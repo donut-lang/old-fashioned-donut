@@ -1,0 +1,7 @@
+.o
+.exe
+.obj
+TestWin/
+Debug/
+Release/
+
