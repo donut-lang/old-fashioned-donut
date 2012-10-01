@@ -16,9 +16,15 @@
 #
 *.exe
 
+# waf temp files
+.lock*
+.waf*/
+
 #build dir
+build/
 TestWin/
 Debug/
 Release/
 TestLinux/
+DebugLinux/
 
