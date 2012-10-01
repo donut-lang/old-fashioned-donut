@@ -1,6 +1,22 @@
-.o
-.exe
-.obj
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Compiled Dynamic libraries
+*.so
+*.dll
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+#
+*.exe
+
+#build dir
 TestWin/
 Debug/
 Release/
