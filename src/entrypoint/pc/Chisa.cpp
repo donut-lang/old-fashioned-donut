@@ -9,7 +9,8 @@
 #include <iostream>
 using namespace std;
 
-namespace ep {
+namespace chisa {
+namespace entrypoint {
 namespace pc {
 
 int main() {
@@ -17,10 +18,10 @@ int main() {
 	return 0;
 }
 
-}}
+}}}
 
 
 int main() {
-	return ep::pc::main();
+	return chisa::entrypoint::pc::main();
 }
 
