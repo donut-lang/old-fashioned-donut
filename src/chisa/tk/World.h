@@ -18,28 +18,27 @@
 
 #ifndef Chisa_TK_WORLD_H__CPP_
 #define Chisa_TK_WORLD_H__CPP_
+#include <memory>
+#include <string>
 
 #include "Task.h"
 #include "Geom.h"
-#include <memory>
-#include <deque>
-#include <string>
+#include "Stack.h"
 
 namespace chisa {
 namespace tk {
-class WidgetGroup;
+class Layout;
 class Widget;
 
 using std::shared_ptr;
 using std::weak_ptr;
-using std::deque;
 using std::string;
 
 class World {
 private:
 	logging::Logger& log;
 	TaskHandler taskHandler;
-	shared_ptr<WidgetGroup> rootWidget;
+	Stack<Layout> layoutStack;
 	Box size;
 public:
 	World(logging::Logger& log);
@@ -51,103 +50,9 @@ public:
 	void render();
 	void idle(const float delta_ms);
 	void reshape(const Box& area);
-};
-
-class WorldStack
-{
 private:
-	deque<shared_ptr<World> > stack;
-public:
-	inline shared_ptr<World> push(const shared_ptr<World> elm)
-	{
-		stack.push_back(elm);
-		return elm;
-	}
-
-	inline shared_ptr<World> pop()
-	{
-		if(stack.empty()){
-			return shared_ptr<World>();
-		}
-		shared_ptr<World> val = stack.back();
-		stack.pop_back();
-		return val;
-	}
-	inline shared_ptr<World> top()
-	{
-		if(stack.empty()){
-			return shared_ptr<World>();
-		}
-		return stack.back();
-	}
-	inline shared_ptr<World> bottom()
-	{
-		if(stack.empty()){
-			return shared_ptr<World>();
-		}
-		return stack.front();
-	}
-	inline shared_ptr<World> replace(shared_ptr<World> elm)
-	{
-		if(stack.empty()){
-			return shared_ptr<World>();
-		}
-		shared_ptr<World> val = stack.back();
-		stack.assign(stack.size()-1, elm);
-		return val;
-	}
-	inline size_t size()
-	{
-		return stack.size();
-	}
-	typedef typename deque<shared_ptr<World> >::const_iterator Iterator;
-	typedef typename deque<shared_ptr<World> >::reverse_iterator ReverseIterator;
-	inline Iterator begin(){
-		return stack.begin();
-	}
-	inline Iterator end(){
-		return stack.end();
-	}
-	inline ReverseIterator rbegin(){
-		return stack.rbegin();
-	}
-	inline ReverseIterator rend(){
-		return stack.rend();
-	}
-	inline int indexOf(World& world){
-		std::size_t i = 0;
-		for(shared_ptr<World>& sptr : stack){
-			if(sptr.get() == &world){
-				return i;
-			}
-			++i;
-		}
-		return -1;
-	}
-	inline int indexOf(shared_ptr<World> world)
-	{
-		if(!world.get()){
-			return 0;
-		}
-		return indexOf(*(world.get()));
-	}
-	inline shared_ptr<World> at(size_t idx)
-	{
-		if(idx >= stack.size()){
-			return shared_ptr<World>();
-		}
-		return stack.at(idx);
-	}
-	inline void erase(size_t idx)
-	{
-		if(idx >= stack.size()){
-			return;
-		}
-		stack.erase(stack.begin()+idx);
-	}
-public:
-	explicit WorldStack(){}
-	virtual ~WorldStack(){}
+	void popLayout();
+	void pushLayout();
 };
 
 }}

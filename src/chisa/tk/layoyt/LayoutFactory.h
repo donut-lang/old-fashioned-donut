@@ -16,27 +16,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "World.h"
-#include "Layout.h"
+#ifndef Chisa_LAYOUTFACTORY_H__CPP_
+#define Chisa_LAYOUTFACTORY_H__CPP_
+
+#include <string>
+#include <memory>
+#include <tinyxml2.h>
 
 namespace chisa {
 namespace tk {
+class Layout;
 
-void World::render()
-{
-	const Area area(0,0,this->size.width(), this->size.height());
-	if(shared_ptr<Layout> layout = this->layoutStack.top()){
-		layout->render(area);
-	}
-}
-void World::idle(const float delta_ms)
-{
+namespace layout {
+using std::string;
+using std::shared_ptr;
+using tinyxml2::XMLDocument;
+using tinyxml2::XMLElement;
+using tinyxml2::XMLNode;
 
-}
-void World::reshape(const Box& area)
-{
-	this->size = area;
+//TODO: 要素名とレイアウトの対応表
 
-}
+class LayoutFactory {
+private:
+	XMLDocument doc;
+	XMLElement* root;
+public:
+	LayoutFactory(string& filename);
+	LayoutFactory(string& filename, const char* buffer, std::size_t lenb);
+	virtual ~LayoutFactory();
+private:
+	shared_ptr<Layout> parseInner(XMLElement* top);
+public:
+	shared_ptr<Layout> create();
+};
 
-}}
+}}}
+#endif /* INCLUDE_GUARD */

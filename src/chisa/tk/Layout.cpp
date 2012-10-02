@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "WidgetGroup.h"
+#include "Layout.h"
 
 namespace chisa {
 namespace tk {

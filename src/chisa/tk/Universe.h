@@ -32,7 +32,7 @@ namespace tk {
 class Universe {
 private:
 	logging::Logger& log;
-	WorldStack worldStack;
+	Stack<World> worldStack;
 public:
 	Universe(logging::Logger& log);
 	virtual ~Universe();
