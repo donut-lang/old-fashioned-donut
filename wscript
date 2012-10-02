@@ -10,6 +10,7 @@ def options(opt):
 	opt.load('compiler_c compiler_cxx')
 def configure(conf):
 	conf.load('compiler_c compiler_cxx')
+	conf.env.append_value('CXXFLAGS', ['-O3', '-std=c++0x', '-std=c++11', '-D__GXX_EXPERIMENTAL_CXX0X__=1'])
 	if sys.platform == 'win32': 
 		conf.check(features='cxx cxxprogram', lib=['glut', 'opengl32',], cflags=['-Wall'], defines=['TEST=TEST'], uselib_store='OPENGL')
 	elif sys.platform == 'linux2':
