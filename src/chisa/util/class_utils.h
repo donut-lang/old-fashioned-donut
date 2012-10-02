@@ -16,17 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Widget.h"
-#include <GL/gl.h>
+#ifndef Chisa_UTIL_CLASS_UTILS_H__CPP_
+#define Chisa_UTIL_CLASS_UTILS_H__CPP_
 
-namespace chisa {
-namespace tk {
+#define DISABLE_COPY_AND_ASSIGN(klass)\
+private:\
+	klass(const klass& other);\
+	klass& operator=(const klass& other);
 
 
-void Widget::render(const Area& area)
-{
-	glScissor(area.x(), area.y(), area.width(), area.height());
-	this->renderImpl();
-}
 
-}}
+#endif /* INCLUDE_GUARD */

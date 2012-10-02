@@ -16,17 +16,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Widget.h"
-#include <GL/gl.h>
+#ifndef Chisa_TK_UNIVERSE_H__CPP_
+#define Chisa_TK_UNIVERSE_H__CPP_
+
+#include "World.h"
+#include "Geom.h"
 
 namespace chisa {
 namespace tk {
 
-
-void Widget::render(const Area& area)
-{
-	glScissor(area.x(), area.y(), area.width(), area.height());
-	this->renderImpl();
-}
+/**
+ * アプリケーションウィンドウ全体を表すクラス
+ */
+class Universe {
+private:
+	WorldStack worldStack;
+public:
+	Universe();
+	virtual ~Universe();
+public:
+	void render();
+	void idle(const float delta_ms);
+	void reshape(const Box& area);
+public: //worldからの通知
+	void createNewWorld();
+	void notifyWorldEnd(World& me);
+};
 
 }}
+#endif /* INCLUDE_GUARD */

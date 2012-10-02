@@ -16,17 +16,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef Chisa_TK_WIDGETGROUP_H__CPP_
+#define Chisa_TK_WIDGETGROUP_H__CPP_
+
 #include "Widget.h"
-#include <GL/gl.h>
+#include "../util/class_utils.h"
 
 namespace chisa {
 namespace tk {
 
-
-void Widget::render(const Area& area)
-{
-	glScissor(area.x(), area.y(), area.width(), area.height());
-	this->renderImpl();
-}
+class WidgetGroup: public chisa::tk::Widget {
+	DISABLE_COPY_AND_ASSIGN(WidgetGroup);
+public:
+	std::weak_ptr<Widget> getChildAt(const size_t index) const;
+	std::size_t getChildCount() const;
+	std::size_t getChildIndexOf(std::weak_ptr<Widget> dancer);
+	weak_ptr<Widget> getWidgetById(const UnicodeString& id);
+public:
+	virtual ~WidgetGroup();
+};
 
 }}
+#endif /* INCLUDE_GUARD */
