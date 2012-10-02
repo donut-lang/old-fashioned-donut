@@ -53,8 +53,7 @@ public:
 	Point calcAbsolutePosition();
 	Point calcRelativePositionFromParent();
 public:
-	void render(const Area& area); /* OpenGLの座標の設定などを行なってしまう */
-	virtual void renderImpl() = 0;
+	virtual void render() = 0;
 	void idle(const float delta_ms);
 	void reshape(const Box& area);
 };
