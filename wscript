@@ -34,6 +34,7 @@ TINYXML2_SRC=[os.path.join('.', 'external','tinyxml2','tinyxml2.cpp')]
 
 def options(opt):
 	opt.load('compiler_c compiler_cxx')
+	opt.load('eclipse')
 def configure(conf):
 	conf.load('compiler_c compiler_cxx')
 	conf.env.append_value('CXXFLAGS', ['-O3', '-std=c++0x', '-std=c++11', '-D__GXX_EXPERIMENTAL_CXX0X__=1'])
