@@ -16,17 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Widget.h"
-#include <GL/gl.h>
+#include "World.h"
+#include "WidgetGroup.h"
 
 namespace chisa {
 namespace tk {
 
-
-void Widget::render(const Area& area)
+void World::render()
 {
-	glScissor(area.x(), area.y(), area.width(), area.height());
-	this->renderImpl();
+	const Area area(0,0,this->size.width(), this->size.height());
+	if(rootWidget){
+		rootWidget->render(area);
+	}
+}
+void World::idle(const float delta_ms)
+{
+
+}
+void World::reshape(const Box& area)
+{
+	this->size = area;
+
 }
 
 }}

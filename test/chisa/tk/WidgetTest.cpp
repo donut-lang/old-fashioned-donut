@@ -16,17 +16,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Widget.h"
-#include <GL/gl.h>
+#include <gtest/gtest.h>
+#include <memory>
+#include "../../../src/chisa/tk/Universe.h"
 
 namespace chisa {
 namespace tk {
 
-
-void Widget::render(const Area& area)
+class WidgetTest : public ::testing::Test
 {
-	glScissor(area.x(), area.y(), area.width(), area.height());
-	this->renderImpl();
+protected:
+	Universe * universe;
+public:
+	void SetUp(){
+		universe = new Universe();
+	}
+	void TearDown(){
+		delete universe;
+	}
+};
+
+TEST_F(WidgetTest, BasicTest)
+{
 }
 
 }}

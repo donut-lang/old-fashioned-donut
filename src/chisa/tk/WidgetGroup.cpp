@@ -16,17 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Widget.h"
-#include <GL/gl.h>
+#include "WidgetGroup.h"
 
 namespace chisa {
 namespace tk {
-
-
-void Widget::render(const Area& area)
-{
-	glScissor(area.x(), area.y(), area.width(), area.height());
-	this->renderImpl();
-}
 
 }}

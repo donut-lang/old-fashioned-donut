@@ -16,17 +16,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Widget.h"
-#include <GL/gl.h>
+#ifndef Chisa_TK_TASK_H__CPP_
+#define Chisa_TK_TASK_H__CPP_
+
+#include <vector>
+#include <memory>
 
 namespace chisa {
 namespace tk {
+using std::vector;
+using std::shared_ptr;
 
+class Task {
+public:
+	Task();
+	virtual ~Task();
+public:
+	// タスクが実行される。
+	// boolがTrueを返す間は、実行され続ける。アニメーションなどにご活用下さい。
+	virtual bool exec(const float delta_ms) = 0;
+};
 
-void Widget::render(const Area& area)
-{
-	glScissor(area.x(), area.y(), area.width(), area.height());
-	this->renderImpl();
-}
+class TaskHandler {
+private:
+	vector<shared_ptr<Task> > taskPool;
+public:
+	TaskHandler();
+	virtual ~TaskHandler();
+public:
+	bool post(shared_ptr<Task> task);
+	std::size_t getPostCount() const{ return taskPool.size(); };
+};
 
 }}
+#endif /* INCLUDE_GUARD */
