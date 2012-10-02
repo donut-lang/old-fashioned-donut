@@ -22,6 +22,7 @@
 #include <tr1/memory>
 #include <unicode/unistr.h>
 #include "../util/class_utils.h"
+#include "../logging/Logger.h"
 #include "./Geom.h"
 
 namespace chisa {
@@ -35,6 +36,7 @@ class WidgetGroup;
 class Widget {
 	DISABLE_COPY_AND_ASSIGN(Widget);
 private:
+	logging::Logger& log;
 	weak_ptr<World> world_;
 	weak_ptr<WidgetGroup> root_;
 	weak_ptr<WidgetGroup> parent_;
@@ -43,7 +45,7 @@ protected:
 	weak_ptr<WidgetGroup> root() { return root_; };
 	weak_ptr<WidgetGroup> parent() { return parent_; };
 public:
-	Widget(weak_ptr<World> world, weak_ptr<WidgetGroup> root, weak_ptr<WidgetGroup> parent);
+	Widget(logging::Logger& log, weak_ptr<World> world, weak_ptr<WidgetGroup> root, weak_ptr<WidgetGroup> parent);
 	virtual ~Widget();
 public: /* レンダリング関連 */
 	void invalidate();

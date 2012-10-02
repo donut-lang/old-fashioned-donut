@@ -18,10 +18,12 @@
 
 #include "Universe.h"
 
+static const std::string TAG("Universe");
+
 namespace chisa {
 namespace tk {
 
-Universe::Universe() {
+Universe::Universe(logging::Logger& log) : log(log) {
 	// TODO Auto-generated constructor stub
 
 }
@@ -55,6 +57,7 @@ void Universe::notifyWorldEnd(World& me)
 {
 	const int idx = this->worldStack.indexOf(me);
 	if(idx < 0){
+		log.w(TAG, "oops. notified unknown world.");
 		return;
 	}
 	this->worldStack.erase(idx);

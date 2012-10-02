@@ -1,5 +1,5 @@
 /**
- * Chisa
+ * Saccubus
  * Copyright (C) 2012 psi
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,30 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef Chisa_TK_WIDGETGROUP_H__CPP_
-#define Chisa_TK_WIDGETGROUP_H__CPP_
+#ifndef SACCUBUS_TESTCOMMON_H_
+#define SACCUBUS_TESTCOMMON_H_
 
-#include "Widget.h"
-#include "../util/class_utils.h"
 #include <memory>
-#include <string>
+using std::shared_ptr;
+#include <gtest/gtest.h>
+#include <iostream>
+#include "../src/chisa/logging/Exception.h"
+#include "../src/chisa/logging/Logger.h"
+using namespace chisa::logging;
 
-namespace chisa {
-namespace tk {
-using std::string;
-using std::weak_ptr;
-using std::size_t;
+#define MATERIAL_DIR "_TestMaterials/"
 
-class WidgetGroup: public chisa::tk::Widget {
-	DISABLE_COPY_AND_ASSIGN(WidgetGroup);
-public:
-	weak_ptr<Widget> getChildAt(const size_t index) const;
-	size_t getChildCount() const;
-	size_t getChildIndexOf(weak_ptr<Widget> dancer);
-	weak_ptr<Widget> getWidgetById(const string& id);
-public:
-	virtual ~WidgetGroup();
-};
+#define NULL_STREAM (*((std::ostream*)0))
+static Logger log_trace(std::cout, Logger::TRACE_);
+static Logger log_err(std::cout, Logger::ERROR_);
 
-}}
-#endif /* INCLUDE_GUARD */
+#endif /* SACCUBUS_TESTCOMMON_H_ */

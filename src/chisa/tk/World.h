@@ -22,8 +22,8 @@
 #include "Task.h"
 #include "Geom.h"
 #include <memory>
-#include <unicode/unistr.h>
 #include <deque>
+#include <string>
 
 namespace chisa {
 namespace tk {
@@ -33,19 +33,20 @@ class Widget;
 using std::shared_ptr;
 using std::weak_ptr;
 using std::deque;
-using icu::UnicodeString;
+using std::string;
 
 class World {
 private:
+	logging::Logger& log;
 	TaskHandler taskHandler;
 	shared_ptr<WidgetGroup> rootWidget;
 	Box size;
 public:
-	World();
+	World(logging::Logger& log);
 	virtual ~World();
 public:
-	void loadLayout(const UnicodeString& filename);
-	weak_ptr<Widget> getWidgetById(const UnicodeString& id);
+	void loadLayout(const string& filename);
+	weak_ptr<Widget> getWidgetById(const string& id);
 public:
 	void render();
 	void idle(const float delta_ms);
