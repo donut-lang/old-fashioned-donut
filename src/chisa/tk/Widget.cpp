@@ -21,14 +21,4 @@
 namespace chisa {
 namespace tk {
 
-Widget::Widget() {
-	// TODO Auto-generated constructor stub
-
-}
-
-Widget::~Widget() {
-	// TODO Auto-generated destructor stub
-
-}
-
 }}
