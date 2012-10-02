@@ -18,6 +18,7 @@
 
 #include <gtest/gtest.h>
 #include <memory>
+#include "../../TestCommon.h"
 #include "../../../src/chisa/tk/Universe.h"
 
 namespace chisa {
@@ -29,7 +30,7 @@ protected:
 	Universe * universe;
 public:
 	void SetUp(){
-		universe = new Universe();
+		universe = new Universe(log_trace);
 	}
 	void TearDown(){
 		delete universe;

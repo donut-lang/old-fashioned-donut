@@ -22,9 +22,13 @@
 namespace chisa {
 namespace tk {
 
+const static std::string TAG("Widget");
 
 void Widget::render(const Area& area)
 {
+	if(log.t()) {
+		log.t(TAG, std::string("rendering: ")+area.toString());
+	}
 	glScissor(area.x(), area.y(), area.width(), area.height());
 	this->renderImpl();
 }

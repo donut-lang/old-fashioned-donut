@@ -21,6 +21,7 @@
 
 #include <vector>
 #include <memory>
+#include "../logging/Logger.h"
 
 namespace chisa {
 namespace tk {
@@ -28,9 +29,13 @@ using std::vector;
 using std::shared_ptr;
 
 class Task {
+private:
+	logging::Logger& log_;
+protected:
+	inline logging::Logger& log() const { return log_; };
 public:
-	Task();
-	virtual ~Task();
+	Task(logging::Logger& log):log_(log){};
+	virtual ~Task(){};
 public:
 	// タスクが実行される。
 	// boolがTrueを返す間は、実行され続ける。アニメーションなどにご活用下さい。
@@ -39,9 +44,11 @@ public:
 
 class TaskHandler {
 private:
+	logging::Logger& log;
+private:
 	vector<shared_ptr<Task> > taskPool;
 public:
-	TaskHandler();
+	TaskHandler(logging::Logger& log);
 	virtual ~TaskHandler();
 public:
 	bool post(shared_ptr<Task> task);

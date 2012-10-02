@@ -21,6 +21,7 @@
 
 #include "World.h"
 #include "Geom.h"
+#include "../logging/Logger.h"
 
 namespace chisa {
 namespace tk {
@@ -30,9 +31,10 @@ namespace tk {
  */
 class Universe {
 private:
+	logging::Logger& log;
 	WorldStack worldStack;
 public:
-	Universe();
+	Universe(logging::Logger& log);
 	virtual ~Universe();
 public:
 	void render();

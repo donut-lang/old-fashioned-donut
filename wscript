@@ -40,6 +40,7 @@ def configure(conf):
 		conf.check(features='cxx cxxprogram', lib=['glut'], cflags=['-Wall'], defines=['TEST=TEST'], uselib_store='OPENGL')
 	
 	conf.check_cfg(package='icu-uc')
+	conf.check_cfg(package='libxml-2.0')
 	conf.check(features='cxx cxxprogram', lib=['gtest','gtest_main','pthread'], cflags=['-Wall'], uselib_store='GTEST')
 
 def build(bld):

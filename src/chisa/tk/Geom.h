@@ -20,6 +20,8 @@
 #define Chisa_TK_GEOM_H__CPP_
 
 #include <cmath>
+#include <string>
+#include "../util/StringUtil.h"
 
 namespace chisa {
 namespace tk {
@@ -40,6 +42,9 @@ public:
 	}
 	inline float x() const{return x_;};
 	inline float y() const{return y_;};
+	inline std::string toString() const{
+		return util::format("(Point %f %f)", x_, y_);
+	}
 };
 
 class Box{
@@ -58,6 +63,9 @@ public:
 	inline float width() const{ return width_; };
 	inline float height() const{ return height_; };
 	inline static bool isUnspecified(const float width_or_height){ return std::isnan(width_or_height); };
+	inline std::string toString() const{
+		return util::format("(Box %f %f)", width_, height_);
+	}
 };
 
 class Area
@@ -80,6 +88,9 @@ public:
 	inline float y() const{ return point_.y(); };
 	inline float width() const{ return box_.width(); };
 	inline float height() const{ return box_.height(); };
+	inline std::string toString() const{
+		return util::format("(Area %f %f %f %f)", x(), y(), width(), height());
+	}
 };
 
 }}
