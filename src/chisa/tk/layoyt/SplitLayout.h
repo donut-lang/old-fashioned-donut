@@ -59,7 +59,7 @@ struct SplitCtx
 
 class SplitLayout: public chisa::tk::Layout {
 private:
-	vector<SplitCtx> children_;
+	vector<shared_ptr<SplitCtx> > children_;
 public:
 	SplitLayout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);
 	virtual ~SplitLayout();
@@ -68,9 +68,12 @@ private:
 protected:
 	void loadTree(LayoutFactory& factory, XMLElement* top);
 	void reshapeLinear(const float size);
-	inline vector<SplitCtx>& children() { return children_; };
+	inline vector<shared_ptr<SplitCtx> >& children() { return children_; };
 public:
 	virtual void idle(const float delta_ms);
+	virtual weak_ptr<Layout> getChildAt(const size_t index) const;
+	virtual size_t getChildCount() const;
+	virtual weak_ptr<Widget> getWidgetById(const string& id);
 };
 
 }}}

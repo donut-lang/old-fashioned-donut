@@ -53,9 +53,9 @@ public:
 	Point calcAbsolutePosition();
 	Point calcRelativePositionFromParent();
 public:
-	virtual void render() = 0;
+	virtual void render(const Area& area) = 0;
 	void idle(const float delta_ms);
-	void reshape(const Box& area);
+	Box reshape(const Box& area);
 };
 
 }}

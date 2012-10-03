@@ -36,8 +36,8 @@ SplitLayout::~SplitLayout() {
 
 void SplitLayout::addChild(const SplitDef& def, shared_ptr<Layout> layout)
 {
-	SplitCtx ctx(def);
-	ctx.layout = layout;
+	shared_ptr<SplitCtx> ctx(new SplitCtx(def));
+	ctx->layout = layout;
 	this->children_.push_back(ctx);
 }
 
@@ -61,12 +61,32 @@ void SplitLayout::loadTree(LayoutFactory& factory, XMLElement* top)
 
 void SplitLayout::idle(const float delta_ms)
 {
-
+	for(shared_ptr<SplitCtx> ctx : this->children()){
+		ctx->layout->idle(delta_ms);
+	}
 }
 
 void SplitLayout::reshapeLinear(const float size)
 {
 
 }
+
+weak_ptr<Layout> SplitLayout::getChildAt(const size_t index) const
+{
+	if(index < this->children_.size()){
+		shared_ptr<SplitCtx> ctx = this->children_.at(index);
+		return weak_ptr<Layout>(ctx->layout);
+	}
+	return weak_ptr<Layout>();
+}
+size_t SplitLayout::getChildCount() const
+{
+	return this->children_.size();
+}
+weak_ptr<Widget> SplitLayout::getWidgetById(const string& id)
+{
+
+}
+
 
 }}}
