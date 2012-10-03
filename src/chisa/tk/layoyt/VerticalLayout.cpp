@@ -17,6 +17,7 @@
  */
 
 #include "VerticalLayout.h"
+#include "LayoutFactory.h"
 
 namespace chisa {
 namespace tk {
@@ -49,5 +50,13 @@ void VerticalLayout::reshape(const Box& area)
 {
 	this->reshapeLinear(area.height());
 }
+
+VerticalLayout* VerticalLayout::parseTree(LayoutFactory& factory, weak_ptr<Layout> root, weak_ptr<Layout> parent, XMLElement* top)
+{
+	VerticalLayout* layout = new VerticalLayout(factory.log(), factory.world(), root, parent);
+	layout->loadTree(factory, top);
+	return layout;
+}
+
 
 }}}

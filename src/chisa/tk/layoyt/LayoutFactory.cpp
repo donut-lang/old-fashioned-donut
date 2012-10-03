@@ -70,6 +70,7 @@ shared_ptr<Layout> LayoutFactory::parseTree(weak_ptr<Layout> root, weak_ptr<Layo
 	string name = top->Name();
 	std::transform(name.begin(), name.end(), name.begin(), ::tolower);
 	if(name=="vertical"){
+		return shared_ptr<Layout>(VerticalLayout::parseTree(*this, root, parent, top));
 	} else if(name=="horizontal") {
 		return shared_ptr<Layout>(HorizontalLayout::parseTree(*this, root, parent, top));
 	} else if(name=="tab") {
