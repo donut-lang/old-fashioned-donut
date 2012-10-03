@@ -34,6 +34,8 @@ inline bool isSpecified(const float width_or_height){
 	return !std::isnan(width_or_height);
 };
 constexpr float Unspecified = NAN;
+constexpr float VeryLarge = 1e10;
+constexpr float VerySmall = 1e-1;
 }
 
 class Point
@@ -49,6 +51,17 @@ public:
 		this->x_ = other.x_;
 		this->y_ = other.y_;
 		return *this;
+	}
+	inline bool operator==(const Point& other) const{
+		return this->x_ == other.x_ && this->y_ == other.y_;
+	}
+	inline bool operator!=(const Point& other) const{
+		return !(*this==other);
+	}
+	inline bool near(const Point& other, const float precision) const{
+		return
+				std::fabs(this->x_ - other.x_) < precision &&
+				std::fabs(this->y_ - other.y_) < precision;
 	}
 	inline float x() const{return x_;};
 	inline float y() const{return y_;};
@@ -69,6 +82,17 @@ public:
 		this->width_ = other.width_;
 		this->height_ = other.height_;
 		return *this;
+	}
+	inline bool operator==(const Box& other){
+		return this->width_ == other.width_ && this->height_ == other.height_;
+	}
+	inline bool operator!=(const Box& other){
+		return !(*this==other);
+	}
+	inline bool near(const Box& other, const float precision) const{
+		return
+				std::fabs(this->width_ - other.width_) < precision &&
+				std::fabs(this->height_ - other.height_) < precision;
 	}
 	inline float width() const{ return width_; };
 	inline float height() const{ return height_; };

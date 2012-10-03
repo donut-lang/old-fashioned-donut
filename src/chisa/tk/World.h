@@ -37,22 +37,24 @@ using std::string;
 class World {
 private:
 	logging::Logger& log;
+	weak_ptr<World> self_;
 	TaskHandler taskHandler;
 	Stack<Layout> layoutStack;
-	Box size;
+	Box size_;
 public:
-	World(logging::Logger& log);
+	World(logging::Logger& log, weak_ptr<World> self);
 	virtual ~World();
+	inline Box size() const{ return size_; };
 public:
-	void loadLayout(const string& filename);
 	weak_ptr<Widget> getWidgetById(const string& id);
 public:
 	void render();
 	void idle(const float delta_ms);
 	void reshape(const Box& area);
 private:
+	inline void size(const Box& newBox) { size_=newBox; };
 	void popLayout();
-	void pushLayout();
+	void pushLayout(const string& filename);
 };
 
 }}

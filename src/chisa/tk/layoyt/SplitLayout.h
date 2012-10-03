@@ -76,6 +76,14 @@ public:
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const;
 	virtual size_t getChildCount() const;
 	virtual weak_ptr<Widget> getWidgetById(const string& id);
+	inline static float max(const float a, const float b)
+	{
+		return isnan(b) ? a : (a > b ? a : b);
+	}
+	inline static float min(const float a, const float b)
+	{
+		return isnan(a) ? b : (a > b ? b : a);
+	}
 };
 
 }}}

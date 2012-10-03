@@ -67,8 +67,36 @@ TEST_F(HorizontalLayoutTest, BasicLayoutTest)
 {
 	XMLElement* hor = newHorizontalChild(doc);
 	doc.InsertFirstChild(hor);
+	addHorizontalChild(doc, hor, "empty", 2);
+	addHorizontalChild(doc, hor, "empty", 3);
 	addHorizontalChild(doc, hor, "empty", 1);
-	addHorizontalChild(doc, hor, "empty", 1);
+
+	LayoutFactory factory(log_trace, weak_ptr<World>(), fname, &doc, false);
+	shared_ptr<Layout> root = factory.parseTree();
+
+	root->reshape(Box(100, 100));
+
+	ASSERT_EQ(3, root->getChildCount());
+
+	ASSERT_NEAR(200.0/6, root->getChildAt(0).lock()->size().width(), 1.0/10);
+	ASSERT_NEAR(100.0, root->getChildAt(0).lock()->size().height(), 1.0/10);
+
+	ASSERT_NEAR(300.0/6, root->getChildAt(1).lock()->size().width(), 1.0/10);
+	ASSERT_NEAR(100.0, root->getChildAt(1).lock()->size().height(), 1.0/10);
+
+	ASSERT_NEAR(100.0/6, root->getChildAt(2).lock()->size().width(), 1.0/10);
+	ASSERT_NEAR(100.0, root->getChildAt(2).lock()->size().height(), 1.0/10);
+
+	ASSERT_NEAR(100, root->size().width(), 1.0/10);
+	ASSERT_NEAR(100, root->size().height(), 1.0/10);
+}
+
+TEST_F(HorizontalLayoutTest, MixedTest)
+{
+	XMLElement* hor = newHorizontalChild(doc);
+	doc.InsertFirstChild(hor);
+	addHorizontalChild(doc, hor, "empty", 2);
+	addHorizontalChild(doc, hor, "empty", geom::Unspecified, 10, 50);
 	addHorizontalChild(doc, hor, "empty", 1);
 
 	LayoutFactory factory(log_trace, weak_ptr<World>(), fname, &doc, false);
@@ -81,14 +109,15 @@ TEST_F(HorizontalLayoutTest, BasicLayoutTest)
 	ASSERT_NEAR(100.0/3, root->getChildAt(0).lock()->size().width(), 1.0/10);
 	ASSERT_NEAR(100.0, root->getChildAt(0).lock()->size().height(), 1.0/10);
 
-	ASSERT_NEAR(100.0/3, root->getChildAt(1).lock()->size().width(), 1.0/10);
+	ASSERT_NEAR(50.0, root->getChildAt(1).lock()->size().width(), 1.0/10);
 	ASSERT_NEAR(100.0, root->getChildAt(1).lock()->size().height(), 1.0/10);
 
-	ASSERT_NEAR(100.0/3, root->getChildAt(2).lock()->size().width(), 1.0/10);
+	ASSERT_NEAR(50.0/3, root->getChildAt(2).lock()->size().width(), 1.0/10);
 	ASSERT_NEAR(100.0, root->getChildAt(2).lock()->size().height(), 1.0/10);
 
 	ASSERT_NEAR(100, root->size().width(), 1.0/10);
 	ASSERT_NEAR(100, root->size().height(), 1.0/10);
 }
+
 
 }}

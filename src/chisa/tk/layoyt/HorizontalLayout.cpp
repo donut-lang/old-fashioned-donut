@@ -72,7 +72,7 @@ void HorizontalLayout::reshape(const Box& area)
 Box HorizontalLayout::measure(const Box& constraint)
 {
 	this->resetChildrenLayout();
-	float height=geom::isUnspecified(constraint.height()) ? 0.0f : constraint.height();
+	float height=constraint.height();
 	if(geom::isUnspecified(constraint.width())){
 		//横幅未指定なのでどこまでも伸びる
 		Box box(geom::Unspecified, constraint.height());
@@ -80,7 +80,7 @@ Box HorizontalLayout::measure(const Box& constraint)
 
 		for(shared_ptr<SplitCtx> ctx : this->children()){
 			const Box result = ctx->layout->measure(box);
-			height = std::max(height, result.height());
+			height = SplitLayout::max(height, result.height());
 			width += (ctx->size = result.width());
 		}
 		return tk::Box(width, height);
@@ -96,12 +96,12 @@ Box HorizontalLayout::measure(const Box& constraint)
 				Box b = ctx->layout->measure(c);
 				float w = b.width();
 				height = std::max(height, b.height());
-				if(geom::isSpecified(ctx->def.max)) w = std::min(w, ctx->def.max);
-				if(geom::isSpecified(ctx->def.min)) w = std::max(w, ctx->def.min);
+				w = SplitLayout::min(w, ctx->def.max);
+				w = SplitLayout::max(w, ctx->def.min);
 				totalWidth+=w;
 				ctx->size = w;
 			}else{
-				//ウェイトの掛かった部分はあとで何とかするようにとっておく
+				//ウェイトの掛かった部分はあとで分け合うためにとっておく
 				totalWeight += ctx->def.weight;
 			}
 		}
@@ -125,9 +125,9 @@ Box HorizontalLayout::measure(const Box& constraint)
 					Box b = ctx->layout->measure(c);
 
 					ctx->size = b.width();
-					height = std::max(height, b.height());
-					if(geom::isSpecified(ctx->def.max)) ctx->size = std::min(ctx->size, ctx->def.max);
-					if(geom::isSpecified(ctx->def.min)) ctx->size = std::max(ctx->size, ctx->def.min);
+					height = SplitLayout::max(height, b.height());
+					ctx->size = SplitLayout::min(ctx->size, ctx->def.max);
+					ctx->size = SplitLayout::max(ctx->size, ctx->def.min);
 					leftWidth -= ctx->size;
 				}
 			}

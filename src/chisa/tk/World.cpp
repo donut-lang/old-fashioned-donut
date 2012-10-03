@@ -18,25 +18,63 @@
 
 #include "World.h"
 #include "Layout.h"
+#include "layoyt/LayoutFactory.h"
 
 namespace chisa {
 namespace tk {
 
+
+World::World(logging::Logger& log, weak_ptr<World> self)
+:log(log)
+,self_(self)
+,taskHandler(log)
+{
+
+}
+World::~World()
+{
+
+}
+
+
 void World::render()
 {
-	const Area area(0,0,this->size.width(), this->size.height());
+	const Area area(0,0,this->size_.width(), this->size_.height());
 	if(shared_ptr<Layout> layout = this->layoutStack.top()){
 		layout->render(area);
 	}
 }
 void World::idle(const float delta_ms)
 {
-
+	if(shared_ptr<Layout> layout = this->layoutStack.top()){
+		layout->idle(delta_ms);
+	}
 }
 void World::reshape(const Box& area)
 {
-	this->size = area;
-
+	this->size(area);
+	if(shared_ptr<Layout> layout = this->layoutStack.top()){
+		layout->reshape(area);
+	}
 }
+
+void World::pushLayout(const string& filename)
+{
+	layout::LayoutFactory factory(log, self_, filename);
+	shared_ptr<Layout> l = factory.parseTree();
+	this->layoutStack.push(l);
+	this->reshape(this->size_);
+}
+
+void World::popLayout()
+{
+	this->layoutStack.pop();
+	if(shared_ptr<Layout> layout = this->layoutStack.top()){
+		if(!this->size().near(layout->size(), 1)){
+			this->reshape(this->size());
+		}
+	}
+}
+
 
 }}
