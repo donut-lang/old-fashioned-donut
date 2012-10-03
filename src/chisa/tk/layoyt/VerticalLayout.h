@@ -16,21 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Widget.h"
-#include <GL/gl.h>
+#ifndef Chisa_TK_LAYOUT_VERTICALLAYOUT_H__CPP_
+#define Chisa_TK_LAYOUT_VERTICALLAYOUT_H__CPP_
+
+#include "SplitLayout.h"
 
 namespace chisa {
 namespace tk {
+namespace layout {
 
-const static std::string TAG("Widget");
+class VerticalLayout: public chisa::tk::layout::SplitLayout {
+public:
+	VerticalLayout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);
+	virtual ~VerticalLayout();
+	virtual string toString();
+public:
+	virtual void render(const Area& area);
+	virtual void reshape(const Box& area);
+};
 
-//void Widget::render(const Area& area)
-//{
-//	if(log.t()) {
-//		log.t(TAG, std::string("rendering: ")+area.toString());
-//	}
-//	glScissor(area.x(), area.y(), area.width(), area.height());
-//	this->renderImpl();
-//}
-
-}}
+}}}
+#endif /* INCLUDE_GUARD */

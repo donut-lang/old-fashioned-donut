@@ -21,4 +21,22 @@
 namespace chisa {
 namespace tk {
 
+Layout::Layout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent)
+:log_(log)
+,world_(world)
+,root_(root)
+,parent_(parent)
+{
+
+}
+Layout::~Layout()
+{
+
+}
+
+string Layout::toString()
+{
+	return util::format("(Layout %p)", this);
+}
+
 }}

@@ -22,32 +22,37 @@
 #include <string>
 #include <memory>
 #include <tinyxml2.h>
+#include "../../logging/Exception.h"
+#include "../../logging/Logger.h"
 
 namespace chisa {
 namespace tk {
 class Layout;
+class World;
 
 namespace layout {
-using std::string;
-using std::shared_ptr;
-using tinyxml2::XMLDocument;
-using tinyxml2::XMLElement;
-using tinyxml2::XMLNode;
+using namespace std;
+using namespace tinyxml2;
 
 //TODO: 要素名とレイアウトの対応表
 
 class LayoutFactory {
 private:
-	XMLDocument doc;
-	XMLElement* root;
+	logging::Logger& log_;
+	weak_ptr<World> world_;
 public:
-	LayoutFactory(string& filename);
-	LayoutFactory(string& filename, const char* buffer, std::size_t lenb);
-	virtual ~LayoutFactory();
+	inline logging::Logger& log() const { return log_; }
+	inline weak_ptr<World> world() const { return world_; }
 private:
-	shared_ptr<Layout> parseInner(XMLElement* top);
+	XMLDocument doc_;
+	XMLElement* root_;
 public:
-	shared_ptr<Layout> create();
+	LayoutFactory(logging::Logger& log, weak_ptr<World> world, string& filename);
+	LayoutFactory(logging::Logger& log, weak_ptr<World> world, string& filename, const char* buffer, std::size_t lenb);
+	virtual ~LayoutFactory();
+public:
+	shared_ptr<Layout> parseTree();
+	shared_ptr<Layout> parseTree(weak_ptr<Layout> root, weak_ptr<Layout> parent, XMLElement* top);
 };
 
 }}}
