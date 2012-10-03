@@ -7,8 +7,10 @@
 //============================================================================
 
 #include <iostream>
-#include <GL/glut.h>
+#include <GL/glfw.h>
 #include "../../chisa/tk/Universe.h"
+#include "../../chisa/logging/Exception.h"
+
 using namespace std;
 
 namespace chisa {
@@ -20,16 +22,8 @@ tk::Universe* gUniverse;
 void render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//	glutSolidTeapot(1/2.0);
-//	glutSwapBuffers();
 	gUniverse->render();
-	glutSwapBuffers();
-}
-
-void idle(const int __)
-{
-	gUniverse->idle(16);
-	glutPostRedisplay();
+	glfwSwapBuffers();
 }
 
 void reshape(int width, int height)
@@ -38,18 +32,47 @@ void reshape(int width, int height)
 }
 
 int main(int argc, char** argv) {
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB|GLUT_DEPTH);
-	glutInitWindowSize(640, 480);
-	glutCreateWindow("Chisa");
+	if(glfwInit() == GL_FALSE){
+		std::cerr << "Failed to initialize GLFW" << std::endl;
+		return -1;
+	}
+	try {
+		if(GL_FALSE == glfwOpenWindow(640,480, 8, 8, 8, 8, 8, 8, GLFW_WINDOW)){
+			std::cerr << "Failed to open window." << std::endl;
+			return -1;
+		}
 
-	logging::Logger log(std::cout, logging::Logger::TRACE_);
-	gUniverse = new tk::Universe(log);
-	glutDisplayFunc(render);
-	glutTimerFunc(16, idle, 0);
-	glutReshapeFunc(reshape);
+		glfwSetWindowTitle("Chisa");
 
-	glutMainLoop();
+		logging::Logger log(std::cout, logging::Logger::TRACE_);
+		gUniverse = new tk::Universe(log);
+		glfwSetWindowSizeCallback(reshape);
+		glfwSetWindowRefreshCallback(render);
+		bool running=true;
+		float last = glfwGetTime();
+		float nextFrame = last+(1.0/60);
+		while(running){
+			gUniverse->idle(1000.0/60);
+			const float now = glfwGetTime();
+			if(now < nextFrame){
+				glfwSleep(nextFrame-now);
+				glfwSwapBuffers();
+			}
+			nextFrame+=(1.0/60);
+			running = !glfwGetKey( GLFW_KEY_ESC ) && glfwGetWindowParam( GLFW_OPENED );
+		}
+
+	} catch (logging::Exception& e) {
+		std::cerr << "Exception caught at " << e.file() << ":" << e.line() << std::endl;
+		std::cerr << "<msg>" << e.msg() << std::endl;
+		glfwTerminate();
+		return -2;
+	} catch (...) {
+		std::cerr << "caught unknwon error." << std::endl;
+		glfwTerminate();
+		return -3;
+	}
+	glfwTerminate();
 	return EXIT_SUCCESS;
 }
 

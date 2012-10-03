@@ -71,5 +71,9 @@ size_t Exception::line()
 	return _line;
 }
 
+std::string Exception::file()
+{
+	return _file;
+}
 
 }}
