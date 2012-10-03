@@ -48,7 +48,6 @@ void VerticalLayout::render(const Area& area)
 }
 void VerticalLayout::reshape(const Box& area)
 {
-	this->reshapeLinear(area.height());
 }
 
 VerticalLayout* VerticalLayout::parseTree(LayoutFactory& factory, weak_ptr<Layout> root, weak_ptr<Layout> parent, XMLElement* top)
@@ -58,5 +57,17 @@ VerticalLayout* VerticalLayout::parseTree(LayoutFactory& factory, weak_ptr<Layou
 	return layout;
 }
 
+Box VerticalLayout::measure(const Box& constraint)
+{
+	Box box(constraint.width(), geom::Unspecified);
+	float width=0.0f;
+	float height=0.0f;
+	for(shared_ptr<SplitCtx> ctx : this->children()){
+		const Box result = ctx->layout->measure(box);
+		width = std::max(width, result.width());
+		height += result.height();
+	}
+	return tk::Box(width, height);
+}
 
 }}}

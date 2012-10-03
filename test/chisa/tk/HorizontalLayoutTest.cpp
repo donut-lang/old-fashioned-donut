@@ -17,8 +17,6 @@
  */
 
 
-#include <gtest/gtest.h>
-#include <memory>
 #include "../../TestCommon.h"
 #include "../../../src/chisa/tk/layoyt/HorizontalLayout.h"
 #include "../../../src/chisa/tk/layoyt/LayoutFactory.h"
@@ -39,9 +37,14 @@ public:
 	}
 };
 
-static XMLElement* addHorizontalChild(XMLDocument& doc, XMLElement* horizontal)
+static XMLElement* addHorizontalChild(XMLDocument& doc, XMLElement* horizontal, const string& elemname, float weight=geom::Unspecified, float min=geom::Unspecified, float max=geom::Unspecified)
 {
-
+	XMLElement* elem = doc.NewElement(elemname.c_str());
+	elem->SetAttribute("weight", weight);
+	elem->SetAttribute("min", min);
+	elem->SetAttribute("max", max);
+	horizontal->InsertEndChild(elem);
+	return elem;
 }
 
 static XMLElement* newHorizontalChild(XMLDocument& doc)
@@ -62,6 +65,27 @@ TEST_F(HorizontalLayoutTest, EmptyTest)
 
 TEST_F(HorizontalLayoutTest, BasicLayoutTest)
 {
+	XMLElement* hor = newHorizontalChild(doc);
+	doc.InsertFirstChild(hor);
+	addHorizontalChild(doc, hor, "empty", 1);
+	addHorizontalChild(doc, hor, "empty", 1);
+	addHorizontalChild(doc, hor, "empty", 1);
+
+	LayoutFactory factory(log_trace, weak_ptr<World>(), fname, &doc, false);
+	shared_ptr<Layout> root = factory.parseTree();
+
+	root->reshape(Box(100, 100));
+
+	ASSERT_EQ(3, root->getChildCount());
+
+	ASSERT_NEAR(100.0/3, root->getChildAt(0).lock()->size().width(), 1.0/10);
+	ASSERT_NEAR(100.0, root->getChildAt(0).lock()->size().height(), 1.0/10);
+
+	ASSERT_NEAR(100.0/3, root->getChildAt(1).lock()->size().width(), 1.0/10);
+	ASSERT_NEAR(100.0, root->getChildAt(1).lock()->size().height(), 1.0/10);
+
+	ASSERT_NEAR(100.0/3, root->getChildAt(2).lock()->size().width(), 1.0/10);
+	ASSERT_NEAR(100.0, root->getChildAt(2).lock()->size().height(), 1.0/10);
 
 }
 

@@ -24,6 +24,7 @@
 #include <algorithm>
 #include "HorizontalLayout.h"
 #include "VerticalLayout.h"
+#include "EmptyLayout.h"
 
 namespace chisa {
 namespace tk {
@@ -88,6 +89,8 @@ shared_ptr<Layout> LayoutFactory::parseTree(weak_ptr<Layout> root, weak_ptr<Layo
 	} else if(name=="horizontal") {
 		return shared_ptr<Layout>(HorizontalLayout::parseTree(*this, root, parent, top));
 	} else if(name=="tab") {
+	} else if(name=="empty") {
+		return shared_ptr<Layout>(EmptyLayout::parseTree(*this, root, parent, top));
 	}else{
 		throw logging::Exception(__FILE__,__LINE__, "Unknwon Layout: %s", name.c_str());
 	}

@@ -40,6 +40,7 @@ public:
 public:
 	virtual void render(const Area& area);
 	virtual void reshape(const Box& area);
+	virtual Box measure(const Box& constraint);
 };
 
 }}}

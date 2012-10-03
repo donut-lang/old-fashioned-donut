@@ -16,24 +16,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef Chisa_TK_LAYOUT_VERTICALLAYOUT_H__CPP_
-#define Chisa_TK_LAYOUT_VERTICALLAYOUT_H__CPP_
+#ifndef Chisa_EMPTYLAYOUT_H__CPP_
+#define Chisa_EMPTYLAYOUT_H__CPP_
 
-#include "SplitLayout.h"
+#include <memory>
+#include <tinyxml2.h>
+#include "../Layout.h"
 
 namespace chisa {
 namespace tk {
 namespace layout {
+using namespace tinyxml2;
+using namespace std;
+class LayoutFactory;
 
-class VerticalLayout: public chisa::tk::layout::SplitLayout {
+class EmptyLayout : public Layout {
 public:
-	VerticalLayout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);
-	virtual ~VerticalLayout();
-	virtual string toString();
+	EmptyLayout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);
+	virtual ~EmptyLayout();
 public:
-	static VerticalLayout* parseTree(LayoutFactory& factory, weak_ptr<Layout> root, weak_ptr<Layout> parent, XMLElement* top);
+	static EmptyLayout* parseTree(LayoutFactory& factory, weak_ptr<Layout> root, weak_ptr<Layout> parent, XMLElement* top);
+public:
+	virtual weak_ptr<Layout> getChildAt(const size_t index) const;
+	virtual size_t getChildCount() const;
+	virtual weak_ptr<Widget> getWidgetById(const string& id);
 public:
 	virtual void render(const Area& area);
+	virtual void idle(const float delta_ms);
 	virtual Box measure(const Box& constraint);
 	virtual void reshape(const Box& area);
 };

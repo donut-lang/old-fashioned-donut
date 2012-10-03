@@ -17,7 +17,7 @@
  */
 
 #include <stdio.h>
-#include <auto_ptr.h>
+#include <memory>
 #include <cstring>
 #include <cstdlib>
 #include "../logging/Exception.h"
