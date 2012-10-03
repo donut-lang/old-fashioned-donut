@@ -67,10 +67,10 @@ private:
 	void addChild(const SplitDef& def, shared_ptr<Layout> layout);
 protected:
 	void loadTree(LayoutFactory& factory, XMLElement* top);
+	void reshapeLinear(const float size);
+	inline vector<SplitCtx>& children() { return children_; };
 public:
 	virtual void idle(const float delta_ms);
-protected:
-	void reshapeLinear(const float size);
 };
 
 }}}

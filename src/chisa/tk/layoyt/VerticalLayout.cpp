@@ -25,12 +25,10 @@ namespace layout {
 VerticalLayout::VerticalLayout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent)
 :SplitLayout(log, world, root, parent)
 {
-	// TODO Auto-generated constructor stub
-
 }
 
-VerticalLayout::~VerticalLayout() {
-	// TODO Auto-generated destructor stub
+VerticalLayout::~VerticalLayout()
+{
 }
 
 string VerticalLayout::toString()
@@ -40,11 +38,16 @@ string VerticalLayout::toString()
 
 void VerticalLayout::render(const Area& area)
 {
-
+	float offset = 0;
+	for(SplitCtx& ctx : this->children()){
+		const Area target(area.x(), area.y()+offset, area.width(), ctx.size);
+		offset += ctx.size;
+		ctx.layout->render(target);
+	}
 }
 void VerticalLayout::reshape(const Box& area)
 {
-
+	this->reshapeLinear(area.height());
 }
 
 }}}
