@@ -30,7 +30,8 @@ HorizontalLayout::HorizontalLayout(logging::Logger& log, weak_ptr<World> world, 
 
 }
 
-HorizontalLayout::~HorizontalLayout() {
+HorizontalLayout::~HorizontalLayout()
+{
 }
 
 string HorizontalLayout::toString()

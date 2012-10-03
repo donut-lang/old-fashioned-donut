@@ -31,6 +31,8 @@ public:
 	virtual ~VerticalLayout();
 	virtual string toString();
 public:
+	static VerticalLayout* parseTree(LayoutFactory& factory, weak_ptr<Layout> root, weak_ptr<Layout> parent, XMLElement* top);
+public:
 	virtual void render(const Area& area);
 	virtual void reshape(const Box& area);
 };
