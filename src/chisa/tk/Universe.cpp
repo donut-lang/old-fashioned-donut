@@ -32,13 +32,13 @@ Universe::~Universe() {
 void Universe::render()
 {
 	//TODO: 下のスタックについて、オフスクリーンレンダリングしたほうがいい？？
-	if(const auto topWorld = this->worldStack.top()){
+	if(shared_ptr<World> topWorld = this->worldStack.top()){
 		topWorld->render();
 	}
 }
 void Universe::idle(const float delta_ms)
 {
-	if(const auto topWorld = this->worldStack.top()){
+	if(shared_ptr<World> topWorld = this->worldStack.top()){
 		topWorld->idle(delta_ms);
 	}
 }
@@ -48,7 +48,7 @@ void Universe::reshape(const Box& area)
 		log.t(TAG, "reshaped: %s", area.toString().c_str());
 	}
 	this->size(area);
-	if(auto topWorld = this->worldStack.top()){
+	if(shared_ptr<World> topWorld = this->worldStack.top()){
 		topWorld->reshape(area);
 	}
 }
