@@ -19,14 +19,13 @@
 #ifndef Chisa_TK_TASK_H__CPP_
 #define Chisa_TK_TASK_H__CPP_
 
-#include <vector>
+#include <deque>
 #include <memory>
 #include "../logging/Logger.h"
 
 namespace chisa {
 namespace tk {
-using std::vector;
-using std::shared_ptr;
+using namespace std;
 
 class Task {
 private:
@@ -46,13 +45,15 @@ class TaskHandler {
 private:
 	logging::Logger& log;
 private:
-	vector<shared_ptr<Task> > taskPool;
+	deque<shared_ptr<Task> > taskPool;
 public:
 	TaskHandler(logging::Logger& log);
 	virtual ~TaskHandler();
 public:
 	bool post(shared_ptr<Task> task);
 	std::size_t getPostCount() const{ return taskPool.size(); };
+public:
+	void run(const float delta_ms);
 };
 
 }}

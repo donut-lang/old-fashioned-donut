@@ -63,8 +63,8 @@ Box EmptyLayout::measure(const Box& constraint)
 	//とりあえず最大を主張しておく
 	// FIXME: とりあえず仮置きで「大きい値」
 	return Box(
-			geom::isUnspecified(constraint.width()) ? 1e10 : constraint.width(),
-			geom::isUnspecified(constraint.height()) ? 1e10 : constraint.height()
+			geom::isUnspecified(constraint.width()) ? geom::VeryLarge : constraint.width(),
+			geom::isUnspecified(constraint.height()) ? geom::VeryLarge : constraint.height()
 	);
 }
 

@@ -24,12 +24,9 @@ namespace chisa {
 namespace tk {
 
 Universe::Universe(logging::Logger& log) : log(log) {
-	// TODO Auto-generated constructor stub
-
 }
 
 Universe::~Universe() {
-	// TODO Auto-generated destructor stub
 }
 
 void Universe::render()
@@ -47,8 +44,11 @@ void Universe::idle(const float delta_ms)
 }
 void Universe::reshape(const Box& area)
 {
-	//ここだけでなく、世界の終わりの時にもreshapeを掛けないといけないはず。
-	if(const auto topWorld = this->worldStack.top()){
+	if(log.t()){
+		log.t(TAG, "reshaped: %s", area.toString().c_str());
+	}
+	this->size(area);
+	if(auto topWorld = this->worldStack.top()){
 		topWorld->reshape(area);
 	}
 }
@@ -61,6 +61,13 @@ void Universe::notifyWorldEnd(World& me)
 		return;
 	}
 	this->worldStack.erase(idx);
+
+	// 下の画面について、以前よりサイズが変わってるようならreshape
+	if(shared_ptr<World> topWorld = this->worldStack.top()){
+		if(!topWorld->size().near(this->size(), 1)){
+			topWorld->reshape(this->size());
+		}
+	}
 }
 
 }}

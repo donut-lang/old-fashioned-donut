@@ -33,9 +33,13 @@ class Universe {
 private:
 	logging::Logger& log;
 	Stack<World> worldStack;
+	Box size_;
 public:
 	Universe(logging::Logger& log);
 	virtual ~Universe();
+	inline Box size() const{ return size_; };
+private:
+	inline void size(const Box& newBox) { size_=newBox; };
 public:
 	void render();
 	void idle(const float delta_ms);

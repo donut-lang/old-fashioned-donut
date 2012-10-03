@@ -16,34 +16,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Task.h"
+
+#include "../../TestCommon.h"
+#include "../../../src/chisa/tk/layoyt/SplitLayout.h"
+#include "../../../src/chisa/tk/layoyt/LayoutFactory.h"
 
 namespace chisa {
 namespace tk {
-
-
-
-TaskHandler::TaskHandler(logging::Logger& log)
-:log(log)
+using namespace layout;
+using namespace std;
+class SplitLayoutTest : public ::testing::Test
 {
-
-}
-TaskHandler::~TaskHandler()
-{
-
-}
-bool TaskHandler::post(shared_ptr<Task> task)
-{
-	this->taskPool.push_back(task);
-}
-
-void TaskHandler::run(const float delta_ms)
-{
-	for(auto it = taskPool.begin(); it != taskPool.end(); ++it){
-		if( !(*it)->exec(delta_ms) ){
-			it = taskPool.erase(it);
-		}
+public:
+	void SetUp(){
 	}
+	void TearDown(){
+	}
+};
+
+
+
+TEST_F(SplitLayoutTest, MaxMinWithNanTest)
+{
+	ASSERT_FLOAT_EQ(SplitLayout::max(1,2), 2);
+	ASSERT_FLOAT_EQ(SplitLayout::min(1,2), 1);
+
+	ASSERT_FLOAT_EQ(SplitLayout::max(1,NAN), 1);
+	ASSERT_FLOAT_EQ(SplitLayout::max(NAN,2), 2);
+	ASSERT_FLOAT_EQ(SplitLayout::min(1,NAN), 1);
+	ASSERT_FLOAT_EQ(SplitLayout::min(NAN,2), 2);
+
+	ASSERT_TRUE(isnan(SplitLayout::max(NAN,NAN)));
+	ASSERT_TRUE(isnan(SplitLayout::min(NAN,NAN)));
 }
 
 }}
