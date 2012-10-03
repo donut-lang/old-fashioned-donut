@@ -43,9 +43,9 @@ protected:
 	inline const weak_ptr<Layout>& root() const { return root_; }
 	inline const weak_ptr<Layout>& parent() const { return parent_; }
 public:
-	weak_ptr<Layout> getChildAt(const size_t index) const;
-	size_t getChildCount() const;
-	weak_ptr<Widget> getWidgetById(const string& id);
+	virtual weak_ptr<Layout> getChildAt(const size_t index) const = 0;
+	virtual size_t getChildCount() const = 0;
+	virtual weak_ptr<Widget> getWidgetById(const string& id) = 0;
 public:
 	virtual void render(const Area& area) = 0; /* OpenGLの座標の設定などを行なってしまう */
 	virtual void idle(const float delta_ms) = 0;

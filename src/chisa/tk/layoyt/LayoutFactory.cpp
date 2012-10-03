@@ -36,33 +36,47 @@ using std::string;
 using namespace tinyxml2;
 using namespace logging;
 
-LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, string& filename)
+LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, const string& filename)
 :log_(log)
 ,world_(world)
-,doc_()
+,doc_(new XMLDocument())
+,doc_free_by_me_(true)
 {
-	const int code = doc_.LoadFile(filename.c_str());
+	const int code = doc_->LoadFile(filename.c_str());
 	if(code != XML_NO_ERROR){
 		throw Exception(__FILE__, __LINE__, "Failed to read xml (%d): %s", code, filename.c_str());
 	}
-	this->root_ = doc_.RootElement();
+	this->root_ = doc_->RootElement();
 }
 
-LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, string& filename, const char* buffer, size_t lenb)
+LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, const string& filename, XMLDocument* document, bool doc_free_by_me)
+:log_(log)
+,world_(world)
+,doc_(document)
+,doc_free_by_me_(doc_free_by_me)
+{
+	this->root_ = doc_->RootElement();
+}
+
+LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, const string& filename, const char* buffer, size_t lenb)
 :log_(log)
 ,world_(world)
 ,doc_()
+,doc_free_by_me_(true)
 {
-	const int code = doc_.Parse(buffer, lenb);
+	const int code = doc_->Parse(buffer, lenb);
 	if(code != XML_NO_ERROR){
 		throw Exception(__FILE__, __LINE__, "Failed to read xml (%d): %s", code, filename.c_str());
 	}
-	this->root_ = doc_.RootElement();
+	this->root_ = doc_->RootElement();
 }
 
 LayoutFactory::~LayoutFactory()
 {
-	// TODO Auto-generated destructor stub
+	if(doc_free_by_me_){
+		delete this->doc_;
+	}
+	this->doc_ = nullptr;
 }
 
 shared_ptr<Layout> LayoutFactory::parseTree(weak_ptr<Layout> root, weak_ptr<Layout> parent, XMLElement* top)

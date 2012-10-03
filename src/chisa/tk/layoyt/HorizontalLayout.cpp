@@ -49,10 +49,10 @@ HorizontalLayout* HorizontalLayout::parseTree(LayoutFactory& factory, weak_ptr<L
 void HorizontalLayout::render(const Area& area)
 {
 	float offset = 0;
-	for(SplitCtx& ctx : this->children()){
-		const Area target(area.x()+offset, area.y(), ctx.size, area.height());
-		offset += ctx.size;
-		ctx.layout->render(target);
+	for(shared_ptr<SplitCtx> ctx : this->children()){
+		const Area target(area.x()+offset, area.y(), ctx->size, area.height());
+		offset += ctx->size;
+		ctx->layout->render(target);
 	}
 }
 
