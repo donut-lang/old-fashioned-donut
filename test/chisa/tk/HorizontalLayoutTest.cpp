@@ -87,6 +87,8 @@ TEST_F(HorizontalLayoutTest, BasicLayoutTest)
 	ASSERT_NEAR(100.0/3, root->getChildAt(2).lock()->size().width(), 1.0/10);
 	ASSERT_NEAR(100.0, root->getChildAt(2).lock()->size().height(), 1.0/10);
 
+	ASSERT_NEAR(100, root->size().width(), 1.0/10);
+	ASSERT_NEAR(100, root->size().height(), 1.0/10);
 }
 
 }}
