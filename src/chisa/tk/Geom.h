@@ -26,6 +26,16 @@
 namespace chisa {
 namespace tk {
 
+namespace geom {
+inline bool isUnspecified(const float width_or_height){
+	return std::isnan(width_or_height);
+};
+inline bool isSpecified(const float width_or_height){
+	return !std::isnan(width_or_height);
+};
+constexpr float Unspecified = NAN;
+}
+
 class Point
 {
 private:
@@ -62,7 +72,6 @@ public:
 	}
 	inline float width() const{ return width_; };
 	inline float height() const{ return height_; };
-	inline static bool isUnspecified(const float width_or_height){ return std::isnan(width_or_height); };
 	inline std::string toString() const{
 		return util::format("(Box %f %f)", width_, height_);
 	}

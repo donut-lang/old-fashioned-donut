@@ -47,8 +47,8 @@ def configure(conf):
 	conf.check_cfg(package='icu-uc')
 	conf.check(features='cxx cxxprogram', lib=['gtest','gtest_main','pthread'], cflags=['-Wall'], uselib_store='GTEST')
 
-TEST_SRC=TINYXML2_SRC+enum('src', [udir('src/entrypoint')])+enum(udir('src/entrypoint/pc/'))
-MAIN_SRC=TINYXML2_SRC+enum('src', [udir('src/entrypoint')])+enum('test')
+TEST_SRC=TINYXML2_SRC+enum('src', [udir('src/entrypoint')])+enum('test')
+MAIN_SRC=TINYXML2_SRC+enum('src', [udir('src/entrypoint')])+enum(udir('src/entrypoint/pc/'))
 
 def build(bld):
 	bld(features = 'cxx cprogram', source = MAIN_SRC, target = 'chisa', use=['OPENGL'])

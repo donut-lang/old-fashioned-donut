@@ -31,7 +31,6 @@ SplitLayout::SplitLayout(logging::Logger& log, weak_ptr<World> world, weak_ptr<L
 
 
 SplitLayout::~SplitLayout() {
-	// TODO Auto-generated destructor stub
 }
 
 void SplitLayout::addChild(const SplitDef& def, shared_ptr<Layout> layout)
@@ -43,7 +42,7 @@ void SplitLayout::addChild(const SplitDef& def, shared_ptr<Layout> layout)
 
 void SplitLayout::loadTree(LayoutFactory& factory, XMLElement* top)
 {
-	for(XMLNode* _node = top->FirstChild(); _node!= top->LastChild(); _node=_node->NextSibling()){
+	for(XMLNode* _node = top->FirstChild(); _node; _node=_node->NextSibling()){
 		XMLElement* elem = _node->ToElement();
 		if(!elem){
 			continue;
@@ -66,9 +65,11 @@ void SplitLayout::idle(const float delta_ms)
 	}
 }
 
-void SplitLayout::reshapeLinear(const float size)
+void SplitLayout::resetChildrenLayout()
 {
-
+	for(shared_ptr<SplitCtx> ctx : this->children()){
+		ctx->size=geom::Unspecified;
+	}
 }
 
 weak_ptr<Layout> SplitLayout::getChildAt(const size_t index) const
