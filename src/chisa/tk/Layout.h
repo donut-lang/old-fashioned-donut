@@ -32,6 +32,16 @@ using std::size_t;
 
 class Layout {
 	DISABLE_COPY_AND_ASSIGN(Layout);
+private:
+	logging::Logger& log_;
+	weak_ptr<World> world_;
+	weak_ptr<Layout> root_;
+	weak_ptr<Layout> parent_;
+protected:
+	inline const logging::Logger& log() const { return log_; }
+	inline const weak_ptr<World>& world() const { return world_; }
+	inline const weak_ptr<Layout>& root() const { return root_; }
+	inline const weak_ptr<Layout>& parent() const { return parent_; }
 public:
 	weak_ptr<Layout> getChildAt(const size_t index) const;
 	size_t getChildCount() const;
@@ -41,7 +51,9 @@ public:
 	virtual void idle(const float delta_ms) = 0;
 	virtual void reshape(const Box& area) = 0;
 public:
+	Layout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);
 	virtual ~Layout();
+	virtual string toString();
 };
 
 }}

@@ -20,7 +20,23 @@
 							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.321264630" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug">
 								<option id="gnu.both.asm.option.include.paths.1774283991" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/external/tinyxml2&quot;"/>
-									<listOptionValue builtIn="false" value="/home/psi/my/include"/>
+									<listOptionValue builtIn="false" value="../."/>
+									<listOptionValue builtIn="false" value="D:/software/dev/msys/mingw/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/cairo/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/ff/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/glut/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/nekomata/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/pcre/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/xml/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/antlr/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/curl-7.27.0-devel-mingw32/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/glib/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/gtest/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/icu/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/intl/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/perftools/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/readline/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/sdl/include"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.577815072" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
@@ -34,7 +50,23 @@
 								</option>
 								<option id="gnu.cpp.compiler.option.include.paths.1474971301" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/external/tinyxml2&quot;"/>
-									<listOptionValue builtIn="false" value="/home/psi/my/include"/>
+									<listOptionValue builtIn="false" value="../."/>
+									<listOptionValue builtIn="false" value="D:/software/dev/msys/mingw/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/cairo/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/ff/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/glut/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/nekomata/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/pcre/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/xml/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/antlr/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/curl-7.27.0-devel-mingw32/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/glib/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/gtest/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/icu/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/intl/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/perftools/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/readline/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/sdl/include"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1893314860" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
@@ -42,8 +74,24 @@
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.mingw.exe.debug.option.optimization.level.1461647757" name="Optimization Level" superClass="gnu.c.compiler.mingw.exe.debug.option.optimization.level" valueType="enumerated"/>
 								<option id="gnu.c.compiler.mingw.exe.debug.option.debugging.level.1085687735" name="Debug Level" superClass="gnu.c.compiler.mingw.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.include.paths.485206022" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="/home/psi/my/include"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/external/tinyxml2&quot;"/>
+									<listOptionValue builtIn="false" value="../."/>
+									<listOptionValue builtIn="false" value="D:/software/dev/msys/mingw/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/cairo/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/ff/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/glut/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/nekomata/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/pcre/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/xml/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/antlr/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/curl-7.27.0-devel-mingw32/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/glib/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/gtest/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/icu/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/intl/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/perftools/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/readline/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/sdl/include"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.2001117184" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -54,7 +102,25 @@
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="glut"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sicuuc"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sicudt"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="tinyxml2"/>
+								</option>
+								<option id="gnu.cpp.link.option.paths.323154902" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
+									<listOptionValue builtIn="false" value="../."/>
+									<listOptionValue builtIn="false" value="D:/software/dev/msys/mingw/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/cairo/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/ff/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/glut/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/nekomata/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/pcre/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/xml/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/antlr/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/curl-7.27.0-devel-mingw32/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/glib/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/gtest/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/icu/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/intl/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/perftools/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/readline/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/sdl/lib"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.136336194" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -102,7 +168,6 @@
 									<listOptionValue builtIn="false" value="__GXX_EXPERIMENTAL_CXX0X__=1"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.include.paths.1790042653" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="/home/psi/my/include"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/external/tinyxml2&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1751439980" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
@@ -111,7 +176,6 @@
 								<option defaultValue="gnu.c.optimization.level.most" id="gnu.c.compiler.mingw.exe.release.option.optimization.level.507495809" name="Optimization Level" superClass="gnu.c.compiler.mingw.exe.release.option.optimization.level" valueType="enumerated"/>
 								<option id="gnu.c.compiler.mingw.exe.release.option.debugging.level.199321820" name="Debug Level" superClass="gnu.c.compiler.mingw.exe.release.option.debugging.level" value="gnu.c.debugging.level.none" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.include.paths.1898955824" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="/home/psi/my/include"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/external/tinyxml2&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.714659249" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
@@ -158,7 +222,6 @@
 							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.2118220107" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug">
 								<option id="gnu.both.asm.option.include.paths.117552022" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/external/tinyxml2&quot;"/>
-									<listOptionValue builtIn="false" value="/home/psi/my/include"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.494668974" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
@@ -172,7 +235,6 @@
 								</option>
 								<option id="gnu.cpp.compiler.option.include.paths.731523964" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/external/tinyxml2&quot;"/>
-									<listOptionValue builtIn="false" value="/home/psi/my/include"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1527655495" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
@@ -181,7 +243,6 @@
 								<option id="gnu.c.compiler.mingw.exe.debug.option.debugging.level.1939944611" name="Debug Level" superClass="gnu.c.compiler.mingw.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.include.paths.108172336" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/external/tinyxml2&quot;"/>
-									<listOptionValue builtIn="false" value="/home/psi/my/include"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1019064013" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -194,7 +255,6 @@
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="gtest_main"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sicuuc"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sicudt"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="tinyxml2"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1874553160" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -310,8 +370,6 @@
 									<listOptionValue builtIn="false" value="__GXX_EXPERIMENTAL_CXX0X__=1"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.include.paths.1443617796" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="/usr/include/libxml2"/>
-									<listOptionValue builtIn="false" value="/home/psi/my/include"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/external/tinyxml2&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.505824163" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
@@ -320,8 +378,6 @@
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.exe.debug.option.optimization.level.2137357474" name="Optimization Level" superClass="gnu.c.compiler.exe.debug.option.optimization.level" valueType="enumerated"/>
 								<option id="gnu.c.compiler.exe.debug.option.debugging.level.857610536" name="Debug Level" superClass="gnu.c.compiler.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.include.paths.1326088703" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="/usr/include/libxml2"/>
-									<listOptionValue builtIn="false" value="/home/psi/my/include"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/external/tinyxml2&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.65999889" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>

@@ -16,21 +16,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Widget.h"
-#include <GL/gl.h>
+#include "VerticalLayout.h"
 
 namespace chisa {
 namespace tk {
+namespace layout {
 
-const static std::string TAG("Widget");
+VerticalLayout::VerticalLayout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent)
+:SplitLayout(log, world, root, parent)
+{
+	// TODO Auto-generated constructor stub
 
-//void Widget::render(const Area& area)
-//{
-//	if(log.t()) {
-//		log.t(TAG, std::string("rendering: ")+area.toString());
-//	}
-//	glScissor(area.x(), area.y(), area.width(), area.height());
-//	this->renderImpl();
-//}
+}
 
-}}
+VerticalLayout::~VerticalLayout() {
+	// TODO Auto-generated destructor stub
+}
+
+string VerticalLayout::toString()
+{
+	return util::format("(VerticalLayout %p)", this);
+}
+
+void VerticalLayout::render(const Area& area)
+{
+
+}
+void VerticalLayout::reshape(const Box& area)
+{
+
+}
+
+}}}

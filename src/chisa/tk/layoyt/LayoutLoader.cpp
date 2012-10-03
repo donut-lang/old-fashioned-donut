@@ -34,26 +34,26 @@ using tinyxml2::XMLDocument;
 using tinyxml2::XMLElement;
 using tinyxml2::XMLNode;
 
-shared_ptr<Layout> loadLayoutFromMemory(const char* buffer, const size_t len)
-{
-	XMLDocument doc;
-	doc.Parse(buffer, len);
-	XMLElement* root = doc.RootElement();
-}
-
-shared_ptr<Layout> loadLayoutFromFile(string& filename)
-{
-	FILE* f = fopen(filename.c_str(), "rb");
-	fseeko64(f, 0LLU, SEEK_SET);
-	const off64_t beg = ftello64(f);
-	fseeko64(f, 0LLU, SEEK_END);
-	const off64_t size = ftello64(f)-beg;
-	auto_ptr<char> dat(new char[size]);
-	if ( fread(dat.get(), size, 1, f) != 0 ){
-		throw logging::Exception(__FILE__, __LINE__, "Failed to read file: %s", filename.c_str());
-	}
-	return loadLayoutFromMemory(dat.get(), size);
-}
+//shared_ptr<Layout> loadLayoutFromMemory(const char* buffer, const size_t len)
+//{
+//	XMLDocument doc;
+//	doc.Parse(buffer, len);
+//	XMLElement* root = doc.RootElement();
+//}
+//
+//shared_ptr<Layout> loadLayoutFromFile(string& filename)
+//{
+//	FILE* f = fopen(filename.c_str(), "rb");
+//	fseeko64(f, 0LLU, SEEK_SET);
+//	const off64_t beg = ftello64(f);
+//	fseeko64(f, 0LLU, SEEK_END);
+//	const off64_t size = ftello64(f)-beg;
+//	auto_ptr<char> dat(new char[size]);
+//	if ( fread(dat.get(), size, 1, f) != 0 ){
+//		throw logging::Exception(__FILE__, __LINE__, "Failed to read file: %s", filename.c_str());
+//	}
+//	return loadLayoutFromMemory(dat.get(), size);
+//}
 
 }}}
 

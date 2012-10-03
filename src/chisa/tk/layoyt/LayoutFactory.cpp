@@ -21,6 +21,9 @@
 #include "../../logging/Exception.h"
 #include <memory>
 #include <tinyxml2.h>
+#include <algorithm>
+#include "HorizontalLayout.h"
+#include "VerticalLayout.h"
 
 namespace chisa {
 namespace tk {
@@ -33,24 +36,28 @@ using std::string;
 using namespace tinyxml2;
 using namespace logging;
 
-LayoutFactory::LayoutFactory(string& filename)
-:doc()
+LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, string& filename)
+:log_(log)
+,world_(world)
+,doc_()
 {
-	const int code = doc.LoadFile(filename.c_str());
+	const int code = doc_.LoadFile(filename.c_str());
 	if(code != XML_NO_ERROR){
 		throw Exception(__FILE__, __LINE__, "Failed to read xml (%d): %s", code, filename.c_str());
 	}
-	this->root = doc.RootElement();
+	this->root_ = doc_.RootElement();
 }
 
-LayoutFactory::LayoutFactory(string& filename, const char* buffer, size_t lenb)
-:doc()
+LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, string& filename, const char* buffer, size_t lenb)
+:log_(log)
+,world_(world)
+,doc_()
 {
-	const int code = doc.Parse(buffer, lenb);
+	const int code = doc_.Parse(buffer, lenb);
 	if(code != XML_NO_ERROR){
 		throw Exception(__FILE__, __LINE__, "Failed to read xml (%d): %s", code, filename.c_str());
 	}
-	this->root = doc.RootElement();
+	this->root_ = doc_.RootElement();
 }
 
 LayoutFactory::~LayoutFactory()
@@ -58,15 +65,22 @@ LayoutFactory::~LayoutFactory()
 	// TODO Auto-generated destructor stub
 }
 
-shared_ptr<Layout> LayoutFactory::parseInner(XMLElement* top)
+shared_ptr<Layout> LayoutFactory::parseTree(weak_ptr<Layout> root, weak_ptr<Layout> parent, XMLElement* top)
 {
 	string name = top->Name();
-	return shared_ptr<Layout>();
+	std::transform(name.begin(), name.end(), name.begin(), ::tolower);
+	if(name=="vertical"){
+	} else if(name=="horizontal") {
+		return shared_ptr<Layout>(HorizontalLayout::parseTree(*this, root, parent, top));
+	} else if(name=="tab") {
+	}else{
+		throw logging::Exception(__FILE__,__LINE__, "Unknwon Layout: %s", name.c_str());
+	}
 }
 
-shared_ptr<Layout> LayoutFactory::create()
+shared_ptr<Layout> LayoutFactory::parseTree()
 {
-	return this->parseInner(this->root);
+	return this->parseTree(weak_ptr<Layout>(), weak_ptr<Layout>(), this->root_);
 }
 
 }}}
