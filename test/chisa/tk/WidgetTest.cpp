@@ -30,7 +30,7 @@ protected:
 	Universe * universe;
 public:
 	void SetUp(){
-		universe = new Universe(log_trace);
+		universe = new Universe(log_trace, ".");
 	}
 	void TearDown(){
 		delete universe;
