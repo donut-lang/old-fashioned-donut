@@ -20,6 +20,7 @@
 #define Chisa_TK_WORLD_H__CPP_
 #include <memory>
 #include <string>
+#include <map>
 
 #include "Task.h"
 #include "Geom.h"
@@ -29,6 +30,7 @@ namespace chisa {
 namespace tk {
 class Layout;
 class Widget;
+class WidgetHandler;
 
 using std::shared_ptr;
 using std::weak_ptr;
@@ -39,7 +41,8 @@ private:
 	logging::Logger& log;
 	weak_ptr<World> self_;
 	TaskHandler taskHandler;
-	Stack<Layout> layoutStack;
+	Stack<shared_ptr<Layout> > layoutStack;
+	map<string, WidgetHandler*> widgetMap;
 	Box size_;
 public:
 	World(logging::Logger& log, weak_ptr<World> self);
@@ -55,6 +58,9 @@ private:
 	inline void size(const Box& newBox) { size_=newBox; };
 	void popLayout();
 	void pushLayout(const string& filename);
+public:
+	void replaceWidget(const string& widgetId, WidgetHandler* const newHandler);
+	void deleteWidget(const string& widgetId, WidgetHandler* const handler);
 };
 
 }}

@@ -32,7 +32,7 @@ namespace tk {
 class Universe {
 private:
 	logging::Logger& log;
-	Stack<World> worldStack;
+	Stack<shared_ptr<World> > worldStack;
 	Box size_;
 public:
 	Universe(logging::Logger& log);
@@ -45,8 +45,8 @@ public:
 	void idle(const float delta_ms);
 	void reshape(const Box& area);
 public: //worldからの通知
-	void createNewWorld();
-	void notifyWorldEnd(World& me);
+	void createNewWorld(const string& worldName);
+	void notifyWorldEnd(weak_ptr<World> me);
 };
 
 }}

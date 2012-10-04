@@ -32,7 +32,6 @@ WidgetFactory::WidgetFactory(logging::Logger& log, weak_ptr<World> world)
 
 WidgetFactory::~WidgetFactory()
 {
-	// TODO Auto-generated destructor stub
 }
 
 }}}

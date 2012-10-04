@@ -17,6 +17,7 @@
  */
 
 #include "WidgetWrapperLayout.h"
+#include "../World.h"
 
 namespace chisa {
 namespace tk {
@@ -29,6 +30,16 @@ WidgetWrapperLayout::WidgetWrapperLayout(logging::Logger& log, weak_ptr<World> w
 
 WidgetWrapperLayout::~WidgetWrapperLayout()
 {
+	if(parent_){
+		if(shared_ptr<World> world = this->world().lock()){
+			//ワールドの書き換えと、ウィジットへの現親レイアウトの通知
+		}
+	}else{
+		if(shared_ptr<World> world = this->world().lock()){
+			//ワールドからの削除と、ウィジットの開放
+			delete widget_;
+		}
+	}
 }
 
 WidgetWrapperLayout* WidgetWrapperLayout::parseTree(LayoutFactory& factory, weak_ptr<Layout> root, weak_ptr<Layout> parent, XMLElement* top)

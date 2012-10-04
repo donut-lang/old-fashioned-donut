@@ -26,6 +26,7 @@
 
 namespace chisa {
 namespace tk {
+class World;
 using std::string;
 using std::weak_ptr;
 using std::size_t;
@@ -39,10 +40,8 @@ private:
 	weak_ptr<Layout> parent_;
 	Box box_;
 protected:
-	inline const logging::Logger& log() const { return log_; }
-	inline const weak_ptr<World>& world() const { return world_; }
-	inline const weak_ptr<Layout>& root() const { return root_; }
-	inline const weak_ptr<Layout>& parent() const { return parent_; }
+	inline logging::Logger& log() const { return log_; }
+	inline weak_ptr<World> world() const { return world_; }
 public:
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const = 0;
 	virtual size_t getChildCount() const = 0;

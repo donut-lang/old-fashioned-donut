@@ -16,13 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WIDGETFACTORY_H_
-#define WIDGETFACTORY_H_
+#ifndef __CXX_CHISA_TK_WIDGET_WIDGETFACTORY_H_
+#define __CXX_CHISA_TK_WIDGET_WIDGETFACTORY_H_
 
 #include <memory>
+#include <tinyxml2.h>
 #include "../../logging/Logger.h"
 
 namespace chisa {
+namespace util {
+class ParamSet;
+class Param;
+}
 namespace tk {
 class World;
 class Widget;
@@ -38,8 +43,9 @@ public:
 	WidgetFactory(logging::Logger& log, weak_ptr<World> world);
 	virtual ~WidgetFactory();
 public:
-	shared_ptr<Widget> createWidget(const string& name);
+	shared_ptr<Widget> createWidget(tinyxml2::XMLElement* widgetElement);
+	shared_ptr<Widget> createWidget(const string& klass, bool inherit, std::shared_ptr<util::ParamSet> paramSet);
 };
 
 }}}
-#endif /* WIDGETFACTORY_H_ */
+#endif /* INCLUDE_GURAD */
