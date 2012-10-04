@@ -23,6 +23,7 @@
 namespace chisa {
 namespace tk {
 
+const static string& TAG("World");
 
 World::World(logging::Logger& log, weak_ptr<World> self)
 :log(log)
@@ -76,5 +77,25 @@ void World::popLayout()
 	}
 }
 
+void World::replaceWidget(const string& widgetId, WidgetHandler* const newHandler)
+{
+	map<string, WidgetHandler*>::iterator it = this->widgetMap.find(widgetId);
+	if(it != widgetMap.end()) {
+		this->widgetMap.erase(it);
+	}
+	this->widgetMap.insert(std::pair<string, WidgetHandler*>(widgetId, newHandler));
+}
+void World::deleteWidget(const string& widgetId, WidgetHandler* const handler)
+{
+	map<string, WidgetHandler*>::iterator it = this->widgetMap.find(widgetId);
+	if(it != widgetMap.end()) {
+		log.w(TAG, "Oops. WidgetID: %s not found.", widgetId.c_str());
+		return;
+	}
+	if(it->second != handler) {
+		log.w(TAG, "Oops. WidgetID: %s query delete, but the handler is not correct.", widgetId.c_str());
+	}
+	this->widgetMap.erase(it);
+}
 
 }}

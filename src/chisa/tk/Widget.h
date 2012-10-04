@@ -30,22 +30,14 @@ namespace tk {
 using std::shared_ptr;
 using std::weak_ptr;
 
-class World;
-class WidgetGroup;
+class Layout;
 
 class Widget {
 	DISABLE_COPY_AND_ASSIGN(Widget);
 private:
 	logging::Logger& log;
-	weak_ptr<World> world_;
-	weak_ptr<WidgetGroup> root_;
-	weak_ptr<WidgetGroup> parent_;
-protected:
-	weak_ptr<World> world() { return world_; };
-	weak_ptr<WidgetGroup> root() { return root_; };
-	weak_ptr<WidgetGroup> parent() { return parent_; };
 public:
-	Widget(logging::Logger& log, weak_ptr<World> world, weak_ptr<WidgetGroup> root, weak_ptr<WidgetGroup> parent);
+	Widget(logging::Logger& log);
 	virtual ~Widget();
 public: /* レンダリング関連 */
 	void invalidate();

@@ -103,7 +103,7 @@ std::shared_ptr<Param> Param::createParam(const std::string& name, const std::st
 	}else if(_type==Param::TypeString::Float){
 		return std::shared_ptr<Param>(new FloatParam(name, value));
 	}else{
-		return std::shared_ptr<Param>(new Param(name));
+		return std::shared_ptr<Param>(new StringParam(name, value));
 	}
 }
 
@@ -144,6 +144,7 @@ std::shared_ptr<Param> Param::parseTree(tinyxml2::XMLElement* elem)
 	if( !(type = elem->Attribute("type", nullptr) ) ){
 		type="string";
 	}
+	elem->FirstChildElement();
 	return Param::createParam(name, type, value);
 }
 void ParamSet::parseTree(std::shared_ptr<ParamSet> paramSet, tinyxml2::XMLElement* elem)

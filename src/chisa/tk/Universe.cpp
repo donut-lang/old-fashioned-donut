@@ -53,20 +53,24 @@ void Universe::reshape(const Box& area)
 	}
 }
 
-void Universe::notifyWorldEnd(World& me)
+void Universe::notifyWorldEnd(weak_ptr<World> me)
 {
-	const int idx = this->worldStack.indexOf(me);
-	if(idx < 0){
-		log.w(TAG, "oops. notified unknown world.");
-		return;
-	}
-	this->worldStack.erase(idx);
-
-	// 下の画面について、以前よりサイズが変わってるようならreshape
-	if(shared_ptr<World> topWorld = this->worldStack.top()){
-		if(!topWorld->size().near(this->size(), 1)){
-			topWorld->reshape(this->size());
+	if(shared_ptr<World> world = me.lock()){
+		const int idx = this->worldStack.indexOf(world);
+		if(idx < 0){
+			log.w(TAG, "oops. notified unknown world.");
+			return;
 		}
+		this->worldStack.erase(idx);
+
+		// 下の画面について、以前よりサイズが変わってるようならreshape
+		if(shared_ptr<World> topWorld = this->worldStack.top()){
+			if(!topWorld->size().near(this->size(), 1)){
+				topWorld->reshape(this->size());
+			}
+		}
+	}else{
+		log.w(TAG, "notified world end, but world was already dead.");
 	}
 }
 

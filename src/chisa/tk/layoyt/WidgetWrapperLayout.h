@@ -31,6 +31,9 @@ using namespace std;
 using namespace tinyxml2;
 
 class WidgetWrapperLayout: public chisa::tk::Layout {
+private:
+	WidgetWrapperLayout* parent_;
+	Widget* widget_;
 public:
 	WidgetWrapperLayout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);
 	virtual ~WidgetWrapperLayout();

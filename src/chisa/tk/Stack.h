@@ -34,43 +34,43 @@ template <typename T>
 class Stack
 {
 private:
-	deque<shared_ptr<T> > stack;
+	deque<T> stack;
 public:
-	shared_ptr<T> push(const shared_ptr<T> elm)
+	T push(const T elm)
 	{
 		stack.push_back(elm);
 		return elm;
 	}
 
-	shared_ptr<T> pop()
+	T pop()
 	{
 		if(stack.empty()){
-			return shared_ptr<T>();
+			return T();
 		}
-		shared_ptr<T> val = stack.back();
+		T val = stack.back();
 		stack.pop_back();
 		return val;
 	}
-	shared_ptr<T> top()
+	T top()
 	{
 		if(stack.empty()){
-			return shared_ptr<T>();
+			return T();
 		}
 		return stack.back();
 	}
-	shared_ptr<T> bottom()
+	T bottom()
 	{
 		if(stack.empty()){
-			return shared_ptr<T>();
+			return T();
 		}
 		return stack.front();
 	}
-	shared_ptr<T> replace(shared_ptr<T> elm)
+	T replace(T elm)
 	{
 		if(stack.empty()){
-			return shared_ptr<T>();
+			return T();
 		}
-		shared_ptr<T> val = stack.back();
+		T val = stack.back();
 		stack.assign(stack.size()-1, elm);
 		return val;
 	}
@@ -78,8 +78,8 @@ public:
 	{
 		return stack.size();
 	}
-	typedef typename deque<shared_ptr<T> >::const_iterator Iterator;
-	typedef typename deque<shared_ptr<T> >::reverse_iterator ReverseIterator;
+	typedef typename deque<T >::const_iterator Iterator;
+	typedef typename deque<T >::reverse_iterator ReverseIterator;
 	Iterator begin(){
 		return stack.begin();
 	}
@@ -92,27 +92,20 @@ public:
 	ReverseIterator rend(){
 		return stack.rend();
 	}
-	int indexOf(T& world){
+	int indexOf(T elm){
 		std::size_t i = 0;
-		for(shared_ptr<T>& sptr : stack){
-			if(sptr.get() == &world){
+		for(T& sptr : stack){
+			if(sptr == elm){
 				return i;
 			}
 			++i;
 		}
 		return -1;
 	}
-	int indexOf(shared_ptr<T> world)
-	{
-		if(!world.get()){
-			return 0;
-		}
-		return indexOf(*(world.get()));
-	}
-	shared_ptr<T> at(size_t idx)
+	T at(size_t idx)
 	{
 		if(idx >= stack.size()){
-			return shared_ptr<T>();
+			return T();
 		}
 		return stack.at(idx);
 	}
