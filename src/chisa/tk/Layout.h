@@ -30,6 +30,10 @@ class XMLElement;
 
 namespace chisa {
 namespace tk {
+namespace layout {
+class LayoutFactory;
+}
+
 class World;
 using std::string;
 using std::weak_ptr;
@@ -61,7 +65,7 @@ public:
 	virtual void idle(const float delta_ms) = 0;
 	virtual Box measure(const Box& constraint) = 0;
 	virtual void reshape(const Box& area) = 0;
-	virtual void loadXML(tinyxml2::XMLElement* const element) = 0;
+	virtual void loadXML(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element) = 0;
 	virtual string toString() = 0;
 public:
 	Layout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);
