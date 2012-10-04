@@ -16,12 +16,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef Chisa_UTIL_CLASS_UTILS_H__CPP_
-#define Chisa_UTIL_CLASS_UTILS_H__CPP_
+#ifndef WIDGETFACTORY_H_
+#define WIDGETFACTORY_H_
 
-#define DISABLE_COPY_AND_ASSIGN(klass)\
-private:\
-	klass(const klass& other);\
-	klass& operator=(const klass& other);
+#include <memory>
+#include "../../logging/Logger.h"
 
-#endif /* INCLUDE_GUARD */
+namespace chisa {
+namespace tk {
+class World;
+class Widget;
+namespace widget {
+
+using namespace std;
+
+class WidgetFactory {
+private:
+	logging::Logger& log_;
+	weak_ptr<World> world_;
+public:
+	WidgetFactory(logging::Logger& log, weak_ptr<World> world);
+	virtual ~WidgetFactory();
+public:
+	shared_ptr<Widget> createWidget(const string& name);
+};
+
+}}}
+#endif /* WIDGETFACTORY_H_ */

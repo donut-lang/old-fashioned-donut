@@ -19,11 +19,15 @@ namespace pc {
 
 tk::Universe* gUniverse;
 
+void tempInit()
+{
+	//暫定で接続コードとかおいてみる
+}
+
 void render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	gUniverse->render();
-	glfwSwapBuffers();
 }
 
 void reshape(int width, int height)
@@ -46,17 +50,22 @@ int main(int argc, char** argv) {
 
 		logging::Logger log(std::cout, logging::Logger::TRACE_);
 		gUniverse = new tk::Universe(log);
+		tempInit();
 		glfwSetWindowSizeCallback(reshape);
-		glfwSetWindowRefreshCallback(render);
+		//glfwSetWindowRefreshCallback(render);
 		bool running=true;
 		float last = glfwGetTime();
 		float nextFrame = last+(1.0/60);
 		while(running){
 			gUniverse->idle(1000.0/60);
-			const float now = glfwGetTime();
+			float now = glfwGetTime();
 			if(now < nextFrame){
-				glfwSleep(nextFrame-now);
+				render();
 				glfwSwapBuffers();
+				float now = glfwGetTime();
+				if(now < nextFrame){
+					glfwSleep(nextFrame-now);
+				}
 			}
 			nextFrame+=(1.0/60);
 			running = !glfwGetKey( GLFW_KEY_ESC ) && glfwGetWindowParam( GLFW_OPENED );
@@ -73,7 +82,7 @@ int main(int argc, char** argv) {
 		return -3;
 	}
 	glfwTerminate();
-	return EXIT_SUCCESS;
+	return 0;
 }
 
 }}}

@@ -16,12 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef Chisa_UTIL_CLASS_UTILS_H__CPP_
-#define Chisa_UTIL_CLASS_UTILS_H__CPP_
 
-#define DISABLE_COPY_AND_ASSIGN(klass)\
-private:\
-	klass(const klass& other);\
-	klass& operator=(const klass& other);
+#include "WidgetFactory.h"
 
-#endif /* INCLUDE_GUARD */
+namespace chisa {
+namespace tk {
+namespace widget {
+
+WidgetFactory::WidgetFactory(logging::Logger& log, weak_ptr<World> world)
+:log_(log)
+,world_(world)
+{
+
+}
+
+WidgetFactory::~WidgetFactory()
+{
+	// TODO Auto-generated destructor stub
+}
+
+}}}
