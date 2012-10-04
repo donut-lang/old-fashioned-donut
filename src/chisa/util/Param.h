@@ -20,7 +20,7 @@
 #define CHISA_UTIL_PARAM_H_
 
 #include <tinyxml2.h>
-#include <set>
+#include <map>
 #include <string>
 #include <memory>
 #include "class_utils.h"
@@ -39,26 +39,35 @@ public:
 		static constexpr const char* Float = "float";
 	};
 private:
-	std::string name_;
+	const std::string name_;
 public:
 	Param(const std::string& name):name_(name){};
 	virtual ~Param(){};
+public:
+	std::string name() const{ return name_; };
 public:
 	virtual bool queryInt(int* val) { return false; };
 	virtual bool queryString(std::string* val) { return false; };
 	virtual bool queryFloat(float* val) { return false; };
 public:
 	static std::shared_ptr<Param> createParam(const std::string& name, const std::string& type, const std::string& value);
+public:
+	static std::shared_ptr<Param> parseTree(tinyxml2::XMLElement* elem);
 };
 
 class ParamSet {
-	std::set<std::string, std::shared_ptr<Param> > params_;
+	std::map<std::string, std::shared_ptr<Param> > params_;
 public:
-	ParamSet();
-	virtual ~ParamSet();
+	ParamSet(){};
+	virtual ~ParamSet(){};
 public:
 	void add(const std::string& name, const std::string& type, const std::string& value);
+	void add(std::shared_ptr<Param> p);
 	std::shared_ptr<Param> get(const std::string& name);
+	bool has(const std::string& name);
+	std::size_t size() const{ return this->params_.size(); };
+public:
+	static void parseTree(std::shared_ptr<ParamSet> paramSet, tinyxml2::XMLElement* elem);
 };
 
 }}

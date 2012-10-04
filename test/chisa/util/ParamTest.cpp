@@ -85,4 +85,38 @@ TEST(ParamTest, FloatTest)
 	ASSERT_TRUE(isnan(val));
 }
 
+TEST(TreeTest, FloatTest)
+{
+	std::shared_ptr<ParamSet> pset(new ParamSet());
+	pset->add("intval", "int", "0");
+	tinyxml2::XMLDocument doc;
+	tinyxml2::XMLElement* pElem;
+	pElem = doc.NewElement("widget");
+	doc.InsertEndChild(pElem);
+
+	pElem = doc.NewElement("param");
+	pElem->SetAttribute("name", "str");
+	pElem->SetAttribute("value", "strvalue");
+	doc.RootElement()->InsertEndChild(pElem);
+
+	pElem = doc.NewElement("param");
+	pElem->SetAttribute("name", "intval");
+	pElem->SetAttribute("type", Param::TypeString::Integer);
+	pElem->SetAttribute("value", "256");
+	doc.RootElement()->InsertEndChild(pElem);
+
+	ParamSet::parseTree(pset, doc.RootElement());
+
+	ASSERT_EQ(2, pset->size());
+	ASSERT_TRUE(pset->get("intval") != nullptr);
+	int val = 0;
+	ASSERT_TRUE(pset->get("intval")->queryInt(&val));
+	ASSERT_EQ(val, 0);
+
+	std::string str;
+	ASSERT_TRUE(pset->get("str") != nullptr);
+	ASSERT_TRUE(pset->get("str")->queryString(&str));
+	ASSERT_EQ(str, "strvalue");
+}
+
 }}
