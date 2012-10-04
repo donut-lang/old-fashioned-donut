@@ -23,6 +23,8 @@
 namespace chisa {
 namespace util {
 
+using namespace tinyxml2;
+
 template<class T>
 T* constructParam(std::string& name, std::string& value){
 	return new T(name, value);
@@ -104,5 +106,57 @@ std::shared_ptr<Param> Param::createParam(const std::string& name, const std::st
 		return std::shared_ptr<Param>(new Param(name));
 	}
 }
+
+void ParamSet::add(std::shared_ptr<Param> p)
+{
+	this->params_.insert(std::pair<std::string, std::shared_ptr<Param> >(p->name(), p));
+}
+void ParamSet::add(const std::string& name, const std::string& type, const std::string& value)
+{
+	std::shared_ptr<Param> p = Param::createParam(name, type, value);
+	this->params_.insert(std::pair<std::string, std::shared_ptr<Param> >(name, p));
+}
+std::shared_ptr<Param> ParamSet::get(const std::string& name)
+{
+	auto p = this->params_.find(name);
+	if(p == this->params_.end()){
+		return std::shared_ptr<Param>();
+	}
+	return p->second;
+}
+
+bool ParamSet::has(const std::string& name)
+{
+	return this->params_.find(name) == this->params_.end();
+}
+
+std::shared_ptr<Param> Param::parseTree(tinyxml2::XMLElement* elem)
+{
+	std::string elemName(elem->Name());
+	std::transform(elemName.begin(), elemName.end(), elemName.begin(), ::tolower);
+
+	const char* name;
+	const char* type;
+	const char* value;
+	if(elemName != "param" || !(name = elem->Attribute("name", nullptr) ) || ! (value = elem->Attribute("value", nullptr)) ){
+		return std::shared_ptr<Param>();
+	}
+	if( !(type = elem->Attribute("type", nullptr) ) ){
+		type="string";
+	}
+	return Param::createParam(name, type, value);
+}
+void ParamSet::parseTree(std::shared_ptr<ParamSet> paramSet, tinyxml2::XMLElement* elem)
+{
+	for(XMLNode* it=elem->FirstChild(); it; it=it->NextSibling()){
+		if(XMLElement* paramElem = it->ToElement()){
+			std::shared_ptr<Param> p = Param::parseTree(paramElem);
+			if(p){
+				paramSet->add(p);
+			}
+		}
+	}
+}
+
 
 }}
