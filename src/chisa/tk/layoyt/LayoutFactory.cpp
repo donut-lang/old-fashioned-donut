@@ -84,16 +84,21 @@ shared_ptr<Layout> LayoutFactory::parseTree(weak_ptr<Layout> root, weak_ptr<Layo
 {
 	string name = top->Name();
 	std::transform(name.begin(), name.end(), name.begin(), ::tolower);
-	if(name=="vertical"){
-		return shared_ptr<Layout>(VerticalLayout::parseTree(*this, root, parent, top));
+	shared_ptr<Layout> layout;
+	if(false){
+	} else if(name=="vertical"){
+		std::shared_ptr<Layout>(new VerticalLayout(this->log(), this->world(), root, parent)).swap(layout);
 	} else if(name=="horizontal") {
-		return shared_ptr<Layout>(HorizontalLayout::parseTree(*this, root, parent, top));
+		std::shared_ptr<Layout>(new HorizontalLayout(this->log(), this->world(), root, parent)).swap(layout);
 	} else if(name=="tab") {
+//		std::shared_ptr<Layout>(new TabLayout(this->log(), this->world(), root, parent)).swap(layout);
 	} else if(name=="empty") {
-		return shared_ptr<Layout>(EmptyLayout::parseTree(*this, root, parent, top));
+		std::shared_ptr<Layout>(new EmptyLayout(this->log(), this->world(), root, parent)).swap(layout);
 	}else{
 		throw logging::Exception(__FILE__,__LINE__, "Unknwon Layout: %s", name.c_str());
 	}
+	layout->loadXML(top);
+	return layout;
 }
 
 shared_ptr<Layout> LayoutFactory::parseTree()

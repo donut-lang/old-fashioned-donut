@@ -29,13 +29,11 @@ class VerticalLayout: public chisa::tk::layout::SplitLayout {
 public:
 	VerticalLayout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);
 	virtual ~VerticalLayout();
-	virtual string toString();
 public:
-	static VerticalLayout* parseTree(LayoutFactory& factory, weak_ptr<Layout> root, weak_ptr<Layout> parent, XMLElement* top);
-public:
-	virtual void render(const Area& area);
-	virtual Box measure(const Box& constraint);
-	virtual void reshape(const Box& area);
+	virtual void render(const Area& area) override;
+	virtual Box measure(const Box& constraint) override;
+	virtual void reshape(const Box& area) override;
+	virtual string toString() override;
 };
 
 }}}

@@ -50,13 +50,6 @@ void VerticalLayout::reshape(const Box& area)
 {
 }
 
-VerticalLayout* VerticalLayout::parseTree(LayoutFactory& factory, weak_ptr<Layout> root, weak_ptr<Layout> parent, XMLElement* top)
-{
-	VerticalLayout* layout = new VerticalLayout(factory.log(), factory.world(), root, parent);
-	layout->loadTree(factory, top);
-	return layout;
-}
-
 Box VerticalLayout::measure(const Box& constraint)
 {
 	Box box(constraint.width(), geom::Unspecified);

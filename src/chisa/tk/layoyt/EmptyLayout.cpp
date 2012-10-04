@@ -18,6 +18,7 @@
 
 #include "EmptyLayout.h"
 #include "LayoutFactory.h"
+#include "../../util/StringUtil.h"
 
 namespace chisa {
 namespace tk {
@@ -66,10 +67,16 @@ Box EmptyLayout::measure(const Box& constraint)
 	);
 }
 
-EmptyLayout* EmptyLayout::parseTree(LayoutFactory& factory, weak_ptr<Layout> root, weak_ptr<Layout> parent, XMLElement* top)
+void EmptyLayout::loadXML(tinyxml2::XMLElement* element)
 {
-	return new EmptyLayout(factory.log(), factory.world(), root, parent);
+
 }
+
+string EmptyLayout::toString()
+{
+	return util::format("(EmptyLayout)");
+}
+
 
 
 }}}
