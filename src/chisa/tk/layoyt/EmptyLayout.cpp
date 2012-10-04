@@ -26,12 +26,10 @@ namespace layout {
 EmptyLayout::EmptyLayout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent)
 :Layout(log, world, root, parent)
 {
-	// TODO Auto-generated constructor stub
-
 }
 
-EmptyLayout::~EmptyLayout() {
-	// TODO Auto-generated destructor stub
+EmptyLayout::~EmptyLayout()
+{
 }
 
 weak_ptr<Layout> EmptyLayout::getChildAt(const size_t index) const
@@ -63,8 +61,8 @@ Box EmptyLayout::measure(const Box& constraint)
 	//とりあえず最大を主張しておく
 	// FIXME: とりあえず仮置きで「大きい値」
 	return Box(
-			geom::isUnspecified(constraint.width()) ? geom::VeryLarge : constraint.width(),
-			geom::isUnspecified(constraint.height()) ? geom::VeryLarge : constraint.height()
+		geom::isUnspecified(constraint.width()) ? geom::VeryLarge : constraint.width(),
+		geom::isUnspecified(constraint.height()) ? geom::VeryLarge : constraint.height()
 	);
 }
 
