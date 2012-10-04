@@ -25,6 +25,7 @@ namespace layout {
 
 SplitLayout::SplitLayout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent)
 :Layout(log, world, root, parent)
+,totalSize_(geom::Unspecified)
 {
 
 }
@@ -70,6 +71,7 @@ void SplitLayout::resetChildrenLayout()
 	for(shared_ptr<SplitCtx> ctx : this->children()){
 		ctx->size=geom::Unspecified;
 	}
+	this->totalSize_ = geom::Unspecified;
 }
 
 weak_ptr<Layout> SplitLayout::getChildAt(const size_t index) const

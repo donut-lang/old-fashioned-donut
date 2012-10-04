@@ -33,9 +33,10 @@ class Universe {
 private:
 	logging::Logger& log;
 	Stack<shared_ptr<World> > worldStack;
+	std::string basepath_;
 	Box size_;
 public:
-	Universe(logging::Logger& log);
+	Universe(logging::Logger& log, const std::string& basepath);
 	virtual ~Universe();
 	inline Box size() const{ return size_; };
 private:
