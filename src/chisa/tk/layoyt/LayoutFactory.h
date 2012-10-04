@@ -44,6 +44,7 @@ public:
 	inline logging::Logger& log() const { return log_; }
 	inline weak_ptr<World> world() const { return world_; }
 private:
+	std::string filename_;
 	XMLDocument* doc_;
 	const bool doc_free_by_me_;
 	XMLElement* root_;
@@ -53,7 +54,7 @@ public:
 	LayoutFactory(logging::Logger& log, weak_ptr<World> world, const string& filename, const char* buffer, std::size_t lenb);
 	virtual ~LayoutFactory();
 public:
-	shared_ptr<Layout> parseTree();
+	shared_ptr<Layout> parseTree(const string& layoutname);
 	shared_ptr<Layout> parseTree(weak_ptr<Layout> root, weak_ptr<Layout> parent, XMLElement* top);
 };
 

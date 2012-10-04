@@ -25,6 +25,8 @@
 #include "Task.h"
 #include "Geom.h"
 #include "Stack.h"
+#include "widget/WidgetFactory.h"
+#include "layoyt/LayoutFactory.h"
 
 namespace chisa {
 namespace tk {
@@ -38,16 +40,21 @@ using std::string;
 
 class World {
 private:
-	logging::Logger& log;
-	weak_ptr<World> self_;
-	TaskHandler taskHandler;
-	Stack<shared_ptr<Layout> > layoutStack;
-	map<string, WidgetHandler*> widgetMap;
+	logging::Logger& log_;
+	TaskHandler taskHandler_;
+	Stack<shared_ptr<Layout> > layoutStack_;
+	map<string, WidgetHandler*> widgetMap_;
+private:
+	layout::LayoutFactory* layoutFactory_;
+	widget::WidgetFactory* widgetFactory_;
+private:
 	Box size_;
 public:
-	World(logging::Logger& log, weak_ptr<World> self);
+	World(logging::Logger& log);
 	virtual ~World();
 	inline Box size() const{ return size_; };
+public:
+	void init(weak_ptr<World> _self, const string& worldname);
 public:
 	weak_ptr<Widget> getWidgetById(const string& id);
 public:

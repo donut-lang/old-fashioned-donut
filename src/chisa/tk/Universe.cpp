@@ -23,7 +23,9 @@ static const std::string TAG("Universe");
 namespace chisa {
 namespace tk {
 
-Universe::Universe(logging::Logger& log) : log(log) {
+Universe::Universe(logging::Logger& log)
+:log(log)
+{
 }
 
 Universe::~Universe() {

@@ -30,8 +30,11 @@ class HorizontalLayoutTest : public ::testing::Test
 {
 protected:
 	XMLDocument doc;
+	XMLElement* world;
 public:
 	void SetUp(){
+		world = doc.NewElement("world");
+		doc.InsertEndChild(world);
 	}
 	void TearDown(){
 	}
@@ -47,32 +50,33 @@ static XMLElement* addHorizontalChild(XMLDocument& doc, XMLElement* horizontal, 
 	return elem;
 }
 
-static XMLElement* newHorizontalChild(XMLDocument& doc)
+static XMLElement* newHorizontalChild(XMLDocument& doc, const std::string& id)
 {
 	XMLElement* elem = doc.NewElement("horizontal");
+	elem->SetAttribute("id", id.c_str());
 	return elem;
 }
 
 TEST_F(HorizontalLayoutTest, EmptyTest)
 {
-	XMLElement* hor = newHorizontalChild(doc);
-	doc.InsertFirstChild(hor);
+	XMLElement* hor = newHorizontalChild(doc, "test");
+	world->InsertFirstChild(hor);
 	LayoutFactory factory(log_trace, weak_ptr<World>(), fname, &doc, false);
-	shared_ptr<Layout> root = factory.parseTree();
+	shared_ptr<Layout> root = factory.parseTree("test");
 	ASSERT_EQ(root->getChildCount(), 0);
 	ASSERT_TRUE(util::startsWith(root->toString(), "(HorizontalLayout"));
 }
 
 TEST_F(HorizontalLayoutTest, BasicLayoutTest)
 {
-	XMLElement* hor = newHorizontalChild(doc);
-	doc.InsertFirstChild(hor);
+	XMLElement* hor = newHorizontalChild(doc, "test");
+	world->InsertFirstChild(hor);
 	addHorizontalChild(doc, hor, "empty", 2);
 	addHorizontalChild(doc, hor, "empty", 3);
 	addHorizontalChild(doc, hor, "empty", 1);
 
 	LayoutFactory factory(log_trace, weak_ptr<World>(), fname, &doc, false);
-	shared_ptr<Layout> root = factory.parseTree();
+	shared_ptr<Layout> root = factory.parseTree("test");
 
 	root->reshape(Box(100, 100));
 
@@ -93,14 +97,14 @@ TEST_F(HorizontalLayoutTest, BasicLayoutTest)
 
 TEST_F(HorizontalLayoutTest, MixedTest)
 {
-	XMLElement* hor = newHorizontalChild(doc);
-	doc.InsertFirstChild(hor);
+	XMLElement* hor = newHorizontalChild(doc, "test");
+	world->InsertFirstChild(hor);
 	addHorizontalChild(doc, hor, "empty", 2);
 	addHorizontalChild(doc, hor, "empty", geom::Unspecified, 10, 50);
 	addHorizontalChild(doc, hor, "empty", 1);
 
 	LayoutFactory factory(log_trace, weak_ptr<World>(), fname, &doc, false);
-	shared_ptr<Layout> root = factory.parseTree();
+	shared_ptr<Layout> root = factory.parseTree("test");
 
 	root->reshape(Box(100, 100));
 
