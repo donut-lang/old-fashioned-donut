@@ -40,6 +40,7 @@ using namespace logging;
 LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, const string& filename)
 :log_(log)
 ,world_(world)
+,filename_(filename)
 ,doc_(new XMLDocument())
 ,doc_free_by_me_(true)
 {
@@ -48,15 +49,22 @@ LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, const 
 		throw Exception(__FILE__, __LINE__, "Failed to read xml (%d): %s", code, filename.c_str());
 	}
 	this->root_ = doc_->RootElement();
+	if(!this->root_ && strcasecmp(this->root_->Name(), "world")){
+		throw Exception(__FILE__, __LINE__, "%s was parsed, but \"world\" element not found.", filename.c_str());
+	}
 }
 
 LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, const string& filename, XMLDocument* document, bool doc_free_by_me)
 :log_(log)
 ,world_(world)
+,filename_(filename)
 ,doc_(document)
 ,doc_free_by_me_(doc_free_by_me)
 {
 	this->root_ = doc_->RootElement();
+	if(!this->root_ && strcasecmp(this->root_->Name(), "world")){
+		throw Exception(__FILE__, __LINE__, "%s was parsed, but \"world\" element not found.", filename.c_str());
+	}
 }
 
 LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, const string& filename, const char* buffer, size_t lenb)
@@ -82,7 +90,7 @@ LayoutFactory::~LayoutFactory()
 
 shared_ptr<Layout> LayoutFactory::parseTree(weak_ptr<Layout> root, weak_ptr<Layout> parent, XMLElement* top)
 {
-	string name = top->Name();
+	string name(top->Name());
 	std::transform(name.begin(), name.end(), name.begin(), ::tolower);
 	shared_ptr<Layout> layout;
 	if(false){
@@ -101,9 +109,15 @@ shared_ptr<Layout> LayoutFactory::parseTree(weak_ptr<Layout> root, weak_ptr<Layo
 	return layout;
 }
 
-shared_ptr<Layout> LayoutFactory::parseTree()
+shared_ptr<Layout> LayoutFactory::parseTree(const string& layoutname)
 {
-	return this->parseTree(weak_ptr<Layout>(), weak_ptr<Layout>(), this->root_);
+	for(XMLElement* elem = this->root_->FirstChildElement(); elem; elem = elem->NextSiblingElement()){
+		const std::string elemId();
+		if(!strcasecmp(elem->Attribute("id", nullptr), layoutname.c_str())){
+			return this->parseTree(weak_ptr<Layout>(), weak_ptr<Layout>(), elem);
+		}
+	}
+	throw new logging::Exception(__FILE__, __LINE__, "Failed to load layout: %s in %s", layoutname.c_str(), this->filename_.c_str());
 }
 
 }}}

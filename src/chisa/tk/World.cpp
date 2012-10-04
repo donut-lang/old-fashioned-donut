@@ -25,52 +25,62 @@ namespace tk {
 
 const static string& TAG("World");
 
-World::World(logging::Logger& log, weak_ptr<World> self)
-:log(log)
-,self_(self)
-,taskHandler(log)
+World::World(logging::Logger& log)
+:log_(log)
+,taskHandler_(log)
 {
 
 }
 World::~World()
 {
-
+	if(this->layoutFactory_){
+		delete this->layoutFactory_;
+		this->layoutFactory_ = nullptr;
+	}
+	if(this->widgetFactory_){
+		delete this->widgetFactory_;
+		this->widgetFactory_ = nullptr;
+	}
 }
 
+
+void World::init(weak_ptr<World> _self, const string& worldname)
+{
+	this->layoutFactory_ = new layout::LayoutFactory(this->log_, _self, worldname);
+}
 
 void World::render()
 {
 	const Area area(0,0,this->size_.width(), this->size_.height());
-	if(shared_ptr<Layout> layout = this->layoutStack.top()){
+	if(shared_ptr<Layout> layout = this->layoutStack_.top()){
 		layout->render(area);
 	}
 }
 void World::idle(const float delta_ms)
 {
-	if(shared_ptr<Layout> layout = this->layoutStack.top()){
+	if(shared_ptr<Layout> layout = this->layoutStack_.top()){
 		layout->idle(delta_ms);
 	}
 }
 void World::reshape(const Box& area)
 {
 	this->size(area);
-	if(shared_ptr<Layout> layout = this->layoutStack.top()){
+	if(shared_ptr<Layout> layout = this->layoutStack_.top()){
 		layout->reshape(area);
 	}
 }
 
-void World::pushLayout(const string& filename)
+void World::pushLayout(const string& layoutname)
 {
-	layout::LayoutFactory factory(log, self_, filename);
-	shared_ptr<Layout> l = factory.parseTree();
-	this->layoutStack.push(l);
+	shared_ptr<Layout> l = this->layoutFactory_->parseTree(layoutname);
+	this->layoutStack_.push(l);
 	this->reshape(this->size_);
 }
 
 void World::popLayout()
 {
-	this->layoutStack.pop();
-	if(shared_ptr<Layout> layout = this->layoutStack.top()){
+	this->layoutStack_.pop();
+	if(shared_ptr<Layout> layout = this->layoutStack_.top()){
 		if(!this->size().near(layout->size(), 1)){
 			this->reshape(this->size());
 		}
@@ -79,23 +89,23 @@ void World::popLayout()
 
 void World::replaceWidget(const string& widgetId, WidgetHandler* const newHandler)
 {
-	map<string, WidgetHandler*>::iterator it = this->widgetMap.find(widgetId);
-	if(it != widgetMap.end()) {
-		this->widgetMap.erase(it);
+	map<string, WidgetHandler*>::iterator it = this->widgetMap_.find(widgetId);
+	if(it != widgetMap_.end()) {
+		this->widgetMap_.erase(it);
 	}
-	this->widgetMap.insert(std::pair<string, WidgetHandler*>(widgetId, newHandler));
+	this->widgetMap_.insert(std::pair<string, WidgetHandler*>(widgetId, newHandler));
 }
 void World::deleteWidget(const string& widgetId, WidgetHandler* const handler)
 {
-	map<string, WidgetHandler*>::iterator it = this->widgetMap.find(widgetId);
-	if(it != widgetMap.end()) {
-		log.w(TAG, "Oops. WidgetID: %s not found.", widgetId.c_str());
+	map<string, WidgetHandler*>::iterator it = this->widgetMap_.find(widgetId);
+	if(it != widgetMap_.end()) {
+		log_.w(TAG, "Oops. WidgetID: %s not found.", widgetId.c_str());
 		return;
 	}
 	if(it->second != handler) {
-		log.w(TAG, "Oops. WidgetID: %s query delete, but the handler is not correct.", widgetId.c_str());
+		log_.w(TAG, "Oops. WidgetID: %s query delete, but the handler is not correct.", widgetId.c_str());
 	}
-	this->widgetMap.erase(it);
+	this->widgetMap_.erase(it);
 }
 
 }}
