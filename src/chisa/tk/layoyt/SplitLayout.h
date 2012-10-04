@@ -67,15 +67,15 @@ public:
 private:
 	void addChild(const SplitDef& def, shared_ptr<Layout> layout);
 protected:
-	void loadTree(LayoutFactory& factory, XMLElement* top);
 	inline vector<shared_ptr<SplitCtx> >& children() { return children_; };
 	void resetChildrenLayout();
 	float calcTotalSize();
 public:
-	virtual void idle(const float delta_ms);
-	virtual weak_ptr<Layout> getChildAt(const size_t index) const;
-	virtual size_t getChildCount() const;
-	virtual weak_ptr<Widget> getWidgetById(const string& id);
+	virtual void loadXML(XMLElement* const element) override;
+	virtual void idle(const float delta_ms) override;
+	virtual weak_ptr<Layout> getChildAt(const size_t index) const override;
+	virtual size_t getChildCount() const override;
+	virtual weak_ptr<Widget> getWidgetById(const string& id) override;
 	inline static float max(const float a, const float b)
 	{
 		return isnan(b) ? a : (a > b ? a : b);

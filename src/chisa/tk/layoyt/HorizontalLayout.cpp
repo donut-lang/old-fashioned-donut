@@ -39,13 +39,6 @@ string HorizontalLayout::toString()
 	return util::format("(HorizontalLayout %p)", this);
 }
 
-HorizontalLayout* HorizontalLayout::parseTree(LayoutFactory& factory, weak_ptr<Layout> root, weak_ptr<Layout> parent, XMLElement* top)
-{
-	HorizontalLayout* layout = new HorizontalLayout(factory.log(), factory.world(), root, parent);
-	layout->loadTree(factory, top);
-	return layout;
-}
-
 void HorizontalLayout::render(const Area& area)
 {
 	float offset = 0;

@@ -40,7 +40,7 @@ void SplitLayout::addChild(const SplitDef& def, shared_ptr<Layout> layout)
 	this->children_.push_back(ctx);
 }
 
-void SplitLayout::loadTree(LayoutFactory& factory, XMLElement* top)
+void SplitLayout::loadXML(XMLElement* top)
 {
 	for(XMLNode* _node = top->FirstChild(); _node; _node=_node->NextSibling()){
 		XMLElement* elem = _node->ToElement();
@@ -54,7 +54,8 @@ void SplitLayout::loadTree(LayoutFactory& factory, XMLElement* top)
 		elem->QueryFloatAttribute("min", &min);
 		elem->QueryFloatAttribute("max", &max);
 		const SplitDef def(weight, min, max);
-		this->addChild(def, factory.parseTree(this->root(), this->parent(), elem));
+		//FIXME
+		//this->addChild(def, factory.parseTree(this->root(), this->parent(), elem));
 	}
 }
 

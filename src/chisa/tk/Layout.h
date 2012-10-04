@@ -24,6 +24,10 @@
 #include <memory>
 #include <string>
 
+namespace tinyxml2 {
+class XMLElement;
+}
+
 namespace chisa {
 namespace tk {
 class World;
@@ -42,6 +46,8 @@ private:
 protected:
 	inline logging::Logger& log() const { return log_; }
 	inline weak_ptr<World> world() const { return world_; }
+	inline weak_ptr<Layout> root() const { return root_; }
+	inline weak_ptr<Layout> parent() const { return parent_; }
 public:
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const = 0;
 	virtual size_t getChildCount() const = 0;
@@ -55,10 +61,11 @@ public:
 	virtual void idle(const float delta_ms) = 0;
 	virtual Box measure(const Box& constraint) = 0;
 	virtual void reshape(const Box& area) = 0;
+	virtual void loadXML(tinyxml2::XMLElement* const element) = 0;
+	virtual string toString() = 0;
 public:
 	Layout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);
 	virtual ~Layout();
-	virtual string toString();
 };
 
 }}

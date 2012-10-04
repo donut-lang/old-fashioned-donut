@@ -34,14 +34,11 @@ class HorizontalLayout: public chisa::tk::layout::SplitLayout {
 public:
 	HorizontalLayout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);
 	virtual ~HorizontalLayout();
-	virtual string toString();
 public:
-	static HorizontalLayout* parseTree(LayoutFactory& factory, weak_ptr<Layout> root, weak_ptr<Layout> parent, XMLElement* top);
-public:
-	virtual void render(const Area& area);
-	virtual void reshape(const Box& area);
-	virtual Box measure(const Box& constraint);
-};
+	virtual void render(const Area& area) override;
+	virtual Box measure(const Box& constraint) override;
+	virtual void reshape(const Box& area) override;
+	virtual string toString() override;};
 
 }}}
 #endif /* INCLUDE_GUARD */
