@@ -32,7 +32,10 @@ namespace chisa {
 namespace tk {
 class Layout;
 class Widget;
-class WidgetHandler;
+
+namespace layout {
+class WidgetWrapperLayout;
+}
 
 using std::shared_ptr;
 using std::weak_ptr;
@@ -43,7 +46,7 @@ private:
 	logging::Logger& log_;
 	TaskHandler taskHandler_;
 	Stack<shared_ptr<Layout> > layoutStack_;
-	map<string, WidgetHandler*> widgetMap_;
+	map<string, layout::WidgetWrapperLayout*> widgetMap_;
 private:
 	layout::LayoutFactory* layoutFactory_;
 	widget::WidgetFactory* widgetFactory_;
@@ -66,8 +69,8 @@ private:
 	void popLayout();
 	void pushLayout(const string& filename);
 public:
-	void replaceWidget(const string& widgetId, WidgetHandler* const newHandler);
-	void deleteWidget(const string& widgetId, WidgetHandler* const handler);
+	void replaceWidget(const string& widgetId, layout::WidgetWrapperLayout* const newHandler);
+	void deleteWidget(const string& widgetId, layout::WidgetWrapperLayout* const handler);
 };
 
 }}

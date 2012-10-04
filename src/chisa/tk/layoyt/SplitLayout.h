@@ -71,7 +71,7 @@ protected:
 	void resetChildrenLayout();
 	float calcTotalSize();
 public:
-	virtual void loadXML(XMLElement* const element) override;
+	virtual void loadXML(LayoutFactory* const factory, XMLElement* const element) override;
 	virtual void idle(const float delta_ms) override;
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const override;
 	virtual size_t getChildCount() const override;

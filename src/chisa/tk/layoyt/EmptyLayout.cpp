@@ -67,7 +67,7 @@ Box EmptyLayout::measure(const Box& constraint)
 	);
 }
 
-void EmptyLayout::loadXML(tinyxml2::XMLElement* element)
+void EmptyLayout::loadXML(LayoutFactory* const factory, tinyxml2::XMLElement* element)
 {
 
 }

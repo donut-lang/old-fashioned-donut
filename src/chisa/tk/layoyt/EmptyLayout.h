@@ -43,7 +43,7 @@ public:
 	virtual void idle(const float delta_ms) override;
 	virtual Box measure(const Box& constraint) override;
 	virtual void reshape(const Box& area) override;
-	virtual void loadXML(tinyxml2::XMLElement* element) override;
+	virtual void loadXML(LayoutFactory* const factory, tinyxml2::XMLElement* element) override;
 	virtual string toString() override;
 };
 
