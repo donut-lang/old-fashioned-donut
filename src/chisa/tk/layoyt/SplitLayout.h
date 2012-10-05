@@ -58,6 +58,12 @@ struct SplitCtx
 
 
 class SplitLayout: public chisa::tk::Layout {
+public:
+	struct AttrName{
+		static const std::string Weight;
+		static const std::string Max;
+		static const std::string Min;
+	};
 private:
 	vector<shared_ptr<SplitCtx> > children_;
 	float totalSize_;

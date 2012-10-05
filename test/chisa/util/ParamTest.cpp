@@ -66,19 +66,19 @@ TEST(ParamTest, FloatTest)
 	ASSERT_FALSE(p->queryString(0));
 	ASSERT_FLOAT_EQ(val, 0xDEADBEEF);
 
-	p = Param::createParam("name", "Float", "10.1");
+	p = Param::createParam("name", "float", "10.1");
 	ASSERT_TRUE(p->queryFloat(&val));
 	ASSERT_FALSE(p->queryInt(0));
 	ASSERT_FALSE(p->queryString(0));
 	ASSERT_FLOAT_EQ(val, 10.1);
 
-	p = Param::createParam("name", "Float", "nan");
+	p = Param::createParam("name", "float", "nan");
 	ASSERT_TRUE(p->queryFloat(&val));
 	ASSERT_FALSE(p->queryInt(0));
 	ASSERT_FALSE(p->queryString(0));
 	ASSERT_TRUE(isnan(val));
 
-	p = Param::createParam("name", "Float", "NAN");
+	p = Param::createParam("name", "float", "NAN");
 	ASSERT_TRUE(p->queryFloat(&val));
 	ASSERT_FALSE(p->queryInt(0));
 	ASSERT_FALSE(p->queryString(0));
@@ -101,7 +101,7 @@ TEST(TreeTest, FloatTest)
 
 	pElem = doc.NewElement("param");
 	pElem->SetAttribute("name", "intval");
-	pElem->SetAttribute("type", Param::TypeString::Integer);
+	pElem->SetAttribute("type", Param::TypeName::Integer);
 	pElem->SetAttribute("value", "256");
 	doc.RootElement()->InsertEndChild(pElem);
 

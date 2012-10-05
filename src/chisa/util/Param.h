@@ -32,8 +32,13 @@ namespace util {
 class Param {
 	DISABLE_COPY_AND_ASSIGN(Param);
 public:
-	class TypeString {
-	public:
+	static constexpr const char* ElemName="param";
+	struct AttrName{
+		static constexpr const char* Name = "name";
+		static constexpr const char* Type = "type";
+		static constexpr const char* Value = "value";
+	};
+	struct TypeName {
 		static constexpr const char* Integer = "int";
 		static constexpr const char* String = "string";
 		static constexpr const char* Float = "float";

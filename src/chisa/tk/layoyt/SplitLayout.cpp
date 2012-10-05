@@ -23,6 +23,10 @@ namespace chisa {
 namespace tk {
 namespace layout {
 
+const std::string SplitLayout::AttrName::Weight("split-weight");
+const std::string SplitLayout::AttrName::Max("split-max");
+const std::string SplitLayout::AttrName::Min("split-min");
+
 SplitLayout::SplitLayout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent)
 :Layout(log, world, root, parent)
 ,totalSize_(geom::Unspecified)
@@ -51,9 +55,9 @@ void SplitLayout::loadXML(LayoutFactory* const factory, XMLElement* top)
 		float weight = NAN;
 		float min = NAN;
 		float max = NAN;
-		elem->QueryFloatAttribute("weight", &weight);
-		elem->QueryFloatAttribute("min", &min);
-		elem->QueryFloatAttribute("max", &max);
+		elem->QueryFloatAttribute(AttrName::Weight.c_str(), &weight);
+		elem->QueryFloatAttribute(AttrName::Min.c_str(), &min);
+		elem->QueryFloatAttribute(AttrName::Max.c_str(), &max);
 		const SplitDef def(weight, min, max);
 		this->addChild(def, factory->parseTree(this->root(), this->parent(), elem));
 	}
