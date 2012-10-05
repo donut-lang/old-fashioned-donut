@@ -55,6 +55,9 @@ void World::init(weak_ptr<World> _self)
 	if(shared_ptr<Universe> universe = this->universe_.lock()){
 		this->layoutFactory_ = new layout::LayoutFactory(this->log_, _self, universe->resolveWorldFilepath(this->name_, "layout.xml"));
 	}
+
+
+	this->pushLayout("main");
 }
 
 void World::render()
