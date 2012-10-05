@@ -114,6 +114,9 @@ public:
 		this->box_ = other.box_;
 		return *this;
 	}
+	inline bool near(const Area& other, const float precision) const{
+		return this->box_.near(other.box_, precision) && point_.near(other.point_, precision);
+	}
 	inline Area():point_(), box_(){};
 	inline Point point() const{return point_;};
 	inline Box box() const{return box_;};

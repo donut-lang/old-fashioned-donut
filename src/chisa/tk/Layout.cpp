@@ -39,4 +39,10 @@ string Layout::toString()
 	return util::format("(Layout %p)", this);
 }
 
+void Layout::reshape(const Area& area)
+{
+	this->reshapeImpl(area);
+	this->area_=area;
+}
+
 }}

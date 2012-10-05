@@ -42,9 +42,10 @@ public:
 	virtual void render(const Area& area) override;
 	virtual void idle(const float delta_ms) override;
 	virtual Box measure(const Box& constraint) override;
-	virtual void reshape(const Box& area) override;
 	virtual void loadXML(LayoutFactory* const factory, tinyxml2::XMLElement* element) override;
 	virtual string toString() override;
+protected:
+	virtual void reshapeImpl(const Area& area) override;
 };
 
 }}}

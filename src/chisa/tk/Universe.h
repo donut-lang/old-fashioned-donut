@@ -34,17 +34,17 @@ private:
 	logging::Logger& log;
 	Stack<shared_ptr<World> > worldStack;
 	std::string basepath_;
-	Box size_;
+	Area area_;
 public:
 	Universe(logging::Logger& log, const std::string& basepath);
 	virtual ~Universe();
-	inline Box size() const{ return size_; };
+	inline Area area() const{ return area_; };
 private:
-	inline void size(const Box& newBox) { size_=newBox; };
+	inline void area(const Area& newArea) { area_=newArea; };
 public:
 	void render();
 	void idle(const float delta_ms);
-	void reshape(const Box& area);
+	void reshape(const Area& area);
 public: //worldからの通知
 	void createNewWorld(const string& worldName);
 	void notifyWorldEnd(weak_ptr<World> me);

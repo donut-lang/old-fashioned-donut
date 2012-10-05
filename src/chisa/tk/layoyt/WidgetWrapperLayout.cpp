@@ -69,9 +69,8 @@ Box WidgetWrapperLayout::measure(const Box& constraint)
 {
 
 }
-void WidgetWrapperLayout::reshape(const Box& area)
+void WidgetWrapperLayout::reshapeImpl(const Area& area)
 {
-	this->size(area);
 }
 
 }}}

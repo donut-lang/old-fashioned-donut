@@ -46,7 +46,7 @@ private:
 	weak_ptr<World> world_;
 	weak_ptr<Layout> root_;
 	weak_ptr<Layout> parent_;
-	Box box_;
+	Area area_;
 protected:
 	inline logging::Logger& log() const { return log_; }
 	inline weak_ptr<World> world() const { return world_; }
@@ -57,16 +57,16 @@ public:
 	virtual size_t getChildCount() const = 0;
 	virtual weak_ptr<Widget> getWidgetById(const string& id) = 0;
 public:
-	Box size() const {return box_;};
-protected:
-	void size(const Box& newBox){ this->box_ = newBox; };
+	Area area() const {return area_;};
 public:
 	virtual void render(const Area& area) = 0; /* OpenGLの座標の設定などを行なってしまう */
 	virtual void idle(const float delta_ms) = 0;
 	virtual Box measure(const Box& constraint) = 0;
-	virtual void reshape(const Box& area) = 0;
 	virtual void loadXML(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element) = 0;
 	virtual string toString() = 0;
+	void reshape(const Area& area);
+protected:
+	virtual void reshapeImpl(const Area& area) = 0;
 public:
 	Layout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);
 	virtual ~Layout();

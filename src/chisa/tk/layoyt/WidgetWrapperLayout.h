@@ -40,14 +40,15 @@ public:
 public:
 	static WidgetWrapperLayout* parseTree(LayoutFactory& factory, weak_ptr<Layout> root, weak_ptr<Layout> parent, XMLElement* top);
 public:
-	virtual weak_ptr<Layout> getChildAt(const size_t index) const;
-	virtual size_t getChildCount() const;
-	virtual weak_ptr<Widget> getWidgetById(const string& id);
+	virtual weak_ptr<Layout> getChildAt(const size_t index) const override;
+	virtual size_t getChildCount() const override;
+	virtual weak_ptr<Widget> getWidgetById(const string& id) override;
 public:
-	virtual void render(const Area& area);
-	virtual void idle(const float delta_ms);
-	virtual Box measure(const Box& constraint);
-	virtual void reshape(const Box& area);
+	virtual void render(const Area& area) override;
+	virtual void idle(const float delta_ms) override;
+	virtual Box measure(const Box& constraint) override;
+protected:
+	virtual void reshapeImpl(const Area& area) override;
 };
 
 }}}

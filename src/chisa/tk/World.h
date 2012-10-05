@@ -51,11 +51,11 @@ private:
 	layout::LayoutFactory* layoutFactory_;
 	widget::WidgetFactory* widgetFactory_;
 private:
-	Box size_;
+	Area area_;
 public:
 	World(logging::Logger& log);
 	virtual ~World();
-	inline Box size() const{ return size_; };
+	inline Area area() const{ return area_; };
 public:
 	void init(weak_ptr<World> _self, const string& worldname);
 public:
@@ -63,9 +63,9 @@ public:
 public:
 	void render();
 	void idle(const float delta_ms);
-	void reshape(const Box& area);
+	void reshape(const Area& area);
 private:
-	inline void size(const Box& newBox) { size_=newBox; };
+	inline void area(const Area& newArea) { area_=newArea; };
 	void popLayout();
 	void pushLayout(const string& filename);
 public:

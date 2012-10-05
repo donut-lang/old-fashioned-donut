@@ -53,9 +53,8 @@ void EmptyLayout::idle(const float delta_ms)
 {
 	// 何もしない。
 }
-void EmptyLayout::reshape(const Box& area)
+void EmptyLayout::reshapeImpl(const Area& area)
 {
-	this->size(area);
 }
 Box EmptyLayout::measure(const Box& constraint)
 {
