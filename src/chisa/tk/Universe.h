@@ -36,17 +36,6 @@ private:
 	std::string basepath_;
 	Area area_;
 	weak_ptr<Universe> self_;
-private:
-	Universe(logging::Logger& log, const std::string& basepath);
-	void init(weak_ptr<Universe> _self);
-public:
-	static shared_ptr<Universe> create(logging::Logger& log, const std::string& basepath)
-	{
-		shared_ptr<Universe> ptr(new Universe(log, basepath));
-		ptr->init(ptr);
-		return ptr;
-	}
-	virtual ~Universe();
 public:
 	inline Area area() const{ return area_; };
 private:
@@ -60,6 +49,20 @@ public: //worldからの通知
 	void notifyWorldEnd(weak_ptr<World> me);
 public:
 	std::string resolveWorldFilepath(const std::string& worldname, const std::string& filename);
+/******************************************************************************
+ * 生成
+ ******************************************************************************/
+private:
+	Universe(logging::Logger& log, const std::string& basepath);
+	void init(weak_ptr<Universe> _self);
+public:
+	static shared_ptr<Universe> create(logging::Logger& log, const std::string& basepath)
+	{
+		shared_ptr<Universe> ptr(new Universe(log, basepath));
+		ptr->init(ptr);
+		return ptr;
+	}
+	virtual ~Universe();
 };
 
 }}
