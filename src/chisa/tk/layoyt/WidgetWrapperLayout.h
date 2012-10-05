@@ -38,8 +38,6 @@ public:
 	WidgetWrapperLayout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);
 	virtual ~WidgetWrapperLayout();
 public:
-	static WidgetWrapperLayout* parseTree(LayoutFactory& factory, weak_ptr<Layout> root, weak_ptr<Layout> parent, XMLElement* top);
-public:
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const override;
 	virtual size_t getChildCount() const override;
 	virtual weak_ptr<Widget> getWidgetById(const string& id) override;

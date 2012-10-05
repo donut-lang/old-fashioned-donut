@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "GL/gl.h"
 #include "WidgetWrapperLayout.h"
 #include "../World.h"
 
@@ -37,18 +38,14 @@ WidgetWrapperLayout::~WidgetWrapperLayout()
 	}else{
 		if(shared_ptr<World> world = this->world().lock()){
 			//ワールドからの削除と、ウィジットの開放
-			delete widget_;
+			//delete widget_;
 		}
 	}
 }
 
-WidgetWrapperLayout* WidgetWrapperLayout::parseTree(LayoutFactory& factory, weak_ptr<Layout> root, weak_ptr<Layout> parent, XMLElement* top)
-{
-
-}
 weak_ptr<Layout> WidgetWrapperLayout::getChildAt(const size_t index) const
 {
-
+	return weak_ptr<Layout>();
 }
 size_t WidgetWrapperLayout::getChildCount() const
 {
@@ -59,7 +56,11 @@ weak_ptr<Widget> WidgetWrapperLayout::getWidgetById(const string& id)
 }
 void WidgetWrapperLayout::render(const Area& area)
 {
-
+	//glScissor(area.x(), area.y(), area.width(), area.height());
+	//glPushMatrix();
+	{
+	}
+	//glPopMatrix();
 }
 void WidgetWrapperLayout::idle(const float delta_ms)
 {
@@ -67,14 +68,14 @@ void WidgetWrapperLayout::idle(const float delta_ms)
 }
 Box WidgetWrapperLayout::measure(const Box& constraint)
 {
-
+	return(Box(100,100));
 }
 void WidgetWrapperLayout::reshapeImpl(const Area& area)
 {
 }
 std::string WidgetWrapperLayout::toString()
 {
-	return "aaa";
+	return "(WidgetWrapperLayout )";
 }
 void WidgetWrapperLayout::loadXML(LayoutFactory* const factory, XMLElement* const element)
 {
