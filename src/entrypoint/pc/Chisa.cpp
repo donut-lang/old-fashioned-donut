@@ -17,11 +17,15 @@ namespace chisa {
 namespace entrypoint {
 namespace pc {
 
-tk::Universe* gUniverse;
+logging::Logger log(std::cout, logging::Logger::TRACE_);
+shared_ptr<tk::Universe> gUniverse;
 
 void tempInit()
 {
+	std::shared_ptr<tk::Universe>(new tk::Universe(log, "./universe")).swap(gUniverse);
+	gUniverse->init(weak_ptr<tk::Universe>(gUniverse));
 	//暫定で接続コードとかおいてみる
+	gUniverse->createNewWorld("test");
 }
 
 void render()
@@ -32,7 +36,7 @@ void render()
 
 void reshape(int width, int height)
 {
-	gUniverse->reshape(tk::Box(width, height));
+	gUniverse->reshape(tk::Area(0,0,width, height));
 }
 
 int main(int argc, char** argv) {
@@ -48,8 +52,6 @@ int main(int argc, char** argv) {
 
 		glfwSetWindowTitle("Chisa");
 
-		logging::Logger log(std::cout, logging::Logger::TRACE_);
-		gUniverse = new tk::Universe(log);
 		tempInit();
 		glfwSetWindowSizeCallback(reshape);
 		//glfwSetWindowRefreshCallback(render);
