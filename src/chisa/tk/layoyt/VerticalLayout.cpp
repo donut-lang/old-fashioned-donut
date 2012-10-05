@@ -46,7 +46,7 @@ void VerticalLayout::render(const Area& area)
 		ctx->layout->render(target);
 	}
 }
-void VerticalLayout::reshape(const Box& area)
+void VerticalLayout::reshapeImpl(const Area& area)
 {
 }
 

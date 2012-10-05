@@ -32,8 +32,9 @@ public:
 public:
 	virtual void render(const Area& area) override;
 	virtual Box measure(const Box& constraint) override;
-	virtual void reshape(const Box& area) override;
 	virtual string toString() override;
+protected:
+	virtual void reshapeImpl(const Area& area) override;
 };
 
 }}}

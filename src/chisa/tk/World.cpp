@@ -51,9 +51,8 @@ void World::init(weak_ptr<World> _self, const string& worldname)
 
 void World::render()
 {
-	const Area area(0,0,this->size_.width(), this->size_.height());
 	if(shared_ptr<Layout> layout = this->layoutStack_.top()){
-		layout->render(area);
+		layout->render(this->area());
 	}
 }
 void World::idle(const float delta_ms)
@@ -62,27 +61,27 @@ void World::idle(const float delta_ms)
 		layout->idle(delta_ms);
 	}
 }
-void World::reshape(const Box& area)
+void World::reshape(const Area& area)
 {
-	this->size(area);
 	if(shared_ptr<Layout> layout = this->layoutStack_.top()){
 		layout->reshape(area);
 	}
+	this->area(area);
 }
 
 void World::pushLayout(const string& layoutname)
 {
 	shared_ptr<Layout> l = this->layoutFactory_->parseTree(layoutname);
 	this->layoutStack_.push(l);
-	this->reshape(this->size_);
+	this->reshape(this->area());
 }
 
 void World::popLayout()
 {
 	this->layoutStack_.pop();
 	if(shared_ptr<Layout> layout = this->layoutStack_.top()){
-		if(!this->size().near(layout->size(), 1)){
-			this->reshape(this->size());
+		if(!this->area().near(layout->area(), 1)){
+			this->reshape(this->area());
 		}
 	}
 }

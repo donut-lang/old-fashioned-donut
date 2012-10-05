@@ -49,17 +49,18 @@ void HorizontalLayout::render(const Area& area)
 	}
 }
 
-void HorizontalLayout::reshape(const Box& area)
+void HorizontalLayout::reshapeImpl(const Area& area)
 {
-	const Box calc = this->measure(area);
+	const Box calc = this->measure(area.box());
 	const float scale = area.width()/calc.width();
+	float offset = 0;
 	for(shared_ptr<SplitCtx> ctx : this->children()){
 		if(scale < 1){
 			ctx->size *= scale;
 		}
-		ctx->layout->reshape(Box(ctx->size, area.height()));
+		ctx->layout->reshape(Area(area.x()+offset, area.y(), ctx->size, area.height()));
+		offset += ctx->size;
 	}
-	this->size(Box((scale < 1 ? area.width() : calc.width()), area.height()));
 }
 
 Box HorizontalLayout::measure(const Box& constraint)

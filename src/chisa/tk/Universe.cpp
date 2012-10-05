@@ -45,15 +45,15 @@ void Universe::idle(const float delta_ms)
 		topWorld->idle(delta_ms);
 	}
 }
-void Universe::reshape(const Box& area)
+void Universe::reshape(const Area& area)
 {
 	if(log.t()){
 		log.t(TAG, "reshaped: %s", area.toString().c_str());
 	}
-	this->size(area);
 	if(shared_ptr<World> topWorld = this->worldStack.top()){
 		topWorld->reshape(area);
 	}
+	this->area(area);
 }
 
 void Universe::notifyWorldEnd(weak_ptr<World> me)
@@ -68,8 +68,8 @@ void Universe::notifyWorldEnd(weak_ptr<World> me)
 
 		// 下の画面について、以前よりサイズが変わってるようならreshape
 		if(shared_ptr<World> topWorld = this->worldStack.top()){
-			if(!topWorld->size().near(this->size(), 1)){
-				topWorld->reshape(this->size());
+			if(!topWorld->area().near(this->area(), 1)){
+				topWorld->reshape(this->area());
 			}
 		}
 	}else{
