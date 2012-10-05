@@ -36,11 +36,18 @@ private:
 	std::string basepath_;
 	Area area_;
 	weak_ptr<Universe> self_;
-public:
+private:
 	Universe(logging::Logger& log, const std::string& basepath);
+	void init(weak_ptr<Universe> _self);
+public:
+	static shared_ptr<Universe> create(logging::Logger& log, const std::string& basepath)
+	{
+		shared_ptr<Universe> ptr(new Universe(log, basepath));
+		ptr->init(ptr);
+		return ptr;
+	}
 	virtual ~Universe();
 public:
-	void init(weak_ptr<Universe> _self);
 	inline Area area() const{ return area_; };
 private:
 	inline void area(const Area& newArea) { area_=newArea; };

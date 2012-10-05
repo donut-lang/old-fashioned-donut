@@ -65,8 +65,7 @@ void Universe::reshape(const Area& area)
 void Universe::createNewWorld(const string& worldName)
 {
 	const string worldBasePath = this->basepath_+util::FileUtil::Sep+worldName;
-	shared_ptr<World> newWorld(new World(log,this->self_, worldName));
-	newWorld->init(weak_ptr<World>(newWorld));
+	shared_ptr<World> newWorld(World::create(log,this->self_, worldName));
 	newWorld->reshape(this->area());
 	this->worldStack.push(newWorld);
 }

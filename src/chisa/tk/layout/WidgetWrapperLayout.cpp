@@ -24,8 +24,7 @@ namespace chisa {
 namespace tk {
 namespace layout {
 
-WidgetWrapperLayout::WidgetWrapperLayout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent)
-:Layout(log, world, root, parent)
+CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(WidgetWrapperLayout)
 ,parent_(nullptr)
 ,widget_(nullptr)
 {

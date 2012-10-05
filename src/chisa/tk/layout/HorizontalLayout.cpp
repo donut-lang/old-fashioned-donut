@@ -23,10 +23,8 @@ namespace chisa {
 namespace tk {
 namespace layout {
 
-HorizontalLayout::HorizontalLayout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent)
-:SplitLayout(log, world, root, parent)
+CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(HorizontalLayout, SplitLayout)
 {
-	// TODO Auto-generated constructor stub
 
 }
 
