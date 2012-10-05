@@ -22,7 +22,7 @@ shared_ptr<tk::Universe> gUniverse;
 
 void tempInit()
 {
-	std::shared_ptr<tk::Universe>(tk::Universe::create<tk::Universe>(log, "./universe")).swap(gUniverse);
+	std::shared_ptr<tk::Universe>(tk::Universe::create(log, "./universe")).swap(gUniverse);
 	//暫定で接続コードとかおいてみる
 	gUniverse->createNewWorld("test");
 }

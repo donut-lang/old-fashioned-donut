@@ -41,6 +41,7 @@ WidgetWrapperLayout::~WidgetWrapperLayout()
 			if(world->replaceWidget(this->widgetId_, this->parent_)) {
 				this->widget_->updateWrapper(this->self());
 			}
+			this->widget_->reshape(this->parent_->area().box());
 		}
 	}else{
 		if(shared_ptr<World> world = this->world().lock()){

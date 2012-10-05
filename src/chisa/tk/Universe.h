@@ -49,9 +49,9 @@ public: //worldからの通知
 	void notifyWorldEnd(weak_ptr<World> me);
 public:
 	std::string resolveWorldFilepath(const std::string& worldname, const std::string& filename);
-/******************************************************************************
- * 生成
- ******************************************************************************/
+	/******************************************************************************
+	 * 生成
+	 ******************************************************************************/
 private:
 	Universe(logging::Logger& log, const std::string& basepath);
 	void init(weak_ptr<Universe> _self);
