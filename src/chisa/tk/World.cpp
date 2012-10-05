@@ -95,23 +95,25 @@ void World::popLayout()
 	}
 }
 
-void World::replaceWidget(const string& widgetId, layout::WidgetWrapperLayout* const newHandler)
+bool World::replaceWidget(const string& widgetId, layout::WidgetWrapperLayout* const newHandler)
 {
 	map<string, layout::WidgetWrapperLayout*>::iterator it = this->widgetMap_.find(widgetId);
 	if(it != widgetMap_.end()) {
 		this->widgetMap_.erase(it);
 	}
 	this->widgetMap_.insert(std::pair<string, layout::WidgetWrapperLayout*>(widgetId, newHandler));
+	return true;
 }
-void World::deleteWidget(const string& widgetId, layout::WidgetWrapperLayout* const handler)
+bool World::deleteWidget(const string& widgetId, layout::WidgetWrapperLayout* const handler)
 {
 	map<string, layout::WidgetWrapperLayout*>::iterator it = this->widgetMap_.find(widgetId);
 	if(it != widgetMap_.end()) {
 		log_.w(TAG, "Oops. WidgetID: %s not found.", widgetId.c_str());
-		return;
+		return false;
 	}
 	if(it->second != handler) {
 		log_.w(TAG, "Oops. WidgetID: %s query delete, but the handler is not correct.", widgetId.c_str());
+		return false;
 	}
 	this->widgetMap_.erase(it);
 }

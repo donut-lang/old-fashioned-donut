@@ -35,10 +35,13 @@ class Layout;
 class Widget {
 	DISABLE_COPY_AND_ASSIGN(Widget);
 private:
-	logging::Logger& log;
+	logging::Logger& log_;
+	weak_ptr<Layout> wrapper_;
 public:
 	Widget(logging::Logger& log);
 	virtual ~Widget();
+public:
+	void updateWrapper(weak_ptr<Layout> wrapper) { this->wrapper_ = wrapper; };
 public: /* レンダリング関連 */
 	void invalidate();
 public:

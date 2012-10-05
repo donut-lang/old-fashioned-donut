@@ -29,6 +29,11 @@ Layout::Layout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> roo
 {
 
 }
+
+void Layout::init(weak_ptr<Layout> _self)
+{
+	this->self_.swap(_self);
+}
 Layout::~Layout()
 {
 

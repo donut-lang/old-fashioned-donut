@@ -115,6 +115,7 @@ shared_ptr<Layout> LayoutFactory::parseTree(weak_ptr<Layout> root, weak_ptr<Layo
 	}else{
 		throw logging::Exception(__FILE__,__LINE__, "Unknwon Layout: %s", name);
 	}
+	layout->init(layout);
 	layout->loadXML(this, top);
 	return layout;
 }

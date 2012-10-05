@@ -24,7 +24,6 @@ namespace util {
 FileUtil::FileUtil()
 {
 	// TODO Auto-generated constructor stub
-
 }
 
 FileUtil::~FileUtil()
@@ -32,5 +31,4 @@ FileUtil::~FileUtil()
 	// TODO Auto-generated destructor stub
 }
 
-}
-}
+}}

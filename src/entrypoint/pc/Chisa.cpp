@@ -55,6 +55,7 @@ int main(int argc, char** argv) {
 		}
 
 		glfwSetWindowTitle("Chisa");
+		glEnable(GL_SCISSOR_TEST);
 
 		tempInit();
 		glfwSetWindowSizeCallback(reshape);

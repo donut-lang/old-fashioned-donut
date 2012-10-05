@@ -74,8 +74,8 @@ private:
 	void popLayout();
 	void pushLayout(const string& filename);
 public:
-	void replaceWidget(const string& widgetId, layout::WidgetWrapperLayout* const newHandler);
-	void deleteWidget(const string& widgetId, layout::WidgetWrapperLayout* const handler);
+	bool replaceWidget(const string& widgetId, layout::WidgetWrapperLayout* const newHandler);
+	bool deleteWidget(const string& widgetId, layout::WidgetWrapperLayout* const handler);
 };
 
 }}
