@@ -33,17 +33,22 @@ WidgetWrapperLayout::WidgetWrapperLayout(logging::Logger& log, weak_ptr<World> w
 
 WidgetWrapperLayout::~WidgetWrapperLayout()
 {
+	if(!this->widget_){
+		return;
+	}
 	if(this->parent_){
 		if(shared_ptr<World> world = this->world().lock()){
 			//ワールドの書き換えと、ウィジットへの現親レイアウトの通知
-			world->replaceWidget(this->widgetId_, this->parent_);
-			this->widget_->updateWrapper(this->self());
+			if(world->replaceWidget(this->widgetId_, this->parent_)) {
+				this->widget_->updateWrapper(this->self());
+			}
 		}
 	}else{
 		if(shared_ptr<World> world = this->world().lock()){
 			//ワールドからの削除と、ウィジットの開放
 			if(world->deleteWidget(this->widgetId_, this)){
 				delete widget_;
+				this->widget_ = nullptr;
 			}
 		}
 	}
@@ -56,9 +61,6 @@ weak_ptr<Layout> WidgetWrapperLayout::getChildAt(const size_t index) const
 size_t WidgetWrapperLayout::getChildCount() const
 {
 	return 0;
-}
-weak_ptr<Widget> WidgetWrapperLayout::getWidgetById(const string& id)
-{
 }
 void WidgetWrapperLayout::render(const Area& area)
 {

@@ -57,7 +57,6 @@ protected:
 public:
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const = 0;
 	virtual size_t getChildCount() const = 0;
-	virtual weak_ptr<Widget> getWidgetById(const string& id) = 0;
 public:
 	Area area() const {return area_;};
 public:

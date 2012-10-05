@@ -41,10 +41,6 @@ size_t EmptyLayout::getChildCount() const
 {
 	return 0;
 }
-weak_ptr<Widget> EmptyLayout::getWidgetById(const string& id)
-{
-	return weak_ptr<Widget>();
-}
 void EmptyLayout::render(const Area& area)
 {
 	// 空っぽ。何も表示しない。
