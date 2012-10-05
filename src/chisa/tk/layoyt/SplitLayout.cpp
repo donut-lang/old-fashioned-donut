@@ -90,10 +90,5 @@ size_t SplitLayout::getChildCount() const
 {
 	return this->children_.size();
 }
-weak_ptr<Widget> SplitLayout::getWidgetById(const string& id)
-{
-
-}
-
 
 }}}

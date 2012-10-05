@@ -81,7 +81,6 @@ public:
 	virtual void idle(const float delta_ms) override;
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const override;
 	virtual size_t getChildCount() const override;
-	virtual weak_ptr<Widget> getWidgetById(const string& id) override;
 	inline static float max(const float a, const float b)
 	{
 		return isnan(b) ? a : (a > b ? a : b);

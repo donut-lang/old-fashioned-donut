@@ -41,7 +41,6 @@ public:
 public:
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const override;
 	virtual size_t getChildCount() const override;
-	virtual weak_ptr<Widget> getWidgetById(const string& id) override;
 public:
 	virtual void render(const Area& area) override;
 	virtual void idle(const float delta_ms) override;
