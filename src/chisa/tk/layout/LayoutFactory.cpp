@@ -103,15 +103,15 @@ shared_ptr<Layout> LayoutFactory::parseTree(weak_ptr<Layout> root, weak_ptr<Layo
 	const char* name = top->Name();
 	if(false){
 	} else if(ElemName::Vertical == name){
-		std::shared_ptr<Layout>(VerticalLayout::create<VerticalLayout>(this->log(), this->world(), root, parent)).swap(layout);
+		std::shared_ptr<Layout>(Layout::create<VerticalLayout>(this->log(), this->world(), root, parent)).swap(layout);
 	} else if(ElemName::Horizontal == name){
-		std::shared_ptr<Layout>(HorizontalLayout::create<HorizontalLayout>(this->log(), this->world(), root, parent)).swap(layout);
+		std::shared_ptr<Layout>(Layout::create<HorizontalLayout>(this->log(), this->world(), root, parent)).swap(layout);
 	} else if(ElemName::Tab == name) {
-//		std::shared_ptr<Layout>(new TabLayout(this->log(), this->world(), root, parent)).swap(layout);
+//		std::shared_ptr<Layout>(Layout::create<TabLayout>(this->log(), this->world(), root, parent)).swap(layout);
 	} else if(ElemName::Empty == name) {
-		std::shared_ptr<Layout>(EmptyLayout::create<EmptyLayout>(this->log(), this->world(), root, parent)).swap(layout);
+		std::shared_ptr<Layout>(Layout::create<EmptyLayout>(this->log(), this->world(), root, parent)).swap(layout);
 	} else if(ElemName::WidgetWrapper == name) {
-		std::shared_ptr<Layout>(WidgetWrapperLayout::create<WidgetWrapperLayout>(this->log(), this->world(), root, parent)).swap(layout);
+		std::shared_ptr<Layout>(Layout::create<WidgetWrapperLayout>(this->log(), this->world(), root, parent)).swap(layout);
 	}else{
 		throw logging::Exception(__FILE__,__LINE__, "Unknwon Layout: %s", name);
 	}
