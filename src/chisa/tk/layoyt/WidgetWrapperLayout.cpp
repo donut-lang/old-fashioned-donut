@@ -26,19 +26,25 @@ namespace layout {
 
 WidgetWrapperLayout::WidgetWrapperLayout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent)
 :Layout(log, world, root, parent)
+,parent_(nullptr)
+,widget_(nullptr)
 {
 }
 
 WidgetWrapperLayout::~WidgetWrapperLayout()
 {
-	if(parent_){
+	if(this->parent_){
 		if(shared_ptr<World> world = this->world().lock()){
 			//ワールドの書き換えと、ウィジットへの現親レイアウトの通知
+			world->replaceWidget(this->widgetId_, this->parent_);
+			this->widget_->updateWrapper(this->self());
 		}
 	}else{
 		if(shared_ptr<World> world = this->world().lock()){
 			//ワールドからの削除と、ウィジットの開放
-			//delete widget_;
+			if(world->deleteWidget(this->widgetId_, this)){
+				delete widget_;
+			}
 		}
 	}
 }

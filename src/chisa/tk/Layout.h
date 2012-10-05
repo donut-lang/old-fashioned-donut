@@ -46,12 +46,14 @@ private:
 	weak_ptr<World> world_;
 	weak_ptr<Layout> root_;
 	weak_ptr<Layout> parent_;
+	weak_ptr<Layout> self_;
 	Area area_;
 protected:
 	inline logging::Logger& log() const { return log_; }
 	inline weak_ptr<World> world() const { return world_; }
 	inline weak_ptr<Layout> root() const { return root_; }
 	inline weak_ptr<Layout> parent() const { return parent_; }
+	inline weak_ptr<Layout> self() const { return self_; }
 public:
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const = 0;
 	virtual size_t getChildCount() const = 0;
@@ -59,17 +61,31 @@ public:
 public:
 	Area area() const {return area_;};
 public:
+	/**
+	 * 描画する。
+	 * エリアは描画される、レイアウト内の位置。
+	 * area ⊂ this->area.box();
+	 */
 	virtual void render(const Area& area) = 0; /* OpenGLの座標の設定などを行なってしまう */
 	virtual void idle(const float delta_ms) = 0;
 	virtual Box measure(const Box& constraint) = 0;
 	virtual void loadXML(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element) = 0;
 	virtual string toString() = 0;
+	/**
+	 * ウインドウサイズの変更などが起こったので、レイアウトの再計算を行う。
+	 * ここのエリアはウインドウ全体内での位置。
+	 */
 	void reshape(const Area& area);
 protected:
+	/**
+	 * サブクラスはこっちを実装する。
+	 */
 	virtual void reshapeImpl(const Area& area) = 0;
 public:
 	Layout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);
 	virtual ~Layout();
+public:
+	void init(weak_ptr<Layout> _self);
 };
 
 }}
