@@ -20,16 +20,17 @@
 #include "Layout.h"
 #include "layoyt/LayoutFactory.h"
 #include "widget/WidgetFactory.h"
-
+#include "Universe.h"
 
 namespace chisa {
 namespace tk {
 
 const static string& TAG("World");
 
-World::World(logging::Logger& log, weak_ptr<Universe> _universe)
+World::World(logging::Logger& log, weak_ptr<Universe> _universe, const string& worldname)
 :log_(log)
 ,universe_(_universe)
+,name_(worldname)
 ,taskHandler_(log)
 ,layoutFactory_(nullptr)
 ,widgetFactory_(nullptr)
@@ -49,9 +50,11 @@ World::~World()
 }
 
 
-void World::init(weak_ptr<World> _self, const string& worldname)
+void World::init(weak_ptr<World> _self)
 {
-	this->layoutFactory_ = new layout::LayoutFactory(this->log_, _self, worldname);
+	if(shared_ptr<Universe> universe = this->universe_.lock()){
+		this->layoutFactory_ = new layout::LayoutFactory(this->log_, _self, universe->resolveWorldFilepath(this->name_, "layout.xml"));
+	}
 }
 
 void World::render()
