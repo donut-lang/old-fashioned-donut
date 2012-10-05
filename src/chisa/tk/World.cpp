@@ -18,7 +18,8 @@
 
 #include "World.h"
 #include "Layout.h"
-#include "layoyt/LayoutFactory.h"
+#include "layout/LayoutFactory.h"
+#include "layout/WidgetWrapperLayout.h"
 #include "widget/WidgetFactory.h"
 #include "Universe.h"
 
@@ -95,6 +96,15 @@ void World::popLayout()
 	}
 }
 
+Widget* World::getWidgetById(const std::string& name)
+{
+	auto it = this->widgetMap_.find(name);
+	if(it == this->widgetMap_.end()){
+		return nullptr;
+	}
+	return it->second->widget();
+}
+
 bool World::replaceWidget(const string& widgetId, layout::WidgetWrapperLayout* const newHandler)
 {
 	map<string, layout::WidgetWrapperLayout*>::iterator it = this->widgetMap_.find(widgetId);
@@ -116,6 +126,7 @@ bool World::deleteWidget(const string& widgetId, layout::WidgetWrapperLayout* co
 		return false;
 	}
 	this->widgetMap_.erase(it);
+	return true;
 }
 
 }}

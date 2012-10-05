@@ -64,8 +64,6 @@ public:
 public:
 	void init(weak_ptr<World> _self);
 public:
-	weak_ptr<Widget> getWidgetById(const string& id);
-public:
 	void render();
 	void idle(const float delta_ms);
 	void reshape(const Area& area);
@@ -74,6 +72,7 @@ private:
 	void popLayout();
 	void pushLayout(const string& filename);
 public:
+	Widget* getWidgetById(const std::string& name);
 	bool replaceWidget(const string& widgetId, layout::WidgetWrapperLayout* const newHandler);
 	bool deleteWidget(const string& widgetId, layout::WidgetWrapperLayout* const handler);
 };
