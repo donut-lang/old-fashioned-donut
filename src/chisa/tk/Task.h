@@ -50,7 +50,7 @@ public:
 	TaskHandler(logging::Logger& log);
 	virtual ~TaskHandler();
 public:
-	bool post(shared_ptr<Task> task);
+	void post(shared_ptr<Task> task);
 	std::size_t getPostCount() const{ return taskPool.size(); };
 public:
 	void run(const float delta_ms);

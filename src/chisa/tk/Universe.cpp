@@ -65,8 +65,8 @@ void Universe::reshape(const Area& area)
 void Universe::createNewWorld(const string& worldName)
 {
 	const string worldBasePath = this->basepath_+util::FileUtil::Sep+worldName;
-	shared_ptr<World> newWorld(new World(log,this->self_));
-	newWorld->init(weak_ptr<World>(newWorld), worldName);
+	shared_ptr<World> newWorld(new World(log,this->self_, worldName));
+	newWorld->init(weak_ptr<World>(newWorld));
 	newWorld->reshape(this->area());
 	this->worldStack.push(newWorld);
 }
@@ -90,6 +90,10 @@ void Universe::notifyWorldEnd(weak_ptr<World> me)
 	}else{
 		log.w(TAG, "notified world end, but world was already dead.");
 	}
+}
+std::string Universe::resolveWorldFilepath(const std::string& worldname, const std::string& filename)
+{
+	return this->basepath_+util::FileUtil::Sep+worldname+util::FileUtil::Sep+filename;
 }
 
 }}

@@ -48,6 +48,7 @@ class World {
 private:
 	logging::Logger& log_;
 	const weak_ptr<Universe> universe_;
+	const std::string name_;
 	TaskHandler taskHandler_;
 	Stack<shared_ptr<Layout> > layoutStack_;
 	map<string, layout::WidgetWrapperLayout*> widgetMap_;
@@ -57,11 +58,11 @@ private:
 private:
 	Area area_;
 public:
-	World(logging::Logger& log, weak_ptr<Universe> _universe);
+	World(logging::Logger& log, weak_ptr<Universe> _universe, const string& worldname);
 	virtual ~World();
 	inline Area area() const{ return area_; };
 public:
-	void init(weak_ptr<World> _self, const string& worldname);
+	void init(weak_ptr<World> _self);
 public:
 	weak_ptr<Widget> getWidgetById(const string& id);
 public:

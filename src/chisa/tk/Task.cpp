@@ -32,7 +32,7 @@ TaskHandler::~TaskHandler()
 {
 
 }
-bool TaskHandler::post(shared_ptr<Task> task)
+void TaskHandler::post(shared_ptr<Task> task)
 {
 	this->taskPool.push_back(task);
 }

@@ -51,6 +51,8 @@ public:
 public: //worldからの通知
 	void createNewWorld(const string& worldName);
 	void notifyWorldEnd(weak_ptr<World> me);
+public:
+	std::string resolveWorldFilepath(const std::string& worldname, const std::string& filename);
 };
 
 }}
