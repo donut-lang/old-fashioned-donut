@@ -47,7 +47,7 @@ public:
 public:
 	virtual void render(const Area& area) = 0;
 	void idle(const float delta_ms);
-	Box reshape(const Box& area);
+	void reshape(const Box& area);
 	virtual Box& measureSize(const Box& constraint) = 0;
 };
 

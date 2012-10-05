@@ -36,6 +36,10 @@ void render()
 
 void reshape(int width, int height)
 {
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0, width, height, 0, -100, 100);
+	glViewport(0, 0, width, height);
 	gUniverse->reshape(tk::Area(0,0,width, height));
 }
 
