@@ -57,12 +57,18 @@ private:
 	widget::WidgetFactory* widgetFactory_;
 private:
 	Area area_;
-public:
+private:
 	World(logging::Logger& log, weak_ptr<Universe> _universe, const string& worldname);
+	void init(weak_ptr<World> _self);
+public:
+	static shared_ptr<World> create(logging::Logger& log, weak_ptr<Universe> _universe, const string& worldname)
+	{
+		shared_ptr<World> ptr(new World(log, _universe, worldname));
+		ptr->init(ptr);
+		return ptr;
+	}
 	virtual ~World();
 	inline Area area() const{ return area_; };
-public:
-	void init(weak_ptr<World> _self);
 public:
 	void render();
 	void idle(const float delta_ms);

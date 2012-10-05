@@ -58,6 +58,7 @@ struct SplitCtx
 
 
 class SplitLayout: public chisa::tk::Layout {
+	CHISA_LAYOUT_SUBKLASS(SplitLayout);
 public:
 	struct AttrName{
 		static const std::string Weight;
@@ -67,9 +68,6 @@ public:
 private:
 	vector<shared_ptr<SplitCtx> > children_;
 	float totalSize_;
-public:
-	SplitLayout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);
-	virtual ~SplitLayout();
 private:
 	void addChild(const SplitDef& def, shared_ptr<Layout> layout);
 protected:

@@ -27,13 +27,11 @@ const std::string SplitLayout::AttrName::Weight("split-weight");
 const std::string SplitLayout::AttrName::Max("split-max");
 const std::string SplitLayout::AttrName::Min("split-min");
 
-SplitLayout::SplitLayout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent)
-:Layout(log, world, root, parent)
+CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(SplitLayout)
 ,totalSize_(geom::Unspecified)
 {
 
 }
-
 
 SplitLayout::~SplitLayout() {
 }

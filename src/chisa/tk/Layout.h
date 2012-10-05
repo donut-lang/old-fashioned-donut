@@ -39,6 +39,25 @@ using std::string;
 using std::weak_ptr;
 using std::size_t;
 
+#define CHISA_LAYOUT_SUBKLASS_FINAL(Klass) \
+friend shared_ptr<Klass> Layout::create<Klass>(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);\
+private:\
+	Klass(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);\
+public:\
+	virtual ~Klass();
+
+#define CHISA_LAYOUT_SUBKLASS(Klass) \
+protected:\
+	Klass(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);\
+public:\
+	virtual ~Klass();
+
+#define CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(Klass, Derived) \
+Klass::Klass(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent)\
+:Derived(log, world, root, parent)
+
+#define CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(Klass) CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(Klass, Layout)
+
 class Layout {
 	DISABLE_COPY_AND_ASSIGN(Layout);
 private:
@@ -80,11 +99,18 @@ protected:
 	 * サブクラスはこっちを実装する。
 	 */
 	virtual void reshapeImpl(const Area& area) = 0;
-public:
+protected:
 	Layout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);
-	virtual ~Layout();
-public:
 	void init(weak_ptr<Layout> _self);
+public:
+	template <typename SubKlass>
+	static shared_ptr<SubKlass> create(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent)
+	{
+		shared_ptr<SubKlass> ptr(new SubKlass(log, world, root, parent));
+		ptr->init(ptr);
+		return ptr;
+	}
+	virtual ~Layout();
 };
 
 }}

@@ -31,9 +31,7 @@ using namespace std;
 class LayoutFactory;
 
 class HorizontalLayout: public chisa::tk::layout::SplitLayout {
-public:
-	HorizontalLayout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);
-	virtual ~HorizontalLayout();
+	CHISA_LAYOUT_SUBKLASS_FINAL(HorizontalLayout);
 public:
 	virtual void render(const Area& area) override;
 	virtual Box measure(const Box& constraint) override;

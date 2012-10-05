@@ -31,9 +31,7 @@ using namespace std;
 class LayoutFactory;
 
 class EmptyLayout : public Layout {
-public:
-	EmptyLayout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);
-	virtual ~EmptyLayout();
+	CHISA_LAYOUT_SUBKLASS_FINAL(EmptyLayout);
 public:
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const override;
 	virtual size_t getChildCount() const override;

@@ -26,9 +26,7 @@ namespace tk {
 namespace layout {
 
 class VerticalLayout: public chisa::tk::layout::SplitLayout {
-public:
-	VerticalLayout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);
-	virtual ~VerticalLayout();
+	CHISA_LAYOUT_SUBKLASS_FINAL(VerticalLayout);
 public:
 	virtual void render(const Area& area) override;
 	virtual Box measure(const Box& constraint) override;
