@@ -39,6 +39,8 @@ public:
 	WidgetWrapperLayout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);
 	virtual ~WidgetWrapperLayout();
 public:
+	Widget* widget() const{ return this->widget_; };
+public:
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const override;
 	virtual size_t getChildCount() const override;
 public:
