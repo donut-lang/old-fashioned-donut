@@ -17,7 +17,6 @@
  */
 
 #include "Param.h"
-#include <algorithm>
 #include <cstdlib>
 
 namespace chisa {
@@ -94,13 +93,11 @@ public:
 
 std::shared_ptr<Param> Param::createParam(const std::string& name, const std::string& type, const std::string& value)
 {
-	std::string _type(type);
-	std::transform(_type.begin(), _type.end(), _type.begin(), ::tolower);
-	if(_type==Param::TypeString::String){
+	if(type==TypeName::String){
 		return std::shared_ptr<Param>(new StringParam(name, value));
-	}else if(_type==Param::TypeString::Integer){
+	}else if(type==TypeName::Integer){
 		return std::shared_ptr<Param>(new IntegerParam(name, value));
-	}else if(_type==Param::TypeString::Float){
+	}else if(type==TypeName::Float){
 		return std::shared_ptr<Param>(new FloatParam(name, value));
 	}else{
 		return std::shared_ptr<Param>(new StringParam(name, value));
@@ -133,16 +130,14 @@ bool ParamSet::has(const std::string& name)
 std::shared_ptr<Param> Param::parseTree(tinyxml2::XMLElement* elem)
 {
 	std::string elemName(elem->Name());
-	std::transform(elemName.begin(), elemName.end(), elemName.begin(), ::tolower);
-
 	const char* name;
 	const char* type;
 	const char* value;
-	if(elemName != "param" || !(name = elem->Attribute("name", nullptr) ) || ! (value = elem->Attribute("value", nullptr)) ){
+	if(elemName != Param::ElemName || !(name = elem->Attribute(AttrName::Name, nullptr) ) || ! (value = elem->Attribute(AttrName::Value, nullptr)) ){
 		return std::shared_ptr<Param>();
 	}
-	if( !(type = elem->Attribute("type", nullptr) ) ){
-		type="string";
+	if( !(type = elem->Attribute(AttrName::Type, nullptr) ) ){
+		type=TypeName::String;
 	}
 	elem->FirstChildElement();
 	return Param::createParam(name, type, value);

@@ -24,6 +24,7 @@
 #include <tinyxml2.h>
 #include "../../logging/Exception.h"
 #include "../../logging/Logger.h"
+#include "../../util/class_utils.h"
 
 namespace chisa {
 namespace tk {
@@ -34,9 +35,20 @@ namespace layout {
 using namespace std;
 using namespace tinyxml2;
 
-//TODO: 要素名とレイアウトの対応表
-
 class LayoutFactory {
+	DISABLE_COPY_AND_ASSIGN(LayoutFactory);
+public:
+	struct ElemName{
+		static const std::string World;
+		static const std::string Vertical;
+		static const std::string Horizontal;
+		static const std::string Tab;
+		static const std::string Empty;
+		static const std::string WidgetWrapper;
+	};
+	struct AttrName {
+		static const std::string Id;
+	};
 private:
 	logging::Logger& log_;
 	weak_ptr<World> world_;

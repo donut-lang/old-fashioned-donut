@@ -21,7 +21,6 @@
 #include "../../logging/Exception.h"
 #include <memory>
 #include <tinyxml2.h>
-#include <algorithm>
 #include "HorizontalLayout.h"
 #include "VerticalLayout.h"
 #include "EmptyLayout.h"
@@ -37,6 +36,15 @@ using std::string;
 using namespace tinyxml2;
 using namespace logging;
 
+const std::string LayoutFactory::ElemName::World("world");
+const std::string LayoutFactory::ElemName::Vertical("vertical");
+const std::string LayoutFactory::ElemName::Horizontal("horizontal");
+const std::string LayoutFactory::ElemName::Empty("empty");
+const std::string LayoutFactory::ElemName::WidgetWrapper("widget");
+const std::string LayoutFactory::ElemName::Tab("tab");
+
+const std::string LayoutFactory::AttrName::Id("id");
+
 LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, const string& filename)
 :log_(log)
 ,world_(world)
@@ -49,7 +57,7 @@ LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, const 
 		throw Exception(__FILE__, __LINE__, "Failed to read xml (%d): %s", code, filename.c_str());
 	}
 	this->root_ = doc_->RootElement();
-	if(!this->root_ && strcasecmp(this->root_->Name(), "world")){
+	if(!this->root_ && ElemName::World == this->root_->Name()){
 		throw Exception(__FILE__, __LINE__, "%s was parsed, but \"world\" element not found.", filename.c_str());
 	}
 }
@@ -62,7 +70,7 @@ LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, const 
 ,doc_free_by_me_(doc_free_by_me)
 {
 	this->root_ = doc_->RootElement();
-	if(!this->root_ && strcasecmp(this->root_->Name(), "world")){
+	if(!this->root_ && ElemName::World == this->root_->Name()){
 		throw Exception(__FILE__, __LINE__, "%s was parsed, but \"world\" element not found.", filename.c_str());
 	}
 }
@@ -90,20 +98,19 @@ LayoutFactory::~LayoutFactory()
 
 shared_ptr<Layout> LayoutFactory::parseTree(weak_ptr<Layout> root, weak_ptr<Layout> parent, XMLElement* top)
 {
-	string name(top->Name());
-	std::transform(name.begin(), name.end(), name.begin(), ::tolower);
 	shared_ptr<Layout> layout;
+	const char* name = top->Name();
 	if(false){
-	} else if(name=="vertical"){
+	} else if(ElemName::Vertical == name){
 		std::shared_ptr<Layout>(new VerticalLayout(this->log(), this->world(), root, parent)).swap(layout);
-	} else if(name=="horizontal") {
+	} else if(ElemName::Horizontal == name){
 		std::shared_ptr<Layout>(new HorizontalLayout(this->log(), this->world(), root, parent)).swap(layout);
-	} else if(name=="tab") {
+	} else if(ElemName::Tab == name) {
 //		std::shared_ptr<Layout>(new TabLayout(this->log(), this->world(), root, parent)).swap(layout);
-	} else if(name=="empty") {
+	} else if(ElemName::Empty == name) {
 		std::shared_ptr<Layout>(new EmptyLayout(this->log(), this->world(), root, parent)).swap(layout);
 	}else{
-		throw logging::Exception(__FILE__,__LINE__, "Unknwon Layout: %s", name.c_str());
+		throw logging::Exception(__FILE__,__LINE__, "Unknwon Layout: %s", name);
 	}
 	layout->loadXML(this, top);
 	return layout;
@@ -112,8 +119,7 @@ shared_ptr<Layout> LayoutFactory::parseTree(weak_ptr<Layout> root, weak_ptr<Layo
 shared_ptr<Layout> LayoutFactory::parseTree(const string& layoutname)
 {
 	for(XMLElement* elem = this->root_->FirstChildElement(); elem; elem = elem->NextSiblingElement()){
-		const std::string elemId();
-		if(!strcasecmp(elem->Attribute("id", nullptr), layoutname.c_str())){
+		if(layoutname == elem->Attribute(AttrName::Id.c_str(), nullptr)){
 			return this->parseTree(weak_ptr<Layout>(), weak_ptr<Layout>(), elem);
 		}
 	}
