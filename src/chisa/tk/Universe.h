@@ -35,9 +35,12 @@ private:
 	Stack<shared_ptr<World> > worldStack;
 	std::string basepath_;
 	Area area_;
+	weak_ptr<Universe> self_;
 public:
 	Universe(logging::Logger& log, const std::string& basepath);
 	virtual ~Universe();
+public:
+	void init(weak_ptr<Universe> _self);
 	inline Area area() const{ return area_; };
 private:
 	inline void area(const Area& newArea) { area_=newArea; };

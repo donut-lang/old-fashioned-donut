@@ -19,15 +19,20 @@
 #include "World.h"
 #include "Layout.h"
 #include "layoyt/LayoutFactory.h"
+#include "widget/WidgetFactory.h"
+
 
 namespace chisa {
 namespace tk {
 
 const static string& TAG("World");
 
-World::World(logging::Logger& log)
+World::World(logging::Logger& log, weak_ptr<Universe> _universe)
 :log_(log)
+,universe_(_universe)
 ,taskHandler_(log)
+,layoutFactory_(nullptr)
+,widgetFactory_(nullptr)
 {
 
 }

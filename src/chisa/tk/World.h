@@ -25,16 +25,19 @@
 #include "Task.h"
 #include "Geom.h"
 #include "Stack.h"
-#include "widget/WidgetFactory.h"
-#include "layoyt/LayoutFactory.h"
 
 namespace chisa {
 namespace tk {
 class Layout;
 class Widget;
+class Universe;
 
 namespace layout {
 class WidgetWrapperLayout;
+class LayoutFactory;
+}
+namespace widget{
+class WidgetFactory;
 }
 
 using std::shared_ptr;
@@ -44,6 +47,7 @@ using std::string;
 class World {
 private:
 	logging::Logger& log_;
+	const weak_ptr<Universe> universe_;
 	TaskHandler taskHandler_;
 	Stack<shared_ptr<Layout> > layoutStack_;
 	map<string, layout::WidgetWrapperLayout*> widgetMap_;
@@ -53,7 +57,7 @@ private:
 private:
 	Area area_;
 public:
-	World(logging::Logger& log);
+	World(logging::Logger& log, weak_ptr<Universe> _universe);
 	virtual ~World();
 	inline Area area() const{ return area_; };
 public:

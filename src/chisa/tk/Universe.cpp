@@ -17,6 +17,7 @@
  */
 
 #include "Universe.h"
+#include "../util/FileUtil.h"
 
 static const std::string TAG("Universe");
 
@@ -30,6 +31,11 @@ Universe::Universe(logging::Logger& log, const std::string& basepath)
 }
 
 Universe::~Universe() {
+}
+
+void Universe::init(weak_ptr<Universe> _self)
+{
+	this->self_=_self;
 }
 
 void Universe::render()
@@ -54,6 +60,15 @@ void Universe::reshape(const Area& area)
 		topWorld->reshape(area);
 	}
 	this->area(area);
+}
+
+void Universe::createNewWorld(const string& worldName)
+{
+	const string worldBasePath = this->basepath_+util::FileUtil::Sep+worldName;
+	shared_ptr<World> newWorld(new World(log,this->self_));
+	newWorld->init(weak_ptr<World>(newWorld), worldName);
+	newWorld->reshape(this->area());
+	this->worldStack.push(newWorld);
 }
 
 void Universe::notifyWorldEnd(weak_ptr<World> me)
