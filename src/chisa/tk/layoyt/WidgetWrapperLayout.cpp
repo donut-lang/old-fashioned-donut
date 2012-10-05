@@ -72,5 +72,13 @@ Box WidgetWrapperLayout::measure(const Box& constraint)
 void WidgetWrapperLayout::reshapeImpl(const Area& area)
 {
 }
+std::string WidgetWrapperLayout::toString()
+{
+	return "aaa";
+}
+void WidgetWrapperLayout::loadXML(LayoutFactory* const factory, XMLElement* const element)
+{
+
+}
 
 }}}

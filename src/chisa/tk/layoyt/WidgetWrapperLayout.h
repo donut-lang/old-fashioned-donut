@@ -47,8 +47,12 @@ public:
 	virtual void render(const Area& area) override;
 	virtual void idle(const float delta_ms) override;
 	virtual Box measure(const Box& constraint) override;
+public:
+	virtual void loadXML(LayoutFactory* const factory, XMLElement* const element) override;
+	virtual string toString() override;
 protected:
 	virtual void reshapeImpl(const Area& area) override;
+
 };
 
 }}}

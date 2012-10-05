@@ -24,6 +24,7 @@
 #include "HorizontalLayout.h"
 #include "VerticalLayout.h"
 #include "EmptyLayout.h"
+#include "WidgetWrapperLayout.h"
 
 namespace chisa {
 namespace tk {
@@ -109,6 +110,8 @@ shared_ptr<Layout> LayoutFactory::parseTree(weak_ptr<Layout> root, weak_ptr<Layo
 //		std::shared_ptr<Layout>(new TabLayout(this->log(), this->world(), root, parent)).swap(layout);
 	} else if(ElemName::Empty == name) {
 		std::shared_ptr<Layout>(new EmptyLayout(this->log(), this->world(), root, parent)).swap(layout);
+	} else if(ElemName::WidgetWrapper == name) {
+		std::shared_ptr<Layout>(new WidgetWrapperLayout(this->log(), this->world(), root, parent)).swap(layout);
 	}else{
 		throw logging::Exception(__FILE__,__LINE__, "Unknwon Layout: %s", name);
 	}
