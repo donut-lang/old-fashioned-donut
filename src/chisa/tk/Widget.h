@@ -49,8 +49,8 @@ public:
 	Point calcRelativePositionFromParent();
 public:
 	virtual void render(const Area& area) = 0;
-	void idle(const float delta_ms);
-	void reshape(const Box& area);
+	virtual void idle(const float delta_ms) = 0;
+	virtual void reshape(const Box& area) = 0;
 	virtual Box& measureSize(const Box& constraint) = 0;
 };
 
