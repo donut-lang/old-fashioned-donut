@@ -79,6 +79,7 @@ Sprite::Handler Canvas::loadPNG(const std::string& filename)
 	}
 	png_read_end(png, end_info);
 	png_destroy_read_struct(&png, &info, &end_info);
+	fclose(fp);
 
 	return spr;
 }
