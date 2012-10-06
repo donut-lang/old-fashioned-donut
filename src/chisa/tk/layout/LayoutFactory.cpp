@@ -122,11 +122,12 @@ shared_ptr<Layout> LayoutFactory::parseTree(weak_ptr<Layout> root, weak_ptr<Layo
 shared_ptr<Layout> LayoutFactory::parseTree(const string& layoutname)
 {
 	for(XMLElement* elem = this->root_->FirstChildElement(); elem; elem = elem->NextSiblingElement()){
-		if(layoutname == elem->Attribute(AttrName::Id.c_str(), nullptr)){
+		const char* id = elem->Attribute(AttrName::Id.c_str(), nullptr);
+		if(id && layoutname == id){
 			return this->parseTree(weak_ptr<Layout>(), weak_ptr<Layout>(), elem);
 		}
 	}
-	throw new logging::Exception(__FILE__, __LINE__, "Failed to load layout: %s in %s", layoutname.c_str(), this->filename_.c_str());
+	throw logging::Exception(__FILE__, __LINE__, "Layout \"%s\" not found in %s", layoutname.c_str(), this->filename_.c_str());
 }
 
 }}}
