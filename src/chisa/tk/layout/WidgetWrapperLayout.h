@@ -32,10 +32,17 @@ using namespace tinyxml2;
 
 class WidgetWrapperLayout: public chisa::tk::Layout {
 	CHISA_LAYOUT_SUBKLASS_FINAL(WidgetWrapperLayout);
+public:
+	enum FitMode {
+		Original,
+		Fit
+	};
 private:
 	WidgetWrapperLayout* parent_;
 	Widget* widget_;
 	std::string widgetId_;
+private:
+	FitMode fitMode_;
 public:
 	Widget* widget() const{ return this->widget_; };
 public:

@@ -26,6 +26,10 @@
 #include "Geom.h"
 #include "Stack.h"
 
+namespace tinyxml2{
+class XMLElement;
+}
+
 namespace chisa {
 namespace tk {
 class Layout;
@@ -68,9 +72,10 @@ private:
 	void popLayout();
 	void pushLayout(const string& filename);
 public:
-	Widget* getWidgetById(const std::string& name);
+	layout::WidgetWrapperLayout* getWidgetById(const std::string& name);
 	bool replaceWidget(const string& widgetId, layout::WidgetWrapperLayout* const newHandler);
 	bool deleteWidget(const string& widgetId, layout::WidgetWrapperLayout* const handler);
+	Widget* createWidget(const string& klass, tinyxml2::XMLElement* elem);
 
 	/******************************************************************************
 	 * 生成

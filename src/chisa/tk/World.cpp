@@ -96,13 +96,13 @@ void World::popLayout()
 	}
 }
 
-Widget* World::getWidgetById(const std::string& name)
+layout::WidgetWrapperLayout* World::getWidgetById(const std::string& name)
 {
 	auto it = this->widgetMap_.find(name);
 	if(it == this->widgetMap_.end()){
 		return nullptr;
 	}
-	return it->second->widget();
+	return it->second;
 }
 
 bool World::replaceWidget(const string& widgetId, layout::WidgetWrapperLayout* const newHandler)
@@ -127,6 +127,11 @@ bool World::deleteWidget(const string& widgetId, layout::WidgetWrapperLayout* co
 	}
 	this->widgetMap_.erase(it);
 	return true;
+}
+
+Widget* World::createWidget(const string& klass, tinyxml2::XMLElement* elem)
+{
+	return this->widgetFactory_->createWidget(klass, elem);
 }
 
 }}

@@ -63,7 +63,7 @@ public:
 	/**
 	 * 描画する。
 	 * エリアは描画される、レイアウト内の位置。
-	 * area ⊂ this->area.box();
+	 * area ⊂ this->area().box();
 	 */
 	virtual void render(const Area& area) = 0; /* OpenGLの座標の設定などを行なってしまう */
 	virtual void idle(const float delta_ms) = 0;

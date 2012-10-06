@@ -43,8 +43,7 @@ public:
 	WidgetFactory(logging::Logger& log, weak_ptr<World> world);
 	virtual ~WidgetFactory();
 public:
-	shared_ptr<Widget> createWidget(tinyxml2::XMLElement* widgetElement);
-	shared_ptr<Widget> createWidget(const string& klass, bool inherit, std::shared_ptr<util::ParamSet> paramSet);
+	Widget* createWidget(const string& klass, tinyxml2::XMLElement* elem);
 };
 
 }}}
