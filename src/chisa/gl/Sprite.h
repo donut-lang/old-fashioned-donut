@@ -52,6 +52,7 @@ private:
 	void unlock();
 private:
 	char* requestMemory();
+public:
 	unsigned int requestTexture();
 public:
 	class Handler : public chisa::gl::Handler<Sprite> {
