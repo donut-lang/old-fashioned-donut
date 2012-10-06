@@ -49,6 +49,7 @@
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="glfw"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="glu32"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="opengl32"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="cairo"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1518610472" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -116,6 +117,7 @@
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sicudt"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="glfw"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="glu32"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="cairo"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.372687479" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -180,6 +182,7 @@
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="X11"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="Xrandr"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="GL"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="cairo"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.880366432" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -248,6 +251,7 @@
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="X11"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="rt"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="Xrandr"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="cairo"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.770223447" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>

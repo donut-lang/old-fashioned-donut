@@ -34,7 +34,7 @@ class WidgetWrapperLayout: public chisa::tk::Layout {
 	CHISA_LAYOUT_SUBKLASS_FINAL(WidgetWrapperLayout);
 public:
 	enum FitMode {
-		Original,
+		Center,
 		Fit
 	};
 private:

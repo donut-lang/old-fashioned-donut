@@ -24,4 +24,18 @@ private:\
 	klass(const klass& other);\
 	klass& operator=(const klass& other);
 
+#define DEFINE_MEMBER_CONST(rscope, wscope, type, name)\
+private:\
+	type const name##_;\
+rscope:\
+	inline type name() const{return name##_;}\
+
+#define DEFINE_MEMBER(rscope, wscope, type, name)\
+private:\
+	type name##_;\
+rscope:\
+	inline type name() const{return name##_;}\
+wscope:\
+	inline void name(type const& val){name##_ = val;}
+
 #endif /* INCLUDE_GUARD */

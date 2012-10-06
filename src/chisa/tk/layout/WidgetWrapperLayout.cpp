@@ -30,7 +30,7 @@ static const string TAG("WidgetWrapperLayout");
 CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(WidgetWrapperLayout)
 ,parent_(nullptr)
 ,widget_(nullptr)
-,fitMode_(Original)
+,fitMode_(Center)
 {
 }
 
@@ -91,10 +91,10 @@ std::string WidgetWrapperLayout::toString()
 }
 void WidgetWrapperLayout::loadXML(LayoutFactory* const factory, XMLElement* const element)
 {
-	if(element->Attribute("fit", "Fit")){
+	if(element->Attribute("fit", "fit")){
 		this->fitMode_ = Fit;
-	}else{
-		this->fitMode_ = Original;
+	}else if(element->Attribute("fit", "center")){
+		this->fitMode_ = Center;
 	}
 	const char* widgetKlass = element->Attribute("widget-klass", nullptr);
 	if(widgetKlass){
