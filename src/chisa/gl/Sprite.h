@@ -37,7 +37,7 @@ private:
 	DEFINE_MEMBER(public, private, int, origHeight);
 	DEFINE_MEMBER(public, private, int, width);
 	DEFINE_MEMBER(public, private, int, height);
-	char* data_;
+	unsigned char* data_;
 	unsigned int texId_;
 	bool dirty_;
 	DEFINE_MEMBER(private, private, bool, locked);
@@ -48,10 +48,10 @@ private:
 	void resize(int width, int height);
 	void incref();
 	void decref();
-	void lock(void** data, int* stride);
+	void lock(unsigned char** data, int* stride);
 	void unlock();
 private:
-	char* requestMemory();
+	unsigned char* requestMemory();
 public:
 	unsigned int requestTexture();
 public:
@@ -65,14 +65,14 @@ public:
 	private:
 		Sprite::Handler parent_;
 		int stride_;
-		void* data_;
+		unsigned char* data_;
 	public:
 		Session(Sprite::Handler parent);
 		virtual ~Session();
 		inline int width() const { return parent_->width(); };
 		inline int height() const { return parent_->height(); };
 		inline int stride() const { return this->stride_; };
-		inline void* data() const { return this->data_; };
+		inline unsigned char* data() const { return this->data_; };
 	};
 	friend class gl::Handler<Sprite>;
 };

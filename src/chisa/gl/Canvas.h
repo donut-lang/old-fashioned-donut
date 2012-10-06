@@ -50,6 +50,7 @@ public:
 	void scale(const float x,const float y, const float z);
 	void drawSprite(const float x,const float y, const float z, Sprite::Handler sprite);
 public:
+	Sprite::Handler loadPNG(const std::string& filename);
 	Sprite::Handler querySprite(const int width, const int height);
 public:
 	void backSprite(Sprite* spr);
