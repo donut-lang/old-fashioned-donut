@@ -80,17 +80,36 @@ void Canvas::scale(const float x,const float y, const float z)
 }
 void Canvas::drawSprite(const float x,const float y, const float z, Sprite::Handler sprite)
 {
+	const GLint texId = sprite->requestTexture();
+	const float width = sprite->width();
+	const float height = sprite->height();
+	const float right = width/sprite->origWidth();
+	const float bottom = height/sprite->origHeight();
+	glBindTexture(GL_TEXTURE_2D, texId);
+	glBegin(GL_POLYGON);
+		glTexCoord2f(0,		0);		glVertex3f(x      , y, z);
+		glTexCoord2f(0,		bottom);	glVertex3f(x      , y+height,z);
+		glTexCoord2f(right,	bottom);	glVertex3f(x+width, y+height,z);
+		glTexCoord2f(right,	0);		glVertex3f(x+width, y,z);
+	glEnd();
+	glFlush();
 }
 
 Sprite::Handler Canvas::querySprite(const int width, const int height)
 {
-
+	auto it = std::upper_bound(this->unusedSprite_.begin(), this->unusedSprite_.end(), std::pair<int,int>(width,height), Order<Sprite>());
+	if(it == this->unusedSprite_.end()){
+		Sprite* spr = new Sprite(this, width, height);
+		return Sprite::Handler(spr, width, height);
+	}else{
+		return Sprite::Handler(*it,width, height);
+	}
 }
 
 template <typename T, size_t maxCount>
 void backImage(logging::Logger& log_, const char* name, std::deque<T*>& unused, T* t)
 {
-	auto ins = std::upper_bound(unused.begin(), unused.end(), t);
+	auto ins = std::upper_bound(unused.begin(), unused.end(), t, Order<Sprite>());
 	unused.insert(ins, t);
 	while(maxCount < unused.size()){
 		T* deleted = 0;
