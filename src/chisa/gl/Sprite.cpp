@@ -58,10 +58,10 @@ Sprite::~Sprite()
 	}
 }
 
-char* Sprite::requestMemory()
+unsigned char* Sprite::requestMemory()
 {
 	if(!this->data_){
-		this->data_ = new char[origWidth_*origHeight_*4];
+		this->data_ = new unsigned char[origWidth_*origHeight_*4];
 	}
 	return this->data_;
 }
@@ -104,7 +104,7 @@ void Sprite::decref()
 	}
 }
 
-void Sprite::lock(void** data, int* stride)
+void Sprite::lock(unsigned char** data, int* stride)
 {
 	if(this->locked()){
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Sprite already locked!");

@@ -134,5 +134,4 @@ void Canvas::backSprite(Sprite* spr)
 	}
 }
 
-
 }}
