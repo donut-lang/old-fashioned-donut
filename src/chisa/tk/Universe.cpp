@@ -57,7 +57,7 @@ void Universe::reshape(const Area& area)
 		log.t(TAG, "reshaped: %s", area.toString().c_str());
 	}
 	if(shared_ptr<World> topWorld = this->worldStack.top()){
-		topWorld->reshape(area);
+		topWorld->reshape(Area(0,0, area.width(), area.height()));
 	}
 	this->area(area);
 }

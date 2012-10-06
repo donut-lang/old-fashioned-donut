@@ -34,4 +34,9 @@ WidgetFactory::~WidgetFactory()
 {
 }
 
+Widget* WidgetFactory::createWidget(const string& klass, tinyxml2::XMLElement* elem)
+{
+
+}
+
 }}}

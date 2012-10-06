@@ -19,14 +19,18 @@
 #include "GL/gl.h"
 #include "WidgetWrapperLayout.h"
 #include "../World.h"
+#include "../../util/Param.h"
 
 namespace chisa {
 namespace tk {
 namespace layout {
 
+static const string TAG("WidgetWrapperLayout");
+
 CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(WidgetWrapperLayout)
 ,parent_(nullptr)
 ,widget_(nullptr)
+,fitMode_(Original)
 {
 }
 
@@ -87,7 +91,29 @@ std::string WidgetWrapperLayout::toString()
 }
 void WidgetWrapperLayout::loadXML(LayoutFactory* const factory, XMLElement* const element)
 {
-
+	if(element->Attribute("fit", "Fit")){
+		this->fitMode_ = Fit;
+	}else{
+		this->fitMode_ = Original;
+	}
+	const char* widgetKlass = element->Attribute("widget-klass", nullptr);
+	if(widgetKlass){
+		this->log().e(TAG, "Oops. widget-klass not defined.");
+		return;
+	}
+	const char* widgetId = element->Attribute("widget-id", nullptr);
+	if(shared_ptr<World> world = this->world().lock()){
+		if(widgetId && (this->parent_ = world->getWidgetById(widgetId))){
+			world->replaceWidget(widgetId, this);
+			this->widget_ = this->parent_->widget_;
+			this->widget_->updateWrapper(this->self());
+		}else{
+			this->widget_ = world->createWidget(widgetKlass, element);
+			if(!this->widget_){
+				this->log().e(TAG, "Oops. widget \"%s\" not registered.", widgetKlass);
+			}
+		}
+	}
 }
 
 }}}
