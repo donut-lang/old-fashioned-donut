@@ -106,26 +106,25 @@ Sprite::Handler Canvas::querySprite(const int width, const int height)
 	}
 }
 
-template <typename T, size_t maxCount>
-void backImage(logging::Logger& log_, const char* name, std::deque<T*>& unused, T* t)
+
+void Canvas::backSprite(Sprite* spr)
 {
-	auto ins = std::upper_bound(unused.begin(), unused.end(), t, Order<Sprite>());
-	unused.insert(ins, t);
-	while(maxCount < unused.size()){
-		T* deleted = 0;
+	auto ins = std::upper_bound(this->unusedSprite_.begin(), this->unusedSprite_.end(), spr, Order<Sprite>());
+	this->unusedSprite_.insert(ins, spr);
+	while(Canvas::MaxCachedSpriteCount < this->unusedSprite_.size()){
+		Sprite* deleted = 0;
 		if((rand() & 1U) == 1U){
-			deleted = unused.back();
-			unused.pop_back();
+			deleted = this->unusedSprite_.back();
+			this->unusedSprite_.pop_back();
 		}else{
-			deleted = unused.front();
-			unused.pop_front();
+			deleted = this->unusedSprite_.front();
+			this->unusedSprite_.pop_front();
 		}
 		if(deleted){
-			T* min = unused.front();
-			T* max = unused.back();
+			Sprite* min = this->unusedSprite_.front();
+			Sprite* max = this->unusedSprite_.back();
 			if(log_.d()){
-				log_.d(TAG, "%s cache deleted. size: %dx%d / min:%dx%d, max:%dx%d",
-						name,
+				log_.d(TAG, "Sprite cache deleted. size: %dx%d / min:%dx%d, max:%dx%d",
 						deleted->width(), deleted->height(),
 						min->width(), min->height(),
 						max->width(), max->height());
@@ -133,11 +132,6 @@ void backImage(logging::Logger& log_, const char* name, std::deque<T*>& unused, 
 			delete deleted;
 		}
 	}
-}
-
-void Canvas::backSprite(Sprite* spr)
-{
-	backImage<Sprite, Canvas::MaxCachedSpriteCount>(log_, "Sprite", unusedSprite_, spr);
 }
 
 
