@@ -123,8 +123,8 @@ void Canvas::backSprite(Sprite* spr)
 		if(deleted){
 			Sprite* min = this->unusedSprite_.front();
 			Sprite* max = this->unusedSprite_.back();
-			if(log_.d()){
-				log_.d(TAG, "Sprite cache deleted. size: %dx%d / min:%dx%d, max:%dx%d",
+			if(log().d()){
+				log().d(TAG, "Sprite cache deleted. size: %dx%d / min:%dx%d, max:%dx%d",
 						deleted->width(), deleted->height(),
 						min->width(), min->height(),
 						max->width(), max->height());

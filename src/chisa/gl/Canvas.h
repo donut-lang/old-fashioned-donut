@@ -25,22 +25,25 @@
 #include "Handler.h"
 #include "Sprite.h"
 #include <deque>
+#include <map>
 
 namespace chisa {
 namespace gl {
 
 class Canvas {
 	DISABLE_COPY_AND_ASSIGN(Canvas);
+	DEFINE_MEMBER_REF(private, logging::Logger, log)
 private:
 	static constexpr size_t MaxCachedBufferCount = 200;
 	static constexpr size_t MaxCachedSpriteCount = 200;
 private:
-	logging::Logger& log_;
+	Sprite::Handler loadPNG(const std::string& filename);
 public:
 	Canvas(logging::Logger& log);
 	virtual ~Canvas();
 public:
 	std::deque<Sprite*> unusedSprite_;
+	std::deque<std::pair<std::string, Sprite::Handler> > imageCache_;
 public:
 	void ortho(const float left, const float right, const float bottom, const float top, const float near_val, const float far_val);
 	void pushMatrix();
@@ -50,8 +53,8 @@ public:
 	void scale(const float x,const float y, const float z);
 	void drawSprite(const float x,const float y, const float z, Sprite::Handler sprite);
 public:
-	Sprite::Handler loadPNG(const std::string& filename);
 	Sprite::Handler querySprite(const int width, const int height);
+	Sprite::Handler queryImage(const std::string& filename);
 public:
 	void backSprite(Sprite* spr);
 };
