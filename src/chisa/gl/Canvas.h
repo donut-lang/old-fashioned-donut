@@ -32,8 +32,8 @@ namespace gl {
 class Canvas {
 	DISABLE_COPY_AND_ASSIGN(Canvas);
 private:
-	static constexpr const size_t MaxCachedBufferCount = 200;
-	static constexpr const size_t MaxCachedSpriteCount = 200;
+	static constexpr size_t MaxCachedBufferCount = 200;
+	static constexpr size_t MaxCachedSpriteCount = 200;
 private:
 	logging::Logger& log_;
 public:

@@ -26,6 +26,10 @@
 #include "./Geom.h"
 
 namespace chisa {
+namespace gl{
+class Canvas;
+}
+
 namespace tk {
 using std::shared_ptr;
 using std::weak_ptr;
@@ -48,10 +52,10 @@ public:
 	Point calcAbsolutePosition();
 	Point calcRelativePositionFromParent();
 public:
-	virtual void render(const Area& area) = 0;
+	virtual void render(gl::Canvas& cv, const Area& area) = 0;
 	virtual void idle(const float delta_ms) = 0;
 	virtual void reshape(const Box& area) = 0;
-	virtual Box& measureSize(const Box& constraint) = 0;
+	virtual Box& measure(const Box& constraint) = 0;
 };
 
 }}
