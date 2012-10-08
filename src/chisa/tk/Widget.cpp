@@ -17,6 +17,7 @@
  */
 
 #include "Widget.h"
+#include "layout/WidgetWrapperLayout.h"
 #include <GL/gl.h>
 
 namespace chisa {
@@ -24,13 +25,13 @@ namespace tk {
 
 const static std::string TAG("Widget");
 
-//void Widget::render(const Area& area)
-//{
-//	if(log.t()) {
-//		log.t(TAG, std::string("rendering: ")+area.toString());
-//	}
-//	glScissor(area.x(), area.y(), area.width(), area.height());
-//	this->renderImpl();
-//}
+Widget::Widget(logging::Logger& log, tinyxml2::XMLElement* element)
+:log_(log)
+{
+}
+
+Widget::~Widget()
+{
+}
 
 }}

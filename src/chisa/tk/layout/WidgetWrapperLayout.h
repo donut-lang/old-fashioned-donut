@@ -56,7 +56,8 @@ public:
 public:
 	virtual void loadXML(LayoutFactory* const factory, XMLElement* const element) override;
 	virtual string toString() override;
-
+public:
+	virtual void calcPositionOf();
 };
 
 }}}
