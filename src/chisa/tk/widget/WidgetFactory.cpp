@@ -18,6 +18,7 @@
 
 
 #include "WidgetFactory.h"
+#include "ImageWidget.h"
 
 namespace chisa {
 namespace tk {
@@ -27,16 +28,25 @@ WidgetFactory::WidgetFactory(logging::Logger& log, weak_ptr<World> world)
 :log_(log)
 ,world_(world)
 {
-
+	this->registerWidget<ImageWidget>("image");
 }
 
 WidgetFactory::~WidgetFactory()
 {
 }
 
+void WidgetFactory::registerWidget(const string& klass, std::function<Widget*(logging::Logger& log, weak_ptr<World> world, tinyxml2::XMLElement* elem)> func)
+{
+	this->widgetMap_.insert(std::make_pair(klass, func));
+}
+
 Widget* WidgetFactory::createWidget(const string& klass, tinyxml2::XMLElement* elem)
 {
-
+	auto it = this->widgetMap_.find(klass);
+	if(it == this->widgetMap_.end()){
+		return nullptr;
+	}
+	return it->second(log_, world_, elem);
 }
 
 }}}

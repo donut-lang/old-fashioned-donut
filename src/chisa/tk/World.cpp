@@ -56,6 +56,7 @@ void World::init(weak_ptr<World> _self)
 	if(shared_ptr<Universe> universe = this->universe_.lock()){
 		this->layoutFactory_ = new layout::LayoutFactory(this->log_, _self, universe->resolveWorldFilepath(this->name_, "layout.xml"));
 	}
+	this->widgetFactory_ = new widget::WidgetFactory(this->log_, _self);
 	this->pushLayout("main");
 }
 
@@ -132,5 +133,20 @@ Widget* World::createWidget(const string& klass, tinyxml2::XMLElement* elem)
 {
 	return this->widgetFactory_->createWidget(klass, elem);
 }
+
+gl::Sprite::Handler World::queryImage(const string& abs_filename)
+{
+	return this->universe_.lock()->queryImage(abs_filename);
+}
+std::string World::resolveWorldFilepath(const string& related_filename)
+{
+	return this->universe_.lock()->resolveWorldFilepath(this->name_, related_filename);
+}
+std::string World::resolveUniverseFilepath(const string& related_filename)
+{
+	return this->universe_.lock()->resolveUniverseFilepath(related_filename);
+}
+
+
 
 }}

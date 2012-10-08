@@ -106,12 +106,12 @@ std::shared_ptr<Param> Param::createParam(const std::string& name, const std::st
 
 void ParamSet::add(std::shared_ptr<Param> p)
 {
-	this->params_.insert(std::pair<std::string, std::shared_ptr<Param> >(p->name(), p));
+	this->params_.insert( std::make_pair(p->name(), p) );
 }
 void ParamSet::add(const std::string& name, const std::string& type, const std::string& value)
 {
 	std::shared_ptr<Param> p = Param::createParam(name, type, value);
-	this->params_.insert(std::pair<std::string, std::shared_ptr<Param> >(name, p));
+	this->params_.insert(std::make_pair(name, p));
 }
 std::shared_ptr<Param> ParamSet::get(const std::string& name)
 {
@@ -124,7 +124,7 @@ std::shared_ptr<Param> ParamSet::get(const std::string& name)
 
 bool ParamSet::has(const std::string& name)
 {
-	return this->params_.find(name) == this->params_.end();
+	return this->params_.find(name) != this->params_.end();
 }
 
 std::shared_ptr<Param> Param::parseTree(tinyxml2::XMLElement* elem)
@@ -133,7 +133,7 @@ std::shared_ptr<Param> Param::parseTree(tinyxml2::XMLElement* elem)
 	const char* name;
 	const char* type;
 	const char* value;
-	if(elemName != Param::ElemName || !(name = elem->Attribute(AttrName::Name, nullptr) ) || ! (value = elem->Attribute(AttrName::Value, nullptr)) ){
+	if(elemName != Param::ElemName || !(name = elem->Attribute(AttrName::Name, nullptr)) || !(value = elem->GetText()) ){
 		return std::shared_ptr<Param>();
 	}
 	if( !(type = elem->Attribute(AttrName::Type, nullptr) ) ){
@@ -142,13 +142,13 @@ std::shared_ptr<Param> Param::parseTree(tinyxml2::XMLElement* elem)
 	elem->FirstChildElement();
 	return Param::createParam(name, type, value);
 }
-void ParamSet::parseTree(std::shared_ptr<ParamSet> paramSet, tinyxml2::XMLElement* elem)
+void ParamSet::parseTree(tinyxml2::XMLElement* elem)
 {
 	for(XMLNode* it=elem->FirstChild(); it; it=it->NextSibling()){
 		if(XMLElement* paramElem = it->ToElement()){
 			std::shared_ptr<Param> p = Param::parseTree(paramElem);
 			if(p){
-				paramSet->add(p);
+				this->add(p);
 			}
 		}
 	}

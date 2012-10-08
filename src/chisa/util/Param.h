@@ -72,7 +72,7 @@ public:
 	bool has(const std::string& name);
 	std::size_t size() const{ return this->params_.size(); };
 public:
-	static void parseTree(std::shared_ptr<ParamSet> paramSet, tinyxml2::XMLElement* elem);
+	void parseTree(tinyxml2::XMLElement* elem);
 };
 
 }}

@@ -145,7 +145,7 @@ void WidgetWrapperLayout::loadXML(LayoutFactory* const factory, XMLElement* cons
 	}
 	const char* widgetKlass = element->Attribute("widget-klass", nullptr);
 	const char* widgetId = element->Attribute("widget-id", nullptr);
-	if(widgetKlass){
+	if(!widgetKlass){
 		this->log().e(TAG, "Oops. widget-klass not defined for id \"%s\".", widgetId);
 		return;
 	}
