@@ -43,13 +43,15 @@ using std::shared_ptr;
 using std::weak_ptr;
 
 class Layout;
+class World;
 
 class Widget {
 	DISABLE_COPY_AND_ASSIGN(Widget);
 	DEFINE_MEMBER_REF(private, logging::Logger, log);
+	DEFINE_MEMBER(protected, private, weak_ptr<World>, world)
 	DEFINE_MEMBER(private, private, weak_ptr<layout::WidgetWrapperLayout>, wrapper);
 public:
-	Widget(logging::Logger& log, tinyxml2::XMLElement* element);
+	Widget(logging::Logger& log, weak_ptr<World> world, tinyxml2::XMLElement* element);
 	virtual ~Widget();
 public:
 	void updateWrapper(weak_ptr<layout::WidgetWrapperLayout> wrapper) { this->wrapper_ = wrapper; };
@@ -59,7 +61,7 @@ public:
 	virtual void render(gl::Canvas& cv, const Area& area) = 0;
 	virtual void idle(const float delta_ms) = 0;
 	virtual void reshape(const Box& area) = 0;
-	virtual Box& measure(const Box& constraint) = 0;
+	virtual Box measure(const Box& constraint) = 0;
 };
 
 }}

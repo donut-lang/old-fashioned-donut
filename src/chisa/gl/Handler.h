@@ -32,7 +32,7 @@ class Handler
 private:
 	T* obj_;
 protected:
-	Handler():obj_(0){};
+	Handler():obj_(nullptr){};
 	explicit Handler(T* const obj)
 	:obj_(obj)
 	{
@@ -61,6 +61,9 @@ public:
 		}
 		this->obj_ = other.obj_;
 		return *this;
+	}
+	operator bool(){
+		return this->obj_;
 	}
 	virtual ~Handler()
 	{

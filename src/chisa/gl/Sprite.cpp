@@ -124,6 +124,12 @@ void Sprite::unlock()
 
 //-----------------------------------------------------------------------------
 
+Sprite::Handler::Handler()
+:gl::Handler<Sprite>(nullptr)
+{
+
+}
+
 Sprite::Handler::Handler(Sprite* const obj, int width, int height)
 :gl::Handler<Sprite>(obj)
 {
