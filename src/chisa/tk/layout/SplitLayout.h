@@ -79,14 +79,6 @@ public:
 	virtual void idle(const float delta_ms) override;
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const override;
 	virtual size_t getChildCount() const override;
-	inline static float max(const float a, const float b)
-	{
-		return isnan(b) ? a : (a > b ? a : b);
-	}
-	inline static float min(const float a, const float b)
-	{
-		return isnan(a) ? b : (a > b ? b : a);
-	}
 };
 
 }}}

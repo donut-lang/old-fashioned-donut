@@ -35,14 +35,12 @@ class EmptyLayout : public Layout {
 public:
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const override;
 	virtual size_t getChildCount() const override;
-public:
-	virtual void render(const Area& area) override;
-	virtual void idle(const float delta_ms) override;
-	virtual Box measure(const Box& constraint) override;
 	virtual void loadXML(LayoutFactory* const factory, tinyxml2::XMLElement* element) override;
 	virtual string toString() override;
-protected:
-	virtual void reshapeImpl(const Area& area) override;
+public:
+	virtual void renderImpl(gl::Canvas& canvas, const Area& screenArea, const Area& area) override;
+	virtual Box onMeasure(const Box& constraint) override;
+	virtual void onLayout(const Box& size) override;
 };
 
 }}}

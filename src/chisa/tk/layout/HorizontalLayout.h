@@ -33,11 +33,11 @@ class LayoutFactory;
 class HorizontalLayout: public chisa::tk::layout::SplitLayout {
 	CHISA_LAYOUT_SUBKLASS_FINAL(HorizontalLayout);
 public:
-	virtual void render(const Area& area) override;
-	virtual Box measure(const Box& constraint) override;
 	virtual string toString() override;
-protected:
-	virtual void reshapeImpl(const Area& area) override;
+public:
+	virtual void renderImpl(gl::Canvas& canvas, const Area& screenArea, const Area& area) override;
+	virtual Box onMeasure(const Box& constraint) override;
+	virtual void onLayout(const Box& size) override;
 };
 }}}
 #endif /* INCLUDE_GUARD */

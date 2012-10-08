@@ -41,27 +41,6 @@ size_t EmptyLayout::getChildCount() const
 {
 	return 0;
 }
-void EmptyLayout::render(const Area& area)
-{
-	// 空っぽ。何も表示しない。
-}
-void EmptyLayout::idle(const float delta_ms)
-{
-	// 何もしない。
-}
-void EmptyLayout::reshapeImpl(const Area& area)
-{
-	//何も表示しないのだから何もしない
-}
-Box EmptyLayout::measure(const Box& constraint)
-{
-	//とりあえず最大を主張しておく
-	// FIXME: とりあえず仮置きで「大きい値」
-	return Box(
-		geom::isUnspecified(constraint.width()) ? geom::VeryLarge : constraint.width(),
-		geom::isUnspecified(constraint.height()) ? geom::VeryLarge : constraint.height()
-	);
-}
 
 void EmptyLayout::loadXML(LayoutFactory* const factory, tinyxml2::XMLElement* element)
 {
@@ -73,6 +52,24 @@ string EmptyLayout::toString()
 	return util::format("(EmptyLayout)");
 }
 
+void EmptyLayout::renderImpl(gl::Canvas& canvas, const Area& screenArea, const Area& area)
+{
+	//何も描画しない
+}
 
+Box EmptyLayout::onMeasure(const Box& constraint)
+{
+	//とりあえず最大を主張しておく
+	// FIXME: とりあえず仮置きで「大きい値」
+	return Box(
+		geom::isUnspecified(constraint.width()) ? geom::VeryLarge : constraint.width(),
+		geom::isUnspecified(constraint.height()) ? geom::VeryLarge : constraint.height()
+	);
+}
+
+void EmptyLayout::onLayout(const Box& size)
+{
+	//何もしない
+}
 
 }}}

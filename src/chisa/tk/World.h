@@ -21,6 +21,7 @@
 #include <memory>
 #include <string>
 #include <map>
+#include "../util/class_utils.h"
 
 #include "Task.h"
 #include "Geom.h"
@@ -31,6 +32,11 @@ class XMLElement;
 }
 
 namespace chisa {
+
+namespace gl{
+class Canvas;
+}
+
 namespace tk {
 class Layout;
 class Widget;
@@ -56,19 +62,15 @@ private:
 	TaskHandler taskHandler_;
 	Stack<shared_ptr<Layout> > layoutStack_;
 	map<string, layout::WidgetWrapperLayout*> widgetMap_;
+	DEFINE_MEMBER(private, private, Area, area);
 private:
 	layout::LayoutFactory* layoutFactory_;
 	widget::WidgetFactory* widgetFactory_;
-private:
-	Area area_;
 public:
-	inline Area area() const{ return area_; };
-public:
-	void render();
+	void render(gl::Canvas& canvas);
 	void idle(const float delta_ms);
 	void reshape(const Area& area);
 private:
-	inline void area(const Area& newArea) { area_=newArea; };
 	void popLayout();
 	void pushLayout(const string& filename);
 public:

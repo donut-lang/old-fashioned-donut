@@ -23,6 +23,7 @@
 #include "../util/class_utils.h"
 #include <memory>
 #include <string>
+#include <cmath>
 
 namespace tinyxml2 {
 class XMLElement;
@@ -42,44 +43,24 @@ using std::size_t;
 class Layout {
 	DISABLE_COPY_AND_ASSIGN(Layout);
 private:
-	logging::Logger& log_;
-	weak_ptr<World> world_;
-	weak_ptr<Layout> root_;
-	weak_ptr<Layout> parent_;
-	weak_ptr<Layout> self_;
-	Area area_;
-protected:
-	inline logging::Logger& log() const { return log_; }
-	inline weak_ptr<World> world() const { return world_; }
-	inline weak_ptr<Layout> root() const { return root_; }
-	inline weak_ptr<Layout> parent() const { return parent_; }
-	inline weak_ptr<Layout> self() const { return self_; }
+	DEFINE_MEMBER_REF(protected, logging::Logger, log);
+	DEFINE_MEMBER(protected, private, weak_ptr<World>, world);
+	DEFINE_MEMBER(protected, private, weak_ptr<Layout>, root);
+	DEFINE_MEMBER(protected, private, weak_ptr<Layout>, parent);
+	DEFINE_MEMBER(protected, private, weak_ptr<Layout>, self);
+	DEFINE_MEMBER(protected, private, Box, size);
+	DEFINE_MEMBER(protected, private, Area, screenArea);
+	DEFINE_MEMBER(protected, private, Area, drawnArea);
 public:
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const = 0;
 	virtual size_t getChildCount() const = 0;
 public:
-	Area area() const {return area_;};
-public:
-	/**
-	 * 描画する。
-	 * エリアは描画される、レイアウト内の位置。
-	 * area ⊂ this->area().box();
-	 */
-	virtual void render(const Area& area) = 0; /* OpenGLの座標の設定などを行なってしまう */
-	virtual void idle(const float delta_ms) = 0;
-	virtual Box measure(const Box& constraint) = 0;
-	virtual void loadXML(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element) = 0;
-	virtual string toString() = 0;
-	/**
-	 * ウインドウサイズの変更などが起こったので、レイアウトの再計算を行う。
-	 * ここのエリアはウインドウ全体内での位置。
-	 */
-	void reshape(const Area& area);
-protected:
-	/**
-	 * サブクラスはこっちを実装する。
-	 */
-	virtual void reshapeImpl(const Area& area) = 0;
+	void render(gl::Canvas& canvas, const Area& screenArea, const Area& area);
+	virtual void renderImpl(gl::Canvas& canvas, const Area& screenArea, const Area& area) = 0;
+	Box measure(const Box& constraint);
+	virtual Box onMeasure(const Box& constraint) = 0;
+	void layout(const Box& size);
+	virtual void onLayout(const Box& size) = 0;
 protected:
 	Layout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);
 private:
@@ -93,6 +74,18 @@ public:
 		return ptr;
 	}
 	virtual ~Layout();
+	virtual void loadXML(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element) = 0;
+	virtual string toString() = 0;
+	virtual void idle(const float delta_ms);
+public:
+	inline static float updateMax(const float a, const float b)
+	{
+		return std::isnan(b) ? a : (a > b ? a : b);
+	}
+	inline static float updateMin(const float a, const float b)
+	{
+		return std::isnan(a) ? b : (a > b ? b : a);
+	}
 };
 
 
