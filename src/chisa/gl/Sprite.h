@@ -57,6 +57,7 @@ public:
 public:
 	class Handler : public chisa::gl::Handler<Sprite> {
 	public:
+		Handler();
 		Handler(Sprite* const obj, int width, int height);
 		virtual ~Handler();
 	};

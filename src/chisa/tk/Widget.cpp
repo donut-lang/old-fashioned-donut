@@ -25,8 +25,9 @@ namespace tk {
 
 const static std::string TAG("Widget");
 
-Widget::Widget(logging::Logger& log, tinyxml2::XMLElement* element)
+Widget::Widget(logging::Logger& log, weak_ptr<World> world, tinyxml2::XMLElement* element)
 :log_(log)
+,world_(world)
 {
 }
 

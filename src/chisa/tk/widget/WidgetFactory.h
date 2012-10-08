@@ -41,8 +41,8 @@ class WidgetFactory {
 	DISABLE_COPY_AND_ASSIGN(WidgetFactory);
 public:
 	template <typename WidgetKlass>
-	WidgetKlass* widgetConstructor(logging::Logger& log, tinyxml2::XMLElement* elem){
-		return new WidgetKlass(log, elem);
+	WidgetKlass* widgetConstructor(logging::Logger& log, weak_ptr<World> world, tinyxml2::XMLElement* elem){
+		return new WidgetKlass(log, world, elem);
 	}
 private:
 	logging::Logger& log_;
@@ -51,7 +51,7 @@ public:
 	WidgetFactory(logging::Logger& log, weak_ptr<World> world);
 	virtual ~WidgetFactory();
 public:
-	void registerWidget(const string& klass, std::function<Widget*(logging::Logger& log, tinyxml2::XMLElement* elem)> func);
+	void registerWidget(const string& klass, std::function<Widget*(logging::Logger& log, weak_ptr<World> world, tinyxml2::XMLElement* elem)> func);
 	template <typename WidgetKlass>
 	void registerWidget(const string& klass) {
 		this->registerWidget(klass, widgetConstructor<WidgetKlass>);
