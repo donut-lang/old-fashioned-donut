@@ -35,7 +35,7 @@ Sprite::Handler Canvas::queryImage(const std::string& filename)
 		}
 	}
 	Sprite::Handler img = this->loadPNG(filename);
-	this->imageCache_.push_front(std::pair<std::string, Sprite::Handler>(filename, img));
+	this->imageCache_.push_front(std::make_pair(filename, img));
 	while(this->imageCache_.size() > 10) {
 		this->imageCache_.pop_back();
 	}
