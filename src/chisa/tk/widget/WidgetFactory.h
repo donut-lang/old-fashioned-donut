@@ -20,8 +20,10 @@
 #define __CXX_CHISA_TK_WIDGET_WIDGETFACTORY_H_
 
 #include <memory>
+#include <functional>
 #include <tinyxml2.h>
 #include "../../logging/Logger.h"
+#include "../../util/class_utils.h"
 
 namespace chisa {
 namespace util {
@@ -36,6 +38,12 @@ namespace widget {
 using namespace std;
 
 class WidgetFactory {
+	DISABLE_COPY_AND_ASSIGN(WidgetFactory);
+public:
+	template <typename WidgetKlass>
+	WidgetKlass* widgetConstructor(logging::Logger& log, tinyxml2::XMLElement* elem){
+		return new WidgetKlass(log, elem);
+	}
 private:
 	logging::Logger& log_;
 	weak_ptr<World> world_;
@@ -43,6 +51,12 @@ public:
 	WidgetFactory(logging::Logger& log, weak_ptr<World> world);
 	virtual ~WidgetFactory();
 public:
+	void registerWidget(const string& klass, std::function<Widget*(logging::Logger& log, tinyxml2::XMLElement* elem)> func);
+	template <typename WidgetKlass>
+	void registerWidget(const string& klass) {
+		this->registerWidget(klass, widgetConstructor<WidgetKlass>);
+	}
+
 	Widget* createWidget(const string& klass, tinyxml2::XMLElement* elem);
 };
 

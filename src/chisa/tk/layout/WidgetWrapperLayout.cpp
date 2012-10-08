@@ -45,7 +45,7 @@ WidgetWrapperLayout::~WidgetWrapperLayout()
 		if(shared_ptr<World> world = this->world().lock()){
 			//ワールドの書き換えと、ウィジットへの現親レイアウトの通知
 			if(world->replaceWidget(this->widgetId_, this->parent_)) {
-				this->widget()->updateWrapper(this->self());
+				this->widget()->updateWrapper(dynamic_pointer_cast<WidgetWrapperLayout>(this->self().lock()));
 			}
 			// TODO　ウィジットにレイアウト通知入れたほうがいい？？
 		}
@@ -103,6 +103,7 @@ void chisa::tk::layout::WidgetWrapperLayout::onLayout(const Box& size)
 		return;
 	}
 	this->widgetSize(widget()->measure(size));
+	widget()->reshape(this->widgetSize()); //そのまま要求を飲む
 	switch(this->fitMode_)
 	{
 	case Fit: {
@@ -143,16 +144,16 @@ void WidgetWrapperLayout::loadXML(LayoutFactory* const factory, XMLElement* cons
 		this->fitMode_ = Center;
 	}
 	const char* widgetKlass = element->Attribute("widget-klass", nullptr);
+	const char* widgetId = element->Attribute("widget-id", nullptr);
 	if(widgetKlass){
-		this->log().e(TAG, "Oops. widget-klass not defined.");
+		this->log().e(TAG, "Oops. widget-klass not defined for id \"%s\".", widgetId);
 		return;
 	}
-	const char* widgetId = element->Attribute("widget-id", nullptr);
 	if(shared_ptr<World> world = this->world().lock()){
 		if(widgetId && (this->parent_ = world->getWidgetById(widgetId))){
 			world->replaceWidget(widgetId, this);
 			this->widget(this->parent_->widget());
-			this->widget()->updateWrapper(this->self());
+			this->widget()->updateWrapper(dynamic_pointer_cast<WidgetWrapperLayout>(this->self().lock()));
 		}else{
 			this->widget(world->createWidget(widgetKlass, element));
 			if(!this->widget()){

@@ -25,12 +25,20 @@
 #include "../logging/Logger.h"
 #include "./Geom.h"
 
+namespace tinyxml2 {
+class XMLElement;
+}
+
 namespace chisa {
 namespace gl{
 class Canvas;
 }
 
 namespace tk {
+namespace layout {
+class WidgetWrapperLayout;
+}
+
 using std::shared_ptr;
 using std::weak_ptr;
 
@@ -38,19 +46,15 @@ class Layout;
 
 class Widget {
 	DISABLE_COPY_AND_ASSIGN(Widget);
-private:
-	logging::Logger& log_;
-	weak_ptr<Layout> wrapper_;
+	DEFINE_MEMBER_REF(private, logging::Logger, log);
+	DEFINE_MEMBER(private, private, weak_ptr<layout::WidgetWrapperLayout>, wrapper);
 public:
-	Widget(logging::Logger& log);
+	Widget(logging::Logger& log, tinyxml2::XMLElement* element);
 	virtual ~Widget();
 public:
-	void updateWrapper(weak_ptr<Layout> wrapper) { this->wrapper_ = wrapper; };
-public: /* レンダリング関連 */
-	void invalidate();
+	void updateWrapper(weak_ptr<layout::WidgetWrapperLayout> wrapper) { this->wrapper_ = wrapper; };
 public:
 	Point calcAbsolutePosition();
-	Point calcRelativePositionFromParent();
 public:
 	virtual void render(gl::Canvas& cv, const Area& area) = 0;
 	virtual void idle(const float delta_ms) = 0;
