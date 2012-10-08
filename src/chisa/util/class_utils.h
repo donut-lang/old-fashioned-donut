@@ -44,4 +44,5 @@ rscope:\
 wscope:\
 	inline void name(type const& val){name##_ = val;}
 
+
 #endif /* INCLUDE_GUARD */

@@ -62,9 +62,6 @@ public:
 		this->obj_ = other.obj_;
 		return *this;
 	}
-	operator bool(){
-		return this->obj_;
-	}
 	virtual ~Handler()
 	{
 		if(this->obj_){
@@ -80,7 +77,7 @@ public:
 	{
 		return this->obj_;
 	}
-	operator bool() const
+	explicit operator bool() const
 	{
 		return this->obj_ != 0;
 	}
