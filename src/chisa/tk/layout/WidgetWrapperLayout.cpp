@@ -80,9 +80,11 @@ void chisa::tk::layout::WidgetWrapperLayout::renderImpl(gl::Canvas& canvas, cons
 	if(!widget()){
 		return;
 	}
+	canvas.pushMatrix();
 	canvas.translate(this->widgetPoint().x(), this->widgetPoint().y(), 0.0f);
 	canvas.scale(this->widgetScale(), this->widgetScale(), this->widgetScale());
 	widget()->render(canvas, Area(0,0,widgetSize().width(), widgetSize().height()));
+	canvas.popMatrix();
 }
 
 Box chisa::tk::layout::WidgetWrapperLayout::onMeasure(const Box& constraint)
@@ -92,7 +94,7 @@ Box chisa::tk::layout::WidgetWrapperLayout::onMeasure(const Box& constraint)
 	}
 	Box box(widget()->measure(constraint));
 	if(geom::isUnspecified(box.width()) || geom::isUnspecified(box.height())){
-		log().e(TAG, "Widget \"this->widgetId_.c_str()\" box size unspecified.");
+		this->log().e(TAG, "Widget \"this->widgetId_.c_str()\" box size unspecified.");
 	}
 	return box;
 }

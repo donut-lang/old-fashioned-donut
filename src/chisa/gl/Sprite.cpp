@@ -61,18 +61,36 @@ Sprite::~Sprite()
 unsigned char* Sprite::requestMemory()
 {
 	if(!this->data_){
-		this->data_ = new unsigned char[origWidth_*origHeight_*4];
+		this->data_ = new unsigned char[origWidth() * origHeight() * 4];
 	}
 	return this->data_;
 }
 unsigned int Sprite::requestTexture()
 {
-	if(this->texId_ != MAGIC){
+	if(this->texId_ == MAGIC){
 		glGenTextures(1, &this->texId_);
-	}
-	if(this->dirty_){
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0,0, this->origWidth(), this->origHeight(), GL_RGBA, GL_UNSIGNED_BYTE, this->data_);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glBindTexture(GL_TEXTURE_2D, this->texId_);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->origWidth(), this->origHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, this->data_);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+		const GLenum err = glGetError();
+		if(err != GL_NO_ERROR){
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to transfer texture: %d", err);
+		}
 		this->dirty_=false;
+	}else if(this->dirty_){
+		glBindTexture(GL_TEXTURE_2D, this->texId_);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0,0, this->origWidth(), this->origHeight(), GL_RGB, GL_UNSIGNED_BYTE, this->data_);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+		this->dirty_=false;
+		const GLenum err = glGetError();
+		if(err != GL_NO_ERROR){
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to transfer texture: %d", err);
+		}
 	}
 	return this->texId_;
 }
@@ -111,12 +129,12 @@ void Sprite::lock(unsigned char** data, int* stride)
 	}
 	this->locked(true);
 	*data = this->requestMemory();
-	*stride = this->origWidth_*4;
+	*stride = this->origWidth()*4;
 }
 void Sprite::unlock()
 {
-	if(this->locked()){
-		throw logging::Exception(__FILE__, __LINE__, "[BUG] Sprite already locked!");
+	if(!this->locked()){
+		throw logging::Exception(__FILE__, __LINE__, "[BUG] Sprite already unlocked!");
 	}
 	this->locked(false);
 	this->dirty_=true;
@@ -143,7 +161,7 @@ Sprite::Handler::~Handler()
 //-----------------------------------------------------------------------------
 
 Sprite::Session::Session(Sprite::Handler parent)
-:parent_(parent_)
+:parent_(parent)
 {
 	this->parent_->lock(&this->data_, &this->stride_);
 }

@@ -86,12 +86,15 @@ void Canvas::drawSprite(const float x,const float y, const float z, Sprite::Hand
 	const float right = width/sprite->origWidth();
 	const float bottom = height/sprite->origHeight();
 	glBindTexture(GL_TEXTURE_2D, texId);
+	glColor4f(1,1,1,1);
+	glEnable(GL_TEXTURE_2D);
 	glBegin(GL_POLYGON);
 		glTexCoord2f(0,		0);		glVertex3f(x      , y, z);
 		glTexCoord2f(0,		bottom);	glVertex3f(x      , y+height,z);
 		glTexCoord2f(right,	bottom);	glVertex3f(x+width, y+height,z);
 		glTexCoord2f(right,	0);		glVertex3f(x+width, y,z);
 	glEnd();
+	glDisable(GL_TEXTURE_2D);
 	glFlush();
 }
 
