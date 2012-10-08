@@ -32,7 +32,7 @@ static int getPower2Of(const int width)
 	return start;
 }
 
-static constexpr const unsigned int MAGIC=0xDEADBEEF;
+static constexpr unsigned int MAGIC=0xDEADBEEF;
 
 Sprite::Sprite(Canvas* const canvas, const int width, const int height)
 :canvas_(canvas)

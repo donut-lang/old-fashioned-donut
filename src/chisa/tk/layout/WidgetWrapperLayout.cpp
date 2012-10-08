@@ -80,14 +80,18 @@ void WidgetWrapperLayout::idle(const float delta_ms)
 }
 Box WidgetWrapperLayout::measure(const Box& constraint)
 {
-	return(Box(100,100));
+	Box box(widget_->measure(constraint));
+	if(geom::isUnspecified(box.width()) || geom::isUnspecified(box.height())){
+		log().e(TAG, "Widget \"this->widgetId_.c_str()\" box size unspecified.");
+	}
+	return box;
 }
 void WidgetWrapperLayout::reshapeImpl(const Area& area)
 {
 }
 std::string WidgetWrapperLayout::toString()
 {
-	return "(WidgetWrapperLayout )";
+	return util::format( "(WidgetWrapperLayout %s)", this->widgetId_.c_str());
 }
 void WidgetWrapperLayout::loadXML(LayoutFactory* const factory, XMLElement* const element)
 {
