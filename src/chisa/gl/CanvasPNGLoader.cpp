@@ -24,6 +24,24 @@
 namespace chisa{
 namespace gl {
 
+Sprite::Handler Canvas::queryImage(const std::string& filename)
+{
+	for(auto it = this->imageCache_.begin(); it != this->imageCache_.end(); ++it){
+		if(it->first == filename){
+			auto pair = *it;
+			this->imageCache_.erase(it);
+			this->imageCache_.push_front(pair);
+			return it->second;
+		}
+	}
+	Sprite::Handler img = this->loadPNG(filename);
+	this->imageCache_.push_front(std::pair<std::string, Sprite::Handler>(filename, img));
+	while(this->imageCache_.size() > 10) {
+		this->imageCache_.pop_back();
+	}
+	return img;
+}
+
 Sprite::Handler Canvas::loadPNG(const std::string& filename)
 {
 	FILE* fp = fopen(filename.c_str(), "rb");
