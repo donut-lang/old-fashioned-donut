@@ -22,6 +22,7 @@
 #include <string>
 #include <map>
 #include "../util/class_utils.h"
+#include "../gl/Canvas.h"
 
 #include "Task.h"
 #include "Geom.h"
@@ -32,10 +33,6 @@ class XMLElement;
 }
 
 namespace chisa {
-
-namespace gl{
-class Canvas;
-}
 
 namespace tk {
 class Layout;
@@ -78,6 +75,13 @@ public:
 	bool replaceWidget(const string& widgetId, layout::WidgetWrapperLayout* const newHandler);
 	bool deleteWidget(const string& widgetId, layout::WidgetWrapperLayout* const handler);
 	Widget* createWidget(const string& klass, tinyxml2::XMLElement* elem);
+	/******************************************************************************
+	 * Universeへの移譲
+	 ******************************************************************************/
+public:
+	gl::Sprite::Handler queryImage(const string& abs_filename);
+	std::string resolveWorldFilepath(const string& related_filename);
+	std::string resolveUniverseFilepath(const string& related_filename);
 
 	/******************************************************************************
 	 * 生成

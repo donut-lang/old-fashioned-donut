@@ -89,9 +89,19 @@ void Universe::notifyWorldEnd(weak_ptr<World> me)
 		log.w(TAG, "notified world end, but world was already dead.");
 	}
 }
-std::string Universe::resolveWorldFilepath(const std::string& worldname, const std::string& filename)
+
+std::string Universe::resolveWorldFilepath(const std::string& worldname, const std::string& related_filename)
 {
-	return this->basepath_+util::FileUtil::Sep+worldname+util::FileUtil::Sep+filename;
+	return this->basepath_+util::FileUtil::Sep+worldname+util::FileUtil::Sep+related_filename;
+}
+std::string Universe::resolveUniverseFilepath(const std::string& related_filename)
+{
+	return this->basepath_+util::FileUtil::Sep+related_filename;
+}
+
+gl::Sprite::Handler Universe::queryImage(const std::string& abs_filename)
+{
+	return this->canvas_.queryImage(abs_filename);
 }
 
 }}

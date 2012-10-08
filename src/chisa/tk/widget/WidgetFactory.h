@@ -20,6 +20,7 @@
 #define __CXX_CHISA_TK_WIDGET_WIDGETFACTORY_H_
 
 #include <memory>
+#include <map>
 #include <functional>
 #include <tinyxml2.h>
 #include "../../logging/Logger.h"
@@ -37,16 +38,17 @@ namespace widget {
 
 using namespace std;
 
+template <typename WidgetKlass>
+WidgetKlass* widgetConstructor(logging::Logger& log, weak_ptr<World> world, tinyxml2::XMLElement* elem){
+	return new WidgetKlass(log, world, elem);
+}
+
 class WidgetFactory {
 	DISABLE_COPY_AND_ASSIGN(WidgetFactory);
-public:
-	template <typename WidgetKlass>
-	WidgetKlass* widgetConstructor(logging::Logger& log, weak_ptr<World> world, tinyxml2::XMLElement* elem){
-		return new WidgetKlass(log, world, elem);
-	}
 private:
 	logging::Logger& log_;
 	weak_ptr<World> world_;
+	std::map<std::string, std::function<Widget*(logging::Logger& log, weak_ptr<World> world, tinyxml2::XMLElement* elem)> > widgetMap_;
 public:
 	WidgetFactory(logging::Logger& log, weak_ptr<World> world);
 	virtual ~WidgetFactory();
