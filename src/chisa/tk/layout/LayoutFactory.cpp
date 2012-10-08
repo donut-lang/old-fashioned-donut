@@ -53,6 +53,7 @@ LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, const 
 ,doc_(new XMLDocument())
 ,doc_free_by_me_(true)
 {
+	init();
 	const int code = doc_->LoadFile(filename.c_str());
 	if(code != XML_NO_ERROR){
 		throw Exception(__FILE__, __LINE__, "Failed to read xml (%d): %s", code, filename.c_str());
@@ -70,6 +71,7 @@ LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, const 
 ,doc_(document)
 ,doc_free_by_me_(doc_free_by_me)
 {
+	init();
 	this->root_ = doc_->RootElement();
 	if(!this->root_ && ElemName::World == this->root_->Name()){
 		throw Exception(__FILE__, __LINE__, "%s was parsed, but \"world\" element not found.", filename.c_str());
@@ -82,11 +84,21 @@ LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, const 
 ,doc_()
 ,doc_free_by_me_(true)
 {
+	init();
 	const int code = doc_->Parse(buffer, lenb);
 	if(code != XML_NO_ERROR){
 		throw Exception(__FILE__, __LINE__, "Failed to read xml (%d): %s", code, filename.c_str());
 	}
 	this->root_ = doc_->RootElement();
+}
+
+void LayoutFactory::init()
+{
+	this->registerLayout<HorizontalLayout>(ElemName::Horizontal);
+	//this->registerLayout<VerticalLayout>(ElemName::Vertical);
+	this->registerLayout<EmptyLayout>(ElemName::Empty);
+	this->registerLayout<WidgetWrapperLayout>(ElemName::WidgetWrapper);
+	//this->registerLayout<TabLayout>(ElemName::Tab);
 }
 
 LayoutFactory::~LayoutFactory()
@@ -97,24 +109,19 @@ LayoutFactory::~LayoutFactory()
 	this->doc_ = nullptr;
 }
 
+void LayoutFactory::registerLayout(const std::string& layoutName, std::function<shared_ptr<Layout>(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent)> constructor)
+{
+	this->layoutMap_.insert(std::make_pair(layoutName, constructor));
+}
+
 shared_ptr<Layout> LayoutFactory::parseTree(weak_ptr<Layout> root, weak_ptr<Layout> parent, XMLElement* top)
 {
-	shared_ptr<Layout> layout;
 	const char* name = top->Name();
-	if(false){
-	} else if(ElemName::Vertical == name){
-//		std::shared_ptr<Layout>(Layout::create<VerticalLayout>(this->log(), this->world(), root, parent)).swap(layout);
-	} else if(ElemName::Horizontal == name){
-		std::shared_ptr<Layout>(Layout::create<HorizontalLayout>(this->log(), this->world(), root, parent)).swap(layout);
-	} else if(ElemName::Tab == name) {
-//		std::shared_ptr<Layout>(Layout::create<TabLayout>(this->log(), this->world(), root, parent)).swap(layout);
-	} else if(ElemName::Empty == name) {
-		std::shared_ptr<Layout>(Layout::create<EmptyLayout>(this->log(), this->world(), root, parent)).swap(layout);
-	} else if(ElemName::WidgetWrapper == name) {
-		std::shared_ptr<Layout>(Layout::create<WidgetWrapperLayout>(this->log(), this->world(), root, parent)).swap(layout);
-	}else{
+	auto it = this->layoutMap_.find(name);
+	if(this->layoutMap_.end() == it){
 		throw logging::Exception(__FILE__,__LINE__, "Unknwon Layout: %s", name);
 	}
+	shared_ptr<Layout> layout(it->second(this->log(), this->world(), root, parent));
 	layout->loadXML(this, top);
 	return layout;
 }
