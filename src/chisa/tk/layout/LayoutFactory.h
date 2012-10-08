@@ -21,19 +21,27 @@
 
 #include <string>
 #include <memory>
+#include <functional>
+#include <map>
 #include <tinyxml2.h>
 #include "../../logging/Exception.h"
 #include "../../logging/Logger.h"
 #include "../../util/class_utils.h"
+#include "../Layout.h"
 
 namespace chisa {
 namespace tk {
-class Layout;
 class World;
 
 namespace layout {
 using namespace std;
 using namespace tinyxml2;
+
+template <typename T>
+shared_ptr<T> layoutConstructor(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent)
+{
+	return Layout::create<T>(log, world, root, parent);
+}
 
 class LayoutFactory {
 	DISABLE_COPY_AND_ASSIGN(LayoutFactory);
@@ -52,6 +60,7 @@ public:
 private:
 	logging::Logger& log_;
 	weak_ptr<World> world_;
+	std::map<std::string, std::function<shared_ptr<Layout>(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent)> > layoutMap_;
 public:
 	inline logging::Logger& log() const { return log_; }
 	inline weak_ptr<World> world() const { return world_; }
@@ -65,9 +74,17 @@ public:
 	LayoutFactory(logging::Logger& log, weak_ptr<World> world, const string& filename, XMLDocument* document, bool doc_free_by_me);
 	LayoutFactory(logging::Logger& log, weak_ptr<World> world, const string& filename, const char* buffer, std::size_t lenb);
 	virtual ~LayoutFactory();
+private:
+	void init();
 public:
 	shared_ptr<Layout> parseTree(const string& layoutname);
 	shared_ptr<Layout> parseTree(weak_ptr<Layout> root, weak_ptr<Layout> parent, XMLElement* top);
+	void registerLayout(const std::string& layoutName, std::function<shared_ptr<Layout>(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent)> constructor);
+	template <typename T>
+	void registerLayout(const std::string& layoutName)
+	{
+		this->registerLayout(layoutName, layoutConstructor<T>);
+	}
 };
 
 }}}
