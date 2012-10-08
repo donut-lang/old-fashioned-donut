@@ -20,6 +20,7 @@
 #include "WidgetWrapperLayout.h"
 #include "../World.h"
 #include "../../util/Param.h"
+#include "../../gl/Canvas.h"
 
 namespace chisa {
 namespace tk {
@@ -31,28 +32,29 @@ CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(WidgetWrapperLayout)
 ,parent_(nullptr)
 ,widget_(nullptr)
 ,fitMode_(Center)
+,widgetScale_(1.0f)
 {
 }
 
 WidgetWrapperLayout::~WidgetWrapperLayout()
 {
-	if(!this->widget_){
+	if(!this->widget()){
 		return;
 	}
 	if(this->parent_){
 		if(shared_ptr<World> world = this->world().lock()){
 			//ワールドの書き換えと、ウィジットへの現親レイアウトの通知
 			if(world->replaceWidget(this->widgetId_, this->parent_)) {
-				this->widget_->updateWrapper(this->self());
+				this->widget()->updateWrapper(this->self());
 			}
-			this->widget_->reshape(this->parent_->area().box());
+			// TODO　ウィジットにレイアウト通知入れたほうがいい？？
 		}
 	}else{
 		if(shared_ptr<World> world = this->world().lock()){
 			//ワールドからの削除と、ウィジットの開放
 			if(world->deleteWidget(this->widgetId_, this)){
-				delete widget_;
-				this->widget_ = nullptr;
+				delete widget();
+				this->widget(nullptr);
 			}
 		}
 	}
@@ -66,29 +68,69 @@ size_t WidgetWrapperLayout::getChildCount() const
 {
 	return 0;
 }
-void WidgetWrapperLayout::render(const Area& area)
-{
-	//glScissor(area.x(), area.y(), area.width(), area.height());
-	//glPushMatrix();
-	{
-	}
-	//glPopMatrix();
-}
 void WidgetWrapperLayout::idle(const float delta_ms)
 {
-
+	if(!widget()) {
+		return;
+	}
+	this->widget()->idle(delta_ms);
 }
-Box WidgetWrapperLayout::measure(const Box& constraint)
+void chisa::tk::layout::WidgetWrapperLayout::renderImpl(gl::Canvas& canvas, const Area& screenArea, const Area& area)
 {
-	Box box(widget_->measure(constraint));
+	if(!widget()){
+		return;
+	}
+	canvas.translate(this->widgetPoint().x(), this->widgetPoint().y(), 0.0f);
+	canvas.scale(this->widgetScale(), this->widgetScale(), this->widgetScale());
+	widget()->render(canvas, Area(0,0,widgetSize().width(), widgetSize().height()));
+}
+
+Box chisa::tk::layout::WidgetWrapperLayout::onMeasure(const Box& constraint)
+{
+	if(!widget()){
+		return Box(0,0);
+	}
+	Box box(widget()->measure(constraint));
 	if(geom::isUnspecified(box.width()) || geom::isUnspecified(box.height())){
 		log().e(TAG, "Widget \"this->widgetId_.c_str()\" box size unspecified.");
 	}
 	return box;
 }
-void WidgetWrapperLayout::reshapeImpl(const Area& area)
+
+void chisa::tk::layout::WidgetWrapperLayout::onLayout(const Box& size)
 {
+	if(!widget()){
+		return;
+	}
+	this->widgetSize(widget()->measure(size));
+	switch(this->fitMode_)
+	{
+	case Fit: {
+		if(size > this->widgetSize()){ //完全に小さい
+			// 拡大。
+			this->widgetScale(std::max(
+					size.width() / this->widgetSize().width(),
+					size.height() / this->widgetSize().height()
+			));
+		}else{
+			//そうでない場合は長い辺に合わせて縮小。
+			this->widgetScale(std::min(
+					size.width() / this->widgetSize().width(),
+					size.height() / this->widgetSize().height()
+			));
+		}
+		Box scaled(this->widgetSize().width() * this->widgetScale(), this->widgetSize().height() * this->widgetScale());
+		this->widgetPoint(Point((size.width() - scaled.width())/2, (size.height()-scaled.height())/2));
+		break;
+	}
+	case Center: {
+		this->widgetScale(1.0f);
+		this->widgetPoint(Point((size.width() - this->widgetSize().width())/2, (size.height()-this->widgetSize().height())/2));
+		break;
+	}
+	}
 }
+
 std::string WidgetWrapperLayout::toString()
 {
 	return util::format( "(WidgetWrapperLayout %s)", this->widgetId_.c_str());
@@ -109,11 +151,11 @@ void WidgetWrapperLayout::loadXML(LayoutFactory* const factory, XMLElement* cons
 	if(shared_ptr<World> world = this->world().lock()){
 		if(widgetId && (this->parent_ = world->getWidgetById(widgetId))){
 			world->replaceWidget(widgetId, this);
-			this->widget_ = this->parent_->widget_;
-			this->widget_->updateWrapper(this->self());
+			this->widget(this->parent_->widget());
+			this->widget()->updateWrapper(this->self());
 		}else{
-			this->widget_ = world->createWidget(widgetKlass, element);
-			if(!this->widget_){
+			this->widget(world->createWidget(widgetKlass, element));
+			if(!this->widget()){
 				this->log().e(TAG, "Oops. widget \"%s\" not registered.", widgetKlass);
 			}
 		}

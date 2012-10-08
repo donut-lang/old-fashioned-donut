@@ -27,6 +27,7 @@ namespace tk {
 Universe::Universe(logging::Logger& log, const std::string& basepath)
 :log(log)
 ,basepath_(basepath)
+,canvas_(log)
 {
 }
 
@@ -42,7 +43,7 @@ void Universe::render()
 {
 	//TODO: 下のスタックについて、オフスクリーンレンダリングしたほうがいい？？
 	if(shared_ptr<World> topWorld = this->worldStack.top()){
-		topWorld->render();
+		topWorld->render(this->canvas_);
 	}
 }
 void Universe::idle(const float delta_ms)
@@ -80,11 +81,9 @@ void Universe::notifyWorldEnd(weak_ptr<World> me)
 		}
 		this->worldStack.erase(idx);
 
-		// 下の画面について、以前よりサイズが変わってるようならreshape
 		if(shared_ptr<World> topWorld = this->worldStack.top()){
-			if(!topWorld->area().near(this->area(), 1)){
-				topWorld->reshape(this->area());
-			}
+			// FIXME: 下の画面について、以前よりサイズが変わってるようならreshape
+			topWorld->reshape(this->area());
 		}
 	}else{
 		log.w(TAG, "notified world end, but world was already dead.");

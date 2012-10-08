@@ -94,6 +94,18 @@ public:
 				std::fabs(this->width_ - other.width_) < precision &&
 				std::fabs(this->height_ - other.height_) < precision;
 	}
+	inline bool operator>(const Box& other) const{
+		return this->width_ > other.width_ && this->height_ > other.height_;
+	}
+	inline bool operator>=(const Box& other) const{
+		return this->width_ >= other.width_ && this->height_ >= other.height_;
+	}
+	inline bool operator<=(const Box& other) const{
+		return this->width_ <= other.width_ && this->height_ <= other.height_;
+	}
+	inline bool operator<(const Box& other) const{
+		return this->width_ < other.width_ && this->height_ < other.height_;
+	}
 	inline float width() const{ return width_; };
 	inline float height() const{ return height_; };
 	inline std::string toString() const{

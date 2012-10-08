@@ -22,6 +22,7 @@
 #include "World.h"
 #include "Geom.h"
 #include "../logging/Logger.h"
+#include "../gl/Canvas.h"
 
 namespace chisa {
 namespace tk {
@@ -36,6 +37,7 @@ private:
 	std::string basepath_;
 	Area area_;
 	weak_ptr<Universe> self_;
+	gl::Canvas canvas_;
 public:
 	inline Area area() const{ return area_; };
 private:

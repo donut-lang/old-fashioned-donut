@@ -31,7 +31,7 @@ class Canvas;
 class Sprite {
 	DISABLE_COPY_AND_ASSIGN(Sprite);
 private:
-	DEFINE_MEMBER_CONST(public, private, Canvas*, canvas);
+	DEFINE_MEMBER_CONST(public, Canvas*, canvas);
 	int refcount_;
 	DEFINE_MEMBER(public, private, int, origWidth);
 	DEFINE_MEMBER(public, private, int, origHeight);

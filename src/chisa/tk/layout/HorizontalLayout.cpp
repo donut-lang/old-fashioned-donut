@@ -37,32 +37,20 @@ string HorizontalLayout::toString()
 	return util::format("(HorizontalLayout %p)", this);
 }
 
-void HorizontalLayout::render(const Area& area)
+void HorizontalLayout::renderImpl(gl::Canvas& canvas, const Area& screenArea, const Area& area)
 {
 	float offset = 0;
 	for(shared_ptr<SplitCtx> ctx : this->children()){
 		const Area target(area.x()+offset, area.y(), ctx->size, area.height());
 		offset += ctx->size;
-		ctx->layout->render(target);
+		//XXX コンパイル通したいだけ
+		ctx->layout->render(canvas, target, target);
 	}
 }
 
-void HorizontalLayout::reshapeImpl(const Area& area)
+Box HorizontalLayout::onMeasure(const Box& constraint)
 {
-	const Box calc = this->measure(area.box());
-	const float scale = area.width()/calc.width();
-	float offset = 0;
-	for(shared_ptr<SplitCtx> ctx : this->children()){
-		if(scale < 1){
-			ctx->size *= scale;
-		}
-		ctx->layout->reshape(Area(area.x()+offset, area.y(), ctx->size, area.height()));
-		offset += ctx->size;
-	}
-}
-
-Box HorizontalLayout::measure(const Box& constraint)
-{
+	/*
 	this->resetChildrenLayout();
 	float height=constraint.height();
 	if(geom::isUnspecified(constraint.width())){
@@ -125,7 +113,22 @@ Box HorizontalLayout::measure(const Box& constraint)
 			}
 			return Box(width-leftWidth, constraint.height());
 		}
-	}
+	}*/
+}
+
+void HorizontalLayout::onLayout(const Box& size)
+{
+	/*
+	const Box calc = this->measure(area.box());
+	const float scale = area.width()/calc.width();
+	float offset = 0;
+	for(shared_ptr<SplitCtx> ctx : this->children()){
+		if(scale < 1){
+			ctx->size *= scale;
+		}
+		ctx->layout->reshape(Area(area.x()+offset, area.y(), ctx->size, area.height()));
+		offset += ctx->size;
+	}*/
 }
 
 }}}

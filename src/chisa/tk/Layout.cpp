@@ -39,15 +39,48 @@ Layout::~Layout()
 
 }
 
+void Layout::idle(const float delta_ms)
+{
+	const size_t max = this->getChildCount();
+	for(size_t i=0;i<max;++i){
+		if( shared_ptr<Layout> child = this->getChildAt(i).lock()){
+			child->idle(delta_ms);
+		}
+	}
+}
+
 string Layout::toString()
 {
 	return util::format("(Layout %p)", this);
 }
 
-void Layout::reshape(const Area& area)
+Box Layout::measure(const Box& constraint)
 {
-	this->reshapeImpl(area);
-	this->area_=area;
+	Box box(this->onMeasure(constraint));
+	return Box(
+			box.width() > constraint.width() ? constraint.width() : box.width(),
+			box.height() > constraint.height() ? constraint.height() : box.height()
+		);
 }
+void Layout::render(gl::Canvas& canvas, const Area& screenArea, const Area& area)
+{
+	this->screenArea(screenArea);
+	this->drawnArea(area);
+	if( //描画範囲にないので書く必要性がありません。
+		area.height()+area.y() <= 0 ||
+		area.width()+area.x() <= 0 ||
+		area.x() >= this->size().width() ||
+		area.y() >= this->size().height() ){
+		return;
+	}
+	this->renderImpl(canvas, screenArea, area);
+}
+
+void Layout::layout(const Box& size)
+{
+	this->onLayout(size);
+	this->size(size);
+}
+
 
 }}

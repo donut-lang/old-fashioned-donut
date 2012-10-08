@@ -39,24 +39,23 @@ public:
 	};
 private:
 	WidgetWrapperLayout* parent_;
-	Widget* widget_;
+	DEFINE_MEMBER(private, private, Widget*, widget);
 	std::string widgetId_;
-private:
 	FitMode fitMode_;
-public:
-	Widget* widget() const{ return this->widget_; };
+	DEFINE_MEMBER(private, private, float, widgetScale);
+	DEFINE_MEMBER(private, private, Point, widgetPoint);
+	DEFINE_MEMBER(private, private, Box, widgetSize);
 public:
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const override;
 	virtual size_t getChildCount() const override;
 public:
-	virtual void render(const Area& area) override;
+	virtual void renderImpl(gl::Canvas& canvas, const Area& screenArea, const Area& area) override;
+	virtual Box onMeasure(const Box& constraint) override;
+	virtual void onLayout(const Box& size) override;
 	virtual void idle(const float delta_ms) override;
-	virtual Box measure(const Box& constraint) override;
 public:
 	virtual void loadXML(LayoutFactory* const factory, XMLElement* const element) override;
 	virtual string toString() override;
-protected:
-	virtual void reshapeImpl(const Area& area) override;
 
 };
 

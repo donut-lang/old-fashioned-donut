@@ -59,10 +59,10 @@ void World::init(weak_ptr<World> _self)
 	this->pushLayout("main");
 }
 
-void World::render()
+void World::render(gl::Canvas& canvas)
 {
 	if(shared_ptr<Layout> layout = this->layoutStack_.top()){
-		layout->render(this->area());
+		layout->render(canvas, this->area(), Area(0,0,this->area().width(), this->area().height()));
 	}
 }
 void World::idle(const float delta_ms)
@@ -74,7 +74,8 @@ void World::idle(const float delta_ms)
 void World::reshape(const Area& area)
 {
 	if(shared_ptr<Layout> layout = this->layoutStack_.top()){
-		layout->reshape(area);
+		layout->measure(area.box());
+		layout->layout(area.box());
 	}
 	this->area(area);
 }
@@ -90,9 +91,7 @@ void World::popLayout()
 {
 	this->layoutStack_.pop();
 	if(shared_ptr<Layout> layout = this->layoutStack_.top()){
-		if(!this->area().near(layout->area(), 1)){
-			this->reshape(this->area());
-		}
+		this->reshape(this->area());
 	}
 }
 

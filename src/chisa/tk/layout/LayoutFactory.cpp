@@ -22,7 +22,7 @@
 #include <memory>
 #include <tinyxml2.h>
 #include "HorizontalLayout.h"
-#include "VerticalLayout.h"
+//#include "VerticalLayout.h"
 #include "EmptyLayout.h"
 #include "WidgetWrapperLayout.h"
 
@@ -103,7 +103,7 @@ shared_ptr<Layout> LayoutFactory::parseTree(weak_ptr<Layout> root, weak_ptr<Layo
 	const char* name = top->Name();
 	if(false){
 	} else if(ElemName::Vertical == name){
-		std::shared_ptr<Layout>(Layout::create<VerticalLayout>(this->log(), this->world(), root, parent)).swap(layout);
+//		std::shared_ptr<Layout>(Layout::create<VerticalLayout>(this->log(), this->world(), root, parent)).swap(layout);
 	} else if(ElemName::Horizontal == name){
 		std::shared_ptr<Layout>(Layout::create<HorizontalLayout>(this->log(), this->world(), root, parent)).swap(layout);
 	} else if(ElemName::Tab == name) {
