@@ -79,6 +79,10 @@ Sprite::Handler Canvas::loadPNG(const std::string& filename)
 	png_init_io(png, fp);
 	png_set_sig_bytes(png, 8);
 
+	if( ! (png_get_color_type(png, info) & PNG_COLOR_MASK_ALPHA)){
+		png_set_filler( png, 0, 1 );
+	}
+
 	//情報を読み込んでサイズだけ調べる
 	png_read_info(png, info);
 	const int width = png_get_image_width(png, info);
