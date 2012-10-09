@@ -110,7 +110,11 @@ void Canvas::scissorReset()
 	glScissor(0,0,this->width_,this->height_);
 }
 
-void Canvas::drawSprite(const float x,const float y, const float z, Handler<RawSprite> sprite)
+void Canvas::drawSprite(Handler<Sprite> sprite, const float x,const float y, const float z)
+{
+	sprite->drawImpl(x,y,z);
+}
+void Canvas::drawSprite(RawSprite* const sprite, const float x,const float y, const float z)
 {
 	const GLint texId = sprite->requestTexture();
 	const float width = sprite->width();
