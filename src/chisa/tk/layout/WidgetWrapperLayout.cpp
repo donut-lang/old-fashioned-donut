@@ -81,14 +81,17 @@ void chisa::tk::layout::WidgetWrapperLayout::renderImpl(gl::Canvas& canvas, cons
 		return;
 	}
 	canvas.pushMatrix();
-	//スクリーン上の位置に移動
-	canvas.translate(screenArea.x(), screenArea.y(), 0.0f);
-	//areaからウィジットが実際にレンダリングされる位置を計算
-	const Area intersect(area.intersect(Area(this->widgetPoint().x(), this->widgetPoint().y(), this->widgetSize().width() * this->widgetScale(), this->widgetSize().height() * this->widgetScale())));
-	canvas.translate(intersect.x(), intersect.y(), 0.0f);
-	canvas.scale(this->widgetScale(), this->widgetScale(), this->widgetScale());
-	//描画を投げる
-	widget()->render(canvas, Area(intersect.x()-this->widgetPoint().x(),intersect.y()-this->widgetPoint().y(), intersect.width(), intersect.height()));
+	{
+		gl::Canvas::Scissor ss(canvas, screenArea);
+		//スクリーン上の位置に移動
+		canvas.translate(screenArea.x(), screenArea.y(), 0.0f);
+		//areaからウィジットが実際にレンダリングされる位置を計算
+		const Area intersect(area.intersect(Area(this->widgetPoint().x(), this->widgetPoint().y(), this->widgetSize().width() * this->widgetScale(), this->widgetSize().height() * this->widgetScale())));
+		canvas.translate(intersect.x(), intersect.y(), 0.0f);
+		canvas.scale(this->widgetScale(), this->widgetScale(), this->widgetScale());
+		//描画を投げる
+		widget()->render(canvas, Area(intersect.x()-this->widgetPoint().x(),intersect.y()-this->widgetPoint().y(), intersect.width(), intersect.height()));
+	}
 	canvas.popMatrix();
 }
 

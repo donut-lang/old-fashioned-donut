@@ -35,13 +35,6 @@ void render()
 
 void reshape(int width, int height)
 {
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(0, width, height, 0, -100, 100);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glViewport(0, 0, width, height);
-	glScissor(0,0,width,height);
 	gUniverse->reshape(tk::Area(0,0,width, height));
 }
 
@@ -57,7 +50,7 @@ int main(int argc, char** argv) {
 		}
 
 		glfwSetWindowTitle("Chisa");
-		//glEnable(GL_SCISSOR_TEST);
+		glEnable(GL_SCISSOR_TEST);
 		glEnable(GL_TEXTURE_2D);
 
 		tempInit();
