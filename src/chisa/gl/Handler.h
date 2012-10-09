@@ -116,7 +116,7 @@ public:
 	{
 		return this->sprite;
 	}
-	operator bool() const
+	explicit operator bool() const
 	{
 		return this->sprite != 0;
 	}
