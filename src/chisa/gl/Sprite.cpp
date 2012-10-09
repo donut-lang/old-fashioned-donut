@@ -38,7 +38,7 @@ Sprite::Sprite(Canvas* const canvas, const int width, const int height)
 	glGenTextures(1, &this->texId_);
 	glBindTexture(GL_TEXTURE_2D, this->texId_);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->origWidth(), this->origHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA, this->origWidth(), this->origHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
@@ -93,6 +93,7 @@ Buffer* Sprite::lock()
 	}
 	this->locked(true);
 
+	//横幅はオリジナルでないとテクスチャ転送できないが、縦サイズは何でもよいので最小サイズを指定する
 	return this->canvas()->queryBuffer(this->origWidth(), this->height());
 }
 void Sprite::unlock(Buffer* const buffer)
@@ -104,7 +105,8 @@ void Sprite::unlock(Buffer* const buffer)
 
 	{
 		glBindTexture(GL_TEXTURE_2D, this->texId_);
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0,0, this->origWidth(), this->origHeight(), GL_RGBA, GL_UNSIGNED_BYTE, buffer->data());
+		//ここのサイズはバッファのものにしないと変な所を読みに行くかもしれない。
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0,0, buffer->width(), buffer->height(), GL_RGBA, GL_UNSIGNED_BYTE, buffer->data());
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
