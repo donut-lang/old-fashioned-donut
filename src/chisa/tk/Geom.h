@@ -65,6 +65,8 @@ public:
 	}
 	inline float x() const{return x_;};
 	inline float y() const{return y_;};
+	inline void x(const float x) { x_=x; };
+	inline void y(const float y) { y_=y; };
 	inline std::string toString() const{
 		return util::format("(Point %f %f)", x_, y_);
 	}
@@ -108,6 +110,8 @@ public:
 	}
 	inline float width() const{ return width_; };
 	inline float height() const{ return height_; };
+	inline void width(const float width) { width_=width; };
+	inline void height(const float height) { height_=height; };
 	inline std::string toString() const{
 		return util::format("(Box %f %f)", width_, height_);
 	}
@@ -121,6 +125,7 @@ private:
 public:
 	inline Area(const float x, const float y, const float width, const float height):point_(x,y), box_(width, height){}
 	inline Area(const Area& other):point_(other.point_), box_(other.box_){};
+	inline Area(const Point& point, const Box& box):point_(point), box_(box){};
 	inline Area& operator=(const Area& other){
 		this->point_ = other.point_;
 		this->box_ = other.box_;
@@ -136,6 +141,10 @@ public:
 	inline float y() const{ return point_.y(); };
 	inline float width() const{ return box_.width(); };
 	inline float height() const{ return box_.height(); };
+	inline void x(const float x) { point_.x(x); };
+	inline void y(const float y) { point_.y(y); };
+	inline void width(const float width) { box_.width(width); };
+	inline void height(const float height) { box_.height(height); };
 	inline std::string toString() const{
 		return util::format("(Area %f %f %f %f)", x(), y(), width(), height());
 	}

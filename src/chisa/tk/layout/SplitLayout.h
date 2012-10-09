@@ -58,27 +58,58 @@ struct SplitCtx
 
 
 class SplitLayout: public chisa::tk::Layout {
-	CHISA_LAYOUT_SUBKLASS(SplitLayout);
 public:
+	enum SplitMode {
+		Vertical,
+		Horizontal
+	};
 	struct AttrName{
 		static const std::string Weight;
 		static const std::string Max;
 		static const std::string Min;
 	};
+protected:
+	SplitLayout(enum SplitMode splitMode, CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_LIST);
+public:
+	virtual ~SplitLayout();
 private:
-	vector<shared_ptr<SplitCtx> > children_;
+	DEFINE_MEMBER(private, private, enum SplitMode, splitMode);
+	DEFINE_MEMBER(private, private, vector<shared_ptr<SplitCtx> >, children)
 	float totalSize_;
 private:
+	inline float wrapSize(float changedSize, const SplitDef& def) const
+	{
+		changedSize = std::max(changedSize, def.max);
+		changedSize = std::min(changedSize, def.min);
+		return changedSize;
+	}
+private:
+	float (Box::*changed_getter)() const;
+	void (Box::*changed_setter)(float);
+	float (Box::*fixed_getter)() const;
+	void (Box::*fixed_setter)(float);
+	float (Point::*point_getter)(void) const;
+	void (Point::*point_setter)(float);
+private:
 	void addChild(const SplitDef& def, shared_ptr<Layout> layout);
-protected:
-	inline vector<shared_ptr<SplitCtx> >& children() { return children_; };
+private:
 	void resetChildrenLayout();
 	float calcTotalSize();
 public:
+	virtual string toString() override;
 	virtual void loadXML(LayoutFactory* const factory, XMLElement* const element) override;
 	virtual void idle(const float delta_ms) override;
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const override;
 	virtual size_t getChildCount() const override;
+public:
+	virtual void renderImpl(gl::Canvas& canvas, const Area& screenArea, const Area& area) override;
+	virtual Box onMeasure(const Box& constraint) override;
+	virtual void onLayout(const Box& size) override;
+public:
+	static shared_ptr<Layout> constructorProxy(enum SplitMode splitMode, CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_LIST)
+	{
+		return shared_ptr<Layout>(new SplitLayout(splitMode, CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_APPLY));
+	}
 };
 
 }}}
