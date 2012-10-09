@@ -23,15 +23,6 @@
 namespace chisa {
 namespace gl {
 
-static int getPower2Of(const int width)
-{
-	int start = 1;
-	while(start < width){
-		start <<= 1;
-	}
-	return start;
-}
-
 static constexpr unsigned int MAGIC=0xDEADBEEF;
 
 Sprite::Sprite(Canvas* const canvas, const int width, const int height)
@@ -41,57 +32,30 @@ Sprite::Sprite(Canvas* const canvas, const int width, const int height)
 ,origHeight_(getPower2Of(height))
 ,width_(origWidth_)
 ,height_(origHeight_)
-,data_(nullptr)
 ,texId_(MAGIC)
-,dirty_(false)
 ,locked_(false)
 {
+	glGenTextures(1, &this->texId_);
+	glBindTexture(GL_TEXTURE_2D, this->texId_);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->origWidth(), this->origHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	const GLenum err = glGetError();
+	if(err != GL_NO_ERROR){
+		throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to transfer texture: %d", err);
+	}
 }
 Sprite::~Sprite()
 {
-	if(this->data_){
-		delete this->data_;
-		this->data_ = nullptr;
-	}
 	if(this->texId_ != MAGIC){
 		glDeleteTextures(1, &this->texId_);
 	}
 }
 
-unsigned char* Sprite::requestMemory()
-{
-	if(!this->data_){
-		this->data_ = new unsigned char[origWidth() * origHeight() * 4];
-	}
-	return this->data_;
-}
 unsigned int Sprite::requestTexture()
 {
-	if(this->texId_ == MAGIC){
-		glGenTextures(1, &this->texId_);
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glBindTexture(GL_TEXTURE_2D, this->texId_);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->origWidth(), this->origHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, this->data_);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-		const GLenum err = glGetError();
-		if(err != GL_NO_ERROR){
-			throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to transfer texture: %d", err);
-		}
-		this->dirty_=false;
-	}else if(this->dirty_){
-		glBindTexture(GL_TEXTURE_2D, this->texId_);
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0,0, this->origWidth(), this->origHeight(), GL_RGB, GL_UNSIGNED_BYTE, this->data_);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-		this->dirty_=false;
-		const GLenum err = glGetError();
-		if(err != GL_NO_ERROR){
-			throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to transfer texture: %d", err);
-		}
-	}
 	return this->texId_;
 }
 
@@ -122,22 +86,35 @@ void Sprite::decref()
 	}
 }
 
-void Sprite::lock(unsigned char** data, int* stride)
+Buffer* Sprite::lock()
 {
 	if(this->locked()){
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Sprite already locked!");
 	}
 	this->locked(true);
-	*data = this->requestMemory();
-	*stride = this->origWidth()*4;
+
+	return this->canvas()->queryBuffer(this->origWidth(), this->height());
 }
-void Sprite::unlock()
+void Sprite::unlock(Buffer* const buffer)
 {
 	if(!this->locked()){
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Sprite already unlocked!");
 	}
 	this->locked(false);
-	this->dirty_=true;
+
+	{
+		glBindTexture(GL_TEXTURE_2D, this->texId_);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0,0, this->origWidth(), this->origHeight(), GL_RGBA, GL_UNSIGNED_BYTE, buffer->data());
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+		const GLenum err = glGetError();
+		if(err != GL_NO_ERROR){
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to transfer texture: %d", err);
+		}
+	}
+
+	this->canvas()->backBuffer(buffer);
 }
 
 //-----------------------------------------------------------------------------
@@ -163,11 +140,11 @@ Sprite::Handler::~Handler()
 Sprite::Session::Session(Sprite::Handler parent)
 :parent_(parent)
 {
-	this->parent_->lock(&this->data_, &this->stride_);
+	this->buffer_ = this->parent_->lock();
 }
 Sprite::Session::~Session()
 {
-	this->parent_->unlock();
+	this->parent_->unlock(this->buffer_);
 }
 
 }}

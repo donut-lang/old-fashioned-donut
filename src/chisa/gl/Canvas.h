@@ -48,6 +48,7 @@ public:
 	virtual ~Canvas();
 public:
 	std::deque<Sprite*> unusedSprite_;
+	std::deque<Buffer*> unusedBuffer_;
 	std::deque<std::pair<std::string, Sprite::Handler> > imageCache_;
 public:
 	void ortho(const float left, const float right, const float bottom, const float top, const float near_val, const float far_val);
@@ -70,12 +71,13 @@ public:
 		Scissor(Canvas& canvas, const tk::Area& area);
 		virtual ~Scissor();
 	};
-
 public:
 	Sprite::Handler querySprite(const int width, const int height);
 	Sprite::Handler queryImage(const std::string& filename);
+	Buffer* queryBuffer(const int width, const int height);
 public:
 	void backSprite(Sprite* spr);
+	void backBuffer(Buffer* buffer);
 };
 
 }}
