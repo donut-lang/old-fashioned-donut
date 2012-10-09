@@ -17,6 +17,7 @@
  */
 
 #include "Layout.h"
+#include <tinyxml2.h>
 
 namespace chisa {
 namespace tk {
@@ -47,6 +48,20 @@ void Layout::idle(const float delta_ms)
 			child->idle(delta_ms);
 		}
 	}
+}
+
+void Layout::loadXML(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element)
+{
+
+	if(const char* id = element->Attribute("id", nullptr)){
+		this->id(id);
+	}
+	this->loadXMLimpl(factory, element);
+}
+
+weak_ptr<Layout> Layout::getLayoutById(const std::string& id)
+{
+	return id == this->id() ? this->self() : this->getLayoutByIdImpl(id);
 }
 
 string Layout::toString()

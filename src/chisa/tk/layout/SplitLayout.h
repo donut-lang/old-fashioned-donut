@@ -97,14 +97,15 @@ private:
 	float calcTotalSize();
 public:
 	virtual string toString() override;
-	virtual void loadXML(LayoutFactory* const factory, XMLElement* const element) override;
 	virtual void idle(const float delta_ms) override;
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const override;
 	virtual size_t getChildCount() const override;
-public:
+private:
 	virtual void renderImpl(gl::Canvas& canvas, const Area& screenArea, const Area& area) override;
 	virtual Box onMeasure(const Box& constraint) override;
 	virtual void onLayout(const Box& size) override;
+	virtual void loadXMLimpl(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element) override;
+	virtual weak_ptr<Layout> getLayoutByIdImpl(const std::string& id) override;
 public:
 	static shared_ptr<Layout> constructorProxy(enum SplitMode splitMode, CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_LIST)
 	{

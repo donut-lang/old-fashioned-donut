@@ -40,7 +40,7 @@ size_t ScrollLayout::getChildCount() const
 	}
 }
 
-void ScrollLayout::loadXML(LayoutFactory* const factory, tinyxml2::XMLElement* element)
+void ScrollLayout::loadXMLimpl(LayoutFactory* const factory, tinyxml2::XMLElement* element)
 {
 	if( const char* _mode = element->Attribute("mode", nullptr) ){
 		std::string mode(_mode);
@@ -80,6 +80,15 @@ void ScrollLayout::onLayout(const Box& size)
 		Box childBox(this->scrollMode_ & Horizontal ? geom::Unspecified : size.width(), this->scrollMode_ & Vertical ? geom::Unspecified : size.height());
 		this->childSize_ = this->child_->measure(childBox);
 		this->child_->layout(this->childSize_);
+	}
+}
+
+weak_ptr<Layout> ScrollLayout::getLayoutByIdImpl(const std::string& id)
+{
+	if(this->child_){
+		return this->child_->getLayoutById(id);
+	}else{
+		return weak_ptr<Layout>();
 	}
 }
 

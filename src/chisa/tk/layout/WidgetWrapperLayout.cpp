@@ -169,7 +169,7 @@ std::string WidgetWrapperLayout::toString()
 {
 	return util::format( "(WidgetWrapperLayout %s)", this->widgetId_.c_str());
 }
-void WidgetWrapperLayout::loadXML(LayoutFactory* const factory, XMLElement* const element)
+void WidgetWrapperLayout::loadXMLimpl(LayoutFactory* const factory, XMLElement* const element)
 {
 	if(element->Attribute("fit", "fit")){
 		this->fitMode_ = Fit;
@@ -195,5 +195,11 @@ void WidgetWrapperLayout::loadXML(LayoutFactory* const factory, XMLElement* cons
 		}
 	}
 }
+
+weak_ptr<Layout> WidgetWrapperLayout::getLayoutByIdImpl(const std::string& id)
+{
+	return weak_ptr<Layout>();
+}
+
 
 }}}

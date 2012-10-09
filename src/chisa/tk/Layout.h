@@ -51,16 +51,20 @@ private:
 	DEFINE_MEMBER(public, private, Box, size);
 	DEFINE_MEMBER(protected, private, Area, screenArea);
 	DEFINE_MEMBER(protected, private, Area, drawnArea);
+	DEFINE_MEMBER(public, private, std::string, id);
 public:
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const = 0;
 	virtual size_t getChildCount() const = 0;
 public:
 	void render(gl::Canvas& canvas, const Area& screenArea, const Area& area);
-	virtual void renderImpl(gl::Canvas& canvas, const Area& screenArea, const Area& area) = 0;
 	Box measure(const Box& constraint);
-	virtual Box onMeasure(const Box& constraint) = 0;
 	void layout(const Box& size);
+private:
+	virtual void renderImpl(gl::Canvas& canvas, const Area& screenArea, const Area& area) = 0;
+	virtual Box onMeasure(const Box& constraint) = 0;
 	virtual void onLayout(const Box& size) = 0;
+	virtual void loadXMLimpl(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element) = 0;
+	virtual weak_ptr<Layout> getLayoutByIdImpl(const std::string& id) = 0;
 protected:
 	Layout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);
 private:
@@ -74,8 +78,9 @@ public:
 		return ptr;
 	}
 	virtual ~Layout();
-	virtual void loadXML(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element) = 0;
 	virtual string toString() = 0;
+	void loadXML(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element);
+	weak_ptr<Layout> getLayoutById(const std::string& id);
 	virtual void idle(const float delta_ms);
 public:
 	inline static float updateMax(const float a, const float b)
