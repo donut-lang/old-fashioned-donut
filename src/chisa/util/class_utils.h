@@ -44,5 +44,13 @@ rscope:\
 wscope:\
 	inline void name(type const& val){name##_ = val;}
 
+inline int getPower2Of(const int width)
+{
+	int start = 1;
+	while(start < width){
+		start <<= 1;
+	}
+	return start;
+}
 
 #endif /* INCLUDE_GUARD */

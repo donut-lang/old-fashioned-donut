@@ -22,6 +22,7 @@
 #include <cairo/cairo.h>
 #include "../util/class_utils.h"
 #include "Handler.h"
+#include "Buffer.h"
 
 namespace chisa {
 namespace gl {
@@ -37,9 +38,7 @@ private:
 	DEFINE_MEMBER(public, private, int, origHeight);
 	DEFINE_MEMBER(public, private, int, width);
 	DEFINE_MEMBER(public, private, int, height);
-	unsigned char* data_;
 	unsigned int texId_;
-	bool dirty_;
 	DEFINE_MEMBER(private, private, bool, locked);
 public:
 	Sprite(Canvas* const canvas, const int width, const int height);
@@ -48,10 +47,8 @@ private:
 	void resize(int width, int height);
 	void incref();
 	void decref();
-	void lock(unsigned char** data, int* stride);
-	void unlock();
-private:
-	unsigned char* requestMemory();
+	Buffer* lock();
+	void unlock(Buffer* const buffer);
 public:
 	unsigned int requestTexture();
 public:
@@ -65,15 +62,14 @@ public:
 		DISABLE_COPY_AND_ASSIGN(Session);
 	private:
 		Sprite::Handler parent_;
-		int stride_;
-		unsigned char* data_;
+		Buffer* buffer_;
 	public:
 		Session(Sprite::Handler parent);
 		virtual ~Session();
 		inline int width() const { return parent_->width(); };
 		inline int height() const { return parent_->height(); };
-		inline int stride() const { return this->stride_; };
-		inline unsigned char* data() const { return this->data_; };
+		inline int stride() const { return this->buffer_->stride(); };
+		inline unsigned char* data() const { return this->buffer_->data(); };
 	};
 	friend class gl::Handler<Sprite>;
 };

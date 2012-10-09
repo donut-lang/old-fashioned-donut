@@ -132,7 +132,7 @@ void Canvas::drawSprite(const float x,const float y, const float z, Sprite::Hand
 
 Sprite::Handler Canvas::querySprite(const int width, const int height)
 {
-	auto it = std::upper_bound(this->unusedSprite_.begin(), this->unusedSprite_.end(), std::pair<int,int>(width,height), Order<Sprite>());
+	auto it = std::lower_bound(this->unusedSprite_.begin(), this->unusedSprite_.end(), std::pair<int,int>(width,height), Order<Sprite>());
 	if(it == this->unusedSprite_.end()){
 		Sprite* spr = new Sprite(this, width, height);
 		return Sprite::Handler(spr, width, height);
@@ -141,10 +141,9 @@ Sprite::Handler Canvas::querySprite(const int width, const int height)
 	}
 }
 
-
 void Canvas::backSprite(Sprite* spr)
 {
-	auto ins = std::upper_bound(this->unusedSprite_.begin(), this->unusedSprite_.end(), spr, Order<Sprite>());
+	auto ins = std::lower_bound(this->unusedSprite_.begin(), this->unusedSprite_.end(), spr, Order<Sprite>());
 	this->unusedSprite_.insert(ins, spr);
 	while(Canvas::MaxCachedSpriteCount < this->unusedSprite_.size()){
 		Sprite* deleted = 0;
@@ -160,6 +159,44 @@ void Canvas::backSprite(Sprite* spr)
 			Sprite* max = this->unusedSprite_.back();
 			if(log().d()){
 				log().d(TAG, "Sprite cache deleted. size: %dx%d / min:%dx%d, max:%dx%d",
+						deleted->width(), deleted->height(),
+						min->width(), min->height(),
+						max->width(), max->height());
+			}
+			delete deleted;
+		}
+	}
+}
+
+Buffer* Canvas::queryBuffer(const int width, const int height)
+{
+	int const pHeight = getPower2Of(height);
+	auto it = std::lower_bound(this->unusedBuffer_.begin(), this->unusedBuffer_.end(), std::pair<int,int>(width,pHeight), Order<Buffer>());
+	if(it == this->unusedBuffer_.end() || (*it)->width() != width ){
+		return new Buffer(width, pHeight);
+	}else{
+		return *it;
+	}
+}
+
+void Canvas::backBuffer(Buffer* buffer)
+{
+	auto ins = std::lower_bound(this->unusedBuffer_.begin(), this->unusedBuffer_.end(), buffer, Order<Buffer>());
+	this->unusedBuffer_.insert(ins, buffer);
+	while(Canvas::MaxCachedBufferCount < this->unusedBuffer_.size()){
+		Buffer* deleted = 0;
+		if((rand() & 1U) == 1U){
+			deleted = this->unusedBuffer_.back();
+			this->unusedBuffer_.pop_back();
+		}else{
+			deleted = this->unusedBuffer_.front();
+			this->unusedBuffer_.pop_front();
+		}
+		if(deleted){
+			Buffer* const min = this->unusedBuffer_.front();
+			Buffer* const max = this->unusedBuffer_.back();
+			if(log().d()){
+				log().d(TAG, "Buffer cache deleted. size: %dx%d / min:%dx%d, max:%dx%d",
 						deleted->width(), deleted->height(),
 						min->width(), min->height(),
 						max->width(), max->height());
