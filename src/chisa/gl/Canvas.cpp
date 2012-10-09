@@ -17,6 +17,7 @@
  */
 
 #include "Canvas.h"
+#include "../tk/Geom.h"
 #include <algorithm>
 #include <GL/gl.h>
 #include <cairo/cairo.h>
@@ -45,6 +46,8 @@ const static std::string TAG("Canvas");
 
 Canvas::Canvas(logging::Logger& log)
 :log_(log)
+,width_(NAN)
+,height_(NAN)
 {
 
 }
@@ -78,6 +81,35 @@ void Canvas::scale(const float x,const float y, const float z)
 {
 	glScalef(x,y,z);
 }
+
+void Canvas::resize2d(const float width, const float height)
+{
+	this->width_ = width;
+	this->height_ = height;
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0, width, height, 0, -100, 100);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glViewport(0, 0, width, height);
+	glScissor(0,0,width,height);
+}
+
+void Canvas::scissor(const float x, const float y, const float width, const float height)
+{
+	glScissor(x, this->height_-height-y,width, height);
+}
+
+void Canvas::scissor(const tk::Area& area)
+{
+	this->scissor(area.x(), area.y(), area.width(), area.height());
+}
+
+void Canvas::scissorReset()
+{
+	glScissor(0,0,this->width_,this->height_);
+}
+
 void Canvas::drawSprite(const float x,const float y, const float z, Sprite::Handler sprite)
 {
 	const GLint texId = sprite->requestTexture();
@@ -137,4 +169,17 @@ void Canvas::backSprite(Sprite* spr)
 	}
 }
 
-}}
+Canvas::Scissor::Scissor(Canvas& canvas, const tk::Area& area)
+:canvas_(canvas)
+{
+	this->canvas_.scissor(area);
+}
+
+Canvas::Scissor::~Scissor()
+{
+	this->canvas_.scissorReset();
+}
+
+}
+}
+
