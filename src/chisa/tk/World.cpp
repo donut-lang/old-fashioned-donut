@@ -85,7 +85,6 @@ void World::pushLayout(const string& layoutname)
 {
 	shared_ptr<Layout> l = this->layoutFactory_->parseTree(layoutname);
 	this->layoutStack_.push(l);
-	this->reshape(this->area());
 }
 
 void World::popLayout()

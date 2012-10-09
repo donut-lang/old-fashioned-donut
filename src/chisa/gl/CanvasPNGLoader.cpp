@@ -31,7 +31,7 @@ Sprite::Handler Canvas::queryImage(const std::string& filename)
 			auto pair = *it;
 			this->imageCache_.erase(it);
 			this->imageCache_.push_front(pair);
-			return it->second;
+			return pair.second;
 		}
 	}
 	Sprite::Handler img = this->loadPNG(filename);
