@@ -70,6 +70,7 @@ public:
 		Scissor(Canvas& canvas, const tk::Area& area);
 		virtual ~Scissor();
 	};
+
 public:
 	Sprite::Handler querySprite(const int width, const int height);
 	Sprite::Handler queryImage(const std::string& filename);
