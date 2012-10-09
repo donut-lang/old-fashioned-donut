@@ -21,78 +21,113 @@
 
 
 #include <utility>
+#include <typeinfo>
 #include "../logging/Exception.h"
 
 namespace chisa {
 namespace gl {
 
-template <typename T>
+
+template<class S>
 class Handler
 {
 private:
-	T* obj_;
+	S* sprite;
 public:
-	Handler():obj_(nullptr){};
-	explicit Handler(T* const obj)
-	:obj_(obj)
+	static Handler<S> __internal__fromRawPointerWithoutCheck(S* const sprite)
 	{
-		if(this->obj_){
-			if(this->obj_->refcount_ != 0){
-				throw logging::Exception(__FILE__, __LINE__, "[BUG] Sprite::Handler created, but refcount = %d, not zero.", this->obj_->refcount_);
+		Handler<S> spr;
+		spr.sprite = sprite;
+		if(spr.sprite){
+			spr.sprite->incref();
+		}
+		return spr;
+	}
+	Handler():sprite(0){};
+	explicit Handler(S* const sprite)
+	:sprite(sprite)
+	{
+		if(this->sprite){
+			if(this->sprite->refcount_ != 0){
+				throw logging::Exception(__FILE__, __LINE__, "[BUG] Sprite::Handler created, but refcount = %d, not zero.", this->sprite->refcount_);
 			}
-			this->obj_->incref();
+			this->sprite->incref();
 		}
 	}
+	Handler(const Handler<S>& other)
+	:sprite(other.sprite)
+	{
+		if(this->sprite){
+			this->sprite->incref();
+		}
+	}
+	template <class T>
 	Handler(const Handler<T>& other)
-	:obj_(other.obj_)
+	:sprite(other.get())
 	{
-		if(this->obj_){
-			this->obj_->incref();
+		if(this->sprite){
+			this->sprite->incref();
 		}
 	}
-	Handler<T>& operator=(const Handler<T>& other)
+	Handler<S>& operator=(const Handler<S>& other)
 	{
-		if(other.obj_){
-			other.obj_->incref();
+		if(other.sprite){
+			other.sprite->incref();
 		}
-		if(this->obj_){
-			this->obj_->decref();
+		if(this->sprite){
+			this->sprite->decref();
 		}
-		this->obj_ = other.obj_;
+		this->sprite = other.sprite;
 		return *this;
+	}
+	template <class T>
+	Handler<S>& operator=(const Handler<T>& other)
+	{
+		if(other.get()){
+			other.get()->incref();
+		}
+		if(this->sprite){
+			this->sprite->decref();
+		}
+		this->sprite = other.get();
+		return *this;
+	}
+	template<class T>
+	Handler<T> cast() const
+	{
+		T* spr = dynamic_cast<T*>(this->sprite);
+		if(!spr){
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] Sprite::Handler / failed to cast %s to %s", typeid(this->sprite).name(), typeid(spr).name());
+		}
+		return Handler<T>::__internal__fromRawPointerWithoutCheck(spr);
 	}
 	virtual ~Handler()
 	{
-		if(this->obj_){
-			this->obj_->decref();
-			this->obj_ = 0;
+		if(this->sprite){
+			this->sprite->decref();
+			this->sprite = 0;
 		}
 	}
-	T* operator->() const
+	S* operator->() const
 	{
-		return this->obj_;
+		return this->sprite;
 	}
-	T* get() const
+	S* get() const
 	{
-		return this->obj_;
+		return this->sprite;
 	}
-	explicit operator bool() const
+	operator bool() const
 	{
-		return this->obj_ != 0;
+		return this->sprite != 0;
 	}
-	void swap(Handler<T>& other)
+	void swap(Handler<S>& other)
 	{
 		using std::swap;
-		swap(other.obj_, this->obj_);
+		swap(other.sprite, this->sprite);
 	}
 	void reset()
 	{
-		Handler<T>().swap(*this);
-	}
-protected:
-	T* obj() const
-	{
-		return this->obj_;
+		Handler<S>().swap(*this);
 	}
 };
 

@@ -32,6 +32,7 @@ class Canvas;
 
 class RawSprite : public Sprite {
 	DISABLE_COPY_AND_ASSIGN(RawSprite);
+	friend class Canvas;
 private:
 	DEFINE_MEMBER(public, private, int, origWidth);
 	DEFINE_MEMBER(public, private, int, origHeight);
@@ -46,9 +47,9 @@ private:
 	void resize(int width, int height);
 	Buffer* lock();
 	void unlock(Buffer* const buffer);
-protected:
-	virtual void onFree();
-public:
+private:
+	virtual void onFree() override;
+	virtual void drawImpl(const float x, const float y, const float z) override;
 	unsigned int requestTexture();
 public:
 	class Session {
@@ -64,7 +65,6 @@ public:
 		inline int stride() const { return this->buffer_->stride(); };
 		inline unsigned char* data() const { return this->buffer_->data(); };
 	};
-	friend class Canvas;
 };
 
 }}

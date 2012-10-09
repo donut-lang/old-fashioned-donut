@@ -59,7 +59,8 @@ public:
 	void translate(const float x,const float y, const float z);
 	void rotate(const float angle, const float x,const float y, const float z);
 	void scale(const float x,const float y, const float z);
-	void drawSprite(const float x,const float y, const float z, Handler<RawSprite> sprite);
+	void drawSprite(Handler<Sprite> sprite, const float x,const float y, const float z);
+	void drawSprite(RawSprite* const sprite, const float x,const float y, const float z);
 private:
 	void scissor(const float x, const float y, const float width, const float height);
 	void scissor(const tk::Area& area);

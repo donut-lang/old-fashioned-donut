@@ -53,6 +53,11 @@ RawSprite::~RawSprite()
 	}
 }
 
+void RawSprite::drawImpl(const float x, const float y, const float z)
+{
+	canvas()->drawSprite(this, x, y, z);
+}
+
 unsigned int RawSprite::requestTexture()
 {
 	return this->texId_;

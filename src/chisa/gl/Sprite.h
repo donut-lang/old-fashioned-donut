@@ -17,20 +17,21 @@ class Canvas;
 class RawSprite;
 
 class Sprite {
-friend class gl::Handler<Sprite>;
-friend class gl::Handler<RawSprite>;
 	DISABLE_COPY_AND_ASSIGN(Sprite);
+	template <typename T> friend class gl::Handler;
+	friend class Canvas;
 private:
-	DEFINE_MEMBER_CONST(public, Canvas*, canvas);
 	int refcount_;
+	DEFINE_MEMBER_CONST(public, Canvas*, canvas);
 public:
 	Sprite(Canvas* const canvas);
 	virtual ~Sprite();
-private:
+private: /* from Handler */
 	void incref();
 	void decref();
-protected:
 	virtual void onFree() = 0;
+private: /* from Canvas */
+	virtual void drawImpl(const float x, const float y, const float z) = 0;
 };
 
 }}
