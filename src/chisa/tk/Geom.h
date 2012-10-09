@@ -158,27 +158,23 @@ public:
 	inline bool empty() const { return this->box_.empty(); }
 	inline Area intersect(const Area& other) const
 	{
+		const float thisEndX = this->x()+this->width();
+		const float thisEndY = this->y()+this->height();
+		const float otherEndX = other.x()+other.width();
+		const float otherEndY = other.y()+other.height();
 		if(
-				this->x()+this->width() <= other.x() ||
-				other.x()+other.width() <= this->x() ||
-				this->y()+this->height() <= other.y() ||
-				other.y()+other.height() <= this->y()
+				thisEndX <= other.x() ||
+				otherEndX <= this->x() ||
+				thisEndY <= other.y() ||
+				otherEndY <= this->y()
 		){
 			return Area(0,0,0,0);
 		}
-		const Point startPoint(
-				std::max(this->x(),other.x()),
-				std::max(this->y(),other.y())
-		);
-		const Point endPoint(
-				std::min(this->x()+this->width(),other.x()+other.width()),
-				std::min(this->y()+this->height(),other.y()+other.height())
-		);
 		return Area(
-				startPoint.x(),
-				startPoint.y(),
-				endPoint.x()-startPoint.x(),
-				endPoint.y()-startPoint.y()
+				std::max(this->x(),other.x()),
+				std::max(this->y(),other.y()),
+				std::min(thisEndX,otherEndX),
+				std::min(thisEndY,otherEndY)
 		);
 	}
 };
