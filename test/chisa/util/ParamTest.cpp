@@ -85,7 +85,7 @@ TEST(ParamTest, FloatTest)
 	ASSERT_TRUE(isnan(val));
 }
 
-TEST(TreeTest, FloatTest)
+TEST(ParamTest, TreeFloatTest)
 {
 	std::shared_ptr<ParamSet> pset(new ParamSet());
 	pset->add("intval", "int", "0");
