@@ -1,0 +1,88 @@
+/*
+ * ScrollLayout.cpp
+ *
+ *  Created on: Oct 9, 2012
+ *      Author: psi
+ */
+
+#include "ScrollLayout.h"
+
+namespace chisa {
+namespace tk {
+namespace layout {
+
+
+CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(ScrollLayout)
+,scrollMode_(None)
+{
+
+}
+
+ScrollLayout::~ScrollLayout()
+{
+}
+
+weak_ptr<Layout> ScrollLayout::getChildAt(const size_t index) const
+{
+	if(index == 0 && this->child_){
+		return this->child_;
+	}else{
+		return weak_ptr<Layout>();
+	}
+}
+
+size_t ScrollLayout::getChildCount() const
+{
+	if(this->child_){
+		return 1;
+	}else{
+		return 0;
+	}
+}
+
+void ScrollLayout::loadXML(LayoutFactory* const factory, tinyxml2::XMLElement* element)
+{
+	if( const char* _mode = element->Attribute("mode", nullptr) ){
+		std::string mode(_mode);
+		if(mode == "both"){
+			this->scrollMode_ = Both;
+		}else if(mode == "horizontal"){
+			this->scrollMode_ = Horizontal;
+		}else if(mode == "vertical"){
+			this->scrollMode_ = Vertical;
+		}
+	}
+	XMLElement* const childElement = element->FirstChildElement();
+	if(childElement) {
+		this->child_ = factory->parseTree(root(), self(), childElement);
+	}
+}
+
+string ScrollLayout::toString()
+{
+	return util::format("(ScrollLayout %p)", this);
+}
+
+void ScrollLayout::renderImpl(gl::Canvas& canvas, const Area& screenArea, const Area& area)
+{
+	const Area scrolledArea(this->nowPosition_, this->size());
+	this->child_->render(canvas, screenArea, area.intersect(scrolledArea));
+}
+
+Box ScrollLayout::onMeasure(const Box& constraint)
+{
+	if(this->child_){
+		return this->child_->measure(constraint);
+	}else{
+		return Box(0, 0);
+	}
+}
+
+void ScrollLayout::onLayout(const Box& size)
+{
+	if(this->child_){
+		return this->child_->layout(size);
+	}
+}
+
+}}}
