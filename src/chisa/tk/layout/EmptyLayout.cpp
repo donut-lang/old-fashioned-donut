@@ -42,7 +42,7 @@ size_t EmptyLayout::getChildCount() const
 	return 0;
 }
 
-void EmptyLayout::loadXML(LayoutFactory* const factory, tinyxml2::XMLElement* element)
+void EmptyLayout::loadXMLimpl(LayoutFactory* const factory, tinyxml2::XMLElement* element)
 {
 
 }
@@ -70,6 +70,11 @@ Box EmptyLayout::onMeasure(const Box& constraint)
 void EmptyLayout::onLayout(const Box& size)
 {
 	//何もしない
+}
+
+weak_ptr<Layout> EmptyLayout::getLayoutByIdImpl(const std::string& id)
+{
+	return weak_ptr<Layout>();
 }
 
 }}}

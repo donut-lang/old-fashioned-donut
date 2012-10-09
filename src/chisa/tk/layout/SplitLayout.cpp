@@ -62,7 +62,7 @@ void SplitLayout::addChild(const SplitDef& def, shared_ptr<Layout> layout)
 	this->children_.push_back(ctx);
 }
 
-void SplitLayout::loadXML(LayoutFactory* const factory, XMLElement* top)
+void SplitLayout::loadXMLimpl(LayoutFactory* const factory, XMLElement* top)
 {
 	for(XMLNode* _node = top->FirstChild(); _node; _node=_node->NextSibling()){
 		XMLElement* elem = _node->ToElement();
@@ -234,5 +234,17 @@ void SplitLayout::onLayout(const Box& size)
 		ctx->layout->layout(box);
 	}
 }
+
+weak_ptr<Layout> SplitLayout::getLayoutByIdImpl(const std::string& id)
+{
+	for(shared_ptr<SplitCtx> childCtx : this->children()){
+		weak_ptr<Layout> res = childCtx->layout->getLayoutById(id);
+		if(!res.expired()){
+			return res;
+		}
+	}
+	return weak_ptr<Layout>();
+}
+
 
 }}}
