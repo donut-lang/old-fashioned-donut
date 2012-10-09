@@ -31,7 +31,7 @@ class Handler
 {
 private:
 	T* obj_;
-protected:
+public:
 	Handler():obj_(nullptr){};
 	explicit Handler(T* const obj)
 	:obj_(obj)
@@ -43,7 +43,6 @@ protected:
 			this->obj_->incref();
 		}
 	}
-public:
 	Handler(const Handler<T>& other)
 	:obj_(other.obj_)
 	{

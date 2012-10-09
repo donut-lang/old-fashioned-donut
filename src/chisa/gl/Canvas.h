@@ -24,6 +24,7 @@
 #include "../util/class_utils.h"
 #include "Handler.h"
 #include "Sprite.h"
+#include "RawSprite.h"
 #include <deque>
 #include <map>
 
@@ -42,14 +43,14 @@ private:
 	static constexpr size_t MaxCachedBufferCount = 200;
 	static constexpr size_t MaxCachedSpriteCount = 200;
 private:
-	Sprite::Handler loadPNG(const std::string& filename);
+	Handler<RawSprite> loadPNG(const std::string& filename);
 public:
 	Canvas(logging::Logger& log);
 	virtual ~Canvas();
 public:
-	std::deque<Sprite*> unusedSprite_;
+	std::deque<RawSprite*> unusedSprite_;
 	std::deque<Buffer*> unusedBuffer_;
-	std::deque<std::pair<std::string, Sprite::Handler> > imageCache_;
+	std::deque<std::pair<std::string, Handler<RawSprite> > > imageCache_;
 public:
 	void ortho(const float left, const float right, const float bottom, const float top, const float near_val, const float far_val);
 	void resize2d(const float width, const float height);
@@ -58,7 +59,7 @@ public:
 	void translate(const float x,const float y, const float z);
 	void rotate(const float angle, const float x,const float y, const float z);
 	void scale(const float x,const float y, const float z);
-	void drawSprite(const float x,const float y, const float z, Sprite::Handler sprite);
+	void drawSprite(const float x,const float y, const float z, Handler<RawSprite> sprite);
 private:
 	void scissor(const float x, const float y, const float width, const float height);
 	void scissor(const tk::Area& area);
@@ -72,11 +73,11 @@ public:
 		virtual ~Scissor();
 	};
 public:
-	Sprite::Handler querySprite(const int width, const int height);
-	Sprite::Handler queryImage(const std::string& filename);
+	Handler<RawSprite> queryRawSprite(const int width, const int height);
+	Handler<RawSprite> queryImage(const std::string& filename);
 public: /* ハンドラやセッションから参照されるメソッド。普通触らない。 */
 	Buffer* queryBuffer(const int width, const int height);
-	void backSprite(Sprite* spr);
+	void backSprite(RawSprite* spr);
 	void backBuffer(Buffer* buffer);
 };
 

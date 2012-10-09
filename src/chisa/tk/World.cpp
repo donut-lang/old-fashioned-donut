@@ -133,7 +133,7 @@ Widget* World::createWidget(const string& klass, tinyxml2::XMLElement* elem)
 	return this->widgetFactory_->createWidget(klass, elem);
 }
 
-gl::Sprite::Handler World::queryImage(const string& abs_filename)
+gl::Handler<gl::RawSprite> World::queryImage(const string& abs_filename)
 {
 	return this->universe_.lock()->queryImage(abs_filename);
 }
