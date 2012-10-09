@@ -75,7 +75,7 @@ void WidgetWrapperLayout::idle(const float delta_ms)
 	}
 	this->widget()->idle(delta_ms);
 }
-void chisa::tk::layout::WidgetWrapperLayout::renderImpl(gl::Canvas& canvas, const Area& screenArea, const Area& area)
+void WidgetWrapperLayout::renderImpl(gl::Canvas& canvas, const Area& screenArea, const Area& area)
 {
 	if(!widget()){
 		return;
@@ -104,10 +104,44 @@ Box chisa::tk::layout::WidgetWrapperLayout::onMeasure(const Box& constraint)
 	if(geom::isUnspecified(box.width()) || geom::isUnspecified(box.height())){
 		this->log().e(TAG, "Widget \"this->widgetId_.c_str()\" box size unspecified.");
 	}
-	return box;
+	if(this->fitMode_ == Fit){
+		const bool widthSpecified = geom::isSpecified(constraint.width());
+		const bool heightSpecified = geom::isSpecified(constraint.height());
+		float scale = 1;
+		if(widthSpecified && heightSpecified){
+			scale = this->calcScale(box, constraint);
+		}else if(widthSpecified){
+			scale = constraint.width() / box.width();
+		}else if(heightSpecified){
+			scale = constraint.height() / box.height();
+		}
+		return Box(box.width() * scale, box.height() * scale);
+	}else if(this->fitMode_ == Center){
+		return box;
+	}else{
+		this->log().e(TAG, "Unknwon fit mode: %d", this->fitMode_);
+		return Box(0,0);
+	}
 }
 
-void chisa::tk::layout::WidgetWrapperLayout::onLayout(const Box& size)
+float WidgetWrapperLayout::calcScale(const Box& widget, const Box& constraint)
+{
+	if(constraint > this->widgetSize()){ //完全に小さい
+		// 拡大。
+		return std::min(
+				constraint.width() / widget.width(),
+				constraint.height() / widget.height()
+		);
+	}else{
+		//そうでない場合は長い辺に合わせて縮小。
+		return std::min(
+				constraint.width() / widget.width(),
+				constraint.height() / widget.height()
+		);
+	}
+}
+
+void WidgetWrapperLayout::onLayout(const Box& size)
 {
 	if(!widget()){
 		return;
@@ -117,20 +151,9 @@ void chisa::tk::layout::WidgetWrapperLayout::onLayout(const Box& size)
 	switch(this->fitMode_)
 	{
 	case Fit: {
-		if(size > this->widgetSize()){ //完全に小さい
-			// 拡大。
-			this->widgetScale(std::min(
-					size.width() / this->widgetSize().width(),
-					size.height() / this->widgetSize().height()
-			));
-		}else{
-			//そうでない場合は長い辺に合わせて縮小。
-			this->widgetScale(std::min(
-					size.width() / this->widgetSize().width(),
-					size.height() / this->widgetSize().height()
-			));
-		}
-		Box scaled(this->widgetSize().width() * this->widgetScale(), this->widgetSize().height() * this->widgetScale());
+		const float scale = this->calcScale(this->widgetSize(), size);
+		this->widgetScale(scale);
+		Box scaled(this->widgetSize().width() * scale, this->widgetSize().height() * scale);
 		this->widgetPoint(Point((size.width() - scaled.width())/2, (size.height()-scaled.height())/2));
 		break;
 	}
