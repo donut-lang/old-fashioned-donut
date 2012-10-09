@@ -96,16 +96,16 @@ TEST(TreeTest, FloatTest)
 
 	pElem = doc.NewElement("param");
 	pElem->SetAttribute("name", "str");
-	pElem->SetAttribute("value", "strvalue");
+	pElem->InsertFirstChild(doc.NewText("strvalue"));
 	doc.RootElement()->InsertEndChild(pElem);
 
 	pElem = doc.NewElement("param");
 	pElem->SetAttribute("name", "intval");
 	pElem->SetAttribute("type", Param::TypeName::Integer);
-	pElem->SetAttribute("value", "256");
+	pElem->InsertFirstChild(doc.NewText("256"));
 	doc.RootElement()->InsertEndChild(pElem);
 
-	ParamSet::parseTree(pset, doc.RootElement());
+	pset->parseTree(doc.RootElement());
 
 	ASSERT_EQ(2, pset->size());
 	ASSERT_TRUE(pset->get("intval") != nullptr);

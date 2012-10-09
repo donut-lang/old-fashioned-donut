@@ -36,7 +36,6 @@ public:
 	struct AttrName{
 		static constexpr const char* Name = "name";
 		static constexpr const char* Type = "type";
-		static constexpr const char* Value = "value";
 	};
 	struct TypeName {
 		static constexpr const char* Integer = "int";

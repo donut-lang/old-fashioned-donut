@@ -27,13 +27,12 @@ namespace tk {
 class WidgetTest : public ::testing::Test
 {
 protected:
-	Universe * universe;
+	shared_ptr<Universe> universe;
 public:
 	void SetUp(){
-		universe = new Universe(log_trace, ".");
+		universe = Universe::create(log_trace, ".");
 	}
 	void TearDown(){
-		delete universe;
 	}
 };
 

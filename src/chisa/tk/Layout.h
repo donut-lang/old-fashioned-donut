@@ -48,7 +48,7 @@ private:
 	DEFINE_MEMBER(protected, private, weak_ptr<Layout>, root);
 	DEFINE_MEMBER(protected, private, weak_ptr<Layout>, parent);
 	DEFINE_MEMBER(protected, private, weak_ptr<Layout>, self);
-	DEFINE_MEMBER(protected, private, Box, size);
+	DEFINE_MEMBER(public, private, Box, size);
 	DEFINE_MEMBER(protected, private, Area, screenArea);
 	DEFINE_MEMBER(protected, private, Area, drawnArea);
 public:
