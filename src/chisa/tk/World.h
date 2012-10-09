@@ -79,7 +79,7 @@ public:
 	 * Universeへの移譲
 	 ******************************************************************************/
 public:
-	gl::Sprite::Handler queryImage(const string& abs_filename);
+	gl::Handler<gl::RawSprite> queryImage(const string& abs_filename);
 	std::string resolveWorldFilepath(const string& related_filename);
 	std::string resolveUniverseFilepath(const string& related_filename);
 

@@ -52,7 +52,7 @@ public: //worldからの通知
 public:
 	std::string resolveWorldFilepath(const std::string& worldname, const std::string& related_filename);
 	std::string resolveUniverseFilepath(const std::string& related_filename);
-	gl::Sprite::Handler queryImage(const std::string& abs_filename);
+	gl::Handler<gl::RawSprite> queryImage(const std::string& abs_filename);
 	/******************************************************************************
 	 * 生成
 	 ******************************************************************************/

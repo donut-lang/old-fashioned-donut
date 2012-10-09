@@ -110,7 +110,7 @@ void Canvas::scissorReset()
 	glScissor(0,0,this->width_,this->height_);
 }
 
-void Canvas::drawSprite(const float x,const float y, const float z, Sprite::Handler sprite)
+void Canvas::drawSprite(const float x,const float y, const float z, Handler<RawSprite> sprite)
 {
 	const GLint texId = sprite->requestTexture();
 	const float width = sprite->width();
@@ -130,23 +130,25 @@ void Canvas::drawSprite(const float x,const float y, const float z, Sprite::Hand
 	glFlush();
 }
 
-Sprite::Handler Canvas::querySprite(const int width, const int height)
+Handler<RawSprite> Canvas::queryRawSprite(const int width, const int height)
 {
-	auto it = std::lower_bound(this->unusedSprite_.begin(), this->unusedSprite_.end(), std::pair<int,int>(width,height), Order<Sprite>());
+	auto it = std::lower_bound(this->unusedSprite_.begin(), this->unusedSprite_.end(), std::pair<int,int>(width,height), Order<RawSprite>());
 	if(it == this->unusedSprite_.end()){
-		Sprite* spr = new Sprite(this, width, height);
-		return Sprite::Handler(spr, width, height);
+		RawSprite* spr = new RawSprite(this, width, height);
+		spr->resize(width, height);
+		return Handler<RawSprite>(spr);
 	}else{
-		return Sprite::Handler(*it,width, height);
+		(*it)->resize(width, height);
+		return Handler<RawSprite>(*it);
 	}
 }
 
-void Canvas::backSprite(Sprite* spr)
+void Canvas::backSprite(RawSprite* spr)
 {
-	auto ins = std::lower_bound(this->unusedSprite_.begin(), this->unusedSprite_.end(), spr, Order<Sprite>());
+	auto ins = std::lower_bound(this->unusedSprite_.begin(), this->unusedSprite_.end(), spr, Order<RawSprite>());
 	this->unusedSprite_.insert(ins, spr);
 	while(Canvas::MaxCachedSpriteCount < this->unusedSprite_.size()){
-		Sprite* deleted = 0;
+		RawSprite* deleted = 0;
 		if((rand() & 1U) == 1U){
 			deleted = this->unusedSprite_.back();
 			this->unusedSprite_.pop_back();
@@ -155,8 +157,8 @@ void Canvas::backSprite(Sprite* spr)
 			this->unusedSprite_.pop_front();
 		}
 		if(deleted){
-			Sprite* min = this->unusedSprite_.front();
-			Sprite* max = this->unusedSprite_.back();
+			RawSprite* const min = this->unusedSprite_.front();
+			RawSprite* const max = this->unusedSprite_.back();
 			if(log().d()){
 				log().d(TAG, "Sprite cache deleted. size: %dx%d / min:%dx%d, max:%dx%d",
 						deleted->width(), deleted->height(),

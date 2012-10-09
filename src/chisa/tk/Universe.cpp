@@ -99,7 +99,7 @@ std::string Universe::resolveUniverseFilepath(const std::string& related_filenam
 	return this->basepath_+util::FileUtil::Sep+related_filename;
 }
 
-gl::Sprite::Handler Universe::queryImage(const std::string& abs_filename)
+gl::Handler<gl::RawSprite> Universe::queryImage(const std::string& abs_filename)
 {
 	return this->canvas_.queryImage(abs_filename);
 }

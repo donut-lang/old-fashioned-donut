@@ -24,7 +24,7 @@
 namespace chisa{
 namespace gl {
 
-Sprite::Handler Canvas::queryImage(const std::string& filename)
+Handler<RawSprite> Canvas::queryImage(const std::string& filename)
 {
 	for(auto it = this->imageCache_.begin(); it != this->imageCache_.end(); ++it){
 		if(it->first == filename){
@@ -34,7 +34,7 @@ Sprite::Handler Canvas::queryImage(const std::string& filename)
 			return pair.second;
 		}
 	}
-	Sprite::Handler img = this->loadPNG(filename);
+	Handler<RawSprite> img = this->loadPNG(filename);
 	this->imageCache_.push_front(std::make_pair(filename, img));
 	while(this->imageCache_.size() > 10) {
 		this->imageCache_.pop_back();
@@ -42,7 +42,7 @@ Sprite::Handler Canvas::queryImage(const std::string& filename)
 	return img;
 }
 
-Sprite::Handler Canvas::loadPNG(const std::string& filename)
+Handler<RawSprite> Canvas::loadPNG(const std::string& filename)
 {
 	FILE* fp = fopen(filename.c_str(), "rb");
 	if(!fp){
@@ -88,9 +88,9 @@ Sprite::Handler Canvas::loadPNG(const std::string& filename)
 	const int width = png_get_image_width(png, info);
 	const int height = png_get_image_height(png, info);
 
-	Sprite::Handler spr = this->querySprite(width, height);
+	Handler<RawSprite> spr = this->queryRawSprite(width, height);
 	{
-		Sprite::Session session(spr);
+		RawSprite::Session session(spr);
 		unsigned char* data = session.data();
 		const int stride = session.stride();
 		unsigned char* ptr[height];
