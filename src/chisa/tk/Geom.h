@@ -170,11 +170,19 @@ public:
 		){
 			return Area(0,0,0,0);
 		}
-		return Area(
+		const Point startPoint(
 				std::max(this->x(),other.x()),
-				std::max(this->y(),other.y()),
+				std::max(this->y(),other.y())
+		);
+		const Point endPoint(
 				std::min(thisEndX,otherEndX),
 				std::min(thisEndY,otherEndY)
+		);
+		return Area(
+				startPoint.x(),
+				startPoint.y(),
+				endPoint.x()-startPoint.x(),
+				endPoint.y()-startPoint.y()
 		);
 	}
 };
