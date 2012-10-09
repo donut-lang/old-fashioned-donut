@@ -74,8 +74,8 @@ public:
 public:
 	Sprite::Handler querySprite(const int width, const int height);
 	Sprite::Handler queryImage(const std::string& filename);
+public: /* ハンドラやセッションから参照されるメソッド。普通触らない。 */
 	Buffer* queryBuffer(const int width, const int height);
-public:
 	void backSprite(Sprite* spr);
 	void backBuffer(Buffer* buffer);
 };
