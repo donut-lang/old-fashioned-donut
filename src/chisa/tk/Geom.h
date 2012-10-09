@@ -115,6 +115,11 @@ public:
 	inline std::string toString() const{
 		return util::format("(Box %f %f)", width_, height_);
 	}
+	inline bool empty() const {
+		return
+				std::fabs(this->width_) < geom::VerySmall &&
+				std::fabs(this->height_) < geom::VerySmall;
+	}
 };
 
 class Area
@@ -135,8 +140,10 @@ public:
 		return this->box_.near(other.box_, precision) && point_.near(other.point_, precision);
 	}
 	inline Area():point_(), box_(){};
-	inline Point point() const{return point_;};
-	inline Box box() const{return box_;};
+	inline Point& point() {return point_;};
+	inline Box& box() {return box_;};
+	inline const Point& point() const{return point_;};
+	inline const Box& box() const{return box_;};
 	inline float x() const{ return point_.x(); };
 	inline float y() const{ return point_.y(); };
 	inline float width() const{ return box_.width(); };
@@ -147,6 +154,32 @@ public:
 	inline void height(const float height) { box_.height(height); };
 	inline std::string toString() const{
 		return util::format("(Area %f %f %f %f)", x(), y(), width(), height());
+	}
+	inline bool empty() const { return this->box_.empty(); }
+	inline Area intersect(const Area& other) const
+	{
+		if(
+				this->x()+this->width() <= other.x() ||
+				other.x()+other.width() <= this->x() ||
+				this->y()+this->height() <= other.y() ||
+				other.y()+other.height() <= this->y()
+		){
+			return Area(0,0,0,0);
+		}
+		const Point startPoint(
+				std::max(this->x(),other.x()),
+				std::max(this->y(),other.y())
+		);
+		const Point endPoint(
+				std::min(this->x()+this->width(),other.x()+other.width()),
+				std::min(this->y()+this->height(),other.y()+other.height())
+		);
+		return Area(
+				startPoint.x(),
+				startPoint.y(),
+				endPoint.x()-startPoint.x(),
+				endPoint.y()-startPoint.y()
+		);
 	}
 };
 

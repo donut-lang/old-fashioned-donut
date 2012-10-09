@@ -126,7 +126,7 @@ void SplitLayout::renderImpl(gl::Canvas& canvas, const Area& screenArea, const A
 		(drawnBox.*changed_setter)(std::min(size, drawnEndOffset-offset));
 
 		Point drawnPoint(area.point());
-		(drawnBox.*changed_setter)(offset-drawnStartOffset);
+		(drawnPoint.*point_setter)(offset-drawnStartOffset);
 
 		Point screenPoint(screenArea.point());
 		(screenPoint.*point_setter)(((screenPoint.*point_getter)())+offset-drawnStartOffset);
