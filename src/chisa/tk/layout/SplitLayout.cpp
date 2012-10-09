@@ -118,9 +118,11 @@ void SplitLayout::renderImpl(gl::Canvas& canvas, const Area& screenArea, const A
 	float offset = 0;
 	for(shared_ptr<SplitCtx> ctx : this->children()){
 		const float size = ctx->size;
-		if(offset+size < drawnStartOffset || drawnEndOffset <= offset){
+		if(offset+size < drawnStartOffset){
 			offset += size;
 			continue;
+		}else if(drawnEndOffset <= offset){
+			break;
 		}
 		Box drawnBox(area.box());
 		(drawnBox.*changed_setter)(std::min(size, drawnEndOffset-offset));
@@ -167,7 +169,6 @@ Box SplitLayout::onMeasure(const Box& constraint)
 		float intendedSizeTotal = 0;
 		float nonWeightedSizeTotal = 0;
 		for(shared_ptr<SplitCtx> childCtx : this->children()){
-			shared_ptr<Layout> child;
 			const bool weightSpecified = geom::isSpecified(childCtx->def.weight);
 			const Box childSize(childCtx->layout->measure(constraint));
 			if(weightSpecified){
