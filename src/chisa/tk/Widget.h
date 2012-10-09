@@ -47,7 +47,7 @@ class World;
 
 class Widget {
 	DISABLE_COPY_AND_ASSIGN(Widget);
-	DEFINE_MEMBER_REF(private, logging::Logger, log);
+	DEFINE_MEMBER_REF(protected, logging::Logger, log);
 	DEFINE_MEMBER(protected, private, weak_ptr<World>, world)
 	DEFINE_MEMBER(private, private, weak_ptr<layout::WidgetWrapperLayout>, wrapper);
 public:

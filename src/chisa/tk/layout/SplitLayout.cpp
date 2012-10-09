@@ -138,9 +138,9 @@ void SplitLayout::renderImpl(gl::Canvas& canvas, const Area& screenArea, const A
 
 Box SplitLayout::onMeasure(const Box& constraint)
 {
-	const bool changedSpecified = geom::isUnspecified((constraint.*changed_getter)());
-	const bool fixedSpecified = geom::isUnspecified((constraint.*fixed_getter)());
-	if(changedSpecified){
+	const bool changedSpecified = geom::isSpecified((constraint.*changed_getter)());
+	const bool fixedSpecified = geom::isSpecified((constraint.*fixed_getter)());
+	if(!changedSpecified){
 		//いくらでも伸びてよし
 		float totalSize = 0;
 		float fixedMaxSize = 0;
@@ -193,7 +193,6 @@ Box SplitLayout::onMeasure(const Box& constraint)
 			for(shared_ptr<SplitCtx> childCtx : this->children()){
 				shared_ptr<Layout> child;
 				const bool weightSpecified = geom::isSpecified(childCtx->def.weight);
-				const Box childSize(childCtx->layout->measure(constraint));
 				if(weightSpecified){
 					//ウェイトがかかっている
 					float size = leftSize * childCtx->def.weight / leftWeight;

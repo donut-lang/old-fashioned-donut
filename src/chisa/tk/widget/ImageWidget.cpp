@@ -24,6 +24,8 @@ namespace chisa {
 namespace tk {
 namespace widget {
 
+const static std::string TAG("ImageWidget");
+
 ImageWidget::ImageWidget(logging::Logger& log, weak_ptr<World> world, tinyxml2::XMLElement* element)
 :Widget(log, world, element)
 ,paramSet_(new util::ParamSet())
@@ -35,8 +37,19 @@ ImageWidget::ImageWidget(logging::Logger& log, weak_ptr<World> world, tinyxml2::
 			if(paramSet_->get("src")->queryString(&src)){
 				std::string fpath = w->resolveUniverseFilepath(src);
 				this->imageSprite_ = w->queryImage(fpath);
+				if(this->imageSprite_ && log.t()){
+					log.t(TAG, "file: %s loaded: %dx%d", fpath.c_str(), imageSprite_->width(), imageSprite_->height());
+				}else if(!this->imageSprite_){
+					log.e(TAG, "Failed to load: %s", fpath.c_str());
+				}
+			}else{
+				log.e(TAG, "Oops. Src parameter is not string.");
 			}
+		}else{
+			log.e(TAG, "Oops. Src parameter not found!");
 		}
+	}else{
+		log.e(TAG, "Oops. failed to lock world!");
 	}
 }
 
@@ -65,6 +78,7 @@ Box ImageWidget::measure(const Box& constraint)
 	if(imageSprite_){
 		return Box(imageSprite_->width(), imageSprite_->height());
 	}else{
+		log().e(TAG, "Image Sprite not allocated, but size measured.");
 		return Box(0, 0);
 	}
 }

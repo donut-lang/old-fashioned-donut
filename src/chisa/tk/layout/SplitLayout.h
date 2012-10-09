@@ -79,8 +79,8 @@ private:
 private:
 	inline float wrapSize(float changedSize, const SplitDef& def) const
 	{
-		changedSize = std::max(changedSize, def.max);
-		changedSize = std::min(changedSize, def.min);
+		changedSize = std::min(changedSize, def.max);
+		changedSize = std::max(changedSize, def.min);
 		return changedSize;
 	}
 private:
