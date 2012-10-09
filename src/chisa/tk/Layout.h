@@ -89,22 +89,27 @@ public:
 };
 
 
+#define CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_LIST logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent
+#define CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_APPLY log, world, root, parent
+
 #define CHISA_LAYOUT_SUBKLASS_FINAL(Klass) \
-friend shared_ptr<Klass> Layout::create<Klass>(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);\
+friend shared_ptr<Klass> Layout::create<Klass>(CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_LIST);\
 private:\
-	Klass(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);\
+	Klass(CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_LIST);\
 public:\
 	virtual ~Klass();
 
 #define CHISA_LAYOUT_SUBKLASS(Klass) \
 protected:\
-	Klass(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);\
+	Klass(CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_LIST);\
 public:\
 	virtual ~Klass();
 
+#define CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_SETUP_BASE(Derived) Derived(CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_APPLY)
+
 #define CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(Klass, Derived) \
-Klass::Klass(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent)\
-:Derived(log, world, root, parent)
+Klass::Klass(CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_LIST)\
+:CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_SETUP_BASE(Derived)
 
 #define CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(Klass) CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(Klass, Layout)
 

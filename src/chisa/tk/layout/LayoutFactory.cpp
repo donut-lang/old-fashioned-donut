@@ -21,8 +21,7 @@
 #include "../../logging/Exception.h"
 #include <memory>
 #include <tinyxml2.h>
-#include "HorizontalLayout.h"
-//#include "VerticalLayout.h"
+#include "SplitLayout.h"
 #include "EmptyLayout.h"
 #include "WidgetWrapperLayout.h"
 
@@ -94,8 +93,8 @@ LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, const 
 
 void LayoutFactory::init()
 {
-	this->registerLayout<HorizontalLayout>(ElemName::Horizontal);
-	//this->registerLayout<VerticalLayout>(ElemName::Vertical);
+	this->registerLayout(ElemName::Horizontal, std::bind(SplitLayout::constructorProxy, SplitLayout::Horizontal, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+	this->registerLayout(ElemName::Vertical, std::bind(SplitLayout::constructorProxy, SplitLayout::Vertical, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
 	this->registerLayout<EmptyLayout>(ElemName::Empty);
 	this->registerLayout<WidgetWrapperLayout>(ElemName::WidgetWrapper);
 	//this->registerLayout<TabLayout>(ElemName::Tab);
