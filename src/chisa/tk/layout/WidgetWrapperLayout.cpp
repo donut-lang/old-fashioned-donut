@@ -116,7 +116,7 @@ void chisa::tk::layout::WidgetWrapperLayout::onLayout(const Box& size)
 	case Fit: {
 		if(size > this->widgetSize()){ //完全に小さい
 			// 拡大。
-			this->widgetScale(std::max(
+			this->widgetScale(std::min(
 					size.width() / this->widgetSize().width(),
 					size.height() / this->widgetSize().height()
 			));
