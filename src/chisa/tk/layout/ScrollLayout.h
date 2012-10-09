@@ -27,6 +27,7 @@ private:
 	enum Mode scrollMode_;
 	Point nowPosition_;
 	shared_ptr<Layout> child_;
+	Box childSize_;
 public:
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const override;
 	virtual size_t getChildCount() const override;
