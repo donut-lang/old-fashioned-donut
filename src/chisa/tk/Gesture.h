@@ -36,18 +36,18 @@ public:
 	GestureListener(){};
 	virtual ~GestureListener(){};
 public:
-	virtual bool onDownRaw(const float timeMs, const Point& pt){return false;};
-	virtual bool onUpRaw(const float timeMs, const Point& pt){return false;};
-	virtual bool onMoveRaw(const float timeMs, const Point& pt){return false;};
-	virtual bool onSingleTapUp(const float timeMs, const Point& pt){return false;};
+	virtual bool onDownRaw(const float timeMs, const Point& ptInScreen){return false;};
+	virtual bool onUpRaw(const float timeMs, const Point& ptInScreen){return false;};
+	virtual bool onMoveRaw(const float timeMs, const Point& ptInScreen){return false;};
+	virtual bool onSingleTapUp(const float timeMs, const Point& ptInScreen){return false;};
 	virtual bool onFling(const float timeMs, const Point& start, const Point& end, const Velocity& velocity){return false;};
 	virtual bool onScroll(const float timeMs, const Point& start, const Point& end, const Distance& distance){return false;};
 	virtual bool onZoom(const float timeMs, const Point& center, const float ratio){return false;};
 	// 実装用
-	//	virtual bool onDownRaw(const float timeMs, const Point& pt) override;
-	//	virtual bool onUpRaw(const float timeMs, const Point& pt) override;
-	//	virtual bool onMoveRaw(const float timeMs, const Point& pt) override;
-	//	virtual bool onSingleTapUp(const float timeMs, const Point& pt) override;
+	//	virtual bool onDownRaw(const float timeMs, const Point& ptInScreen) override;
+	//	virtual bool onUpRaw(const float timeMs, const Point& ptInScreen) override;
+	//	virtual bool onMoveRaw(const float timeMs, const Point& ptInScreen) override;
+	//	virtual bool onSingleTapUp(const float timeMs, const Point& ptInScreen) override;
 	//	virtual bool onFling(const float timeMs, const Point& start, const Point& end, const Velocity& velocity) override;
 	//	virtual bool onScroll(const float timeMs, const Point& start, const Point& end, const Distance& distance) override;
 	//	virtual bool onZoom(const float timeMs, const Point& center, const float ratio) override;

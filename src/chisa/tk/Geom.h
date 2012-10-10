@@ -114,6 +114,11 @@ public:
 		this->y(this->y()+d.y());
 		return *this;
 	}
+	inline Point& operator-=(const Distance& d){
+		this->x(this->x()-d.x());
+		this->y(this->y()-d.y());
+		return *this;
+	}
 };
 
 class Velocity : public Vector {

@@ -91,7 +91,8 @@ void WidgetWrapperLayout::renderImpl(gl::Canvas& canvas, const Area& screenArea,
 		//描画を投げる
 		Point offset(area.x()-this->widgetOffset().x(), area.y()-this->widgetOffset().y());
 		Box size(std::min(area.width(), widgetSizeReal().width()-area.x()), std::min(area.height(), widgetSizeReal().height()-area.y()));
-		widget()->render(canvas, Area(offset.x() / this->widgetScaleX(), offset.y() / this->widgetScaleY(), size.width()/this->widgetScaleX(), size.height()/this->widgetScaleY()));
+		this->widgetDrawnArea(Area(offset.x() / this->widgetScaleX(), offset.y() / this->widgetScaleY(), size.width()/this->widgetScaleX(), size.height()/this->widgetScaleY()));
+		widget()->render(canvas, this->widgetDrawnArea());
 	}
 	canvas.popMatrix();
 }
@@ -205,5 +206,48 @@ weak_ptr<Layout> WidgetWrapperLayout::getLayoutByIdImpl(const std::string& id)
 	return weak_ptr<Layout>();
 }
 
+Point WidgetWrapperLayout::calcPtInWidget(const Point& ptInScreen)
+{
+	Distance delta = ptInScreen - this->screenArea().point();
+	Distance scaledDelta(delta.x() / this->widgetScaleX(), delta.y() / this->widgetScaleY());
+	return Point(this->widgetDrawnArea().point() + scaledDelta);
+}
+
+bool WidgetWrapperLayout::onDownRaw(const float timeMs, const Point& ptInScreen)
+{
+	return widget_->onDownRaw(timeMs, calcPtInWidget(ptInScreen));
+}
+
+bool WidgetWrapperLayout::onUpRaw(const float timeMs, const Point& ptInScreen)
+{
+	return widget_->onUpRaw(timeMs, calcPtInWidget(ptInScreen));
+}
+
+bool WidgetWrapperLayout::onMoveRaw(const float timeMs, const Point& ptInScreen)
+{
+	return widget_->onMoveRaw(timeMs, calcPtInWidget(ptInScreen));
+}
+
+bool WidgetWrapperLayout::onSingleTapUp(const float timeMs, const Point& ptInScreen)
+{
+	return widget_->onSingleTapUp(timeMs, calcPtInWidget(ptInScreen));
+}
+
+bool WidgetWrapperLayout::onFling(const float timeMs, const Point& start, const Point& end, const Velocity& velocity)
+{
+	const Velocity scaledVelocity(velocity.x() / this->widgetScaleX(), velocity.y() / this->widgetScaleY());
+	return widget_->onFling(timeMs, calcPtInWidget(start), calcPtInWidget(end), scaledVelocity);
+}
+
+bool WidgetWrapperLayout::onScroll(const float timeMs, const Point& start, const Point& end, const Distance& distance)
+{
+	const Distance scaledDistance(distance.x() / this->widgetScaleX(), distance.y() / this->widgetScaleY());
+	return widget_->onScroll(timeMs, calcPtInWidget(start), calcPtInWidget(end), scaledDistance);
+}
+
+bool WidgetWrapperLayout::onZoom(const float timeMs, const Point& center, const float ratio)
+{
+	return widget_->onZoom(timeMs, calcPtInWidget(center), ratio);
+}
 
 }}}

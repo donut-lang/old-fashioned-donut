@@ -62,6 +62,24 @@ public:
 	virtual void idle(const float delta_ms) = 0;
 	virtual void reshape(const Box& area) = 0;
 	virtual Box measure(const Box& constraint) = 0;
+public:
+	virtual bool onDownRaw(const float timeMs, const Point& ptInWidget){return false;};
+	virtual bool onUpRaw(const float timeMs, const Point& ptInWidget){return false;};
+	virtual bool onMoveRaw(const float timeMs, const Point& ptInWidget){return false;};
+	virtual bool onSingleTapUp(const float timeMs, const Point& ptInWidget){return false;};
+	virtual bool onFling(const float timeMs, const Point& start, const Point& end, const Velocity& velocity){return false;};
+	virtual bool onScroll(const float timeMs, const Point& start, const Point& end, const Distance& distance){return false;};
+	virtual bool onZoom(const float timeMs, const Point& center, const float ratio){return false;};
+
+//	実装用
+//	virtual bool onDownRaw(const float timeMs, const Point& ptInWidget) override;
+//	virtual bool onUpRaw(const float timeMs, const Point& ptInWidget) override;
+//	virtual bool onMoveRaw(const float timeMs, const Point& ptInWidget) override;
+//	virtual bool onSingleTapUp(const float timeMs, const Point& ptInWidget) override;
+//	virtual bool onFling(const float timeMs, const Point& start, const Point& end, const Velocity& velocity) override;
+//	virtual bool onScroll(const float timeMs, const Point& start, const Point& end, const Distance& distance) override;
+//	virtual bool onZoom(const float timeMs, const Point& center, const float ratio) override;
+
 };
 
 }}

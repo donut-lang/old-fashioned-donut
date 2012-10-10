@@ -47,6 +47,7 @@ private:
 	DEFINE_MEMBER(private, private, Point, widgetOffset);
 	DEFINE_MEMBER(private, private, Box, widgetSize);
 	DEFINE_MEMBER(private, private, Box, widgetSizeReal);
+	DEFINE_MEMBER(private, private, Area, widgetDrawnArea);
 public:
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const override;
 	virtual size_t getChildCount() const override;
@@ -61,6 +62,17 @@ private:
 	virtual weak_ptr<Layout> getLayoutByIdImpl(const std::string& id) override;
 private:
 	float calcScale(const Box& widget, const Box& constraint);
+private:
+	Point calcPtInWidget(const Point& ptInScreen);
+public:
+	virtual bool onDownRaw(const float timeMs, const Point& ptInScreen) override;
+	virtual bool onUpRaw(const float timeMs, const Point& ptInScreen) override;
+	virtual bool onMoveRaw(const float timeMs, const Point& ptInScreen) override;
+	virtual bool onSingleTapUp(const float timeMs, const Point& ptInScreen) override;
+	virtual bool onFling(const float timeMs, const Point& start, const Point& end, const Velocity& velocity) override;
+	virtual bool onScroll(const float timeMs, const Point& start, const Point& end, const Distance& distance) override;
+	virtual bool onZoom(const float timeMs, const Point& center, const float ratio) override;
+
 };
 
 }}}
