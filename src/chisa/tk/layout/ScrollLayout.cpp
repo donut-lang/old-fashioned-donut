@@ -74,12 +74,21 @@ void ScrollLayout::renderImpl(gl::Canvas& canvas, const Area& screenArea, const 
 	if(this->lastMovedFrom_ < ScrollBarTimeOut){
 		const float alpha = (ScrollBarTimeOut - this->lastMovedFrom_) / ScrollBarTimeOut;
 		if((this->scrollMode_ & Vertical)){
+			const float scrollMax = area.height() - this->childSize_.height();
+			const float scrollRatio = this->scrollDist_.y() / scrollMax;
 			const float x = screenArea.x()+screenArea.width()-7.0f;
 			const float len = (screenArea.height()-4.0f) * area.height() / this->childSize_.height();
-			const float y = screenArea.y()+2.0f - (screenArea.height()-len-4.0f) * (this->scrollDist_.y() / (area.height() - this->childSize_.height()));
-			canvas.drawLine(5.0f, 1.0f, 1.0f, 1.0f, alpha, x, std::max(y, screenArea.y()), -0.1f, x, std::min(y+len, screenArea.y()+screenArea.height()), -0.1f);
+			const float y = screenArea.y()+2.0f - (screenArea.height()-len-4.0f) * scrollRatio;
+			canvas.drawLine(5.0f, .5f, .5f, .5f, alpha, x, std::max(y, screenArea.y()), -0.1f, x, std::min(y+len, screenArea.y()+screenArea.height()), -0.1f);
 		}
 		if((this->scrollMode_ & Horizontal)){
+			const float scrollMax = area.width() - this->childSize_.width();
+			const float scrollRatio = this->scrollDist_.x() / scrollMax;
+
+			const float y = screenArea.y()+screenArea.height()-7.0f;
+			const float len = (screenArea.width()-4.0f) * area.width() / this->childSize_.width();
+			const float x = screenArea.x()+2.0f - (screenArea.width()-len-4.0f) * scrollRatio;
+			canvas.drawLine(5.0f, .5f, .5f, .5f, alpha, std::max(x, screenArea.x()), y, -0.1f, std::min(x+len, screenArea.x()+screenArea.width()), y, -0.1f);
 		}
 	}
 }
