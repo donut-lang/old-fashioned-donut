@@ -91,6 +91,7 @@ void GestureSession::onTouchUp(const float timeMs, const Point& pt)
 
 void GestureSession::onTouchMove(const float timeMs, const Point& pt)
 {
+	this->invokeMoveRaw(timeMs, pt);
 	this->invokeScroll(timeMs, this->lastPoint_, pt, pt-this->lastPoint_);
 	this->totalMoved_ += (pt-this->lastPoint_);
 	this->lastTimeMs_ = timeMs;

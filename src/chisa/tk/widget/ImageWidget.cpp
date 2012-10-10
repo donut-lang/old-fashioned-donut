@@ -58,6 +58,8 @@ ImageWidget::~ImageWidget()
 	delete paramSet_;
 }
 
+#include <GL/gl.h>
+
 void ImageWidget::render(gl::Canvas& cv, const Area& area)
 {
 	if(this->imageSprite_){
