@@ -18,6 +18,7 @@
 
 #include "Gesture.h"
 #include "World.h"
+#include "Layout.h"
 
 namespace chisa {
 namespace tk {
@@ -35,7 +36,7 @@ GestureSession::GestureSession(logging::Logger& log, const unsigned int pointerI
 ,lastTimeMs_(startTimeMs)
 {
 	if(log.t()){
-		log.t(TAG, "Touch Session created: %s at %f index: %d", startPoint.toString().c_str(), startTimeMs, pointerIndex);
+		log.t(TAG, "Touch Session created: %s at %f index: %d layout: %s", startPoint.toString().c_str(), startTimeMs, pointerIndex, targetLayout.lock()->toString().c_str());
 	}
 }
 
@@ -46,7 +47,7 @@ GestureSession::~GestureSession()
 void GestureSession::onTouchUp(const float timeMs, const Point& pt)
 {
 	if(log().t()){
-		log().t(TAG, "Touch Session end: %s at %f index: %d", pt.toString().c_str(), timeMs, this->pointerIndex_);
+		log().t(TAG, "Touch Session end: %s at %f index: %d layout: %s", pt.toString().c_str(), timeMs, this->pointerIndex_, this->targetLayout_.lock()->toString().c_str());
 	}
 }
 
