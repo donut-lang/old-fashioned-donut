@@ -19,6 +19,7 @@ namespace layout {
 class ScrollLayout: public chisa::tk::Layout {
 	CHISA_LAYOUT_SUBKLASS_FINAL(ScrollLayout);
 private:
+	static constexpr float ScrollBarTimeOut = 1000.0f;
 	enum Mode {
 		None = 0x00,
 		Vertical = 0x01,
@@ -29,6 +30,7 @@ private:
 	Distance scrollDist_;
 	shared_ptr<Layout> child_;
 	Box childSize_;
+	float lastMovedFrom_;
 public:
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const override;
 	virtual size_t getChildCount() const override;

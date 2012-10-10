@@ -81,7 +81,8 @@ int main(int argc, char** argv) {
 
 		glfwSetWindowTitle("Chisa");
 		glEnable(GL_SCISSOR_TEST);
-		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_BLEND);
+		glEnable(GL_ALPHA_TEST);
 
 		tempInit();
 		glfwSetWindowSizeCallback( reshape );

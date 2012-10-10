@@ -126,8 +126,8 @@ void Canvas::drawSprite(RawSprite* const sprite, const float x,const float y, co
 	glEnable(GL_TEXTURE_2D);
 	glBegin(GL_POLYGON);
 		glTexCoord2f(0,		0);		glVertex3f(x      , y, z);
-		glTexCoord2f(0,		bottom);	glVertex3f(x      , y+height,z);
-		glTexCoord2f(right,	bottom);	glVertex3f(x+width, y+height,z);
+		glTexCoord2f(0,		bottom);glVertex3f(x      , y+height,z);
+		glTexCoord2f(right,	bottom);glVertex3f(x+width, y+height,z);
 		glTexCoord2f(right,	0);		glVertex3f(x+width, y,z);
 	glEnd();
 	glDisable(GL_TEXTURE_2D);
@@ -145,6 +145,17 @@ Handler<RawSprite> Canvas::queryRawSprite(const int width, const int height)
 		(*it)->resize(width, height);
 		return Handler<RawSprite>(*it);
 	}
+}
+
+void Canvas::drawLine(const float width, const float r,const float g,const float b,const float a, const float x1,const float y1, const float z1, const float x2,const float y2, const float z2)
+{
+	glLineWidth(width);
+	glColor4f(r,g,b,a);
+	glBegin(GL_LINES);
+		glVertex3f(x1, y1, z1);
+		glVertex3f(x2, y2, z2);
+	glEnd();
+	glFlush();
 }
 
 void Canvas::backSprite(RawSprite* spr)
