@@ -126,7 +126,7 @@ void ScrollLayout::idle(const float delta_ms)
 	this->lastMovedFrom_ += delta_ms;
 }
 
-bool ScrollLayout::onScroll(const Point& start, const Point& end, const Distance& distance)
+bool ScrollLayout::onScroll(const float timeMs, const Point& start, const Point& end, const Distance& distance)
 {
 	if(this->scrollMode_ == Both){
 		this->scrollDist_ -= distance;

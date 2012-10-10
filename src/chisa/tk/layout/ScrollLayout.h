@@ -43,7 +43,7 @@ private:
 	virtual void loadXMLimpl(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element) override;
 	virtual weak_ptr<Layout> getLayoutByIdImpl(const std::string& id) override;
 public:
-	virtual bool onScroll(const Point& start, const Point& end, const Distance& distance) override;
+	virtual bool onScroll(const float timeMs, const Point& start, const Point& end, const Distance& distance) override;
 };
 
 }}}

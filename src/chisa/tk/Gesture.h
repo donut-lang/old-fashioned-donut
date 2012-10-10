@@ -36,23 +36,23 @@ public:
 	GestureListener(){};
 	virtual ~GestureListener(){};
 public:
-	virtual bool onDownRaw(const Point& pt){return false;};
-	virtual bool onUpRaw(const Point& pt){return false;};
-	virtual bool onMoveRaw(const Point& pt){return false;};
-	virtual bool onSingleTapUp(const Point& pt){return false;};
-	virtual bool onShowPress(const Point& pt){return false;};
-	virtual bool onFling(const Point& start, const Point& end, const Velocity& velocity){return false;};
-	virtual bool onScroll(const Point& start, const Point& end, const Distance& distance){return false;};
-	virtual bool onZoom(const Point& center, const float ratio){return false;};
+	virtual bool onDownRaw(const float timeMs, const Point& pt){return false;};
+	virtual bool onUpRaw(const float timeMs, const Point& pt){return false;};
+	virtual bool onMoveRaw(const float timeMs, const Point& pt){return false;};
+	virtual bool onSingleTapUp(const float timeMs, const Point& pt){return false;};
+	virtual bool onShowPress(const float timeMs, const Point& pt){return false;};
+	virtual bool onFling(const float timeMs, const Point& start, const Point& end, const Velocity& velocity){return false;};
+	virtual bool onScroll(const float timeMs, const Point& start, const Point& end, const Distance& distance){return false;};
+	virtual bool onZoom(const float timeMs, const Point& center, const float ratio){return false;};
 	// 実装用
-	//	virtual bool onDownRaw(const Point& pt) override;
-	//	virtual bool onUpRaw(const Point& pt) override;
-	//	virtual bool onMoveRaw(const Point& pt) override;
-	//	virtual bool onSingleTapUp(const Point& pt) override;
-	//	virtual bool onShowPress(const Point& pt) override;
-	//	virtual bool onFling(const Point& start, const Point& end, const Velocity& velocity) override;
-	//	virtual bool onScroll(const Point& start, const Point& end, const Distance& distance) override;
-	//	virtual bool onZoom(const Point& center, const float ratio) override;
+	//	virtual bool onDownRaw(const float timeMs, const Point& pt) override;
+	//	virtual bool onUpRaw(const float timeMs, const Point& pt) override;
+	//	virtual bool onMoveRaw(const float timeMs, const Point& pt) override;
+	//	virtual bool onSingleTapUp(const float timeMs, const Point& pt) override;
+	//	virtual bool onShowPress(const float timeMs, const Point& pt) override;
+	//	virtual bool onFling(const float timeMs, const Point& start, const Point& end, const Velocity& velocity) override;
+	//	virtual bool onScroll(const float timeMs, const Point& start, const Point& end, const Distance& distance) override;
+	//	virtual bool onZoom(const float timeMs, const Point& center, const float ratio) override;
 };
 
 class GestureSession {
@@ -75,14 +75,14 @@ public:
 	void onTouchUp(const float timeMs, const Point& pt);
 	void onTouchMove(const float timeMs, const Point& pt);
 private:
-	void invokeDownRaw(const Point& pt);
-	void invokeUpRaw(const Point& pt);
-	void invokeMoveRaw(const Point& pt);
-	void invokeSingleTapUp(const Point& pt);
-	void invokeShowPress(const Point& pt);
-	void invokeFling(const Point& start, const Point& end, const Velocity& velocity);
-	void invokeScroll(const Point& start, const Point& end, const Distance& distance);
-	void invokeZoom(const Point& center, const float ratio);
+	void invokeDownRaw(const float timeMs, const Point& pt);
+	void invokeUpRaw(const float timeMs, const Point& pt);
+	void invokeMoveRaw(const float timeMs, const Point& pt);
+	void invokeSingleTapUp(const float timeMs, const Point& pt);
+	void invokeShowPress(const float timeMs, const Point& pt);
+	void invokeFling(const float timeMs, const Point& start, const Point& end, const Velocity& velocity);
+	void invokeScroll(const float timeMs, const Point& start, const Point& end, const Distance& distance);
+	void invokeZoom(const float timeMs, const Point& center, const float ratio);
 };
 
 class GestureMediator {

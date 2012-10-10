@@ -92,9 +92,12 @@ int main(int argc, char** argv) {
 		bool running=true;
 		float last = glfwGetTime();
 		float nextFrame = last+(1.0/60);
+		float lastIdle = last;
 		while(running){
-			gUniverse->idle(1000.0/60);
 			float now = glfwGetTime();
+			gUniverse->idle((now-lastIdle)*1000);
+			lastIdle = now;
+			now = glfwGetTime();
 			if(now < nextFrame){
 				render();
 				glfwSwapBuffers();
