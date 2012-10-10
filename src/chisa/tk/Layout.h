@@ -62,6 +62,7 @@ public:
 	virtual string toString() = 0;
 	void loadXML(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element);
 	weak_ptr<Layout> getLayoutById(const std::string& id);
+	weak_ptr<Layout> getLayoutByPoint(const Point& screenPoint);
 	virtual void idle(const float delta_ms);
 private:
 	virtual void renderImpl(gl::Canvas& canvas, const Area& screenArea, const Area& area) = 0;
