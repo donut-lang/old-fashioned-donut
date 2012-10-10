@@ -24,23 +24,34 @@ namespace chisa {
 namespace tk {
 namespace layout {
 
+static const std::string TAG("SplitLayout");
 const std::string SplitLayout::AttrName::Weight("split-weight");
 const std::string SplitLayout::AttrName::Max("split-max");
 const std::string SplitLayout::AttrName::Min("split-min");
 
 
-SplitLayout::SplitLayout(enum SplitMode splitMode, CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_LIST)
-:CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_SETUP_BASE(Layout)
-,splitMode_(splitMode)
+CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(SplitLayout)
+,splitMode_(Vertical)
 ,totalSize_(geom::Unspecified)
-,changed_getter(splitMode == Vertical ? (float(Box::*)(void) const)&Box::height : (float(Box::*)(void) const)&Box::width)
-,changed_setter(splitMode == Vertical ? (void(Box::*)(float))&Box::height : (void(Box::*)(float))&Box::width)
-,fixed_getter((splitMode == Vertical ? (float(Box::*)(void) const)&Box::width : (float(Box::*)(void) const)&Box::height))
-,fixed_setter(splitMode == Vertical ? (void(Box::*)(float))&Box::width : (void(Box::*)(float))&Box::height)
-,point_getter((splitMode == Vertical ? (float(Point::*)(void) const)&Point::y : (float(Point::*)(void) const)&Point::x))
-,point_setter((splitMode == Vertical ? (void(Point::*)(float))&Point::y : (void(Point::*)(float))&Point::x))
+,changed_getter(nullptr)
+,changed_setter(nullptr)
+,fixed_getter(nullptr)
+,fixed_setter(nullptr)
+,point_getter(nullptr)
+,point_setter(nullptr)
 {
+	this->setMode(Vertical);
+}
 
+void SplitLayout::setMode(enum SplitMode mode)
+{
+	this->splitMode(mode);
+	changed_getter = mode == Vertical ? (float(Box::*)(void) const)&Box::height : (float(Box::*)(void) const)&Box::width;
+	changed_setter = mode == Vertical ? (void(Box::*)(float))&Box::height : (void(Box::*)(float))&Box::width;
+	fixed_getter = mode == Vertical ? (float(Box::*)(void) const)&Box::width : (float(Box::*)(void) const)&Box::height;
+	fixed_setter = mode == Vertical ? (void(Box::*)(float))&Box::width : (void(Box::*)(float))&Box::height;
+	point_getter = mode == Vertical ? (float(Point::*)(void) const)&Point::y : (float(Point::*)(void) const)&Point::x;
+	point_setter = mode == Vertical ? (void(Point::*)(float))&Point::y : (void(Point::*)(float))&Point::x;
 }
 
 SplitLayout::~SplitLayout() {
@@ -50,8 +61,10 @@ string SplitLayout::toString()
 {
 	if(this->splitMode() == Horizontal){
 		return util::format("(HorizontalLayout %p)", this);
-	}else{
+	}else if(this->splitMode() == Vertical){
 		return util::format("(VerticalLayout %p)", this);
+	}else{
+		return util::format("(InvalidSplitLayout %p)", this);
 	}
 }
 
@@ -64,6 +77,15 @@ void SplitLayout::addChild(const SplitDef& def, shared_ptr<Layout> layout)
 
 void SplitLayout::loadXMLimpl(LayoutFactory* const factory, XMLElement* top)
 {
+	const std::string name(top->Name());
+	if(name == "horizontal"){
+		this->setMode(Horizontal);
+	}else if(name == "vertical"){
+		this->setMode(Vertical);
+	}else{
+		log().e(TAG, "Oops. you might miss-spelled? \"s\"", name.c_str());
+		this->setMode(Vertical);
+	}
 	for(XMLNode* _node = top->FirstChild(); _node; _node=_node->NextSibling()){
 		XMLElement* elem = _node->ToElement();
 		if(!elem){
@@ -76,7 +98,7 @@ void SplitLayout::loadXMLimpl(LayoutFactory* const factory, XMLElement* top)
 		elem->QueryFloatAttribute(AttrName::Min.c_str(), &min);
 		elem->QueryFloatAttribute(AttrName::Max.c_str(), &max);
 		const SplitDef def(weight, min, max);
-		this->addChild(def, factory->parseTree(this->root(), this->parent(), elem));
+		this->addChild(def, factory->parseTree(this->root(), this->self(), elem));
 	}
 }
 

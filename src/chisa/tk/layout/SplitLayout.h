@@ -58,6 +58,7 @@ struct SplitCtx
 
 
 class SplitLayout: public chisa::tk::Layout {
+	CHISA_LAYOUT_SUBKLASS_FINAL(SplitLayout);
 public:
 	enum SplitMode {
 		Vertical,
@@ -68,14 +69,11 @@ public:
 		static const std::string Max;
 		static const std::string Min;
 	};
-protected:
-	SplitLayout(enum SplitMode splitMode, CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_LIST);
-public:
-	virtual ~SplitLayout();
 private:
 	DEFINE_MEMBER(private, private, enum SplitMode, splitMode);
 	DEFINE_MEMBER(private, private, vector<shared_ptr<SplitCtx> >, children)
 	float totalSize_;
+	void setMode(enum SplitMode mode);
 private:
 	inline float wrapSize(float changedSize, const SplitDef& def) const
 	{
@@ -106,11 +104,6 @@ private:
 	virtual void onLayout(const Box& size) override;
 	virtual void loadXMLimpl(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element) override;
 	virtual weak_ptr<Layout> getLayoutByIdImpl(const std::string& id) override;
-public:
-	static shared_ptr<Layout> constructorProxy(enum SplitMode splitMode, CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_LIST)
-	{
-		return shared_ptr<Layout>(new SplitLayout(splitMode, CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_APPLY));
-	}
 };
 
 }}}

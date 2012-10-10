@@ -20,6 +20,7 @@
 #define Chisa_TK_LAYOUT_H__CPP_
 
 #include "Widget.h"
+#include "Gesture.h"
 #include "../util/class_utils.h"
 #include <memory>
 #include <string>
@@ -40,13 +41,13 @@ using std::string;
 using std::weak_ptr;
 using std::size_t;
 
-class Layout {
+class Layout : public GestureListener {
 	DISABLE_COPY_AND_ASSIGN(Layout);
 private:
 	DEFINE_MEMBER_REF(protected, logging::Logger, log);
 	DEFINE_MEMBER(protected, private, weak_ptr<World>, world);
-	DEFINE_MEMBER(protected, private, weak_ptr<Layout>, root);
-	DEFINE_MEMBER(protected, private, weak_ptr<Layout>, parent);
+	DEFINE_MEMBER(public, private, weak_ptr<Layout>, root);
+	DEFINE_MEMBER(public, private, weak_ptr<Layout>, parent);
 	DEFINE_MEMBER(protected, private, weak_ptr<Layout>, self);
 	DEFINE_MEMBER(protected, private, Box, size);
 	DEFINE_MEMBER(protected, private, Area, screenArea);

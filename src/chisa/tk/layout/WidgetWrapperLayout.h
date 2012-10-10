@@ -38,7 +38,7 @@ public:
 		Fit
 	};
 private:
-	WidgetWrapperLayout* parent_;
+	WidgetWrapperLayout* borrowed_;
 	DEFINE_MEMBER(private, private, Widget*, widget);
 	std::string widgetId_;
 	FitMode fitMode_;

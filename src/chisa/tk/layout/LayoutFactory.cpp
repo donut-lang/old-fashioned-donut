@@ -93,8 +93,8 @@ LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, const 
 
 void LayoutFactory::init()
 {
-	this->registerLayout(ElemName::Horizontal, std::bind(SplitLayout::constructorProxy, SplitLayout::Horizontal, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
-	this->registerLayout(ElemName::Vertical, std::bind(SplitLayout::constructorProxy, SplitLayout::Vertical, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+	this->registerLayout<SplitLayout>(ElemName::Horizontal);
+	this->registerLayout<SplitLayout>(ElemName::Vertical);
 	this->registerLayout<EmptyLayout>(ElemName::Empty);
 	this->registerLayout<WidgetWrapperLayout>(ElemName::WidgetWrapper);
 	//this->registerLayout<TabLayout>(ElemName::Tab);
