@@ -122,7 +122,7 @@ void Canvas::drawSprite(RawSprite* const sprite, const float x,const float y, co
 	const float right = width/sprite->origWidth();
 	const float bottom = height/sprite->origHeight();
 	glBindTexture(GL_TEXTURE_2D, texId);
-	glColor4f(1,1,1,1);
+	glColor4f(1.0f,1.0f,1.0f,1.0f);
 	glEnable(GL_TEXTURE_2D);
 	glBegin(GL_POLYGON);
 		glTexCoord2f(0,		0);		glVertex3f(x      , y, z);

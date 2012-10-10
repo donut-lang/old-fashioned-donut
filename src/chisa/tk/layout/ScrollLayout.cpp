@@ -74,7 +74,6 @@ void ScrollLayout::renderImpl(gl::Canvas& canvas, const Area& screenArea, const 
 	if(this->lastMovedFrom_ < ScrollBarTimeOut){
 		const float alpha = (ScrollBarTimeOut - this->lastMovedFrom_) / ScrollBarTimeOut;
 		if((this->scrollMode_ & Vertical)){
-			log().e("TAG", "ALPHA: %f", alpha);
 			const float x = screenArea.x()+screenArea.width()-7.0f;
 			const float len = (screenArea.height()-4.0f) * area.height() / this->childSize_.height();
 			const float y = screenArea.y()+2.0f - (screenArea.height()-len-4.0f) * (this->scrollDist_.y() / (area.height() - this->childSize_.height()));

@@ -19,7 +19,7 @@ namespace layout {
 class ScrollLayout: public chisa::tk::Layout {
 	CHISA_LAYOUT_SUBKLASS_FINAL(ScrollLayout);
 private:
-	static constexpr float ScrollBarTimeOut = 1000.0f;
+	static constexpr float ScrollBarTimeOut = 500.0f;
 	enum Mode {
 		None = 0x00,
 		Vertical = 0x01,
