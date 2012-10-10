@@ -19,6 +19,7 @@
 #include "Gesture.h"
 #include "World.h"
 #include "Layout.h"
+#include <algorithm>
 
 namespace chisa {
 namespace tk {
@@ -27,21 +28,35 @@ static const std::string TAG("GestureSession");
 
 GestureSession::GestureSession(logging::Logger& log, const unsigned int pointerIndex, std::weak_ptr<Layout> targetLayout, const Point& startPoint, const float startTimeMs)
 :log_(log)
+,handled_(false)
 ,pointerIndex_(pointerIndex)
-,targetLayout_(targetLayout)
 ,startPoint_(startPoint)
 ,startTimeMs_(startTimeMs)
-,gotOutOfRegion(false)
+,gotOutOfRegion_(false)
 ,lastPoint_(startPoint)
 ,lastTimeMs_(startTimeMs)
 {
-	const shared_ptr<Layout> target = this->targetLayout_.lock();
+	const shared_ptr<Layout> target = targetLayout.lock();
 	if(!target){
 		log.e(TAG, "[Touch Session %d] oops. Target Layout was already deleted.", this->pointerIndex_);
 		return;
 	}
-	if(log.t()){
-		log.t(TAG, "Touch Session created: %s at %f index: %d layout: %s", startPoint.toString().c_str(), startTimeMs, pointerIndex, targetLayout.lock()->toString().c_str());
+	//このセッションに関わるレイアウトを列挙
+	shared_ptr<Layout> _it = target;
+	while(_it) {
+		this->layoutChain_.push_front(_it);
+		_it = _it->parent().lock();
+	}
+	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
+		shared_ptr<Layout> target = it->lock();
+		if(log.t()){
+			log.t(TAG, "Touch Session creating: %s at %f index: %d layout: %s", startPoint.toString().c_str(), startTimeMs, pointerIndex, target->toString().c_str());
+		}
+		if(target->onDownRaw(startPoint)){
+			//onDownイベントをconsumeした先には一切イベントを分け与えない。
+			this->layoutChain_.erase(it+1, this->layoutChain_.end());
+			break;
+		}
 	}
 }
 
@@ -51,22 +66,26 @@ GestureSession::~GestureSession()
 
 void GestureSession::onTouchUp(const float timeMs, const Point& pt)
 {
-	const shared_ptr<Layout> target = this->targetLayout_.lock();
-	if(!target){
-		log().e(TAG, "[Touch Session %d] oops. Target Layout was already deleted.", this->pointerIndex_);
-		return;
-	}
-	if(log().t()){
-		log().t(TAG, "Touch Session end: %s at %f index: %d layout: %s", pt.toString().c_str(), timeMs, this->pointerIndex_, target->toString().c_str());
+	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
+		if(shared_ptr<Layout> target = it->lock()){
+			if(log().t()){
+				log().t(TAG, "Touch Session ending: %s at %f index: %d layout: %s", pt.toString().c_str(), timeMs, this->pointerIndex_, target->toString().c_str());
+			}
+			if(target->onUpRaw(pt)){
+				break;
+			}
+		}
 	}
 }
 
 void GestureSession::onTouchMove(const float timeMs, const Point& pt)
 {
-	const shared_ptr<Layout> target = this->targetLayout_.lock();
-	if(!target){
-		log().e(TAG, "[Touch Session %d] oops. Target Layout was already deleted.", this->pointerIndex_);
-		return;
+	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
+		if(shared_ptr<Layout> target = it->lock()){
+			if(target->onMoveRaw(pt)){
+				break;
+			}
+		}
 	}
 }
 

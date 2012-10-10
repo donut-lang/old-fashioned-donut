@@ -20,6 +20,7 @@
 #define _CXX_Chisa_GESTUREMEDIATOR_H_
 
 #include <memory>
+#include <deque>
 #include "Geom.h"
 #include "../util/class_utils.h"
 #include "../logging/Logger.h"
@@ -35,7 +36,9 @@ public:
 	GestureListener(){};
 	virtual ~GestureListener(){};
 public:
-	virtual bool onDown(const Point& pt){return false;};
+	virtual bool onDownRaw(const Point& pt){return false;};
+	virtual bool onUpRaw(const Point& pt){return false;};
+	virtual bool onMoveRaw(const Point& pt){return false;};
 	virtual bool onSingleTapUp(const Point& pt){return false;};
 	virtual bool onShowPress(const Point& pt){return false;};
 	virtual bool onFling(const Point& start, const Point& end, const Velocity& velocity){return false;};
@@ -50,11 +53,14 @@ public:
 	GestureSession(logging::Logger& log, const unsigned int pointerIndex, std::weak_ptr<Layout> targetLayout, const Point& startPoint, const float startTimeMs);
 	virtual ~GestureSession();
 private:
+	std::deque<std::weak_ptr<Layout> > layoutChain_;
+	typedef std::deque<std::weak_ptr<Layout> >::const_iterator LayoutConstIterator;
+	typedef std::deque<std::weak_ptr<Layout> >::iterator LayoutIterator;
+	bool handled_;
 	const unsigned int pointerIndex_;
-	const std::weak_ptr<Layout> targetLayout_;
 	const Point startPoint_;
 	const float startTimeMs_;
-	bool gotOutOfRegion;
+	bool gotOutOfRegion_;
 	Point lastPoint_;
 	float lastTimeMs_;
 public:

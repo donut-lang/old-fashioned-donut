@@ -29,7 +29,7 @@ namespace layout {
 static const string TAG("WidgetWrapperLayout");
 
 CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(WidgetWrapperLayout)
-,parent_(nullptr)
+,borrowed_(nullptr)
 ,widget_(nullptr)
 ,fitMode_(Center)
 ,widgetScale_(1.0f)
@@ -41,10 +41,10 @@ WidgetWrapperLayout::~WidgetWrapperLayout()
 	if(!this->widget()){
 		return;
 	}
-	if(this->parent_){
+	if(this->borrowed_){
 		if(shared_ptr<World> world = this->world().lock()){
 			//ワールドの書き換えと、ウィジットへの現親レイアウトの通知
-			if(world->replaceWidget(this->widgetId_, this->parent_)) {
+			if(world->replaceWidget(this->widgetId_, this->borrowed_)) {
 				this->widget()->updateWrapper(dynamic_pointer_cast<WidgetWrapperLayout>(this->self().lock()));
 			}
 			// TODO　ウィジットにレイアウト通知入れたほうがいい？？
@@ -183,9 +183,9 @@ void WidgetWrapperLayout::loadXMLimpl(LayoutFactory* const factory, XMLElement* 
 		return;
 	}
 	if(shared_ptr<World> world = this->world().lock()){
-		if(widgetId && (this->parent_ = world->getWidgetById(widgetId))){
+		if(widgetId && (this->borrowed_ = world->getWidgetById(widgetId))){
 			world->replaceWidget(widgetId, this);
-			this->widget(this->parent_->widget());
+			this->widget(this->borrowed_->widget());
 			this->widget()->updateWrapper(dynamic_pointer_cast<WidgetWrapperLayout>(this->self().lock()));
 		}else{
 			this->widget(world->createWidget(widgetKlass, element));
