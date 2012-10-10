@@ -14,6 +14,7 @@ namespace layout {
 
 CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(ScrollLayout)
 ,scrollMode_(None)
+,scrollDist_(0,0)
 {
 
 }
@@ -65,8 +66,9 @@ string ScrollLayout::toString()
 
 void ScrollLayout::renderImpl(gl::Canvas& canvas, const Area& screenArea, const Area& area)
 {
-	const Area scrolledArea(this->nowPosition_, this->size());
-	this->child_->render(canvas, screenArea, area.intersect(scrolledArea));
+	const Area clipArea(this->scrollDist_, this->size());
+	const Area logicalArea(area.point()+this->scrollDist_, area.box());
+	this->child_->render(canvas, screenArea, clipArea.intersect(logicalArea));
 }
 
 Box ScrollLayout::onMeasure(const Box& constraint)
@@ -82,6 +84,13 @@ void ScrollLayout::onLayout(const Box& size)
 		this->child_->layout(this->childSize_);
 	}
 }
+
+bool ScrollLayout::onScroll(const Point& start, const Point& end, const Distance& distance)
+{
+	this->scrollDist_ -= distance;
+	return true;
+}
+
 
 weak_ptr<Layout> ScrollLayout::getLayoutByIdImpl(const std::string& id)
 {

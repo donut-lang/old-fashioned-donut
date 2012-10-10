@@ -28,7 +28,6 @@ static const std::string TAG("GestureSession");
 
 GestureSession::GestureSession(logging::Logger& log, const unsigned int pointerIndex, std::weak_ptr<Layout> targetLayout, const Point& startPoint, const float startTimeMs)
 :log_(log)
-,handled_(false)
 ,pointerIndex_(pointerIndex)
 ,startPoint_(startPoint)
 ,startTimeMs_(startTimeMs)
@@ -66,10 +65,38 @@ GestureSession::~GestureSession()
 
 void GestureSession::onTouchUp(const float timeMs, const Point& pt)
 {
+	this->lastTimeMs_ = timeMs;
+	this->lastPoint_ = pt;
+	this->invokeUpRaw(pt);
+}
+
+void GestureSession::onTouchMove(const float timeMs, const Point& pt)
+{
+	this->invokeScroll(this->lastPoint_, pt, pt-this->lastPoint_);
+	this->lastTimeMs_ = timeMs;
+	this->lastPoint_ = pt;
+}
+
+void GestureSession::invokeDownRaw(const Point& pt)
+{
 	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
 		if(shared_ptr<Layout> target = it->lock()){
-			if(log().t()){
-				log().t(TAG, "Touch Session ending: %s at %f index: %d layout: %s", pt.toString().c_str(), timeMs, this->pointerIndex_, target->toString().c_str());
+			if(this->log().t()){
+				this->log().t(TAG, "Touch Session creating: %s at %f index: %d layout: %s", pt.toString().c_str(), this->startTimeMs_, this->pointerIndex_, target->toString().c_str());
+			}
+			if(target->onDownRaw(pt)){
+				break;
+			}
+		}
+	}
+}
+
+void GestureSession::invokeUpRaw(const Point& pt)
+{
+	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
+		if(shared_ptr<Layout> target = it->lock()){
+			if(this->log().t()){
+				this->log().t(TAG, "Touch Session ending: %s at %f index: %d layout: %s", pt.toString().c_str(), this->lastTimeMs_, this->pointerIndex_, target->toString().c_str());
 			}
 			if(target->onUpRaw(pt)){
 				break;
@@ -78,7 +105,7 @@ void GestureSession::onTouchUp(const float timeMs, const Point& pt)
 	}
 }
 
-void GestureSession::onTouchMove(const float timeMs, const Point& pt)
+void GestureSession::invokeMoveRaw(const Point& pt)
 {
 	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
 		if(shared_ptr<Layout> target = it->lock()){
@@ -89,6 +116,59 @@ void GestureSession::onTouchMove(const float timeMs, const Point& pt)
 	}
 }
 
+void GestureSession::invokeSingleTapUp(const Point& pt)
+{
+	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
+		if(shared_ptr<Layout> target = it->lock()){
+			if(target->onSingleTapUp(pt)){
+				break;
+			}
+		}
+	}
+}
 
+void GestureSession::invokeShowPress(const Point& pt)
+{
+	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
+		if(shared_ptr<Layout> target = it->lock()){
+			if(target->onShowPress(pt)){
+				break;
+			}
+		}
+	}
+}
+
+void GestureSession::invokeFling(const Point& start, const Point& end, const Velocity& velocity)
+{
+	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
+		if(shared_ptr<Layout> target = it->lock()){
+			if(target->onFling(start, end, velocity)){
+				break;
+			}
+		}
+	}
+}
+
+void GestureSession::invokeScroll(const Point& start, const Point& end, const Distance& distance)
+{
+	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
+		if(shared_ptr<Layout> target = it->lock()){
+			if(target->onScroll(start, end, distance)){
+				break;
+			}
+		}
+	}
+}
+
+void GestureSession::invokeZoom(const Point& center, const float ratio)
+{
+	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
+		if(shared_ptr<Layout> target = it->lock()){
+			if(target->onZoom(center, ratio)){
+				break;
+			}
+		}
+	}
+}
 
 }}

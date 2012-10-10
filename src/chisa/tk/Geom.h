@@ -68,13 +68,51 @@ public:
 	inline void y(const float y) { y_=y; };
 };
 
+class Distance : public Vector {
+public:
+	inline Distance(const float x, const float y):Vector(x,y){}
+	inline Distance(const Distance& o):Vector(o){}
+	inline Distance():Vector(){}
+	inline std::string toString() const{
+		return util::format("(Distance %f %f)", this->x(), this->y());
+	}
+	inline Distance operator-(const Distance& other) const{
+		return Distance(this->x()-other.x(), this->y()-other.y());
+	}
+	inline Distance operator+(const Distance& d) const{
+		return Distance(this->x()+d.x(), this->y()+d.y());
+	}
+	inline Distance& operator+=(const Distance& d){
+		this->x(this->x()+d.x());
+		this->y(this->y()+d.y());
+		return *this;
+	}
+	inline Distance& operator-=(const Distance& d){
+		this->x(this->x()-d.x());
+		this->y(this->y()-d.y());
+		return *this;
+	}
+};
+
 class Point : public Vector {
 public:
 	inline Point(const float x, const float y):Vector(x,y){}
 	inline Point(const Point& o):Vector(o){}
 	inline Point():Vector(){}
+	inline Point(Distance& dist):Vector(dist){};
 	inline std::string toString() const{
 		return util::format("(Point %f %f)", this->x(), this->y());
+	}
+	inline Distance operator-(const Point& other) const{
+		return Distance(this->x()-other.x(), this->y()-other.y());
+	}
+	inline Point operator+(const Distance& d) const{
+		return Point(this->x()+d.x(), this->y()+d.y());
+	}
+	inline Point& operator+=(const Distance& d){
+		this->x(this->x()+d.x());
+		this->y(this->y()+d.y());
+		return *this;
 	}
 };
 
@@ -85,16 +123,6 @@ public:
 	inline Velocity():Vector(){}
 	inline std::string toString() const{
 		return util::format("(Velocity %f %f)", this->x(), this->y());
-	}
-};
-
-class Distance : public Vector {
-public:
-	inline Distance(const float x, const float y):Vector(x,y){}
-	inline Distance(const Point& o):Vector(o){}
-	inline Distance():Vector(){}
-	inline std::string toString() const{
-		return util::format("(Distance %f %f)", this->x(), this->y());
 	}
 };
 
