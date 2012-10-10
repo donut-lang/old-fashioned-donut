@@ -38,27 +38,26 @@ constexpr float VeryLarge = 1e10;
 constexpr float VerySmall = 1e-1;
 }
 
-class Point
-{
+class Vector {
 private:
 	float x_;
 	float y_;
 public:
-	inline Point(const float x, const float y):x_(x),y_(y){}
-	inline Point(const Point& o):x_(o.x_),y_(o.y_){}
-	inline Point():x_(NAN),y_(NAN){}
-	inline Point& operator=(const Point& other) {
+	inline Vector(const float x, const float y):x_(x),y_(y){}
+	inline Vector(const Vector& o):x_(o.x_),y_(o.y_){}
+	inline Vector():x_(NAN),y_(NAN){}
+	inline Vector& operator=(const Vector& other) {
 		this->x_ = other.x_;
 		this->y_ = other.y_;
 		return *this;
 	}
-	inline bool operator==(const Point& other) const{
+	inline bool operator==(const Vector& other) const{
 		return this->x_ == other.x_ && this->y_ == other.y_;
 	}
-	inline bool operator!=(const Point& other) const{
+	inline bool operator!=(const Vector& other) const{
 		return !(*this==other);
 	}
-	inline bool near(const Point& other, const float precision) const{
+	inline bool near(const Vector& other, const float precision) const{
 		return
 				std::fabs(this->x_ - other.x_) < precision &&
 				std::fabs(this->y_ - other.y_) < precision;
@@ -67,8 +66,35 @@ public:
 	inline float y() const{return y_;};
 	inline void x(const float x) { x_=x; };
 	inline void y(const float y) { y_=y; };
+};
+
+class Point : public Vector {
+public:
+	inline Point(const float x, const float y):Vector(x,y){}
+	inline Point(const Point& o):Vector(o){}
+	inline Point():Vector(){}
 	inline std::string toString() const{
-		return util::format("(Point %f %f)", x_, y_);
+		return util::format("(Point %f %f)", this->x(), this->y());
+	}
+};
+
+class Velocity : public Vector {
+public:
+	inline Velocity(const float x, const float y):Vector(x,y){}
+	inline Velocity(const Point& o):Vector(o){}
+	inline Velocity():Vector(){}
+	inline std::string toString() const{
+		return util::format("(Velocity %f %f)", this->x(), this->y());
+	}
+};
+
+class Distance : public Vector {
+public:
+	inline Distance(const float x, const float y):Vector(x,y){}
+	inline Distance(const Point& o):Vector(o){}
+	inline Distance():Vector(){}
+	inline std::string toString() const{
+		return util::format("(Distance %f %f)", this->x(), this->y());
 	}
 };
 
@@ -184,6 +210,9 @@ public:
 				endPoint.x()-startPoint.x(),
 				endPoint.y()-startPoint.y()
 		);
+	}
+	inline bool contain(const Point& pt) const{
+		return x() <= pt.x() && y() <= pt.y() && pt.x() <= (x()+width()) && pt.y() <= (y()+height());
 	}
 };
 

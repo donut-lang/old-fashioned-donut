@@ -38,6 +38,36 @@ void reshape(int width, int height)
 	gUniverse->reshape(tk::Area(0,0,width, height));
 }
 
+int gMouseX=0;
+int gMouseY=0;
+bool gMousePressed=false;
+
+void mousePosition(int x,int y){
+	gMouseX = x;
+	gMouseY = y;
+	if(gMousePressed){
+		const float timeMs = glfwGetTime() * 1000;
+		gUniverse->onTouchMove(timeMs, 0, tk::Point(gMouseX, gMouseY));
+	}
+}
+
+void mouseButton(int button, int action){
+	if(button != GLFW_MOUSE_BUTTON_LEFT){
+		return;
+	}
+	const float timeMs = glfwGetTime() * 1000;
+	switch( action ) {
+	case GLFW_PRESS:
+		gUniverse->onTouchDown(timeMs, 0, tk::Point(gMouseX, gMouseY));
+		gMousePressed = true;
+		break;
+	case GLFW_RELEASE:
+		gUniverse->onTouchUp(timeMs, 0, tk::Point(gMouseX, gMouseY));
+		gMousePressed = false;
+		break;
+	}
+}
+
 int main(int argc, char** argv) {
 	if(glfwInit() == GL_FALSE){
 		std::cerr << "Failed to initialize GLFW" << std::endl;
@@ -54,7 +84,9 @@ int main(int argc, char** argv) {
 		glEnable(GL_TEXTURE_2D);
 
 		tempInit();
-		glfwSetWindowSizeCallback(reshape);
+		glfwSetWindowSizeCallback( reshape );
+		glfwSetMouseButtonCallback( mouseButton );
+		glfwSetMousePosCallback( mousePosition );
 		//glfwSetWindowRefreshCallback(render);
 		bool running=true;
 		float last = glfwGetTime();

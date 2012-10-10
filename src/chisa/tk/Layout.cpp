@@ -64,6 +64,23 @@ weak_ptr<Layout> Layout::getLayoutById(const std::string& id)
 	return id == this->id() ? this->self() : this->getLayoutByIdImpl(id);
 }
 
+weak_ptr<Layout> Layout::getLayoutByPoint(const Point& screenPoint)
+{
+	if(!this->screenArea().contain(screenPoint)){
+		return weak_ptr<Layout>();
+	}
+	const size_t max = this->getChildCount();
+	for(size_t i=0;i<max;++i){
+		if(shared_ptr<Layout> child = this->getChildAt(i).lock()){
+			if(child->screenArea().contain(screenPoint)){
+				return child->getLayoutByPoint(screenPoint);
+			}
+		}
+	}
+	return this->self();
+}
+
+
 string Layout::toString()
 {
 	return util::format("(Layout %p)", this);

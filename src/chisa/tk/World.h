@@ -38,6 +38,7 @@ namespace tk {
 class Layout;
 class Widget;
 class Universe;
+class GestureMediator;
 
 namespace layout {
 class WidgetWrapperLayout;
@@ -63,6 +64,7 @@ private:
 private:
 	layout::LayoutFactory* layoutFactory_;
 	widget::WidgetFactory* widgetFactory_;
+	GestureMediator* gestureMediator_;
 public:
 	void render(gl::Canvas& canvas);
 	void idle(const float delta_ms);
@@ -75,6 +77,8 @@ public:
 	bool replaceWidget(const string& widgetId, layout::WidgetWrapperLayout* const newHandler);
 	bool deleteWidget(const string& widgetId, layout::WidgetWrapperLayout* const handler);
 	Widget* createWidget(const string& klass, tinyxml2::XMLElement* elem);
+public:
+	weak_ptr<Layout> getLayoutByPoint(const Point& screenPoint);
 	/******************************************************************************
 	 * Universeへの移譲
 	 ******************************************************************************/
@@ -82,6 +86,13 @@ public:
 	gl::Handler<gl::RawSprite> queryImage(const string& abs_filename);
 	std::string resolveWorldFilepath(const string& related_filename);
 	std::string resolveUniverseFilepath(const string& related_filename);
+	/******************************************************************************
+	 * タッチイベント。Universeから移譲されてくる
+	 ******************************************************************************/
+public:
+	void onTouchDown(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint);
+	void onTouchUp(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint);
+	void onTouchMove(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint);
 
 	/******************************************************************************
 	 * 生成

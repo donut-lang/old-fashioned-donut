@@ -54,6 +54,13 @@ public:
 	std::string resolveUniverseFilepath(const std::string& related_filename);
 	gl::Handler<gl::RawSprite> queryImage(const std::string& abs_filename);
 	/******************************************************************************
+	 * タッチイベント
+	 ******************************************************************************/
+public:
+	void onTouchDown(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint);
+	void onTouchUp(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint);
+	void onTouchMove(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint);
+	/******************************************************************************
 	 * 生成
 	 ******************************************************************************/
 private:

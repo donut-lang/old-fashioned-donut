@@ -22,6 +22,7 @@
 #include "layout/WidgetWrapperLayout.h"
 #include "widget/WidgetFactory.h"
 #include "Universe.h"
+#include "Gesture.h"
 
 namespace chisa {
 namespace tk {
@@ -35,9 +36,11 @@ World::World(logging::Logger& log, weak_ptr<Universe> _universe, const string& w
 ,taskHandler_(log)
 ,layoutFactory_(nullptr)
 ,widgetFactory_(nullptr)
+,gestureMediator_(nullptr)
 {
 
 }
+
 World::~World()
 {
 	if(this->layoutFactory_){
@@ -48,6 +51,10 @@ World::~World()
 		delete this->widgetFactory_;
 		this->widgetFactory_ = nullptr;
 	}
+	if(this->gestureMediator_){
+		delete this->gestureMediator_;
+		this->gestureMediator_ = nullptr;
+	}
 }
 
 
@@ -57,6 +64,7 @@ void World::init(weak_ptr<World> _self)
 		this->layoutFactory_ = new layout::LayoutFactory(this->log_, _self, universe->resolveWorldFilepath(this->name_, "layout.xml"));
 	}
 	this->widgetFactory_ = new widget::WidgetFactory(this->log_, _self);
+	this->gestureMediator_ = new GestureMediator(this->log_, _self);
 	this->pushLayout("main");
 }
 
@@ -93,6 +101,14 @@ void World::popLayout()
 	if(shared_ptr<Layout> layout = this->layoutStack_.top()){
 		this->reshape(this->area());
 	}
+}
+
+weak_ptr<Layout> World::getLayoutByPoint(const Point& screenPoint)
+{
+	if(shared_ptr<Layout> layout = this->layoutStack_.top()){
+		return layout->getLayoutByPoint(screenPoint);
+	}
+	return weak_ptr<Layout>();
 }
 
 layout::WidgetWrapperLayout* World::getWidgetById(const std::string& name)
@@ -146,6 +162,25 @@ std::string World::resolveUniverseFilepath(const string& related_filename)
 	return this->universe_.lock()->resolveUniverseFilepath(related_filename);
 }
 
+void World::onTouchDown(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint)
+{
+	if(this->gestureMediator_){
+		this->gestureMediator_->onTouchDown(timeMs, pointerIndex, screenPoint);
+	}
+}
 
+void World::onTouchUp(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint)
+{
+	if(this->gestureMediator_){
+		this->gestureMediator_->onTouchUp(timeMs, pointerIndex, screenPoint);
+	}
+}
+
+void World::onTouchMove(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint)
+{
+	if(this->gestureMediator_){
+		this->gestureMediator_->onTouchMove(timeMs, pointerIndex, screenPoint);
+	}
+}
 
 }}
