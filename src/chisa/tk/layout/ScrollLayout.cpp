@@ -90,16 +90,16 @@ void ScrollLayout::idle(const float delta_ms)
 {
 	Point ptStart(this->scrollDist_);
 	Point ptEnd(ptStart.x()+this->size().width(), ptStart.y()+this->size().height());
-	if(ptStart.x() < 0){
+	if((this->scrollMode_ & Vertical) && ptStart.x() < 0){
 		this->scrollDist_.x(this->scrollDist_.x() - (ptStart.x()*delta_ms/100));
 	}
-	if(ptStart.y() < 0){
+	if((this->scrollMode_ & Horizontal) && ptStart.y() < 0){
 			this->scrollDist_.y(this->scrollDist_.y() - (ptStart.y()*delta_ms/100));
 	}
-	if(ptEnd.x() > this->childSize_.width()){
+	if((this->scrollMode_ & Vertical) && ptEnd.x() > this->childSize_.width()){
 		this->scrollDist_.x(this->scrollDist_.x() - ((ptEnd.x() - this->childSize_.width()) * delta_ms/100));
 	}
-	if(ptEnd.y() > this->childSize_.height()){
+	if((this->scrollMode_ & Horizontal) && ptEnd.y() > this->childSize_.height()){
 		this->scrollDist_.y(this->scrollDist_.y() - ((ptEnd.y() - this->childSize_.height()) * delta_ms/100));
 	}
 }
