@@ -35,6 +35,11 @@ GestureSession::GestureSession(logging::Logger& log, const unsigned int pointerI
 ,lastPoint_(startPoint)
 ,lastTimeMs_(startTimeMs)
 {
+	const shared_ptr<Layout> target = this->targetLayout_.lock();
+	if(!target){
+		log.e(TAG, "[Touch Session %d] oops. Target Layout was already deleted.", this->pointerIndex_);
+		return;
+	}
 	if(log.t()){
 		log.t(TAG, "Touch Session created: %s at %f index: %d layout: %s", startPoint.toString().c_str(), startTimeMs, pointerIndex, targetLayout.lock()->toString().c_str());
 	}
@@ -46,13 +51,23 @@ GestureSession::~GestureSession()
 
 void GestureSession::onTouchUp(const float timeMs, const Point& pt)
 {
+	const shared_ptr<Layout> target = this->targetLayout_.lock();
+	if(!target){
+		log().e(TAG, "[Touch Session %d] oops. Target Layout was already deleted.", this->pointerIndex_);
+		return;
+	}
 	if(log().t()){
-		log().t(TAG, "Touch Session end: %s at %f index: %d layout: %s", pt.toString().c_str(), timeMs, this->pointerIndex_, this->targetLayout_.lock()->toString().c_str());
+		log().t(TAG, "Touch Session end: %s at %f index: %d layout: %s", pt.toString().c_str(), timeMs, this->pointerIndex_, target->toString().c_str());
 	}
 }
 
 void GestureSession::onTouchMove(const float timeMs, const Point& pt)
 {
+	const shared_ptr<Layout> target = this->targetLayout_.lock();
+	if(!target){
+		log().e(TAG, "[Touch Session %d] oops. Target Layout was already deleted.", this->pointerIndex_);
+		return;
+	}
 }
 
 
