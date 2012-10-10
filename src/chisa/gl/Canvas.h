@@ -61,6 +61,7 @@ public:
 	void scale(const float x,const float y, const float z);
 	void drawSprite(Handler<Sprite> sprite, const float x,const float y, const float z);
 	void drawSprite(RawSprite* const sprite, const float x,const float y, const float z);
+	void drawLine(const float width, const float r,const float g,const float b,const float a, const float x1,const float y1, const float z1, const float x2,const float y2, const float z2);
 private:
 	void scissor(const float x, const float y, const float width, const float height);
 	void scissor(const tk::Area& area);

@@ -16,6 +16,7 @@ namespace layout {
 CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(ScrollLayout)
 ,scrollMode_(None)
 ,scrollDist_(0,0)
+,lastMovedFrom_(0)
 {
 
 }
@@ -70,6 +71,18 @@ void ScrollLayout::renderImpl(gl::Canvas& canvas, const Area& screenArea, const 
 	const Area clipArea(this->scrollDist_, this->size());
 	const Area logicalArea(area.point()+this->scrollDist_, area.box());
 	this->child_->render(canvas, screenArea, clipArea.intersect(logicalArea));
+	if(this->lastMovedFrom_ < ScrollBarTimeOut){
+		const float alpha = (ScrollBarTimeOut - this->lastMovedFrom_) / ScrollBarTimeOut;
+		if((this->scrollMode_ & Vertical)){
+			log().e("TAG", "ALPHA: %f", alpha);
+			const float x = screenArea.x()+screenArea.width()-7.0f;
+			const float len = (screenArea.height()-4.0f) * area.height() / this->childSize_.height();
+			const float y = screenArea.y()+2.0f - (screenArea.height()-len-4.0f) * (this->scrollDist_.y() / (area.height() - this->childSize_.height()));
+			canvas.drawLine(5.0f, 1.0f, 1.0f, 1.0f, alpha, x, std::max(y, screenArea.y()), -0.1f, x, std::min(y+len, screenArea.y()+screenArea.height()), -0.1f);
+		}
+		if((this->scrollMode_ & Horizontal)){
+		}
+	}
 }
 
 Box ScrollLayout::onMeasure(const Box& constraint)
@@ -102,6 +115,7 @@ void ScrollLayout::idle(const float delta_ms)
 	if((this->scrollMode_ & Vertical) && ptEnd.y() > this->childSize_.height()){
 		this->scrollDist_.y(this->scrollDist_.y() - ((ptEnd.y() - this->childSize_.height()) * delta_ms/100));
 	}
+	this->lastMovedFrom_ += delta_ms;
 }
 
 bool ScrollLayout::onScroll(const Point& start, const Point& end, const Distance& distance)
@@ -113,6 +127,7 @@ bool ScrollLayout::onScroll(const Point& start, const Point& end, const Distance
 	}else if(this->scrollMode_ == Horizontal){
 		this->scrollDist_.x(this->scrollDist_.x() - distance.x());
 	}
+	this->lastMovedFrom_ = 0.0f;
 	return true; //イベントを消費する
 }
 
