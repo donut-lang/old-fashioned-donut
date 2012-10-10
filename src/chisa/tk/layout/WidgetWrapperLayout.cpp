@@ -32,7 +32,8 @@ CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(WidgetWrapperLayout)
 ,borrowed_(nullptr)
 ,widget_(nullptr)
 ,fitMode_(Center)
-,widgetScale_(1.0f)
+,widgetScaleX_(1.0f)
+,widgetScaleY_(1.0f)
 {
 }
 
@@ -86,10 +87,11 @@ void WidgetWrapperLayout::renderImpl(gl::Canvas& canvas, const Area& screenArea,
 		//スクリーン上の位置に移動
 		canvas.translate(screenArea.x(), screenArea.y(), 0.0f);
 		//areaからウィジットが実際にレンダリングされる位置を計算
-		canvas.translate(-area.x()+this->widgetPoint().x(), -area.y()+this->widgetPoint().y(), 0.0f);
-		canvas.scale(this->widgetScale(), this->widgetScale(), this->widgetScale());
+		canvas.scale(this->widgetScaleX(), this->widgetScaleY(), 1.0);
 		//描画を投げる
-		widget()->render(canvas, Area(area.x()-this->widgetPoint().x(), area.y()-this->widgetPoint().y(), area.width(), area.height()));
+		Point offset(area.x()-this->widgetOffset().x(), area.y()-this->widgetOffset().y());
+		Box size(std::min(area.width(), widgetSizeReal().width()-area.x()), std::min(area.height(), widgetSizeReal().height()-area.y()));
+		widget()->render(canvas, Area(offset.x() / this->widgetScaleX(), offset.y() / this->widgetScaleY(), size.width()/this->widgetScaleX(), size.height()/this->widgetScaleY()));
 	}
 	canvas.popMatrix();
 }
@@ -151,14 +153,17 @@ void WidgetWrapperLayout::onLayout(const Box& size)
 	{
 	case Fit: {
 		const float scale = this->calcScale(this->widgetSize(), size);
-		this->widgetScale(scale);
-		Box scaled(this->widgetSize().width() * scale, this->widgetSize().height() * scale);
-		this->widgetPoint(Point((size.width() - scaled.width())/2, (size.height()-scaled.height())/2));
+		this->widgetScaleX(scale);
+		this->widgetScaleY(scale);
+		this->widgetSizeReal(Box(this->widgetSize().width() * scale, this->widgetSize().height() * scale));
+		this->widgetOffset(Point((size.width() - this->widgetSizeReal().width())/2, (size.height()-this->widgetSizeReal().height())/2));
 		break;
 	}
 	case Center: {
-		this->widgetScale(1.0f);
-		this->widgetPoint(Point((size.width() - this->widgetSize().width())/2, (size.height()-this->widgetSize().height())/2));
+		this->widgetScaleX(1.0f);
+		this->widgetScaleY(1.0f);
+		this->widgetSizeReal(this->widgetSize());
+		this->widgetOffset(Point((size.width() - this->widgetSize().width())/2, (size.height()-this->widgetSize().height())/2));
 		break;
 	}
 	}
