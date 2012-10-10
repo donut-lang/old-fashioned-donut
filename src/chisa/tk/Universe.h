@@ -35,13 +35,9 @@ private:
 	logging::Logger& log;
 	Stack<shared_ptr<World> > worldStack;
 	std::string basepath_;
-	Area area_;
+	DEFINE_MEMBER(public, private, Area, area);
 	weak_ptr<Universe> self_;
 	gl::Canvas canvas_;
-public:
-	inline Area area() const{ return area_; };
-private:
-	inline void area(const Area& newArea) { area_=newArea; };
 public:
 	void render();
 	void idle(const float delta_ms);
