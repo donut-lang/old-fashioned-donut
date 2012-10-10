@@ -9,6 +9,7 @@
 #define __CXX_ChisaSCROLLLAYOUT_H_
 
 #include "../Layout.h"
+#include "../Task.h"
 #include "LayoutFactory.h"
 
 namespace chisa {
@@ -32,6 +33,7 @@ public:
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const override;
 	virtual size_t getChildCount() const override;
 	virtual string toString() override;
+	virtual void idle(const float delta_ms) override;
 private:
 	virtual void renderImpl(gl::Canvas& canvas, const Area& screenArea, const Area& area) override;
 	virtual Box onMeasure(const Box& constraint) override;
