@@ -91,13 +91,13 @@ int main(int argc, char** argv) {
 		//glfwSetWindowRefreshCallback(render);
 		bool running=true;
 		float last = glfwGetTime();
+		float delta = 0.0f;
 		float nextFrame = last+(1.0/60);
-		float lastIdle = last;
 		while(running){
+			gUniverse->idle(delta*1000);
 			float now = glfwGetTime();
-			gUniverse->idle((now-lastIdle)*1000);
-			lastIdle = now;
-			now = glfwGetTime();
+			delta = now-last;
+			last = now;
 			if(now < nextFrame){
 				render();
 				glfwSwapBuffers();
