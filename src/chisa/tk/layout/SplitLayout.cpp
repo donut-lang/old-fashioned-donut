@@ -132,11 +132,10 @@ size_t SplitLayout::getChildCount() const
 
 void SplitLayout::renderImpl(gl::Canvas& canvas, const Area& screenArea, const Area& area)
 {
-	Box areaLeft(screenArea.box());
-	Point nowPoint(screenArea.point());
-
+	const float boxSize = (area.box().*changed_getter)();
 	const float drawnStartOffset = (area.point().*point_getter)();
-	const float drawnEndOffset = drawnStartOffset+(area.box().*changed_getter)();
+	const float drawnEndOffset = drawnStartOffset+boxSize;
+	const float screenStart = (screenArea.point().*point_getter)();
 	float offset = 0;
 	for(shared_ptr<SplitCtx> ctx : this->children()){
 		const float size = ctx->size;
@@ -146,14 +145,17 @@ void SplitLayout::renderImpl(gl::Canvas& canvas, const Area& screenArea, const A
 		}else if(drawnEndOffset <= offset){
 			break;
 		}
+		const float drawnStart = std::max(drawnStartOffset - offset, 0.0f);
+		const float drawnSize = std::min(size-drawnStart, drawnEndOffset-offset-drawnStart);
+
 		Box drawnBox(area.box());
-		(drawnBox.*changed_setter)(std::min(size, drawnEndOffset-offset));
+		(drawnBox.*changed_setter)(drawnSize);
 
 		Point drawnPoint(area.point());
-		(drawnPoint.*point_setter)(std::min(0.0f, offset-drawnStartOffset));
+		(drawnPoint.*point_setter)(drawnStart);
 
 		Point screenPoint(screenArea.point());
-		(screenPoint.*point_setter)(((screenPoint.*point_getter)())+offset-drawnStartOffset);
+		(screenPoint.*point_setter)(screenStart+offset+drawnStart-drawnStartOffset);
 
 		ctx->layout->render(canvas, Area(screenPoint, drawnBox), Area(drawnPoint, drawnBox));
 		offset += size;
@@ -170,7 +172,9 @@ Box SplitLayout::onMeasure(const Box& constraint)
 		float fixedMaxSize = 0;
 		for(shared_ptr<SplitCtx> childCtx : this->children()){
 			const Box childSize(childCtx->layout->measure(constraint));
-			totalSize += this->wrapSize((childSize.*changed_getter)(), childCtx->def);
+			const float size = this->wrapSize((childSize.*changed_getter)(), childCtx->def);
+			totalSize += size;
+			childCtx->size = size;
 			fixedMaxSize = std::max(fixedMaxSize, (childSize.*fixed_getter)());
 		}
 		Box measured;
