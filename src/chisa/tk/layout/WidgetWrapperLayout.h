@@ -42,9 +42,11 @@ private:
 	DEFINE_MEMBER(private, private, Widget*, widget);
 	std::string widgetId_;
 	FitMode fitMode_;
-	DEFINE_MEMBER(private, private, float, widgetScale);
-	DEFINE_MEMBER(private, private, Point, widgetPoint);
+	DEFINE_MEMBER(private, private, float, widgetScaleX);
+	DEFINE_MEMBER(private, private, float, widgetScaleY);
+	DEFINE_MEMBER(private, private, Point, widgetOffset);
 	DEFINE_MEMBER(private, private, Box, widgetSize);
+	DEFINE_MEMBER(private, private, Box, widgetSizeReal);
 public:
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const override;
 	virtual size_t getChildCount() const override;
