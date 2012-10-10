@@ -52,6 +52,7 @@ public:
 		static const std::string Horizontal;
 		static const std::string Tab;
 		static const std::string Empty;
+		static const std::string Scroll;
 		static const std::string WidgetWrapper;
 	};
 	struct AttrName {

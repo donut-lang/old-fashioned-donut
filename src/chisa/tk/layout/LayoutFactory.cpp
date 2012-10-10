@@ -23,6 +23,7 @@
 #include <tinyxml2.h>
 #include "SplitLayout.h"
 #include "EmptyLayout.h"
+#include "ScrollLayout.h"
 #include "WidgetWrapperLayout.h"
 
 namespace chisa {
@@ -41,6 +42,7 @@ const std::string LayoutFactory::ElemName::Vertical("vertical");
 const std::string LayoutFactory::ElemName::Horizontal("horizontal");
 const std::string LayoutFactory::ElemName::Empty("empty");
 const std::string LayoutFactory::ElemName::WidgetWrapper("widget");
+const std::string LayoutFactory::ElemName::Scroll("scroll");
 const std::string LayoutFactory::ElemName::Tab("tab");
 
 const std::string LayoutFactory::AttrName::Id("id");
@@ -96,6 +98,7 @@ void LayoutFactory::init()
 	this->registerLayout<SplitLayout>(ElemName::Horizontal);
 	this->registerLayout<SplitLayout>(ElemName::Vertical);
 	this->registerLayout<EmptyLayout>(ElemName::Empty);
+	this->registerLayout<ScrollLayout>(ElemName::Scroll);
 	this->registerLayout<WidgetWrapperLayout>(ElemName::WidgetWrapper);
 	//this->registerLayout<TabLayout>(ElemName::Tab);
 }

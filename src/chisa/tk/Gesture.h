@@ -44,6 +44,15 @@ public:
 	virtual bool onFling(const Point& start, const Point& end, const Velocity& velocity){return false;};
 	virtual bool onScroll(const Point& start, const Point& end, const Distance& distance){return false;};
 	virtual bool onZoom(const Point& center, const float ratio){return false;};
+	// 実装用
+	//	virtual bool onDownRaw(const Point& pt) override;
+	//	virtual bool onUpRaw(const Point& pt) override;
+	//	virtual bool onMoveRaw(const Point& pt) override;
+	//	virtual bool onSingleTapUp(const Point& pt) override;
+	//	virtual bool onShowPress(const Point& pt) override;
+	//	virtual bool onFling(const Point& start, const Point& end, const Velocity& velocity) override;
+	//	virtual bool onScroll(const Point& start, const Point& end, const Distance& distance) override;
+	//	virtual bool onZoom(const Point& center, const float ratio) override;
 };
 
 class GestureSession {
@@ -56,7 +65,6 @@ private:
 	std::deque<std::weak_ptr<Layout> > layoutChain_;
 	typedef std::deque<std::weak_ptr<Layout> >::const_iterator LayoutConstIterator;
 	typedef std::deque<std::weak_ptr<Layout> >::iterator LayoutIterator;
-	bool handled_;
 	const unsigned int pointerIndex_;
 	const Point startPoint_;
 	const float startTimeMs_;
@@ -66,6 +74,15 @@ private:
 public:
 	void onTouchUp(const float timeMs, const Point& pt);
 	void onTouchMove(const float timeMs, const Point& pt);
+private:
+	void invokeDownRaw(const Point& pt);
+	void invokeUpRaw(const Point& pt);
+	void invokeMoveRaw(const Point& pt);
+	void invokeSingleTapUp(const Point& pt);
+	void invokeShowPress(const Point& pt);
+	void invokeFling(const Point& start, const Point& end, const Velocity& velocity);
+	void invokeScroll(const Point& start, const Point& end, const Distance& distance);
+	void invokeZoom(const Point& center, const float ratio);
 };
 
 class GestureMediator {

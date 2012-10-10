@@ -25,7 +25,7 @@ private:
 		Both = 0x11
 	};
 	enum Mode scrollMode_;
-	Point nowPosition_;
+	Distance scrollDist_;
 	shared_ptr<Layout> child_;
 	Box childSize_;
 public:
@@ -38,6 +38,8 @@ private:
 	virtual void onLayout(const Box& size) override;
 	virtual void loadXMLimpl(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element) override;
 	virtual weak_ptr<Layout> getLayoutByIdImpl(const std::string& id) override;
+public:
+	virtual bool onScroll(const Point& start, const Point& end, const Distance& distance) override;
 };
 
 }}}
