@@ -40,7 +40,6 @@ public:
 	virtual bool onUpRaw(const float timeMs, const Point& pt){return false;};
 	virtual bool onMoveRaw(const float timeMs, const Point& pt){return false;};
 	virtual bool onSingleTapUp(const float timeMs, const Point& pt){return false;};
-	virtual bool onShowPress(const float timeMs, const Point& pt){return false;};
 	virtual bool onFling(const float timeMs, const Point& start, const Point& end, const Velocity& velocity){return false;};
 	virtual bool onScroll(const float timeMs, const Point& start, const Point& end, const Distance& distance){return false;};
 	virtual bool onZoom(const float timeMs, const Point& center, const float ratio){return false;};
@@ -49,7 +48,6 @@ public:
 	//	virtual bool onUpRaw(const float timeMs, const Point& pt) override;
 	//	virtual bool onMoveRaw(const float timeMs, const Point& pt) override;
 	//	virtual bool onSingleTapUp(const float timeMs, const Point& pt) override;
-	//	virtual bool onShowPress(const float timeMs, const Point& pt) override;
 	//	virtual bool onFling(const float timeMs, const Point& start, const Point& end, const Velocity& velocity) override;
 	//	virtual bool onScroll(const float timeMs, const Point& start, const Point& end, const Distance& distance) override;
 	//	virtual bool onZoom(const float timeMs, const Point& center, const float ratio) override;
@@ -62,15 +60,20 @@ public:
 	GestureSession(logging::Logger& log, const unsigned int pointerIndex, std::weak_ptr<Layout> targetLayout, const Point& startPoint, const float startTimeMs);
 	virtual ~GestureSession();
 private:
+	//static constexpr float MaxFlingVelocity=4000;
+	static constexpr float MinFlingVelocity=5/1000;
+private:
+	std::weak_ptr<Layout> target_;
 	std::deque<std::weak_ptr<Layout> > layoutChain_;
 	typedef std::deque<std::weak_ptr<Layout> >::const_iterator LayoutConstIterator;
 	typedef std::deque<std::weak_ptr<Layout> >::iterator LayoutIterator;
 	const unsigned int pointerIndex_;
 	const Point startPoint_;
 	const float startTimeMs_;
-	bool gotOutOfRegion_;
 	Point lastPoint_;
 	float lastTimeMs_;
+private:
+	Distance totalMoved_;
 public:
 	void onTouchUp(const float timeMs, const Point& pt);
 	void onTouchMove(const float timeMs, const Point& pt);
@@ -78,8 +81,6 @@ private:
 	void invokeDownRaw(const float timeMs, const Point& pt);
 	void invokeUpRaw(const float timeMs, const Point& pt);
 	void invokeMoveRaw(const float timeMs, const Point& pt);
-	void invokeSingleTapUp(const float timeMs, const Point& pt);
-	void invokeShowPress(const float timeMs, const Point& pt);
 	void invokeFling(const float timeMs, const Point& start, const Point& end, const Velocity& velocity);
 	void invokeScroll(const float timeMs, const Point& start, const Point& end, const Distance& distance);
 	void invokeZoom(const float timeMs, const Point& center, const float ratio);
