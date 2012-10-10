@@ -48,7 +48,7 @@ private:
 	DEFINE_MEMBER(protected, private, weak_ptr<Layout>, root);
 	DEFINE_MEMBER(protected, private, weak_ptr<Layout>, parent);
 	DEFINE_MEMBER(protected, private, weak_ptr<Layout>, self);
-	DEFINE_MEMBER(public, private, Box, size);
+	DEFINE_MEMBER(protected, private, Box, size);
 	DEFINE_MEMBER(protected, private, Area, screenArea);
 	DEFINE_MEMBER(protected, private, Area, drawnArea);
 	DEFINE_MEMBER(public, private, std::string, id);
@@ -59,6 +59,10 @@ public:
 	void render(gl::Canvas& canvas, const Area& screenArea, const Area& area);
 	Box measure(const Box& constraint);
 	void layout(const Box& size);
+	virtual string toString() = 0;
+	void loadXML(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element);
+	weak_ptr<Layout> getLayoutById(const std::string& id);
+	virtual void idle(const float delta_ms);
 private:
 	virtual void renderImpl(gl::Canvas& canvas, const Area& screenArea, const Area& area) = 0;
 	virtual Box onMeasure(const Box& constraint) = 0;
@@ -78,10 +82,6 @@ public:
 		return ptr;
 	}
 	virtual ~Layout();
-	virtual string toString() = 0;
-	void loadXML(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element);
-	weak_ptr<Layout> getLayoutById(const std::string& id);
-	virtual void idle(const float delta_ms);
 public:
 	inline static float updateMax(const float a, const float b)
 	{
