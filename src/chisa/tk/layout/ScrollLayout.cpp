@@ -6,6 +6,7 @@
  */
 
 #include "ScrollLayout.h"
+#include "../World.h"
 
 namespace chisa {
 namespace tk {
@@ -85,10 +86,34 @@ void ScrollLayout::onLayout(const Box& size)
 	}
 }
 
+void ScrollLayout::idle(const float delta_ms)
+{
+	Point ptStart(this->scrollDist_);
+	Point ptEnd(ptStart.x()+this->size().width(), ptStart.y()+this->size().height());
+	if(ptStart.x() < 0){
+		this->scrollDist_.x(this->scrollDist_.x() - (ptStart.x()*delta_ms/100));
+	}
+	if(ptStart.y() < 0){
+			this->scrollDist_.y(this->scrollDist_.y() - (ptStart.y()*delta_ms/100));
+	}
+	if(ptEnd.x() > this->childSize_.width()){
+		this->scrollDist_.x(this->scrollDist_.x() - ((ptEnd.x() - this->childSize_.width()) * delta_ms/100));
+	}
+	if(ptEnd.y() > this->childSize_.height()){
+		this->scrollDist_.y(this->scrollDist_.y() - ((ptEnd.y() - this->childSize_.height()) * delta_ms/100));
+	}
+}
+
 bool ScrollLayout::onScroll(const Point& start, const Point& end, const Distance& distance)
 {
-	this->scrollDist_ -= distance;
-	return true;
+	if(this->scrollMode_ == Both){
+		this->scrollDist_ -= distance;
+	}else if(this->scrollMode_ == Vertical){
+		this->scrollDist_.x(this->scrollDist_.x() - distance.x());
+	}else if(this->scrollMode_ == Horizontal){
+		this->scrollDist_.y(this->scrollDist_.y() - distance.y());
+	}
+	return true; //イベントを消費する
 }
 
 

@@ -79,6 +79,7 @@ void World::idle(const float delta_ms)
 	if(shared_ptr<Layout> layout = this->layoutStack_.top()){
 		layout->idle(delta_ms);
 	}
+	this->taskHandler_.run(delta_ms);
 }
 void World::reshape(const Area& area)
 {
@@ -101,6 +102,11 @@ void World::popLayout()
 	if(shared_ptr<Layout> layout = this->layoutStack_.top()){
 		this->reshape(this->area());
 	}
+}
+
+void World::postTask(shared_ptr<Task> task)
+{
+	this->taskHandler_.post(task);
 }
 
 weak_ptr<Layout> World::getLayoutByPoint(const Point& screenPoint)
