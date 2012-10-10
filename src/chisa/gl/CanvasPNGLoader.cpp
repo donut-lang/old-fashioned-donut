@@ -80,7 +80,7 @@ Handler<RawSprite> Canvas::loadPNG(const std::string& filename)
 	png_set_sig_bytes(png, 8);
 
 	if( ! (png_get_color_type(png, info) & PNG_COLOR_MASK_ALPHA)){
-		png_set_filler( png, 0, 1 );
+		png_set_filler( png, 0xff, 1 );
 	}
 
 	//情報を読み込んでサイズだけ調べる
