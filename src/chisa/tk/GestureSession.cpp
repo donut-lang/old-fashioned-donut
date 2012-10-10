@@ -28,20 +28,21 @@ static const std::string TAG("GestureSession");
 
 GestureSession::GestureSession(logging::Logger& log, const unsigned int pointerIndex, std::weak_ptr<Layout> targetLayout, const Point& startPoint, const float startTimeMs)
 :log_(log)
+,target_(targetLayout)
 ,pointerIndex_(pointerIndex)
 ,startPoint_(startPoint)
 ,startTimeMs_(startTimeMs)
-,gotOutOfRegion_(false)
 ,lastPoint_(startPoint)
 ,lastTimeMs_(startTimeMs)
+,totalMoved_(0,0)
 {
-	const shared_ptr<Layout> target = targetLayout.lock();
-	if(!target){
+	const shared_ptr<Layout> orig_target = targetLayout.lock();
+	if(!orig_target){
 		log.e(TAG, "[Touch Session %d] oops. Target Layout was already deleted.", this->pointerIndex_);
 		return;
 	}
 	//このセッションに関わるレイアウトを列挙
-	shared_ptr<Layout> _it = target;
+	shared_ptr<Layout> _it = orig_target;
 	while(_it) {
 		this->layoutChain_.push_front(_it);
 		_it = _it->parent().lock();
@@ -53,7 +54,10 @@ GestureSession::GestureSession(logging::Logger& log, const unsigned int pointerI
 		}
 		if(target->onDownRaw(this->startTimeMs_, this->startPoint_)){
 			//onDownイベントをconsumeした先には一切イベントを分け与えない。
-			this->layoutChain_.erase(it+1, this->layoutChain_.end());
+			if(it+1 != this->layoutChain_.end()){
+				this->layoutChain_.erase(it+1, this->layoutChain_.end());
+				std::weak_ptr<Layout>().swap(this->target_);
+			}
 			break;
 		}
 	}
@@ -68,11 +72,27 @@ void GestureSession::onTouchUp(const float timeMs, const Point& pt)
 	this->lastTimeMs_ = timeMs;
 	this->lastPoint_ = pt;
 	this->invokeUpRaw(timeMs, pt);
+
+	this->totalMoved_ += (pt-this->lastPoint_);
+
+	const float timeDiff = this->lastTimeMs_-this->startTimeMs_;
+	const Velocity vel(this->totalMoved_, timeDiff);
+	if(fabs(vel.x()) > MinFlingVelocity || fabs(vel.y()) > MinFlingVelocity ){
+		this->invokeFling(timeMs, this->startPoint_, pt, vel);
+		return;
+	}
+	if( shared_ptr<Layout> target = this->target_.lock() ){
+		if(target->screenArea().contain(pt)){
+			target->onSingleTapUp(timeMs, pt);
+			return;
+		}
+	}
 }
 
 void GestureSession::onTouchMove(const float timeMs, const Point& pt)
 {
 	this->invokeScroll(timeMs, this->lastPoint_, pt, pt-this->lastPoint_);
+	this->totalMoved_ += (pt-this->lastPoint_);
 	this->lastTimeMs_ = timeMs;
 	this->lastPoint_ = pt;
 }
@@ -110,28 +130,6 @@ void GestureSession::invokeMoveRaw(const float timeMs, const Point& pt)
 	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
 		if(shared_ptr<Layout> target = it->lock()){
 			if(target->onMoveRaw(timeMs, pt)){
-				break;
-			}
-		}
-	}
-}
-
-void GestureSession::invokeSingleTapUp(const float timeMs, const Point& pt)
-{
-	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
-		if(shared_ptr<Layout> target = it->lock()){
-			if(target->onSingleTapUp(timeMs, pt)){
-				break;
-			}
-		}
-	}
-}
-
-void GestureSession::invokeShowPress(const float timeMs, const Point& pt)
-{
-	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
-		if(shared_ptr<Layout> target = it->lock()){
-			if(target->onShowPress(timeMs, pt)){
 				break;
 			}
 		}

@@ -50,7 +50,7 @@ private:
 	DEFINE_MEMBER(public, private, weak_ptr<Layout>, parent);
 	DEFINE_MEMBER(protected, private, weak_ptr<Layout>, self);
 	DEFINE_MEMBER(protected, private, Box, size);
-	DEFINE_MEMBER(protected, private, Area, screenArea);
+	DEFINE_MEMBER(public, private, Area, screenArea);
 	DEFINE_MEMBER(protected, private, Area, drawnArea);
 	DEFINE_MEMBER(public, private, std::string, id);
 public:

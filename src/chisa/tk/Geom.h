@@ -119,7 +119,8 @@ public:
 class Velocity : public Vector {
 public:
 	inline Velocity(const float x, const float y):Vector(x,y){}
-	inline Velocity(const Point& o):Vector(o){}
+	inline Velocity(const Velocity& o):Vector(o){}
+	inline Velocity(const Distance& o, const float time):Vector(o.x()/time, o.y()/time){}
 	inline Velocity():Vector(){}
 	inline std::string toString() const{
 		return util::format("(Velocity %f %f)", this->x(), this->y());
