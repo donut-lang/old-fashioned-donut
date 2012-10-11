@@ -52,22 +52,22 @@ string EmptyLayout::toString()
 	return util::format("(EmptyLayout)");
 }
 
-void EmptyLayout::renderImpl(gl::Canvas& canvas, const Area& screenArea, const Area& area)
+void EmptyLayout::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
 {
 	//何も描画しない
 }
 
-Box EmptyLayout::onMeasure(const Box& constraint)
+geom::Box EmptyLayout::onMeasure(const geom::Box& constraint)
 {
 	//とりあえず最大を主張しておく
 	// FIXME: とりあえず仮置きで「大きい値」
-	return Box(
+	return geom::Box(
 		geom::isUnspecified(constraint.width()) ? geom::VeryLarge : constraint.width(),
 		geom::isUnspecified(constraint.height()) ? geom::VeryLarge : constraint.height()
 	);
 }
 
-void EmptyLayout::onLayout(const Box& size)
+void EmptyLayout::onLayout(const geom::Box& size)
 {
 	//何もしない
 }

@@ -44,10 +44,10 @@ private:
 	FitMode fitMode_;
 	DEFINE_MEMBER(private, private, float, widgetScaleX);
 	DEFINE_MEMBER(private, private, float, widgetScaleY);
-	DEFINE_MEMBER(private, private, Point, widgetOffset);
-	DEFINE_MEMBER(private, private, Box, widgetSize);
-	DEFINE_MEMBER(private, private, Box, widgetSizeReal);
-	DEFINE_MEMBER(private, private, Area, widgetDrawnArea);
+	DEFINE_MEMBER(private, private, geom::Vector, widgetOffset);
+	DEFINE_MEMBER(private, private, geom::Box, widgetSize);
+	DEFINE_MEMBER(private, private, geom::Box, widgetSizeReal);
+	DEFINE_MEMBER(private, private, geom::Area, widgetDrawnArea);
 public:
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const override;
 	virtual size_t getChildCount() const override;
@@ -55,23 +55,23 @@ public:
 	virtual void idle(const float delta_ms) override;
 	virtual string toString() override;
 private:
-	virtual void renderImpl(gl::Canvas& canvas, const Area& screenArea, const Area& area) override;
-	virtual Box onMeasure(const Box& constraint) override;
-	virtual void onLayout(const Box& size) override;
+	virtual void renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area) override;
+	virtual geom::Box onMeasure(const geom::Box& constraint) override;
+	virtual void onLayout(const geom::Box& size) override;
 	virtual void loadXMLimpl(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element) override;
 	virtual weak_ptr<Layout> getLayoutByIdImpl(const std::string& id) override;
 private:
-	float calcScale(const Box& widget, const Box& constraint);
+	float calcScale(const geom::Box& widget, const geom::Box& constraint);
 private:
-	Point calcPtInWidget(const Point& ptInScreen);
+	geom::Vector calcPtInWidget(const geom::Vector& ptInScreen);
 public:
-	virtual bool onDownRaw(const float timeMs, const Point& ptInScreen) override;
-	virtual bool onUpRaw(const float timeMs, const Point& ptInScreen) override;
-	virtual bool onMoveRaw(const float timeMs, const Point& ptInScreen) override;
-	virtual bool onSingleTapUp(const float timeMs, const Point& ptInScreen) override;
-	virtual bool onFling(const float timeMs, const Point& start, const Point& end, const Velocity& velocity) override;
-	virtual bool onScroll(const float timeMs, const Point& start, const Point& end, const Distance& distance) override;
-	virtual bool onZoom(const float timeMs, const Point& center, const float ratio) override;
+	virtual bool onDownRaw(const float timeMs, const geom::Vector& ptInScreen) override;
+	virtual bool onUpRaw(const float timeMs, const geom::Vector& ptInScreen) override;
+	virtual bool onMoveRaw(const float timeMs, const geom::Vector& ptInScreen) override;
+	virtual bool onSingleTapUp(const float timeMs, const geom::Vector& ptInScreen) override;
+	virtual bool onFling(const float timeMs, const geom::Vector& start, const geom::Vector& end, const geom::Velocity& velocity) override;
+	virtual bool onScroll(const float timeMs, const geom::Vector& start, const geom::Vector& end, const geom::Vector& distance) override;
+	virtual bool onZoom(const float timeMs, const geom::Vector& center, const float ratio) override;
 
 };
 

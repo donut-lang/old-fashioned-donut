@@ -60,7 +60,7 @@ ImageWidget::~ImageWidget()
 
 #include <GL/gl.h>
 
-void ImageWidget::render(gl::Canvas& cv, const Area& area)
+void ImageWidget::render(gl::Canvas& cv, const geom::Area& area)
 {
 	if(this->imageSprite_){
 		cv.drawSprite(this->imageSprite_, -area.x(), -area.y(), 0);
@@ -71,17 +71,17 @@ void ImageWidget::idle(const float delta_ms)
 {
 }
 
-void ImageWidget::reshape(const Box& area)
+void ImageWidget::reshape(const geom::Box& area)
 {
 }
 
-Box ImageWidget::measure(const Box& constraint)
+geom::Box ImageWidget::measure(const geom::Box& constraint)
 {
 	if(imageSprite_){
-		return Box(imageSprite_->width(), imageSprite_->height());
+		return geom::Box(imageSprite_->width(), imageSprite_->height());
 	}else{
 		log().e(TAG, "Image Sprite not allocated, but size measured.");
-		return Box(0, 0);
+		return geom::Box(0, 0);
 	}
 }
 

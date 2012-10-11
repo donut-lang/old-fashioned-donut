@@ -17,7 +17,8 @@
  */
 
 #include "Canvas.h"
-#include "../tk/Geom.h"
+#include "../geom/Vector.h"
+#include "../geom/Area.h"
 #include <algorithm>
 #include <GL/gl.h>
 #include <cairo/cairo.h>
@@ -100,7 +101,7 @@ void Canvas::scissor(const float x, const float y, const float width, const floa
 	glScissor(x, this->height_-height-y,width, height);
 }
 
-void Canvas::scissor(const tk::Area& area)
+void Canvas::scissor(const geom::Area& area)
 {
 	this->scissor(area.x(), area.y(), area.width(), area.height());
 }
@@ -223,7 +224,7 @@ void Canvas::backBuffer(Buffer* buffer)
 	}
 }
 
-Canvas::Scissor::Scissor(Canvas& canvas, const tk::Area& area)
+Canvas::Scissor::Scissor(Canvas& canvas, const geom::Area& area)
 :canvas_(canvas)
 {
 	this->canvas_.scissor(area);

@@ -18,7 +18,7 @@
 
 #include "SplitLayout.h"
 #include "LayoutFactory.h"
-#include "../Geom.h"
+#include "../../geom/Vector.h"
 
 namespace chisa {
 namespace tk {
@@ -46,12 +46,12 @@ CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(SplitLayout)
 void SplitLayout::setMode(enum SplitMode mode)
 {
 	this->splitMode(mode);
-	changed_getter = mode == Vertical ? (float(Box::*)(void) const)&Box::height : (float(Box::*)(void) const)&Box::width;
-	changed_setter = mode == Vertical ? (void(Box::*)(float))&Box::height : (void(Box::*)(float))&Box::width;
-	fixed_getter = mode == Vertical ? (float(Box::*)(void) const)&Box::width : (float(Box::*)(void) const)&Box::height;
-	fixed_setter = mode == Vertical ? (void(Box::*)(float))&Box::width : (void(Box::*)(float))&Box::height;
-	point_getter = mode == Vertical ? (float(Point::*)(void) const)&Point::y : (float(Point::*)(void) const)&Point::x;
-	point_setter = mode == Vertical ? (void(Point::*)(float))&Point::y : (void(Point::*)(float))&Point::x;
+	changed_getter = mode == Vertical ? (float(geom::Box::*)(void) const)&geom::Box::height : (float(geom::Box::*)(void) const)&geom::Box::width;
+	changed_setter = mode == Vertical ? (void(geom::Box::*)(float))&geom::Box::height : (void(geom::Box::*)(float))&geom::Box::width;
+	fixed_getter = mode == Vertical ? (float(geom::Box::*)(void) const)&geom::Box::width : (float(geom::Box::*)(void) const)&geom::Box::height;
+	fixed_setter = mode == Vertical ? (void(geom::Box::*)(float))&geom::Box::width : (void(geom::Box::*)(float))&geom::Box::height;
+	point_getter = mode == Vertical ? (float(geom::Vector::*)(void) const)&geom::Vector::y : (float(geom::Vector::*)(void) const)&geom::Vector::x;
+	point_setter = mode == Vertical ? (void(geom::Vector::*)(float))&geom::Vector::y : (void(geom::Vector::*)(float))&geom::Vector::x;
 }
 
 SplitLayout::~SplitLayout() {
@@ -130,7 +130,7 @@ size_t SplitLayout::getChildCount() const
 	return this->children_.size();
 }
 
-void SplitLayout::renderImpl(gl::Canvas& canvas, const Area& screenArea, const Area& area)
+void SplitLayout::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
 {
 	const float boxSize = (area.box().*changed_getter)();
 	const float drawnStartOffset = (area.point().*point_getter)();
@@ -148,21 +148,21 @@ void SplitLayout::renderImpl(gl::Canvas& canvas, const Area& screenArea, const A
 		const float drawnStart = std::max(drawnStartOffset - offset, 0.0f);
 		const float drawnSize = std::min(size-drawnStart, drawnEndOffset-offset-drawnStart);
 
-		Box drawnBox(area.box());
+		geom::Box drawnBox(area.box());
 		(drawnBox.*changed_setter)(drawnSize);
 
-		Point drawnPoint(area.point());
+		geom::Vector drawnPoint(area.point());
 		(drawnPoint.*point_setter)(drawnStart);
 
-		Point screenPoint(screenArea.point());
+		geom::Vector screenPoint(screenArea.point());
 		(screenPoint.*point_setter)(screenStart+offset+drawnStart-drawnStartOffset);
 
-		ctx->layout->render(canvas, Area(screenPoint, drawnBox), Area(drawnPoint, drawnBox));
+		ctx->layout->render(canvas, geom::Area(screenPoint, drawnBox), geom::Area(drawnPoint, drawnBox));
 		offset += size;
 	}
 }
 
-Box SplitLayout::onMeasure(const Box& constraint)
+geom::Box SplitLayout::onMeasure(const geom::Box& constraint)
 {
 	const bool changedSpecified = geom::isSpecified((constraint.*changed_getter)());
 	const bool fixedSpecified = geom::isSpecified((constraint.*fixed_getter)());
@@ -171,13 +171,13 @@ Box SplitLayout::onMeasure(const Box& constraint)
 		float totalSize = 0;
 		float fixedMaxSize = 0;
 		for(shared_ptr<SplitCtx> childCtx : this->children()){
-			const Box childSize(childCtx->layout->measure(constraint));
+			const geom::Box childSize(childCtx->layout->measure(constraint));
 			const float size = this->wrapSize((childSize.*changed_getter)(), childCtx->def);
 			totalSize += size;
 			childCtx->size = size;
 			fixedMaxSize = std::max(fixedMaxSize, (childSize.*fixed_getter)());
 		}
-		Box measured;
+		geom::Box measured;
 		(measured.*changed_setter)(totalSize);
 		if(fixedSpecified){
 			(measured.*fixed_setter)((constraint.*fixed_getter)());
@@ -196,7 +196,7 @@ Box SplitLayout::onMeasure(const Box& constraint)
 		float nonWeightedSizeTotal = 0;
 		for(shared_ptr<SplitCtx> childCtx : this->children()){
 			const bool weightSpecified = geom::isSpecified(childCtx->def.weight);
-			const Box childSize(childCtx->layout->measure(constraint));
+			const geom::Box childSize(childCtx->layout->measure(constraint));
 			if(weightSpecified){
 				//ウェイトがかかっている場合は最小サイズを。
 				intendedSizeTotal += childCtx->def.min;
@@ -240,7 +240,7 @@ Box SplitLayout::onMeasure(const Box& constraint)
 				childCtx->size -= changedOverrun * childCtx->size / intendedSizeTotal;
 			}
 		}
-		Box measured;
+		geom::Box measured;
 		(measured.*changed_setter)(limitChangedSize);
 		if(fixedSpecified){
 			(measured.*fixed_setter)((constraint.*fixed_getter)());
@@ -251,10 +251,10 @@ Box SplitLayout::onMeasure(const Box& constraint)
 	}
 }
 
-void SplitLayout::onLayout(const Box& size)
+void SplitLayout::onLayout(const geom::Box& size)
 {
 	for(shared_ptr<SplitCtx> ctx : this->children()){
-		Box box;
+		geom::Box box;
 		(box.*changed_setter)(ctx->size);
 		(box.*fixed_setter)((size.*fixed_getter)());
 		ctx->layout->layout(box);
