@@ -139,6 +139,12 @@ public:
 	inline float y() const{return y_;};
 	inline void x(const float x) { x_=x; };
 	inline void y(const float y) { y_=y; };
+	inline Self operator-(){
+		return Self(-x_,-y_);
+	}
+	inline Self operator+(){
+		return Self(+x_,+y_);
+	}
 protected:
 	template <typename R, typename T>
 	inline R operator_add(const T& other) const {
