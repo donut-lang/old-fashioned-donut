@@ -62,6 +62,40 @@ TEST(GeomTest, BasicTest)
 	ASSERT_TRUE(p1.near(p2, 1));
 }
 
+#define OPTEST(V1,V2,OP,V3)\
+do{\
+	Vector v3 (V1 OP V2);\
+	Vector v(V1);\
+	v OP##= V2;\
+	ASSERT_FLOAT_EQ(V3.x(), v3.x());\
+	ASSERT_FLOAT_EQ(V3.y(), v3.y());\
+	ASSERT_FLOAT_EQ(V3.x(), v.x());\
+	ASSERT_FLOAT_EQ(V3.y(), v.y());\
+}while(0);\
+
+#define UNARY_TEST(OP,V1,V2)\
+do{\
+	Vector v2 (OP V1);\
+	ASSERT_FLOAT_EQ(V2.x(), v2.x());\
+	ASSERT_FLOAT_EQ(V2.y(), v2.y());\
+}while(0);\
+
+TEST(GeomTest, OpTest)
+{
+	OPTEST(Vector(1,2),Vector(3,4),+,Vector(4,6));
+	OPTEST(Vector(1,2),Vector(3,4),-,Vector(-2,-2));
+
+	UNARY_TEST(+, Vector(1,2),Vector(1,2));
+	UNARY_TEST(-, Vector(1,2),Vector(-1,-2));
+
+	UNARY_TEST(+, Vector(-1,2),Vector(-1,2));
+	UNARY_TEST(-, Vector(-1,2),Vector(1,-2));
+
+	UNARY_TEST(+, Vector(-1,-2),Vector(-1,-2));
+	UNARY_TEST(-, Vector(-1,-2),Vector(1,2));
+}
+
+
 Area testIntersect(Area x, Area y)
 {
 	return x.intersect(y);
