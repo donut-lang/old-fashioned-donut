@@ -99,7 +99,7 @@ void SplitLayout::loadXMLimpl(LayoutFactory* const factory, XMLElement* top)
 		elem->QueryFloatAttribute(AttrName::Max.c_str(), &max);
 		//デフォルト値の設定
 		if(geom::isUnspecified(min)){
-			max = 0;
+			min = 0;
 		}
 		if(geom::isUnspecified(max)){
 			max = geom::VeryLarge;
