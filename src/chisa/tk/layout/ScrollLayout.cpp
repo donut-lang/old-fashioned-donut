@@ -109,8 +109,8 @@ void ScrollLayout::onLayout(const geom::Box& size)
 
 void ScrollLayout::idle(const float delta_ms)
 {
-	geom::Vector ptStart(geom::Vector(0,0)+this->scrollOffset_);
-	geom::Vector ptEnd(ptStart.x()+this->size().width(), ptStart.y()+this->size().height());
+	geom::Point ptStart(geom::Point(0,0)+this->scrollOffset_);
+	geom::Point ptEnd(ptStart.x()+this->size().width(), ptStart.y()+this->size().height());
 	if((this->scrollMode_ & Horizontal) && ptStart.x() < 0){
 		this->scrollOffset_.x(this->scrollOffset_.x() - (ptStart.x()*delta_ms/100));
 	}
@@ -126,7 +126,7 @@ void ScrollLayout::idle(const float delta_ms)
 	this->lastMovedFrom_ += delta_ms;
 }
 
-bool ScrollLayout::onScroll(const float timeMs, const geom::Vector& start, const geom::Vector& end, const geom::Vector& distance)
+bool ScrollLayout::onScroll(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Distance& distance)
 {
 	if(this->scrollMode_ == Both){
 		this->scrollOffset_ -= distance;

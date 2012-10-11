@@ -56,37 +56,20 @@ public:
 	inline std::string toString() const{
 		return util::format("(Area %f %f %f %f)", x(), y(), width(), height());
 	}
-	inline bool empty() const { return this->box_.empty(); }
+	inline bool empty() const { return this->box_.zero(); }
 	inline Area intersect(const Area& other) const
 	{
-		const float thisEndX = this->x()+this->width();
-		const float thisEndY = this->y()+this->height();
-		const float otherEndX = other.x()+other.width();
-		const float otherEndY = other.y()+other.height();
-		if(
-				thisEndX <= other.x() ||
-				otherEndX <= this->x() ||
-				thisEndY <= other.y() ||
-				otherEndY <= this->y()
-		){
+		using namespace chisa::geom;
+		const Point thisEnd = this->point()+this->box();
+		const Point otherEnd = other.point()+other.box();
+		if(thisEnd <= other.point() || otherEnd <= this->point()){
 			return Area(0,0,0,0);
 		}
-		const Vector startPoint(
-				std::max(this->x(),other.x()),
-				std::max(this->y(),other.y())
-		);
-		const Vector endPoint(
-				std::min(thisEndX,otherEndX),
-				std::min(thisEndY,otherEndY)
-		);
-		return Area(
-				startPoint.x(),
-				startPoint.y(),
-				endPoint.x()-startPoint.x(),
-				endPoint.y()-startPoint.y()
-		);
+		const Vector startPoint(max(this->point(), other.point()));
+		const Vector endPoint(min(thisEnd, otherEnd));
+		return Area(startPoint, (endPoint-startPoint));
 	}
-	inline bool contain(const Vector& pt) const{
+	inline bool contain(const Point& pt) const{
 		return x() <= pt.x() && y() <= pt.y() && pt.x() <= (x()+width()) && pt.y() <= (y()+height());
 	}
 };

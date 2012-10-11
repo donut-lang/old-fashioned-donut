@@ -88,7 +88,7 @@ void WidgetWrapperLayout::renderImpl(gl::Canvas& canvas, const geom::Area& scree
 		//areaからウィジットが実際にレンダリングされる位置を計算
 		canvas.scale(this->widgetScale().x(), this->widgetScale().y(), 1.0);
 		//描画を投げる
-		geom::Vector offset(area.point()-this->widgetOffset());
+		geom::Point offset(area.point()-this->widgetOffset());
 		geom::Box size(std::min(area.width(), widgetSizeReal().width()-area.x()), std::min(area.height(), widgetSizeReal().height()-area.y()));
 		this->widgetDrawnArea(geom::Area(offset / this->widgetScale(), size/this->widgetScale()));
 		widget()->render(canvas, this->widgetDrawnArea());
@@ -156,13 +156,13 @@ void WidgetWrapperLayout::onLayout(const geom::Box& size)
 
 		this->widgetScale(geom::ScaleVector(scale, scale));
 		this->widgetSizeReal(geom::Box(this->widgetSize().width() * scale, this->widgetSize().height() * scale));
-		this->widgetOffset(geom::Vector((size.width() - this->widgetSizeReal().width())/2, (size.height()-this->widgetSizeReal().height())/2));
+		this->widgetOffset(geom::Point((size.width() - this->widgetSizeReal().width())/2, (size.height()-this->widgetSizeReal().height())/2));
 		break;
 	}
 	case Center: {
 		this->widgetScale(geom::ScaleVector(1.0f, 1.0f));
 		this->widgetSizeReal(this->widgetSize());
-		this->widgetOffset(geom::Vector((size.width() - this->widgetSize().width())/2, (size.height()-this->widgetSize().height())/2));
+		this->widgetOffset(geom::Point((size.width() - this->widgetSize().width())/2, (size.height()-this->widgetSize().height())/2));
 		break;
 	}
 	}
@@ -204,43 +204,43 @@ weak_ptr<Layout> WidgetWrapperLayout::getLayoutByIdImpl(const std::string& id)
 	return weak_ptr<Layout>();
 }
 
-geom::Vector WidgetWrapperLayout::calcPtInWidget(const geom::Vector& ptInScreen)
+geom::Point WidgetWrapperLayout::calcPtInWidget(const geom::Point& ptInScreen)
 {
-	const geom::Vector delta = ptInScreen - this->screenArea().point();
-	return geom::Vector(this->widgetDrawnArea().point() + delta / this->widgetScale());
+	const geom::Point delta = ptInScreen - this->screenArea().point();
+	return geom::Point(this->widgetDrawnArea().point() + delta / this->widgetScale());
 }
 
-bool WidgetWrapperLayout::onDownRaw(const float timeMs, const geom::Vector& ptInScreen)
+bool WidgetWrapperLayout::onDownRaw(const float timeMs, const geom::Point& ptInScreen)
 {
 	return widget_->onDownRaw(timeMs, calcPtInWidget(ptInScreen));
 }
 
-bool WidgetWrapperLayout::onUpRaw(const float timeMs, const geom::Vector& ptInScreen)
+bool WidgetWrapperLayout::onUpRaw(const float timeMs, const geom::Point& ptInScreen)
 {
 	return widget_->onUpRaw(timeMs, calcPtInWidget(ptInScreen));
 }
 
-bool WidgetWrapperLayout::onMoveRaw(const float timeMs, const geom::Vector& ptInScreen)
+bool WidgetWrapperLayout::onMoveRaw(const float timeMs, const geom::Point& ptInScreen)
 {
 	return widget_->onMoveRaw(timeMs, calcPtInWidget(ptInScreen));
 }
 
-bool WidgetWrapperLayout::onSingleTapUp(const float timeMs, const geom::Vector& ptInScreen)
+bool WidgetWrapperLayout::onSingleTapUp(const float timeMs, const geom::Point& ptInScreen)
 {
 	return widget_->onSingleTapUp(timeMs, calcPtInWidget(ptInScreen));
 }
 
-bool WidgetWrapperLayout::onFling(const float timeMs, const geom::Vector& start, const geom::Vector& end, const geom::Velocity& velocity)
+bool WidgetWrapperLayout::onFling(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Velocity& velocity)
 {
 	return widget_->onFling(timeMs, calcPtInWidget(start), calcPtInWidget(end), velocity / this->widgetScale());
 }
 
-bool WidgetWrapperLayout::onScroll(const float timeMs, const geom::Vector& start, const geom::Vector& end, const geom::Vector& distance)
+bool WidgetWrapperLayout::onScroll(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Distance& distance)
 {
 	return widget_->onScroll(timeMs, calcPtInWidget(start), calcPtInWidget(end), distance / this->widgetScale());
 }
 
-bool WidgetWrapperLayout::onZoom(const float timeMs, const geom::Vector& center, const float ratio)
+bool WidgetWrapperLayout::onZoom(const float timeMs, const geom::Point& center, const float ratio)
 {
 	return widget_->onZoom(timeMs, calcPtInWidget(center), ratio);
 }

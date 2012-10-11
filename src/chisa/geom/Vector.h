@@ -52,10 +52,10 @@ public:\
 #define ENABLE_PM_ASSIGN(Klass,OtherKlass)\
 	public:\
 	inline Klass& operator+=(const OtherKlass& b) {\
-			return Klass::operator_add_assign(*this, b);\
+			return operator_add_assign(*this, b);\
 	};\
 	inline Klass& operator-=(const OtherKlass& b) {\
-			return Klass::operator_minus_assign(*this, b);\
+			return operator_minus_assign(*this, b);\
 	};
 #define ENABLE_MD(Klass,OtherKlass,Result)\
 	public:\
@@ -128,11 +128,29 @@ public:
 				std::fabs(this->x_ - other.x_) < precision &&
 				std::fabs(this->y_ - other.y_) < precision;
 	}
+	inline bool operator==(const Self& other){
+		return this->x_ == other.x_ && this->y_ == other.y_;
+	}
+	inline bool operator!=(const Self& other){
+		return !(*this==other);
+	}
 public:
 	inline float x() const{return x_;};
 	inline float y() const{return y_;};
 	inline void x(const float x) { x_=x; };
 	inline void y(const float y) { y_=y; };
+	inline bool operator>(const Self& other) const{
+		return this->x_ > other.x_ && this->y_ > other.y_;
+	}
+	inline bool operator>=(const Self& other) const{
+		return this->x_ >= other.x_ && this->y_ >= other.y_;
+	}
+	inline bool operator<=(const Self& other) const{
+		return this->x_ <= other.x_ && this->y_ <= other.y_;
+	}
+	inline bool operator<(const Self& other) const{
+		return this->x_ < other.x_ && this->y_ < other.y_;
+	}
 protected:
 	template <typename R, typename T>
 	inline R operator_add(const T& other) const {
@@ -209,16 +227,30 @@ public:
 };
 
 class Vector : public BaseVector<Vector> {
-	SETUP(Vector)
+	SETUP(Vector);
 public:
 	inline std::string toString() const{
 		return util::format("(Vector %f %f)", this->x(), this->y());
 	}
-	ENABLE_PM(Vector, Vector, Vector);
+	ENABLE_PM(Vector , Vector , Vector );
 	ENABLE_PM_ASSIGN(Vector, Vector);
 	ENABLE_MD(Vector, ScaleVector, Vector);
 	ENABLE_MD_ASSIGN(Vector, ScaleVector);
 	ENABLE_MD_FLOAT(Vector);
+	inline bool near(const Vector& other, const float precision) const{
+		return
+				std::fabs(this->x() - other.x()) < precision &&
+				std::fabs(this->y() - other.y()) < precision;
+	}
+	inline float width() const{ return this->x(); };
+	inline float height() const{ return this->y(); };
+	inline void width(const float width) { this->x(width); };
+	inline void height(const float height) { this->y(height); };
+	inline bool zero() const {
+		return
+				std::fabs(this->x()) < geom::VerySmall &&
+				std::fabs(this->y()) < geom::VerySmall;
+	}
 };
 
 class Velocity : public BaseVector<Velocity> {
@@ -234,71 +266,15 @@ public:
 	ENABLE_MD_ASSIGN(Velocity, ScaleVector);
 };
 
-class Box{
-private:
-	float width_;
-	float height_;
-public:
-	inline Box(const float width, const float height):width_(width), height_(height){}
-	inline Box(const Box& o):width_(o.width_), height_(o.height_){};
-	inline Box():width_(NAN), height_(NAN){};
-	inline Box& operator=(const Box& other){
-		this->width_ = other.width_;
-		this->height_ = other.height_;
-		return *this;
-	}
-	inline bool operator==(const Box& other){
-		return this->width_ == other.width_ && this->height_ == other.height_;
-	}
-	inline bool operator!=(const Box& other){
-		return !(*this==other);
-	}
-	inline bool near(const Box& other, const float precision) const{
-		return
-				std::fabs(this->width_ - other.width_) < precision &&
-				std::fabs(this->height_ - other.height_) < precision;
-	}
-	inline bool operator>(const Box& other) const{
-		return this->width_ > other.width_ && this->height_ > other.height_;
-	}
-	inline bool operator>=(const Box& other) const{
-		return this->width_ >= other.width_ && this->height_ >= other.height_;
-	}
-	inline bool operator<=(const Box& other) const{
-		return this->width_ <= other.width_ && this->height_ <= other.height_;
-	}
-	inline bool operator<(const Box& other) const{
-		return this->width_ < other.width_ && this->height_ < other.height_;
-	}
-	inline Box operator/(const ScaleVector& scale) const {
-		return Box(this->width_ / scale.x(), this->height_ / scale.y());
-	}
-	inline Box operator*(const ScaleVector& scale) const {
-		return Box(this->width_ * scale.x(), this->height_ * scale.y());
-	}
-	inline Box& operator*=(const ScaleVector& scale) {
-		this->width_ *= scale.x();
-		this->height_ *= scale.y();
-		return *this;
-	}
-	inline Box& operator/=(const ScaleVector& scale) {
-		this->width_ /= scale.x();
-		this->height_ /= scale.y();
-		return *this;
-	}
-	inline float width() const{ return width_; };
-	inline float height() const{ return height_; };
-	inline void width(const float width) { width_=width; };
-	inline void height(const float height) { height_=height; };
-	inline std::string toString() const{
-		return util::format("(Box %f %f)", width_, height_);
-	}
-	inline bool empty() const {
-		return
-				std::fabs(this->width_) < geom::VerySmall &&
-				std::fabs(this->height_) < geom::VerySmall;
-	}
-};
+template <typename T>
+T min(const BaseVector<T>& a, const BaseVector<T>& b){
+	return T(std::min(a.x(), b.x()), std::min(a.y(), b.y()));
+}
+
+template <typename T>
+T max(const BaseVector<T>& a, const BaseVector<T>& b){
+	return T(std::max(a.x(), b.x()), std::max(a.y(), b.y()));
+}
 
 }}
 
@@ -308,5 +284,7 @@ public:
 #undef ENABLE_MD_ASSGN
 #undef FRIEND_OP
 #undef SETUP
+
+#include "Decl.h"
 
 #endif /* INCLUDE_GUARD */

@@ -43,7 +43,7 @@ private:
 	std::string widgetId_;
 	FitMode fitMode_;
 	DEFINE_MEMBER(private, private, geom::ScaleVector, widgetScale);
-	DEFINE_MEMBER(private, private, geom::Vector, widgetOffset);
+	DEFINE_MEMBER(private, private, geom::Point, widgetOffset);
 	DEFINE_MEMBER(private, private, geom::Box, widgetSize);
 	DEFINE_MEMBER(private, private, geom::Box, widgetSizeReal);
 	DEFINE_MEMBER(private, private, geom::Area, widgetDrawnArea);
@@ -62,15 +62,15 @@ private:
 private:
 	float calcScale(const geom::Box& widget, const geom::Box& constraint);
 private:
-	geom::Vector calcPtInWidget(const geom::Vector& ptInScreen);
+	geom::Point calcPtInWidget(const geom::Point& ptInScreen);
 public:
-	virtual bool onDownRaw(const float timeMs, const geom::Vector& ptInScreen) override;
-	virtual bool onUpRaw(const float timeMs, const geom::Vector& ptInScreen) override;
-	virtual bool onMoveRaw(const float timeMs, const geom::Vector& ptInScreen) override;
-	virtual bool onSingleTapUp(const float timeMs, const geom::Vector& ptInScreen) override;
-	virtual bool onFling(const float timeMs, const geom::Vector& start, const geom::Vector& end, const geom::Velocity& velocity) override;
-	virtual bool onScroll(const float timeMs, const geom::Vector& start, const geom::Vector& end, const geom::Vector& distance) override;
-	virtual bool onZoom(const float timeMs, const geom::Vector& center, const float ratio) override;
+	virtual bool onDownRaw(const float timeMs, const geom::Point& ptInScreen) override;
+	virtual bool onUpRaw(const float timeMs, const geom::Point& ptInScreen) override;
+	virtual bool onMoveRaw(const float timeMs, const geom::Point& ptInScreen) override;
+	virtual bool onSingleTapUp(const float timeMs, const geom::Point& ptInScreen) override;
+	virtual bool onFling(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Velocity& velocity) override;
+	virtual bool onScroll(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Distance& distance) override;
+	virtual bool onZoom(const float timeMs, const geom::Point& center, const float ratio) override;
 
 };
 

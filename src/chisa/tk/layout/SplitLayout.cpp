@@ -50,8 +50,8 @@ void SplitLayout::setMode(enum SplitMode mode)
 	changed_setter = mode == Vertical ? (void(geom::Box::*)(float))&geom::Box::height : (void(geom::Box::*)(float))&geom::Box::width;
 	fixed_getter = mode == Vertical ? (float(geom::Box::*)(void) const)&geom::Box::width : (float(geom::Box::*)(void) const)&geom::Box::height;
 	fixed_setter = mode == Vertical ? (void(geom::Box::*)(float))&geom::Box::width : (void(geom::Box::*)(float))&geom::Box::height;
-	point_getter = mode == Vertical ? (float(geom::Vector::*)(void) const)&geom::Vector::y : (float(geom::Vector::*)(void) const)&geom::Vector::x;
-	point_setter = mode == Vertical ? (void(geom::Vector::*)(float))&geom::Vector::y : (void(geom::Vector::*)(float))&geom::Vector::x;
+	point_getter = mode == Vertical ? (float(geom::Point::*)(void) const)&geom::Point::y : (float(geom::Point::*)(void) const)&geom::Point::x;
+	point_setter = mode == Vertical ? (void(geom::Point::*)(float))&geom::Point::y : (void(geom::Point::*)(float))&geom::Point::x;
 }
 
 SplitLayout::~SplitLayout() {
@@ -151,10 +151,10 @@ void SplitLayout::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, c
 		geom::Box drawnBox(area.box());
 		(drawnBox.*changed_setter)(drawnSize);
 
-		geom::Vector drawnPoint(area.point());
+		geom::Point drawnPoint(area.point());
 		(drawnPoint.*point_setter)(drawnStart);
 
-		geom::Vector screenPoint(screenArea.point());
+		geom::Point screenPoint(screenArea.point());
 		(screenPoint.*point_setter)(screenStart+offset+drawnStart-drawnStartOffset);
 
 		ctx->layout->render(canvas, geom::Area(screenPoint, drawnBox), geom::Area(drawnPoint, drawnBox));
