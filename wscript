@@ -45,7 +45,7 @@ def configure(conf):
 	if sys.platform == 'win32': 
 		conf.check(features='cxx cxxprogram', lib=['glfw', 'opengl32',], cflags=['-Wall'], defines=['TEST=TEST'], uselib_store='OPENGL')
 	elif sys.platform in ['linux2', 'linux']:
-		conf.check(features='cxx cxxprogram', lib=['glfw'], cflags=['-Wall'], defines=['TEST=TEST'], uselib_store='OPENGL')
+		conf.check(features='cxx cxxprogram', lib=['glfw','GL', 'X11','rt','Xrandr','pthread'], cflags=['-Wall'], defines=['TEST=TEST'], uselib_store='OPENGL')
 
 TEST_SRC=TINYXML2_SRC+enum('src', [udir('src/entrypoint')])+enum('test')
 MAIN_SRC=TINYXML2_SRC+enum('src', [udir('src/entrypoint')])+enum(udir('src/entrypoint/pc/'))
