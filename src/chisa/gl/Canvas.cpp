@@ -89,7 +89,7 @@ void Canvas::resize2d(const geom::Box& box)
 	this->height_ = box.height();
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0, box.width(), box.height(), 0, -100, 100);
+	this->ortho(0, box.width(), box.height(), 0, -100, 100);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glViewport(0, 0, box.width(), box.height());
