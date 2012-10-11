@@ -89,21 +89,21 @@ void Universe::notifyWorldEnd(weak_ptr<World> me)
 		log.w(TAG, "notified world end, but world was already dead.");
 	}
 }
-void Universe::onTouchDown(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenPoint)
+void Universe::onTouchDown(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint)
 {
 	if(shared_ptr<World> topWorld = this->worldStack.top()){
 		topWorld->onTouchDown(timeMs, pointerIndex, screenPoint);
 	}
 }
 
-void Universe::onTouchUp(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenPoint)
+void Universe::onTouchUp(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint)
 {
 	if(shared_ptr<World> topWorld = this->worldStack.top()){
 		topWorld->onTouchUp(timeMs, pointerIndex, screenPoint);
 	}
 }
 
-void Universe::onTouchMove(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenPoint)
+void Universe::onTouchMove(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint)
 {
 	if(shared_ptr<World> topWorld = this->worldStack.top()){
 		topWorld->onTouchMove(timeMs, pointerIndex, screenPoint);

@@ -27,7 +27,7 @@ private:
 		Both = 0x11
 	};
 	enum Mode scrollMode_;
-	geom::Vector scrollOffset_;
+	geom::Point scrollOffset_;
 	shared_ptr<Layout> child_;
 	geom::Box childSize_;
 	float lastMovedFrom_;
@@ -43,7 +43,7 @@ private:
 	virtual void loadXMLimpl(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element) override;
 	virtual weak_ptr<Layout> getLayoutByIdImpl(const std::string& id) override;
 public:
-	virtual bool onScroll(const float timeMs, const geom::Vector& start, const geom::Vector& end, const geom::Vector& distance) override;
+	virtual bool onScroll(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Distance& distance) override;
 };
 
 }}}

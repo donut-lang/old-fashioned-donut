@@ -86,8 +86,8 @@ private:
 	void (geom::Box::*changed_setter)(float);
 	float (geom::Box::*fixed_getter)() const;
 	void (geom::Box::*fixed_setter)(float);
-	float (geom::Vector::*point_getter)(void) const;
-	void (geom::Vector::*point_setter)(float);
+	float (geom::Point::*point_getter)(void) const;
+	void (geom::Point::*point_setter)(float);
 private:
 	void addChild(const SplitDef& def, shared_ptr<Layout> layout);
 private:

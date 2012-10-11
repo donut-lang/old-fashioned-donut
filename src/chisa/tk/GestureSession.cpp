@@ -26,7 +26,7 @@ namespace tk {
 
 static const std::string TAG("GestureSession");
 
-GestureSession::GestureSession(logging::Logger& log, const unsigned int pointerIndex, std::weak_ptr<Layout> targetLayout, const geom::Vector& startPoint, const float startTimeMs)
+GestureSession::GestureSession(logging::Logger& log, const unsigned int pointerIndex, std::weak_ptr<Layout> targetLayout, const geom::Point& startPoint, const float startTimeMs)
 :log_(log)
 ,target_(targetLayout)
 ,pointerIndex_(pointerIndex)
@@ -67,7 +67,7 @@ GestureSession::~GestureSession()
 {
 }
 
-void GestureSession::onTouchUp(const float timeMs, const geom::Vector& pt)
+void GestureSession::onTouchUp(const float timeMs, const geom::Point& pt)
 {
 	this->lastTimeMs_ = timeMs;
 	this->lastPoint_ = pt;
@@ -89,7 +89,7 @@ void GestureSession::onTouchUp(const float timeMs, const geom::Vector& pt)
 	}
 }
 
-void GestureSession::onTouchMove(const float timeMs, const geom::Vector& pt)
+void GestureSession::onTouchMove(const float timeMs, const geom::Point& pt)
 {
 	this->invokeMoveRaw(timeMs, pt);
 	this->invokeScroll(timeMs, this->lastPoint_, pt, pt-this->lastPoint_);
@@ -98,7 +98,7 @@ void GestureSession::onTouchMove(const float timeMs, const geom::Vector& pt)
 	this->lastPoint_ = pt;
 }
 
-void GestureSession::invokeDownRaw(const float timeMs, const geom::Vector& pt)
+void GestureSession::invokeDownRaw(const float timeMs, const geom::Point& pt)
 {
 	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
 		if(shared_ptr<Layout> target = it->lock()){
@@ -112,7 +112,7 @@ void GestureSession::invokeDownRaw(const float timeMs, const geom::Vector& pt)
 	}
 }
 
-void GestureSession::invokeUpRaw(const float timeMs, const geom::Vector& pt)
+void GestureSession::invokeUpRaw(const float timeMs, const geom::Point& pt)
 {
 	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
 		if(shared_ptr<Layout> target = it->lock()){
@@ -126,7 +126,7 @@ void GestureSession::invokeUpRaw(const float timeMs, const geom::Vector& pt)
 	}
 }
 
-void GestureSession::invokeMoveRaw(const float timeMs, const geom::Vector& pt)
+void GestureSession::invokeMoveRaw(const float timeMs, const geom::Point& pt)
 {
 	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
 		if(shared_ptr<Layout> target = it->lock()){
@@ -137,7 +137,7 @@ void GestureSession::invokeMoveRaw(const float timeMs, const geom::Vector& pt)
 	}
 }
 
-void GestureSession::invokeFling(const float timeMs, const geom::Vector& start, const geom::Vector& end, const geom::Velocity& velocity)
+void GestureSession::invokeFling(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Velocity& velocity)
 {
 	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
 		if(shared_ptr<Layout> target = it->lock()){
@@ -148,7 +148,7 @@ void GestureSession::invokeFling(const float timeMs, const geom::Vector& start, 
 	}
 }
 
-void GestureSession::invokeScroll(const float timeMs, const geom::Vector& start, const geom::Vector& end, const geom::Vector& distance)
+void GestureSession::invokeScroll(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Distance& distance)
 {
 	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
 		if(shared_ptr<Layout> target = it->lock()){
@@ -159,7 +159,7 @@ void GestureSession::invokeScroll(const float timeMs, const geom::Vector& start,
 	}
 }
 
-void GestureSession::invokeZoom(const float timeMs, const geom::Vector& center, const float ratio)
+void GestureSession::invokeZoom(const float timeMs, const geom::Point& center, const float ratio)
 {
 	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
 		if(shared_ptr<Layout> target = it->lock()){

@@ -78,7 +78,7 @@ public:
 	bool deleteWidget(const string& widgetId, layout::WidgetWrapperLayout* const handler);
 	Widget* createWidget(const string& klass, tinyxml2::XMLElement* elem);
 public:
-	weak_ptr<Layout> getLayoutByPoint(const geom::Vector& screenVector);
+	weak_ptr<Layout> getLayoutByPoint(const geom::Point& screenVector);
 	/******************************************************************************
 	 * タスク管理
 	 ******************************************************************************/
@@ -95,9 +95,9 @@ public:
 	 * タッチイベント。Universeから移譲されてくる
 	 ******************************************************************************/
 public:
-	void onTouchDown(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenVector);
-	void onTouchUp(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenVector);
-	void onTouchMove(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenVector);
+	void onTouchDown(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenVector);
+	void onTouchUp(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenVector);
+	void onTouchMove(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenVector);
 
 	/******************************************************************************
 	 * 生成

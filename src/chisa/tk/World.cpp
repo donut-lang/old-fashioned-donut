@@ -109,7 +109,7 @@ void World::postTask(shared_ptr<Task> task)
 	this->taskHandler_.post(task);
 }
 
-weak_ptr<Layout> World::getLayoutByPoint(const geom::Vector& screenPoint)
+weak_ptr<Layout> World::getLayoutByPoint(const geom::Point& screenPoint)
 {
 	if(shared_ptr<Layout> layout = this->layoutStack_.top()){
 		return layout->getLayoutByPoint(screenPoint);
@@ -168,21 +168,21 @@ std::string World::resolveUniverseFilepath(const string& related_filename)
 	return this->universe_.lock()->resolveUniverseFilepath(related_filename);
 }
 
-void World::onTouchDown(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenPoint)
+void World::onTouchDown(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint)
 {
 	if(this->gestureMediator_){
 		this->gestureMediator_->onTouchDown(timeMs, pointerIndex, screenPoint);
 	}
 }
 
-void World::onTouchUp(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenPoint)
+void World::onTouchUp(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint)
 {
 	if(this->gestureMediator_){
 		this->gestureMediator_->onTouchUp(timeMs, pointerIndex, screenPoint);
 	}
 }
 
-void World::onTouchMove(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenPoint)
+void World::onTouchMove(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint)
 {
 	if(this->gestureMediator_){
 		this->gestureMediator_->onTouchMove(timeMs, pointerIndex, screenPoint);

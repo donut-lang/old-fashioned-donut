@@ -54,9 +54,9 @@ public:
 	 * タッチイベント
 	 ******************************************************************************/
 public:
-	void onTouchDown(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenPoint);
-	void onTouchUp(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenPoint);
-	void onTouchMove(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenPoint);
+	void onTouchDown(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint);
+	void onTouchUp(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint);
+	void onTouchMove(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint);
 	/******************************************************************************
 	 * 生成
 	 ******************************************************************************/
