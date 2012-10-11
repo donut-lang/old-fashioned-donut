@@ -58,8 +58,6 @@ ImageWidget::~ImageWidget()
 	delete paramSet_;
 }
 
-#include "../../geom/Vector.h"
-
 void ImageWidget::render(gl::Canvas& cv, const geom::Area& area)
 {
 	if(this->imageSprite_){
