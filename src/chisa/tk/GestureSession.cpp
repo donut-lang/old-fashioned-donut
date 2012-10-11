@@ -26,7 +26,7 @@ namespace tk {
 
 static const std::string TAG("GestureSession");
 
-GestureSession::GestureSession(logging::Logger& log, const unsigned int pointerIndex, std::weak_ptr<Layout> targetLayout, const Point& startPoint, const float startTimeMs)
+GestureSession::GestureSession(logging::Logger& log, const unsigned int pointerIndex, std::weak_ptr<Layout> targetLayout, const geom::Vector& startPoint, const float startTimeMs)
 :log_(log)
 ,target_(targetLayout)
 ,pointerIndex_(pointerIndex)
@@ -67,7 +67,7 @@ GestureSession::~GestureSession()
 {
 }
 
-void GestureSession::onTouchUp(const float timeMs, const Point& pt)
+void GestureSession::onTouchUp(const float timeMs, const geom::Vector& pt)
 {
 	this->lastTimeMs_ = timeMs;
 	this->lastPoint_ = pt;
@@ -76,7 +76,7 @@ void GestureSession::onTouchUp(const float timeMs, const Point& pt)
 	this->totalMoved_ += (pt-this->lastPoint_);
 
 	const float timeDiff = this->lastTimeMs_-this->startTimeMs_;
-	const Velocity vel(this->totalMoved_, timeDiff);
+	const geom::Velocity vel(this->totalMoved_, timeDiff);
 	if(fabs(vel.x()) > MinFlingVelocity || fabs(vel.y()) > MinFlingVelocity ){
 		this->invokeFling(timeMs, this->startPoint_, pt, vel);
 		return;
@@ -89,7 +89,7 @@ void GestureSession::onTouchUp(const float timeMs, const Point& pt)
 	}
 }
 
-void GestureSession::onTouchMove(const float timeMs, const Point& pt)
+void GestureSession::onTouchMove(const float timeMs, const geom::Vector& pt)
 {
 	this->invokeMoveRaw(timeMs, pt);
 	this->invokeScroll(timeMs, this->lastPoint_, pt, pt-this->lastPoint_);
@@ -98,7 +98,7 @@ void GestureSession::onTouchMove(const float timeMs, const Point& pt)
 	this->lastPoint_ = pt;
 }
 
-void GestureSession::invokeDownRaw(const float timeMs, const Point& pt)
+void GestureSession::invokeDownRaw(const float timeMs, const geom::Vector& pt)
 {
 	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
 		if(shared_ptr<Layout> target = it->lock()){
@@ -112,7 +112,7 @@ void GestureSession::invokeDownRaw(const float timeMs, const Point& pt)
 	}
 }
 
-void GestureSession::invokeUpRaw(const float timeMs, const Point& pt)
+void GestureSession::invokeUpRaw(const float timeMs, const geom::Vector& pt)
 {
 	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
 		if(shared_ptr<Layout> target = it->lock()){
@@ -126,7 +126,7 @@ void GestureSession::invokeUpRaw(const float timeMs, const Point& pt)
 	}
 }
 
-void GestureSession::invokeMoveRaw(const float timeMs, const Point& pt)
+void GestureSession::invokeMoveRaw(const float timeMs, const geom::Vector& pt)
 {
 	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
 		if(shared_ptr<Layout> target = it->lock()){
@@ -137,7 +137,7 @@ void GestureSession::invokeMoveRaw(const float timeMs, const Point& pt)
 	}
 }
 
-void GestureSession::invokeFling(const float timeMs, const Point& start, const Point& end, const Velocity& velocity)
+void GestureSession::invokeFling(const float timeMs, const geom::Vector& start, const geom::Vector& end, const geom::Velocity& velocity)
 {
 	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
 		if(shared_ptr<Layout> target = it->lock()){
@@ -148,7 +148,7 @@ void GestureSession::invokeFling(const float timeMs, const Point& start, const P
 	}
 }
 
-void GestureSession::invokeScroll(const float timeMs, const Point& start, const Point& end, const Distance& distance)
+void GestureSession::invokeScroll(const float timeMs, const geom::Vector& start, const geom::Vector& end, const geom::Vector& distance)
 {
 	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
 		if(shared_ptr<Layout> target = it->lock()){
@@ -159,7 +159,7 @@ void GestureSession::invokeScroll(const float timeMs, const Point& start, const 
 	}
 }
 
-void GestureSession::invokeZoom(const float timeMs, const Point& center, const float ratio)
+void GestureSession::invokeZoom(const float timeMs, const geom::Vector& center, const float ratio)
 {
 	for(LayoutIterator it = this->layoutChain_.begin(); it != this->layoutChain_.end(); ++it){
 		if(shared_ptr<Layout> target = it->lock()){

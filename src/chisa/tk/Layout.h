@@ -22,6 +22,8 @@
 #include "Widget.h"
 #include "Gesture.h"
 #include "../util/class_utils.h"
+#include "../geom/Vector.h"
+#include "../geom/Area.h"
 #include <memory>
 #include <string>
 #include <cmath>
@@ -49,26 +51,26 @@ private:
 	DEFINE_MEMBER(public, private, weak_ptr<Layout>, root);
 	DEFINE_MEMBER(public, private, weak_ptr<Layout>, parent);
 	DEFINE_MEMBER(protected, private, weak_ptr<Layout>, self);
-	DEFINE_MEMBER(protected, private, Box, size);
-	DEFINE_MEMBER(public, private, Area, screenArea);
-	DEFINE_MEMBER(protected, private, Area, drawnArea);
+	DEFINE_MEMBER(protected, private, geom::Box, size);
+	DEFINE_MEMBER(public, private, geom::Area, screenArea);
+	DEFINE_MEMBER(protected, private, geom::Area, drawnArea);
 	DEFINE_MEMBER(public, private, std::string, id);
 public:
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const = 0;
 	virtual size_t getChildCount() const = 0;
 public:
-	void render(gl::Canvas& canvas, const Area& screenArea, const Area& area);
-	Box measure(const Box& constraint);
-	void layout(const Box& size);
+	void render(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area);
+	geom::Box measure(const geom::Box& constraint);
+	void layout(const geom::Box& size);
 	virtual string toString() = 0;
 	void loadXML(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element);
 	weak_ptr<Layout> getLayoutById(const std::string& id);
-	weak_ptr<Layout> getLayoutByPoint(const Point& screenPoint);
+	weak_ptr<Layout> getLayoutByPoint(const geom::Vector& screenPoint);
 	virtual void idle(const float delta_ms);
 private:
-	virtual void renderImpl(gl::Canvas& canvas, const Area& screenArea, const Area& area) = 0;
-	virtual Box onMeasure(const Box& constraint) = 0;
-	virtual void onLayout(const Box& size) = 0;
+	virtual void renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area) = 0;
+	virtual geom::Box onMeasure(const geom::Box& constraint) = 0;
+	virtual void onLayout(const geom::Box& size) = 0;
 	virtual void loadXMLimpl(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element) = 0;
 	virtual weak_ptr<Layout> getLayoutByIdImpl(const std::string& id) = 0;
 protected:

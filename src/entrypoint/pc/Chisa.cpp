@@ -35,7 +35,7 @@ void render()
 
 void reshape(int width, int height)
 {
-	gUniverse->reshape(tk::Area(0,0,width, height));
+	gUniverse->reshape(geom::Area(0,0,width, height));
 }
 
 int gMouseX=0;
@@ -47,7 +47,7 @@ void mousePosition(int x,int y){
 	gMouseY = y;
 	if(gMousePressed){
 		const float timeMs = glfwGetTime() * 1000;
-		gUniverse->onTouchMove(timeMs, 0, tk::Point(gMouseX, gMouseY));
+		gUniverse->onTouchMove(timeMs, 0, geom::Vector(gMouseX, gMouseY));
 	}
 }
 
@@ -58,11 +58,11 @@ void mouseButton(int button, int action){
 	const float timeMs = glfwGetTime() * 1000;
 	switch( action ) {
 	case GLFW_PRESS:
-		gUniverse->onTouchDown(timeMs, 0, tk::Point(gMouseX, gMouseY));
+		gUniverse->onTouchDown(timeMs, 0, geom::Vector(gMouseX, gMouseY));
 		gMousePressed = true;
 		break;
 	case GLFW_RELEASE:
-		gUniverse->onTouchUp(timeMs, 0, tk::Point(gMouseX, gMouseY));
+		gUniverse->onTouchUp(timeMs, 0, geom::Vector(gMouseX, gMouseY));
 		gMousePressed = false;
 		break;
 	}

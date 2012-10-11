@@ -64,7 +64,7 @@ weak_ptr<Layout> Layout::getLayoutById(const std::string& id)
 	return id == this->id() ? this->self() : this->getLayoutByIdImpl(id);
 }
 
-weak_ptr<Layout> Layout::getLayoutByPoint(const Point& screenPoint)
+weak_ptr<Layout> Layout::getLayoutByPoint(const geom::Vector& screenPoint)
 {
 	if(!this->screenArea().contain(screenPoint)){
 		return weak_ptr<Layout>();
@@ -86,15 +86,15 @@ string Layout::toString()
 	return util::format("(Layout %p)", this);
 }
 
-Box Layout::measure(const Box& constraint)
+geom::Box Layout::measure(const geom::Box& constraint)
 {
-	Box box(this->onMeasure(constraint));
-	return Box(
+	geom::Box box(this->onMeasure(constraint));
+	return geom::Box(
 			box.width() > constraint.width() ? constraint.width() : box.width(),
 			box.height() > constraint.height() ? constraint.height() : box.height()
 		);
 }
-void Layout::render(gl::Canvas& canvas, const Area& screenArea, const Area& area)
+void Layout::render(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
 {
 	this->screenArea(screenArea);
 	this->drawnArea(area);
@@ -108,7 +108,7 @@ void Layout::render(gl::Canvas& canvas, const Area& screenArea, const Area& area
 	this->renderImpl(canvas, screenArea, area);
 }
 
-void Layout::layout(const Box& size)
+void Layout::layout(const geom::Box& size)
 {
 	this->onLayout(size);
 	this->size(size);

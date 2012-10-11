@@ -71,7 +71,7 @@ void World::init(weak_ptr<World> _self)
 void World::render(gl::Canvas& canvas)
 {
 	if(shared_ptr<Layout> layout = this->layoutStack_.top()){
-		layout->render(canvas, this->area(), Area(0,0,this->area().width(), this->area().height()));
+		layout->render(canvas, this->area(), geom::Area(0,0,this->area().width(), this->area().height()));
 	}
 }
 void World::idle(const float delta_ms)
@@ -81,7 +81,7 @@ void World::idle(const float delta_ms)
 	}
 	this->taskHandler_.run(delta_ms);
 }
-void World::reshape(const Area& area)
+void World::reshape(const geom::Area& area)
 {
 	if(shared_ptr<Layout> layout = this->layoutStack_.top()){
 		layout->measure(area.box());
@@ -109,7 +109,7 @@ void World::postTask(shared_ptr<Task> task)
 	this->taskHandler_.post(task);
 }
 
-weak_ptr<Layout> World::getLayoutByPoint(const Point& screenPoint)
+weak_ptr<Layout> World::getLayoutByPoint(const geom::Vector& screenPoint)
 {
 	if(shared_ptr<Layout> layout = this->layoutStack_.top()){
 		return layout->getLayoutByPoint(screenPoint);
@@ -168,21 +168,21 @@ std::string World::resolveUniverseFilepath(const string& related_filename)
 	return this->universe_.lock()->resolveUniverseFilepath(related_filename);
 }
 
-void World::onTouchDown(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint)
+void World::onTouchDown(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenPoint)
 {
 	if(this->gestureMediator_){
 		this->gestureMediator_->onTouchDown(timeMs, pointerIndex, screenPoint);
 	}
 }
 
-void World::onTouchUp(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint)
+void World::onTouchUp(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenPoint)
 {
 	if(this->gestureMediator_){
 		this->gestureMediator_->onTouchUp(timeMs, pointerIndex, screenPoint);
 	}
 }
 
-void World::onTouchMove(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint)
+void World::onTouchMove(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenPoint)
 {
 	if(this->gestureMediator_){
 		this->gestureMediator_->onTouchMove(timeMs, pointerIndex, screenPoint);

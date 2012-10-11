@@ -23,9 +23,9 @@
 #include <map>
 #include "../util/class_utils.h"
 #include "../gl/Canvas.h"
+#include "../geom/Area.h"
 
 #include "Task.h"
-#include "Geom.h"
 #include "Stack.h"
 
 namespace tinyxml2{
@@ -60,7 +60,7 @@ private:
 	TaskHandler taskHandler_;
 	Stack<shared_ptr<Layout> > layoutStack_;
 	map<string, layout::WidgetWrapperLayout*> widgetMap_;
-	DEFINE_MEMBER(private, private, Area, area);
+	DEFINE_MEMBER(private, private, geom::Area, area);
 private:
 	layout::LayoutFactory* layoutFactory_;
 	widget::WidgetFactory* widgetFactory_;
@@ -68,7 +68,7 @@ private:
 public:
 	void render(gl::Canvas& canvas);
 	void idle(const float delta_ms);
-	void reshape(const Area& area);
+	void reshape(const geom::Area& area);
 private:
 	void popLayout();
 	void pushLayout(const string& filename);
@@ -78,7 +78,7 @@ public:
 	bool deleteWidget(const string& widgetId, layout::WidgetWrapperLayout* const handler);
 	Widget* createWidget(const string& klass, tinyxml2::XMLElement* elem);
 public:
-	weak_ptr<Layout> getLayoutByPoint(const Point& screenPoint);
+	weak_ptr<Layout> getLayoutByPoint(const geom::Vector& screenVector);
 	/******************************************************************************
 	 * タスク管理
 	 ******************************************************************************/
@@ -95,9 +95,9 @@ public:
 	 * タッチイベント。Universeから移譲されてくる
 	 ******************************************************************************/
 public:
-	void onTouchDown(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint);
-	void onTouchUp(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint);
-	void onTouchMove(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint);
+	void onTouchDown(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenVector);
+	void onTouchUp(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenVector);
+	void onTouchMove(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenVector);
 
 	/******************************************************************************
 	 * 生成

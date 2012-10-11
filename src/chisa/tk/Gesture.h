@@ -21,9 +21,9 @@
 
 #include <memory>
 #include <deque>
-#include "Geom.h"
 #include "../util/class_utils.h"
 #include "../logging/Logger.h"
+#include "../geom/Vector.h"
 
 namespace chisa {
 namespace tk {
@@ -36,28 +36,28 @@ public:
 	GestureListener(){};
 	virtual ~GestureListener(){};
 public:
-	virtual bool onDownRaw(const float timeMs, const Point& ptInScreen){return false;};
-	virtual bool onUpRaw(const float timeMs, const Point& ptInScreen){return false;};
-	virtual bool onMoveRaw(const float timeMs, const Point& ptInScreen){return false;};
-	virtual bool onSingleTapUp(const float timeMs, const Point& ptInScreen){return false;};
-	virtual bool onFling(const float timeMs, const Point& start, const Point& end, const Velocity& velocity){return false;};
-	virtual bool onScroll(const float timeMs, const Point& start, const Point& end, const Distance& distance){return false;};
-	virtual bool onZoom(const float timeMs, const Point& center, const float ratio){return false;};
+	virtual bool onDownRaw(const float timeMs, const geom::Vector& ptInScreen){return false;};
+	virtual bool onUpRaw(const float timeMs, const geom::Vector& ptInScreen){return false;};
+	virtual bool onMoveRaw(const float timeMs, const geom::Vector& ptInScreen){return false;};
+	virtual bool onSingleTapUp(const float timeMs, const geom::Vector& ptInScreen){return false;};
+	virtual bool onFling(const float timeMs, const geom::Vector& start, const geom::Vector& end, const geom::Velocity& velocity){return false;};
+	virtual bool onScroll(const float timeMs, const geom::Vector& start, const geom::Vector& end, const geom::Vector& distance){return false;};
+	virtual bool onZoom(const float timeMs, const geom::Vector& center, const float ratio){return false;};
 	// 実装用
-	//	virtual bool onDownRaw(const float timeMs, const Point& ptInScreen) override;
-	//	virtual bool onUpRaw(const float timeMs, const Point& ptInScreen) override;
-	//	virtual bool onMoveRaw(const float timeMs, const Point& ptInScreen) override;
-	//	virtual bool onSingleTapUp(const float timeMs, const Point& ptInScreen) override;
-	//	virtual bool onFling(const float timeMs, const Point& start, const Point& end, const Velocity& velocity) override;
-	//	virtual bool onScroll(const float timeMs, const Point& start, const Point& end, const Distance& distance) override;
-	//	virtual bool onZoom(const float timeMs, const Point& center, const float ratio) override;
+	//	virtual bool onDownRaw(const float timeMs, const geom::Vector& ptInScreen) override;
+	//	virtual bool onUpRaw(const float timeMs, const geom::Vector& ptInScreen) override;
+	//	virtual bool onMoveRaw(const float timeMs, const geom::Vector& ptInScreen) override;
+	//	virtual bool onSingleTapUp(const float timeMs, const geom::Vector& ptInScreen) override;
+	//	virtual bool onFling(const float timeMs, const geom::Vector& start, const geom::Vector& end, const geom::Velocity& velocity) override;
+	//	virtual bool onScroll(const float timeMs, const geom::Vector& start, const geom::Vector& end, const geom::Vector& distance) override;
+	//	virtual bool onZoom(const float timeMs, const geom::Vector& center, const float ratio) override;
 };
 
 class GestureSession {
 	DISABLE_COPY_AND_ASSIGN(GestureSession);
 	DEFINE_MEMBER_REF(private, logging::Logger, log)
 public:
-	GestureSession(logging::Logger& log, const unsigned int pointerIndex, std::weak_ptr<Layout> targetLayout, const Point& startPoint, const float startTimeMs);
+	GestureSession(logging::Logger& log, const unsigned int pointerIndex, std::weak_ptr<Layout> targetLayout, const geom::Vector& startPoint, const float startTimeMs);
 	virtual ~GestureSession();
 private:
 	//static constexpr float MaxFlingVelocity=4000;
@@ -68,22 +68,22 @@ private:
 	typedef std::deque<std::weak_ptr<Layout> >::const_iterator LayoutConstIterator;
 	typedef std::deque<std::weak_ptr<Layout> >::iterator LayoutIterator;
 	const unsigned int pointerIndex_;
-	const Point startPoint_;
+	const geom::Vector startPoint_;
 	const float startTimeMs_;
-	Point lastPoint_;
+	geom::Vector lastPoint_;
 	float lastTimeMs_;
 private:
-	Distance totalMoved_;
+	geom::Vector totalMoved_;
 public:
-	void onTouchUp(const float timeMs, const Point& pt);
-	void onTouchMove(const float timeMs, const Point& pt);
+	void onTouchUp(const float timeMs, const geom::Vector& pt);
+	void onTouchMove(const float timeMs, const geom::Vector& pt);
 private:
-	void invokeDownRaw(const float timeMs, const Point& pt);
-	void invokeUpRaw(const float timeMs, const Point& pt);
-	void invokeMoveRaw(const float timeMs, const Point& pt);
-	void invokeFling(const float timeMs, const Point& start, const Point& end, const Velocity& velocity);
-	void invokeScroll(const float timeMs, const Point& start, const Point& end, const Distance& distance);
-	void invokeZoom(const float timeMs, const Point& center, const float ratio);
+	void invokeDownRaw(const float timeMs, const geom::Vector& pt);
+	void invokeUpRaw(const float timeMs, const geom::Vector& pt);
+	void invokeMoveRaw(const float timeMs, const geom::Vector& pt);
+	void invokeFling(const float timeMs, const geom::Vector& start, const geom::Vector& end, const geom::Velocity& velocity);
+	void invokeScroll(const float timeMs, const geom::Vector& start, const geom::Vector& end, const geom::Vector& distance);
+	void invokeZoom(const float timeMs, const geom::Vector& center, const float ratio);
 };
 
 class GestureMediator {
@@ -97,9 +97,9 @@ public:
 	GestureMediator(logging::Logger& log, const std::weak_ptr<World> world);
 	virtual ~GestureMediator();
 public:
-	void onTouchDown(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint);
-	void onTouchUp(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint);
-	void onTouchMove(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint);
+	void onTouchDown(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenPoint);
+	void onTouchUp(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenPoint);
+	void onTouchMove(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenPoint);
 };
 
 }

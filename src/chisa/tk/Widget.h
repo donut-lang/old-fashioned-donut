@@ -23,13 +23,19 @@
 #include <unicode/unistr.h>
 #include "../util/class_utils.h"
 #include "../logging/Logger.h"
-#include "./Geom.h"
 
 namespace tinyxml2 {
 class XMLElement;
 }
 
 namespace chisa {
+namespace geom{
+class Box;
+class Area;
+class Vector;
+class Velocity;
+}
+
 namespace gl{
 class Canvas;
 }
@@ -56,29 +62,29 @@ public:
 public:
 	void updateWrapper(weak_ptr<layout::WidgetWrapperLayout> wrapper) { this->wrapper_ = wrapper; };
 public:
-	Point calcAbsolutePosition();
+	geom::Vector calcAbsolutePosition();
 public:
-	virtual void render(gl::Canvas& cv, const Area& area) = 0;
+	virtual void render(gl::Canvas& cv, const geom::Area& area) = 0;
 	virtual void idle(const float delta_ms) = 0;
-	virtual void reshape(const Box& area) = 0;
-	virtual Box measure(const Box& constraint) = 0;
+	virtual void reshape(const geom::Box& area) = 0;
+	virtual geom::Box measure(const geom::Box& constraint) = 0;
 public:
-	virtual bool onDownRaw(const float timeMs, const Point& ptInWidget){return false;};
-	virtual bool onUpRaw(const float timeMs, const Point& ptInWidget){return false;};
-	virtual bool onMoveRaw(const float timeMs, const Point& ptInWidget){return false;};
-	virtual bool onSingleTapUp(const float timeMs, const Point& ptInWidget){return false;};
-	virtual bool onFling(const float timeMs, const Point& start, const Point& end, const Velocity& velocity){return false;};
-	virtual bool onScroll(const float timeMs, const Point& start, const Point& end, const Distance& distance){return false;};
-	virtual bool onZoom(const float timeMs, const Point& center, const float ratio){return false;};
+	virtual bool onDownRaw(const float timeMs, const geom::Vector& ptInWidget){return false;};
+	virtual bool onUpRaw(const float timeMs, const geom::Vector& ptInWidget){return false;};
+	virtual bool onMoveRaw(const float timeMs, const geom::Vector& ptInWidget){return false;};
+	virtual bool onSingleTapUp(const float timeMs, const geom::Vector& ptInWidget){return false;};
+	virtual bool onFling(const float timeMs, const geom::Vector& start, const geom::Vector& end, const geom::Velocity& velocity){return false;};
+	virtual bool onScroll(const float timeMs, const geom::Vector& start, const geom::Vector& end, const geom::Vector& distance){return false;};
+	virtual bool onZoom(const float timeMs, const geom::Vector& center, const float ratio){return false;};
 
 //	実装用
-//	virtual bool onDownRaw(const float timeMs, const Point& ptInWidget) override;
-//	virtual bool onUpRaw(const float timeMs, const Point& ptInWidget) override;
-//	virtual bool onMoveRaw(const float timeMs, const Point& ptInWidget) override;
-//	virtual bool onSingleTapUp(const float timeMs, const Point& ptInWidget) override;
-//	virtual bool onFling(const float timeMs, const Point& start, const Point& end, const Velocity& velocity) override;
-//	virtual bool onScroll(const float timeMs, const Point& start, const Point& end, const Distance& distance) override;
-//	virtual bool onZoom(const float timeMs, const Point& center, const float ratio) override;
+//	virtual bool onDownRaw(const float timeMs, const geom::Vector& ptInWidget) override;
+//	virtual bool onUpRaw(const float timeMs, const geom::Vector& ptInWidget) override;
+//	virtual bool onMoveRaw(const float timeMs, const geom::Vector& ptInWidget) override;
+//	virtual bool onSingleTapUp(const float timeMs, const geom::Vector& ptInWidget) override;
+//	virtual bool onFling(const float timeMs, const geom::Vector& start, const geom::Vector& end, const Velocity& velocity) override;
+//	virtual bool onScroll(const float timeMs, const geom::Vector& start, const geom::Vector& end, const Distance& distance) override;
+//	virtual bool onZoom(const float timeMs, const geom::Vector& center, const float ratio) override;
 
 };
 

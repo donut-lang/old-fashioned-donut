@@ -76,7 +76,7 @@ void WidgetWrapperLayout::idle(const float delta_ms)
 	}
 	this->widget()->idle(delta_ms);
 }
-void WidgetWrapperLayout::renderImpl(gl::Canvas& canvas, const Area& screenArea, const Area& area)
+void WidgetWrapperLayout::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
 {
 	if(!widget()){
 		return;
@@ -89,20 +89,20 @@ void WidgetWrapperLayout::renderImpl(gl::Canvas& canvas, const Area& screenArea,
 		//areaからウィジットが実際にレンダリングされる位置を計算
 		canvas.scale(this->widgetScaleX(), this->widgetScaleY(), 1.0);
 		//描画を投げる
-		Point offset(area.x()-this->widgetOffset().x(), area.y()-this->widgetOffset().y());
-		Box size(std::min(area.width(), widgetSizeReal().width()-area.x()), std::min(area.height(), widgetSizeReal().height()-area.y()));
-		this->widgetDrawnArea(Area(offset.x() / this->widgetScaleX(), offset.y() / this->widgetScaleY(), size.width()/this->widgetScaleX(), size.height()/this->widgetScaleY()));
+		geom::Vector offset(area.x()-this->widgetOffset().x(), area.y()-this->widgetOffset().y());
+		geom::Box size(std::min(area.width(), widgetSizeReal().width()-area.x()), std::min(area.height(), widgetSizeReal().height()-area.y()));
+		this->widgetDrawnArea(geom::Area(offset.x() / this->widgetScaleX(), offset.y() / this->widgetScaleY(), size.width()/this->widgetScaleX(), size.height()/this->widgetScaleY()));
 		widget()->render(canvas, this->widgetDrawnArea());
 	}
 	canvas.popMatrix();
 }
 
-Box chisa::tk::layout::WidgetWrapperLayout::onMeasure(const Box& constraint)
+geom::Box chisa::tk::layout::WidgetWrapperLayout::onMeasure(const geom::Box& constraint)
 {
 	if(!widget()){
-		return Box(0,0);
+		return geom::Box(0,0);
 	}
-	Box box(widget()->measure(constraint));
+	geom::Box box(widget()->measure(constraint));
 	if(geom::isUnspecified(box.width()) || geom::isUnspecified(box.height())){
 		this->log().e(TAG, "Widget \"this->widgetId_.c_str()\" box size unspecified.");
 	}
@@ -117,16 +117,16 @@ Box chisa::tk::layout::WidgetWrapperLayout::onMeasure(const Box& constraint)
 		}else if(heightSpecified){
 			scale = constraint.height() / box.height();
 		}
-		return Box(box.width() * scale, box.height() * scale);
+		return geom::Box(box.width() * scale, box.height() * scale);
 	}else if(this->fitMode_ == Center){
 		return box;
 	}else{
 		this->log().e(TAG, "Unknwon fit mode: %d", this->fitMode_);
-		return Box(0,0);
+		return geom::Box(0,0);
 	}
 }
 
-float WidgetWrapperLayout::calcScale(const Box& widget, const Box& constraint)
+float WidgetWrapperLayout::calcScale(const geom::Box& widget, const geom::Box& constraint)
 {
 	if(constraint > this->widgetSize()){ //完全に小さい
 		// 拡大。
@@ -143,7 +143,7 @@ float WidgetWrapperLayout::calcScale(const Box& widget, const Box& constraint)
 	}
 }
 
-void WidgetWrapperLayout::onLayout(const Box& size)
+void WidgetWrapperLayout::onLayout(const geom::Box& size)
 {
 	if(!widget()){
 		return;
@@ -156,15 +156,15 @@ void WidgetWrapperLayout::onLayout(const Box& size)
 		const float scale = this->calcScale(this->widgetSize(), size);
 		this->widgetScaleX(scale);
 		this->widgetScaleY(scale);
-		this->widgetSizeReal(Box(this->widgetSize().width() * scale, this->widgetSize().height() * scale));
-		this->widgetOffset(Point((size.width() - this->widgetSizeReal().width())/2, (size.height()-this->widgetSizeReal().height())/2));
+		this->widgetSizeReal(geom::Box(this->widgetSize().width() * scale, this->widgetSize().height() * scale));
+		this->widgetOffset(geom::Vector((size.width() - this->widgetSizeReal().width())/2, (size.height()-this->widgetSizeReal().height())/2));
 		break;
 	}
 	case Center: {
 		this->widgetScaleX(1.0f);
 		this->widgetScaleY(1.0f);
 		this->widgetSizeReal(this->widgetSize());
-		this->widgetOffset(Point((size.width() - this->widgetSize().width())/2, (size.height()-this->widgetSize().height())/2));
+		this->widgetOffset(geom::Vector((size.width() - this->widgetSize().width())/2, (size.height()-this->widgetSize().height())/2));
 		break;
 	}
 	}
@@ -206,46 +206,46 @@ weak_ptr<Layout> WidgetWrapperLayout::getLayoutByIdImpl(const std::string& id)
 	return weak_ptr<Layout>();
 }
 
-Point WidgetWrapperLayout::calcPtInWidget(const Point& ptInScreen)
+geom::Vector WidgetWrapperLayout::calcPtInWidget(const geom::Vector& ptInScreen)
 {
-	Distance delta = ptInScreen - this->screenArea().point();
-	Distance scaledDelta(delta.x() / this->widgetScaleX(), delta.y() / this->widgetScaleY());
-	return Point(this->widgetDrawnArea().point() + scaledDelta);
+	geom::Vector delta = ptInScreen - this->screenArea().point();
+	geom::Vector scaledDelta(delta.x() / this->widgetScaleX(), delta.y() / this->widgetScaleY());
+	return geom::Vector(this->widgetDrawnArea().point() + scaledDelta);
 }
 
-bool WidgetWrapperLayout::onDownRaw(const float timeMs, const Point& ptInScreen)
+bool WidgetWrapperLayout::onDownRaw(const float timeMs, const geom::Vector& ptInScreen)
 {
 	return widget_->onDownRaw(timeMs, calcPtInWidget(ptInScreen));
 }
 
-bool WidgetWrapperLayout::onUpRaw(const float timeMs, const Point& ptInScreen)
+bool WidgetWrapperLayout::onUpRaw(const float timeMs, const geom::Vector& ptInScreen)
 {
 	return widget_->onUpRaw(timeMs, calcPtInWidget(ptInScreen));
 }
 
-bool WidgetWrapperLayout::onMoveRaw(const float timeMs, const Point& ptInScreen)
+bool WidgetWrapperLayout::onMoveRaw(const float timeMs, const geom::Vector& ptInScreen)
 {
 	return widget_->onMoveRaw(timeMs, calcPtInWidget(ptInScreen));
 }
 
-bool WidgetWrapperLayout::onSingleTapUp(const float timeMs, const Point& ptInScreen)
+bool WidgetWrapperLayout::onSingleTapUp(const float timeMs, const geom::Vector& ptInScreen)
 {
 	return widget_->onSingleTapUp(timeMs, calcPtInWidget(ptInScreen));
 }
 
-bool WidgetWrapperLayout::onFling(const float timeMs, const Point& start, const Point& end, const Velocity& velocity)
+bool WidgetWrapperLayout::onFling(const float timeMs, const geom::Vector& start, const geom::Vector& end, const geom::Velocity& velocity)
 {
-	const Velocity scaledVelocity(velocity.x() / this->widgetScaleX(), velocity.y() / this->widgetScaleY());
+	const geom::Velocity scaledVelocity(velocity.x() / this->widgetScaleX(), velocity.y() / this->widgetScaleY());
 	return widget_->onFling(timeMs, calcPtInWidget(start), calcPtInWidget(end), scaledVelocity);
 }
 
-bool WidgetWrapperLayout::onScroll(const float timeMs, const Point& start, const Point& end, const Distance& distance)
+bool WidgetWrapperLayout::onScroll(const float timeMs, const geom::Vector& start, const geom::Vector& end, const geom::Vector& distance)
 {
-	const Distance scaledDistance(distance.x() / this->widgetScaleX(), distance.y() / this->widgetScaleY());
+	const geom::Vector scaledDistance(distance.x() / this->widgetScaleX(), distance.y() / this->widgetScaleY());
 	return widget_->onScroll(timeMs, calcPtInWidget(start), calcPtInWidget(end), scaledDistance);
 }
 
-bool WidgetWrapperLayout::onZoom(const float timeMs, const Point& center, const float ratio)
+bool WidgetWrapperLayout::onZoom(const float timeMs, const geom::Vector& center, const float ratio)
 {
 	return widget_->onZoom(timeMs, calcPtInWidget(center), ratio);
 }

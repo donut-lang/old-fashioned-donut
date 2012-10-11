@@ -15,7 +15,7 @@ namespace layout {
 
 CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(ScrollLayout)
 ,scrollMode_(None)
-,scrollDist_(0,0)
+,scrollOffset_(0,0)
 ,lastMovedFrom_(0)
 {
 
@@ -66,16 +66,16 @@ string ScrollLayout::toString()
 	return util::format("(ScrollLayout %p)", this);
 }
 
-void ScrollLayout::renderImpl(gl::Canvas& canvas, const Area& screenArea, const Area& area)
+void ScrollLayout::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
 {
-	const Area clipArea(this->scrollDist_, this->size());
-	const Area logicalArea(area.point()+this->scrollDist_, area.box());
+	const geom::Area clipArea(this->scrollOffset_, this->size());
+	const geom::Area logicalArea(area.point()+this->scrollOffset_, area.box());
 	this->child_->render(canvas, screenArea, clipArea.intersect(logicalArea));
 	if(this->lastMovedFrom_ < ScrollBarTimeOut){
 		const float alpha = (ScrollBarTimeOut - this->lastMovedFrom_) / ScrollBarTimeOut;
 		if((this->scrollMode_ & Vertical)){
 			const float scrollMax = area.height() - this->childSize_.height();
-			const float scrollRatio = this->scrollDist_.y() / scrollMax;
+			const float scrollRatio = this->scrollOffset_.y() / scrollMax;
 			const float x = screenArea.x()+screenArea.width()-7.0f;
 			const float len = (screenArea.height()-4.0f) * area.height() / this->childSize_.height();
 			const float y = screenArea.y()+2.0f - (screenArea.height()-len-4.0f) * scrollRatio;
@@ -83,7 +83,7 @@ void ScrollLayout::renderImpl(gl::Canvas& canvas, const Area& screenArea, const 
 		}
 		if((this->scrollMode_ & Horizontal)){
 			const float scrollMax = area.width() - this->childSize_.width();
-			const float scrollRatio = this->scrollDist_.x() / scrollMax;
+			const float scrollRatio = this->scrollOffset_.x() / scrollMax;
 
 			const float y = screenArea.y()+screenArea.height()-7.0f;
 			const float len = (screenArea.width()-4.0f) * area.width() / this->childSize_.width();
@@ -93,15 +93,15 @@ void ScrollLayout::renderImpl(gl::Canvas& canvas, const Area& screenArea, const 
 	}
 }
 
-Box ScrollLayout::onMeasure(const Box& constraint)
+geom::Box ScrollLayout::onMeasure(const geom::Box& constraint)
 {
-	return Box(geom::VeryLarge, geom::VeryLarge);
+	return geom::Box(geom::VeryLarge, geom::VeryLarge);
 }
 
-void ScrollLayout::onLayout(const Box& size)
+void ScrollLayout::onLayout(const geom::Box& size)
 {
 	if(this->child_){
-		Box childBox(this->scrollMode_ & Horizontal ? geom::Unspecified : size.width(), this->scrollMode_ & Vertical ? geom::Unspecified : size.height());
+		geom::Box childBox(this->scrollMode_ & Horizontal ? geom::Unspecified : size.width(), this->scrollMode_ & Vertical ? geom::Unspecified : size.height());
 		this->childSize_ = this->child_->measure(childBox);
 		this->child_->layout(this->childSize_);
 	}
@@ -109,31 +109,31 @@ void ScrollLayout::onLayout(const Box& size)
 
 void ScrollLayout::idle(const float delta_ms)
 {
-	Point ptStart(this->scrollDist_);
-	Point ptEnd(ptStart.x()+this->size().width(), ptStart.y()+this->size().height());
+	geom::Vector ptStart(geom::Vector(0,0)+this->scrollOffset_);
+	geom::Vector ptEnd(ptStart.x()+this->size().width(), ptStart.y()+this->size().height());
 	if((this->scrollMode_ & Horizontal) && ptStart.x() < 0){
-		this->scrollDist_.x(this->scrollDist_.x() - (ptStart.x()*delta_ms/100));
+		this->scrollOffset_.x(this->scrollOffset_.x() - (ptStart.x()*delta_ms/100));
 	}
 	if((this->scrollMode_ & Vertical) && ptStart.y() < 0){
-			this->scrollDist_.y(this->scrollDist_.y() - (ptStart.y()*delta_ms/100));
+			this->scrollOffset_.y(this->scrollOffset_.y() - (ptStart.y()*delta_ms/100));
 	}
 	if((this->scrollMode_ & Horizontal) && ptEnd.x() > this->childSize_.width()){
-		this->scrollDist_.x(this->scrollDist_.x() - ((ptEnd.x() - this->childSize_.width()) * delta_ms/100));
+		this->scrollOffset_.x(this->scrollOffset_.x() - ((ptEnd.x() - this->childSize_.width()) * delta_ms/100));
 	}
 	if((this->scrollMode_ & Vertical) && ptEnd.y() > this->childSize_.height()){
-		this->scrollDist_.y(this->scrollDist_.y() - ((ptEnd.y() - this->childSize_.height()) * delta_ms/100));
+		this->scrollOffset_.y(this->scrollOffset_.y() - ((ptEnd.y() - this->childSize_.height()) * delta_ms/100));
 	}
 	this->lastMovedFrom_ += delta_ms;
 }
 
-bool ScrollLayout::onScroll(const float timeMs, const Point& start, const Point& end, const Distance& distance)
+bool ScrollLayout::onScroll(const float timeMs, const geom::Vector& start, const geom::Vector& end, const geom::Vector& distance)
 {
 	if(this->scrollMode_ == Both){
-		this->scrollDist_ -= distance;
+		this->scrollOffset_ -= distance;
 	}else if(this->scrollMode_ == Vertical){
-		this->scrollDist_.y(this->scrollDist_.y() - distance.y());
+		this->scrollOffset_.y(this->scrollOffset_.y() - distance.y());
 	}else if(this->scrollMode_ == Horizontal){
-		this->scrollDist_.x(this->scrollDist_.x() - distance.x());
+		this->scrollOffset_.x(this->scrollOffset_.x() - distance.x());
 	}
 	this->lastMovedFrom_ = 0.0f;
 	return true; //イベントを消費する

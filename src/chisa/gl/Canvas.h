@@ -29,7 +29,7 @@
 #include <map>
 
 namespace chisa {
-namespace tk {
+namespace geom {
 class Area;
 }
 namespace gl {
@@ -64,14 +64,14 @@ public:
 	void drawLine(const float width, const float r,const float g,const float b,const float a, const float x1,const float y1, const float z1, const float x2,const float y2, const float z2);
 private:
 	void scissor(const float x, const float y, const float width, const float height);
-	void scissor(const tk::Area& area);
+	void scissor(const geom::Area& area);
 	void scissorReset();
 public:
 	class Scissor {
 	private:
 		Canvas& canvas_;
 	public:
-		Scissor(Canvas& canvas, const tk::Area& area);
+		Scissor(Canvas& canvas, const geom::Area& area);
 		virtual ~Scissor();
 	};
 public:

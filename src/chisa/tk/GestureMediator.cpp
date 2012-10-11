@@ -37,7 +37,7 @@ GestureMediator::~GestureMediator()
 {
 }
 
-void GestureMediator::onTouchDown(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint)
+void GestureMediator::onTouchDown(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenPoint)
 {
 	if(this->session_[pointerIndex]){
 		this->log().e(TAG, "oops. touch down occcured, but there is already a GestureSession for pointerIndex: %d", pointerIndex);
@@ -50,7 +50,7 @@ void GestureMediator::onTouchDown(const float timeMs, const unsigned int pointer
 	}
 }
 
-void GestureMediator::onTouchUp(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint)
+void GestureMediator::onTouchUp(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenPoint)
 {
 	if(!this->session_[pointerIndex]){
 		this->log().e(TAG, "oops. touch up occcured, but there is no GestureSession for pointerIndex: %d", pointerIndex);
@@ -62,7 +62,7 @@ void GestureMediator::onTouchUp(const float timeMs, const unsigned int pointerIn
 	delete session;
 }
 
-void GestureMediator::onTouchMove(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint)
+void GestureMediator::onTouchMove(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenPoint)
 {
 	if(!this->session_[pointerIndex]){
 		this->log().e(TAG, "oops. touch move occured, but there is no GestureSession for pointerIndex: %d", pointerIndex);

@@ -52,14 +52,14 @@ void Universe::idle(const float delta_ms)
 		topWorld->idle(delta_ms);
 	}
 }
-void Universe::reshape(const Area& area)
+void Universe::reshape(const geom::Area& area)
 {
 	if(log.t()){
 		log.t(TAG, "reshaped: %s", area.toString().c_str());
 	}
 	this->canvas_.resize2d(area.width(), area.height());
 	if(shared_ptr<World> topWorld = this->worldStack.top()){
-		topWorld->reshape(Area(0,0, area.width(), area.height()));
+		topWorld->reshape(geom::Area(0,0, area.width(), area.height()));
 	}
 	this->area(area);
 }
@@ -89,21 +89,21 @@ void Universe::notifyWorldEnd(weak_ptr<World> me)
 		log.w(TAG, "notified world end, but world was already dead.");
 	}
 }
-void Universe::onTouchDown(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint)
+void Universe::onTouchDown(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenPoint)
 {
 	if(shared_ptr<World> topWorld = this->worldStack.top()){
 		topWorld->onTouchDown(timeMs, pointerIndex, screenPoint);
 	}
 }
 
-void Universe::onTouchUp(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint)
+void Universe::onTouchUp(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenPoint)
 {
 	if(shared_ptr<World> topWorld = this->worldStack.top()){
 		topWorld->onTouchUp(timeMs, pointerIndex, screenPoint);
 	}
 }
 
-void Universe::onTouchMove(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint)
+void Universe::onTouchMove(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenPoint)
 {
 	if(shared_ptr<World> topWorld = this->worldStack.top()){
 		topWorld->onTouchMove(timeMs, pointerIndex, screenPoint);

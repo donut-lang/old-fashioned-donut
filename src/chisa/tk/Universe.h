@@ -20,9 +20,10 @@
 #define Chisa_TK_UNIVERSE_H__CPP_
 
 #include "World.h"
-#include "Geom.h"
 #include "../logging/Logger.h"
 #include "../gl/Canvas.h"
+#include "../geom/Area.h"
+#include "../geom/Vector.h"
 
 namespace chisa {
 namespace tk {
@@ -35,13 +36,13 @@ private:
 	logging::Logger& log;
 	Stack<shared_ptr<World> > worldStack;
 	std::string basepath_;
-	DEFINE_MEMBER(public, private, Area, area);
+	DEFINE_MEMBER(public, private, geom::Area, area);
 	weak_ptr<Universe> self_;
 	gl::Canvas canvas_;
 public:
 	void render();
 	void idle(const float delta_ms);
-	void reshape(const Area& area);
+	void reshape(const geom::Area& area);
 public: //worldからの通知
 	void createNewWorld(const string& worldName);
 	void notifyWorldEnd(weak_ptr<World> me);
@@ -53,9 +54,9 @@ public:
 	 * タッチイベント
 	 ******************************************************************************/
 public:
-	void onTouchDown(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint);
-	void onTouchUp(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint);
-	void onTouchMove(const float timeMs, const unsigned int pointerIndex, const Point& screenPoint);
+	void onTouchDown(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenPoint);
+	void onTouchUp(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenPoint);
+	void onTouchMove(const float timeMs, const unsigned int pointerIndex, const geom::Vector& screenPoint);
 	/******************************************************************************
 	 * 生成
 	 ******************************************************************************/
