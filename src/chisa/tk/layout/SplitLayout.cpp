@@ -91,12 +91,19 @@ void SplitLayout::loadXMLimpl(LayoutFactory* const factory, XMLElement* top)
 		if(!elem){
 			continue;
 		}
-		float weight = NAN;
-		float min = 0;
-		float max = geom::VeryLarge;
+		float weight = geom::Unspecified;
+		float min = geom::Unspecified;
+		float max = geom::Unspecified;
 		elem->QueryFloatAttribute(AttrName::Weight.c_str(), &weight);
 		elem->QueryFloatAttribute(AttrName::Min.c_str(), &min);
 		elem->QueryFloatAttribute(AttrName::Max.c_str(), &max);
+		//デフォルト値の設定
+		if(geom::isUnspecified(min)){
+			max = 0;
+		}
+		if(geom::isUnspecified(max)){
+			max = geom::VeryLarge;
+		}
 		const SplitDef def(weight, min, max);
 		this->addChild(def, factory->parseTree(this->root(), this->self(), elem));
 	}
