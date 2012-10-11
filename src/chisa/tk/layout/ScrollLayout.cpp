@@ -79,7 +79,7 @@ void ScrollLayout::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, 
 			const float x = screenArea.x()+screenArea.width()-7.0f;
 			const float len = (screenArea.height()-4.0f) * area.height() / this->childSize_.height();
 			const float y = screenArea.y()+2.0f - (screenArea.height()-len-4.0f) * scrollRatio;
-			canvas.drawLine(5.0f, .5f, .5f, .5f, alpha, geom::Point(x, std::max(y, screenArea.y())), geom::Point(x, std::min(y+len, screenArea.y()+screenArea.height())));
+			canvas.drawLine(5.0f, .5f, .5f, .5f, alpha, geom::Point(x, std::max(y, screenArea.y())), geom::Point(x, std::min(y+len, screenArea.y()+screenArea.height())), 1.0f);
 		}
 		if((this->scrollMode_ & Horizontal)){
 			const float scrollMax = area.width() - this->childSize_.width();
@@ -88,7 +88,7 @@ void ScrollLayout::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, 
 			const float y = screenArea.y()+screenArea.height()-7.0f;
 			const float len = (screenArea.width()-4.0f) * area.width() / this->childSize_.width();
 			const float x = screenArea.x()+2.0f - (screenArea.width()-len-4.0f) * scrollRatio;
-			canvas.drawLine(5.0f, .5f, .5f, .5f, alpha, geom::Point(std::max(x, screenArea.x()), y), geom::Point(std::min(x+len, screenArea.x()+screenArea.width()), y));
+			canvas.drawLine(5.0f, .5f, .5f, .5f, alpha, geom::Point(std::max(x, screenArea.x()), y), geom::Point(std::min(x+len, screenArea.x()+screenArea.width()), y), 1.0f);
 		}
 	}
 }
