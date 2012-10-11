@@ -88,7 +88,7 @@ void WidgetWrapperLayout::renderImpl(gl::Canvas& canvas, const geom::Area& scree
 		//areaからウィジットが実際にレンダリングされる位置を計算
 		canvas.scale(this->widgetScale().x(), this->widgetScale().y(), 1.0);
 		//描画を投げる
-		geom::Vector offset(area.x()-this->widgetOffset().x(), area.y()-this->widgetOffset().y());
+		geom::Vector offset(area.point()-this->widgetOffset());
 		geom::Box size(std::min(area.width(), widgetSizeReal().width()-area.x()), std::min(area.height(), widgetSizeReal().height()-area.y()));
 		this->widgetDrawnArea(geom::Area(offset / this->widgetScale(), size/this->widgetScale()));
 		widget()->render(canvas, this->widgetDrawnArea());
