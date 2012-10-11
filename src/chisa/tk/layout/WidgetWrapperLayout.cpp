@@ -89,7 +89,8 @@ void WidgetWrapperLayout::renderImpl(gl::Canvas& canvas, const geom::Area& scree
 		canvas.scale(this->widgetScale().x(), this->widgetScale().y(), 1.0);
 		//描画を投げる
 		geom::Point offset(area.point()-this->widgetOffset());
-		geom::Box size(std::min(area.width(), widgetSizeReal().width()-area.x()), std::min(area.height(), widgetSizeReal().height()-area.y()));
+		using namespace chisa::geom;
+		geom::Box size(min(area.box(), widgetSizeReal()-area.point()));
 		this->widgetDrawnArea(geom::Area(offset / this->widgetScale(), size/this->widgetScale()));
 		widget()->render(canvas, this->widgetDrawnArea());
 	}
