@@ -17,11 +17,12 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../../src/chisa/tk/Geom.h"
+#include "../../../src/chisa/geom/Vector.h"
+#include "../../../src/chisa/geom/Area.h"
 #include <math.h>
 
 namespace chisa {
-namespace tk {
+namespace geom {
 
 TEST(GeomTest, BasicTest)
 {

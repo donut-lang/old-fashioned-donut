@@ -127,7 +127,7 @@ geom::Box chisa::tk::layout::WidgetWrapperLayout::onMeasure(const geom::Box& con
 
 float WidgetWrapperLayout::calcScale(const geom::Box& widget, const geom::Box& constraint)
 {
-	if(constraint > this->widgetSize()){ //完全に小さい
+	if(constraint.width() > this->widgetSize().width() && constraint.height() > this->widgetSize().height()){ //完全に小さい
 		// 拡大。
 		return std::min(
 				constraint.width() / widget.width(),

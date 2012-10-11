@@ -78,8 +78,8 @@ TEST_F(HorizontalLayoutTest, BasicLayoutTest)
 	LayoutFactory factory(log_trace, weak_ptr<World>(), fname, &doc, false);
 	shared_ptr<Layout> root = factory.parseTree("test");
 
-	root->measure(Box(100, 100));
-	root->layout(Box(100, 100));
+	root->measure(geom::Box(100, 100));
+	root->layout(geom::Box(100, 100));
 
 	ASSERT_EQ(3, root->getChildCount());
 
@@ -107,8 +107,8 @@ TEST_F(HorizontalLayoutTest, MixedTest)
 	LayoutFactory factory(log_trace, weak_ptr<World>(), fname, &doc, false);
 	shared_ptr<Layout> root = factory.parseTree("test");
 
-	root->measure(Box(100, 100));
-	root->layout(Box(100, 100));
+	root->measure(geom::Box(100, 100));
+	root->layout(geom::Box(100, 100));
 
 	ASSERT_EQ(3, root->getChildCount());
 
