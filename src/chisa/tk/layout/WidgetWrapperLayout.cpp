@@ -32,8 +32,7 @@ CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(WidgetWrapperLayout)
 ,borrowed_(nullptr)
 ,widget_(nullptr)
 ,fitMode_(Center)
-,widgetScaleX_(1.0f)
-,widgetScaleY_(1.0f)
+,widgetScale_(1.0f, 1.0f)
 {
 }
 
@@ -87,11 +86,11 @@ void WidgetWrapperLayout::renderImpl(gl::Canvas& canvas, const geom::Area& scree
 		//スクリーン上の位置に移動
 		canvas.translate(screenArea.x(), screenArea.y(), 0.0f);
 		//areaからウィジットが実際にレンダリングされる位置を計算
-		canvas.scale(this->widgetScaleX(), this->widgetScaleY(), 1.0);
+		canvas.scale(this->widgetScale().x(), this->widgetScale().y(), 1.0);
 		//描画を投げる
 		geom::Vector offset(area.x()-this->widgetOffset().x(), area.y()-this->widgetOffset().y());
 		geom::Box size(std::min(area.width(), widgetSizeReal().width()-area.x()), std::min(area.height(), widgetSizeReal().height()-area.y()));
-		this->widgetDrawnArea(geom::Area(offset.x() / this->widgetScaleX(), offset.y() / this->widgetScaleY(), size.width()/this->widgetScaleX(), size.height()/this->widgetScaleY()));
+		this->widgetDrawnArea(geom::Area(offset / this->widgetScale(), size/this->widgetScale()));
 		widget()->render(canvas, this->widgetDrawnArea());
 	}
 	canvas.popMatrix();
@@ -154,15 +153,14 @@ void WidgetWrapperLayout::onLayout(const geom::Box& size)
 	{
 	case Fit: {
 		const float scale = this->calcScale(this->widgetSize(), size);
-		this->widgetScaleX(scale);
-		this->widgetScaleY(scale);
+
+		this->widgetScale(geom::ScaleVector(scale, scale));
 		this->widgetSizeReal(geom::Box(this->widgetSize().width() * scale, this->widgetSize().height() * scale));
 		this->widgetOffset(geom::Vector((size.width() - this->widgetSizeReal().width())/2, (size.height()-this->widgetSizeReal().height())/2));
 		break;
 	}
 	case Center: {
-		this->widgetScaleX(1.0f);
-		this->widgetScaleY(1.0f);
+		this->widgetScale(geom::ScaleVector(1.0f, 1.0f));
 		this->widgetSizeReal(this->widgetSize());
 		this->widgetOffset(geom::Vector((size.width() - this->widgetSize().width())/2, (size.height()-this->widgetSize().height())/2));
 		break;
@@ -208,9 +206,8 @@ weak_ptr<Layout> WidgetWrapperLayout::getLayoutByIdImpl(const std::string& id)
 
 geom::Vector WidgetWrapperLayout::calcPtInWidget(const geom::Vector& ptInScreen)
 {
-	geom::Vector delta = ptInScreen - this->screenArea().point();
-	geom::Vector scaledDelta(delta.x() / this->widgetScaleX(), delta.y() / this->widgetScaleY());
-	return geom::Vector(this->widgetDrawnArea().point() + scaledDelta);
+	const geom::Vector delta = ptInScreen - this->screenArea().point();
+	return geom::Vector(this->widgetDrawnArea().point() + delta / this->widgetScale());
 }
 
 bool WidgetWrapperLayout::onDownRaw(const float timeMs, const geom::Vector& ptInScreen)
@@ -235,14 +232,12 @@ bool WidgetWrapperLayout::onSingleTapUp(const float timeMs, const geom::Vector& 
 
 bool WidgetWrapperLayout::onFling(const float timeMs, const geom::Vector& start, const geom::Vector& end, const geom::Velocity& velocity)
 {
-	const geom::Velocity scaledVelocity(velocity.x() / this->widgetScaleX(), velocity.y() / this->widgetScaleY());
-	return widget_->onFling(timeMs, calcPtInWidget(start), calcPtInWidget(end), scaledVelocity);
+	return widget_->onFling(timeMs, calcPtInWidget(start), calcPtInWidget(end), velocity / this->widgetScale());
 }
 
 bool WidgetWrapperLayout::onScroll(const float timeMs, const geom::Vector& start, const geom::Vector& end, const geom::Vector& distance)
 {
-	const geom::Vector scaledDistance(distance.x() / this->widgetScaleX(), distance.y() / this->widgetScaleY());
-	return widget_->onScroll(timeMs, calcPtInWidget(start), calcPtInWidget(end), scaledDistance);
+	return widget_->onScroll(timeMs, calcPtInWidget(start), calcPtInWidget(end), distance / this->widgetScale());
 }
 
 bool WidgetWrapperLayout::onZoom(const float timeMs, const geom::Vector& center, const float ratio)

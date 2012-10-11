@@ -42,8 +42,7 @@ private:
 	DEFINE_MEMBER(private, private, Widget*, widget);
 	std::string widgetId_;
 	FitMode fitMode_;
-	DEFINE_MEMBER(private, private, float, widgetScaleX);
-	DEFINE_MEMBER(private, private, float, widgetScaleY);
+	DEFINE_MEMBER(private, private, geom::ScaleVector, widgetScale);
 	DEFINE_MEMBER(private, private, geom::Vector, widgetOffset);
 	DEFINE_MEMBER(private, private, geom::Box, widgetSize);
 	DEFINE_MEMBER(private, private, geom::Box, widgetSizeReal);
