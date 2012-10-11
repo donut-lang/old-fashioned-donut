@@ -139,18 +139,6 @@ public:
 	inline float y() const{return y_;};
 	inline void x(const float x) { x_=x; };
 	inline void y(const float y) { y_=y; };
-	inline bool operator>(const Self& other) const{
-		return this->x_ > other.x_ && this->y_ > other.y_;
-	}
-	inline bool operator>=(const Self& other) const{
-		return this->x_ >= other.x_ && this->y_ >= other.y_;
-	}
-	inline bool operator<=(const Self& other) const{
-		return this->x_ <= other.x_ && this->y_ <= other.y_;
-	}
-	inline bool operator<(const Self& other) const{
-		return this->x_ < other.x_ && this->y_ < other.y_;
-	}
 protected:
 	template <typename R, typename T>
 	inline R operator_add(const T& other) const {
@@ -246,9 +234,9 @@ public:
 	inline float height() const{ return this->y(); };
 	inline void width(const float width) { this->x(width); };
 	inline void height(const float height) { this->y(height); };
-	inline bool zero() const {
+	inline bool empty() const {
 		return
-				std::fabs(this->x()) < geom::VerySmall &&
+				std::fabs(this->x()) < geom::VerySmall ||
 				std::fabs(this->y()) < geom::VerySmall;
 	}
 };

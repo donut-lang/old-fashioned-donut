@@ -51,7 +51,7 @@ private:
 	DEFINE_MEMBER(public, private, weak_ptr<Layout>, root);
 	DEFINE_MEMBER(public, private, weak_ptr<Layout>, parent);
 	DEFINE_MEMBER(protected, private, weak_ptr<Layout>, self);
-	DEFINE_MEMBER(protected, private, geom::Box, size);
+	DEFINE_MEMBER(public, private, geom::Box, size);
 	DEFINE_MEMBER(public, private, geom::Area, screenArea);
 	DEFINE_MEMBER(protected, private, geom::Area, drawnArea);
 	DEFINE_MEMBER(public, private, std::string, id);

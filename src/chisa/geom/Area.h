@@ -56,13 +56,17 @@ public:
 	inline std::string toString() const{
 		return util::format("(Area %f %f %f %f)", x(), y(), width(), height());
 	}
-	inline bool empty() const { return this->box_.zero(); }
+	inline bool empty() const { return this->box_.empty(); }
 	inline Area intersect(const Area& other) const
 	{
 		using namespace chisa::geom;
 		const Point thisEnd = this->point()+this->box();
 		const Point otherEnd = other.point()+other.box();
-		if(thisEnd <= other.point() || otherEnd <= this->point()){
+		if(
+				thisEnd.x() <= other.point().x() ||
+				thisEnd.y() <= other.point().y() ||
+				otherEnd.x() <= this->point().x() ||
+				otherEnd.y() <= this->point().y() ){
 			return Area(0,0,0,0);
 		}
 		const Vector startPoint(max(this->point(), other.point()));
