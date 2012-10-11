@@ -109,8 +109,8 @@ void ScrollLayout::onLayout(const geom::Box& size)
 
 void ScrollLayout::idle(const float delta_ms)
 {
-	geom::Point ptStart(geom::Point(0,0)+this->scrollOffset_);
-	geom::Point ptEnd(ptStart.x()+this->size().width(), ptStart.y()+this->size().height());
+	geom::Point ptStart(this->scrollOffset_);
+	geom::Point ptEnd(this->scrollOffset_+this->size());
 	if((this->scrollMode_ & Horizontal) && ptStart.x() < 0){
 		this->scrollOffset_.x(this->scrollOffset_.x() - (ptStart.x()*delta_ms/100));
 	}
