@@ -270,6 +270,22 @@ public:
 	inline bool operator<(const Box& other) const{
 		return this->width_ < other.width_ && this->height_ < other.height_;
 	}
+	inline Box operator/(const ScaleVector& scale) const {
+		return Box(this->width_ / scale.x(), this->height_ / scale.y());
+	}
+	inline Box operator*(const ScaleVector& scale) const {
+		return Box(this->width_ * scale.x(), this->height_ * scale.y());
+	}
+	inline Box& operator*=(const ScaleVector& scale) {
+		this->width_ *= scale.x();
+		this->height_ *= scale.y();
+		return *this;
+	}
+	inline Box& operator/=(const ScaleVector& scale) {
+		this->width_ /= scale.x();
+		this->height_ /= scale.y();
+		return *this;
+	}
 	inline float width() const{ return width_; };
 	inline float height() const{ return height_; };
 	inline void width(const float width) { width_=width; };
