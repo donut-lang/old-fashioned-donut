@@ -84,9 +84,9 @@ void WidgetWrapperLayout::renderImpl(gl::Canvas& canvas, const geom::Area& scree
 	{
 		gl::Canvas::Scissor ss(canvas, screenArea);
 		//スクリーン上の位置に移動
-		canvas.translate(screenArea.x(), screenArea.y(), 0.0f);
+		canvas.translate(screenArea.point());
 		//areaからウィジットが実際にレンダリングされる位置を計算
-		canvas.scale(this->widgetScale().x(), this->widgetScale().y(), 1.0);
+		canvas.scale(this->widgetScale());
 		//描画を投げる
 		geom::Point offset(area.point()-this->widgetOffset());
 		using namespace chisa::geom;

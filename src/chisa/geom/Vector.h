@@ -31,7 +31,15 @@ public:\
 	virtual ~Klass(){};
 
 #define ENABLE_CAST(Klass, From)\
-	explicit Klass(const From& o):BaseVector<Klass>(o){};\
+	explicit Klass(const From& o):BaseVector<Klass>(o){};
+
+#define ENABLE_UNARY_OP(Klass)\
+	inline Klass operator-() const{\
+		return this->BaseVector<Klass>::operator-();\
+	}\
+	inline Klass operator+() const{\
+		return this->BaseVector<Klass>::operator+();\
+	}
 
 #define ENABLE_PM(Klass,OtherKlass,Result) \
 	ENABLE_PLUS(Klass, OtherKlass, Result)\
@@ -139,10 +147,10 @@ public:
 	inline float y() const{return y_;};
 	inline void x(const float x) { x_=x; };
 	inline void y(const float y) { y_=y; };
-	inline Self operator-(const int& dummy){
+	inline Self operator-() const{
 		return Self(-x_,-y_);
 	}
-	inline Self operator+(const int& dummy){
+	inline Self operator+() const{
 		return Self(+x_,+y_);
 	}
 protected:
@@ -226,6 +234,7 @@ public:
 	inline std::string toString() const{
 		return util::format("(Vector %f %f)", this->x(), this->y());
 	}
+	ENABLE_UNARY_OP(Vector);
 	ENABLE_PM(Vector , Vector , Vector );
 	ENABLE_PM_ASSIGN(Vector, Vector);
 	ENABLE_MD(Vector, ScaleVector, Vector);
@@ -254,6 +263,7 @@ public:
 		return util::format("(Velocity %f %f)", this->x(), this->y());
 	}
 	inline Velocity(const Vector& dist, const float time):BaseVector<Velocity>(dist/time){}
+	ENABLE_UNARY_OP(Velocity);
 	ENABLE_PM(Velocity, Velocity, Velocity);
 	ENABLE_PM_ASSIGN(Velocity, Velocity);
 	ENABLE_MD(Velocity, ScaleVector, Velocity);
@@ -277,6 +287,8 @@ T max(const BaseVector<T>& a, const BaseVector<T>& b){
 #undef ENABLE_MD
 #undef ENABLE_MD_ASSGN
 #undef FRIEND_OP
+#undef ENABLE_CAST
+#undef ENABLE_UNARY_OP
 #undef SETUP
 
 #include "Decl.h"

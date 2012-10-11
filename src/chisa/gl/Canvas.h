@@ -19,14 +19,15 @@
 #ifndef Chisa_CANVAS_H__CPP_
 #define Chisa_CANVAS_H__CPP_
 
+#include <deque>
+#include <map>
 #include "../logging/Exception.h"
 #include "../logging/Logger.h"
 #include "../util/class_utils.h"
+#include "../geom/Decl.h"
 #include "Handler.h"
 #include "Sprite.h"
 #include "RawSprite.h"
-#include <deque>
-#include <map>
 
 namespace chisa {
 namespace geom {
@@ -53,17 +54,16 @@ public:
 	std::deque<std::pair<std::string, Handler<RawSprite> > > imageCache_;
 public:
 	void ortho(const float left, const float right, const float bottom, const float top, const float near_val, const float far_val);
-	void resize2d(const float width, const float height);
+	void resize2d(const geom::Box& box);
 	void pushMatrix();
 	void popMatrix();
-	void translate(const float x,const float y, const float z);
-	void rotate(const float angle, const float x,const float y, const float z);
-	void scale(const float x,const float y, const float z);
-	void drawSprite(Handler<Sprite> sprite, const float x,const float y, const float z);
-	void drawSprite(RawSprite* const sprite, const float x,const float y, const float z);
-	void drawLine(const float width, const float r,const float g,const float b,const float a, const float x1,const float y1, const float z1, const float x2,const float y2, const float z2);
+	void translate(const geom::Point& pt);
+	void rotate(const float angle, const geom::Point& pt);
+	void scale(const geom::ScaleVector& scale);
+	void drawSprite(Handler<Sprite> sprite, const geom::Point& pt, const float depth=0.0f);
+	void drawSprite(RawSprite* const sprite, const geom::Point& pt, const float depth=0.0f);
+	void drawLine(const float width, const float r,const float g,const float b,const float a, const geom::Point& start, const geom::Point& end, const float depth=0.0f);
 private:
-	void scissor(const float x, const float y, const float width, const float height);
 	void scissor(const geom::Area& area);
 	void scissorReset();
 public:

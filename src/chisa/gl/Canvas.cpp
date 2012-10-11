@@ -70,40 +70,35 @@ void Canvas::popMatrix()
 {
 	glPopMatrix();
 }
-void Canvas::translate(const float x,const float y, const float z)
+void Canvas::translate(const geom::Point& pt)
 {
-	glTranslatef(x,y,z);
+	glTranslatef(pt.x(),pt.y(),0.0f);
 }
-void Canvas::rotate(const float angle, const float x,const float y, const float z)
+void Canvas::rotate(const float angle, const geom::Point& pt)
 {
-	glRotatef(angle, x,y,z);
+	glRotatef(angle, pt.x(),pt.y(),0.0f);
 }
-void Canvas::scale(const float x,const float y, const float z)
+void Canvas::scale(const geom::ScaleVector& scale)
 {
-	glScalef(x,y,z);
+	glScalef(scale.x(),scale.y(),1.0f);
 }
 
-void Canvas::resize2d(const float width, const float height)
+void Canvas::resize2d(const geom::Box& box)
 {
-	this->width_ = width;
-	this->height_ = height;
+	this->width_ = box.width();
+	this->height_ = box.height();
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0, width, height, 0, -100, 100);
+	glOrtho(0, box.width(), box.height(), 0, -100, 100);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glViewport(0, 0, width, height);
-	glScissor(0,0,width,height);
-}
-
-void Canvas::scissor(const float x, const float y, const float width, const float height)
-{
-	glScissor(x, this->height_-height-y,width, height);
+	glViewport(0, 0, box.width(), box.height());
+	glScissor(0,0,box.width(),box.height());
 }
 
 void Canvas::scissor(const geom::Area& area)
 {
-	this->scissor(area.x(), area.y(), area.width(), area.height());
+	glScissor(area.x(), this->height_-area.height()-area.y(),area.width(), area.height());
 }
 
 void Canvas::scissorReset()
@@ -111,11 +106,11 @@ void Canvas::scissorReset()
 	glScissor(0,0,this->width_,this->height_);
 }
 
-void Canvas::drawSprite(Handler<Sprite> sprite, const float x,const float y, const float z)
+void Canvas::drawSprite(Handler<Sprite> sprite, const geom::Point& pt, const float depth)
 {
-	sprite->drawImpl(x,y,z);
+	sprite->drawImpl(pt, depth);
 }
-void Canvas::drawSprite(RawSprite* const sprite, const float x,const float y, const float z)
+void Canvas::drawSprite(RawSprite* const sprite, const geom::Point& pt, const float depth)
 {
 	const GLint texId = sprite->requestTexture();
 	const float width = sprite->width();
@@ -126,10 +121,10 @@ void Canvas::drawSprite(RawSprite* const sprite, const float x,const float y, co
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
 	glEnable(GL_TEXTURE_2D);
 	glBegin(GL_POLYGON);
-		glTexCoord2f(0,		0);		glVertex3f(x      , y, z);
-		glTexCoord2f(0,		bottom);glVertex3f(x      , y+height,z);
-		glTexCoord2f(right,	bottom);glVertex3f(x+width, y+height,z);
-		glTexCoord2f(right,	0);		glVertex3f(x+width, y,z);
+		glTexCoord2f(0,		0);		glVertex3f(pt.x()      , pt.y(), depth);
+		glTexCoord2f(0,		bottom);glVertex3f(pt.x()      , pt.y()+height, depth);
+		glTexCoord2f(right,	bottom);glVertex3f(pt.x()+width, pt.y()+height, depth);
+		glTexCoord2f(right,	0);		glVertex3f(pt.x()+width, pt.y(),depth);
 	glEnd();
 	glDisable(GL_TEXTURE_2D);
 	glFlush();
@@ -148,13 +143,13 @@ Handler<RawSprite> Canvas::queryRawSprite(const int width, const int height)
 	}
 }
 
-void Canvas::drawLine(const float width, const float r,const float g,const float b,const float a, const float x1,const float y1, const float z1, const float x2,const float y2, const float z2)
+void Canvas::drawLine(const float width, const float r,const float g,const float b,const float a, const geom::Point& start, const geom::Point& end, const float depth)
 {
 	glLineWidth(width);
 	glColor4f(r,g,b,a);
 	glBegin(GL_LINES);
-		glVertex3f(x1, y1, z1);
-		glVertex3f(x2, y2, z2);
+		glVertex3f(start.x(), start.y(), depth);
+		glVertex3f(end.x()  , end.y(), depth);
 	glEnd();
 	glFlush();
 }

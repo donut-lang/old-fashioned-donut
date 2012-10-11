@@ -53,9 +53,9 @@ RawSprite::~RawSprite()
 	}
 }
 
-void RawSprite::drawImpl(const float x, const float y, const float z)
+void RawSprite::drawImpl(const geom::Point& pt, const float depth)
 {
-	canvas()->drawSprite(this, x, y, z);
+	canvas()->drawSprite(this, pt, depth);
 }
 
 unsigned int RawSprite::requestTexture()

@@ -49,7 +49,7 @@ private:
 	void unlock(Buffer* const buffer);
 private:
 	virtual void onFree() override;
-	virtual void drawImpl(const float x, const float y, const float z) override;
+	virtual void drawImpl(const geom::Point& pt, const float depth=0.0f) override;
 	unsigned int requestTexture();
 public:
 	class Session {

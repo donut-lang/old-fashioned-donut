@@ -10,6 +10,7 @@
 
 #include "../util/class_utils.h"
 #include "Handler.h"
+#include "../geom/Decl.h"
 
 namespace chisa {
 namespace gl {
@@ -31,7 +32,7 @@ private: /* from Handler */
 	void decref();
 	virtual void onFree() = 0;
 private: /* from Canvas */
-	virtual void drawImpl(const float x, const float y, const float z) = 0;
+	virtual void drawImpl(const geom::Point& pt, const float depth=0.0f) = 0;
 };
 
 }}
