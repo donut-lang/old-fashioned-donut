@@ -44,8 +44,12 @@ static XMLElement* addHorizontalChild(XMLDocument& doc, XMLElement* horizontal, 
 {
 	XMLElement* elem = doc.NewElement(elemname.c_str());
 	elem->SetAttribute("split-weight", weight);
-	elem->SetAttribute("split-min", min);
-	elem->SetAttribute("split-max", max);
+	if(geom::isSpecified(min)){
+		elem->SetAttribute("split-min", min);
+	}
+	if(geom::isSpecified(max)){
+		elem->SetAttribute("split-max", max);
+	}
 	horizontal->InsertEndChild(elem);
 	return elem;
 }
