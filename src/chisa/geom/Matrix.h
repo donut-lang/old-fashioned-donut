@@ -23,7 +23,7 @@ public:
 	inline const float& operator()(const size_t x, const size_t y) const{
 		return mat_[x<<2|y];
 	}
-	const float* rawPtr() const
+	inline const float* raw() const
 	{
 		return mat_;
 	}
@@ -134,17 +134,7 @@ public:
 	}
 	inline Matrix& operator*=(const Matrix& other)
 	{
-		Matrix mat;
-		for(size_t x=0;x<4;++x){
-			for(size_t y=0;y<4;++y){
-				float ans = 0.0f;
-				for(size_t j=0;j<4;++j){
-					ans += (*this)(j,y)*other(x,j);
-				}
-				mat(x,y)=ans;
-			}
-		}
-		(*this)=mat;
+		(*this)=(*this)*other;
 		return *this;
 	}
 };
