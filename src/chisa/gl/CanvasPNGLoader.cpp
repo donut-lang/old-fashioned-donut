@@ -24,6 +24,8 @@
 namespace chisa{
 namespace gl {
 
+static const std::string TAG("Canvas/PNG");
+
 Handler<RawSprite> Canvas::queryImage(const std::string& filename)
 {
 	for(auto it = this->imageCache_.begin(); it != this->imageCache_.end(); ++it){
@@ -31,8 +33,14 @@ Handler<RawSprite> Canvas::queryImage(const std::string& filename)
 			auto pair = *it;
 			this->imageCache_.erase(it);
 			this->imageCache_.push_front(pair);
+			if(log().t()){
+				log().t(TAG, "Cache hit: %s",filename.c_str());
+			}
 			return pair.second;
 		}
+	}
+	if(log().t()){
+		log().t(TAG, "Cache not found: %s",filename.c_str());
 	}
 	Handler<RawSprite> img = this->loadPNG(filename);
 	this->imageCache_.push_front(std::make_pair(filename, img));
