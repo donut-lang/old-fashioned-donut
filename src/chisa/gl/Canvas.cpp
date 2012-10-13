@@ -62,14 +62,6 @@ void Canvas::ortho(const float left, const float right, const float bottom, cons
 {
 	glOrtho(left, right, bottom, top, near_val, far_val);
 }
-void Canvas::pushMatrix()
-{
-	glPushMatrix();
-}
-void Canvas::popMatrix()
-{
-	glPopMatrix();
-}
 void Canvas::translate(const geom::Point& pt)
 {
 	glTranslatef(pt.x(),pt.y(),0.0f);
@@ -219,17 +211,27 @@ void Canvas::backBuffer(Buffer* buffer)
 	}
 }
 
-Canvas::Scissor::Scissor(Canvas& canvas, const geom::Area& area)
+Canvas::ScissorScope::ScissorScope(Canvas& canvas, const geom::Area& area)
 :canvas_(canvas)
 {
 	this->canvas_.scissor(area);
 }
 
-Canvas::Scissor::~Scissor()
+Canvas::ScissorScope::~ScissorScope()
 {
 	this->canvas_.scissorReset();
 }
 
+Canvas::AffineScope::AffineScope(Canvas& canvas)
+:canvas_(canvas)
+{
+	glPushMatrix();
 }
+Canvas::AffineScope::~AffineScope()
+{
+	glPopMatrix();
 }
+
+
+}}
 

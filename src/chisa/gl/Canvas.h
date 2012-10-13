@@ -55,8 +55,6 @@ public:
 public:
 	void ortho(const float left, const float right, const float bottom, const float top, const float near_val, const float far_val);
 	void resize2d(const geom::Box& box);
-	void pushMatrix();
-	void popMatrix();
 	void translate(const geom::Point& pt);
 	void rotate(const float angle, const geom::Point& pt);
 	void scale(const geom::ScaleVector& scale);
@@ -67,12 +65,19 @@ private:
 	void scissor(const geom::Area& area);
 	void scissorReset();
 public:
-	class Scissor {
+	class ScissorScope {
 	private:
 		Canvas& canvas_;
 	public:
-		Scissor(Canvas& canvas, const geom::Area& area);
-		virtual ~Scissor();
+		ScissorScope(Canvas& canvas, const geom::Area& area);
+		virtual ~ScissorScope();
+	};
+	class AffineScope {
+	private:
+		Canvas& canvas_;
+	public:
+		AffineScope(Canvas& canvas);
+		virtual ~AffineScope();
 	};
 public:
 	Handler<RawSprite> queryRawSprite(const int width, const int height);
