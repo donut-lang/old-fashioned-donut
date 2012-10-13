@@ -31,6 +31,8 @@ typedef Vector Point;
 typedef Vector Distance;
 typedef Vector Box;
 
+class Matrix;
+
 }}
 
 

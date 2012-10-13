@@ -8,6 +8,11 @@
 #ifndef __CXX_Chisa_GEOM_MATRIX_H_
 #define __CXX_Chisa_GEOM_MATRIX_H_
 
+#include "Decl.h"
+
+namespace chisa {
+namespace geom {
+
 class Matrix{
 private:
 	float* mat_;
@@ -144,5 +149,5 @@ public:
 	}
 };
 
-
+}}
 #endif /* INCUDE_GUARD */
