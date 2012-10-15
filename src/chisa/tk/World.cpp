@@ -74,7 +74,7 @@ void World::init(weak_ptr<World> _self)
 
 		if( const char* geistName = this->doc_->RootElement()->Attribute("geist", nullptr)){
 			universe->hexe()->registerLayouts(*this->layoutFactory_);
-			this->geist(universe->invokeWorldGeist(geistName));
+			this->geist(universe->invokeWorldGeist(_self, geistName));
 		}else{
 			if(log().t()){
 				log().t(TAG, "Geist not specified for: %s", this->name().c_str());
@@ -178,6 +178,12 @@ gl::Handler<gl::RawSprite> World::queryImage(const string& abs_filename)
 {
 	return this->universe_.lock()->queryImage(abs_filename);
 }
+
+gl::Handler<gl::RawSprite> World::queryRawSprite(const int width, const int height)
+{
+	return this->universe_.lock()->queryRawSprite(width, height);
+}
+
 
 void World::onTouchDown(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint)
 {
