@@ -32,8 +32,9 @@ namespace tk {
  * アプリケーションウィンドウ全体を表すクラス
  */
 class Universe {
+	DISABLE_COPY_AND_ASSIGN(Universe);
 private:
-	logging::Logger& log;
+	DEFINE_MEMBER_REF(private, logging::Logger, log);
 	Stack<shared_ptr<World> > worldStack;
 	std::string basepath_;
 	DEFINE_MEMBER(public, private, geom::Area, area);

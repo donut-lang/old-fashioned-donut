@@ -25,7 +25,7 @@ namespace chisa {
 namespace tk {
 
 Universe::Universe(logging::Logger& log, const std::string& basepath)
-:log(log)
+:log_(log)
 ,basepath_(basepath)
 ,canvas_(log)
 {
@@ -54,8 +54,8 @@ void Universe::idle(const float delta_ms)
 }
 void Universe::reshape(const geom::Area& area)
 {
-	if(log.t()){
-		log.t(TAG, "reshaped: %s", area.toString().c_str());
+	if(log().t()){
+		log().t(TAG, "reshaped: %s", area.toString().c_str());
 	}
 	this->canvas_.resize2d(area.box());
 	if(shared_ptr<World> topWorld = this->worldStack.top()){
@@ -67,7 +67,7 @@ void Universe::reshape(const geom::Area& area)
 void Universe::createNewWorld(const string& worldName)
 {
 	const string worldBasePath = this->basepath_+util::FileUtil::Sep+worldName;
-	shared_ptr<World> newWorld(World::create(log,this->self_, worldName));
+	shared_ptr<World> newWorld(World::create(log(),this->self_, worldName));
 	this->worldStack.push(newWorld);
 }
 
@@ -76,7 +76,7 @@ void Universe::notifyWorldEnd(weak_ptr<World> me)
 	if(shared_ptr<World> world = me.lock()){
 		const int idx = this->worldStack.indexOf(world);
 		if(idx < 0){
-			log.w(TAG, "oops. notified unknown world.");
+			log().w(TAG, "oops. notified unknown world.");
 			return;
 		}
 		this->worldStack.erase(idx);
@@ -86,7 +86,7 @@ void Universe::notifyWorldEnd(weak_ptr<World> me)
 			topWorld->reshape(this->area());
 		}
 	}else{
-		log.w(TAG, "notified world end, but world was already dead.");
+		log().w(TAG, "notified world end, but world was already dead.");
 	}
 }
 void Universe::onTouchDown(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint)
