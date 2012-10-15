@@ -28,15 +28,15 @@ template <typename T>
 struct Order {
 	bool operator()(const T* const a, const T* const b)
 	{
-		return a->width() <= b->width() && a->height() <= b->height();
+		return a->width() < b->width() && a->height() < b->height();
 	}
 	bool operator() (const T* a, const std::pair<int,int>& b)
 	{
-		return a->width() <= b.first && a->height() <= b.second;
+		return a->width() < b.first && a->height() < b.second;
 	}
 	bool operator() (const std::pair<int,int>& a, const T* b)
 	{
-		return a.first <= b->width() && a.second <= b->height();
+		return a.first < b->width() && a.second < b->height();
 	}
 };
 
@@ -131,7 +131,9 @@ Handler<RawSprite> Canvas::queryRawSprite(const int width, const int height)
 		return Handler<RawSprite>(spr);
 	}else{
 		(*it)->resize(width, height);
-		return Handler<RawSprite>(*it);
+		Handler<RawSprite> spr(*it);
+		this->unusedSprite_.erase(it);
+		return spr;
 	}
 }
 
@@ -180,7 +182,9 @@ Buffer* Canvas::queryBuffer(const int width, const int height)
 	if(it == this->unusedBuffer_.end() || (*it)->width() != width ){
 		return new Buffer(width, pHeight);
 	}else{
-		return *it;
+		Buffer* const buf = *it;
+		this->unusedBuffer_.erase(it);
+		return buf;
 	}
 }
 

@@ -34,6 +34,7 @@ RawSprite::RawSprite(Canvas* const canvas, const int width, const int height)
 ,height_(origHeight_)
 ,texId_(MAGIC)
 ,locked_(false)
+,buffer_(nullptr)
 {
 	glGenTextures(1, &this->texId_);
 	glBindTexture(GL_TEXTURE_2D, this->texId_);
@@ -61,6 +62,21 @@ void RawSprite::drawImpl(const geom::Point& pt, const float depth)
 
 unsigned int RawSprite::requestTexture()
 {
+	if(this->buffer_){
+		glBindTexture(GL_TEXTURE_2D, this->texId_);
+		//ここのサイズはバッファのものにしないと変な所を読みに行くかもしれない。
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0,0, this->buffer_->width(), this->buffer_->height(), GL_RGBA, GL_UNSIGNED_BYTE, this->buffer_->data());
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+		const GLenum err = glGetError();
+		if(err != GL_NO_ERROR){
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to transfer texture: %d", err);
+		}
+		this->canvas()->backBuffer(this->buffer_);
+		this->buffer_ = nullptr;
+	}
+
 	return this->texId_;
 }
 
@@ -78,6 +94,10 @@ void RawSprite::resize(int width, int height)
 void RawSprite::onFree() {
 	this->width_ = this->origWidth_;
 	this->height_ = this->origHeight_;
+	if(this->buffer_){
+		this->canvas()->backBuffer(this->buffer_);
+		this->buffer_ = nullptr;
+	}
 	this->canvas()->backSprite(this);
 }
 
@@ -87,31 +107,19 @@ Buffer* RawSprite::lock()
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Sprite already locked!");
 	}
 	this->locked(true);
-
-	//横幅はオリジナルでないとテクスチャ転送できないが、縦サイズは何でもよいので最小サイズを指定する
-	return this->canvas()->queryBuffer(this->origWidth(), this->height());
+	if(this->buffer_){
+		return this->buffer_;
+	}else{
+		//横幅はオリジナルでないとテクスチャ転送できないが、縦サイズは何でもよいので最小サイズを指定する
+		return (this->buffer_ = this->canvas()->queryBuffer(this->origWidth(), this->height()));
+	}
 }
-void RawSprite::unlock(Buffer* const buffer)
+void RawSprite::unlock()
 {
 	if(!this->locked()){
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Sprite already unlocked!");
 	}
 	this->locked(false);
-
-	{
-		glBindTexture(GL_TEXTURE_2D, this->texId_);
-		//ここのサイズはバッファのものにしないと変な所を読みに行くかもしれない。
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0,0, buffer->width(), buffer->height(), GL_RGBA, GL_UNSIGNED_BYTE, buffer->data());
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-		const GLenum err = glGetError();
-		if(err != GL_NO_ERROR){
-			throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to transfer texture: %d", err);
-		}
-	}
-
-	this->canvas()->backBuffer(buffer);
 }
 
 //-----------------------------------------------------------------------------
@@ -119,11 +127,11 @@ void RawSprite::unlock(Buffer* const buffer)
 RawSprite::Session::Session(Handler<RawSprite> parent)
 :parent_(parent)
 {
-	this->buffer_ = this->parent_->lock();
+	this->parent_->lock();
 }
 RawSprite::Session::~Session()
 {
-	this->parent_->unlock(this->buffer_);
+	this->parent_->unlock();
 }
 
 }}

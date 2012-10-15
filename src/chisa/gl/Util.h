@@ -24,7 +24,7 @@ namespace gl {
 
 constexpr int getPower2Of(const int width, const int acc=1)
 {
-	return acc > width ? acc : getPower2Of(width, acc<<1);
+	return acc >= width ? acc : getPower2Of(width, acc<<1);
 }
 
 }}

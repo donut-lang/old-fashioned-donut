@@ -17,19 +17,24 @@
  */
 
 #include "NesGeist.h"
+#include "../chisa/tk/World.h"
 
 namespace nes {
 
 NesGeist::NesGeist(chisa::logging::Logger& log, std::weak_ptr<chisa::tk::World> world)
 :chisa::WorldGeist(log, world)
+,machine_(nullptr)
+,runner_t_(nullptr)
+,runner_(nullptr)
 {
 	this->machine_ = new VirtualMachine(*this, *this, this, nullptr);
+	if( std::shared_ptr<chisa::tk::World> world = this->world_.lock() ){
+		this->spr_ = world->queryRawSprite(256, 240);
+	}
 }
 
 NesGeist::~NesGeist()
 {
-	this->queryStop();
-	this->join();
 }
 
 std::string NesGeist::toString() const
@@ -39,9 +44,9 @@ std::string NesGeist::toString() const
 
 void NesGeist::dispatchRendering(const uint8_t nesBuffer[screenHeight][screenWidth], const uint8_t paletteMask)
 {
-	chisa::util::RWLock::WriteLock(this->sprLock_);
+	NesGeist::Lock lock(*this);
 	{
-		chisa::gl::RawSprite::Session s(this->sprA_);
+		chisa::gl::RawSprite::Session s(lock.getSprite());
 		unsigned char* mem8 = s.data();
 		unsigned int* mem32 = nullptr;
 		const int stride = s.stride();
@@ -64,23 +69,59 @@ bool NesGeist::isPressed(uint8_t keyIdx)
 	return false;
 }
 
-void NesGeist::run()
-{
-	while(!this->isStopQueried()){
-		for(size_t i=0;i<1000*1000;++i){
-			this->machine_->run();
-		}
-	}
-}
-
 void NesGeist::loadNES(const std::string& abs_filename)
 {
+	this->stopNES();
 	this->machine_->loadCartridge(abs_filename.c_str());
+	this->machine_->sendHardReset();
+}
+void NesGeist::stopNES()
+{
+	if(this->runner_){
+		delete this->runner_t_;
+		delete this->runner_;
+		this->runner_t_ = nullptr;
+		this->runner_ = nullptr;
+	}
 }
 
 void NesGeist::startNES()
 {
-	this->start();
+	this->stopNES();
+	this->runner_ = new Runner(*this);
+	this->runner_t_ = new std::thread(std::ref(*this->runner_));
+}
+
+NesGeist::Runner::Runner(NesGeist& parent)
+:parent_(parent)
+,stop_(false)
+{
+
+}
+
+void NesGeist::Runner::queryStop()
+{
+	this->stop_=true;
+}
+
+void NesGeist::Runner::operator ()()
+{
+	while(!this->stop_){
+		for(size_t i=0;i<1000*1000;++i){
+			this->parent_.machine_->run();
+		}
+	}
+}
+
+NesGeist::Lock::Lock(NesGeist& parent)
+:parent_(parent)
+{
+	parent_.spr_mutex_.lock();
+}
+NesGeist::Lock::~Lock()
+{
+	parent_.spr_mutex_.unlock();
 }
 
 }
+

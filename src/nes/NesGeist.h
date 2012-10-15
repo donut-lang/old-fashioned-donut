@@ -23,14 +23,40 @@
 #include "../chisa/Hexe.h"
 #include "../chisa/gl/Sprite.h"
 #include "../chisa/gl/RawSprite.h"
-#include "../chisa/util/Thread.h"
+#include <thread>
+#include <atomic>
+#include <mutex>
 
 namespace nes {
 
-class NesGeist : public chisa::WorldGeist, public VideoFairy, public AudioFairy, public GamepadFairy, public chisa::util::Thread {
+class NesGeist : public chisa::WorldGeist, public VideoFairy, public AudioFairy, public GamepadFairy {
+private:
+	class Runner {
+	private:
+		NesGeist& parent_;
+		bool stop_;
+	public:
+		Runner(NesGeist& parent);
+		virtual ~Runner() = default;
+	public:
+		void queryStop();
+	public:
+		void operator()();
+	};
+public:
+	class Lock {
+		NesGeist& parent_;
+	public:
+		Lock(NesGeist& parent);
+		virtual ~Lock();
+		inline chisa::gl::Handler<chisa::gl::RawSprite> getSprite() { return parent_.spr_; };
+	};
+private:
 	VirtualMachine* machine_;
-	chisa::gl::Handler<chisa::gl::RawSprite> sprA_;
-	chisa::util::RWLock sprLock_;
+	std::thread* runner_t_;
+	Runner* runner_;
+	chisa::gl::Handler<chisa::gl::RawSprite> spr_;
+	std::mutex spr_mutex_;
 public:
 	NesGeist(chisa::logging::Logger& log, std::weak_ptr<chisa::tk::World> world);
 	virtual ~NesGeist();
@@ -39,8 +65,8 @@ public:
 	virtual void dispatchRendering(const uint8_t nesBuffer[screenHeight][screenWidth], const uint8_t paletteMask) override;
 	virtual void onUpdate() override;
 	virtual bool isPressed(uint8_t keyIdx) override;
-	virtual void run() override;
 public:
+	void stopNES();
 	void loadNES(const std::string& abs_filename);
 	void startNES();
 };
