@@ -73,7 +73,7 @@ void World::init(weak_ptr<World> _self)
 		this->layoutFactory_ = new layout::LayoutFactory(this->log_, _self, filename, this->doc_, false);
 
 		if( const char* geistName = this->doc_->RootElement()->Attribute("geist", nullptr)){
-			universe->invokeWorldGeist(geistName);
+			this->geist(universe->invokeWorldGeist(geistName));
 		}else{
 			if(log().t()){
 				log().t(TAG, "Geist not specified for: %s", this->name().c_str());
