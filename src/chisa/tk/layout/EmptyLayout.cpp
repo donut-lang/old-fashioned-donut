@@ -47,7 +47,7 @@ void EmptyLayout::loadXMLimpl(LayoutFactory* const factory, tinyxml2::XMLElement
 
 }
 
-string EmptyLayout::toString()
+string EmptyLayout::toString() const
 {
 	return util::format("(EmptyLayout)");
 }

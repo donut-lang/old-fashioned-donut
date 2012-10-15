@@ -57,7 +57,7 @@ void SplitLayout::setMode(enum SplitMode mode)
 SplitLayout::~SplitLayout() {
 }
 
-string SplitLayout::toString()
+string SplitLayout::toString() const
 {
 	if(this->splitMode() == Horizontal){
 		return util::format("(HorizontalLayout %p)", this);
