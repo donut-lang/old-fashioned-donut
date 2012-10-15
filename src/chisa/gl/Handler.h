@@ -61,6 +61,11 @@ public:
 			this->sprite->incref();
 		}
 	}
+	Handler(Handler<S>&& other)
+	:sprite(other.sprite)
+	{
+		other.sprite = nullptr;
+	}
 	template <class T>
 	Handler(const Handler<T>& other)
 	:sprite(other.get())
