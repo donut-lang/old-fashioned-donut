@@ -34,7 +34,7 @@ protected:
 	inline logging::Logger& log() const { return log_; };
 public:
 	Task(logging::Logger& log):log_(log){};
-	virtual ~Task(){};
+	virtual ~Task() = default;
 public:
 	// タスクが実行される。
 	// boolがTrueを返す間は、実行され続ける。アニメーションなどにご活用下さい。
