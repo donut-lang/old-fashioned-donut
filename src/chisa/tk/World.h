@@ -54,9 +54,9 @@ using std::string;
 
 class World {
 private:
-	logging::Logger& log_;
+	DEFINE_MEMBER_REF(public, logging::Logger, log);
 	const weak_ptr<Universe> universe_;
-	const std::string name_;
+	DEFINE_MEMBER_CONST(public, std::string, name);
 	TaskHandler taskHandler_;
 	Stack<shared_ptr<Layout> > layoutStack_;
 	map<string, layout::WidgetWrapperLayout*> widgetMap_;

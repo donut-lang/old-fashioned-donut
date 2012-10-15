@@ -158,7 +158,7 @@ void WidgetWrapperLayout::onLayout(const geom::Box& size)
 	}
 }
 
-std::string WidgetWrapperLayout::toString()
+std::string WidgetWrapperLayout::toString() const
 {
 	return util::format( "(WidgetWrapperLayout %s)", this->widgetId_.c_str());
 }

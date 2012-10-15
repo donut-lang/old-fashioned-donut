@@ -81,7 +81,7 @@ weak_ptr<Layout> Layout::getLayoutByPoint(const geom::Vector& screenPoint)
 }
 
 
-string Layout::toString()
+string Layout::toString() const
 {
 	return util::format("(Layout %p)", this);
 }

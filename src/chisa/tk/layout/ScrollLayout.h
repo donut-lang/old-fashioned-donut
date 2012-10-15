@@ -34,7 +34,7 @@ private:
 public:
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const override;
 	virtual size_t getChildCount() const override;
-	virtual string toString() override;
+	virtual string toString() const override;
 	virtual void idle(const float delta_ms) override;
 private:
 	virtual void renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area) override;

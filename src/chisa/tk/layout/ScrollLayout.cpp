@@ -61,7 +61,7 @@ void ScrollLayout::loadXMLimpl(LayoutFactory* const factory, tinyxml2::XMLElemen
 	}
 }
 
-string ScrollLayout::toString()
+string ScrollLayout::toString() const
 {
 	return util::format("(ScrollLayout %p)", this);
 }

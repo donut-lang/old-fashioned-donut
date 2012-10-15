@@ -52,7 +52,7 @@ public:
 	virtual size_t getChildCount() const override;
 public:
 	virtual void idle(const float delta_ms) override;
-	virtual string toString() override;
+	virtual string toString() const override;
 private:
 	virtual void renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area) override;
 	virtual geom::Box onMeasure(const geom::Box& constraint) override;

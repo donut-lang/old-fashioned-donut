@@ -62,7 +62,7 @@ public:
 	void render(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area);
 	geom::Box measure(const geom::Box& constraint);
 	void layout(const geom::Box& size);
-	virtual string toString() = 0;
+	virtual string toString() const = 0;
 	void loadXML(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element);
 	weak_ptr<Layout> getLayoutById(const std::string& id);
 	weak_ptr<Layout> getLayoutByPoint(const geom::Vector& screenPoint);
