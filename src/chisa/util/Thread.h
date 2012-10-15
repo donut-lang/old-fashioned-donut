@@ -24,15 +24,54 @@
 namespace chisa {
 namespace util {
 
+class RWLock {
+private:
+	pthread_rwlock_t_* lock_;
+public:
+	RWLock(){
+		pthread_rwlock_init(&this->lock_, nullptr);
+	}
+	virtual ~RWLock(){
+		pthread_rwlock_destroy(&this->lock_);
+	}
+public:
+	class WriteLock {
+	private:
+		RWLock& parent_;
+	public:
+		WriteLock(RWLock& lock):parent_(lock){
+			pthread_rwlock_wrlock(&parent_.lock_);
+		}
+		virtual ~WriteLock(){
+			pthread_rwlock_unlock(&parent_.lock_);
+		}
+	};
+	class ReadLock {
+	private:
+		RWLock& parent_;
+	public:
+		ReadLock(RWLock& lock):parent_(lock){
+			pthread_rwlock_rdlock(&parent_.lock_);
+		}
+		virtual ~ReadLock(){
+			pthread_rwlock_unlock(&parent_.lock_);
+		}
+	};
+};
+
 class Thread {
 private:
 	pthread_t* thread_;
+	RWLock stopLock_;
+	bool stopQueried_;
 public:
 	Thread();
 	virtual ~Thread();
 	void start();
 	void join();
-	bool isKilled();
+	void queryStop();
+	bool isRunning();
+	bool isStopQueried();
 protected:
 	virtual void run() = 0;
 private:

@@ -20,14 +20,16 @@
 
 namespace nes {
 
-NesGeist::NesGeist(chisa::logging::Logger& log)
-:chisa::WorldGeist(log)
-//,machine_()
+NesGeist::NesGeist(chisa::logging::Logger& log, std::weak_ptr<chisa::tk::World> world)
+:chisa::WorldGeist(log, world)
 {
+	this->machine_ = new VirtualMachine(*this, *this, this, nullptr);
 }
 
 NesGeist::~NesGeist()
 {
+	this->queryStop();
+	this->join();
 }
 
 std::string NesGeist::toString() const
@@ -45,6 +47,15 @@ void NesGeist::onUpdate()
 
 bool NesGeist::isPressed(uint8_t keyIdx)
 {
+}
+
+void NesGeist::run()
+{
+	while(this->isStopQueried()){
+		for(size_t i=0;i<1000*1000;++i){
+			this->machine_->run();
+		}
+	}
 }
 
 }

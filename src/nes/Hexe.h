@@ -31,7 +31,7 @@ public:
 	virtual void registerWidgets(chisa::tk::widget::WidgetFactory& factory) override;
 	virtual void registerLayouts(chisa::tk::layout::LayoutFactory& factory) override;
 public:
-	virtual std::shared_ptr<chisa::WorldGeist> invokeWorldGeist(const std::string& nameOfGeist) override;
+	virtual std::shared_ptr<chisa::WorldGeist> invokeWorldGeist(std::weak_ptr<chisa::tk::World> world, const std::string& nameOfGeist) override;
 };
 
 }

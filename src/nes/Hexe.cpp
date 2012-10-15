@@ -41,10 +41,10 @@ void Hexe::registerLayouts(chisa::tk::layout::LayoutFactory& factory)
 {
 }
 
-std::shared_ptr<chisa::WorldGeist> Hexe::invokeWorldGeist(const std::string& nameOfGeist)
+std::shared_ptr<chisa::WorldGeist> Hexe::invokeWorldGeist(std::weak_ptr<chisa::tk::World> world, const std::string& nameOfGeist)
 {
 	if(nameOfGeist == "nes"){
-		return std::shared_ptr<chisa::WorldGeist>(new NesGeist(log()));
+		return std::shared_ptr<chisa::WorldGeist>(new NesGeist(log(), world));
 	}
 	return std::shared_ptr<chisa::WorldGeist>();
 }

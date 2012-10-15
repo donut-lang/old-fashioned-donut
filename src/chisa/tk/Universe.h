@@ -64,12 +64,13 @@ public:
 	{
 		return this->hexe()->resolveFilepath(related_filename...);
 	}
-	std::shared_ptr<chisa::WorldGeist> invokeWorldGeist(const std::string& nameOfGeist);
+	std::shared_ptr<chisa::WorldGeist> invokeWorldGeist(std::weak_ptr<tk::World> world, const std::string& nameOfGeist);
 	/******************************************************************************
 	 * 画像
 	 ******************************************************************************/
 public:
 	gl::Handler<gl::RawSprite> queryImage(const std::string& abs_filename);
+	gl::Handler<gl::RawSprite> queryRawSprite(const int width, const int height);
 	/******************************************************************************
 	 * タッチイベント
 	 ******************************************************************************/

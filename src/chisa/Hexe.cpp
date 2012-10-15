@@ -35,8 +35,9 @@ std::string Hexe::toString() const
 	return util::format("(Hexe %p)", this);
 }
 
-WorldGeist::WorldGeist(logging::Logger& log)
+WorldGeist::WorldGeist(logging::Logger& log, std::weak_ptr<chisa::tk::World> world)
 :log_(log)
+,world_(world)
 {
 
 }
@@ -48,5 +49,6 @@ WorldGeist::~WorldGeist()
 std::string WorldGeist::toString() const{
 	return util::format("(WorldGeist %p)", this);
 }
+
 
 }

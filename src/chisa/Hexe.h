@@ -45,17 +45,20 @@ public:
 	virtual void registerWidgets(tk::widget::WidgetFactory& factory){};
 	virtual void registerLayouts(tk::layout::LayoutFactory& factory){};
 public:
-	virtual std::shared_ptr<WorldGeist> invokeWorldGeist(const std::string& nameOfGeist) = 0;
+	virtual std::shared_ptr<WorldGeist> invokeWorldGeist(std::weak_ptr<chisa::tk::World> world, const std::string& nameOfGeist) = 0;
 };
 
 class WorldGeist {
 	DISABLE_COPY_AND_ASSIGN(WorldGeist);
 	DEFINE_MEMBER_REF(protected, logging::Logger, log);
+	std::weak_ptr<chisa::tk::World> world_;
 public:
 	virtual std::string toString() const;
 public:
-	WorldGeist(logging::Logger& log);
+	WorldGeist(logging::Logger& log, std::weak_ptr<chisa::tk::World> world);
 	virtual ~WorldGeist();
+public:
+	inline std::shared_ptr<chisa::tk::World> world() { return world_.lock(); }
 };
 
 }
