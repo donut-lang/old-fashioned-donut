@@ -21,13 +21,17 @@
 
 #include "../../chisa/tk/Widget.h"
 #include "../../chisa/Hexe.h"
+#include "../../chisa/util/Param.h"
 
 namespace nes {
+class NesGeist;
+
 namespace widget {
 
 class NesScreenWidget: public ::chisa::tk::Widget {
 private:
-	std::weak_ptr<chisa::WorldGeist> geist_;
+	std::weak_ptr<nes::NesGeist> geist_;
+	chisa::util::ParamSet params_;
 public:
 	NesScreenWidget(chisa::logging::Logger& log, std::weak_ptr<chisa::tk::World> world, tinyxml2::XMLElement* element);
 	virtual ~NesScreenWidget();

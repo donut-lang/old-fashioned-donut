@@ -17,15 +17,27 @@
  */
 
 #include "NesScreenWidget.h"
+#include "../NesGeist.h"
+#include "../../chisa/tk/World.h"
 #include "../../chisa/geom/Vector.h"
 #include "../../chisa/geom/Area.h"
 
 namespace nes {
 namespace widget {
 
-NesScreenWidget::NesScreenWidget(chisa::logging::Logger& log, std::weak_ptr<chisa::tk::World> world, tinyxml2::XMLElement* element)
-:Widget(log, world, element)
+NesScreenWidget::NesScreenWidget(chisa::logging::Logger& log, std::weak_ptr<chisa::tk::World> _world, tinyxml2::XMLElement* element)
+:Widget(log, _world, element)
 {
+	std::shared_ptr<chisa::tk::World> world(_world.lock());
+	std::shared_ptr<nes::NesGeist> geist(std::dynamic_pointer_cast<nes::NesGeist>(world->geist()));
+	this->geist_ = geist;
+	this->params_.parseTree(element);
+
+	std::string rom;
+	if(this->params_.queryString("rom", &rom)){
+		geist->loadNES(world->resolveUniverseFilepath(rom));
+		geist->startNES();
+	}
 }
 
 NesScreenWidget::~NesScreenWidget()
@@ -34,6 +46,11 @@ NesScreenWidget::~NesScreenWidget()
 
 void NesScreenWidget::render(chisa::gl::Canvas& cv, const chisa::geom::Area& area)
 {
+	std::shared_ptr<nes::NesGeist> geist = this->geist_.lock();
+	if(!geist){
+		return;
+	}
+
 }
 
 void NesScreenWidget::idle(const float delta_ms)

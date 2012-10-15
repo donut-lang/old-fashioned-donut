@@ -154,5 +154,29 @@ void ParamSet::parseTree(tinyxml2::XMLElement* elem)
 	}
 }
 
+bool ParamSet::queryInt(const std::string& name, int* val)
+{
+	if(std::shared_ptr<Param> p = this->get(name)){
+		p->queryInt(val);
+		return true;
+	}
+	return false;
+}
+bool ParamSet::queryString(const std::string& name, std::string* val)
+{
+	if(std::shared_ptr<Param> p = this->get(name)){
+		p->queryString(val);
+		return true;
+	}
+	return false;
+}
+bool ParamSet::queryFloat(const std::string& name, float* val)
+{
+	if(std::shared_ptr<Param> p = this->get(name)){
+		p->queryFloat(val);
+		return true;
+	}
+	return false;
+}
 
 }}

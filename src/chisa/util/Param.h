@@ -70,6 +70,9 @@ public:
 	std::shared_ptr<Param> get(const std::string& name);
 	bool has(const std::string& name);
 	std::size_t size() const{ return this->params_.size(); };
+	bool queryInt(const std::string& name, int* val);
+	bool queryString(const std::string& name, std::string* val);
+	bool queryFloat(const std::string& name, float* val);
 public:
 	void parseTree(tinyxml2::XMLElement* elem);
 };

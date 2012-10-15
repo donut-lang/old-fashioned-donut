@@ -61,7 +61,7 @@ public:
 
 class Thread {
 private:
-	pthread_t* thread_;
+	pthread_t thread_;
 	RWLock stopLock_;
 	bool stopQueried_;
 public:
