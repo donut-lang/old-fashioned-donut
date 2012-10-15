@@ -35,4 +35,16 @@ std::string NesGeist::toString() const
 	return chisa::util::format("(NesGeist %p)", this);
 }
 
+void NesGeist::dispatchRendering(const uint8_t nesBuffer[screenHeight][screenWidth], const uint8_t paletteMask)
+{
+}
+
+void NesGeist::onUpdate()
+{
+}
+
+bool NesGeist::isPressed(uint8_t keyIdx)
+{
+}
+
 }

@@ -24,12 +24,16 @@
 
 namespace nes {
 
-class NesGeist : public chisa::WorldGeist {
+class NesGeist : public chisa::WorldGeist, public VideoFairy, public AudioFairy, public GamepadFairy {
 	//VirtualMachine machine_;
 public:
 	NesGeist(chisa::logging::Logger& log);
 	virtual ~NesGeist();
 	virtual std::string toString() const override;
+public:
+	virtual void dispatchRendering(const uint8_t nesBuffer[screenHeight][screenWidth], const uint8_t paletteMask);
+	virtual void onUpdate();
+	virtual bool isPressed(uint8_t keyIdx);
 };
 
 }
