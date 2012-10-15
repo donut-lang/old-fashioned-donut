@@ -42,6 +42,7 @@ def configure(conf):
 	conf.check_cfg(package='icu-uc', uselib_store='ICU', mandatory=True, args='--cflags --libs')
 	conf.check_cfg(package='libpng', uselib_store='LIBPNG', mandatory=True, args='--cflags --libs')
 	conf.check(features='cxx cxxprogram', lib=['gtest','gtest_main','pthread'], cflags=['-Wall'], uselib_store='GTEST')
+	conf.check(features='cxx cxxprogram', lib=['pthread'], cflags=['-Wall'], uselib_store='PTHREAD')
 	if sys.platform == 'win32': 
 		conf.check(features='cxx cxxprogram', lib=['glfw', 'opengl32',], cflags=['-Wall'], defines=['TEST=TEST'], uselib_store='OPENGL')
 	elif sys.platform in ['linux2', 'linux']:
@@ -51,8 +52,8 @@ TEST_SRC=TINYXML2_SRC+enum('src', [udir('src/entrypoint')])+enum('test')
 MAIN_SRC=TINYXML2_SRC+enum('src', [udir('src/entrypoint')])+enum(udir('src/entrypoint/pc/'))
 
 def build(bld):
-	bld(features = 'cxx cprogram', source = MAIN_SRC, target = 'chisa', use=['OPENGL','LIBPNG'])
-	bld(features = 'cxx cprogram', source = TEST_SRC, target = 'chisa_test', use=['OPENGL','GTEST','LIBPNG'])
+	bld(features = 'cxx cprogram', source = MAIN_SRC, target = 'chisa', use=['PTHREAD', 'OPENGL','LIBPNG'])
+	bld(features = 'cxx cprogram', source = TEST_SRC, target = 'chisa_test', use=['PTHREAD', 'OPENGL','GTEST','LIBPNG'])
 
 def shutdown(ctx):
 	pass

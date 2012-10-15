@@ -21,7 +21,8 @@
 namespace nes {
 
 NesGeist::NesGeist(chisa::logging::Logger& log)
-:WorldGeist(log)
+:chisa::WorldGeist(log)
+//,machine_()
 {
 }
 

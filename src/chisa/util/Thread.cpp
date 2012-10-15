@@ -16,21 +16,49 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CXX_Chisa_NESGEIST_H_
-#define _CXX_Chisa_NESGEIST_H_
+#include "Thread.h"
 
-#include "machine/VirtualMachine.h"
-#include "../chisa/Hexe.h"
+namespace chisa {
+namespace util {
 
-namespace nes {
-
-class NesGeist : public chisa::WorldGeist {
-	//VirtualMachine machine_;
-public:
-	NesGeist(chisa::logging::Logger& log);
-	virtual ~NesGeist();
-	virtual std::string toString() const override;
-};
-
+void*  Thread::_run_impl(void* thread)
+{
+	reinterpret_cast<Thread*>(thread)->run();
+	return nullptr;
 }
-#endif /* INCLUDE_GUARD */
+
+Thread::Thread()
+:thread_(nullptr)
+{
+}
+
+Thread::~Thread()
+{
+	if(this->thread_){
+		this->join();
+		delete this->thread_;
+		this->thread_ = nullptr;
+	}
+}
+
+void Thread::start()
+{
+	pthread_create(this->thread_, nullptr, Thread::_run_impl,this);
+}
+
+bool Thread::isKilled()
+{
+	if(this->thread_){
+		return pthread_kill(*this->thread_, 0) != 0;
+	}
+	return false;
+}
+
+void Thread::join()
+{
+	if(this->thread_){
+		pthread_join(*this->thread_, nullptr);
+	}
+}
+
+}}
