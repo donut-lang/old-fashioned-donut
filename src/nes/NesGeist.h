@@ -16,27 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CXX_Chisa_NESSCREENWIDGET_H_
-#define _CXX_Chisa_NESSCREENWIDGET_H_
+#ifndef _CXX_Chisa_NESGEIST_H_
+#define _CXX_Chisa_NESGEIST_H_
 
-#include "../../chisa/tk/Widget.h"
-#include "../../chisa/Hexe.h"
+#include "../chisa/Hexe.h"
 
 namespace nes {
-namespace widget {
 
-class NesScreenWidget: public ::chisa::tk::Widget {
-private:
-	std::weak_ptr<chisa::WorldGeist> geist_;
+class NesGeist : public chisa::WorldGeist {
 public:
-	NesScreenWidget(chisa::logging::Logger& log, std::weak_ptr<chisa::tk::World> world, tinyxml2::XMLElement* element);
-	virtual ~NesScreenWidget();
-public:
-	virtual void render(chisa::gl::Canvas& cv, const chisa::geom::Area& area) override;
-	virtual void idle(const float delta_ms) override;
-	virtual void reshape(const chisa::geom::Box& areaSize) override;
-	virtual chisa::geom::Box measure(const chisa::geom::Box& constraintSize) override;
+	NesGeist(chisa::logging::Logger& log);
+	virtual ~NesGeist();
+	virtual std::string toString() const override;
 };
 
-}}
+}
 #endif /* INCLUDE_GUARD */

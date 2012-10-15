@@ -72,6 +72,12 @@ public:
 	virtual bool onZoom(const float timeMs, const geom::Point& center, const float ratio){return false;};
 
 //	実装用
+//public:
+//	virtual void render(gl::Canvas& cv, const geom::Area& area) override;
+//	virtual void idle(const float delta_ms) override;
+//	virtual void reshape(const geom::Box& areaSize) override;
+//	virtual geom::Box measure(const geom::Box& constraintSize) override;
+//public:
 //	virtual bool onDownRaw(const float timeMs, const geom::Point& ptInWidget) override;
 //	virtual bool onUpRaw(const float timeMs, const geom::Point& ptInWidget) override;
 //	virtual bool onMoveRaw(const float timeMs, const geom::Point& ptInWidget) override;
