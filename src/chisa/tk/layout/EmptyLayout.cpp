@@ -59,12 +59,7 @@ void EmptyLayout::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, c
 
 geom::Box EmptyLayout::onMeasure(const geom::Box& constraint)
 {
-	//とりあえず最大を主張しておく
-	// FIXME: とりあえず仮置きで「大きい値」
-	return geom::Box(
-		geom::isUnspecified(constraint.width()) ? geom::VeryLarge : constraint.width(),
-		geom::isUnspecified(constraint.height()) ? geom::VeryLarge : constraint.height()
-	);
+	return geom::Box(geom::Unspecified, geom::Unspecified);
 }
 
 void EmptyLayout::onLayout(const geom::Box& size)

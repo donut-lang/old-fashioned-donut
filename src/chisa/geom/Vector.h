@@ -105,7 +105,6 @@ inline bool isSpecified(const float width_or_height){
 	return !std::isnan(width_or_height);
 };
 constexpr float Unspecified = NAN;
-constexpr float VeryLarge = 1e10;
 constexpr float VerySmall = 1e-1;
 
 template <class Self>
