@@ -29,21 +29,21 @@ class WorldGeist;
 
 class Hexe {
 	DISABLE_COPY_AND_ASSIGN(Hexe);
-	DEFINE_MEMBER_REF(public, logging::Logger, log)
+	DEFINE_MEMBER_REF(protected, logging::Logger, log)
 public:
 	Hexe(logging::Logger& log);
 	virtual ~Hexe();
 	virtual std::string toString() const;
 public:
-	void registerWidgets(tk::widget::WidgetFactory& factory);
-	void registerLayouts(tk::layout::LayoutFactory& factory);
+	virtual void registerWidgets(tk::widget::WidgetFactory& factory);
+	virtual void registerLayouts(tk::layout::LayoutFactory& factory);
 public:
-	WorldGeist* invokeWorldGeist(const std::string& nameOfGeist);
+	virtual std::shared_ptr<WorldGeist> invokeWorldGeist(const std::string& nameOfGeist) = 0;
 };
 
 class WorldGeist {
 	DISABLE_COPY_AND_ASSIGN(WorldGeist);
-	DEFINE_MEMBER_REF(public, logging::Logger, log)
+	DEFINE_MEMBER_REF(protected, logging::Logger, log)
 	virtual std::string toString() const;
 public:
 	WorldGeist(logging::Logger& log);
