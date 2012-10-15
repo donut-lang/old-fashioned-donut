@@ -159,14 +159,6 @@ gl::Handler<gl::RawSprite> World::queryImage(const string& abs_filename)
 {
 	return this->universe_.lock()->queryImage(abs_filename);
 }
-std::string World::resolveWorldFilepath(const string& related_filename)
-{
-	return this->universe_.lock()->resolveWorldFilepath(this->name_, related_filename);
-}
-std::string World::resolveUniverseFilepath(const string& related_filename)
-{
-	return this->universe_.lock()->resolveUniverseFilepath(related_filename);
-}
 
 void World::onTouchDown(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint)
 {

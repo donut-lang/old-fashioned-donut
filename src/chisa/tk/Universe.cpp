@@ -17,6 +17,7 @@
  */
 
 #include "Universe.h"
+#include "World.h"
 #include "../util/FileUtil.h"
 
 static const std::string TAG("Universe");
@@ -24,9 +25,9 @@ static const std::string TAG("Universe");
 namespace chisa {
 namespace tk {
 
-Universe::Universe(logging::Logger& log, const std::string& basepath)
+Universe::Universe(logging::Logger& log, Hexe* hexe)
 :log_(log)
-,basepath_(basepath)
+,hexe_(hexe)
 ,canvas_(log)
 {
 }
@@ -66,7 +67,6 @@ void Universe::reshape(const geom::Area& area)
 
 void Universe::createNewWorld(const string& worldName)
 {
-	const string worldBasePath = this->basepath_+util::FileUtil::Sep+worldName;
 	shared_ptr<World> newWorld(World::create(log(),this->self_, worldName));
 	this->worldStack.push(newWorld);
 }
@@ -108,15 +108,6 @@ void Universe::onTouchMove(const float timeMs, const unsigned int pointerIndex, 
 	if(shared_ptr<World> topWorld = this->worldStack.top()){
 		topWorld->onTouchMove(timeMs, pointerIndex, screenPoint);
 	}
-}
-
-std::string Universe::resolveWorldFilepath(const std::string& worldname, const std::string& related_filename)
-{
-	return this->basepath_+util::FileUtil::Sep+worldname+util::FileUtil::Sep+related_filename;
-}
-std::string Universe::resolveUniverseFilepath(const std::string& related_filename)
-{
-	return this->basepath_+util::FileUtil::Sep+related_filename;
 }
 
 gl::Handler<gl::RawSprite> Universe::queryImage(const std::string& abs_filename)

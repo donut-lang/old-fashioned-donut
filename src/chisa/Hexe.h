@@ -23,20 +23,27 @@
 #include "logging/Logger.h"
 #include "tk/layout/LayoutFactory.h"
 #include "tk/widget/WidgetFactory.h"
+#include "util/FileUtil.h"
 
 namespace chisa {
 class WorldGeist;
 
 class Hexe {
 	DISABLE_COPY_AND_ASSIGN(Hexe);
-	DEFINE_MEMBER_REF(protected, logging::Logger, log)
+	DEFINE_MEMBER_REF(protected, logging::Logger, log);
+	DEFINE_MEMBER_CONST(protected, std::string, basepath);
 public:
-	Hexe(logging::Logger& log);
+	Hexe(logging::Logger& log, const std::string& basepath);
 	virtual ~Hexe();
 	virtual std::string toString() const;
+	template <typename... Args>
+	std::string resolveFilepath(const Args&... path) const
+	{
+		return util::file::join(this->basepath(), path...);
+	}
 public:
-	virtual void registerWidgets(tk::widget::WidgetFactory& factory);
-	virtual void registerLayouts(tk::layout::LayoutFactory& factory);
+	virtual void registerWidgets(tk::widget::WidgetFactory& factory){};
+	virtual void registerLayouts(tk::layout::LayoutFactory& factory){};
 public:
 	virtual std::shared_ptr<WorldGeist> invokeWorldGeist(const std::string& nameOfGeist) = 0;
 };

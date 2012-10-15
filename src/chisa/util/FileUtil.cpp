@@ -20,15 +20,6 @@
 
 namespace chisa {
 namespace util {
+namespace file {
 
-FileUtil::FileUtil()
-{
-	// TODO Auto-generated constructor stub
-}
-
-FileUtil::~FileUtil()
-{
-	// TODO Auto-generated destructor stub
-}
-
-}}
+}}}

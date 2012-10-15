@@ -19,20 +19,30 @@
 #ifndef _CXX_CHISA_UTIL_FILEUTIL_H_
 #define _CXX_CHISA_UTIL_FILEUTIL_H_
 
+#include <string>
+
 namespace chisa {
 namespace util {
+namespace file {
 
-class FileUtil {
-public:
 #if defined(__WIN32__) || defined(__WIN64__)
 	static constexpr const char* Sep="\\";
 #else
 	static constexpr const char* Sep="/";
 #endif
-public:
-	FileUtil();
-	virtual ~FileUtil();
-};
 
-}}
+template <typename First, typename... Args>
+std::string join(const First& elem)
+{
+	return elem;
+}
+
+template <typename First, typename... Args>
+std::string join(const First& elem, const Args&... left)
+{
+	return std::string(elem)+Sep+join(left...);
+}
+
+
+}}}
 #endif /* INCLUDE_GUARD */
