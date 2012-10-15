@@ -32,9 +32,14 @@ TaskHandler::~TaskHandler()
 {
 
 }
-void TaskHandler::post(shared_ptr<Task> task)
+void TaskHandler::registerTask(Task* task)
 {
-	this->taskPool.push_back(task);
+	this->taskPool.insert(task);
+}
+
+void TaskHandler::unregisterTask(Task* task)
+{
+	this->taskPool.erase(task);
 }
 
 void TaskHandler::run(const float delta_ms)

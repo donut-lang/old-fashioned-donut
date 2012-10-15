@@ -123,9 +123,14 @@ void World::popLayout()
 	}
 }
 
-void World::postTask(shared_ptr<Task> task)
+void World::registerTask(Task* task)
 {
-	this->taskHandler_.post(task);
+	this->taskHandler_.registerTask(task);
+}
+
+void World::unregisterTask(Task* task)
+{
+	this->taskHandler_.unregisterTask(task);
 }
 
 weak_ptr<Layout> World::getLayoutByPoint(const geom::Point& screenPoint)
@@ -147,7 +152,7 @@ layout::WidgetWrapperLayout* World::getWidgetById(const std::string& name)
 
 bool World::replaceWidget(const string& widgetId, layout::WidgetWrapperLayout* const newHandler)
 {
-	map<string, layout::WidgetWrapperLayout*>::iterator it = this->widgetMap_.find(widgetId);
+	std::map<std::string, layout::WidgetWrapperLayout*>::iterator it = this->widgetMap_.find(widgetId);
 	if(it != widgetMap_.end()) {
 		this->widgetMap_.erase(it);
 	}
@@ -156,7 +161,7 @@ bool World::replaceWidget(const string& widgetId, layout::WidgetWrapperLayout* c
 }
 bool World::deleteWidget(const string& widgetId, layout::WidgetWrapperLayout* const handler)
 {
-	map<string, layout::WidgetWrapperLayout*>::iterator it = this->widgetMap_.find(widgetId);
+	std::map<std::string, layout::WidgetWrapperLayout*>::iterator it = this->widgetMap_.find(widgetId);
 	if(it != widgetMap_.end()) {
 		log_.w(TAG, "Oops. WidgetID: %s not found.", widgetId.c_str());
 		return false;

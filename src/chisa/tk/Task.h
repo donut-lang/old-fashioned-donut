@@ -19,13 +19,12 @@
 #ifndef Chisa_TK_TASK_H__CPP_
 #define Chisa_TK_TASK_H__CPP_
 
-#include <deque>
+#include <set>
 #include <memory>
 #include "../logging/Logger.h"
 
 namespace chisa {
 namespace tk {
-using namespace std;
 
 class Task {
 private:
@@ -34,7 +33,7 @@ protected:
 	inline logging::Logger& log() const { return log_; };
 public:
 	Task(logging::Logger& log):log_(log){};
-	virtual ~Task() = default;
+	virtual ~Task() {};
 public:
 	// タスクが実行される。
 	// boolがTrueを返す間は、実行され続ける。アニメーションなどにご活用下さい。
@@ -45,12 +44,13 @@ class TaskHandler {
 private:
 	logging::Logger& log;
 private:
-	deque<shared_ptr<Task> > taskPool;
+	std::set<Task*> taskPool;
 public:
 	TaskHandler(logging::Logger& log);
 	virtual ~TaskHandler();
 public:
-	void post(shared_ptr<Task> task);
+	void registerTask(Task* task);
+	void unregisterTask(Task* task);
 	std::size_t getPostCount() const{ return taskPool.size(); };
 public:
 	void run(const float delta_ms);

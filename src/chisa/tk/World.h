@@ -60,7 +60,7 @@ private:
 	DEFINE_MEMBER_CONST(public, std::string, name);
 	TaskHandler taskHandler_;
 	Stack<shared_ptr<Layout> > layoutStack_;
-	map<string, layout::WidgetWrapperLayout*> widgetMap_;
+	std::map<std::string, layout::WidgetWrapperLayout*> widgetMap_;
 	DEFINE_MEMBER(private, private, geom::Area, area);
 private:
 	tinyxml2::XMLDocument* doc_;
@@ -87,7 +87,8 @@ public:
 	 * タスク管理
 	 ******************************************************************************/
 public:
-	void postTask(shared_ptr<Task> task);
+	void registerTask(Task* task);
+	void unregisterTask(Task* task);
 	/******************************************************************************
 	 * Universeへの移譲
 	 ******************************************************************************/
