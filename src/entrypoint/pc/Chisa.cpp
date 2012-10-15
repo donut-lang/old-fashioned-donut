@@ -20,6 +20,7 @@
 #include <GL/glfw.h>
 #include "../../chisa/tk/Universe.h"
 #include "../../chisa/logging/Exception.h"
+#include "../../nes/Hexe.h"
 
 using namespace std;
 
@@ -29,39 +30,12 @@ namespace pc {
 
 logging::Logger log(std::cout, logging::Logger::TRACE_);
 shared_ptr<tk::Universe> gUniverse;
-class Hexe : public chisa::Hexe
-{
-public:
-	Hexe(logging::Logger& log, const std::string& basepath)
-	:chisa::Hexe(log, basepath)
-	{
-
-	}
-	virtual ~Hexe()
-	{
-
-	}
-public:
-	virtual void registerWidgets(tk::widget::WidgetFactory& factory) override
-	{
-
-	}
-	virtual void registerLayouts(tk::layout::LayoutFactory& factory) override
-	{
-
-	}
-public:
-	virtual std::shared_ptr<WorldGeist> invokeWorldGeist(const std::string& nameOfGeist) override
-	{
-		return std::shared_ptr<WorldGeist>();
-	}
-};
 
 Hexe* gHexe = nullptr;
 
 void tempInit()
 {
-	gHexe = new Hexe(log, "./universe");
+	gHexe = new nes::Hexe(log, "./universe");
 	std::shared_ptr<tk::Universe>(tk::Universe::create(log, gHexe)).swap(gUniverse);
 	//暫定で接続コードとかおいてみる
 	gUniverse->createNewWorld("test");

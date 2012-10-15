@@ -35,7 +35,8 @@ class WidgetWrapperLayout: public chisa::tk::Layout {
 public:
 	enum FitMode {
 		Center,
-		Fit
+		Fit,
+		Expand
 	};
 private:
 	WidgetWrapperLayout* borrowed_;

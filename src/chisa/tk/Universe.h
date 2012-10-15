@@ -38,7 +38,7 @@ class Universe {
 	DISABLE_COPY_AND_ASSIGN(Universe);
 private:
 	DEFINE_MEMBER_REF(private, logging::Logger, log);
-	DEFINE_MEMBER_CONST(private, Hexe*, hexe);
+	DEFINE_MEMBER_CONST(public, Hexe*, hexe);
 	Stack<shared_ptr<World> > worldStack;
 	DEFINE_MEMBER(public, private, geom::Area, area);
 	weak_ptr<Universe> self_;
