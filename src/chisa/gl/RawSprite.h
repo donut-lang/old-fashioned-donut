@@ -20,7 +20,7 @@
 #define Chisa_SPRITE_H__CPP_
 
 #include <cairo/cairo.h>
-#include "../util/class_utils.h"
+#include "../util/ClassUtil.h"
 #include "Handler.h"
 #include "Buffer.h"
 #include "Sprite.h"

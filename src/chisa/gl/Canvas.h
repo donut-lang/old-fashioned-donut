@@ -23,7 +23,7 @@
 #include <map>
 #include "../logging/Exception.h"
 #include "../logging/Logger.h"
-#include "../util/class_utils.h"
+#include "../util/ClassUtil.h"
 #include "../geom/Decl.h"
 #include "Handler.h"
 #include "Sprite.h"

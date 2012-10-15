@@ -16,25 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CXX_CHISA_GL_BUFFER_H_
-#define CXX_CHISA_GL_BUFFER_H_
-
-#include "../util/ClassUtil.h"
+#include "Util.h"
 
 namespace chisa {
 namespace gl {
 
-class Buffer{
-	DISABLE_COPY_AND_ASSIGN(Buffer);
-	DEFINE_MEMBER_CONST(public, unsigned char*, data);
-	DEFINE_MEMBER_CONST(public, int, width);
-	DEFINE_MEMBER_CONST(public, int, height);
-	DEFINE_MEMBER_CONST(public, int, stride);
-public:
-	Buffer(const int width, const int height);
-	virtual ~Buffer();
-};
 
 }}
-
-#endif /* INCLUDE_GUARD */
