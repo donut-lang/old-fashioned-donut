@@ -23,9 +23,11 @@ namespace nes {
 
 NesGeist::NesGeist(chisa::logging::Logger& log, std::weak_ptr<chisa::tk::World> world)
 :chisa::WorldGeist(log, world)
+,chisa::tk::Task(log)
 ,machine_(nullptr)
 ,runner_t_(nullptr)
 ,runner_(nullptr)
+,time_ms_(0.0f)
 {
 	this->machine_ = new VirtualMachine(*this, *this, this, nullptr);
 	if( std::shared_ptr<chisa::tk::World> world = this->world_.lock() ){
@@ -44,8 +46,8 @@ std::string NesGeist::toString() const
 
 void NesGeist::dispatchRendering(const uint8_t nesBuffer[screenHeight][screenWidth], const uint8_t paletteMask)
 {
-	NesGeist::Lock lock(*this);
 	{
+		NesGeist::Lock lock(*this);
 		chisa::gl::RawSprite::Session s(lock.getSprite());
 		unsigned char* mem8 = s.data();
 		unsigned int* mem32 = nullptr;
@@ -56,6 +58,12 @@ void NesGeist::dispatchRendering(const uint8_t nesBuffer[screenHeight][screenWid
 				mem32[x] = nesPaletteARGB[nesBuffer[y][x] & paletteMask];
 			}
 			mem8+=stride;
+		}
+	}
+	{
+		std::unique_lock<std::mutex> lock(this->frame_mutex_);
+		if(this->runner_){
+			this->cond_.wait(lock);
 		}
 	}
 }
@@ -82,7 +90,19 @@ void NesGeist::stopNES()
 		delete this->runner_;
 		this->runner_t_ = nullptr;
 		this->runner_ = nullptr;
+		this->world()->unregisterTask(this);
 	}
+}
+
+bool NesGeist::exec(const float delta_ms)
+{
+	std::unique_lock<std::mutex> lock(this->frame_mutex_);
+	this->time_ms_ += delta_ms;
+	while(this->time_ms_ > (1.0f/60)){
+		this->time_ms_ -= (1.0f/60);
+		this->cond_.notify_one();
+	}
+	return true;
 }
 
 void NesGeist::startNES()
@@ -90,6 +110,8 @@ void NesGeist::startNES()
 	this->stopNES();
 	this->runner_ = new Runner(*this);
 	this->runner_t_ = new std::thread(std::ref(*this->runner_));
+	this->time_ms_ = 0.0f;
+	this->world()->registerTask(this);
 }
 
 NesGeist::Runner::Runner(NesGeist& parent)
