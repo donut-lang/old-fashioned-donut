@@ -8,7 +8,7 @@
 #ifndef _CHISA_GL_SPRITE_H_
 #define _CHISA_GL_SPRITE_H_
 
-#include "../util/class_utils.h"
+#include "../util/ClassUtil.h"
 #include "Handler.h"
 #include "../geom/Decl.h"
 

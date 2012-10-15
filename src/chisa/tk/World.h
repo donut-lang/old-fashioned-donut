@@ -21,7 +21,7 @@
 #include <memory>
 #include <string>
 #include <map>
-#include "../util/class_utils.h"
+#include "../util/ClassUtil.h"
 #include "../gl/Canvas.h"
 #include "../geom/Area.h"
 
@@ -92,12 +92,20 @@ public:
 	template <typename... Args>
 	std::string resolveWorldFilepath(const Args&... related_filename) const
 	{
-		return this->universe_.lock()->resolveWorldFilepath(this->name(), related_filename...);
+		if(shared_ptr<Universe> universe = this->universe_.lock()){
+			return universe->resolveWorldFilepath(this->name(), related_filename...);
+		}else{
+			throw logging::Exception(__FILE__, __LINE__, "Oops. Universe already removed.");
+		}
 	}
 	template <typename... Args>
 	std::string resolveUniverseFilepath(const Args&... related_filename) const
 	{
-		return this->universe_.lock()->resolveUniverseFilepath(related_filename...);
+		if(shared_ptr<Universe> universe = this->universe_.lock()){
+			return universe->resolveUniverseFilepath(related_filename...);
+		}else{
+			throw logging::Exception(__FILE__, __LINE__, "Oops. Universe already removed.");
+		}
 	}
 	/******************************************************************************
 	 * タッチイベント。Universeから移譲されてくる

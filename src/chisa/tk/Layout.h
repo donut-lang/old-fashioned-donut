@@ -21,7 +21,7 @@
 
 #include "Widget.h"
 #include "Gesture.h"
-#include "../util/class_utils.h"
+#include "../util/ClassUtil.h"
 #include "../geom/Vector.h"
 #include "../geom/Area.h"
 #include <memory>

@@ -21,7 +21,7 @@
 
 #include <memory>
 #include <unicode/unistr.h>
-#include "../util/class_utils.h"
+#include "../util/ClassUtil.h"
 #include "../logging/Logger.h"
 #include "../geom/Decl.h"
 

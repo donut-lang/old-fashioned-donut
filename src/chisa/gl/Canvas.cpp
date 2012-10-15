@@ -19,10 +19,10 @@
 #include "Canvas.h"
 #include "../geom/Vector.h"
 #include "../geom/Area.h"
+#include "Util.h"
 #include <algorithm>
 #include <GL/gl.h>
 #include <cairo/cairo.h>
-
 
 template <typename T>
 struct Order {

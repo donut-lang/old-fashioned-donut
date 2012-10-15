@@ -19,6 +19,7 @@
 #include <GL/gl.h>
 #include "Sprite.h"
 #include "Canvas.h"
+#include "Util.h"
 
 namespace chisa {
 namespace gl {

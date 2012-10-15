@@ -26,7 +26,7 @@
 #include <tinyxml2.h>
 #include "../../logging/Exception.h"
 #include "../../logging/Logger.h"
-#include "../../util/class_utils.h"
+#include "../../util/ClassUtil.h"
 #include "../Layout.h"
 
 namespace chisa {

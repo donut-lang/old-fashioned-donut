@@ -21,7 +21,7 @@
 
 #include <memory>
 #include <deque>
-#include "../util/class_utils.h"
+#include "../util/ClassUtil.h"
 #include "../logging/Logger.h"
 #include "../geom/Vector.h"
 

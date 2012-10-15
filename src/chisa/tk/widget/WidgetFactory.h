@@ -24,7 +24,7 @@
 #include <functional>
 #include <tinyxml2.h>
 #include "../../logging/Logger.h"
-#include "../../util/class_utils.h"
+#include "../../util/ClassUtil.h"
 
 namespace chisa {
 namespace util {

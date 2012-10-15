@@ -23,7 +23,7 @@
 #include <map>
 #include <string>
 #include <memory>
-#include "class_utils.h"
+#include "ClassUtil.h"
 
 namespace chisa {
 namespace util {
