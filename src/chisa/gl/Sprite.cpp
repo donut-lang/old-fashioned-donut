@@ -22,10 +22,12 @@ Sprite::~Sprite()
 
 void Sprite::incref()
 {
+	std::unique_lock<std::mutex> lock(this->ref_mutex_);
 	this->refcount_++;
 }
 void Sprite::decref()
 {
+	std::unique_lock<std::mutex> lock(this->ref_mutex_);
 	this->refcount_--;
 	if(this->refcount_ < 0){
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Sprite::Handler refcount = %d < 0", this->refcount_);
