@@ -50,6 +50,9 @@ public:
 public: //worldからの通知
 	void createNewWorld(const string& worldName);
 	void notifyWorldEnd(weak_ptr<World> me);
+	/******************************************************************************
+	 * Hexeへ移譲
+	 ******************************************************************************/
 public:
 	template <typename... Args>
 	std::string resolveWorldFilepath(const std::string& worldname, const Args&... related_filename) const
@@ -61,6 +64,11 @@ public:
 	{
 		return this->hexe()->resolveFilepath(related_filename...);
 	}
+	std::shared_ptr<chisa::WorldGeist> invokeWorldGeist(const std::string& nameOfGeist);
+	/******************************************************************************
+	 * 画像
+	 ******************************************************************************/
+public:
 	gl::Handler<gl::RawSprite> queryImage(const std::string& abs_filename);
 	/******************************************************************************
 	 * タッチイベント
