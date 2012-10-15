@@ -30,7 +30,6 @@ protected:
 	shared_ptr<Universe> universe;
 public:
 	void SetUp(){
-		universe = Universe::create(log_trace, ".");
 	}
 	void TearDown(){
 	}

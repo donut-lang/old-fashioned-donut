@@ -19,14 +19,17 @@
 #ifndef Chisa_TK_UNIVERSE_H__CPP_
 #define Chisa_TK_UNIVERSE_H__CPP_
 
-#include "World.h"
 #include "../logging/Logger.h"
 #include "../gl/Canvas.h"
 #include "../geom/Area.h"
 #include "../geom/Vector.h"
+#include "../Hexe.h"
+#include "Stack.h"
 
 namespace chisa {
 namespace tk {
+
+class World;
 
 /**
  * アプリケーションウィンドウ全体を表すクラス
@@ -35,8 +38,8 @@ class Universe {
 	DISABLE_COPY_AND_ASSIGN(Universe);
 private:
 	DEFINE_MEMBER_REF(private, logging::Logger, log);
+	DEFINE_MEMBER_CONST(private, Hexe*, hexe);
 	Stack<shared_ptr<World> > worldStack;
-	std::string basepath_;
 	DEFINE_MEMBER(public, private, geom::Area, area);
 	weak_ptr<Universe> self_;
 	gl::Canvas canvas_;
@@ -48,8 +51,16 @@ public: //worldからの通知
 	void createNewWorld(const string& worldName);
 	void notifyWorldEnd(weak_ptr<World> me);
 public:
-	std::string resolveWorldFilepath(const std::string& worldname, const std::string& related_filename);
-	std::string resolveUniverseFilepath(const std::string& related_filename);
+	template <typename... Args>
+	std::string resolveWorldFilepath(const std::string& worldname, const Args&... related_filename) const
+	{
+		return this->hexe()->resolveFilepath(worldname, related_filename...);
+	}
+	template <typename... Args>
+	std::string resolveUniverseFilepath(const Args&... related_filename) const
+	{
+		return this->hexe()->resolveFilepath(related_filename...);
+	}
 	gl::Handler<gl::RawSprite> queryImage(const std::string& abs_filename);
 	/******************************************************************************
 	 * タッチイベント
@@ -62,12 +73,12 @@ public:
 	 * 生成
 	 ******************************************************************************/
 private:
-	Universe(logging::Logger& log, const std::string& basepath);
+	Universe(logging::Logger& log, Hexe* hexe);
 	void init(weak_ptr<Universe> _self);
 public:
-	static shared_ptr<Universe> create(logging::Logger& log, const std::string& basepath)
+	static shared_ptr<Universe> create(logging::Logger& log, Hexe* hexe)
 	{
-		shared_ptr<Universe> ptr(new Universe(log, basepath));
+		shared_ptr<Universe> ptr(new Universe(log, hexe));
 		ptr->init(ptr);
 		return ptr;
 	}

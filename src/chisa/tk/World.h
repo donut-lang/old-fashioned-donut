@@ -27,6 +27,7 @@
 
 #include "Task.h"
 #include "Stack.h"
+#include "Universe.h"
 
 namespace tinyxml2{
 class XMLElement;
@@ -37,7 +38,6 @@ namespace chisa {
 namespace tk {
 class Layout;
 class Widget;
-class Universe;
 class GestureMediator;
 
 namespace layout {
@@ -89,8 +89,16 @@ public:
 	 ******************************************************************************/
 public:
 	gl::Handler<gl::RawSprite> queryImage(const string& abs_filename);
-	std::string resolveWorldFilepath(const string& related_filename);
-	std::string resolveUniverseFilepath(const string& related_filename);
+	template <typename... Args>
+	std::string resolveWorldFilepath(const Args&... related_filename) const
+	{
+		return this->universe_.lock()->resolveWorldFilepath(this->name(), related_filename...);
+	}
+	template <typename... Args>
+	std::string resolveUniverseFilepath(const Args&... related_filename) const
+	{
+		return this->universe_.lock()->resolveUniverseFilepath(related_filename...);
+	}
 	/******************************************************************************
 	 * タッチイベント。Universeから移譲されてくる
 	 ******************************************************************************/
