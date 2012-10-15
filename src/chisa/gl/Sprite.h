@@ -11,6 +11,7 @@
 #include "../util/ClassUtil.h"
 #include "Handler.h"
 #include "../geom/Decl.h"
+#include <mutex>
 
 namespace chisa {
 namespace gl {
@@ -23,6 +24,7 @@ class Sprite {
 	friend class Canvas;
 private:
 	int refcount_;
+	std::mutex ref_mutex_;
 	DEFINE_MEMBER_CONST(public, Canvas*, canvas);
 public:
 	Sprite(Canvas* const canvas);

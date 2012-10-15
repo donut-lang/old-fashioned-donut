@@ -103,10 +103,10 @@ void RawSprite::onFree() {
 
 Buffer* RawSprite::lock()
 {
-	if(this->locked()){
+	bool expected = false;
+	if(!this->locked_.compare_exchange_strong(expected, true)){
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Sprite already locked!");
 	}
-	this->locked(true);
 	if(this->buffer_){
 		return this->buffer_;
 	}else{
@@ -116,10 +116,10 @@ Buffer* RawSprite::lock()
 }
 void RawSprite::unlock()
 {
-	if(!this->locked()){
+	bool expected = true;
+	if(!this->locked_.compare_exchange_strong(expected, false)){
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Sprite already unlocked!");
 	}
-	this->locked(false);
 }
 
 //-----------------------------------------------------------------------------

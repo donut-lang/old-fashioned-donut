@@ -24,6 +24,7 @@
 #include "Handler.h"
 #include "Buffer.h"
 #include "Sprite.h"
+#include <atomic>
 
 namespace chisa {
 namespace gl {
@@ -39,7 +40,7 @@ private:
 	DEFINE_MEMBER(public, private, int, width);
 	DEFINE_MEMBER(public, private, int, height);
 	unsigned int texId_;
-	DEFINE_MEMBER(private, private, bool, locked);
+	std::atomic<bool> locked_;
 public:
 	RawSprite(Canvas* const canvas, const int width, const int height);
 	virtual ~RawSprite();
