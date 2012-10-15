@@ -28,43 +28,32 @@ void*  Thread::_run_impl(void* thread)
 }
 
 Thread::Thread()
-:thread_(nullptr)
-,stopQueried_(false)
+:stopQueried_(false)
 {
 }
 
 Thread::~Thread()
 {
-	if(this->thread_){
-		this->join();
-		delete this->thread_;
-		this->thread_ = nullptr;
-	}
 }
 
 void Thread::start()
 {
-	pthread_create(this->thread_, nullptr, Thread::_run_impl,this);
+	pthread_create(&this->thread_, nullptr, Thread::_run_impl,this);
 }
 
 bool Thread::isRunning()
 {
-	if(this->thread_){
-		return pthread_kill(*this->thread_, 0) == 0;
-	}
-	return false;
+	return pthread_kill(this->thread_, 0) == 0;
 }
 
 void Thread::join()
 {
-	if(this->thread_){
-		pthread_join(*this->thread_, nullptr);
-	}
+	pthread_join(this->thread_, nullptr);
 }
 
 void Thread::queryStop()
 {
-	if(!this->isRunning()){
+	if(this->isRunning()){
 		return;
 	}
 	{
@@ -74,8 +63,8 @@ void Thread::queryStop()
 }
 bool Thread::isStopQueried()
 {
-	if(!this->isRunning()){
-		return true;
+	if(this->isRunning()){
+		return false;
 	}
 	{
 		RWLock::ReadLock(this->stopLock_);

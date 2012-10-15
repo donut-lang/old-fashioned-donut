@@ -21,8 +21,9 @@
 
 #define DISABLE_COPY_AND_ASSIGN(klass)\
 private:\
-	klass(const klass& other);\
-	klass& operator=(const klass& other);
+	klass(const klass& other) = delete;\
+	klass& operator=(const klass& other) = delete;\
+	klass& operator=(klass&& other) = delete;
 
 #define DEFINE_MEMBER_CONST(rscope, type, name)\
 private:\

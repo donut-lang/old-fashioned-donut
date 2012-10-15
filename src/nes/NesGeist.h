@@ -21,12 +21,16 @@
 
 #include "machine/VirtualMachine.h"
 #include "../chisa/Hexe.h"
+#include "../chisa/gl/Sprite.h"
+#include "../chisa/gl/RawSprite.h"
 #include "../chisa/util/Thread.h"
 
 namespace nes {
 
 class NesGeist : public chisa::WorldGeist, public VideoFairy, public AudioFairy, public GamepadFairy, public chisa::util::Thread {
 	VirtualMachine* machine_;
+	chisa::gl::Handler<chisa::gl::RawSprite> sprA_;
+	chisa::util::RWLock sprLock_;
 public:
 	NesGeist(chisa::logging::Logger& log, std::weak_ptr<chisa::tk::World> world);
 	virtual ~NesGeist();
@@ -36,6 +40,9 @@ public:
 	virtual void onUpdate() override;
 	virtual bool isPressed(uint8_t keyIdx) override;
 	virtual void run() override;
+public:
+	void loadNES(const std::string& abs_filename);
+	void startNES();
 };
 
 }

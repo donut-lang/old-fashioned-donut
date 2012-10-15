@@ -39,6 +39,20 @@ std::string NesGeist::toString() const
 
 void NesGeist::dispatchRendering(const uint8_t nesBuffer[screenHeight][screenWidth], const uint8_t paletteMask)
 {
+	chisa::util::RWLock::WriteLock(this->sprLock_);
+	{
+		chisa::gl::RawSprite::Session s(this->sprA_);
+		unsigned char* mem8 = s.data();
+		unsigned int* mem32 = nullptr;
+		const int stride = s.stride();
+		for(int y=0;y<screenHeight;++y){
+			mem32 = reinterpret_cast<unsigned int*>(mem8);
+			for(int x=0;x<screenHeight;++x){
+				mem32[x] = nesPaletteARGB[nesBuffer[y][x] & paletteMask];
+			}
+			mem8+=stride;
+		}
+	}
 }
 
 void NesGeist::onUpdate()
@@ -47,15 +61,26 @@ void NesGeist::onUpdate()
 
 bool NesGeist::isPressed(uint8_t keyIdx)
 {
+	return false;
 }
 
 void NesGeist::run()
 {
-	while(this->isStopQueried()){
+	while(!this->isStopQueried()){
 		for(size_t i=0;i<1000*1000;++i){
 			this->machine_->run();
 		}
 	}
+}
+
+void NesGeist::loadNES(const std::string& abs_filename)
+{
+	this->machine_->loadCartridge(abs_filename.c_str());
+}
+
+void NesGeist::startNES()
+{
+	this->start();
 }
 
 }
