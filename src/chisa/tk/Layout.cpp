@@ -88,11 +88,7 @@ string Layout::toString() const
 
 geom::Box Layout::measure(const geom::Box& constraint)
 {
-	geom::Box box(this->onMeasure(constraint));
-	return geom::Box(
-			box.width() > constraint.width() ? constraint.width() : box.width(),
-			box.height() > constraint.height() ? constraint.height() : box.height()
-		);
+	return this->onMeasure(constraint);
 }
 void Layout::render(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
 {

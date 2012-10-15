@@ -95,14 +95,18 @@ void ScrollLayout::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, 
 
 geom::Box ScrollLayout::onMeasure(const geom::Box& constraint)
 {
-	return geom::Box(geom::VeryLarge, geom::VeryLarge);
+	return geom::Box(geom::Unspecified, geom::Unspecified);
 }
 
 void ScrollLayout::onLayout(const geom::Box& size)
 {
 	if(this->child_){
-		geom::Box childBox(this->scrollMode_ & Horizontal ? geom::Unspecified : size.width(), this->scrollMode_ & Vertical ? geom::Unspecified : size.height());
+		geom::Box childBox((this->scrollMode_ & Horizontal) == Horizontal ? geom::Unspecified : size.width(), (this->scrollMode_ & Vertical) == Vertical ? geom::Unspecified : size.height());
 		this->childSize_ = this->child_->measure(childBox);
+		this->childSize_ = geom::Box(
+				(geom::isSpecified(this->childSize_.width()) ? this->childSize_.width() : size.width()),
+				(geom::isSpecified(this->childSize_.height()) ? this->childSize_.height() : size.height())
+		);
 		this->child_->layout(this->childSize_);
 	}
 }

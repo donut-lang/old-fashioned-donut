@@ -102,7 +102,7 @@ void SplitLayout::loadXMLimpl(LayoutFactory* const factory, XMLElement* top)
 			min = 0;
 		}
 		if(geom::isUnspecified(max)){
-			max = geom::VeryLarge;
+			max = geom::Unspecified;
 		}
 		const SplitDef def(weight, min, max);
 		this->addChild(def, factory->parseTree(this->root(), this->self(), elem));
@@ -173,16 +173,28 @@ geom::Box SplitLayout::onMeasure(const geom::Box& constraint)
 {
 	const bool changedSpecified = geom::isSpecified((constraint.*changed_getter)());
 	const bool fixedSpecified = geom::isSpecified((constraint.*fixed_getter)());
+	geom::Box cbox(constraint);
+	(cbox.*changed_setter)(geom::Unspecified);
 	if(!changedSpecified){
 		//いくらでも伸びてよし
 		float totalSize = 0;
 		float fixedMaxSize = 0;
 		for(shared_ptr<SplitCtx> childCtx : this->children()){
-			const geom::Box childSize(childCtx->layout->measure(constraint));
+			const geom::Box childSize(childCtx->layout->measure(cbox));
 			const float size = this->wrapSize((childSize.*changed_getter)(), childCtx->def);
-			totalSize += size;
-			childCtx->size = size;
-			fixedMaxSize = std::max(fixedMaxSize, (childSize.*fixed_getter)());
+			if(geom::isSpecified(size)){
+				totalSize += size;
+				childCtx->size = size;
+			}else if(geom::isSpecified(childCtx->def.max)){
+				totalSize += childCtx->def.max;
+				childCtx->size = childCtx->def.max;
+			}else{
+				totalSize += childCtx->def.min;
+				childCtx->size = childCtx->def.min;
+			}
+			if(geom::isSpecified((childSize.*fixed_getter)())) {
+				fixedMaxSize = std::max(fixedMaxSize, (childSize.*fixed_getter)());
+			}
 		}
 		geom::Box measured;
 		(measured.*changed_setter)(totalSize);
@@ -203,12 +215,18 @@ geom::Box SplitLayout::onMeasure(const geom::Box& constraint)
 		float nonWeightedSizeTotal = 0;
 		for(shared_ptr<SplitCtx> childCtx : this->children()){
 			const bool weightSpecified = geom::isSpecified(childCtx->def.weight);
-			const geom::Box childSize(childCtx->layout->measure(constraint));
+			const geom::Box childSize(childCtx->layout->measure(cbox));
 			if(weightSpecified){
 				//ウェイトがかかっている場合は最小サイズを。
+				childCtx->weight = childCtx->def.weight;
 				intendedSizeTotal += childCtx->def.min;
 				childCtx->size = childCtx->def.min;//足りなかった時に使うための仮置き
-				totalWeight += childCtx->def.weight;
+				totalWeight += childCtx->weight;
+			}else if(geom::isUnspecified((childSize.*changed_getter)())){
+				childCtx->weight = 1.0f;
+				intendedSizeTotal += childCtx->def.min;
+				childCtx->size = childCtx->def.min;//足りなかった時に使うための仮置き
+				totalWeight += childCtx->weight;
 			}else{
 				//そうでない場合は、子レイアウトに言われた通りのサイズを。
 				//ただしmin/maxは守る
@@ -217,7 +235,9 @@ geom::Box SplitLayout::onMeasure(const geom::Box& constraint)
 				intendedSizeTotal += tempChangedSize;
 				nonWeightedSizeTotal += tempChangedSize;
 			}
-			fixedMaxSize = std::max(fixedMaxSize, (childSize.*fixed_getter)());
+			if(geom::isSpecified((childSize.*fixed_getter)())) {
+				fixedMaxSize = std::max(fixedMaxSize, (childSize.*fixed_getter)());
+			}
 		}
 
 		if(intendedSizeTotal <= limitChangedSize){
@@ -226,13 +246,13 @@ geom::Box SplitLayout::onMeasure(const geom::Box& constraint)
 			float leftSize = limitChangedSize - nonWeightedSizeTotal;
 			for(shared_ptr<SplitCtx> childCtx : this->children()){
 				shared_ptr<Layout> child;
-				const bool weightSpecified = geom::isSpecified(childCtx->def.weight);
+				const bool weightSpecified = geom::isSpecified(childCtx->weight);
 				if(weightSpecified){
 					//ウェイトがかかっている
-					float size = leftSize * childCtx->def.weight / leftWeight;
+					float size = leftSize * childCtx->weight / leftWeight;
 					//max/minを考慮しつつサイズを割り当てる
 					size = this->wrapSize(size, childCtx->def);
-					leftWeight -= childCtx->def.weight;
+					leftWeight -= childCtx->weight;
 					leftSize -= size;
 					childCtx->size = size;
 				}else{

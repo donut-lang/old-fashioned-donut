@@ -48,10 +48,12 @@ struct SplitCtx
 	const SplitDef def;
 	shared_ptr<Layout> layout;
 	float size;
+	float weight;
 	SplitCtx(const SplitDef& def)
 	:def(def)
 	,layout(nullptr)
 	,size(NAN)
+	,weight(def.weight)
 	{
 	}
 };
@@ -77,6 +79,9 @@ private:
 private:
 	inline float wrapSize(float changedSize, const SplitDef& def) const
 	{
+		if(geom::isUnspecified(changedSize)){
+			return def.min;
+		}
 		changedSize = std::min(changedSize, def.max);
 		changedSize = std::max(changedSize, def.min);
 		return changedSize;
