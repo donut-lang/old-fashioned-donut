@@ -31,6 +31,7 @@
 
 namespace tinyxml2{
 class XMLElement;
+class XMLDocument;
 }
 
 namespace chisa {
@@ -61,6 +62,9 @@ private:
 	Stack<shared_ptr<Layout> > layoutStack_;
 	map<string, layout::WidgetWrapperLayout*> widgetMap_;
 	DEFINE_MEMBER(private, private, geom::Area, area);
+private:
+	tinyxml2::XMLDocument* doc_;
+	std::shared_ptr<chisa::WorldGeist> geist_;
 private:
 	layout::LayoutFactory* layoutFactory_;
 	widget::WidgetFactory* widgetFactory_;

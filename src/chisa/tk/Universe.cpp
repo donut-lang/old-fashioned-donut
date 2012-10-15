@@ -109,6 +109,13 @@ void Universe::onTouchMove(const float timeMs, const unsigned int pointerIndex, 
 		topWorld->onTouchMove(timeMs, pointerIndex, screenPoint);
 	}
 }
+std::shared_ptr<chisa::WorldGeist> Universe::invokeWorldGeist(const std::string& nameOfGeist)
+{
+	if(log().t()){
+		log().t(TAG, "Invoking: %s",nameOfGeist.c_str());
+	}
+	return this->hexe()->invokeWorldGeist(nameOfGeist);
+}
 
 gl::Handler<gl::RawSprite> Universe::queryImage(const std::string& abs_filename)
 {

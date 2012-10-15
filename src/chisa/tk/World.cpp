@@ -34,6 +34,8 @@ World::World(logging::Logger& log, weak_ptr<Universe> _universe, const string& w
 ,universe_(_universe)
 ,name_(worldname)
 ,taskHandler_(log)
+,doc_(nullptr)
+,geist_(nullptr)
 ,layoutFactory_(nullptr)
 ,widgetFactory_(nullptr)
 ,gestureMediator_(nullptr)
@@ -43,6 +45,10 @@ World::World(logging::Logger& log, weak_ptr<Universe> _universe, const string& w
 
 World::~World()
 {
+	if(this->doc_){
+		delete this->doc_;
+		this->doc_=nullptr;
+	}
 	if(this->layoutFactory_){
 		delete this->layoutFactory_;
 		this->layoutFactory_ = nullptr;
@@ -61,7 +67,18 @@ World::~World()
 void World::init(weak_ptr<World> _self)
 {
 	if(shared_ptr<Universe> universe = this->universe_.lock()){
-		this->layoutFactory_ = new layout::LayoutFactory(this->log_, _self, universe->resolveWorldFilepath(this->name_, "layout.xml"));
+		const std::string filename(universe->resolveWorldFilepath(this->name_, "layout.xml"));
+		this->doc_ = new tinyxml2::XMLDocument();
+		this->doc_->LoadFile(filename.c_str());
+		this->layoutFactory_ = new layout::LayoutFactory(this->log_, _self, filename, this->doc_, false);
+
+		if( const char* geistName = this->doc_->RootElement()->Attribute("geist", nullptr)){
+			universe->invokeWorldGeist(geistName);
+		}else{
+			if(log().t()){
+				log().t(TAG, "Geist not specified for: %s", this->name().c_str());
+			}
+		}
 	}
 	this->widgetFactory_ = new widget::WidgetFactory(this->log_, _self);
 	this->gestureMediator_ = new GestureMediator(this->log_, _self);
