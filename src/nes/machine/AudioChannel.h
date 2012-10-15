@@ -12,6 +12,9 @@
 #include <stdint.h>
 #include <stdio.h>
 
+namespace nes {
+class VirtualMachine;
+
 class AudioChannel
 {
 public:
@@ -171,4 +174,5 @@ public:
 	inline void onReset();
 };
 
+}
 #endif /* AUDIOCHANNEL_H_ */

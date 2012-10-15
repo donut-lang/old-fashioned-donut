@@ -11,6 +11,8 @@
 #include <stdint.h>
 #include <stdio.h>
 
+namespace nes {
+
 class NesFile
 {
 public:
@@ -86,4 +88,5 @@ private:
 	void analyzeFile(const uint8_t* const header, const uint32_t filesize, const uint8_t* data);
 };
 
+}
 #endif /* NESFILE_H_ */

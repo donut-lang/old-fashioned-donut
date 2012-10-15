@@ -11,6 +11,8 @@
 #include "../VirtualMachine.h"
 #include "../file/NesFile.h"
 
+namespace nes {
+
 class Mapper3 : public Cartridge
 {
 public:
@@ -31,4 +33,5 @@ private:
 	uint32_t chrBankAddrBase;
 };
 
+}
 #endif /* MAPPER3_H_ */

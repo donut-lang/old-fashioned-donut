@@ -12,6 +12,8 @@
 #include <cstddef>
 #include "../exception/EmulatorException.h"
 
+namespace nes {
+
 class VideoFairy
 {
 public:
@@ -32,4 +34,5 @@ public:
 	virtual ~DummyVideoFairy(){}
 };
 
+}
 #endif /* VIDEOFAIRY_H_ */

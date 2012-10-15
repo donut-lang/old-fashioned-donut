@@ -8,6 +8,8 @@
 #include "Mapper2.h"
 #include <string.h>
 
+namespace nes {
+
 Mapper2::Mapper2(VirtualMachine & vm, const NesFile *nesFile):
 Cartridge(vm, nesFile),
 lowBankAddrBase(0),
@@ -65,5 +67,4 @@ void Mapper2::writeBankLow(uint16_t addr, uint8_t val)
 	lowBankAddrBase = NesFile::PRG_ROM_PAGE_SIZE * (val & 15);
 }
 
-
-
+}

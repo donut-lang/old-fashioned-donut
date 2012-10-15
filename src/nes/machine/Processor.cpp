@@ -2,6 +2,8 @@
 #include "VirtualMachine.h"
 #include <stdio.h>
 
+namespace nes {
+
 Processor::Processor(VirtualMachine& vm):
 	VM(vm),
 	A(0),
@@ -1288,3 +1290,5 @@ const uint8_t Processor::CycleTable[0x100] ={
 	2, 6, 3, 8, 3, 3, 5, 5,2, 2, 2, 2, 4, 4, 6, 6,
 	2, 5, 2, 8, 4, 4, 6, 6,2, 4, 2, 7, 4, 4, 6, 7
 };
+
+}

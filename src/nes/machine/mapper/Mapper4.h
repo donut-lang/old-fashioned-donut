@@ -10,6 +10,8 @@
 
 #include "../VirtualMachine.h"
 
+namespace nes {
+
 class Mapper4 : public Cartridge
 {
 public:
@@ -53,4 +55,5 @@ private:
 	void processIRQ();
 };
 
+}
 #endif /* MAPPER4_H_ */

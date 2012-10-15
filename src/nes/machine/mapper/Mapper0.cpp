@@ -1,6 +1,8 @@
 #include "Mapper0.h"
 #include <string.h>
 
+namespace nes {
+
 Mapper0::Mapper0(VirtualMachine& vm, const NesFile* nesFile) :
 Cartridge(vm, nesFile),
 // 16KBなら、同じ内容が繰り返される
@@ -65,3 +67,4 @@ void Mapper0::writeBankLow(uint16_t addr, uint8_t val)
 	//have no effect
 }
 
+}

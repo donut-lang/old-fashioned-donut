@@ -1,5 +1,7 @@
 #include "VirtualMachine.h"
 
+namespace nes {
+
 Audio::Audio(VirtualMachine& vm, AudioFairy& audioFairy):
 	VM(vm),
 	audioFairy(audioFairy),
@@ -773,3 +775,4 @@ inline void Digital::onReset()
 	onHardReset();
 }
 
+}

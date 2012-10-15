@@ -4,6 +4,8 @@
 #include "./NesFile.h"
 #include "../exception/EmulatorException.h"
 
+namespace nes {
+
 NesFile::NesFile(const uint8_t* data, const uint32_t size, const std::string& name) :
 filename(name),
 mapperNo(0),
@@ -75,4 +77,6 @@ void NesFile::analyzeFile(const uint8_t* const header, const uint32_t filesize, 
 	memcpy(chrRom, &data[fptr], this->chrSize);
 	fptr += this->chrSize;
 	this->chrRom = chrRom;
+}
+
 }

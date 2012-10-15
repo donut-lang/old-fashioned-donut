@@ -10,6 +10,8 @@
 
 #include "../../VirtualMachine.h"
 
+namespace nes {
+
 class VRC4 : public Cartridge
 {
 public:
@@ -139,4 +141,5 @@ private:
 	int32_t irqNextClock;
 };
 
+}
 #endif /* VRC4_H_ */
