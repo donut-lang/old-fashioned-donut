@@ -18,6 +18,7 @@
 
 #include "Hexe.h"
 #include "widget/NesScreenWidget.h"
+#include "widget/NesMemoryWidget.h"
 #include "NesGeist.h"
 
 namespace nes {
@@ -35,6 +36,7 @@ Hexe::~Hexe()
 void Hexe::registerWidgets(chisa::tk::widget::WidgetFactory& factory)
 {
 	factory.registerWidget<nes::widget::NesScreenWidget>("nes-screen");
+	factory.registerWidget<nes::widget::NesMemoryWidget>("nes-memory");
 }
 
 void Hexe::registerLayouts(chisa::tk::layout::LayoutFactory& factory)

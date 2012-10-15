@@ -21,6 +21,7 @@
 
 #include "machine/VirtualMachine.h"
 #include "../chisa/Hexe.h"
+#include "../chisa/tk/Task.h"
 #include "../chisa/gl/Sprite.h"
 #include "../chisa/gl/RawSprite.h"
 #include <thread>
