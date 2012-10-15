@@ -50,7 +50,8 @@ public:
 
 class WorldGeist {
 	DISABLE_COPY_AND_ASSIGN(WorldGeist);
-	DEFINE_MEMBER_REF(protected, logging::Logger, log)
+	DEFINE_MEMBER_REF(protected, logging::Logger, log);
+public:
 	virtual std::string toString() const;
 public:
 	WorldGeist(logging::Logger& log);

@@ -16,38 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "NesScreenWidget.h"
-#include "../../chisa/geom/Vector.h"
-#include "../../chisa/geom/Area.h"
+#include "NesGeist.h"
 
 namespace nes {
-namespace widget {
 
-NesScreenWidget::NesScreenWidget(chisa::logging::Logger& log, std::weak_ptr<chisa::tk::World> world, tinyxml2::XMLElement* element)
-:Widget(log, world, element)
+NesGeist::NesGeist(chisa::logging::Logger& log)
+:WorldGeist(log)
 {
 }
 
-NesScreenWidget::~NesScreenWidget()
+NesGeist::~NesGeist()
 {
 }
 
-void NesScreenWidget::render(chisa::gl::Canvas& cv, const chisa::geom::Area& area)
+std::string NesGeist::toString() const
 {
+	return chisa::util::format("(NesGeist %p)", this);
 }
 
-void NesScreenWidget::idle(const float delta_ms)
-{
 }
-
-void NesScreenWidget::reshape(const chisa::geom::Box& areaSize)
-{
-
-}
-
-chisa::geom::Box NesScreenWidget::measure(const chisa::geom::Box& constraintSize)
-{
-	return chisa::geom::Box(256,240);
-}
-
-}}
