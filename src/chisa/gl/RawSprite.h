@@ -46,24 +46,24 @@ public:
 private:
 	void resize(int width, int height);
 	Buffer* lock();
-	void unlock(Buffer* const buffer);
+	void unlock();
 private:
 	virtual void onFree() override;
 	virtual void drawImpl(const geom::Point& pt, const float depth=0.0f) override;
 	unsigned int requestTexture();
+	Buffer* buffer_;
 public:
 	class Session {
 		DISABLE_COPY_AND_ASSIGN(Session);
 	private:
 		Handler<RawSprite> parent_;
-		Buffer* buffer_;
 	public:
 		Session(Handler<RawSprite> parent);
 		virtual ~Session();
 		inline int width() const { return parent_->width(); };
 		inline int height() const { return parent_->height(); };
-		inline int stride() const { return this->buffer_->stride(); };
-		inline unsigned char* data() const { return this->buffer_->data(); };
+		inline int stride() const { return parent_->buffer_->stride(); };
+		inline unsigned char* data() const { return parent_->buffer_->data(); };
 	};
 };
 
