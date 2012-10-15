@@ -63,6 +63,7 @@
 						<entry excluding="xmltest.cpp" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="external/tinyxml2"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/chisa"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/entrypoint/pc"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/nes"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -131,6 +132,7 @@
 					<sourceEntries>
 						<entry excluding="xmltest.cpp" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="external/tinyxml2"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/chisa"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/nes"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="test"/>
 					</sourceEntries>
 				</configuration>
@@ -200,6 +202,7 @@
 					<sourceEntries>
 						<entry excluding="xmltest.cpp" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="external/tinyxml2"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/chisa"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/nes"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="test"/>
 					</sourceEntries>
 				</configuration>
@@ -271,6 +274,7 @@
 						<entry excluding="xmltest.cpp" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="external/tinyxml2"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/chisa"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/entrypoint/pc"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/nes"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

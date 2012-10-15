@@ -64,7 +64,7 @@ private:
 	DEFINE_MEMBER(private, private, geom::Area, area);
 private:
 	tinyxml2::XMLDocument* doc_;
-	std::shared_ptr<chisa::WorldGeist> geist_;
+	DEFINE_MEMBER(public, private, std::shared_ptr<WorldGeist>, geist);
 private:
 	layout::LayoutFactory* layoutFactory_;
 	widget::WidgetFactory* widgetFactory_;
