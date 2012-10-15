@@ -103,7 +103,9 @@ geom::Box chisa::tk::layout::WidgetWrapperLayout::onMeasure(const geom::Box& con
 	if(geom::isUnspecified(box.width()) || geom::isUnspecified(box.height())){
 		this->log().e(TAG, "Widget \"this->widgetId_.c_str()\" box size unspecified.");
 	}
-	if(this->fitMode_ == Fit){
+	switch (this->fitMode_)
+	{
+	case Expand: {
 		const bool widthSpecified = geom::isSpecified(constraint.width());
 		const bool heightSpecified = geom::isSpecified(constraint.height());
 		float scale = 1;
@@ -115,11 +117,28 @@ geom::Box chisa::tk::layout::WidgetWrapperLayout::onMeasure(const geom::Box& con
 			scale = constraint.height() / box.height();
 		}
 		return geom::Box(box.width() * scale, box.height() * scale);
-	}else if(this->fitMode_ == Center){
+	}
+	case Fit: {
+		const bool widthSpecified = geom::isSpecified(constraint.width());
+		const bool heightSpecified = geom::isSpecified(constraint.height());
+		float scale = 1;
+		if(widthSpecified && heightSpecified){
+			scale = this->calcScale(box, constraint);
+		}else if(widthSpecified){
+			scale = constraint.width() / box.width();
+		}else if(heightSpecified){
+			scale = constraint.height() / box.height();
+		}
+		scale = std::min(scale, 1.0f);
+		return geom::Box(box.width() * scale, box.height() * scale);
+	}
+	case Center: {
 		return box;
-	}else{
+	}
+	default: {
 		this->log().e(TAG, "Unknwon fit mode: %d", this->fitMode_);
 		return geom::Box(0,0);
+	}
 	}
 }
 
@@ -141,6 +160,14 @@ void WidgetWrapperLayout::onLayout(const geom::Box& size)
 	widget()->reshape(this->widgetSize()); //そのまま要求を飲む
 	switch(this->fitMode_)
 	{
+	case Expand: {
+		const float scale = this->calcScale(this->widgetSize(), size);
+
+		this->widgetScale(geom::ScaleVector(scale, scale));
+		this->widgetSizeReal(geom::Box(this->widgetSize().width() * scale, this->widgetSize().height() * scale));
+		this->widgetOffset(geom::Point((size.width() - this->widgetSizeReal().width())/2, (size.height()-this->widgetSizeReal().height())/2));
+		break;
+	}
 	case Fit: {
 		const float scale = this->calcScale(this->widgetSize(), size);
 
@@ -168,6 +195,8 @@ void WidgetWrapperLayout::loadXMLimpl(LayoutFactory* const factory, XMLElement* 
 		this->fitMode_ = Fit;
 	}else if(element->Attribute("fit", "center")){
 		this->fitMode_ = Center;
+	}else if(element->Attribute("fit", "expand")){
+		this->fitMode_ = Expand;
 	}
 	const char* widgetKlass = element->Attribute("widget-klass", nullptr);
 	const char* widgetId = element->Attribute("widget-id", nullptr);

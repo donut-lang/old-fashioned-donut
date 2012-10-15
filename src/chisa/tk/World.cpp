@@ -73,14 +73,16 @@ void World::init(weak_ptr<World> _self)
 		this->layoutFactory_ = new layout::LayoutFactory(this->log_, _self, filename, this->doc_, false);
 
 		if( const char* geistName = this->doc_->RootElement()->Attribute("geist", nullptr)){
+			universe->hexe()->registerLayouts(*this->layoutFactory_);
 			this->geist(universe->invokeWorldGeist(geistName));
 		}else{
 			if(log().t()){
 				log().t(TAG, "Geist not specified for: %s", this->name().c_str());
 			}
 		}
+		this->widgetFactory_ = new widget::WidgetFactory(this->log_, _self);
+		universe->hexe()->registerWidgets(*this->widgetFactory_);
 	}
-	this->widgetFactory_ = new widget::WidgetFactory(this->log_, _self);
 	this->gestureMediator_ = new GestureMediator(this->log_, _self);
 	this->pushLayout("main");
 }

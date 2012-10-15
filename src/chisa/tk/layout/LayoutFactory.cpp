@@ -74,7 +74,7 @@ LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, const 
 {
 	init();
 	this->root_ = doc_->RootElement();
-	if(!this->root_ && ElemName::World == this->root_->Name()){
+	if(!this->root_ || ElemName::World != this->root_->Name()){
 		throw Exception(__FILE__, __LINE__, "%s was parsed, but \"world\" element not found.", filename.c_str());
 	}
 }
