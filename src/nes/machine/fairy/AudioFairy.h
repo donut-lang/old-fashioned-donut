@@ -12,6 +12,8 @@
 #include <stdio.h>
 #include <string.h>
 
+namespace nes {
+
 class AudioFairy
 {
 private:
@@ -69,5 +71,5 @@ class DummyAudioFairy : public AudioFairy
 
 };
 
-
+}
 #endif /* AUDIOFAIRY_H_ */

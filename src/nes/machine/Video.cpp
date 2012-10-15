@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 
+namespace nes {
+
 Video::Video(VirtualMachine& vm, VideoFairy& videoFairy):
 	VM(vm),
 	cartridge(NULL),
@@ -547,3 +549,4 @@ inline void Video::writeSprite(uint16_t addr, uint8_t value)
 	this->spRam[addr] = value;
 }
 
+}

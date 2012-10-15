@@ -4,6 +4,8 @@
 #include "../VirtualMachine.h"
 #include "../file/NesFile.h"
 
+namespace nes {
+
 class Mapper1 : public Cartridge
 {
 	public:
@@ -47,4 +49,5 @@ class Mapper1 : public Cartridge
 		inline void updateBank();
 };
 
+}
 #endif // MAPPER1_H

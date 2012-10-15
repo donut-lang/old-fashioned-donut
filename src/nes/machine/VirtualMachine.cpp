@@ -4,6 +4,8 @@
 #include "exception/EmulatorException.h"
 #include "VirtualMachine.h"
 
+namespace nes {
+
 VirtualMachine::VirtualMachine(VideoFairy& videoFairy, AudioFairy& audioFairy, GamepadFairy* player1, GamepadFairy* player2) :
 ram(*this),
 processor(*this),
@@ -141,4 +143,6 @@ void VirtualMachine::loadCartridge(const uint8_t* data, const uint32_t size,  co
 	}
 	this->cartridge = Cartridge::loadCartridge(*this, data, size, name);
 	this->video.connectCartridge(this->cartridge);
+}
+
 }

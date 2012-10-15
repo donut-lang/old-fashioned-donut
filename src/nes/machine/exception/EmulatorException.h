@@ -12,6 +12,8 @@
 #include <string>
 #include <sstream>
 
+namespace nes {
+
 class EmulatorException
 {
 	public:
@@ -31,4 +33,5 @@ class EmulatorException
 		}
 };
 
+}
 #endif /* EMULATOREXCEPTION_H_ */

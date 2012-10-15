@@ -10,6 +10,8 @@
 
 #include "board/VRC4.h"
 
+namespace nes {
+
 class Mapper21 : public VRC4
 {
 public:
@@ -20,4 +22,5 @@ public:
 	void writeBankLow(uint16_t addr, uint8_t val);
 };
 
+}
 #endif /* MAPPER21_H_ */

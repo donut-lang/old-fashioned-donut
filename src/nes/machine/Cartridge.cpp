@@ -11,6 +11,8 @@
 #include <string>
 #include <sstream>
 
+namespace nes {
+
 //ダミー実装
 Cartridge::Cartridge(VirtualMachine& vm, const NesFile* nesFile) :
 	nesFile(nesFile),
@@ -176,4 +178,6 @@ Cartridge* Cartridge::loadCartridge(VirtualMachine& vm, const uint8_t* data, con
 		throw;
 	}
 	return NULL;
+}
+
 }

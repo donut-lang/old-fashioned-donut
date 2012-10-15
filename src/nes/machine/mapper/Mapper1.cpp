@@ -1,5 +1,7 @@
 #include "Mapper1.h"
 
+namespace nes {
+
 Mapper1::Mapper1(VirtualMachine& vm, const NesFile* nesFile) :
 Cartridge(vm, nesFile),
 is512krom(nesFile->getPrgPageCnt()==32),
@@ -183,4 +185,6 @@ inline void Mapper1::updateBank()
 			highPrgAddrBase = this->lastPrgBank * NesFile::PRG_ROM_PAGE_SIZE;
 		}
 	}
+}
+
 }

@@ -7,6 +7,8 @@
 
 #include "Mapper23.h"
 
+namespace nes {
+
 Mapper23::Mapper23(VirtualMachine& vm, const NesFile* nesFile):
 VRC4(vm, nesFile)
 {
@@ -127,4 +129,6 @@ void Mapper23::writeBankLow(uint16_t addr, uint8_t val)
 	default:
 		throw EmulatorException("[Mapper23] Invalid addr!! 0x") << std::hex << addr;
 	}
+}
+
 }

@@ -1,5 +1,7 @@
 #include "EmulatorException.h"
 
+namespace nes {
+
 EmulatorException::EmulatorException()
 {
 }
@@ -24,4 +26,6 @@ EmulatorException::~EmulatorException()
 const std::string EmulatorException::getMessage() const
 {
 	return this->msg.str();
+}
+
 }

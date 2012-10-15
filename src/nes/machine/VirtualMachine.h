@@ -9,6 +9,9 @@
 #include "fairy/VideoFairy.h"
 #include "fairy/AudioFairy.h"
 #include "fairy/GamepadFairy.h"
+#include "AudioChannel.h"
+
+namespace nes {
 
 class VirtualMachine;
 
@@ -121,8 +124,6 @@ private:
 	uint8_t pad1Idx;
 	uint8_t pad2Idx;
 };
-
-#include "AudioChannel.h"
 
 class Audio {
 	public:
@@ -560,4 +561,5 @@ class VirtualMachine
 
 };
 
+}
 #endif // VIRTUALMACHINE_H

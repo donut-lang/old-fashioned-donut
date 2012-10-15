@@ -4,6 +4,8 @@
 #include "../VirtualMachine.h"
 #include "../file/NesFile.h"
 
+namespace nes {
+
 class Mapper0 : public Cartridge
 {
 	public:
@@ -29,4 +31,5 @@ class Mapper0 : public Cartridge
 		uint8_t chrRam[8192];
 };
 
+}
 #endif // MAPPER0_H

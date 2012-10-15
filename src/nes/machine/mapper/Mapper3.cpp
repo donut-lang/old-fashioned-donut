@@ -7,6 +7,8 @@
 
 #include "Mapper3.h"
 
+namespace nes {
+
 Mapper3::Mapper3(VirtualMachine& vm, const NesFile* nesFile) :
 Cartridge(vm, nesFile),
 prgHighBankAddrBase((nesFile->getPrgPageCnt()-1)*NesFile::PRG_ROM_PAGE_SIZE),
@@ -50,3 +52,4 @@ inline void Mapper3::writeReg(uint16_t addr, uint8_t val)
 	chrBankAddrBase = (val & 3) * NesFile::CHR_ROM_PAGE_SIZE;
 }
 
+}

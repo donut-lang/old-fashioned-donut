@@ -10,6 +10,8 @@
 
 #include <stdint.h>
 
+namespace nes {
+
 class GamepadFairy
 {
 public:
@@ -50,4 +52,5 @@ public:
 	virtual bool isPressed(uint8_t keyIdx){return false;};
 };
 
+}
 #endif /* GAMEPADFAIRY_H_ */

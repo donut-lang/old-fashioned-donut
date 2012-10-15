@@ -7,6 +7,8 @@
 
 #include "Mapper4.h"
 
+namespace nes {
+
 Mapper4::Mapper4(VirtualMachine& vm, const NesFile* nesFile):
 Cartridge(vm, nesFile),
 mode(0),
@@ -168,4 +170,4 @@ void Mapper4::processIRQ()
 	}
 }
 
-
+}

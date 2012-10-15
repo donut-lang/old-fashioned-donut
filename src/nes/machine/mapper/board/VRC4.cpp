@@ -7,6 +7,8 @@
 
 #include "VRC4.h"
 
+namespace nes {
+
 VRC4::VRC4(VirtualMachine& vm, const NesFile* nesFile):
 Cartridge(vm,nesFile),
 prgMask(nesFile->getPrgPageCnt() > 8 ? 31 : 15),
@@ -78,4 +80,6 @@ uint8_t VRC4::readSaveArea(uint16_t addr)
 void VRC4::writeSaveArea(uint16_t addr, uint8_t val)
 {
 	prgram[addr & 0x1fff] = val;
+}
+
 }
