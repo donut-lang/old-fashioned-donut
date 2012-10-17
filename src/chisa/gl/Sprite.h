@@ -5,9 +5,7 @@
  *      Author: psi
  */
 
-#ifndef _CHISA_GL_SPRITE_H_
-#define _CHISA_GL_SPRITE_H_
-
+#pragma once
 #include "../util/ClassUtil.h"
 #include "Handler.h"
 #include "../geom/Decl.h"
@@ -38,5 +36,3 @@ private: /* from Canvas */
 };
 
 }}
-
-#endif /* SPRITE_H_ */

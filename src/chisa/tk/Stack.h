@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef Chisa_TK_STACK_H__CPP_
-#define Chisa_TK_STACK_H__CPP_
-
+#pragma once
 #include <deque>
 #include <string>
 #include <memory>
@@ -122,5 +120,3 @@ public:
 };
 
 }}
-
-#endif /* INCLUDE_GUARD */

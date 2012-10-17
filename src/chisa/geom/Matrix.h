@@ -5,8 +5,7 @@
  *      Author: psi
  */
 
-#ifndef __CXX_Chisa_GEOM_MATRIX_H_
-#define __CXX_Chisa_GEOM_MATRIX_H_
+#pragma once
 
 #include "Decl.h"
 
@@ -140,4 +139,3 @@ public:
 };
 
 }}
-#endif /* INCUDE_GUARD */

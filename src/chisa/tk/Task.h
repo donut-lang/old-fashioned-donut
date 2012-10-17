@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef Chisa_TK_TASK_H__CPP_
-#define Chisa_TK_TASK_H__CPP_
-
+#pragma once
 #include <set>
 #include <memory>
 #include "../logging/Logger.h"
@@ -57,4 +55,3 @@ public:
 };
 
 }}
-#endif /* INCLUDE_GUARD */

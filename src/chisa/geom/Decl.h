@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CXX_Chisa_DECL_H_
-#define _CXX_Chisa_DECL_H_
-
+#pragma once
 namespace chisa {
 namespace geom {
 
@@ -34,6 +32,3 @@ typedef Vector Box;
 class Matrix;
 
 }}
-
-
-#endif /* INCLUDE_GUARD */

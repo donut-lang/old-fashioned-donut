@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef Chisa_TK_LAYOUT_H__CPP_
-#define Chisa_TK_LAYOUT_H__CPP_
-
+#pragma once
 #include "Widget.h"
 #include "Gesture.h"
 #include "../util/ClassUtil.h"
@@ -123,4 +121,3 @@ Klass::Klass(CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_LIST)\
 #define CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(Klass) CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(Klass, Layout)
 
 }}
-#endif /* INCLUDE_GUARD */

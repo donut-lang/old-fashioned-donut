@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CXX_CHISA_TK_WIDGET_IMAGEWIDGET_H_
-#define _CXX_CHISA_TK_WIDGET_IMAGEWIDGET_H_
+#pragma once
 
 #include "../Widget.h"
 #include "../../gl/RawSprite.h"
@@ -46,4 +45,3 @@ public:
 };
 
 }}}
-#endif /* INCLUDE_GUARD */

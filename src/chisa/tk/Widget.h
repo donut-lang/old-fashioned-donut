@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef Chisa_TK_WIDGET_H__CPP_
-#define Chisa_TK_WIDGET_H__CPP_
-
+#pragma once
 #include <memory>
 #include <unicode/unistr.h>
 #include "../util/ClassUtil.h"
@@ -89,4 +87,3 @@ public:
 };
 
 }}
-#endif /* INCLUDE_GUARD */

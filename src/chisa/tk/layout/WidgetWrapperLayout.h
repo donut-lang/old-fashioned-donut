@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef Chisa_WIDGETWRAPPERLAYOUT_H__CPP_
-#define Chisa_WIDGETWRAPPERLAYOUT_H__CPP_
+#pragma once
 
 #include "../Layout.h"
 #include <memory>
@@ -76,4 +75,3 @@ public:
 };
 
 }}}
-#endif /* INCLUDE_GUARD */

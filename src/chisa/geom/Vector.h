@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef Chisa_GEOM_VECTOR_H__CPP_
-#define Chisa_GEOM_VECTOR_H__CPP_
-
+#pragma once
 #include <cmath>
 #include <string>
 #include "../util/StringUtil.h"
@@ -292,4 +290,3 @@ T max(const BaseVector<T>& a, const BaseVector<T>& b){
 
 #include "Decl.h"
 
-#endif /* INCLUDE_GUARD */

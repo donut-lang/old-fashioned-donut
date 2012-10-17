@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef Chisa_TK_UNIVERSE_H__CPP_
-#define Chisa_TK_UNIVERSE_H__CPP_
-
+#pragma once
 #include "../logging/Logger.h"
 #include "../gl/Canvas.h"
 #include "../geom/Area.h"
@@ -95,4 +93,3 @@ public:
 };
 
 }}
-#endif /* INCLUDE_GUARD */
