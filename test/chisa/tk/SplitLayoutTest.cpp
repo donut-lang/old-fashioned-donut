@@ -116,13 +116,13 @@ TEST_F(HorizontalLayoutTest, MixedTest)
 
 	ASSERT_EQ(3, root->getChildCount());
 
-	ASSERT_NEAR(100.0/3, root->getChildAt(0).lock()->size().width(), 1.0/10);
+	ASSERT_NEAR(50.0, root->getChildAt(0).lock()->size().width(), 1.0/10);
 	ASSERT_NEAR(100.0, root->getChildAt(0).lock()->size().height(), 1.0/10);
 
-	ASSERT_NEAR(50.0, root->getChildAt(1).lock()->size().width(), 1.0/10);
+	ASSERT_NEAR(25.0, root->getChildAt(1).lock()->size().width(), 1.0/10);
 	ASSERT_NEAR(100.0, root->getChildAt(1).lock()->size().height(), 1.0/10);
 
-	ASSERT_NEAR(50.0/3, root->getChildAt(2).lock()->size().width(), 1.0/10);
+	ASSERT_NEAR(25.0, root->getChildAt(2).lock()->size().width(), 1.0/10);
 	ASSERT_NEAR(100.0, root->getChildAt(2).lock()->size().height(), 1.0/10);
 
 	ASSERT_NEAR(100, root->size().width(), 1.0/10);
