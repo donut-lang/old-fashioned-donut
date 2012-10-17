@@ -1,5 +1,4 @@
-#ifndef MAPPER0_H
-#define MAPPER0_H
+#pragma once
 
 #include "../VirtualMachine.h"
 #include "../file/NesFile.h"
@@ -32,4 +31,3 @@ class Mapper0 : public Cartridge
 };
 
 }
-#endif // MAPPER0_H

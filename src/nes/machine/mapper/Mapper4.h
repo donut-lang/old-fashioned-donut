@@ -5,9 +5,7 @@
  *	  Author: psi
  */
 
-#ifndef MAPPER4_H_
-#define MAPPER4_H_
-
+#pragma once
 #include "../VirtualMachine.h"
 
 namespace nes {
@@ -56,4 +54,3 @@ private:
 };
 
 }
-#endif /* MAPPER4_H_ */

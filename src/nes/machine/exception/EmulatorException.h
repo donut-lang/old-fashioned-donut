@@ -5,8 +5,7 @@
  *      Author: psi
  */
 
-#ifndef EMULATOREXCEPTION_H_
-#define EMULATOREXCEPTION_H_
+#pragma once
 
 #include <iostream>
 #include <string>
@@ -34,4 +33,4 @@ class EmulatorException
 };
 
 }
-#endif /* EMULATOREXCEPTION_H_ */
+
