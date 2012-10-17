@@ -17,6 +17,8 @@
  */
 
 #include "MarginLayout.h"
+#include "LayoutFactory.h"
+#include <tinyxml2.h>
 
 namespace chisa {
 namespace tk {
@@ -53,7 +55,7 @@ void MarginLayout::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, 
 		child->render(
 			canvas,
 			geom::Area(screenArea.point()+this->margin_, screenArea.box()-this->removedSize_),
-			geom::Area(area.point()+this->margin_, area.box()-this->removedSize_)
+			geom::Area(area.point(), area.box()-this->removedSize_)
 		);
 	}
 }
@@ -61,7 +63,7 @@ void MarginLayout::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, 
 geom::Box MarginLayout::onMeasure(const geom::Box& constraint)
 {
 	if( shared_ptr<Layout> child = this->child_.lock() ){
-		return child->measure( constraint-this->removedSize_ );
+		return child->measure( constraint-this->removedSize_ ) + this->removedSize_;
 	}
 	return constraint;
 }
