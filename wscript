@@ -35,6 +35,7 @@ TINYXML2_SRC=[os.path.join('.', 'external','tinyxml2','tinyxml2.cpp')]
 def options(opt):
 	opt.load('compiler_c compiler_cxx')
 	opt.load('eclipse')
+	opt.load('boost')
 def configure(conf):
 	conf.load('compiler_c compiler_cxx')
 	conf.env.append_value('CXXFLAGS', ['-O3', '-std=c++0x', '-std=c++11', '-D__GXX_EXPERIMENTAL_CXX0X__=1'])
@@ -43,8 +44,10 @@ def configure(conf):
 	conf.check_cfg(package='libpng', uselib_store='LIBPNG', mandatory=True, args='--cflags --libs')
 	conf.check(features='cxx cxxprogram', lib=['gtest','gtest_main','pthread'], cflags=['-Wall'], uselib_store='GTEST')
 	conf.check(features='cxx cxxprogram', lib=['pthread'], cflags=['-Wall'], uselib_store='PTHREAD')
-	if sys.platform == 'win32': 
+	if sys.platform == 'win32':
 		conf.check(features='cxx cxxprogram', lib=['glfw', 'opengl32',], cflags=['-Wall'], defines=['TEST=TEST'], uselib_store='OPENGL')
+		conf.load('boost')
+		conf.check_boost(lib='system thread chrono')
 	elif sys.platform in ['linux2', 'linux']:
 		conf.check(features='cxx cxxprogram', lib=['glfw','GL', 'X11','rt','Xrandr','pthread'], cflags=['-Wall'], defines=['TEST=TEST'], uselib_store='OPENGL')
 
