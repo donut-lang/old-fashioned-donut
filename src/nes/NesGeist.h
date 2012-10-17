@@ -24,9 +24,7 @@
 #include "../chisa/tk/Task.h"
 #include "../chisa/gl/Sprite.h"
 #include "../chisa/gl/RawSprite.h"
-#include <thread>
-#include <condition_variable>
-#include <mutex>
+#include "../chisa/util/Thread.h"
 
 namespace nes {
 

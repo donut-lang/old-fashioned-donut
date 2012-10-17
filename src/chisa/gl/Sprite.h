@@ -11,7 +11,7 @@
 #include "../util/ClassUtil.h"
 #include "Handler.h"
 #include "../geom/Decl.h"
-#include <mutex>
+#include "../util/Thread.h"
 
 namespace chisa {
 namespace gl {

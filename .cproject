@@ -18,6 +18,27 @@
 							<targetPlatform id="cdt.managedbuild.target.gnu.platform.mingw.exe.debug.647576129" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.mingw.exe.debug"/>
 							<builder buildPath="${workspace_loc:/Chisa/Debug}" id="cdt.managedbuild.tool.gnu.builder.mingw.base.1017648550" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder" parallelBuildOn="false" superClass="cdt.managedbuild.tool.gnu.builder.mingw.base"/>
 							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.562769231" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug">
+								<option id="gnu.both.asm.option.include.paths.802343411" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="../."/>
+									<listOptionValue builtIn="false" value="D:/software/dev/msys/mingw/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/boost/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/cairo/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/ff/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/nekomata/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/pcre/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/xml/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/antlr/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/curl-7.27.0-devel-mingw32/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/glfw-2.7.6.bin.WIN32/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/glib/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/glut/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/gtest/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/icu/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/intl/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/perftools/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/readline/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/sdl/include"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.205859499" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.archiver.mingw.base.268799529" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.mingw.base"/>
@@ -26,22 +47,63 @@
 								<option id="gnu.cpp.compiler.mingw.exe.debug.option.debugging.level.1827216350" name="Debug Level" superClass="gnu.cpp.compiler.mingw.exe.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.138268118" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__GXX_EXPERIMENTAL_CXX0X__=1"/>
+									<listOptionValue builtIn="false" value="BOOST_THREAD_USE_LIB=1"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.other.other.36713338" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" value="-c -fmessage-length=0 -std=c++11 -pthread" valueType="string"/>
 								<option id="gnu.cpp.compiler.option.include.paths.451922029" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/external/tinyxml2&quot;"/>
 									<listOptionValue builtIn="false" value="../."/>
+									<listOptionValue builtIn="false" value="../."/>
+									<listOptionValue builtIn="false" value="D:/software/dev/msys/mingw/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/boost/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/cairo/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/ff/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/nekomata/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/pcre/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/xml/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/antlr/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/curl-7.27.0-devel-mingw32/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/glfw-2.7.6.bin.WIN32/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/glib/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/glut/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/gtest/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/icu/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/intl/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/perftools/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/readline/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/sdl/include"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1878130131" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.217741042" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug">
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.mingw.exe.debug.option.optimization.level.770126116" name="Optimization Level" superClass="gnu.c.compiler.mingw.exe.debug.option.optimization.level" valueType="enumerated"/>
 								<option id="gnu.c.compiler.mingw.exe.debug.option.debugging.level.1117589801" name="Debug Level" superClass="gnu.c.compiler.mingw.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
+								<option id="gnu.c.compiler.option.include.paths.444012868" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="../."/>
+									<listOptionValue builtIn="false" value="D:/software/dev/msys/mingw/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/boost/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/cairo/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/ff/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/nekomata/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/pcre/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/xml/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/antlr/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/curl-7.27.0-devel-mingw32/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/glfw-2.7.6.bin.WIN32/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/glib/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/glut/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/gtest/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/icu/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/intl/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/perftools/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/readline/include"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/sdl/include"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.680456390" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.1925678762" name="MinGW C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.1541519334" name="MinGW C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug">
-								<option id="gnu.cpp.link.option.paths.1822324502" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths"/>
+							<tool commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.1541519334" name="MinGW C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug">
+								<option id="gnu.cpp.link.option.paths.1822324502" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths"/>
 								<option id="gnu.cpp.link.option.libs.1438736354" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sicuuc"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="gtest"/>
@@ -51,8 +113,12 @@
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="opengl32"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="cairo"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="png"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="boost_thread-mgw47-mt-sd-1_51"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="boost_system-mgw47-mt-sd-1_51"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="boost_chrono-mgw47-mt-sd-1_51"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="pthread"/>
 								</option>
+								<option id="gnu.cpp.link.option.flags.2140099511" name="Linker flags" superClass="gnu.cpp.link.option.flags" value="" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1518610472" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -123,6 +189,7 @@
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="cairo"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="png"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="pthread"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="boost_system-mgw47-mt-sd-1_51"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.372687479" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
