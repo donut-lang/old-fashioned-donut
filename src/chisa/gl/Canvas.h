@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef Chisa_CANVAS_H__CPP_
-#define Chisa_CANVAS_H__CPP_
-
+#pragma once
 #include <deque>
 #include <map>
 #include "../logging/Exception.h"
@@ -89,4 +87,3 @@ public: /* ハンドラやセッションから参照されるメソッド。普
 };
 
 }}
-#endif /* INCLUDE_GUARD */

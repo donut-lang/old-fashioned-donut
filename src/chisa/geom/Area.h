@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CXX_Chisa_GEOM_AREA_H_
-#define _CXX_Chisa_GEOM_AREA_H_
+#pragma once
 #include "Vector.h"
 
 namespace chisa {
@@ -79,5 +78,3 @@ public:
 };
 
 }}
-
-#endif /* INCLUDE_GUARD */

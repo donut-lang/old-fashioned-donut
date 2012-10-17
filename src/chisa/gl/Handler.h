@@ -16,10 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef Chisa_HANDLER_H__CPP_
-#define Chisa_HANDLER_H__CPP_
-
-
+#pragma once
 #include <utility>
 #include <typeinfo>
 #include "../logging/Exception.h"
@@ -144,5 +141,3 @@ void swap(Handler<T>& a, Handler<T>& b)
 
 }}
 
-
-#endif /* INCLUDE_GUARD */

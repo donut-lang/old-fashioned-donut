@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef Chisa_UTIL_CLASS_UTILS_H__CPP_
-#define Chisa_UTIL_CLASS_UTILS_H__CPP_
+#pragma once
 
 #define DISABLE_COPY_AND_ASSIGN(klass)\
 private:\
@@ -44,5 +43,3 @@ rscope:\
 	inline type name() const{return name##_;}\
 wscope:\
 	inline void name(type const& val){name##_ = val;}
-
-#endif /* INCLUDE_GUARD */

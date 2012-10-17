@@ -20,8 +20,7 @@
 #include <string>
 #include <vector>
 
-#ifndef SACCUBUS_STRINGUTIL_H_
-#define SACCUBUS_STRINGUTIL_H_
+#pragma once
 /* FIXME: さきゅばすから取ってきた */
 
 namespace chisa {
@@ -43,4 +42,3 @@ bool startsWith(const std::string& target, const std::string& prefix);
 bool endsWith(const std::string& target, const std::string& suffix);
 
 }}
-#endif /* SACCUBUS_STRINGUTIL_H_ */

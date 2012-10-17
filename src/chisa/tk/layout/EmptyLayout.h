@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef Chisa_EMPTYLAYOUT_H__CPP_
-#define Chisa_EMPTYLAYOUT_H__CPP_
-
+#pragma once
 #include <memory>
 #include <tinyxml2.h>
 #include "../Layout.h"
@@ -45,4 +43,3 @@ private:
 };
 
 }}}
-#endif /* INCLUDE_GUARD */

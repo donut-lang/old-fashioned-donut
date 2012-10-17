@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CXX_Chisa_UTIL_H_
-#define _CXX_Chisa_UTIL_H_
+#pragma once
 
 namespace chisa {
 namespace gl {
@@ -28,4 +27,3 @@ constexpr int getPower2Of(const int width, const int acc=1)
 }
 
 }}
-#endif /* INCLUDE_GUARD */

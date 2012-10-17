@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __CXX_CHISA_TK_WIDGET_WIDGETFACTORY_H_
-#define __CXX_CHISA_TK_WIDGET_WIDGETFACTORY_H_
-
+#pragma once
 #include <memory>
 #include <map>
 #include <functional>
@@ -63,4 +61,3 @@ public:
 };
 
 }}}
-#endif /* INCLUDE_GURAD */

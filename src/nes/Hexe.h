@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CXX_Chisa_HEXE_H_
-#define _CXX_Chisa_HEXE_H_
-
+#pragma once
 #include "../chisa/Hexe.h"
 
 namespace nes {
@@ -35,4 +33,3 @@ public:
 };
 
 }
-#endif /* INCLUDE_GUARD */

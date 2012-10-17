@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef Chisa_TK_LAYOUT_SPLITLAYOUT_H__CPP_
-#define Chisa_TK_LAYOUT_SPLITLAYOUT_H__CPP_
+#pragma once
 
 #include "../Layout.h"
 #include <tinyxml2.h>
@@ -112,4 +111,3 @@ private:
 };
 
 }}}
-#endif /* INCLUDE_GUARD */

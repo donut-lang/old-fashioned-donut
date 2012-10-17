@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CXX_Chisa_NESGEIST_H_
-#define _CXX_Chisa_NESGEIST_H_
-
+#pragma once
 #include "machine/VirtualMachine.h"
 #include "../chisa/Hexe.h"
 #include "../chisa/tk/Task.h"
@@ -75,4 +73,3 @@ public:
 };
 
 }
-#endif /* INCLUDE_GUARD */

@@ -16,9 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CXX_CHISA_GL_BUFFER_H_
-#define CXX_CHISA_GL_BUFFER_H_
-
+#pragma once
 #include "../util/ClassUtil.h"
 
 namespace chisa {
@@ -36,5 +34,3 @@ public:
 };
 
 }}
-
-#endif /* INCLUDE_GUARD */

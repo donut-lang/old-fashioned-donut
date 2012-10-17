@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CHISA_UTIL_PARAM_H_
-#define CHISA_UTIL_PARAM_H_
+#pragma once
 
 #include <tinyxml2.h>
 #include <map>
@@ -78,4 +77,3 @@ public:
 };
 
 }}
-#endif

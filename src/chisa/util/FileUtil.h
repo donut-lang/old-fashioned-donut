@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CXX_CHISA_UTIL_FILEUTIL_H_
-#define _CXX_CHISA_UTIL_FILEUTIL_H_
+#pragma once
 
 #include <string>
 
@@ -45,4 +44,3 @@ std::string join(const First& elem, const Args&... left)
 
 
 }}}
-#endif /* INCLUDE_GUARD */

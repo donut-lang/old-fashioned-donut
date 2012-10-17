@@ -5,8 +5,7 @@
  *      Author: psi
  */
 
-#ifndef __CXX_ChisaSCROLLLAYOUT_H_
-#define __CXX_ChisaSCROLLLAYOUT_H_
+#pragma once
 
 #include "../Layout.h"
 #include "../Task.h"
@@ -47,4 +46,3 @@ public:
 };
 
 }}}
-#endif /* INCUDE_GUARD */

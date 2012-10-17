@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SACCUBUS_LOGGER_H_
-#define SACCUBUS_LOGGER_H_
+#pragma once
 
 #include <ostream>
 #include <cstdarg>
@@ -69,4 +68,4 @@ public:
 };
 
 }}
-#endif /* SACCUBUS_LOGGER_H_ */
+

@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef Chisa_TK_WORLD_H__CPP_
-#define Chisa_TK_WORLD_H__CPP_
+#pragma once
 #include <memory>
 #include <string>
 #include <map>
@@ -138,4 +137,3 @@ public:
 };
 
 }}
-#endif /* INCLUDE_GUARD */
