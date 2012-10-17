@@ -5,8 +5,7 @@
  *      Author: psi
  */
 
-#ifndef GAMEPADFAIRY_H_
-#define GAMEPADFAIRY_H_
+#pragma once
 
 #include <stdint.h>
 
@@ -53,4 +52,3 @@ public:
 };
 
 }
-#endif /* GAMEPADFAIRY_H_ */

@@ -5,8 +5,7 @@
  *      Author: psi
  */
 
-#ifndef VIDEOFAIRY_H_
-#define VIDEOFAIRY_H_
+#pragma once
 
 #include <stdint.h>
 #include <cstddef>
@@ -35,4 +34,3 @@ public:
 };
 
 }
-#endif /* VIDEOFAIRY_H_ */

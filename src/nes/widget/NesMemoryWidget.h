@@ -5,8 +5,7 @@
  *      Author: psi
  */
 
-#ifndef __CXX_ChisaNESMEMORYWIDGET_H_
-#define __CXX_ChisaNESMEMORYWIDGET_H_
+#pragma once
 
 #include "../../chisa/tk/Widget.h"
 
@@ -29,4 +28,4 @@ public:
 };
 
 }}
-#endif /* INCUDE_GUARD */
+

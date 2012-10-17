@@ -1,5 +1,4 @@
-#ifndef VIRTUALMACHINE_H
-#define VIRTUALMACHINE_H
+#pragma once
 
 #include <cstddef>
 #include <iostream>
@@ -562,4 +561,3 @@ class VirtualMachine
 };
 
 }
-#endif // VIRTUALMACHINE_H

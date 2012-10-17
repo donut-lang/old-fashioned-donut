@@ -5,9 +5,7 @@
  *      Author: psi
  */
 
-#ifndef MAPPER23_H_
-#define MAPPER23_H_
-
+#pragma once
 #include "board/VRC4.h"
 
 namespace nes {
@@ -24,4 +22,3 @@ public:
 };
 
 }
-#endif /* MAPPER23_H_ */

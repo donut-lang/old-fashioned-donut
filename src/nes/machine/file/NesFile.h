@@ -5,8 +5,7 @@
  *	  Author: psi
  */
 
-#ifndef NESFILE_H_
-#define NESFILE_H_
+#pragma once
 #include <cstddef>
 #include <stdint.h>
 #include <stdio.h>
@@ -89,4 +88,3 @@ private:
 };
 
 }
-#endif /* NESFILE_H_ */

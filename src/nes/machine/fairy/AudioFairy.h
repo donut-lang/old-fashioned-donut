@@ -5,8 +5,7 @@
  *      Author: psi
  */
 
-#ifndef AUDIOFAIRY_H_
-#define AUDIOFAIRY_H_
+#pragma once
 
 #include "../exception/EmulatorException.h"
 #include <stdio.h>
@@ -72,4 +71,3 @@ class DummyAudioFairy : public AudioFairy
 };
 
 }
-#endif /* AUDIOFAIRY_H_ */

@@ -5,8 +5,7 @@
  *	  Author: psi
  */
 
-#ifndef MAPPER2_H_
-#define MAPPER2_H_
+#pragma once
 
 #include "../VirtualMachine.h"
 #include "../file/NesFile.h"
@@ -37,4 +36,3 @@ private:
 };
 
 }
-#endif /* MAPPER2_H_ */
