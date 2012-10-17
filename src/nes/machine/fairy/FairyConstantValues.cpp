@@ -6,7 +6,13 @@
  */
 
 #include "VideoFairy.h"
+
+#if defined(WIN32) || defined(WIN64) || defined(__WIN32__) || defined(__WIN64__)
+#define IS_BIG_ENDIAN 0
+#else
 #include <endian.h>
+#define IS_BIG_ENDIAN (BYTE_ORDER == BIG_ENDIAN)
+#endif
 
 namespace nes {
 
@@ -16,7 +22,7 @@ namespace nes {
 
 const uint32_t VideoFairy::nesPaletteARGB[64] =
 {
-# if BYTE_ORDER == BIG_ENDIAN
+# if IS_BIG_ENDIAN
 		0x787878ff, 0x2000b0ff, 0x2800b8ff, 0x6010a0ff, 0x982078ff, 0xb01030ff, 0xa03000ff, 0x784000ff,
 		0x485800ff, 0x386800ff, 0x386c00ff, 0x306040ff, 0x305080ff, 0x000000ff, 0x000000ff, 0x000000ff,
 		0xb0b0b0ff, 0x4060f8ff, 0x4040ffff, 0x9040f0ff, 0xd840c0ff, 0xd84060ff, 0xe05000ff, 0xc07000ff,

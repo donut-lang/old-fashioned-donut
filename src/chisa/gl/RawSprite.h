@@ -21,10 +21,10 @@
 
 #include <cairo/cairo.h>
 #include "../util/ClassUtil.h"
+#include "../util/Thread.h"
 #include "Handler.h"
 #include "Buffer.h"
 #include "Sprite.h"
-#include <atomic>
 
 namespace chisa {
 namespace gl {
