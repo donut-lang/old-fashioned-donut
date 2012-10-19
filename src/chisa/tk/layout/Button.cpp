@@ -33,7 +33,7 @@ CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(Button)
 ,sprite_()
 ,dirty_(false)
 ,vertical_(false)
-,pushed_(false)
+,pushedCnt_(0)
 {
 	{
 		cairo_status_t st = cairo_surface_status(this->surface_);
@@ -150,13 +150,13 @@ weak_ptr<Layout> Button::getLayoutByIdImpl(const std::string& id)
 
 bool Button::onDownRaw(const float timeMs, const geom::Point& ptInScreen)
 {
-	this->pushed_ = true;
+	++this->pushedCnt_;
 	return false;
 }
 
 bool Button::onUpRaw(const float timeMs, const geom::Point& ptInScreen)
 {
-	this->pushed_ = false;
+	--this->pushedCnt_;
 	return false;
 }
 

@@ -38,7 +38,7 @@ private:
 	bool vertical_;
 private:
 	geom::Box renderOffset_;
-	bool pushed_;
+	int pushedCnt_;
 private:
 	void text(const std::string& text);
 	std::string text() const{ return this->text_; };
