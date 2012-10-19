@@ -94,14 +94,14 @@ void WidgetWrapperLayout::renderImpl(gl::Canvas& canvas, const geom::Area& scree
 	widget()->render(canvas, this->widgetDrawnArea());
 }
 
-geom::Box chisa::tk::layout::WidgetWrapperLayout::onMeasure(const geom::Box& constraint)
+geom::Box WidgetWrapperLayout::onMeasure(const geom::Box& constraint)
 {
 	if(!widget()){
 		return geom::Box(0,0);
 	}
 	geom::Box box(widget()->measure(constraint));
 	if(geom::isUnspecified(box.width()) || geom::isUnspecified(box.height())){
-		this->log().e(TAG, "Widget \"this->widgetId_.c_str()\" box size unspecified.");
+		this->log().e(TAG, "Widget \"%s\" box size unspecified.", this->widgetId_.c_str());
 	}
 	switch (this->fitMode_)
 	{
@@ -187,7 +187,7 @@ void WidgetWrapperLayout::onLayout(const geom::Box& size)
 
 std::string WidgetWrapperLayout::toString() const
 {
-	return util::format( "(WidgetWrapperLayout %s)", this->widgetId_.c_str());
+	return util::format( "(WidgetWrapperLayout \"%s\")", this->widgetId_.c_str());
 }
 void WidgetWrapperLayout::loadXMLimpl(LayoutFactory* const factory, XMLElement* const element)
 {
