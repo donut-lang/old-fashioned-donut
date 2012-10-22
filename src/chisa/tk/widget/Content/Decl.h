@@ -15,6 +15,7 @@ class NodeReader;
 class NodeWalker;
 
 class Node;
+class TreeNode;
 class InlineNode;
 class BlockNode;
 
