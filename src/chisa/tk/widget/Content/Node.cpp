@@ -36,7 +36,7 @@ std::shared_ptr<Document> Node::createRootDocument()
 
 TreeNode::TreeNode()
 {
-	this->addAttribute<std::string>("id", this->id_);
+	this->addAttribute("id", this->id_);
 }
 
 void TreeNode::parseAttribute(tinyxml2::XMLElement* node)
