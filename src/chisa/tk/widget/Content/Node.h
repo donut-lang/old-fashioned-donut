@@ -12,6 +12,7 @@
 #include "NodeWalker.h"
 #include <memory>
 #include <vector>
+#include <map>
 #include <tinyxml2.h>
 
 namespace chisa {
@@ -32,7 +33,6 @@ public:
 	virtual ~Node() noexcept = default;
 public:
 	virtual void walked(NodeWalker& walker) = 0;
-	virtual void parseAttribute(tinyxml2::XMLNode* node) {};
 	template <typename Derived, typename... Args>
 	static std::shared_ptr<Derived> create(std::weak_ptr<Document> root, std::weak_ptr<Node> parent, const Args&... args)
 	{
@@ -47,28 +47,27 @@ public:
 #define NODE_SUBKLASS_DESTRUCTOR(Klass) public: virtual ~Klass() noexcept = default;
 #define NODE_SUBKLASS_WALK(Klass) 	public: virtual void walked(NodeWalker& walker) override { walker.walk(this); };
 
-#define NODE_SUBKLASS_LEAF(Klass)\
+#define NODE_SUBKLASS(Klass)\
+protected:\
+	Klass();\
 NODE_SUBKLASS_DESTRUCTOR(Klass);\
+
+#define NODE_SUBKLASS_LEAF(Klass)\
 NODE_SUBKLASS_WALK(Klass);\
+NODE_SUBKLASS_DESTRUCTOR(Klass);\
 template <typename Derived, typename... Args>\
 friend std::shared_ptr<Derived> Node::create(std::weak_ptr<Document> root, std::weak_ptr<Node> parent, const Args&... args)
-
-#define NODE_SUBKLASS_WITH_IMPL_LEAF(Klass)\
-private: Klass(){}\
-NODE_SUBKLASS_LEAF(Klass);
-
-#define NODE_SUBKLASS_WITH_IMPL(Klass)\
-protected: Klass(){}\
-NODE_SUBKLASS_DESTRUCTOR(Klass);
 
 /******************************************************************************
  * カテゴライズするためのノード
  ******************************************************************************/
 
 class TreeNode : public Node {
-	NODE_SUBKLASS_WITH_IMPL(TreeNode);
+	DEFINE_MEMBER(public, private, std::string, id);
+	NODE_SUBKLASS(TreeNode);
 private:
 	std::vector<std::shared_ptr<Node> > children_;\
+	std::map<std::string, std::function<void(tinyxml2::XMLElement*)> > attrMap_;
 protected:
 	inline std::vector<std::shared_ptr<Node> >& children() { return children_; }
 	inline const std::vector<std::shared_ptr<Node> >& children() const { return children_; }
@@ -83,14 +82,22 @@ public:
 	inline void add(std::shared_ptr<Node> child) { this->children_.push_back(child); };
 	inline size_t count() const { return this->children_.size(); };
 	inline std::shared_ptr<Node> at(size_t idx) const { return this->children_.at(idx); };
+	void parseAttribute(tinyxml2::XMLElement* elm);
+protected:
+	template <typename T> static void parseAttr(const std::string& name, T& ptr, const T& def, tinyxml2::XMLElement* elm);
+	template <typename T> void addAttribute(const std::string& name, T& ptr, const T def=T())
+	{
+		using namespace std::placeholders;
+		this->attrMap_.insert(std::make_pair(name, std::bind(TreeNode::parseAttr<T>, std::string(name), std::ref(ptr), def, _1)));
+	}
 };
 
 class BlockNode : public TreeNode {
-	NODE_SUBKLASS_WITH_IMPL(BlockNode);
+	NODE_SUBKLASS(BlockNode);
 };
 
 class InlineNode : public TreeNode {
-	NODE_SUBKLASS_WITH_IMPL(InlineNode);
+	NODE_SUBKLASS(InlineNode);
 };
 
 /******************************************************************************
@@ -98,12 +105,12 @@ class InlineNode : public TreeNode {
  ******************************************************************************/
 
 class Document : public TreeNode {
-	NODE_SUBKLASS_WITH_IMPL_LEAF(Document);
+	NODE_SUBKLASS_LEAF(Document);
 	friend std::shared_ptr<Document> Node::createRootDocument();
 };
 
 class Paragraph : public BlockNode {
-	NODE_SUBKLASS_WITH_IMPL_LEAF(Paragraph);
+	NODE_SUBKLASS_LEAF(Paragraph);
 };
 
 class Heading : public BlockNode {
