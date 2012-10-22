@@ -65,7 +65,7 @@ TEST(NodeReadingTest, TextNodeTest)
 	ASSERT_EQ("Kitty on your lap.", t->text());
 }
 
-TEST(ContentWidget, HeadingTest)
+TEST(NodeReadingTest, HeadingTest)
 {
 	std::shared_ptr<Document> m;
 	auto tree = parse(R"delimiter(
@@ -84,7 +84,7 @@ TEST(ContentWidget, HeadingTest)
 	}
 }
 
-TEST(ContentWidget, MixedTest)
+TEST(NodeReadingTest, MixedTest)
 {
 	std::shared_ptr<Document> m;
 	auto tree = parse(R"delimiter(
@@ -108,6 +108,22 @@ TEST(ContentWidget, MixedTest)
 	std::shared_ptr<Text> tnode(std::dynamic_pointer_cast<Text>(m->at(1)));
 	ASSERT_TRUE(tnode.get());
 	ASSERT_EQ("kitty on your lap", tnode->text());
+}
+
+TEST(NodeReadingTest, AttributeTest)
+{
+	std::shared_ptr<Document> m;
+	auto tree = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?>
+	<doc><p id="test"></p></doc>
+	)delimiter");
+	ASSERT_NO_THROW(m = NodeReader().parseTree(tree->RootElement()));
+	ASSERT_EQ(1, m->count());
+
+	std::shared_ptr<Paragraph> p(std::dynamic_pointer_cast<Paragraph>(m->at(0)));
+	ASSERT_TRUE(p.get());
+	ASSERT_EQ("test", p->id());
+	ASSERT_EQ(0, p->count());
 }
 
 }}}
