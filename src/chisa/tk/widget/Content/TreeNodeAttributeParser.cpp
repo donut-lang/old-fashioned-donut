@@ -44,4 +44,18 @@ template <> void TreeNode::parseAttr<std::string>(const std::string& name, std::
 	}
 }
 
+template <> void TreeNode::parseAttr<unsigned int>(const std::string& name, unsigned int& v, const unsigned int& def, tinyxml2::XMLElement* elm)
+{
+	if(!elm->QueryUnsignedAttribute(name.c_str(), &v)){
+		v = def;
+	}
+}
+
+template <> void TreeNode::parseAttr<bool>(const std::string& name, bool& v, const bool& def, tinyxml2::XMLElement* elm)
+{
+	if(!elm->QueryBoolAttribute(name.c_str(), &v)){
+		v = def;
+	}
+}
+
 }}}
