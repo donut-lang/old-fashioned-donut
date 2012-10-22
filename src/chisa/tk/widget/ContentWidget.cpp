@@ -8,6 +8,8 @@
 #include "ContentWidget.h"
 #include "../../geom/Area.h"
 #include "../../geom/Vector.h"
+#include "Content/ModelReader.h"
+#include <tinyxml2.h>
 
 namespace chisa {
 namespace tk {
@@ -15,6 +17,7 @@ namespace widget {
 
 CHISA_WIDGET_SUBKLASS_CONSTRUCTOR_DEF(ContentWidget)
 {
+	this->rootModel(ModelReader().parseTree(element));
 }
 
 ContentWidget::~ContentWidget()

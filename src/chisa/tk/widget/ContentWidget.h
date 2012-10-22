@@ -8,6 +8,7 @@
 #pragma once
 
 #include "../Widget.h"
+#include "Content/Decl.h"
 
 namespace chisa {
 namespace tk {
@@ -15,6 +16,7 @@ namespace widget {
 
 class ContentWidget: public chisa::tk::Widget {
 	CHISA_WIDGET_SUBKLASS(ContentWidget);
+	DEFINE_MEMBER(private, private, std::shared_ptr<Model>, rootModel);
 public:
 	virtual void render(gl::Canvas& cv, const geom::Area& area) override;
 	virtual void idle(const float delta_ms) override;
