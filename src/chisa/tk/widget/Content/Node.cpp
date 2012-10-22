@@ -1,10 +1,20 @@
-/*
- * Model.cpp
+/**
+ * Chisa
+ * Copyright (C) 2012 psi
  *
- *  Created on: Oct 21, 2012
- *      Author: psi
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #include "Node.h"
 
 namespace chisa {
@@ -15,9 +25,25 @@ Node::Node()
 {
 }
 
+std::shared_ptr<Document> Node::createRootDocument()
+{
+	std::shared_ptr<Document> node(new Document);
+	node->root(node);
+	node->parent(std::weak_ptr<Node>());
+	return node;
+}
+
+
 TreeNode::TreeNode()
 {
 	this->addAttribute<std::string>("id", this->id_);
+}
+
+void TreeNode::parseAttribute(tinyxml2::XMLElement* node)
+{
+	for(auto it : this->attrMap_){
+		it.second(node);
+	}
 }
 
 BlockNode::BlockNode()
@@ -30,44 +56,15 @@ InlineNode::InlineNode()
 
 }
 
-void TreeNode::parseAttribute(tinyxml2::XMLElement* node)
+Document::Document()
 {
-	for(auto it : this->attrMap_){
-		it.second(node);
-	}
+
 }
 
-std::shared_ptr<Document> Node::createRootDocument()
+Paragraph::Paragraph()
 {
-	std::shared_ptr<Document> node(new Document);
-	node->root(node);
-	node->parent(std::weak_ptr<Node>());
-	return node;
-}
 
-template <> void TreeNode::parseAttr<int>(const std::string& name, int& v, const int& def, tinyxml2::XMLElement* elm)
-{
-	if(!elm->QueryIntAttribute(name.c_str(), &v)){
-		v = def;
-	}
 }
-
-template <> void TreeNode::parseAttr<float>(const std::string& name, float& v, const float& def, tinyxml2::XMLElement* elm)
-{
-	if(!elm->QueryFloatAttribute(name.c_str(), &v)){
-		v = def;
-	}
-}
-
-template <> void TreeNode::parseAttr<std::string>(const std::string& name, std::string& v, const std::string& def, tinyxml2::XMLElement* elm)
-{
-	if(const char* attr = elm->Attribute(name.c_str())){
-		v = attr;
-	}else{
-		v = def;
-	}
-}
-
 
 Heading::Heading(int const level)
 :BlockNode()
