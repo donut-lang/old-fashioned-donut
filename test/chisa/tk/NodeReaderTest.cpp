@@ -126,5 +126,20 @@ TEST(NodeReadingTest, AttributeTest)
 	ASSERT_EQ(0, p->count());
 }
 
+TEST(NodeReadingTest, SpaceStringTest)
+{
+	std::shared_ptr<Document> m;
+	auto tree = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?>
+	<doc>               <p 	>	</p>	</doc>
+	)delimiter");
+	ASSERT_NO_THROW(m = NodeReader().parseTree(tree->RootElement()));
+	ASSERT_EQ(1, m->count());
+
+	std::shared_ptr<Paragraph> p(std::dynamic_pointer_cast<Paragraph>(m->at(0)));
+	ASSERT_TRUE(p.get());
+	ASSERT_EQ(0, p->count());
+}
+
 }}}
 
