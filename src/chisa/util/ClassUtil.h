@@ -28,7 +28,7 @@ private:\
 private:\
 	type const name##_;\
 rscope:\
-	inline type name() const{return name##_;}\
+	inline type const& name() const{return name##_;}\
 
 #define DEFINE_MEMBER_REF(rscope, type, name)\
 private:\
@@ -40,6 +40,7 @@ rscope:\
 private:\
 	type name##_;\
 rscope:\
-	inline type name() const{return name##_;}\
+	inline type name() {return name##_;}\
+	inline type const& name() const{return name##_;}\
 wscope:\
 	inline void name(type const& val){name##_ = val;}

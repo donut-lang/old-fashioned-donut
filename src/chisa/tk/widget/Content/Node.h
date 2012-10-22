@@ -76,11 +76,8 @@ class TreeNode : public Node {
 	DEFINE_MEMBER(public, private, std::string, id);
 	NODE_SUBKLASS(TreeNode);
 private:
-	std::vector<std::shared_ptr<Node> > children_;\
+	DEFINE_MEMBER(public, private, std::vector<std::shared_ptr<Node> >, children);
 	std::map<std::string, std::function<void(tinyxml2::XMLElement*)> > attrMap_;
-protected:
-	inline std::vector<std::shared_ptr<Node> >& children() { return children_; }
-	inline const std::vector<std::shared_ptr<Node> >& children() const { return children_; }
 public:
 	typedef std::vector<std::shared_ptr<Node> >::iterator Iterator;
 	typedef std::vector<std::shared_ptr<Node> >::const_iterator ConstIterator;
