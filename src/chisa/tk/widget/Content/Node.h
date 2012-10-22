@@ -51,12 +51,12 @@ friend std::shared_ptr<Derived> Node::create(std::weak_ptr<Document> root, std::
 private: Klass(){}\
 NODE_SUBKLASS_LEAF(Klass);
 
-#define NODE_SUBKLASS_WITH_IMPL_PARENT(Klass)\
+#define NODE_SUBKLASS_WITH_IMPL(Klass)\
 protected: Klass(){}\
 NODE_SUBKLASS_DESTRUCTOR(Klass);
 
 class TreeNode : public Node {
-	NODE_SUBKLASS_WITH_IMPL_PARENT(TreeNode);
+	NODE_SUBKLASS_WITH_IMPL(TreeNode);
 private:
 	std::vector<std::shared_ptr<Node> > children_;\
 protected:
@@ -76,11 +76,11 @@ public:
 };
 
 class BlockNode : public TreeNode {
-	NODE_SUBKLASS_WITH_IMPL_PARENT(BlockNode);
+	NODE_SUBKLASS_WITH_IMPL(BlockNode);
 };
 
 class InlineNode : public TreeNode {
-	NODE_SUBKLASS_WITH_IMPL_PARENT(InlineNode);
+	NODE_SUBKLASS_WITH_IMPL(InlineNode);
 };
 
 class Document : public TreeNode {
