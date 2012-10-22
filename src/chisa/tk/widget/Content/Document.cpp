@@ -22,10 +22,4 @@ namespace chisa {
 namespace tk {
 namespace widget {
 
-Text::Text(std::string text)
-:Node()
-,text_(text)
-{
-}
-
 }}}

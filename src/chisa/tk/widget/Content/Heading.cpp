@@ -5,14 +5,14 @@
  *      Author: psi
  */
 
-#include "Model.h"
+#include "Node.h"
 
 namespace chisa {
 namespace tk {
 namespace widget {
 
-Heading::Heading(MODEL_SUBKLASS_PARAM_LIST, int const level)
-:BlockModel(MODEL_SUBKLASS_PARAM_APPLY)
+Heading::Heading(int const level)
+:BlockNode()
 ,level_(level)
 {
 

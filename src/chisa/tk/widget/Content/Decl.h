@@ -11,12 +11,14 @@ namespace chisa {
 namespace tk {
 namespace widget {
 
-class ModelReader;
-class ModelWalker;
+class NodeReader;
+class NodeWalker;
 
-class Model;
-class InlineModel;
-class BlockModel;
+class Node;
+class InlineNode;
+class BlockNode;
+
+class Document;
 class Paragraph;
 class Text;
 class Heading;
