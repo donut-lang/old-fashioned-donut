@@ -19,6 +19,7 @@
 
 #include "WidgetFactory.h"
 #include "ImageWidget.h"
+#include "ContentWidget.h"
 
 namespace chisa {
 namespace tk {
@@ -29,6 +30,7 @@ WidgetFactory::WidgetFactory(logging::Logger& log, weak_ptr<World> world)
 ,world_(world)
 {
 	this->registerWidget<ImageWidget>("image");
+	this->registerWidget<ContentWidget>("content");
 }
 
 WidgetFactory::~WidgetFactory()
