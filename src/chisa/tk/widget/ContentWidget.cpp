@@ -26,9 +26,15 @@ namespace chisa {
 namespace tk {
 namespace widget {
 
+static std::string const TAG("ContentWidget");
+
 CHISA_WIDGET_SUBKLASS_CONSTRUCTOR_DEF(ContentWidget)
 {
-	this->rootNode(NodeReader().parseTree(element));
+	tinyxml2::XMLElement* docElem = element->FirstChildElement("doc");
+	this->rootNode(NodeReader().parseTree(docElem));
+	if(this->log().t()){
+		this->log().t(TAG, "Content Parsed.");
+	}
 }
 
 ContentWidget::~ContentWidget()
