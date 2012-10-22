@@ -94,10 +94,12 @@ TEST(ContentWidget, MixedTest)
 	ASSERT_NO_THROW(m = NodeReader().parseTree(tree->RootElement()));
 	ASSERT_TRUE(m.get());
 	ASSERT_EQ(3, m->count());
+
 	std::shared_ptr<Heading> hnode(std::dynamic_pointer_cast<Heading>(m->at(0)));
 	ASSERT_TRUE(hnode.get());
 	ASSERT_EQ(1, hnode->level());
 	ASSERT_EQ("a", std::dynamic_pointer_cast<Text>(hnode->at(0))->text());
+
 	hnode = (std::dynamic_pointer_cast<Heading>(m->at(2)));
 	ASSERT_TRUE(hnode.get());
 	ASSERT_EQ(3, hnode->level());

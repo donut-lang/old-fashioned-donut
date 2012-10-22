@@ -12,10 +12,15 @@
 #include "NodeWalker.h"
 #include <memory>
 #include <vector>
+#include <tinyxml2.h>
 
 namespace chisa {
 namespace tk {
 namespace widget {
+
+/******************************************************************************
+ * 基底ノード
+ ******************************************************************************/
 
 class Node {
 	DISABLE_COPY_AND_ASSIGN(Node);
@@ -27,6 +32,7 @@ public:
 	virtual ~Node() noexcept = default;
 public:
 	virtual void walked(NodeWalker& walker) = 0;
+	virtual void parseAttribute(tinyxml2::XMLNode* node) {};
 	template <typename Derived, typename... Args>
 	static std::shared_ptr<Derived> create(std::weak_ptr<Document> root, std::weak_ptr<Node> parent, const Args&... args)
 	{
@@ -55,6 +61,10 @@ NODE_SUBKLASS_LEAF(Klass);
 protected: Klass(){}\
 NODE_SUBKLASS_DESTRUCTOR(Klass);
 
+/******************************************************************************
+ * カテゴライズするためのノード
+ ******************************************************************************/
+
 class TreeNode : public Node {
 	NODE_SUBKLASS_WITH_IMPL(TreeNode);
 private:
@@ -82,6 +92,10 @@ class BlockNode : public TreeNode {
 class InlineNode : public TreeNode {
 	NODE_SUBKLASS_WITH_IMPL(InlineNode);
 };
+
+/******************************************************************************
+ * 実装ノード
+ ******************************************************************************/
 
 class Document : public TreeNode {
 	NODE_SUBKLASS_WITH_IMPL_LEAF(Document);

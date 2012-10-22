@@ -16,12 +16,21 @@ namespace widget {
 
 const std::string NodeReader::RootElementName("doc");
 
+template <typename N, typename... Args>
+static NodeReader::ParseFunc createProxy(const Args&... args)
+{
+	using namespace std::placeholders;
+	NodeReader::TreeConstructor c = std::bind(Node::create<N, Args...>, _1, _2, args...);
+	return std::bind(&NodeReader::parseTreeNode, _1, c, _2, _3, _4);
+}
+
 NodeReader::NodeReader()
 {
 	using namespace std::placeholders;
-	this->elementParser_.insert(std::make_pair("h1", std::bind(&NodeReader::parseHeading, _1,1,_2, _3, _4)));
-	this->elementParser_.insert(std::make_pair("h2", std::bind(&NodeReader::parseHeading, _1,2,_2, _3, _4)));
-	this->elementParser_.insert(std::make_pair("h3", std::bind(&NodeReader::parseHeading, _1,3,_2, _3, _4)));
+	this->elementParser_.insert(std::make_pair("h1", createProxy<Heading>(1)));
+	this->elementParser_.insert(std::make_pair("h2", createProxy<Heading>(2)));
+	this->elementParser_.insert(std::make_pair("h3", createProxy<Heading>(3)));
+	this->elementParser_.insert(std::make_pair("p", createProxy<Paragraph>()));
 }
 
 #define NODE_FOREACH(it, node)\
@@ -60,18 +69,19 @@ std::shared_ptr<Node> NodeReader::parseNode(std::weak_ptr<Document> root, std::w
 	throw logging::Exception(__FILE__, __LINE__, "Unknwon document node: %s", node->Value());
 }
 
+std::shared_ptr<TreeNode> NodeReader::parseTreeNode(TreeConstructor constructor, std::weak_ptr<Document> root, std::weak_ptr<Node> parent, tinyxml2::XMLElement* elm)
+{
+	std::shared_ptr<TreeNode> tree(constructor(root, parent));
+	tree->parseAttribute(elm);
+	NODE_FOREACH(it, elm) {
+		tree->add(this->parseNode(root, tree, it));
+	}
+	return tree;
+}
+
 std::shared_ptr<Node> NodeReader::parseText(std::weak_ptr<Document> root, std::weak_ptr<Node> parent, tinyxml2::XMLText* txt)
 {
 	return std::shared_ptr<Node>(Node::create<Text>(root, parent, txt->Value()));
-}
-
-std::shared_ptr<Node> NodeReader::parseHeading(int level, std::weak_ptr<Document> root, std::weak_ptr<Node> parent, tinyxml2::XMLElement* elm)
-{
-	std::shared_ptr<Heading> model(Node::create<Heading>(root, parent, level));
-	NODE_FOREACH(it, elm) {
-		model->add(this->parseNode(root, model, it));
-	}
-	return model;
 }
 
 }}}
