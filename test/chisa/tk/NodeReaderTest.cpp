@@ -84,5 +84,29 @@ TEST(ContentWidget, HeadingTest)
 	}
 }
 
+TEST(ContentWidget, MixedTest)
+{
+	std::shared_ptr<Document> m;
+	auto tree = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?>
+	<doc><h1>a</h1>kitty on your lap<h3>c</h3></doc>
+	)delimiter");
+	ASSERT_NO_THROW(m = NodeReader().parseTree(tree->RootElement()));
+	ASSERT_TRUE(m.get());
+	ASSERT_EQ(3, m->count());
+	std::shared_ptr<Heading> hnode(std::dynamic_pointer_cast<Heading>(m->at(0)));
+	ASSERT_TRUE(hnode.get());
+	ASSERT_EQ(1, hnode->level());
+	ASSERT_EQ("a", std::dynamic_pointer_cast<Text>(hnode->at(0))->text());
+	hnode = (std::dynamic_pointer_cast<Heading>(m->at(2)));
+	ASSERT_TRUE(hnode.get());
+	ASSERT_EQ(3, hnode->level());
+	ASSERT_EQ("c", std::dynamic_pointer_cast<Text>(hnode->at(0))->text());
+
+	std::shared_ptr<Text> tnode(std::dynamic_pointer_cast<Text>(m->at(1)));
+	ASSERT_TRUE(tnode.get());
+	ASSERT_EQ("kitty on your lap", tnode->text());
+}
+
 }}}
 
