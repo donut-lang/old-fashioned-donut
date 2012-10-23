@@ -61,7 +61,22 @@ template <> void TreeNode::parseAttr<bool>(const std::string& name, bool& v, con
 
 template <> void TreeNode::parseAttr<Margin>(const std::string& name, Margin& v, const Margin& def, tinyxml2::XMLElement* elm)
 {
-
+	float margin;
+	if(elm->QueryFloatAttribute(name.c_str(), &margin)){
+		v.margin(margin);
+	}
+	if(elm->QueryFloatAttribute((name+"-top").c_str(), &margin)){
+		v.top(margin);
+	}
+	if(elm->QueryFloatAttribute((name+"-left").c_str(), &margin)){
+		v.left(margin);
+	}
+	if(elm->QueryFloatAttribute((name+"-right").c_str(), &margin)){
+		v.right(margin);
+	}
+	if(elm->QueryFloatAttribute((name+"-bottom").c_str(), &margin)){
+		v.bottom(margin);
+	}
 }
 
 }}}

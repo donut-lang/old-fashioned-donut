@@ -20,6 +20,7 @@
 #include "../../../util/ClassUtil.h"
 #include "Decl.h"
 #include "NodeWalker.h"
+#include "Margin.h"
 #include <memory>
 #include <vector>
 #include <map>
@@ -73,14 +74,16 @@ friend std::shared_ptr<Derived> Node::create(std::weak_ptr<Document> root, std::
  ******************************************************************************/
 
 class TreeNode : public Node {
+public:
+	typedef std::vector<std::shared_ptr<Node> > ChildrenType;
+	typedef ChildrenType::iterator Iterator;
+	typedef ChildrenType::const_iterator ConstIterator;
+private:
 	DEFINE_MEMBER(public, private, std::string, id);
 	NODE_SUBKLASS(TreeNode);
 private:
-	DEFINE_MEMBER(public, private, std::vector<std::shared_ptr<Node> >, children);
+	DEFINE_MEMBER(public, private, ChildrenType, children);
 	std::map<std::string, std::function<void(tinyxml2::XMLElement*)> > attrMap_;
-public:
-	typedef std::vector<std::shared_ptr<Node> >::iterator Iterator;
-	typedef std::vector<std::shared_ptr<Node> >::const_iterator ConstIterator;
 public:
 	inline Iterator begin() { return this->children_.begin(); };
 	inline Iterator end() { return this->children_.end(); };
@@ -100,6 +103,7 @@ protected:
 };
 
 class BlockNode : public TreeNode {
+	DEFINE_MEMBER(public, private, Margin, margin);
 	NODE_SUBKLASS(BlockNode);
 };
 
@@ -111,7 +115,7 @@ class InlineNode : public TreeNode {
  * 実装ノード
  ******************************************************************************/
 
-class Document : public TreeNode {
+class Document : public BlockNode {
 	NODE_SUBKLASS_LEAF(Document);
 	friend std::shared_ptr<Document> Node::createRootDocument();
 public:

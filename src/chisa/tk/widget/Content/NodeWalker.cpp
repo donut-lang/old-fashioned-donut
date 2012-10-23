@@ -15,24 +15,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#pragma once
-#include <memory>
-#include "Decl.h"
+
+#include "Node.h"
+#include "NodeWalker.h"
 
 namespace chisa {
 namespace tk {
 namespace widget {
 
-class NodeWalker {
-public:
-	NodeWalker() noexcept = default;
-	virtual ~NodeWalker() noexcept (true) = default;
-	void start(std::shared_ptr<Document> model);
-	virtual void walk(Document* model) = 0;
-	virtual void walk(Paragraph* model) = 0;
-	virtual void walk(Heading* model) = 0;
-	virtual void walk(Text* model) = 0;
-	virtual void walk(Link* link) = 0;
-};
+void NodeWalker::start(std::shared_ptr<Document> model)
+{
+	model->walk(*this);
+}
 
 }}}
