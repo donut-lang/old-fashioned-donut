@@ -16,8 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "../../gl/StringRenderer.h"
 #include "ContentWidget.h"
 #include "Content/Node.h"
+#include "../../geom/Area.h"
 
 namespace chisa {
 namespace tk {
@@ -27,6 +29,8 @@ ContentMeasure::ContentMeasure(float const width) noexcept
 :widgetWidth_(width)
 ,direction_(Right)
 ,nowSession_(nullptr)
+,surface_(cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 1, 1))
+,cairo_(cairo_create(this->surface_))
 {
 }
 
@@ -34,7 +38,7 @@ ContentMeasure::BlockSession::BlockSession(ContentMeasure& parent, BlockNode* co
 :node_(node)
 ,lastSession_(parent.nowSession_)
 ,parent_(parent)
-,maxWidth_(0.0f)
+,maxWidth_(geom::min(node->width(), lastSession_->maxWidth_))
 ,consumedHeight_(0.0f)
 ,reservedWidth_(0.0f)
 ,reservedHeight_(0.0f)
@@ -49,29 +53,12 @@ ContentMeasure::BlockSession::~BlockSession() noexcept
 float ContentMeasure::BlockSession::calcLeftWidth()
 {
 	return consumedHeight_ <= lastSession_->reservedHeight_ ?
-				0 : //親ノードの最大値-reservedWidth;
-				0;//nodeが最大値を持ってるならそれ、無いなら親セッションの最大幅
+				lastSession_->maxWidth_-lastSession_->reservedWidth_ : //親ノードの最大値-reservedWidth;
+				maxWidth_;//nodeが最大値を持ってるならそれ、無いなら親セッションの最大幅
 }
-
-void ContentMeasure::extend(float width, float lineHeight)
-{
-//	float newX = this->pt_.x() + width;
-//	float maxLineHeight = std::max(lineHeight, this->lineHeight_);
-//	if(newX <= this->boxWidth_){
-//		this->pt_.x(newX);
-//		this->lineHeight_ = maxLineHeight;
-//	}else{
-//		newX -= this->boxWidth_;
-//		this->pt_.x(newX);
-//		this->pt_.y(this->pt_.y() + maxLineHeight);
-//		this->lineHeight_ = lineHeight;
-//	}
-}
-
 void ContentMeasure::walk(Document* model)
 {
 	BlockSession bs(*this, model);
-
 }
 
 void ContentMeasure::walk(Paragraph* model)
@@ -90,6 +77,22 @@ void ContentMeasure::walk(Link* model)
 
 void ContentMeasure::walk(Text* model)
 {
+	float width = this->nowSession_->calcLeftWidth();
+	gl::StringRenderer renderer;
+	std::string str = model->text();
+	size_t now=0;
+	size_t end=1;
+	while(now < end){
+		geom::Area area;
+		size_t rendererd;
+		std::tuple<geom::Area, size_t, size_t> r = renderer.calcMaximumStringLength(str, width, now);
+		std::tie(area, rendererd, end) = r;
+		if(rendererd == now){//そもそも１文字すら入らない
+			//行送り
+			continue;
+		}
+		now = rendererd;
+	}
 }
 
 }}}
