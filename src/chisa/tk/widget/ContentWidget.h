@@ -22,6 +22,7 @@
 #include "Content/NodeWalker.h"
 #include "../../geom/Vector.h"
 #include "Content/Margin.h"
+#include <cairo/cairo.h>
 
 namespace chisa {
 namespace tk {
@@ -55,8 +56,8 @@ private:
 	};
 	Direction direction_;
 	BlockSession* nowSession_;
-private:
-	void extend(float width, float lineHeight);
+	cairo_surface_t * surface_;
+	cairo_t * cairo_;
 public:
 	ContentMeasure(float const width) noexcept;
 	virtual ~ContentMeasure() noexcept (true) = default;
