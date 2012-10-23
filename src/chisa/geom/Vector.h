@@ -117,6 +117,8 @@ template <class Self>
 class BaseVector {
 	template <typename T> friend class BaseVector;
 private:
+	void *operator new(std::size_t) = delete;
+	void operator delete(void* pv) = delete;
 	float x_;
 	float y_;
 protected:
@@ -125,8 +127,6 @@ protected:
 	inline BaseVector(const float x, const float y) noexcept:x_(x),y_(y){}
 	inline BaseVector() noexcept:x_(NAN),y_(NAN){}
 	~BaseVector() noexcept = default;
-	void *operator new(std::size_t) = delete;
-	void operator delete(void* pv) = delete;
 public:
 	inline Self& operator=(const Self& other) noexcept {
 		this->x_ = other.x_;
@@ -155,6 +155,7 @@ public:
 	inline float y() const noexcept{return y_;};
 	inline void x(const float x) noexcept { x_=x; };
 	inline void y(const float y) noexcept { y_=y; };
+	inline Self flip() const noexcept { return Self(y_, x_); };
 	inline Self operator-() const noexcept{
 		return Self(-x_,-y_);
 	}

@@ -79,6 +79,9 @@ public:
 	inline bool contain(const Point& pt) const noexcept{
 		return x() <= pt.x() && y() <= pt.y() && pt.x() <= (x()+width()) && pt.y() <= (y()+height());
 	}
+	inline Area flip() const noexcept {
+		return Area(point_.flip(), box_.flip());
+	}
 };
 
 }}
