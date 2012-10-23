@@ -42,7 +42,7 @@ protected:
 public:
 	virtual ~Node() noexcept = default;
 public:
-	virtual void walked(NodeWalker& walker) = 0;
+	virtual void walk(NodeWalker& walker) = 0;
 	template <typename Derived, typename... Args>
 	static std::shared_ptr<Derived> create(std::weak_ptr<Document> root, std::weak_ptr<Node> parent, const Args&... args)
 	{
@@ -55,7 +55,7 @@ public:
 };
 
 #define NODE_SUBKLASS_DESTRUCTOR(Klass) public: virtual ~Klass() noexcept = default;
-#define NODE_SUBKLASS_WALK(Klass) 	public: virtual void walked(NodeWalker& walker) override { walker.walk(this); };
+#define NODE_SUBKLASS_WALK(Klass) public: virtual void walk(NodeWalker& walker) override { walker.walk(this); };
 
 #define NODE_SUBKLASS(Klass)\
 protected:\
@@ -129,6 +129,12 @@ class Heading : public BlockNode {
 	NODE_SUBKLASS_LEAF(Heading);
 private:
 	Heading(int const level);
+};
+
+class Link : public InlineNode {
+	NODE_SUBKLASS_LEAF(Link);
+public:
+	Link();
 };
 
 class Text : public Node {

@@ -21,7 +21,7 @@
 namespace chisa {
 namespace gl {
 
-constexpr int getPower2Of(const int width, const int acc=1)
+constexpr int getPower2Of(const int width, const int acc=1) noexcept
 {
 	return acc >= width ? acc : getPower2Of(width, acc<<1);
 }

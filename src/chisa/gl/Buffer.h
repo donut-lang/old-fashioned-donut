@@ -30,7 +30,7 @@ class Buffer{
 	DEFINE_MEMBER_CONST(public, int, stride);
 public:
 	Buffer(const int width, const int height);
-	virtual ~Buffer();
+	virtual ~Buffer() noexcept;
 };
 
 }}

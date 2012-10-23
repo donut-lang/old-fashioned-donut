@@ -30,8 +30,10 @@ class Handler
 {
 private:
 	S* sprite;
+	void *operator new(std::size_t) = delete;
+	void operator delete(void* pv) = delete;
 public:
-	static Handler<S> __internal__fromRawPointerWithoutCheck(S* const sprite)
+	static Handler<S> __internal__fromRawPointerWithoutCheck(S* const sprite) noexcept
 	{
 		Handler<S> spr;
 		spr.sprite = sprite;
@@ -40,7 +42,7 @@ public:
 		}
 		return spr;
 	}
-	Handler():sprite(0){};
+	Handler() noexcept:sprite(0){};
 	explicit Handler(S* const sprite)
 	:sprite(sprite)
 	{
@@ -51,27 +53,27 @@ public:
 			this->sprite->incref();
 		}
 	}
-	Handler(const Handler<S>& other)
+	Handler(const Handler<S>& other) noexcept
 	:sprite(other.sprite)
 	{
 		if(this->sprite){
 			this->sprite->incref();
 		}
 	}
-	Handler(Handler<S>&& other)
+	Handler(Handler<S>&& other) noexcept
 	:sprite(other.sprite)
 	{
 		other.sprite = nullptr;
 	}
 	template <class T>
-	Handler(const Handler<T>& other)
+	Handler(const Handler<T>& other) noexcept
 	:sprite(other.get())
 	{
 		if(this->sprite){
 			this->sprite->incref();
 		}
 	}
-	Handler<S>& operator=(const Handler<S>& other)
+	Handler<S>& operator=(const Handler<S>& other) noexcept
 	{
 		if(other.sprite){
 			other.sprite->incref();
@@ -83,7 +85,7 @@ public:
 		return *this;
 	}
 	template <class T>
-	Handler<S>& operator=(const Handler<T>& other)
+	Handler<S>& operator=(const Handler<T>& other) noexcept
 	{
 		if(other.get()){
 			other.get()->incref();
@@ -103,38 +105,38 @@ public:
 		}
 		return Handler<T>::__internal__fromRawPointerWithoutCheck(spr);
 	}
-	virtual ~Handler()
+	~Handler() noexcept
 	{
 		if(this->sprite){
 			this->sprite->decref();
 			this->sprite = 0;
 		}
 	}
-	S* operator->() const
+	S* operator->() const noexcept
 	{
 		return this->sprite;
 	}
-	S* get() const
+	S* get() const noexcept
 	{
 		return this->sprite;
 	}
-	explicit operator bool() const
+	explicit operator bool() const noexcept
 	{
 		return this->sprite != 0;
 	}
-	void swap(Handler<S>& other)
+	void swap(Handler<S>& other) noexcept
 	{
 		using std::swap;
 		swap(other.sprite, this->sprite);
 	}
-	void reset()
+	void reset() noexcept
 	{
 		Handler<S>().swap(*this);
 	}
 };
 
 template<class T>
-void swap(Handler<T>& a, Handler<T>& b)
+void swap(Handler<T>& a, Handler<T>& b) noexcept
 {
 	a.swap(b);
 }

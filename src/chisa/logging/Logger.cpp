@@ -26,7 +26,7 @@
 namespace chisa {
 namespace logging{
 
-Logger::Logger(std::ostream& stream, enum Level level)
+Logger::Logger(std::ostream& stream, enum Level level) noexcept
 :_stream(stream), level(level)
 {
 }
@@ -65,10 +65,7 @@ void Logger::msg(enum Level level, const std::string& tag, const std::string& fm
 	_stream.flags();
 }
 
-Logger::~Logger() {
-}
-
-bool Logger::t()
+bool Logger::t() const noexcept
 {
 	return this->level <= TRACE_;
 }
@@ -80,7 +77,7 @@ void Logger::t(const std::string& tag, const std::string& fmt, ...)
 	va_end(lst);
 
 }
-bool Logger::v()
+bool Logger::v() const noexcept
 {
 	return this->level <= VERBOSE_;
 }
@@ -92,7 +89,7 @@ void Logger::v(const std::string& tag, const std::string& fmt, ...)
 	msg(VERBOSE_, tag, fmt, lst);
 	va_end(lst);
 }
-bool Logger::d()
+bool Logger::d() const noexcept
 {
 	return this->level <= DEBUG_;
 }
@@ -103,7 +100,7 @@ void Logger::d(const std::string& tag, const std::string& fmt, ...)
 	msg(DEBUG_, tag, fmt, lst);
 	va_end(lst);
 }
-bool Logger::i()
+bool Logger::i() const noexcept
 {
 	return this->level <= INFO_;
 }

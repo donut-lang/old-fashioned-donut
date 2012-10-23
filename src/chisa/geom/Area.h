@@ -28,35 +28,39 @@ private:
 	Vector point_;
 	Box box_;
 public:
-	inline Area(const float x, const float y, const float width, const float height):point_(x,y), box_(width, height){}
-	inline Area(const Area& other):point_(other.point_), box_(other.box_){};
-	inline Area(const Vector& point, const Box& box):point_(point), box_(box){};
-	inline Area& operator=(const Area& other){
+	inline Area(const float x, const float y, const float width, const float height) noexcept:point_(x,y), box_(width, height){}
+	inline Area(const Area& other) noexcept:point_(other.point_), box_(other.box_){};
+	inline Area(const Vector& point, const Box& box) noexcept:point_(point), box_(box){};
+	inline Area& operator=(const Area& other) noexcept{
 		this->point_ = other.point_;
 		this->box_ = other.box_;
 		return *this;
 	}
-	inline bool near(const Area& other, const float precision) const{
+	inline Area() noexcept:point_(), box_(){};
+	inline ~Area() noexcept = default;
+	void *operator new(std::size_t) = delete;
+	void operator delete(void* pv) = delete;
+public:
+	inline bool near(const Area& other, const float precision) const noexcept{
 		return this->box_.near(other.box_, precision) && point_.near(other.point_, precision);
 	}
-	inline Area():point_(), box_(){};
-	inline Vector& point() {return point_;};
-	inline Box& box() {return box_;};
-	inline const Vector& point() const{return point_;};
-	inline const Box& box() const{return box_;};
-	inline float x() const{ return point_.x(); };
-	inline float y() const{ return point_.y(); };
-	inline float width() const{ return box_.width(); };
-	inline float height() const{ return box_.height(); };
-	inline void x(const float x) { point_.x(x); };
-	inline void y(const float y) { point_.y(y); };
-	inline void width(const float width) { box_.width(width); };
-	inline void height(const float height) { box_.height(height); };
+	inline Vector& point() noexcept {return point_;};
+	inline Box& box() noexcept {return box_;};
+	inline const Vector& point() const noexcept{return point_;};
+	inline const Box& box() const noexcept{return box_;};
+	inline float x() const noexcept{ return point_.x(); };
+	inline float y() const noexcept{ return point_.y(); };
+	inline float width() const noexcept{ return box_.width(); };
+	inline float height() const noexcept{ return box_.height(); };
+	inline void x(const float x) noexcept { point_.x(x); };
+	inline void y(const float y) noexcept { point_.y(y); };
+	inline void width(const float width) noexcept { box_.width(width); };
+	inline void height(const float height) noexcept { box_.height(height); };
 	inline std::string toString() const{
 		return util::format("(Area %f %f %f %f)", x(), y(), width(), height());
 	}
-	inline bool empty() const { return this->box_.empty(); }
-	inline Area intersect(const Area& other) const
+	inline bool empty() const noexcept { return this->box_.empty(); }
+	inline Area intersect(const Area& other) const noexcept
 	{
 		using namespace chisa::geom;
 		const Point thisEnd = this->point()+this->box();
@@ -72,7 +76,7 @@ public:
 		const Vector endPoint(min(thisEnd, otherEnd));
 		return Area(startPoint, (endPoint-startPoint));
 	}
-	inline bool contain(const Point& pt) const{
+	inline bool contain(const Point& pt) const noexcept{
 		return x() <= pt.x() && y() <= pt.y() && pt.x() <= (x()+width()) && pt.y() <= (y()+height());
 	}
 };

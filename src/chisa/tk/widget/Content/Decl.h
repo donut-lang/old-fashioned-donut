@@ -32,6 +32,7 @@ class BlockNode;
 class Document;
 class Paragraph;
 class Text;
+class Link;
 class Heading;
 
 }}}

@@ -23,19 +23,21 @@
 
 #define SETUP(Klass)\
 public:\
-	Klass(const Klass& o):BaseVector<Klass>(o){};\
-	Klass():BaseVector<Klass>(){};\
-	explicit Klass(const float x, const float y):BaseVector<Klass>(x,y){};\
-	virtual ~Klass(){};
+	Klass(const Klass& o) noexcept:BaseVector<Klass>(o){};\
+	Klass() noexcept:BaseVector<Klass>(){};\
+	explicit Klass(const float x, const float y) noexcept:BaseVector<Klass>(x,y){};\
+	~Klass() noexcept(true) = default;\
+	void *operator new(std::size_t) = delete;\
+	void operator delete(void* pv) = delete;
 
 #define ENABLE_CAST(Klass, From)\
-	explicit Klass(const From& o):BaseVector<Klass>(o){};
+	explicit Klass(const From& o) noexcept:BaseVector<Klass>(o){};
 
 #define ENABLE_UNARY_OP(Klass)\
-	inline Klass operator-() const{\
+	inline Klass operator-() const noexcept{\
 		return this->BaseVector<Klass>::operator-();\
 	}\
-	inline Klass operator+() const{\
+	inline Klass operator+() const noexcept{\
 		return this->BaseVector<Klass>::operator+();\
 	}
 
@@ -45,52 +47,52 @@ public:\
 
 #define ENABLE_PLUS(Klass,OtherKlass,Result) \
 public:\
-	inline Result operator+(const OtherKlass& b) const{\
+	inline Result operator+(const OtherKlass& b) const noexcept{\
 		return this->operator_add<Result, OtherKlass>(b);\
 	};\
 
 #define ENABLE_MINUS(Klass,OtherKlass,Result) \
 public:\
-	inline Result operator-(const OtherKlass& b) const{\
+	inline Result operator-(const OtherKlass& b) const noexcept{\
 		return this->operator_minus<Result, OtherKlass>(b);\
 	};
 
 #define ENABLE_PM_ASSIGN(Klass,OtherKlass)\
 	public:\
-	inline Klass& operator+=(const OtherKlass& b) {\
+	inline Klass& operator+=(const OtherKlass& b) noexcept {\
 			return operator_add_assign(*this, b);\
 	};\
-	inline Klass& operator-=(const OtherKlass& b) {\
+	inline Klass& operator-=(const OtherKlass& b) noexcept {\
 			return operator_minus_assign(*this, b);\
 	};
 #define ENABLE_MD(Klass,OtherKlass,Result)\
 	public:\
-	inline Result operator*(const OtherKlass& b) const{\
+	inline Result operator*(const OtherKlass& b) const noexcept{\
 		return this->operator_mult<Result, OtherKlass>(b);\
 	};\
-	inline Result operator/(const OtherKlass& b) const{\
+	inline Result operator/(const OtherKlass& b) const noexcept{\
 		return this->operator_div<Result, OtherKlass>(b);\
 	};
 #define ENABLE_MD_ASSIGN(Klass,OtherKlass)\
 	public:\
-	inline Klass& operator*=(const OtherKlass& b) {\
+	inline Klass& operator*=(const OtherKlass& b) noexcept {\
 		return Klass::operator_mult_assign(*this, b);\
 	};\
-	inline Klass& operator/=(const OtherKlass& b) {\
+	inline Klass& operator/=(const OtherKlass& b) noexcept {\
 		return Klass::operator_div_assign(*this, b);\
 	};
 #define ENABLE_MD_FLOAT(Klass)\
 	public:\
-	inline Klass operator*(const float& b) const{\
+	inline Klass operator*(const float& b) const noexcept{\
 		return this->operator_mult(b);\
 	};\
-	inline Klass operator/(const float& b) const{\
+	inline Klass operator/(const float& b) const noexcept{\
 		return this->operator_div(b);\
 	};\
-	inline Klass& operator*=(const float& b) {\
+	inline Klass& operator*=(const float& b) noexcept {\
 		return Klass::operator_mult_assign(*this, b);\
 	};\
-	inline Klass& operator/=(const float& b) {\
+	inline Klass& operator/=(const float& b) noexcept {\
 		return Klass::operator_div_assign(*this, b);\
 	};
 
@@ -113,106 +115,109 @@ private:
 	float y_;
 protected:
 	template <typename O>
-	inline BaseVector(const BaseVector<O>& o):x_(o.x_),y_(o.y_){}
-	inline BaseVector(const float x, const float y):x_(x),y_(y){}
-	inline BaseVector():x_(NAN),y_(NAN){}
+	inline BaseVector(const BaseVector<O>& o) noexcept:x_(o.x_),y_(o.y_){}
+	inline BaseVector(const float x, const float y) noexcept:x_(x),y_(y){}
+	inline BaseVector() noexcept:x_(NAN),y_(NAN){}
+	~BaseVector() noexcept = default;
+	void *operator new(std::size_t) = delete;
+	void operator delete(void* pv) = delete;
 public:
-	inline Self& operator=(const Self& other) {
+	inline Self& operator=(const Self& other) noexcept {
 		this->x_ = other.x_;
 		this->y_ = other.y_;
 		return *this;
 	}
-	inline bool operator==(const Self& other) const{
+	inline bool operator==(const Self& other) const noexcept{
 		return this->x_ == other.x_ && this->y_ == other.y_;
 	}
-	inline bool operator!=(const Self& other) const{
+	inline bool operator!=(const Self& other) const noexcept{
 		return !(*this==other);
 	}
-	inline bool near(const Self& other, const float precision) const{
+	inline bool near(const Self& other, const float precision) const noexcept{
 		return
 				std::fabs(this->x_ - other.x_) < precision &&
 				std::fabs(this->y_ - other.y_) < precision;
 	}
-	inline bool operator==(const Self& other){
+	inline bool operator==(const Self& other) noexcept{
 		return this->x_ == other.x_ && this->y_ == other.y_;
 	}
-	inline bool operator!=(const Self& other){
+	inline bool operator!=(const Self& other) noexcept{
 		return !(*this==other);
 	}
 public:
-	inline float x() const{return x_;};
-	inline float y() const{return y_;};
-	inline void x(const float x) { x_=x; };
-	inline void y(const float y) { y_=y; };
-	inline Self operator-() const{
+	inline float x() const noexcept{return x_;};
+	inline float y() const noexcept{return y_;};
+	inline void x(const float x) noexcept { x_=x; };
+	inline void y(const float y) noexcept { y_=y; };
+	inline Self operator-() const noexcept{
 		return Self(-x_,-y_);
 	}
-	inline Self operator+() const{
+	inline Self operator+() const noexcept{
 		return Self(+x_,+y_);
 	}
 protected:
 	template <typename R, typename T>
-	inline R operator_add(const T& other) const {
+	inline R operator_add(const T& other) const noexcept {
 		return R(this->x_+other.x_, this->y_+other.y_);
 	}
 	template <typename R, typename T>
-	inline R operator_minus(const T& other) const {
+	inline R operator_minus(const T& other) const noexcept {
 		return R(this->x_-other.x_, this->y_-other.y_);
 	}
 	template <typename T>
-	static inline Self& operator_add_assign(Self& self, const T& other) {
+	static inline Self& operator_add_assign(Self& self, const T& other) noexcept {
 		self.x_+=other.x_;
 		self.y_+=other.y_;
 		return self;
 	}
 	template <typename T>
-	static inline Self& operator_minus_assign(Self& self, const T& other) {
+	static inline Self& operator_minus_assign(Self& self, const T& other) noexcept {
 		self.x_-=other.x_;
 		self.y_-=other.y_;
 		return self;
 	}
 	template <typename R, typename T>
-	inline R operator_mult(const BaseVector<T>& other) const {
+	inline R operator_mult(const BaseVector<T>& other) const noexcept {
 		return R(this->x_*other.x_, this->y_*other.y_);
 	}
-	inline Self operator_mult(const float& other) const {
+	inline Self operator_mult(const float& other) const noexcept {
 		return Self(this->x_*other, this->y_*other);
 	}
 	template <typename T>
-	static inline Self& operator_mult_assign(Self& self, const BaseVector<T>& other) {
+	static inline Self& operator_mult_assign(Self& self, const BaseVector<T>& other) noexcept {
 		self.x_*=other.x_;
 		self.y_*=other.y_;
 		return self;
 	}
 	template <typename R>
-	inline R operator_mult(float const ratio) const {
+	inline R operator_mult(float const ratio) const noexcept {
 		return R(this->x_*ratio, this->y_*ratio);
 	}
-	static inline Self& operator_mult_assign(Self& self, const float& ratio) {
+	static inline Self& operator_mult_assign(Self& self, const float& ratio) noexcept {
 		self.x_*=ratio;
 		self.y_*=ratio;
 		return self;
 	}
 	template <typename R, typename T>
-	inline R operator_div(const BaseVector<T>& other) const {
+	inline R operator_div(const BaseVector<T>& other) const noexcept {
 		return R(this->x_/other.x_, this->y_/other.y_);
 	}
-	inline Self operator_div(const float other) const {
+	inline Self operator_div(const float other) const noexcept {
 		return Self(this->x_/other, this->y_/other);
 	}
 	template <typename T>
-	static inline Self& operator_div_assign(Self& self, const BaseVector<T>& other) {
+	static inline Self& operator_div_assign(Self& self, const BaseVector<T>& other) noexcept {
 		self.x_/=other.x_;
 		self.y_/=other.y_;
 		return self;
 	}
-	static inline Self& operator_div_assign(Self& self, const float& ratio) {
+	static inline Self& operator_div_assign(Self& self, const float& ratio) noexcept {
 		self.x_/=ratio;
 		self.y_/=ratio;
 		return self;
 	}
 	template <typename T>
-	inline float dotProduct(const BaseVector<T>& other) const {
+	inline float dotProduct(const BaseVector<T>& other) const noexcept {
 		return this->x_*other.x_+this->y_*other.y_;
 	}
 };
@@ -237,16 +242,16 @@ public:
 	ENABLE_MD(Vector, ScaleVector, Vector);
 	ENABLE_MD_ASSIGN(Vector, ScaleVector);
 	ENABLE_MD_FLOAT(Vector);
-	inline bool near(const Vector& other, const float precision) const{
+	inline bool near(const Vector& other, const float precision) const noexcept{
 		return
 				std::fabs(this->x() - other.x()) < precision &&
 				std::fabs(this->y() - other.y()) < precision;
 	}
-	inline float width() const{ return this->x(); };
-	inline float height() const{ return this->y(); };
-	inline void width(const float width) { this->x(width); };
-	inline void height(const float height) { this->y(height); };
-	inline bool empty() const {
+	inline float width() const noexcept{ return this->x(); };
+	inline float height() const noexcept{ return this->y(); };
+	inline void width(const float width) noexcept { this->x(width); };
+	inline void height(const float height) noexcept { this->y(height); };
+	inline bool empty() const noexcept {
 		return
 				std::fabs(this->x()) < geom::VerySmall ||
 				std::fabs(this->y()) < geom::VerySmall;
@@ -268,12 +273,12 @@ public:
 };
 
 template <typename T>
-T min(const BaseVector<T>& a, const BaseVector<T>& b){
+T min(const BaseVector<T>& a, const BaseVector<T>& b) noexcept{
 	return T(std::min(a.x(), b.x()), std::min(a.y(), b.y()));
 }
 
 template <typename T>
-T max(const BaseVector<T>& a, const BaseVector<T>& b){
+T max(const BaseVector<T>& a, const BaseVector<T>& b) noexcept{
 	return T(std::max(a.x(), b.x()), std::max(a.y(), b.y()));
 }
 
