@@ -89,12 +89,15 @@ void Button::realizeText(gl::Canvas& canvas)
 	}
 	this->dirty_ = false;
 	this->measureTextSize();
-	this->sprite_ = this->renderer_.renderString(canvas, this->vertical_ ? this->cmd_.flip() : this->cmd_);
+	this->sprite_ = this->renderer_.renderString(canvas, this->cmd_);
 }
 
 void Button::measureTextSize()
 {
 	this->cmd_ = this->renderer_.measure(this->text().c_str());
+	if(this->vertical_){
+		this->cmd_ = this->cmd_.flip();
+	}
 }
 
 void Button::onClick()
