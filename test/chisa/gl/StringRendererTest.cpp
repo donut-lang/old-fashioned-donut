@@ -31,10 +31,28 @@ TEST(StringRendererTest, BasicTest)
 	geom::Area area;
 	std::size_t size;
 	std::size_t max;
-	std::tie(area, size, max) = r.calcMaximumStringLength("aあc", aa.width()+ab.width()+0.001);
+	std::tie(area, size, max) = r.calcMaximumStringLength("aあc", aa.width()+ab.width()+0.0001);
 	ASSERT_EQ(3, max);
 	ASSERT_EQ(2, size);
 	ASSERT_FLOAT_EQ(aa.width()+ab.width(), area.width());
+
+	std::tie(area, size, max) = r.calcMaximumStringLength("aあc", aa.width()+ab.width()-0.0001);
+	ASSERT_EQ(3, max);
+	ASSERT_EQ(1, size);
+	ASSERT_FLOAT_EQ(aa.width(), area.width());
+}
+
+TEST(StringRendererTest, EmptySpaceTest)
+{
+
+	StringRenderer r;
+	geom::Area area;
+	std::size_t size;
+	std::size_t max;
+	std::tie(area, size, max) = r.calcMaximumStringLength("aあc", r.measure("a").width()-0.0001);
+	ASSERT_EQ(3, max);
+	ASSERT_EQ(0, size);
+	ASSERT_FLOAT_EQ(0, area.width());
 }
 
 }}

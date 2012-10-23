@@ -65,24 +65,25 @@ std::tuple<geom::Area, size_t, size_t> StringRenderer::calcMaximumStringLength(c
 
 	std::size_t const beg = beginInUtf8;
 	std::size_t const end = std::min(static_cast<size_t>(str.length()), endInUtf8);
-	geom::Area area;
 
 	sink.Reset();
 	str.tempSubStringBetween(beg, end).toUTF8(sink);
-	area = this->measure(buf);
-	if(area.width() <= limit){
-		return std::tuple<geom::Area, size_t, size_t>(area, end, end);
+	geom::Area tmpArea = this->measure(buf);
+	if(tmpArea.width() <= limit){
+		return std::tuple<geom::Area, size_t, size_t>(tmpArea, end, end);
 	}
 
 	std::size_t min = beg;
 	std::size_t max = end;
+	geom::Area area(0,0,0,0);
 
 	while(min+1 < max){
 		sink.Reset();
 		std::size_t center = (min+max)/2;
 		str.tempSubStringBetween(beg, center).toUTF8(sink);
-		area = this->measure(buf);
-		if(area.width() <= limit){
+		geom::Area tmpArea = this->measure(buf);
+		if(tmpArea.width() <= limit){
+			area = tmpArea;
 			min = center;
 		}else{
 			max = center;
