@@ -32,8 +32,6 @@ private:
 	gl::StringRenderer renderer_;
 	gl::StringRenderer::Command cmd_;
 	std::string text_;
-	geom::Box textSize_;
-	geom::Vector textOffset_;
 	gl::Handler<gl::RawSprite> sprite_;
 	bool dirty_;
 	bool vertical_;
