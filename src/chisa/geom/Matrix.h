@@ -104,7 +104,7 @@ public:
 		return *this;
 	}
 public:
-	inline Matrix operator*(float const f) const
+	inline Matrix operator*(float const f) const noexcept
 	{
 		Matrix mat;
 		for(size_t i=0;i<16;++i){
