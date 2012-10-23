@@ -18,6 +18,7 @@
 
 #include "StringRenderer.h"
 #include "../geom/Vector.h"
+#include "../gl/Canvas.h"
 #include "../logging/Exception.h"
 #include <cfloat>
 #include <cstring>
@@ -99,25 +100,31 @@ StringRenderer::Command StringRenderer::calcMaximumStringLength(const std::strin
 	return cmd;
 }
 
-void StringRenderer::renderString(gl::Handler<gl::RawSprite> spr, const StringRenderer::Command& cmd, const float angle)
+gl::Handler<gl::RawSprite> StringRenderer::renderString(gl::Canvas& cv, const StringRenderer::Command& cmd)
 {
+	gl::Handler<gl::RawSprite> spr = cv.queryRawSprite(static_cast<int>(cmd.area().width()), static_cast<int>(cmd.area().height()));
 	gl::RawSprite::Session ss(spr);
-	cairo_surface_t* surf = cairo_image_surface_create_for_data(ss.data(), CAIRO_FORMAT_ARGB32, ss.width(), ss.height(), ss.stride());
-	cairo_t* cr = cairo_create(surf);
+	{
+		cairo_surface_t* surf = cairo_image_surface_create_for_data(ss.data(), CAIRO_FORMAT_ARGB32, ss.width(), ss.height(), ss.stride());
+		cairo_t* cr = cairo_create(surf);
 
-	//データは使いまわしているので一旦サーフェイスの中身を削除する
-	cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
-	cairo_paint(cr);
+		//データは使いまわしているので一旦サーフェイスの中身を削除する
+		cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
+		cairo_paint(cr);
 
-	cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
-	cairo_move_to(cr, cmd.area().point().x(), cmd.area().point().y());
-	cairo_rotate(cr, angle);
+		cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
+		cairo_move_to(cr, cmd.area().point().x(), cmd.area().point().y());
+		if(cmd.vertical()){
+			cairo_rotate(cr, 90.0f);
+		}
 
-	cairo_text_path(cr, cmd.str().c_str());
-	cairo_set_source_rgba(cr, 1,1,1,1);
-	cairo_paint(cr);
+		cairo_text_path(cr, cmd.str().c_str());
+		cairo_set_source_rgba(cr, 1,1,1,1);
+		cairo_paint(cr);
 
-	cairo_destroy(cr);
+		cairo_destroy(cr);
+	}
+	return spr;
 }
 
 

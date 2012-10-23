@@ -61,12 +61,12 @@ void Button::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const 
 geom::Box Button::onMeasure(const geom::Box& constraint)
 {
 	this->measureTextSize();
-	return this->textSize_;
+	return this->cmd_.area().box();
 }
 
 void Button::onLayout(const geom::Box& size)
 {
-	this->renderOffset_ = (size-this->textSize_)/2;
+	this->renderOffset_ = (size-this->cmd_.area().box())/2;
 }
 
 void Button::loadXMLimpl(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element)
@@ -89,8 +89,7 @@ void Button::realizeText(gl::Canvas& canvas)
 	}
 	this->dirty_ = false;
 	this->measureTextSize();
-	this->sprite_ = canvas.queryRawSprite(static_cast<int>(this->textSize_.width()), static_cast<int>(this->textSize_.height()));
-	this->renderer_.renderString(this->sprite_, this->cmd_, this->vertical_ ? 90.0f : 0.0f);
+	this->sprite_ = this->renderer_.renderString(canvas, this->vertical_ ? this->cmd_.flip() : this->cmd_);
 }
 
 void Button::measureTextSize()
@@ -123,7 +122,7 @@ bool Button::onUpRaw(const float timeMs, const geom::Point& ptInScreen)
 
 bool Button::onSingleTapUp(const float timeMs, const geom::Point& ptInScreen)
 {
-	geom::Area a(this->drawnArea().point()+this->renderOffset_, this->textSize_);
+	geom::Area a(this->drawnArea().point()+this->renderOffset_, this->cmd_.area().box());
 	if(a.contain(ptInScreen)){
 		this->onClick();
 	}

@@ -32,21 +32,28 @@ class StringRenderer {
 public:
 	class Command {
 		DEFINE_MEMBER(public, private, bool, enabled);
+		DEFINE_MEMBER(public, private, bool, vertical);
 		DEFINE_MEMBER(public, private, std::string, str);
 		DEFINE_MEMBER(public, private, geom::Area, area);
 	private:
 		void* operator new(size_t) = delete;
 		void operator delete(void*) = delete;
 	public:
-		Command():enabled_(false),str_(),area_(0,0,0,0){};
-		Command(const std::string& str, geom::Area& area):enabled_(true),str_(str),area_(area){};
-		Command(const std::string& str, geom::Area&& area):enabled_(true),str_(str),area_(area){};
-		Command(const std::string&& str, geom::Area& area):enabled_(true),str_(str),area_(area){};
-		Command(const std::string&& str, geom::Area&& area):enabled_(true),str_(str),area_(area){};
+		Command():enabled_(false),vertical_(false),str_(),area_(0,0,0,0){};
+		Command(const std::string& str, geom::Area& area):enabled_(true),vertical_(false),str_(str),area_(area){};
+		Command(const std::string& str, geom::Area&& area):enabled_(true),vertical_(false),str_(str),area_(area){};
+		Command(const std::string&& str, geom::Area& area):enabled_(true),vertical_(false),str_(str),area_(area){};
+		Command(const std::string&& str, geom::Area&& area):enabled_(true),vertical_(false),str_(str),area_(area){};
 		Command(const Command& other) = default;
 		Command(Command&& other) = default;
 		Command& operator=(const Command& other) = default;
 		Command& operator=(Command&& other) = default;
+		Command flip() noexcept{
+			Command cmd(*this);
+			cmd.vertical(true);
+			cmd.area(cmd.area_.flip());
+			return cmd;
+		}
 		~Command () noexcept = default;
 	};
 private:
@@ -55,7 +62,7 @@ private:
 public:
 	StringRenderer::Command measure(const std::string& strUtf8);
 	StringRenderer::Command calcMaximumStringLength(const std::string& str, const float limit, std::size_t beginInUtf8=0, std::size_t endInUtf8=0);
-	void renderString(gl::Handler<gl::RawSprite> spr, const StringRenderer::Command& cmd, float const angle = 0.0f);
+	gl::Handler<gl::RawSprite> renderString(gl::Canvas& cv, const StringRenderer::Command& cmd);
 public:
 	StringRenderer();
 	virtual ~StringRenderer();
