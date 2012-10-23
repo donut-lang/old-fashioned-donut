@@ -69,5 +69,15 @@ TEST(AreaTest, IntersectTest)
 	ASSERT_TRUE(testIntersect(Area(100,100,0,0), Area(0,0,100,100)).empty());
 }
 
+TEST(AreaTest, FlipTest)
+{
+	Area a(1,2,3,4);
+	Area b = a.flip();
+	ASSERT_FLOAT_EQ(a.y(), b.x());
+	ASSERT_FLOAT_EQ(a.x(), b.y());
+	ASSERT_FLOAT_EQ(a.width(), b.height());
+	ASSERT_FLOAT_EQ(a.height(), b.width());
+}
+
 }}
 
