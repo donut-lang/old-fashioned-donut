@@ -17,29 +17,50 @@
  */
 
 #include "ContentWidget.h"
+#include "Content/Node.h"
 
 namespace chisa {
 namespace tk {
 namespace widget {
 
-ContentMeasure::ContentMeasure(int const width) noexcept
-:width_(width)
-,lineHeight_(0)
+ContentMeasure::ContentMeasure(float const width) noexcept
+:lineHeight_(0.0f)
+,widgetWidth_(width)
+,boxWidth_(width)
 {
+	this->pt_.x(0.0f);
+	this->pt_.y(0.0f);
 }
 
-void ContentMeasure::nextLine()
+ContentMeasure::BoxSession::BoxSession(ContentMeasure& parent, const Margin& m)
+:parent_(parent)
+,margin_(m)
 {
-	this->pt_.y(this->pt_.y()+this->lineHeight_);
-	this->pt_.x(0);
+	parent.pt_.x(0);
+}
+ContentMeasure::BoxSession::~BoxSession() noexcept
+{
+
 }
 
-void ContentMeasure::walk(std::shared_ptr<Node> model)
+void ContentMeasure::extend(float width, float lineHeight)
 {
+	float newX = this->pt_.x() + width;
+	float maxLineHeight = std::max(lineHeight, this->lineHeight_);
+	if(newX <= this->boxWidth_){
+		this->pt_.x(newX);
+		this->lineHeight_ = maxLineHeight;
+	}else{
+		newX -= this->boxWidth_;
+		this->pt_.x(newX);
+		this->pt_.y(this->pt_.y() + maxLineHeight);
+		this->lineHeight_ = lineHeight;
+	}
 }
 
 void ContentMeasure::walk(Document* model)
 {
+	this->margin_ = model->margin();
 }
 
 void ContentMeasure::walk(Paragraph* model)

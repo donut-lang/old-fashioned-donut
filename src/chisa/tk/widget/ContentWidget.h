@@ -29,22 +29,30 @@ namespace widget {
 
 class ContentMeasure : public NodeWalker {
 private:
-	const int width_;
-private:
 	geom::Point pt_;
 	float lineHeight_;
 	Margin margin_;
+	float const widgetWidth_;
+	float boxWidth_;
 private:
-	void nextLine();
+	void extend(float width, float lineHeight);
 public:
-	ContentMeasure(int const width) noexcept;
+	ContentMeasure(float const width) noexcept;
 	virtual ~ContentMeasure() noexcept (true) = default;
-	void walk(std::shared_ptr<Node> model);
 	virtual void walk(Document* model) override;
 	virtual void walk(Paragraph* model) override;
 	virtual void walk(Heading* model) override;
 	virtual void walk(Link* model) override;
 	virtual void walk(Text* model) override;
+public:
+	class BoxSession {
+	private:
+		ContentMeasure& parent_;
+		const Margin margin_;
+	public:
+		BoxSession(ContentMeasure& parent, const Margin& m);
+		~BoxSession() noexcept;
+	};
 };
 
 class ContentWidget: public chisa::tk::Widget {

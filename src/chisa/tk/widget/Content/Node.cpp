@@ -37,7 +37,6 @@ std::shared_ptr<Document> Node::createRootDocument()
 TreeNode::TreeNode()
 {
 	this->addAttribute("id", this->id_);
-	//this->addAttribute("margin-top", this->);
 }
 
 void TreeNode::parseAttribute(tinyxml2::XMLElement* node)
@@ -49,7 +48,7 @@ void TreeNode::parseAttribute(tinyxml2::XMLElement* node)
 
 BlockNode::BlockNode()
 {
-
+	this->addAttribute("margin", this->margin_);
 }
 
 InlineNode::InlineNode()

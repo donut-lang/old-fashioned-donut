@@ -40,7 +40,18 @@ public:
 		this->right_ = other.right_;
 		return *this;
 	};
+	Margin& operator=(const float& other) noexcept{
+		this->top_ = other;
+		this->bottom_ = other;
+		this->left_ = other;
+		this->right_ = other;
+		return *this;
+	};
+	void margin(const float& other) noexcept{
+		(*this) = other;
+	};
 	~Margin() noexcept = default;
+private:
 	void *operator new(std::size_t) = delete;
 	void operator delete(void* pv) = delete;
 };
