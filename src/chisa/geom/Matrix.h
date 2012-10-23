@@ -26,13 +26,13 @@ class Matrix{
 private:
 	float* mat_;
 public:
-	inline float& operator()(const size_t x, const size_t y){
+	inline float& operator() (const size_t x, const size_t y) noexcept{
 		return mat_[x<<2|y];
 	}
-	inline const float& operator()(const size_t x, const size_t y) const{
+	inline const float& operator()(const size_t x, const size_t y) const noexcept{
 		return mat_[x<<2|y];
 	}
-	inline const float* raw() const
+	inline const float* raw() const noexcept
 	{
 		return mat_;
 	}
@@ -78,12 +78,12 @@ public:
 		(*this)(2,3)=x32;
 		(*this)(3,3)=x33;
 	}
-	Matrix(Matrix&& other)
+	Matrix(Matrix&& other) noexcept
 	:mat_(other.mat_)
 	{
 		other.mat_=nullptr;
 	}
-	virtual ~Matrix(){
+	~Matrix() noexcept {
 		if(this->mat_){
 			delete this->mat_;
 			this->mat_ = nullptr;
@@ -94,7 +94,7 @@ public:
 		memcpy(this->mat_, o.mat_, sizeof(float)*16);
 		return *this;
 	}
-	Matrix& operator=(Matrix&& o)
+	Matrix& operator=(Matrix&& o) noexcept
 	{
 		if(this->mat_){
 			delete this->mat_;
@@ -112,22 +112,22 @@ public:
 		}
 		return mat;
 	}
-	inline Matrix& operator*=(float const f)
+	inline Matrix& operator*=(float const f) noexcept
 	{
 		for(size_t i=0;i<16;++i){
 			this->mat_[i]*=f;
 		}
 		return *this;
 	}
-	inline Matrix operator/(float const f) const
+	inline Matrix operator/(float const f) const noexcept
 	{
 		return this->operator *(1/f);
 	}
-	inline Matrix& operator/=(float const f)
+	inline Matrix& operator/=(float const f) noexcept
 	{
 		return this->operator *=(1/f);
 	}
-	inline Matrix operator*(const Matrix& other) const
+	inline Matrix operator*(const Matrix& other) const noexcept
 	{
 		Matrix mat;
 		for(size_t x=0;x<4;++x){
@@ -141,7 +141,7 @@ public:
 		}
 		return mat;
 	}
-	inline Matrix& operator*=(const Matrix& other)
+	inline Matrix& operator*=(const Matrix& other) noexcept
 	{
 		(*this)=(*this)*other;
 		return *this;

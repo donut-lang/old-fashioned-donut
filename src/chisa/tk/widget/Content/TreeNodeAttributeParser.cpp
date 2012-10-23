@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "Node.h"
+#include "Margin.h"
 
 namespace chisa {
 namespace tk {
@@ -56,6 +57,11 @@ template <> void TreeNode::parseAttr<bool>(const std::string& name, bool& v, con
 	if(!elm->QueryBoolAttribute(name.c_str(), &v)){
 		v = def;
 	}
+}
+
+template <> void TreeNode::parseAttr<Margin>(const std::string& name, Margin& v, const Margin& def, tinyxml2::XMLElement* elm)
+{
+
 }
 
 }}}

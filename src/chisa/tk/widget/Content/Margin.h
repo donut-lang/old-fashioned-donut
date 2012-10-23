@@ -15,24 +15,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #pragma once
-#include <memory>
-#include "Decl.h"
+#include "../../../util/ClassUtil.h"
+#include <cstddef>
 
 namespace chisa {
 namespace tk {
 namespace widget {
 
-class NodeWalker {
+class Margin {
+	DEFINE_MEMBER(public, public, float, top);
+	DEFINE_MEMBER(public, public, float, bottom);
+	DEFINE_MEMBER(public, public, float, left);
+	DEFINE_MEMBER(public, public, float, right);
 public:
-	NodeWalker() noexcept = default;
-	virtual ~NodeWalker() noexcept (true) = default;
-	void walk(std::shared_ptr<Node> model);
-	virtual void walk(Document* model) = 0;
-	virtual void walk(Paragraph* model) = 0;
-	virtual void walk(Heading* model) = 0;
-	virtual void walk(Text* model) = 0;
-	virtual void walk(Link* link) = 0;
+	Margin() noexcept :top_(0),bottom_(0),left_(0),right_(0){};
+	Margin(const Margin& other) noexcept:
+		top_(other.top_),bottom_(other.bottom_),left_(other.left_),right_(other.right_){};
+	Margin& operator=(const Margin& other) noexcept{
+		this->top_ = other.top_;
+		this->bottom_ = other.bottom_;
+		this->left_ = other.left_;
+		this->right_ = other.right_;
+		return *this;
+	};
+	~Margin() noexcept = default;
+	void *operator new(std::size_t) = delete;
+	void operator delete(void* pv) = delete;
 };
 
 }}}

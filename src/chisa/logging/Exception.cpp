@@ -26,7 +26,7 @@ Exception::Exception(const char* file, const size_t line) throw() : _line(0)
 {
 }
 
-Exception::Exception(const char* file, const size_t line, const std::string& fmt, ...) throw()
+Exception::Exception(const char* file, const size_t line, const std::string& fmt, ...) noexcept
 {
 	va_list lst;
 	va_start(lst, fmt);
@@ -34,44 +34,43 @@ Exception::Exception(const char* file, const size_t line, const std::string& fmt
 	va_end(lst);
 }
 
-Exception::Exception(const char* file, const size_t line, const std::string& fmt, va_list lst) throw()
+Exception::Exception(const char* file, const size_t line, const std::string& fmt, va_list lst) noexcept
 {
 	init(file, line, fmt, lst);
 }
 
-void Exception::init(const char* file, const size_t line, const std::string& fmt, va_list lst) throw()
+void Exception::init(const char* file, const size_t line, const std::string& fmt, va_list lst) noexcept
 {
 	try{
 		this->_line = line;
 		this->_file = std::string(file);
 		this->_loc = util::format("(in %s:%d): ", file, line);
 		this->_msg = util::formatv(fmt, lst);
+		this->_what = _loc+_msg;
 	}catch(...){
 		this->_line = 0;
 		this->_file = __FILE__;
 		this->_loc = "line ? in " __FILE__ ": ";
 		this->_msg = "[BUG] Failed to format string!!";
+		this->_what = _loc+_msg;
 	}
 }
 
-Exception::~Exception() throw(){
-}
-
-std::string Exception::what()
+const char* Exception::what() const noexcept (true)
 {
-	return _loc+_msg;
+	return _what.c_str();
 }
 
-std::string Exception::msg()
+std::string Exception::msg() const noexcept
 {
 	return _msg;
 }
-size_t Exception::line()
+size_t Exception::line() const noexcept
 {
 	return _line;
 }
 
-std::string Exception::file()
+std::string Exception::file() const noexcept
 {
 	return _file;
 }

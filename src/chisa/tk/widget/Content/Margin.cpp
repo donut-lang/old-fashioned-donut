@@ -15,71 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "Node.h"
+
+#include "Margin.h"
 
 namespace chisa {
 namespace tk {
 namespace widget {
-
-Node::Node()
-{
-}
-
-std::shared_ptr<Document> Node::createRootDocument()
-{
-	std::shared_ptr<Document> node(new Document);
-	node->root(node);
-	node->parent(std::weak_ptr<Node>());
-	return node;
-}
-
-
-TreeNode::TreeNode()
-{
-	this->addAttribute("id", this->id_);
-	//this->addAttribute("margin-top", this->);
-}
-
-void TreeNode::parseAttribute(tinyxml2::XMLElement* node)
-{
-	for(auto it : this->attrMap_){
-		it.second(node);
-	}
-}
-
-BlockNode::BlockNode()
-{
-
-}
-
-InlineNode::InlineNode()
-{
-
-}
-
-Document::Document()
-{
-
-}
-
-Paragraph::Paragraph()
-{
-
-}
-
-Heading::Heading(int const level)
-:level_(level)
-{
-}
-
-Link::Link()
-{
-	//this->addAttribute("src", )
-}
-
-Text::Text(std::string text)
-:text_(text)
-{
-}
 
 }}}

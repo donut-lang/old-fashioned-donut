@@ -50,18 +50,18 @@ private:
 	enum Level level;
 	void msg(enum Level level, const std::string& tag, const std::string& fmt, std::va_list args);
 public:
-	Logger(std::ostream& stream, enum Level level);
-	virtual ~Logger();
+	Logger(std::ostream& stream, enum Level level) noexcept;
+	~Logger() noexcept = default;
 public:
-	std::ostream& stream() const{ return _stream; };
+	std::ostream& stream() const noexcept{ return _stream; };
 public:
-	bool t();
+	bool t() const noexcept;
 	void t(const std::string& tag, const std::string& fmt, ...);
-	bool v();
+	bool v() const noexcept;
 	void v(const std::string& tag, const std::string& fmt, ...);
-	bool d();
+	bool d() const noexcept;
 	void d(const std::string& tag, const std::string& fmt, ...);
-	bool i();
+	bool i() const noexcept;
 	void i(const std::string& tag, const std::string& fmt, ...);
 	void w(const std::string& tag, const std::string& fmt, ...);
 	void e(const std::string& tag, const std::string& fmt, ...);

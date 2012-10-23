@@ -36,18 +36,19 @@ private:
 	std::string _loc;
 	std::string _msg;
 	std::string _file;
+	std::string _what;
 	size_t _line;
 protected:
-	void init(const char* file, const size_t line, const std::string& fmt, va_list lst) throw();
+	void init(const char* file, const size_t line, const std::string& fmt, va_list lst) noexcept;
 public:
-	Exception(const char* file, const size_t line) throw();
-	Exception(const char* file, const size_t line, const std::string& fmt, ...) throw();
-	Exception(const char* file, const size_t line, const std::string& fmt, va_list lst) throw();
-	virtual ~Exception() throw();
-	std::string what();
-	std::string msg();
-	std::string file();
-	size_t line();
+	Exception(const char* file, const size_t line) noexcept;
+	Exception(const char* file, const size_t line, const std::string& fmt, ...) noexcept;
+	Exception(const char* file, const size_t line, const std::string& fmt, va_list lst) noexcept;
+	virtual ~Exception() noexcept = default;
+	virtual const char* what() const noexcept override;
+	std::string msg() const noexcept;
+	std::string file() const noexcept;
+	size_t line() const noexcept;
 };
 
 }}

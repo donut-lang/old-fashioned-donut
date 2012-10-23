@@ -19,10 +19,33 @@
 
 #include "../Widget.h"
 #include "Content/Decl.h"
+#include "Content/NodeWalker.h"
+#include "../../geom/Vector.h"
+#include "Content/Margin.h"
 
 namespace chisa {
 namespace tk {
 namespace widget {
+
+class ContentMeasure : public NodeWalker {
+private:
+	const int width_;
+private:
+	geom::Point pt_;
+	float lineHeight_;
+	Margin margin_;
+private:
+	void nextLine();
+public:
+	ContentMeasure(int const width) noexcept;
+	virtual ~ContentMeasure() noexcept (true) = default;
+	void walk(std::shared_ptr<Node> model);
+	virtual void walk(Document* model) override;
+	virtual void walk(Paragraph* model) override;
+	virtual void walk(Heading* model) override;
+	virtual void walk(Link* model) override;
+	virtual void walk(Text* model) override;
+};
 
 class ContentWidget: public chisa::tk::Widget {
 	CHISA_WIDGET_SUBKLASS(ContentWidget);

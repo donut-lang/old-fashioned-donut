@@ -29,7 +29,7 @@ Buffer::Buffer(const int width, const int height)
 {
 }
 
-Buffer::~Buffer()
+Buffer::~Buffer() noexcept
 {
 	delete this->data_;
 }
