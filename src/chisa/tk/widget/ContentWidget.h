@@ -28,12 +28,33 @@ namespace tk {
 namespace widget {
 
 class ContentMeasure : public NodeWalker {
+public:
+	class BlockSession {
+	private:
+		BlockNode* const node_;
+		BlockSession* const lastSession_;
+		ContentMeasure& parent_;
+		float maxWidth_;
+		//完全に使い切った高さ
+		float consumedHeight_;
+		//ブロック要素が横に並んでいるなどで使い切ってる横幅・縦幅
+		float reservedWidth_;
+		float reservedHeight_;
+	public:
+		BlockSession(ContentMeasure& parent, BlockNode* const node);
+		~BlockSession() noexcept;
+		float calcLeftWidth();
+	};
 private:
-	geom::Point pt_;
-	float lineHeight_;
-	Margin margin_;
+	//ウィジットそのものの横幅。何があろうとも、これは厳守ですよ〜。
 	float const widgetWidth_;
-	float boxWidth_;
+	enum Direction {
+		Left,
+		Right,
+		Default
+	};
+	Direction direction_;
+	BlockSession* nowSession_;
 private:
 	void extend(float width, float lineHeight);
 public:
@@ -44,15 +65,6 @@ public:
 	virtual void walk(Heading* model) override;
 	virtual void walk(Link* model) override;
 	virtual void walk(Text* model) override;
-public:
-	class BoxSession {
-	private:
-		ContentMeasure& parent_;
-		const Margin margin_;
-	public:
-		BoxSession(ContentMeasure& parent, const Margin& m);
-		~BoxSession() noexcept;
-	};
 };
 
 class ContentWidget: public chisa::tk::Widget {

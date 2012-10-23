@@ -98,11 +98,17 @@ public:\
 
 namespace chisa {
 namespace geom {
-inline bool isUnspecified(const float width_or_height){
+constexpr bool isUnspecified(const float width_or_height){
 	return std::isnan(width_or_height);
 };
-inline bool isSpecified(const float width_or_height){
+constexpr bool isSpecified(const float width_or_height){
 	return !std::isnan(width_or_height);
+};
+constexpr float max(const float a, const float b){
+	return std::isnan(a) ? b : (a < b  ? b : a);
+};
+constexpr float min(const float a, const float b){
+	return std::isnan(a) ? b : (a > b  ? b : a);
 };
 constexpr float Unspecified = NAN;
 constexpr float VerySmall = 1e-1;
@@ -221,7 +227,6 @@ protected:
 		return this->x_*other.x_+this->y_*other.y_;
 	}
 };
-
 class ScaleVector : public BaseVector<ScaleVector> {
 	SETUP(ScaleVector)
 public:
