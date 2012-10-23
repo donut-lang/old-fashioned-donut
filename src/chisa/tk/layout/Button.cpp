@@ -17,7 +17,6 @@
  */
 
 #include "Button.h"
-#include <cairo/cairo.h>
 #include <tinyxml2.h>
 #include "../../gl/Canvas.h"
 #include "../../logging/Exception.h"
@@ -27,32 +26,16 @@ namespace tk {
 namespace widget {
 
 CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(Button)
-,surface_(cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 1,1))
-,cairo_(cairo_create(this->surface_))
 ,text_()
 ,sprite_()
 ,dirty_(false)
 ,vertical_(false)
 ,pushedCnt_(0)
 {
-	{
-		cairo_status_t st = cairo_surface_status(this->surface_);
-		if(st != CAIRO_STATUS_SUCCESS){
-			throw logging::Exception(__FILE__, __LINE__, "Oops. Failed to create cairo surface. Error code: %d", st);
-		}
-	}
-	{
-		cairo_status_t st = cairo_status(this->cairo_);
-		if(st != CAIRO_STATUS_SUCCESS){
-			throw logging::Exception(__FILE__, __LINE__, "Oops. Failed to create cairo. Error code: %d", st);
-		}
-	}
 }
 
 Button::~Button()
 {
-	cairo_destroy(this->cairo_);
-	cairo_surface_destroy(this->surface_);
 }
 
 weak_ptr<Layout> Button::getChildAt(const size_t index) const
@@ -107,35 +90,12 @@ void Button::realizeText(gl::Canvas& canvas)
 	this->dirty_ = false;
 	this->measureTextSize();
 	this->sprite_ = canvas.queryRawSprite(static_cast<int>(this->textSize_.width()), static_cast<int>(this->textSize_.height()));
-	{
-		gl::RawSprite::Session ss(this->sprite_);
-		cairo_surface_t* surf = cairo_image_surface_create_for_data(ss.data(), CAIRO_FORMAT_ARGB32, ss.width(), ss.height(), ss.stride());
-		cairo_t* cr = cairo_create(surf);
-
-		//データは使いまわしているので一旦サーフェイスの中身を削除する
-		cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
-		cairo_paint(cr);
-
-		cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
-		cairo_move_to(cr, this->textOffset_.x(), this->textOffset_.y());
-		if(this->vertical_){
-			cairo_rotate(cr, 90);
-		}
-
-		cairo_text_path(cr, this->text_.c_str());
-		cairo_set_source_rgba(cr, 1,1,1,1);
-		cairo_paint(cr);
-
-		cairo_destroy(cr);
-	}
+	this->renderer_.renderString(this->sprite_, this->cmd_, this->vertical_ ? 90.0f : 0.0f);
 }
 
 void Button::measureTextSize()
 {
-	cairo_text_extents_t ext;
-	cairo_text_extents(this->cairo_, this->text_.c_str(), &ext);
-	this->textSize_ = vertical_ ? geom::Box(ext.height+ext.y_advance, ext.x_advance) : geom::Box(ext.x_advance, ext.height+ext.y_advance);
-	this->textOffset_ = vertical_ ? geom::Vector(-ext.y_bearing, ext.x_bearing) : geom::Vector(ext.x_bearing, -ext.y_bearing);
+	this->cmd_ = this->renderer_.measure(this->text().c_str());
 }
 
 void Button::onClick()

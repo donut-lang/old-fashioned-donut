@@ -26,33 +26,24 @@ namespace gl {
 TEST(StringRendererTest, BasicTest)
 {
 	StringRenderer r;
-	geom::Area aa = r.measure("a");
-	geom::Area ab = r.measure("あ");
-	geom::Area area;
-	std::size_t size;
-	std::size_t max;
-	std::tie(area, size, max) = r.calcMaximumStringLength("aあc", aa.width()+ab.width()+0.0001);
-	ASSERT_EQ(3, max);
-	ASSERT_EQ(2, size);
-	ASSERT_FLOAT_EQ(aa.width()+ab.width(), area.width());
+	StringRenderer::Command aa = r.measure("a");
+	StringRenderer::Command ab = r.measure("あ");
+	StringRenderer::Command cmd = r.calcMaximumStringLength("aあc", aa.area().width()+ab.area().width()+0.0001);
+	ASSERT_EQ("aあ", cmd.str());
+	ASSERT_FLOAT_EQ(aa.area().width()+ab.area().width(), cmd.area().width());
 
-	std::tie(area, size, max) = r.calcMaximumStringLength("aあc", aa.width()+ab.width()-0.0001);
-	ASSERT_EQ(3, max);
-	ASSERT_EQ(1, size);
-	ASSERT_FLOAT_EQ(aa.width(), area.width());
+	cmd = r.calcMaximumStringLength("aあc", aa.area().width()+ab.area().width()-0.0001);
+	ASSERT_EQ("a", cmd.str());
+	ASSERT_FLOAT_EQ(aa.area().width(), cmd.area().width());
 }
 
 TEST(StringRendererTest, EmptySpaceTest)
 {
 
 	StringRenderer r;
-	geom::Area area;
-	std::size_t size;
-	std::size_t max;
-	std::tie(area, size, max) = r.calcMaximumStringLength("aあc", r.measure("a").width()-0.0001);
-	ASSERT_EQ(3, max);
-	ASSERT_EQ(0, size);
-	ASSERT_FLOAT_EQ(0, area.width());
+	StringRenderer::Command cmd = r.calcMaximumStringLength("aあc", r.measure("a").area().width()-0.0001);
+	ASSERT_EQ("", cmd.str());
+	ASSERT_FLOAT_EQ(0, cmd.area().width());
 }
 
 }}

@@ -20,6 +20,7 @@
 
 #include "../Layout.h"
 #include "../../gl/RawSprite.h"
+#include "../../gl/StringRenderer.h"
 
 namespace chisa {
 namespace tk {
@@ -28,8 +29,8 @@ namespace widget {
 class Button: public chisa::tk::Layout {
 	CHISA_LAYOUT_SUBKLASS(Button);
 private:
-	cairo_surface_t* const surface_;
-	cairo_t* const cairo_;
+	gl::StringRenderer renderer_;
+	gl::StringRenderer::Command cmd_;
 	std::string text_;
 	geom::Box textSize_;
 	geom::Vector textOffset_;

@@ -83,15 +83,13 @@ void ContentMeasure::walk(Text* model)
 	size_t now=0;
 	size_t end=1;
 	while(now < end){
-		geom::Area area;
-		size_t rendererd;
-		std::tuple<geom::Area, size_t, size_t> r = renderer.calcMaximumStringLength(str, width, now);
-		std::tie(area, rendererd, end) = r;
-		if(rendererd == now){//そもそも１文字すら入らない
+		gl::StringRenderer::Command cmd = renderer.calcMaximumStringLength(str, width, now);
+		if(cmd.str().size() <= 0){//そもそも１文字すら入らない
 			//行送り
 			continue;
 		}
-		now = rendererd;
+		now += cmd.str().size();
+
 	}
 }
 
