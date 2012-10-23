@@ -21,18 +21,41 @@
 #include <cstdint>
 #include <cstddef>
 #include <tuple>
+#include "RawSprite.h"
 #include "../geom/Area.h"
+#include "../util/ClassUtil.h"
 
 namespace chisa {
 namespace gl {
 
 class StringRenderer {
+public:
+	class Command {
+		DEFINE_MEMBER(public, private, bool, enabled);
+		DEFINE_MEMBER(public, private, std::string, str);
+		DEFINE_MEMBER(public, private, geom::Area, area);
+	private:
+		void* operator new(size_t) = delete;
+		void operator delete(void*) = delete;
+	public:
+		Command():enabled_(false),str_(),area_(0,0,0,0){};
+		Command(const std::string& str, geom::Area& area):enabled_(true),str_(str),area_(area){};
+		Command(const std::string& str, geom::Area&& area):enabled_(true),str_(str),area_(area){};
+		Command(const std::string&& str, geom::Area& area):enabled_(true),str_(str),area_(area){};
+		Command(const std::string&& str, geom::Area&& area):enabled_(true),str_(str),area_(area){};
+		Command(const Command& other) = default;
+		Command(Command&& other) = default;
+		Command& operator=(const Command& other) = default;
+		Command& operator=(Command&& other) = default;
+		~Command () noexcept = default;
+	};
 private:
 	cairo_surface_t* nullSurface_;
 	cairo_t* cairo_;
 public:
-	geom::Area measure(const char* utf8, std::size_t begin=0, std::size_t end=SIZE_MAX);
-	std::tuple<geom::Area, size_t, size_t> calcMaximumStringLength(const std::string& str, const float limit, std::size_t beginInUtf8=0, std::size_t endInUtf8=SIZE_MAX);
+	StringRenderer::Command measure(const std::string& strUtf8);
+	StringRenderer::Command calcMaximumStringLength(const std::string& str, const float limit, std::size_t beginInUtf8=0, std::size_t endInUtf8=0);
+	void renderString(gl::Handler<gl::RawSprite> spr, const StringRenderer::Command& cmd, float const angle = 0.0f);
 public:
 	StringRenderer();
 	virtual ~StringRenderer();
