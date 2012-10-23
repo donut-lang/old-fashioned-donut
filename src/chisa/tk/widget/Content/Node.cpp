@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "Node.h"
+#include "../../../geom/Vector.h"
 
 namespace chisa {
 namespace tk {
@@ -49,6 +50,9 @@ void TreeNode::parseAttribute(tinyxml2::XMLElement* node)
 BlockNode::BlockNode()
 {
 	this->addAttribute("margin", this->margin_);
+	this->addAttribute("float", this->direction_, None);
+	this->addAttribute("width", this->width_, geom::Unspecified);
+	this->addAttribute("height", this->height_, geom::Unspecified);
 }
 
 InlineNode::InlineNode()

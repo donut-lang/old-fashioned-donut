@@ -103,7 +103,17 @@ protected:
 };
 
 class BlockNode : public TreeNode {
+public:
+	enum Direction {
+		None,
+		Right,
+		Left
+	};
+private:
 	DEFINE_MEMBER(public, private, Margin, margin);
+	DEFINE_MEMBER(public, private, Direction, direction);
+	DEFINE_MEMBER(public, private, float, width);
+	DEFINE_MEMBER(public, private, float, height);
 	NODE_SUBKLASS(BlockNode);
 };
 

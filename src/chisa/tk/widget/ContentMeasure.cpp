@@ -24,51 +24,64 @@ namespace tk {
 namespace widget {
 
 ContentMeasure::ContentMeasure(float const width) noexcept
-:lineHeight_(0.0f)
-,widgetWidth_(width)
-,boxWidth_(width)
+:widgetWidth_(width)
+,direction_(Right)
+,nowSession_(nullptr)
 {
-	this->pt_.x(0.0f);
-	this->pt_.y(0.0f);
 }
 
-ContentMeasure::BoxSession::BoxSession(ContentMeasure& parent, const Margin& m)
-:parent_(parent)
-,margin_(m)
+ContentMeasure::BlockSession::BlockSession(ContentMeasure& parent, BlockNode* const node)
+:node_(node)
+,lastSession_(parent.nowSession_)
+,parent_(parent)
+,maxWidth_(0.0f)
+,consumedHeight_(0.0f)
+,reservedWidth_(0.0f)
+,reservedHeight_(0.0f)
 {
-	parent.pt_.x(0);
+	parent.nowSession_ = this;
 }
-ContentMeasure::BoxSession::~BoxSession() noexcept
+ContentMeasure::BlockSession::~BlockSession() noexcept
 {
+	this->parent_.nowSession_ = this->lastSession_;
+}
 
+float ContentMeasure::BlockSession::calcLeftWidth()
+{
+	return consumedHeight_ <= lastSession_->reservedHeight_ ?
+				0 : //親ノードの最大値-reservedWidth;
+				0;//nodeが最大値を持ってるならそれ、無いなら親セッションの最大幅
 }
 
 void ContentMeasure::extend(float width, float lineHeight)
 {
-	float newX = this->pt_.x() + width;
-	float maxLineHeight = std::max(lineHeight, this->lineHeight_);
-	if(newX <= this->boxWidth_){
-		this->pt_.x(newX);
-		this->lineHeight_ = maxLineHeight;
-	}else{
-		newX -= this->boxWidth_;
-		this->pt_.x(newX);
-		this->pt_.y(this->pt_.y() + maxLineHeight);
-		this->lineHeight_ = lineHeight;
-	}
+//	float newX = this->pt_.x() + width;
+//	float maxLineHeight = std::max(lineHeight, this->lineHeight_);
+//	if(newX <= this->boxWidth_){
+//		this->pt_.x(newX);
+//		this->lineHeight_ = maxLineHeight;
+//	}else{
+//		newX -= this->boxWidth_;
+//		this->pt_.x(newX);
+//		this->pt_.y(this->pt_.y() + maxLineHeight);
+//		this->lineHeight_ = lineHeight;
+//	}
 }
 
 void ContentMeasure::walk(Document* model)
 {
-	this->margin_ = model->margin();
+	BlockSession bs(*this, model);
+
 }
 
 void ContentMeasure::walk(Paragraph* model)
 {
+	BlockSession bs(*this, model);
 }
 
 void ContentMeasure::walk(Heading* model)
 {
+	BlockSession bs(*this, model);
 }
 
 void ContentMeasure::walk(Link* model)
