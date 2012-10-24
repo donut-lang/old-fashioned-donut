@@ -33,4 +33,7 @@ using namespace chisa::logging;
 static Logger log_trace(std::cout, Logger::TRACE_);
 static Logger log_err(std::cout, Logger::ERROR_);
 
+#include <tinyxml2.h>
+std::shared_ptr<tinyxml2::XMLDocument> parse(const std::string& str);
+
 #endif /* SACCUBUS_TESTCOMMON_H_ */

@@ -19,19 +19,11 @@
 #include "../../TestCommon.h"
 #include "../../src/chisa/tk/widget/Content/Node.h"
 #include "../../src/chisa/tk/widget/Content/NodeReader.h"
-#include <tinyxml2.h>
 #include <typeinfo>
 
 namespace chisa {
 namespace tk {
 namespace widget {
-
-std::shared_ptr<tinyxml2::XMLDocument> parse(const std::string& str)
-{
-	std::shared_ptr<tinyxml2::XMLDocument> d(new tinyxml2::XMLDocument);
-	d->Parse(str.c_str(), str.size());
-	return d;
-}
 
 TEST(NodeReadingTest, NOPTest)
 {
