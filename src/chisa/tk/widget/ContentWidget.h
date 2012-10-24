@@ -28,46 +28,6 @@ namespace chisa {
 namespace tk {
 namespace widget {
 
-class ContentMeasure : public NodeWalker {
-public:
-	class BlockSession {
-	private:
-		BlockNode* const node_;
-		BlockSession* const lastSession_;
-		ContentMeasure& parent_;
-		float maxWidth_;
-		//完全に使い切った高さ
-		float consumedHeight_;
-		//ブロック要素が横に並んでいるなどで使い切ってる横幅・縦幅
-		float reservedWidth_;
-		float reservedHeight_;
-	public:
-		BlockSession(ContentMeasure& parent, BlockNode* const node);
-		~BlockSession() noexcept;
-		float calcLeftWidth();
-	};
-private:
-	//ウィジットそのものの横幅。何があろうとも、これは厳守ですよ〜。
-	float const widgetWidth_;
-	enum Direction {
-		Left,
-		Right,
-		Default
-	};
-	Direction direction_;
-	BlockSession* nowSession_;
-	cairo_surface_t * surface_;
-	cairo_t * cairo_;
-public:
-	ContentMeasure(float const width) noexcept;
-	virtual ~ContentMeasure() noexcept (true) = default;
-	virtual void walk(Document* model) override;
-	virtual void walk(Paragraph* model) override;
-	virtual void walk(Heading* model) override;
-	virtual void walk(Link* model) override;
-	virtual void walk(Text* model) override;
-};
-
 class ContentWidget: public chisa::tk::Widget {
 	CHISA_WIDGET_SUBKLASS(ContentWidget);
 	DEFINE_MEMBER(private, private, std::shared_ptr<Document>, rootNode);

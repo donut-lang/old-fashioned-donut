@@ -18,6 +18,7 @@
 
 #pragma once
 #include "../../../util/ClassUtil.h"
+#include "../../../geom/Vector.h"
 #include <cstddef>
 
 namespace chisa {
@@ -25,6 +26,7 @@ namespace tk {
 namespace widget {
 
 class Margin {
+	STACK_OBJECT(Margin);
 	DEFINE_MEMBER(public, public, float, top);
 	DEFINE_MEMBER(public, public, float, bottom);
 	DEFINE_MEMBER(public, public, float, left);
@@ -50,10 +52,10 @@ public:
 	void margin(const float& other) noexcept{
 		(*this) = other;
 	};
+	inline float totalWidth() const noexcept { return this->left()+this->right(); };
+	inline float totalHeight() const noexcept { return this->top()+this->bottom(); };
+	inline geom::Distance offset() const noexcept { return geom::Distance(this->left(), this->top()); };
 	~Margin() noexcept = default;
-private:
-	void *operator new(std::size_t) = delete;
-	void operator delete(void* pv) = delete;
 };
 
 }}}

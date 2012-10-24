@@ -17,6 +17,7 @@
  */
 
 #include "ContentWidget.h"
+#include "ContentMeasurer.h"
 #include "../../geom/Area.h"
 #include "../../geom/Vector.h"
 #include "Content/NodeReader.h"
@@ -55,7 +56,7 @@ void ContentWidget::reshape(const geom::Box& areaSize)
 
 geom::Box ContentWidget::measure(const geom::Box& constraintSize)
 {
-	ContentMeasure cm(constraintSize.width());
+	ContentMeasurer cm(constraintSize.width());
 	cm.start(this->rootNode());
 }
 

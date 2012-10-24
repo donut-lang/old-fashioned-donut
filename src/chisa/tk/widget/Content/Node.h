@@ -152,11 +152,26 @@ public:
 };
 
 class Text : public Node {
+public:
+	class RenderSet{
+		STACK_OBJECT(RenderSet);
+		DEFINE_MEMBER(public, private, gl::StringRenderer::Command, cmd);
+		DEFINE_MEMBER(public, private, geom::Area, renderArea);
+	public:
+		RenderSet(gl::StringRenderer::Command cmd, geom::Area renderArea):cmd_(cmd), renderArea_(renderArea){};
+		RenderSet(const RenderSet& other):cmd_(other.cmd_), renderArea_(other.renderArea_){};
+		RenderSet(RenderSet&& other):cmd_(other.cmd_), renderArea_(other.renderArea_){};
+		RenderSet& operator=(const RenderSet& other){cmd_=other.cmd_;renderArea_=other.renderArea_;return *this;};
+		RenderSet& operator=(RenderSet&& other){cmd_=other.cmd_;renderArea_=other.renderArea_;return *this;};
+	};
+private:
 	DEFINE_MEMBER(public, private, std::string, text);
-	DEFINE_MEMBER(public, private, std::vector<gl::StringRenderer::Command>, renderCommands);
+	DEFINE_MEMBER(public, private, std::vector<RenderSet>, renderCommands);
 	NODE_SUBKLASS_LEAF(Text);
 private:
 	Text(std::string text);
+public:
+	void clearRenderCommands() noexcept{ decltype(this->renderCommands_)().swap(this->renderCommands_); };
 };
 
 }}}

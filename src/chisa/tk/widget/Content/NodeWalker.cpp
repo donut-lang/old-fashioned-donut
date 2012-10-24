@@ -28,4 +28,12 @@ void NodeWalker::start(std::shared_ptr<Document> model)
 	model->walk(*this);
 }
 
+void NodeWalker::walkChildren(TreeNode* node)
+{
+	for(const std::shared_ptr<Node>& c : *node){
+		c->walk(*this);
+	}
+}
+
+
 }}}
