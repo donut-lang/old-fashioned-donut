@@ -21,8 +21,13 @@
 #define DISABLE_COPY_AND_ASSIGN(klass)\
 private:\
 	klass(const klass& other) = delete;\
+	klass(klass&& other) = delete;\
 	klass& operator=(const klass& other) = delete;\
 	klass& operator=(klass&& other) = delete;
+
+#define STACK_OBJECT(Klass)\
+	void* operator new(size_t) = delete;\
+	void operator delete(void*) = delete;
 
 #define DEFINE_MEMBER_CONST(rscope, type, name)\
 private:\
