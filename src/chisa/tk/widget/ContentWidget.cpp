@@ -57,7 +57,7 @@ void ContentWidget::reshape(const geom::Box& areaSize)
 geom::Box ContentWidget::measure(const geom::Box& constraintSize)
 {
 	ContentMeasurer cm(constraintSize.width());
-	cm.start(this->rootNode());
+	return cm.start(this->rootNode());
 }
 
 bool ContentWidget::onDownRaw(const float timeMs, const geom::Point& ptInWidget)

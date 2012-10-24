@@ -27,10 +27,7 @@ namespace widget {
 
 ContentMeasurer::ContentMeasurer(float const width) noexcept
 :widgetWidth_(width)
-,defaultSession_(*this)
-,nowSession_(&defaultSession_)
-,surface_(cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 1, 1))
-,cairo_(cairo_create(this->surface_))
+,nowSession_(nullptr)
 {
 }
 
@@ -73,6 +70,13 @@ ContentMeasurer::BlockSession::~BlockSession() noexcept
 		this->lastSession_->extendBlock(geom::Box(this->maxWidth_, this->consumedHeight_), node_->direction());
 	}
 	this->parent_.nowSession_ = this->lastSession_;
+}
+
+geom::Box ContentMeasurer::start(std::shared_ptr<Document> doc)
+{
+	BlockSession bs(*this);
+	this->NodeWalker::start(doc);
+	return geom::Box(bs.reservedBlockWidth(), bs.reservedBlockHeight());
 }
 
 geom::Area ContentMeasurer::BlockSession::extendBlock(const geom::Box& size, BlockNode::Direction dir)
