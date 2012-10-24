@@ -28,7 +28,7 @@ namespace widget {
 ContentMeasurer::ContentMeasurer(float const width) noexcept
 :widgetWidth_(width)
 ,defaultSession_(*this)
-,nowSession_(nullptr)
+,nowSession_(&defaultSession_)
 ,surface_(cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 1, 1))
 ,cairo_(cairo_create(this->surface_))
 {
@@ -69,7 +69,9 @@ ContentMeasurer::BlockSession::BlockSession(ContentMeasurer& parent, BlockNode* 
 ContentMeasurer::BlockSession::~BlockSession() noexcept
 {
 	this->flushBlock();
-	this->lastSession_->extendBlock(geom::Box(this->maxWidth_, this->consumedHeight_), node_->direction());
+	if(this->lastSession_){
+		this->lastSession_->extendBlock(geom::Box(this->maxWidth_, this->consumedHeight_), node_->direction());
+	}
 	this->parent_.nowSession_ = this->lastSession_;
 }
 
@@ -155,7 +157,7 @@ void ContentMeasurer::BlockSession::flushBlock()
 
 float ContentMeasurer::BlockSession::calcLeftWidth()
 {
-	return consumedHeight_ <= lastSession_->reservedBlockHeight() ?
+	return lastSession_ && this->consumedHeight() <= lastSession_->reservedBlockHeight() ?
 				lastSession_->calcLeftWidth() - this->reservedBlockWidth() - this->reservedInlineWidth() : //親ノードの最大値-reservedWidth;
 				this->maxWidth() - this->reservedBlockWidth() - this->reservedInlineWidth();//nodeが最大値を持ってるならそれ、無いなら親セッションの最大幅
 }
@@ -187,7 +189,7 @@ float ContentMeasurer::calcLeftWidth()
 
 void ContentMeasurer::nextLine()
 {
-	this->nextLine();
+	this->nowSession_->nextLine();
 }
 
 
@@ -218,19 +220,23 @@ void ContentMeasurer::walk(Text* model)
 {
 	model->clearRenderCommands();
 	gl::StringRenderer renderer;
-	std::string str = model->text();
-	size_t now=0;
-	while(now < str.length()){
-		gl::StringRenderer::Command cmd = renderer.calcMaximumStringLength(str, this->calcLeftWidth(), now);
-		if(!cmd){//そもそも１文字すら入らない
-			this->nextLine();
-			continue;
+	std::vector<std::string> lines;
+	util::splitLine(model->text(), lines);
+	for(const std::string& str : lines){
+		size_t now=0;
+		while(now < str.length()){
+			gl::StringRenderer::Command cmd = renderer.calcMaximumStringLength(str, this->calcLeftWidth(), now);
+			if(!cmd){//そもそも１文字すら入らない
+				this->nextLine();
+				continue;
+			}
+			now += cmd.str().size();
+			//文字分のエリアを確保し、その位置とレンダリングコマンドを記録
+			geom::Area rendered = this->extendInline(cmd.area().box());
+			Text::RenderSet set(cmd, rendered);
+			model->renderCommands().push_back(set);
 		}
-		now += cmd.str().size();
-		//文字分のエリアを確保し、その位置とレンダリングコマンドを記録
-		geom::Area rendered = this->extendInline(cmd.area().box());
-		Text::RenderSet set(cmd, rendered);
-		std::vector<chisa::gl::StringRenderer::Command>().push_back(cmd);
+		this->nextLine();
 	}
 }
 
