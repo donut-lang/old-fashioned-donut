@@ -62,8 +62,8 @@ TEST_SRC=TINYXML2_SRC+enum('src', [udir('src/entrypoint')])+enum('test')
 MAIN_SRC=TINYXML2_SRC+enum('src', [udir('src/entrypoint')])+enum(udir('src/entrypoint/pc/'))
 
 def build(bld):
-	bld(features = 'cxx cprogram', source = MAIN_SRC, target = 'chisa', use=['PTHREAD', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST'])
-	bld(features = 'cxx cprogram', source = TEST_SRC, target = 'chisa_test', use=['PTHREAD', 'OPENGL','FREETYPE2','CAIRO','GTEST','LIBPNG','BOOST'])
+	bld(features = 'cxx cprogram', source = MAIN_SRC, target = 'chisa', use=['PTHREAD', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU'])
+	bld(features = 'cxx cprogram', source = TEST_SRC, target = 'chisa_test', use=['PTHREAD', 'OPENGL','FREETYPE2','CAIRO','GTEST','LIBPNG','BOOST','ICU'])
 
 def shutdown(ctx):
 	pass
