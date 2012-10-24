@@ -26,7 +26,7 @@ namespace chisa {
 namespace tk {
 namespace widget {
 
-TEST(ContentMeasurerTest, NOPTest)
+TEST(ContentMeasurerTest, TextWrapTest)
 {
 	auto docTree = parse(R"delimiter(
 <?xml version="1.0" encoding="UTF-8"?>
