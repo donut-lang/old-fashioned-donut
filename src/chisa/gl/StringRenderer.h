@@ -31,10 +31,10 @@ namespace gl {
 class StringRenderer {
 public:
 	class Command {
-		DEFINE_MEMBER(public, private, bool, enabled);
-		DEFINE_MEMBER(public, private, bool, vertical);
+		DEFINE_MEMBER(private, private, bool, enabled);
+		DEFINE_MEMBER(private, private, bool, vertical);
 		DEFINE_MEMBER(public, private, std::string, str);
-		DEFINE_MEMBER(public, private, geom::Area, area);
+		DEFINE_MEMBER(private, private, geom::Area, area);
 	private:
 		void* operator new(size_t) = delete;
 		void operator delete(void*) = delete;
@@ -54,8 +54,13 @@ public:
 			cmd.area(cmd.area_.flip());
 			return cmd;
 		}
+		float width() const noexcept { return this->area().width(); };
+		float height() const noexcept { return this->area().height(); };
+		geom::Box size() const noexcept { return this->area().box(); };
 		~Command () noexcept = default;
 		explicit operator bool () const noexcept { return this->enabled(); };
+	public:
+		gl::Handler<gl::RawSprite> renderString(gl::Canvas& cv) const;
 	};
 private:
 	cairo_surface_t* nullSurface_;

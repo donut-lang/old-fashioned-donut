@@ -75,7 +75,7 @@ StringRenderer::Command StringRenderer::calcMaximumStringLength(const std::strin
 		sink.Reset();
 		str.tempSubStringBetween(beg, end).toUTF8(sink);
 		StringRenderer::Command cmdTry = this->measure(buf);
-		if(cmdTry.area().width() <= limit){
+		if(cmdTry.width() <= limit){
 			return cmdTry;
 		}
 	}
@@ -89,7 +89,7 @@ StringRenderer::Command StringRenderer::calcMaximumStringLength(const std::strin
 		sink.Reset();
 		str.tempSubStringBetween(beg, center).toUTF8(sink);
 		Command cmdTry = this->measure(buf);
-		if(cmdTry.area().width() <= limit){
+		if(cmdTry.width() <= limit){
 			cmd = cmdTry;
 			min = center;
 		}else{
@@ -102,7 +102,11 @@ StringRenderer::Command StringRenderer::calcMaximumStringLength(const std::strin
 
 gl::Handler<gl::RawSprite> StringRenderer::renderString(gl::Canvas& cv, const StringRenderer::Command& cmd)
 {
-	gl::Handler<gl::RawSprite> spr = cv.queryRawSprite(static_cast<int>(cmd.area().width()), static_cast<int>(cmd.area().height()));
+	return cmd.renderString(cv);
+}
+gl::Handler<gl::RawSprite> StringRenderer::Command::renderString(gl::Canvas& cv) const
+{
+	gl::Handler<gl::RawSprite> spr = cv.queryRawSprite(static_cast<int>(this->area().width()), static_cast<int>(this->area().height()));
 	gl::RawSprite::Session ss(spr);
 	{
 		cairo_surface_t* surf = cairo_image_surface_create_for_data(ss.data(), CAIRO_FORMAT_ARGB32, ss.width(), ss.height(), ss.stride());
@@ -113,12 +117,12 @@ gl::Handler<gl::RawSprite> StringRenderer::renderString(gl::Canvas& cv, const St
 		cairo_paint(cr);
 
 		cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
-		cairo_move_to(cr, cmd.area().point().x(), cmd.area().point().y());
-		if(cmd.vertical()){
+		cairo_move_to(cr, this->area().x(), this->area().y());
+		if(this->vertical()){
 			cairo_rotate(cr, 90.0f);
 		}
 
-		cairo_text_path(cr, cmd.str().c_str());
+		cairo_text_path(cr, this->str().c_str());
 		cairo_set_source_rgba(cr, 1,1,1,1);
 		cairo_paint(cr);
 

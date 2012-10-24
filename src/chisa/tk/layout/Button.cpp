@@ -61,12 +61,12 @@ void Button::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const 
 geom::Box Button::onMeasure(const geom::Box& constraint)
 {
 	this->measureTextSize();
-	return this->cmd_.area().box();
+	return this->cmd_.size();
 }
 
 void Button::onLayout(const geom::Box& size)
 {
-	this->renderOffset_ = (size-this->cmd_.area().box())/2;
+	this->renderOffset_ = (size-this->cmd_.size())/2;
 }
 
 void Button::loadXMLimpl(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element)
@@ -125,7 +125,7 @@ bool Button::onUpRaw(const float timeMs, const geom::Point& ptInScreen)
 
 bool Button::onSingleTapUp(const float timeMs, const geom::Point& ptInScreen)
 {
-	geom::Area a(this->drawnArea().point()+this->renderOffset_, this->cmd_.area().box());
+	geom::Area a(this->drawnArea().point()+this->renderOffset_, this->cmd_.size());
 	if(a.contain(ptInScreen)){
 		this->onClick();
 	}
