@@ -39,6 +39,7 @@ public:
 		DEFINE_MEMBER(public, private, float, maxWidth);
 		DEFINE_MEMBER(private, private, BlockNode::Direction, lastDirection)
 		//完全に使い切った高さ
+		DEFINE_MEMBER(public, private, float, consumedWidth);
 		DEFINE_MEMBER(public, private, float, consumedHeight);
 		//ブロック要素が横に並んでいるなどで使い切ってる横幅・縦幅
 		DEFINE_MEMBER(public, private, float, reservedBlockWidth);
@@ -47,12 +48,13 @@ public:
 		DEFINE_MEMBER(public, private, float, reservedInlineWidth);
 		DEFINE_MEMBER(public, private, float, reservedInlineHeight);
 		DEFINE_MEMBER(public, private, float, inlineHeight);
+		//
+		bool inlineRendered_;
 	public:
 		BlockSession(ContentMeasurer& parent);
 		BlockSession(ContentMeasurer& parent, BlockNode* const node);
 		~BlockSession() noexcept;
 		float calcLeftWidth();
-		void flushInline();
 		void flushBlock();
 		void nextLine();
 		geom::Area extendBlock(const geom::Box& size, BlockNode::Direction dir=BlockNode::Direction::None);
@@ -66,7 +68,6 @@ private:
 	geom::Area extendInline(const geom::Box& size);
 	float calcLeftWidth();
 	void nextLine();
-	void flushInline();
 	void flushBlock();
 public:
 	ContentMeasurer(float const width) noexcept;
