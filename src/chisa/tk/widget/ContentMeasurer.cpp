@@ -45,6 +45,7 @@ ContentMeasurer::BlockSession::BlockSession(ContentMeasurer& parent)
 ,reservedInlineWidth_(0.0f)
 ,reservedInlineHeight_(0.0f)
 ,inlineHeight_(0.0f)
+,inlineRendered_(false)
 {
 	parent.nowSession_ = this;
 }
