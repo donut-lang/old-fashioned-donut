@@ -23,8 +23,11 @@
 
 #define SETUP(Klass)\
 public:\
-	Klass(const Klass& o) noexcept:BaseVector<Klass>(o){};\
-	Klass() noexcept:BaseVector<Klass>(){};\
+	Klass(const Klass& o) noexcept = default;\
+	Klass(Klass&& o) noexcept = default;\
+	Klass& operator=(const Klass& o) noexcept = default;\
+	Klass& operator=(Klass&& o) noexcept = default;\
+	Klass() noexcept = default;\
 	explicit Klass(const float x, const float y) noexcept:BaseVector<Klass>(x,y){};\
 	~Klass() noexcept(true) = default;\
 	void *operator new(std::size_t) = delete;\
@@ -124,6 +127,16 @@ private:
 protected:
 	template <typename O>
 	inline BaseVector(const BaseVector<O>& o) noexcept:x_(o.x_),y_(o.y_){}
+	inline BaseVector(const BaseVector<Self>& s) = default;
+	inline BaseVector(BaseVector<Self>&& s) = default;
+	inline BaseVector<Self>& operator=(const BaseVector<Self>& s) = default;
+	inline BaseVector<Self>& operator=(BaseVector<Self>&& s) = default;
+	template <typename O>
+	inline BaseVector(BaseVector<O>&& o) noexcept:x_(o.x_),y_(o.y_){}
+	template <typename O>
+	inline Self& operator=(BaseVector<O>&& o) noexcept{ x_ = o.x_; y_ = o.y_; return *this; }
+	template <typename O>
+	inline Self& operator=(const BaseVector<O>& o) noexcept{ x_ = o.x_; y_ = o.y_; return *this; }
 	inline BaseVector(const float x, const float y) noexcept:x_(x),y_(y){}
 	inline BaseVector() noexcept:x_(NAN),y_(NAN){}
 	~BaseVector() noexcept = default;

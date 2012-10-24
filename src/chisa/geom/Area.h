@@ -29,13 +29,11 @@ private:
 	Box box_;
 public:
 	inline Area(const float x, const float y, const float width, const float height) noexcept:point_(x,y), box_(width, height){}
-	inline Area(const Area& other) noexcept:point_(other.point_), box_(other.box_){};
+	inline Area(const Area& other) noexcept = default;
+	inline Area(Area&& other) noexcept = default;
 	inline Area(const Vector& point, const Box& box) noexcept:point_(point), box_(box){};
-	inline Area& operator=(const Area& other) noexcept{
-		this->point_ = other.point_;
-		this->box_ = other.box_;
-		return *this;
-	}
+	inline Area& operator=(const Area& other) noexcept = default;
+	inline Area& operator=(Area&& other) noexcept = default;
 	inline Area() noexcept:point_(), box_(){};
 	inline ~Area() noexcept = default;
 	void *operator new(std::size_t) = delete;

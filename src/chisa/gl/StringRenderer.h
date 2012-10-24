@@ -55,6 +55,7 @@ public:
 			return cmd;
 		}
 		~Command () noexcept = default;
+		explicit operator bool () const noexcept { return this->enabled(); };
 	};
 private:
 	cairo_surface_t* nullSurface_;
