@@ -231,7 +231,7 @@ void ContentMeasurer::walk(Text* model)
 			}
 			now += cmd.str().size();
 			//文字分のエリアを確保し、その位置とレンダリングコマンドを記録
-			geom::Area rendered = this->extendInline(cmd.area().box());
+			geom::Area rendered = this->extendInline(cmd.size());
 			Text::RenderSet set(cmd, rendered);
 			model->renderCommands().push_back(set);
 		}

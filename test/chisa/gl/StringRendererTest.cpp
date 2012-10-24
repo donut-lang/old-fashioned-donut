@@ -28,22 +28,22 @@ TEST(StringRendererTest, BasicTest)
 	StringRenderer r;
 	StringRenderer::Command aa = r.measure("a");
 	StringRenderer::Command ab = r.measure("あ");
-	StringRenderer::Command cmd = r.calcMaximumStringLength("aあc", aa.area().width()+ab.area().width()+0.0001);
+	StringRenderer::Command cmd = r.calcMaximumStringLength("aあc", aa.width()+ab.width()+0.0001);
 	ASSERT_EQ("aあ", cmd.str());
-	ASSERT_FLOAT_EQ(aa.area().width()+ab.area().width(), cmd.area().width());
+	ASSERT_FLOAT_EQ(aa.width()+ab.width(), cmd.width());
 
-	cmd = r.calcMaximumStringLength("aあc", aa.area().width()+ab.area().width()-0.0001);
+	cmd = r.calcMaximumStringLength("aあc", aa.width()+ab.width()-0.0001);
 	ASSERT_EQ("a", cmd.str());
-	ASSERT_FLOAT_EQ(aa.area().width(), cmd.area().width());
+	ASSERT_FLOAT_EQ(aa.width(), cmd.width());
 }
 
 TEST(StringRendererTest, EmptySpaceTest)
 {
 
 	StringRenderer r;
-	StringRenderer::Command cmd = r.calcMaximumStringLength("aあc", r.measure("a").area().width()-0.0001);
+	StringRenderer::Command cmd = r.calcMaximumStringLength("aあc", r.measure("a").width()-0.0001);
 	ASSERT_EQ("", cmd.str());
-	ASSERT_FLOAT_EQ(0, cmd.area().width());
+	ASSERT_FLOAT_EQ(0, cmd.width());
 }
 
 }}
