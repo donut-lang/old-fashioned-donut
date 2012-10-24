@@ -27,12 +27,29 @@ namespace widget {
 
 ContentMeasurer::ContentMeasurer(float const width) noexcept
 :widgetWidth_(width)
+,defaultSession_(*this)
 ,nowSession_(nullptr)
 ,surface_(cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 1, 1))
 ,cairo_(cairo_create(this->surface_))
 {
 }
 
+ContentMeasurer::BlockSession::BlockSession(ContentMeasurer& parent)
+:node_()
+,parent_(parent)
+,lastSession_(nullptr)
+,offsetFromTop_(0.0f,0.0f)
+,maxWidth_(parent.widgetWidth_)
+,lastDirection_(BlockNode::Direction::None)
+,consumedHeight_(0.0f)
+,reservedBlockWidth_(0.0f)
+,reservedBlockHeight_(0.0f)
+,reservedInlineWidth_(0.0f)
+,reservedInlineHeight_(0.0f)
+,inlineHeight_(0.0f)
+{
+	parent.nowSession_ = this;
+}
 ContentMeasurer::BlockSession::BlockSession(ContentMeasurer& parent, BlockNode* const node)
 :node_(node)
 ,parent_(parent)
@@ -45,11 +62,13 @@ ContentMeasurer::BlockSession::BlockSession(ContentMeasurer& parent, BlockNode* 
 ,reservedBlockHeight_(0.0f)
 ,reservedInlineWidth_(0.0f)
 ,reservedInlineHeight_(0.0f)
+,inlineHeight_(0.0f)
 {
 	parent.nowSession_ = this;
 }
 ContentMeasurer::BlockSession::~BlockSession() noexcept
 {
+	this->flushBlock();
 	this->lastSession_->extendBlock(geom::Box(this->maxWidth_, this->consumedHeight_), node_->direction());
 	this->parent_.nowSession_ = this->lastSession_;
 }
@@ -83,13 +102,35 @@ geom::Area ContentMeasurer::BlockSession::extendBlock(const geom::Box& size, Blo
 	return area;
 }
 
+void ContentMeasurer::BlockSession::nextLine()
+{
+	this->reservedInlineHeight( this->reservedInlineHeight() + this->inlineHeight() );
+	this->reservedInlineWidth(0.0f);
+	this->inlineHeight(0.0f);
+}
+
 geom::Area ContentMeasurer::BlockSession::extendInline(const geom::Box& size)
 {
+	geom::Area area;
+	if(size.width() > this->calcLeftWidth()){
+		this->nextLine();
+	}
+	if(this->lastDirection() == BlockNode::Direction::Left){
+		area = geom::Area(this->offsetFromTop() + geom::Distance(this->reservedInlineWidth(), this->reservedInlineHeight()),size);
+		this->reservedInlineWidth( this->reservedInlineWidth() + size.width() );
+		this->inlineHeight( geom::max(this->inlineHeight(), size.height()) );
+	}else{
+		area = geom::Area(this->offsetFromTop() + geom::Distance(this->reservedBlockWidth()+this->reservedInlineWidth(), this->reservedInlineHeight()),size);
+		this->reservedInlineWidth( this->reservedInlineWidth() + size.width() );
+		this->inlineHeight( geom::max(this->inlineHeight(), size.height()) );
+	}
+	return area;
 }
+
 
 void ContentMeasurer::BlockSession::flushInline()
 {
-	if(!(this->reservedInlineHeight() > geom::VerySmall || this->reservedInlineWidth() > geom::VerySmall)){
+	if(this->reservedInlineHeight() < geom::VerySmall && this->reservedInlineWidth() < geom::VerySmall){
 		return;
 	}
 	this->consumedHeight_ += geom::max(this->reservedBlockHeight(), this->reservedInlineHeight());
@@ -103,7 +144,7 @@ void ContentMeasurer::BlockSession::flushInline()
 void ContentMeasurer::BlockSession::flushBlock()
 {
 	this->flushInline();
-	if(!(this->reservedBlockHeight() > geom::VerySmall || this->reservedBlockWidth() > geom::VerySmall)){
+	if(this->reservedBlockHeight() < geom::VerySmall && this->reservedBlockWidth() < geom::VerySmall){
 		return;
 	}
 	this->consumedHeight_ += this->reservedBlockHeight();
@@ -115,26 +156,8 @@ void ContentMeasurer::BlockSession::flushBlock()
 float ContentMeasurer::BlockSession::calcLeftWidth()
 {
 	return consumedHeight_ <= lastSession_->reservedBlockHeight() ?
-				lastSession_->maxWidth()-lastSession_->reservedBlockWidth() : //親ノードの最大値-reservedWidth;
-				maxWidth();//nodeが最大値を持ってるならそれ、無いなら親セッションの最大幅
-}
-void ContentMeasurer::walk(Document* model)
-{
-	BlockSession bs(*this, model);
-}
-
-void ContentMeasurer::walk(Paragraph* model)
-{
-	BlockSession bs(*this, model);
-}
-
-void ContentMeasurer::walk(Heading* model)
-{
-	BlockSession bs(*this, model);
-}
-
-void ContentMeasurer::walk(Link* model)
-{
+				lastSession_->calcLeftWidth() - this->reservedBlockWidth() - this->reservedInlineWidth() : //親ノードの最大値-reservedWidth;
+				this->maxWidth() - this->reservedBlockWidth() - this->reservedInlineWidth();//nodeが最大値を持ってるならそれ、無いなら親セッションの最大幅
 }
 
 geom::Area ContentMeasurer::extendBlock(const geom::Box& size, BlockNode::Direction dir)
@@ -147,22 +170,64 @@ geom::Area ContentMeasurer::extendInline(const geom::Box& size)
 	return this->nowSession_->extendInline(size);
 }
 
+void ContentMeasurer::flushInline()
+{
+	this->nowSession_->flushInline();
+}
+
+void ContentMeasurer::flushBlock()
+{
+	this->nowSession_->flushBlock();
+}
+
+float ContentMeasurer::calcLeftWidth()
+{
+	return this->nowSession_->calcLeftWidth();
+}
+
+void ContentMeasurer::nextLine()
+{
+	this->nextLine();
+}
+
+
+void ContentMeasurer::walk(Document* model)
+{
+	BlockSession bs(*this, model);
+	this->walkChildren(model);
+}
+
+void ContentMeasurer::walk(Paragraph* model)
+{
+	BlockSession bs(*this, model);
+	this->walkChildren(model);
+}
+
+void ContentMeasurer::walk(Heading* model)
+{
+	BlockSession bs(*this, model);
+	this->walkChildren(model);
+}
+
+void ContentMeasurer::walk(Link* model)
+{
+	this->walkChildren(model);
+}
+
 void ContentMeasurer::walk(Text* model)
 {
-	float width = this->nowSession_->calcLeftWidth();
 	model->clearRenderCommands();
 	gl::StringRenderer renderer;
 	std::string str = model->text();
 	size_t now=0;
 	while(now < str.length()){
-		gl::StringRenderer::Command cmd = renderer.calcMaximumStringLength(str, width, now);
+		gl::StringRenderer::Command cmd = renderer.calcMaximumStringLength(str, this->calcLeftWidth(), now);
 		if(!cmd){//そもそも１文字すら入らない
-			//行送り
+			this->nextLine();
 			continue;
 		}
 		now += cmd.str().size();
-		//TODO: 文字分のエリアを予約
-		//コマンドを追加。本来はポジションとかも含めて入れないと行けないはず〜。
+		//文字分のエリアを確保し、その位置とレンダリングコマンドを記録
 		geom::Area rendered = this->extendInline(cmd.area().box());
 		Text::RenderSet set(cmd, rendered);
 		std::vector<chisa::gl::StringRenderer::Command>().push_back(cmd);

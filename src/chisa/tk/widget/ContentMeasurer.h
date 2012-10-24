@@ -46,24 +46,31 @@ public:
 		//インライン要素が並んでいる横幅・縦幅
 		DEFINE_MEMBER(public, private, float, reservedInlineWidth);
 		DEFINE_MEMBER(public, private, float, reservedInlineHeight);
+		DEFINE_MEMBER(public, private, float, inlineHeight);
 	public:
+		BlockSession(ContentMeasurer& parent);
 		BlockSession(ContentMeasurer& parent, BlockNode* const node);
 		~BlockSession() noexcept;
 		float calcLeftWidth();
 		void flushInline();
 		void flushBlock();
+		void nextLine();
 		geom::Area extendBlock(const geom::Box& size, BlockNode::Direction dir=BlockNode::Direction::None);
 		geom::Area extendInline(const geom::Box& size);
 	};
 private:
 	//ウィジットそのものの横幅。何があろうとも、これは厳守ですよ〜。
 	float const widgetWidth_;
+	BlockSession defaultSession_;
 	BlockSession* nowSession_;
 	cairo_surface_t * surface_;
 	cairo_t * cairo_;
-private:
 	geom::Area extendBlock(const geom::Box& size, BlockNode::Direction dir=BlockNode::Direction::None);
 	geom::Area extendInline(const geom::Box& size);
+	float calcLeftWidth();
+	void nextLine();
+	void flushInline();
+	void flushBlock();
 public:
 	ContentMeasurer(float const width) noexcept;
 	virtual ~ContentMeasurer() noexcept (true) = default;
