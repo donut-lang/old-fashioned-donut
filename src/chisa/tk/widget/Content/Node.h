@@ -25,6 +25,7 @@
 #include <vector>
 #include <map>
 #include <tinyxml2.h>
+#include "../../../gl/StringRenderer.h"
 
 namespace chisa {
 namespace tk {
@@ -97,8 +98,7 @@ protected:
 	template <typename T> static void parseAttr(const std::string& name, T& ptr, const T& def, tinyxml2::XMLElement* elm);
 	template <typename T> void addAttribute(const std::string& name, T& ptr, const T def=T())
 	{
-		using namespace std::placeholders;
-		this->attrMap_.insert(std::make_pair(name, std::bind(TreeNode::parseAttr<T>, std::string(name), std::ref(ptr), def, _1)));
+		this->attrMap_.insert(std::make_pair(name, std::bind(TreeNode::parseAttr<T>, std::string(name), std::ref(ptr), def, std::placeholders::_1)));
 	}
 };
 
@@ -153,6 +153,7 @@ public:
 
 class Text : public Node {
 	DEFINE_MEMBER(public, private, std::string, text);
+	DEFINE_MEMBER(public, private, std::vector<gl::StringRenderer::Command>, renderCommands);
 	NODE_SUBKLASS_LEAF(Text);
 private:
 	Text(std::string text);

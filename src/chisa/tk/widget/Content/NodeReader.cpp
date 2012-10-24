@@ -30,9 +30,8 @@ const std::string NodeReader::RootElementName("doc");
 template <typename N, typename... Args>
 static NodeReader::ParseFunc createProxy(const Args&... args)
 {
-	using namespace std::placeholders;
-	NodeReader::TreeConstructor c = std::bind(Node::create<N, Args...>, _1, _2, args...);
-	return std::bind(&NodeReader::parseTreeNode, _1, c, _2, _3, _4);
+	NodeReader::TreeConstructor c = std::bind(Node::create<N, Args...>, std::placeholders::_1, std::placeholders::_2, args...);
+	return std::bind(&NodeReader::parseTreeNode, std::placeholders::_1, c, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
 }
 
 NodeReader::NodeReader()

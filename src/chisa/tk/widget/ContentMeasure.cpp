@@ -78,18 +78,20 @@ void ContentMeasure::walk(Link* model)
 void ContentMeasure::walk(Text* model)
 {
 	float width = this->nowSession_->calcLeftWidth();
+	std::vector<chisa::gl::StringRenderer::Command>().swap(model->renderCommands());
 	gl::StringRenderer renderer;
 	std::string str = model->text();
 	size_t now=0;
-	size_t end=1;
-	while(now < end){
+	while(now < str.length()){
 		gl::StringRenderer::Command cmd = renderer.calcMaximumStringLength(str, width, now);
-		if(cmd.str().size() <= 0){//そもそも１文字すら入らない
+		if(!cmd){//そもそも１文字すら入らない
 			//行送り
 			continue;
 		}
 		now += cmd.str().size();
-
+		//TODO: 文字分のエリアを予約
+		//コマンドを追加。本来はポジションとかも含めて入れないと行けないはず〜。
+		std::vector<chisa::gl::StringRenderer::Command>().push_back(cmd);
 	}
 }
 
