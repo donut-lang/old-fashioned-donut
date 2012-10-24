@@ -72,9 +72,9 @@ StringRenderer::Command StringRenderer::calcMaximumStringLength(const std::strin
 	std::size_t const end = endInUtf8 == 0 ? static_cast<size_t>(str.length()) : endInUtf8;
 
 	{ //とりあえず全部で試してみる
+		sink.Reset();
 		str.tempSubStringBetween(beg, end).toUTF8(sink);
 		StringRenderer::Command cmdTry = this->measure(buf);
-		sink.Reset();
 		if(cmdTry.area().width() <= limit){
 			return cmdTry;
 		}
@@ -86,9 +86,9 @@ StringRenderer::Command StringRenderer::calcMaximumStringLength(const std::strin
 
 	while(min+1 < max){
 		std::size_t center = (min+max)/2;
+		sink.Reset();
 		str.tempSubStringBetween(beg, center).toUTF8(sink);
 		Command cmdTry = this->measure(buf);
-		sink.Reset();
 		if(cmdTry.area().width() <= limit){
 			cmd = cmdTry;
 			min = center;
