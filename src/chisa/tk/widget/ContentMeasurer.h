@@ -61,10 +61,7 @@ public:
 private:
 	//ウィジットそのものの横幅。何があろうとも、これは厳守ですよ〜。
 	float const widgetWidth_;
-	BlockSession defaultSession_;
 	BlockSession* nowSession_;
-	cairo_surface_t * surface_;
-	cairo_t * cairo_;
 	geom::Area extendBlock(const geom::Box& size, BlockNode::Direction dir=BlockNode::Direction::None);
 	geom::Area extendInline(const geom::Box& size);
 	float calcLeftWidth();
@@ -73,6 +70,7 @@ private:
 	void flushBlock();
 public:
 	ContentMeasurer(float const width) noexcept;
+	geom::Box start(std::shared_ptr<Document> doc);
 	virtual ~ContentMeasurer() noexcept (true) = default;
 	virtual void walk(Document* model) override;
 	virtual void walk(Paragraph* model) override;
