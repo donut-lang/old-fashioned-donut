@@ -30,6 +30,7 @@ namespace widget {
 static std::string const TAG("ContentWidget");
 
 CHISA_WIDGET_SUBKLASS_CONSTRUCTOR_DEF(ContentWidget)
+,lastWidth_(NAN)
 {
 	tinyxml2::XMLElement* docElem = element->FirstChildElement("doc");
 	this->rootNode(NodeReader().parseTree(docElem));
@@ -44,6 +45,7 @@ ContentWidget::~ContentWidget()
 
 void ContentWidget::render(gl::Canvas& cv, const geom::Area& area)
 {
+
 }
 
 void ContentWidget::idle(const float delta_ms)
@@ -52,28 +54,36 @@ void ContentWidget::idle(const float delta_ms)
 
 void ContentWidget::reshape(const geom::Box& areaSize)
 {
+	this->measure(areaSize);
 }
 
 geom::Box ContentWidget::measure(const geom::Box& constraintSize)
 {
-	ContentMeasurer cm(constraintSize.width());
-	return cm.start(this->rootNode());
+	if(geom::isUnspecified(this->lastWidth()) || std::fabs(constraintSize.width()-this->lastWidth()) >= geom::VerySmall){
+		this->lastWidth(constraintSize.width());
+		this->lastSize(ContentMeasurer(constraintSize.width()).start(this->rootNode()));
+	}
+	return this->lastSize();
 }
 
 bool ContentWidget::onDownRaw(const float timeMs, const geom::Point& ptInWidget)
 {
+	return true;
 }
 
 bool ContentWidget::onUpRaw(const float timeMs, const geom::Point& ptInWidget)
 {
+	return true;
 }
 
 bool ContentWidget::onSingleTapUp(const float timeMs, const geom::Point& ptInWidget)
 {
+	return true;
 }
 
 bool ContentWidget::onZoom(const float timeMs, const geom::Point& center, const float ratio)
 {
+	return true;
 }
 
 }}}
