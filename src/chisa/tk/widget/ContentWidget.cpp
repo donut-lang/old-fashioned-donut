@@ -17,7 +17,7 @@
  */
 
 #include "ContentWidget.h"
-#include "ContentMeasurer.h"
+#include "ContentWidgetImpl.h"
 #include "../../geom/Area.h"
 #include "../../geom/Vector.h"
 #include "Content/NodeReader.h"

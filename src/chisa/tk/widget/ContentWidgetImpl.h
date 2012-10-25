@@ -28,6 +28,39 @@ namespace chisa {
 namespace tk {
 namespace widget {
 
+class RenderCommand;
+
+class RenderTree {
+	std::vector<RenderCommand*> objects_;
+private:
+public:
+	RenderTree();
+	~RenderTree();
+	void reset();
+	void render(gl::Canvas& cv, const geom::Area& area);
+};
+
+class RenderCommand {
+	DISABLE_COPY_AND_ASSIGN(RenderCommand);
+	DEFINE_MEMBER(public, private, gl::Handler<gl::RawSprite>, sprite);
+	DEFINE_MEMBER(public, private, geom::Area, area);
+public:
+	RenderCommand() noexcept{};
+	virtual ~RenderCommand() noexcept = default;
+	bool hasSprite() const noexcept { return this->sprite().operator bool(); };
+	gl::Handler<gl::RawSprite> realize() {
+		if(!this->sprite()){
+			this->sprite(this->realizeImpl());
+		}
+		return this->sprite();
+	};
+	void free() noexcept{
+		this->sprite().reset();
+	}
+protected:
+	virtual gl::Handler<gl::RawSprite> realizeImpl() = 0;
+};
+
 class ContentMeasurer : public NodeWalker {
 public:
 	class BlockSession {

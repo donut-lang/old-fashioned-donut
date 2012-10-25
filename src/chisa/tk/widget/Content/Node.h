@@ -54,26 +54,6 @@ public:
 		return node;
 	}
 	static std::shared_ptr<Document> createRootDocument();
-public:
-	class RenderCommand {
-		DISABLE_COPY_AND_ASSIGN(RenderCommand);
-		DEFINE_MEMBER(public, private, gl::Handler<gl::RawSprite>, sprite);
-		DEFINE_MEMBER(public, private, geom::Area, area);
-	public:
-		RenderCommand() noexcept{};
-		virtual ~RenderCommand() noexcept = default;
-		bool hasSprite() const noexcept { return this->sprite().operator bool(); };
-		void realize() {
-			if(!this->sprite()){
-				this->sprite(this->realizeImpl());
-			}
-		};
-		void free() noexcept{
-			this->sprite().reset();
-		}
-	protected:
-		virtual gl::Handler<gl::RawSprite> realizeImpl() = 0;
-	};
 };
 
 #define NODE_SUBKLASS_DESTRUCTOR(Klass) public: virtual ~Klass() noexcept = default;
