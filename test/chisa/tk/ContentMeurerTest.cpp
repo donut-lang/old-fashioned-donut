@@ -33,20 +33,21 @@ TEST(ContentMeasurerTest, TextWrapTest)
 <doc>Kitty on your lap.</doc>
 )delimiter");
 	NodeReader reader;
+	RenderTree tree;
 	std::shared_ptr<Document> doc = reader.parseTree(docTree->RootElement());
-	ContentMeasurer(1000).start(doc);
+	ContentMeasurer(1000, tree).start(doc);
 	ASSERT_STREQ(typeid(Text).name(), typeid(*(doc->at(0).get())).name());
 	std::shared_ptr<Text> text(std::dynamic_pointer_cast<Text>(doc->at(0)));
-	ASSERT_EQ(1, text->renderCommands().size());
+	ASSERT_EQ(1, tree.size());
 
-	const Text::RenderSet& set = text->renderCommands().at(0);
-	float const width = set.renderArea().width();
+	const RenderCommand& set = *tree.at(0);
+	float const width = set.area().width();
 
-	ContentMeasurer(width/2+1).start(doc);
-	ASSERT_EQ(2, text->renderCommands().size());
+	ContentMeasurer(width/2+1, tree).start(doc);
+	ASSERT_EQ(2, tree.size());
 
-	ContentMeasurer(width/5+4).start(doc);
-	ASSERT_EQ(5, text->renderCommands().size());
+	ContentMeasurer(width/5+4, tree).start(doc);
+	ASSERT_EQ(5, tree.size());
 }
 
 }}}

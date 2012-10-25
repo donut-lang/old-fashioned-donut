@@ -28,11 +28,14 @@ namespace chisa {
 namespace tk {
 namespace widget {
 
+class RenderTree;
+
 class ContentWidget: public chisa::tk::Widget {
 	CHISA_WIDGET_SUBKLASS(ContentWidget);
 	DEFINE_MEMBER(private, private, std::shared_ptr<Document>, rootNode);
 	DEFINE_MEMBER(private, private, float, lastWidth);
 	DEFINE_MEMBER(private, private, geom::Box, lastSize);
+	DEFINE_MEMBER(private, private, RenderTree*, renderTree);
 public:
 	virtual void render(gl::Canvas& cv, const geom::Area& area) override;
 	virtual void idle(const float delta_ms) override;

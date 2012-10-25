@@ -25,10 +25,12 @@ namespace chisa {
 namespace tk {
 namespace widget {
 
-ContentMeasurer::ContentMeasurer(float const width) noexcept
+ContentMeasurer::ContentMeasurer(float const width, RenderTree& tree) noexcept
 :widgetWidth_(width)
 ,nowSession_(nullptr)
+,renderTree_(tree)
 {
+	this->renderTree_.reset();
 }
 
 ContentMeasurer::BlockSession::BlockSession(ContentMeasurer& parent)
@@ -215,9 +217,23 @@ void ContentMeasurer::walk(Link* model)
 	this->walkChildren(model);
 }
 
+class TextRenderCommand : public RenderCommand
+{
+private:
+	gl::StringRenderer::Command cmd_;
+public:
+	TextRenderCommand(const geom::Area& area, const gl::StringRenderer::Command& cmd) noexcept
+	:RenderCommand(area),cmd_(cmd){};
+	virtual ~TextRenderCommand() noexcept = default;
+public:
+	virtual gl::Handler<gl::RawSprite> realizeImpl(gl::Canvas& cv) override
+	{
+		return this->cmd_.renderString(cv);
+	}
+};
+
 void ContentMeasurer::walk(Text* model)
 {
-	model->clearRenderCommands();
 	gl::StringRenderer renderer;
 	std::vector<std::string> lines;
 	util::splitLine(model->text(), lines);
@@ -232,8 +248,7 @@ void ContentMeasurer::walk(Text* model)
 			now += cmd.str().size();
 			//文字分のエリアを確保し、その位置とレンダリングコマンドを記録
 			geom::Area rendered = this->extendInline(cmd.size());
-			Text::RenderSet set(cmd, rendered);
-			model->renderCommands().push_back(set);
+			this->renderTree_.append(new TextRenderCommand(rendered, cmd));
 		}
 		this->nextLine();
 	}

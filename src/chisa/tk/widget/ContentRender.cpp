@@ -26,16 +26,17 @@ namespace chisa {
 namespace tk {
 namespace widget {
 
-inline RenderTree::RenderTree()
+
+RenderTree::RenderTree()
 {
 }
 
-inline RenderTree::~RenderTree()
+RenderTree::~RenderTree() noexcept(true)
 {
 	this->reset();
 }
 
-inline void RenderTree::reset()
+void RenderTree::reset() noexcept(true)
 {
 	for(RenderCommand* cmd : this->objects_){
 		delete cmd;
@@ -43,12 +44,16 @@ inline void RenderTree::reset()
 	decltype(this->objects_)().swap(this->objects_);
 }
 
-inline void RenderTree::render(gl::Canvas& cv, const geom::Area& area)
+void RenderTree::append(RenderCommand* cmd)
+{
+	this->objects_.push_back(cmd);
+}
+void RenderTree::render(gl::Canvas& cv, const geom::Area& area)
 {
 	const float limit = area.height()/2;
 	for(RenderCommand* cmd : this->objects_){
 		if(!cmd->area().intersect(area).empty()){
-			cv.drawSprite(cmd->realize(), cmd->area().point() - area.point());
+			cv.drawSprite(cmd->realize(cv), cmd->area().point() - area.point());
 		}else{
 			const geom::Vector distV = geom::max(cmd->area().point() - area.point() - area.box(), area.point() - cmd->area().point() - cmd->area().box());
 			const float dist = std::max(distV.x(), distV.y());
@@ -58,6 +63,5 @@ inline void RenderTree::render(gl::Canvas& cv, const geom::Area& area)
 		}
 	}
 }
-
 
 }}}

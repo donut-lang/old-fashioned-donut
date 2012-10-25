@@ -31,26 +31,47 @@ namespace widget {
 class RenderCommand;
 
 class RenderTree {
-	std::vector<RenderCommand*> objects_;
 private:
+	typedef std::vector<RenderCommand*> ListType;
+	ListType objects_;
 public:
 	RenderTree();
-	~RenderTree();
-	void reset();
+	~RenderTree() noexcept(true);
+	void reset() noexcept(true);
 	void render(gl::Canvas& cv, const geom::Area& area);
+	void append(RenderCommand* const cmd);
+public:
+	typedef ListType::iterator Iterator;
+	typedef ListType::const_iterator ConstIterator;
+	typedef ListType::reverse_iterator ReverseIterator;
+	typedef ListType::const_reverse_iterator ConstReverseIterator;
+public:
+	std::size_t size() const noexcept{ return this->objects_.size(); };
+	RenderCommand* at(std::size_t idx) const noexcept{ return this->objects_.at(idx); };
+	Iterator begin() { return this->objects_.begin(); };
+	Iterator end() { return this->objects_.end(); };
+	ConstIterator cbegin() const { return this->objects_.cbegin(); };
+	ConstIterator cend() const { return this->objects_.cend(); };
+	ReverseIterator rbegin() { return this->objects_.rbegin(); };
+	ReverseIterator rend() { return this->objects_.rend(); };
+	ConstReverseIterator crbegin() const { return this->objects_.crbegin(); };
+	ConstReverseIterator crend() const { return this->objects_.crend(); };
 };
 
 class RenderCommand {
 	DISABLE_COPY_AND_ASSIGN(RenderCommand);
 	DEFINE_MEMBER(public, private, gl::Handler<gl::RawSprite>, sprite);
 	DEFINE_MEMBER(public, private, geom::Area, area);
+private:
+	RenderCommand() noexcept = delete;
 public:
-	RenderCommand() noexcept{};
+	RenderCommand(const geom::Area& area) noexcept:area_(area){};
 	virtual ~RenderCommand() noexcept = default;
+public:
 	bool hasSprite() const noexcept { return this->sprite().operator bool(); };
-	gl::Handler<gl::RawSprite> realize() {
+	gl::Handler<gl::RawSprite> realize(gl::Canvas& cv) {
 		if(!this->sprite()){
-			this->sprite(this->realizeImpl());
+			this->sprite(this->realizeImpl(cv));
 		}
 		return this->sprite();
 	};
@@ -58,7 +79,7 @@ public:
 		this->sprite().reset();
 	}
 protected:
-	virtual gl::Handler<gl::RawSprite> realizeImpl() = 0;
+	virtual gl::Handler<gl::RawSprite> realizeImpl(gl::Canvas& cv) = 0;
 };
 
 class ContentMeasurer : public NodeWalker {
@@ -97,13 +118,15 @@ private:
 	//ウィジットそのものの横幅。何があろうとも、これは厳守ですよ〜。
 	float const widgetWidth_;
 	BlockSession* nowSession_;
+	RenderTree& renderTree_;
+private:
 	geom::Area extendBlock(const geom::Box& size, BlockNode::Direction dir=BlockNode::Direction::None);
 	geom::Area extendInline(const geom::Box& size);
 	float calcLeftWidth();
 	void nextLine();
 	void flushBlock();
 public:
-	ContentMeasurer(float const width) noexcept;
+	ContentMeasurer(float const width, RenderTree& tree) noexcept;
 	geom::Box start(std::shared_ptr<Document> doc);
 	virtual ~ContentMeasurer() noexcept (true) = default;
 	virtual void walk(Document* model) override;
