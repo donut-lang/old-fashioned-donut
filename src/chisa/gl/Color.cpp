@@ -16,21 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include "Color.h"
+
 namespace chisa {
-namespace geom {
-
-class Vector;
-class Area;
-class ScaleVector;
-class Velocity;
-
-typedef Vector Point;
-typedef Vector Distance;
-typedef Vector Box;
-
-class Margin;
-
-class Matrix;
+namespace gl {
 
 }}

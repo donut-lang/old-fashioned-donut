@@ -23,6 +23,7 @@
 #include "../logging/Logger.h"
 #include "../util/ClassUtil.h"
 #include "../geom/Decl.h"
+#include "Color.h"
 #include "Handler.h"
 #include "Sprite.h"
 #include "RawSprite.h"
@@ -58,10 +59,11 @@ public:
 	void scale(const geom::ScaleVector& scale);
 	void drawSprite(Handler<Sprite> sprite, const geom::Point& pt, const float depth=0.0f);
 	void drawSprite(RawSprite* const sprite, const geom::Point& pt, const float depth=0.0f);
-	void drawLine(const float width, const float r,const float g,const float b,const float a, const geom::Point& start, const geom::Point& end, const float depth=0.0f);
+	void drawLine(const float width, const Color& color, const geom::Point& start, const geom::Point& end, const float depth=0.0f);
 private:
 	void scissor(const geom::Area& area);
 	void scissorReset();
+	void setColor(const Color& color);
 public:
 	class ScissorScope {
 	private:

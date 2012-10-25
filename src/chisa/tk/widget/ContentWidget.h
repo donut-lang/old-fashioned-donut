@@ -21,8 +21,6 @@
 #include "Content/Decl.h"
 #include "Content/NodeWalker.h"
 #include "../../geom/Vector.h"
-#include "Content/Margin.h"
-#include <cairo/cairo.h>
 
 namespace chisa {
 namespace tk {

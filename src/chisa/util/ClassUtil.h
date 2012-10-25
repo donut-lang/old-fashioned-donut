@@ -17,6 +17,7 @@
  */
 
 #pragma once
+#include <cstddef>
 
 #define DISABLE_COPY_AND_ASSIGN(klass)\
 private:\
@@ -26,7 +27,7 @@ private:\
 	klass& operator=(klass&& other) = delete;
 
 #define STACK_OBJECT(Klass)\
-	void* operator new(size_t) = delete;\
+	void* operator new(std::size_t) = delete;\
 	void operator delete(void*) = delete;
 
 #define DEFINE_MEMBER_CONST(rscope, type, name)\

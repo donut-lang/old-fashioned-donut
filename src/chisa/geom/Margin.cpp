@@ -16,21 +16,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include "Margin.h"
+
 namespace chisa {
 namespace geom {
 
-class Vector;
-class Area;
-class ScaleVector;
-class Velocity;
-
-typedef Vector Point;
-typedef Vector Distance;
-typedef Vector Box;
-
-class Margin;
-
-class Matrix;
-
 }}
+
+#include "../util/XMLUtil.h"
+
+namespace chisa {
+namespace util {
+namespace xml {
+
+using namespace chisa::geom;
+
+template <>
+void parseAttr<Margin>(const std::string& name, Margin& v, const Margin& def, tinyxml2::XMLElement* elm)
+{
+	float margin;
+	if(elm->QueryFloatAttribute(name.c_str(), &margin)){
+		v.margin(margin);
+	}
+	if(elm->QueryFloatAttribute((name+"-top").c_str(), &margin)){
+		v.top(margin);
+	}
+	if(elm->QueryFloatAttribute((name+"-left").c_str(), &margin)){
+		v.left(margin);
+	}
+	if(elm->QueryFloatAttribute((name+"-right").c_str(), &margin)){
+		v.right(margin);
+	}
+	if(elm->QueryFloatAttribute((name+"-bottom").c_str(), &margin)){
+		v.bottom(margin);
+	}
+}
+}}}

@@ -86,3 +86,27 @@ Text::Text(std::string text)
 }
 
 }}}
+
+namespace chisa {
+namespace util {
+namespace xml {
+
+using namespace chisa::tk::widget;
+template <> void parseAttr<BlockNode::Direction>(const std::string& name, BlockNode::Direction& v, const BlockNode::Direction& def, tinyxml2::XMLElement* elm)
+{
+	if(const char* c = elm->Attribute(name.c_str())){
+		std::string val(c);
+		if(val == "right"){
+			v = BlockNode::Direction::Right;
+			return;
+		}else if(val == "left"){
+			v = BlockNode::Direction::Left;
+			return;
+		}else if(val == "none"){
+			v = BlockNode::Direction::None;
+			return;
+		}
+	}
+	v = def;
+}
+}}}

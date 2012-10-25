@@ -17,20 +17,26 @@
  */
 
 #pragma once
+#include "../util/ClassUtil.h"
+
 namespace chisa {
-namespace geom {
+namespace gl {
 
-class Vector;
-class Area;
-class ScaleVector;
-class Velocity;
-
-typedef Vector Point;
-typedef Vector Distance;
-typedef Vector Box;
-
-class Margin;
-
-class Matrix;
+class Color {
+	STACK_OBJECT(Color);
+public:
+	DEFINE_MEMBER(public, public, float, red);
+	DEFINE_MEMBER(public, public, float, green);
+	DEFINE_MEMBER(public, public, float, blue);
+	DEFINE_MEMBER(public, public, float, alpha);
+public:
+	Color() noexcept:red_(0), green_(0), blue_(0), alpha_(0){};
+	Color(float r, float g, float b, float a) noexcept:red_(r), green_(g), blue_(b), alpha_(a){};
+	Color(const Color& other) = default;
+	Color(Color&& other) = default;
+	Color& operator=(const Color& other) = default;
+	Color& operator=(Color&& other) = default;
+	~Color() noexcept = default;
+};
 
 }}

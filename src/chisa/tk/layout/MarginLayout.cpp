@@ -18,7 +18,7 @@
 
 #include "MarginLayout.h"
 #include "LayoutFactory.h"
-#include <tinyxml2.h>
+#include "../../util/XMLUtil.h"
 
 namespace chisa {
 namespace tk {
@@ -54,8 +54,8 @@ void MarginLayout::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, 
 	if( shared_ptr<Layout> child = this->child_.lock() ){
 		child->render(
 			canvas,
-			geom::Area(screenArea.point()+this->margin_, screenArea.box()-this->removedSize_),
-			geom::Area(area.point(), area.box()-this->removedSize_)
+			geom::Area(screenArea.point()+this->margin_.offset(), screenArea.box()-this->margin_.totalSpace()),
+			geom::Area(area.point(), area.box()-this->margin_.totalSpace())
 		);
 	}
 }
@@ -63,7 +63,7 @@ void MarginLayout::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, 
 geom::Box MarginLayout::onMeasure(const geom::Box& constraint)
 {
 	if( shared_ptr<Layout> child = this->child_.lock() ){
-		return child->measure( constraint-this->removedSize_ ) + this->removedSize_;
+		return child->measure( constraint-this->margin_.totalSpace() ) + this->margin_.totalSpace();
 	}
 	return constraint;
 }
@@ -71,32 +71,13 @@ geom::Box MarginLayout::onMeasure(const geom::Box& constraint)
 void MarginLayout::onLayout(const geom::Box& size)
 {
 	if( shared_ptr<Layout> child = this->child_.lock() ){
-		child->layout( size-this->removedSize_ );
+		child->layout( size-this->margin_.totalSpace() );
 	}
 }
 
 void MarginLayout::loadXMLimpl(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element)
 {
-	float v;
-	float marginTop = 0.0f;
-	float marginRight = 0.0f;
-	float marginLeft = 0.0f;
-	float marginBottom = 0.0f;
-	if(element->QueryFloatAttribute("margin", &v)){
-		marginTop = v;
-		marginLeft = v;
-		marginRight = v;
-		marginBottom = v;
-	}
-	element->QueryFloatAttribute("margin-top", &marginTop);
-	element->QueryFloatAttribute("margin-left", &marginLeft);
-	element->QueryFloatAttribute("margin-right", &marginRight);
-	element->QueryFloatAttribute("margin-bottom", &marginBottom);
-
-	this->margin_.x(marginLeft);
-	this->margin_.y(marginTop);
-	this->removedSize_.x(marginTop+marginBottom);
-	this->removedSize_.y(marginLeft+marginRight);
+	chisa::util::xml::parseAttr("margin", this->margin_, geom::Margin(0,0,0,0), element);
 
 	factory->parseTree(this->root(), this->self(), element->FirstChildElement());
 }
