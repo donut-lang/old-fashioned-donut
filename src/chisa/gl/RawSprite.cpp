@@ -65,13 +65,13 @@ unsigned int RawSprite::requestTexture()
 	if(this->buffer_){
 		glBindTexture(GL_TEXTURE_2D, this->texId_);
 		//ここのサイズはバッファのものにしないと変な所を読みに行くかもしれない。
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0,0, this->buffer_->width(), this->buffer_->height(), GL_RGBA, GL_UNSIGNED_BYTE, this->buffer_->data());
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0,0, this->buffer_->width(), this->height(), GL_RGBA, GL_UNSIGNED_BYTE, this->buffer_->data());
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 		const GLenum err = glGetError();
 		if(err != GL_NO_ERROR){
-			throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to transfer texture: %d", err);
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to transfer texture: code 0x%x", err);
 		}
 		this->canvas()->backBuffer(this->buffer_);
 		this->buffer_ = nullptr;

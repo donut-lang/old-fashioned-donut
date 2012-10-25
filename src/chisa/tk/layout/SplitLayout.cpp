@@ -72,7 +72,7 @@ void SplitLayout::addChild(const SplitDef& def, shared_ptr<Layout> layout)
 {
 	shared_ptr<SplitCtx> ctx(new SplitCtx(def));
 	ctx->layout = layout;
-	this->children_.push_back(ctx);
+	this->children().push_back(ctx);
 }
 
 void SplitLayout::loadXMLimpl(LayoutFactory* const factory, XMLElement* top)
@@ -126,7 +126,7 @@ void SplitLayout::resetChildrenLayout()
 
 weak_ptr<Layout> SplitLayout::getChildAt(const size_t index) const
 {
-	if(index < this->children_.size()){
+	if(index < this->children().size()){
 		shared_ptr<SplitCtx> ctx = this->children_.at(index);
 		return weak_ptr<Layout>(ctx->layout);
 	}
@@ -134,7 +134,7 @@ weak_ptr<Layout> SplitLayout::getChildAt(const size_t index) const
 }
 size_t SplitLayout::getChildCount() const
 {
-	return this->children_.size();
+	return this->children().size();
 }
 
 void SplitLayout::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
