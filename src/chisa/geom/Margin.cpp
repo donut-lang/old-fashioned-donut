@@ -17,12 +17,6 @@
  */
 
 #include "Margin.h"
-
-namespace chisa {
-namespace geom {
-
-}}
-
 #include "../util/XMLUtil.h"
 
 namespace chisa {
