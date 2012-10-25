@@ -26,7 +26,7 @@ namespace gl {
 //前提条件
 //http://www.sgi.com/tech/stl/StrictWeakOrdering.html
 
-TEST(BufferOrderTest, BasicTest)
+TEST(OrderTest, BasicTest)
 {
 	internal::BufferOrder order;
 	//横幅が同じなら縦幅でソート
@@ -40,13 +40,13 @@ TEST(BufferOrderTest, BasicTest)
 	ASSERT_TRUE (order(std::make_pair(1,2),std::make_pair(2,1)));
 }
 
-TEST(BufferOrderTest, IrreflexivityTest)
+TEST(OrderTest, IrreflexivityTest)
 {
 	internal::BufferOrder order;
 	ASSERT_FALSE(order(std::make_pair(100,100),std::make_pair(100,100)));
 }
 
-TEST(BufferOrderTest, AntisymmetryTest)
+TEST(OrderTest, AntisymmetryTest)
 {
 	internal::BufferOrder order;
 	ANTI(1,2,1,3);
@@ -57,51 +57,11 @@ TEST(BufferOrderTest, AntisymmetryTest)
 	ANTI(1,2,2,1);
 }
 
-TEST(BufferOrderTest, TransitivityTest)
+TEST(OrderTest, TransitivityTest)
 {
 	internal::BufferOrder order;
 	ASSERT_EQ(order(std::make_pair(1,2),std::make_pair(3,4)) && order(std::make_pair(3,4),std::make_pair(5,6)), order(std::make_pair(1,2),std::make_pair(5,6)));
 }
-
-TEST(SpriteOrderTest, BasicTest)
-{
-	//どちらも同じか大きいときだけtrue
-	internal::SpriteOrder order;
-	ASSERT_FALSE(order(std::make_pair(1,2),std::make_pair(1,3)));
-	ASSERT_FALSE(order(std::make_pair(1,2),std::make_pair(1,1)));
-	//横幅が小さい
-	ASSERT_FALSE(order(std::make_pair(2,2),std::make_pair(1,3)));
-	ASSERT_FALSE(order(std::make_pair(2,2),std::make_pair(1,1)));
-	//横幅が大きい
-	ASSERT_TRUE (order(std::make_pair(1,2),std::make_pair(2,3)));
-	ASSERT_FALSE(order(std::make_pair(1,2),std::make_pair(2,1)));
-}
-
-TEST(SpriteOrderTest, IrreflexivityTest)
-{
-	internal::SpriteOrder order;
-	ASSERT_FALSE(order(std::make_pair(100,100),std::make_pair(100,100)));
-}
-
-
-TEST(SpriteOrderTest, AntisymmetryTest)
-{
-	internal::SpriteOrder order;
-	ANTI(1,2,1,3);
-	ANTI(1,2,1,1);
-	ANTI(2,2,1,3);
-	ANTI(2,2,1,1);
-	ANTI(1,2,2,3);
-	ANTI(1,2,2,1);
-}
-
-
-TEST(SpriteOrderTest, TransitivityTest)
-{
-	internal::SpriteOrder order;
-	ASSERT_EQ(order(std::make_pair(1,2),std::make_pair(3,4)) && order(std::make_pair(3,4),std::make_pair(5,6)), order(std::make_pair(1,2),std::make_pair(5,6)));
-}
-
 
 }}
 
