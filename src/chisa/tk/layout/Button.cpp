@@ -89,7 +89,7 @@ void Button::realizeText(gl::Canvas& canvas)
 	}
 	this->dirty_ = false;
 	this->measureTextSize();
-	this->sprite_ = this->renderer_.renderString(canvas, this->cmd_);
+	this->sprite_ = this->cmd_.renderString(canvas);
 }
 
 void Button::measureTextSize()

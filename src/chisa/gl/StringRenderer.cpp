@@ -31,7 +31,11 @@ namespace gl {
 StringRenderer::StringRenderer()
 :nullSurface_(cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 1, 1))
 ,cairo_(cairo_create(nullSurface_))
+,style_(StringRenderer::Style::Regular)
+,size_(StringRenderer::DefaultSize)
 {
+	this->style(this->style_);
+	this->size(this->size_);
 	{
 		cairo_status_t st = cairo_surface_status(this->nullSurface_);
 		if(st != CAIRO_STATUS_SUCCESS){
@@ -46,6 +50,37 @@ StringRenderer::StringRenderer()
 	}
 }
 
+void StringRenderer::style(Style style)
+{
+	switch(style)
+	{
+	case Regular:
+		break;
+	case Bold:
+		break;
+	case Italic:
+		break;
+	case ItalicBold:
+		break;
+	}
+	this->style_ = style;
+}
+
+StringRenderer::Style StringRenderer::style()
+{
+	return this->style_;
+}
+
+void StringRenderer::size(float size)
+{
+	this->size_ = size;
+	cairo_set_font_size(this->cairo_, size);
+}
+float StringRenderer::size()
+{
+	return this->size_;
+}
+
 StringRenderer::~StringRenderer()
 {
 	cairo_destroy(this->cairo_);
@@ -58,7 +93,7 @@ StringRenderer::Command StringRenderer::measure(const std::string& strUtf8)
 	cairo_text_extents(this->cairo_, strUtf8.c_str(), &ext);
 	auto offset = geom::Vector(ext.x_bearing, -ext.y_bearing);
 	auto size = geom::Box(ext.x_advance, ext.height+ext.y_advance);
-	return StringRenderer::Command(strUtf8, geom::Area(offset, size));
+	return StringRenderer::Command(this->style(), this->size(), strUtf8, geom::Area(offset, size));
 }
 
 StringRenderer::Command StringRenderer::calcMaximumStringLength(const std::string& ostr, const float limit, size_t beginInUtf8, size_t endInUtf8)
@@ -100,10 +135,6 @@ StringRenderer::Command StringRenderer::calcMaximumStringLength(const std::strin
 	return cmd;
 }
 
-gl::Handler<gl::RawSprite> StringRenderer::renderString(gl::Canvas& cv, const StringRenderer::Command& cmd)
-{
-	return cmd.renderString(cv);
-}
 gl::Handler<gl::RawSprite> StringRenderer::Command::renderString(gl::Canvas& cv) const
 {
 	gl::Handler<gl::RawSprite> spr = cv.queryRawSprite(static_cast<int>(this->area().width()), static_cast<int>(this->area().height()));
@@ -116,6 +147,8 @@ gl::Handler<gl::RawSprite> StringRenderer::Command::renderString(gl::Canvas& cv)
 		cairo_set_source_rgba(cr, 0, 0, 0, 0);
 		cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
 		cairo_paint(cr);
+
+		cairo_set_font_size(cr, this->size_);
 
 		cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
 		cairo_move_to(cr, this->area().x(), this->area().y());

@@ -30,20 +30,27 @@ namespace gl {
 
 class StringRenderer {
 public:
+	enum Style {
+		Regular = 0,
+		Bold = 1,
+		Italic = 2,
+		ItalicBold = 3
+	};
+	static constexpr float DefaultSize=16.0f;
+public:
 	class Command {
 		DEFINE_MEMBER(private, private, bool, enabled);
 		DEFINE_MEMBER(private, private, bool, vertical);
+		Style style_;
+		float size_;
 		DEFINE_MEMBER(public, private, std::string, str);
 		DEFINE_MEMBER(private, private, geom::Area, area);
 	private:
 		void* operator new(size_t) = delete;
 		void operator delete(void*) = delete;
 	public:
-		Command():enabled_(false),vertical_(false),str_(),area_(0,0,0,0){};
-		Command(const std::string& str, geom::Area& area):enabled_(true),vertical_(false),str_(str),area_(area){};
-		Command(const std::string& str, geom::Area&& area):enabled_(true),vertical_(false),str_(str),area_(area){};
-		Command(const std::string&& str, geom::Area& area):enabled_(true),vertical_(false),str_(str),area_(area){};
-		Command(const std::string&& str, geom::Area&& area):enabled_(true),vertical_(false),str_(str),area_(area){};
+		Command():enabled_(false),vertical_(false), style_(Style::Regular), size_(DefaultSize),str_(),area_(0,0,0,0){};
+		Command(const Style style, const float size, const std::string& str, const geom::Area& area):enabled_(true),vertical_(false),style_(style), size_(size),str_(str),area_(area){};
 		Command(const Command& other) = default;
 		Command(Command&& other) = default;
 		Command& operator=(const Command& other) = default;
@@ -65,10 +72,15 @@ public:
 private:
 	cairo_surface_t* nullSurface_;
 	cairo_t* cairo_;
+	Style style_;
+	float size_;
+	void style(Style style);
+	Style style();
+	void size(float size);
+	float size();
 public:
 	StringRenderer::Command measure(const std::string& strUtf8);
 	StringRenderer::Command calcMaximumStringLength(const std::string& str, const float limit, std::size_t beginInUtf8=0, std::size_t endInUtf8=0);
-	gl::Handler<gl::RawSprite> renderString(gl::Canvas& cv, const StringRenderer::Command& cmd);
 public:
 	StringRenderer();
 	virtual ~StringRenderer();
