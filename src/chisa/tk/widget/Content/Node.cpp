@@ -16,7 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "Node.h"
-#include "../../../geom/Vector.h"
 
 namespace chisa {
 namespace tk {
@@ -50,9 +49,12 @@ void TreeNode::parseAttribute(tinyxml2::XMLElement* node)
 BlockNode::BlockNode()
 {
 	this->addAttribute("margin", this->margin_);
-	this->addAttribute("float", this->direction_, None);
-	this->addAttribute("width", this->width_, geom::Unspecified);
-	this->addAttribute("height", this->height_, geom::Unspecified);
+	this->direction(None);
+	this->addAttribute("float", this->direction_);
+	this->width(geom::Unspecified);
+	this->addAttribute("width", this->width_);
+	this->height(geom::Unspecified);
+	this->addAttribute("height", this->height_);
 }
 
 InlineNode::InlineNode()
@@ -87,26 +89,3 @@ Text::Text(std::string text)
 
 }}}
 
-namespace chisa {
-namespace util {
-namespace xml {
-
-using namespace chisa::tk::widget;
-template <> void parseAttr<BlockNode::Direction>(const std::string& name, BlockNode::Direction& v, const BlockNode::Direction& def, tinyxml2::XMLElement* elm)
-{
-	if(const char* c = elm->Attribute(name.c_str())){
-		std::string val(c);
-		if(val == "right"){
-			v = BlockNode::Direction::Right;
-			return;
-		}else if(val == "left"){
-			v = BlockNode::Direction::Left;
-			return;
-		}else if(val == "none"){
-			v = BlockNode::Direction::None;
-			return;
-		}
-	}
-	v = def;
-}
-}}}

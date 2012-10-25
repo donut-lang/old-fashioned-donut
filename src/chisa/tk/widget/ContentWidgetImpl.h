@@ -20,8 +20,7 @@
 #include "../Widget.h"
 #include "Content/Node.h"
 #include "Content/NodeWalker.h"
-#include "../../geom/Vector.h"
-#include "../../geom/Margin.h"
+#include "../../geom/Area.h"
 
 namespace chisa {
 namespace tk {

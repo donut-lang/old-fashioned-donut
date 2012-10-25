@@ -18,7 +18,7 @@
 
 #pragma once
 #include "../Layout.h"
-#include "../../geom/Margin.h"
+#include "../../geom/Area.h"
 
 namespace chisa {
 namespace tk {
