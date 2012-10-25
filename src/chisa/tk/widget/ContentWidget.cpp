@@ -66,7 +66,7 @@ geom::Box ContentWidget::measure(const geom::Box& constraintSize)
 		this->lastWidth(constraintSize.width());
 		this->lastSize(ContentMeasurer(constraintSize.width(), *this->renderTree()).start(this->rootNode()));
 	}
-	return this->lastSize();
+	return geom::Box(geom::max(constraintSize.width(), this->lastSize().width()), this->lastSize().height());
 }
 
 bool ContentWidget::onDownRaw(const float timeMs, const geom::Point& ptInWidget)
