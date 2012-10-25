@@ -110,7 +110,9 @@ Handler<RawSprite> Canvas::queryRawSprite(const int width, const int height)
 {
 	internal::SpriteOrder order;
 	auto it = std::lower_bound(this->unusedSprite_.begin(), this->unusedSprite_.end(), std::pair<int,int>(width,height), order);
-	if(it == this->unusedSprite_.end() || (*it)->width() != width){
+	//横幅が同じ場合は、縦幅も大きいか同じであることが保証される。
+	//横幅が優先なので、横幅が違う場合は高さは短いかもしれない
+	if(it == this->unusedSprite_.end() || (*it)->height() < height){
 		RawSprite* spr = new RawSprite(this, width, height);
 		spr->resize(width, height);
 		return Handler<RawSprite>(spr);
@@ -170,6 +172,8 @@ Buffer* Canvas::queryBuffer(const int width, const int height)
 	internal::BufferOrder order;
 	int const pHeight = getPower2Of(height);
 	auto it = std::lower_bound(this->unusedBuffer_.begin(), this->unusedBuffer_.end(), std::pair<int,int>(width,pHeight), order);
+	//横幅が同じ場合は、縦幅も大きいか同じであることが保証される。
+	//横幅が優先なので、横幅が違う場合は高さは短いかもしれない
 	if(it == this->unusedBuffer_.end() || (*it)->width() != width ){
 		return new Buffer(width, pHeight);
 	}else{
