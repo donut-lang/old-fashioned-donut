@@ -19,6 +19,8 @@
 #pragma once
 #include <cstddef>
 
+//-----------------------------------------------------------------------------
+
 #define DISABLE_COPY_AND_ASSIGN(klass)\
 private:\
 	klass(const klass& other) = delete;\
@@ -30,23 +32,45 @@ private:\
 	void* operator new(std::size_t) = delete;\
 	void operator delete(void*) = delete;
 
+//-----------------------------------------------------------------------------
+
 #define DEFINE_MEMBER_CONST(rscope, type, name)\
 private:\
 	type const name##_;\
 rscope:\
-	inline type const& name() const{return name##_;}\
+	inline type const& name() const noexcept{return name##_;}
+
+#define DEFINE_MEMBER_CONST_LITERAL(rscope, type, name)\
+private:\
+	type const name##_;\
+rscope:\
+	inline constexpr type const& name() const noexcept{return name##_;}
 
 #define DEFINE_MEMBER_REF(rscope, type, name)\
 private:\
 	type& name##_;\
 rscope:\
-	inline type& name() const{return name##_;}\
+	inline type& name() const noexcept{return name##_;}
+
+#define DEFINE_MEMBER_REF_LITERAL(rscope, type, name)\
+private:\
+	type& name##_;\
+rscope:\
+	inline constexpr type& name() const noexcept{return name##_;}
 
 #define DEFINE_MEMBER(rscope, wscope, type, name)\
 private:\
 	type name##_;\
 rscope:\
-	inline type & name() {return name##_;}\
-	inline type const& name() const{return name##_;}\
+	inline type const& name() const noexcept{return name##_;}\
+	inline type& name() noexcept{return name##_;}\
+wscope:\
+	inline void name(type const& val){name##_ = val;}
+
+#define DEFINE_MEMBER_LITERAL(rscope, wscope, type, name)\
+private:\
+	type name##_;\
+rscope:\
+	inline constexpr type const& name() const noexcept{return name##_;}\
 wscope:\
 	inline void name(type const& val){name##_ = val;}

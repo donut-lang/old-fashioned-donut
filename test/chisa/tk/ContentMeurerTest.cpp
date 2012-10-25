@@ -43,11 +43,11 @@ TEST(ContentMeasurerTest, TextWrapTest)
 	const RenderCommand& set = *tree.at(0);
 	float const width = set.area().width();
 
-	ContentMeasurer(width/2+1, tree).start(doc);
-	ASSERT_EQ(2, tree.size());
+	ContentMeasurer(width/2, tree).start(doc);
+	ASSERT_LE(2, tree.size());
 
-	ContentMeasurer(width/5+4, tree).start(doc);
-	ASSERT_EQ(5, tree.size());
+	ContentMeasurer(width/5, tree).start(doc);
+	ASSERT_LE(5, tree.size());
 }
 
 }}}
