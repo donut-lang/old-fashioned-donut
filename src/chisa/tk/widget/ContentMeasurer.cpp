@@ -17,7 +17,7 @@
  */
 
 #include "../../gl/StringRenderer.h"
-#include "ContentMeasurer.h"
+#include "ContentWidgetImpl.h"
 #include "Content/Node.h"
 #include "../../geom/Area.h"
 

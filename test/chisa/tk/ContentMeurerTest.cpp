@@ -17,7 +17,7 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../src/chisa/tk/widget/ContentMeasurer.h"
+#include "../../src/chisa/tk/widget/ContentWidgetImpl.h"
 #include "../../src/chisa/tk/widget/Content/NodeReader.h"
 #include <tinyxml2.h>
 #include <typeinfo>
