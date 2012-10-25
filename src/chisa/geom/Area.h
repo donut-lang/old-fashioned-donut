@@ -27,11 +27,21 @@ class Area
 private:
 	Vector point_;
 	Box box_;
+private:
+	inline constexpr Area intersectImpl(const Area& other, const Point& thisEnd, const Point& otherEnd) const noexcept{
+		return
+			thisEnd.x() <= other.x() || thisEnd.y() <= other.y() || otherEnd.x() <= this->x() || otherEnd.y() <= this->y() ?
+			Area(0,0,0,0) :
+			intersectImpl2(geom::max(this->point(), other.point()), geom::min(thisEnd, otherEnd));
+	}
+	inline constexpr Area intersectImpl2(const Point& startPoint, const Point& endPoint) const noexcept{
+		return Area(startPoint, (endPoint-startPoint));
+	}
 public:
-	inline Area(const float x, const float y, const float width, const float height) noexcept:point_(x,y), box_(width, height){}
-	inline Area(const Area& other) noexcept = default;
-	inline Area(Area&& other) noexcept = default;
-	inline Area(const Vector& point, const Box& box) noexcept:point_(point), box_(box){};
+	constexpr Area(const float x, const float y, const float width, const float height) noexcept:point_(x,y), box_(width, height){}
+	constexpr Area(const Area& other) noexcept = default;
+	constexpr Area(Area&& other) noexcept = default;
+	constexpr Area(const Vector& point, const Box& box) noexcept:point_(point), box_(box){};
 	inline Area& operator=(const Area& other) noexcept = default;
 	inline Area& operator=(Area&& other) noexcept = default;
 	inline Area() noexcept:point_(), box_(){};
@@ -44,12 +54,12 @@ public:
 	}
 	inline Vector& point() noexcept {return point_;};
 	inline Box& box() noexcept {return box_;};
-	inline const Vector& point() const noexcept{return point_;};
-	inline const Box& box() const noexcept{return box_;};
-	inline float x() const noexcept{ return point_.x(); };
-	inline float y() const noexcept{ return point_.y(); };
-	inline float width() const noexcept{ return box_.width(); };
-	inline float height() const noexcept{ return box_.height(); };
+	inline constexpr const Vector& point() const noexcept{return point_;};
+	inline constexpr const Box& box() const noexcept{return box_;};
+	inline constexpr float x() const noexcept{ return point_.x(); };
+	inline constexpr float y() const noexcept{ return point_.y(); };
+	inline constexpr float width() const noexcept{ return box_.width(); };
+	inline constexpr float height() const noexcept{ return box_.height(); };
 	inline void x(const float x) noexcept { point_.x(x); };
 	inline void y(const float y) noexcept { point_.y(y); };
 	inline void width(const float width) noexcept { box_.width(width); };
@@ -57,27 +67,31 @@ public:
 	inline std::string toString() const{
 		return util::format("(Area %f %f %f %f)", x(), y(), width(), height());
 	}
-	inline bool empty() const noexcept { return this->box_.empty(); }
+	inline constexpr bool empty() const noexcept { return this->box_.empty(); }
+	//	inline Area intersect(const Area& other) const noexcept
+	//	{
+	//		using namespace chisa::geom;
+	//		const Point thisEnd = this->point()+this->box();
+	//		const Point otherEnd = other.point()+other.box();
+	//		if(
+	//				thisEnd.x() <= other.point().x() ||
+	//				thisEnd.y() <= other.point().y() ||
+	//				otherEnd.x() <= this->point().x() ||
+	//				otherEnd.y() <= this->point().y() ){
+	//			return Area(0,0,0,0);
+	//		}
+	//		const Vector startPoint(max(this->point(), other.point()));
+	//		const Vector endPoint(min(thisEnd, otherEnd));
+	//		return Area(startPoint, (endPoint-startPoint));
+	//	}
 	inline Area intersect(const Area& other) const noexcept
 	{
-		using namespace chisa::geom;
-		const Point thisEnd = this->point()+this->box();
-		const Point otherEnd = other.point()+other.box();
-		if(
-				thisEnd.x() <= other.point().x() ||
-				thisEnd.y() <= other.point().y() ||
-				otherEnd.x() <= this->point().x() ||
-				otherEnd.y() <= this->point().y() ){
-			return Area(0,0,0,0);
-		}
-		const Vector startPoint(max(this->point(), other.point()));
-		const Vector endPoint(min(thisEnd, otherEnd));
-		return Area(startPoint, (endPoint-startPoint));
+		return intersectImpl(other, this->point()+this->box(), other.point()+other.box());
 	}
-	inline bool contain(const Point& pt) const noexcept{
+	inline constexpr bool contain(const Point& pt) const noexcept{
 		return x() <= pt.x() && y() <= pt.y() && pt.x() <= (x()+width()) && pt.y() <= (y()+height());
 	}
-	inline Area flip() const noexcept {
+	inline constexpr Area flip() const noexcept {
 		return Area(point_.flip(), box_.flip());
 	}
 };
