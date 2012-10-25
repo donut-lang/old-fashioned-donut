@@ -30,8 +30,8 @@ public:
 	DEFINE_MEMBER(public, public, float, blue);
 	DEFINE_MEMBER(public, public, float, alpha);
 public:
-	Color() noexcept:red_(0), green_(0), blue_(0), alpha_(0){};
-	Color(float r, float g, float b, float a) noexcept:red_(r), green_(g), blue_(b), alpha_(a){};
+	constexpr Color() noexcept:red_(0), green_(0), blue_(0), alpha_(0){};
+	constexpr Color(float r, float g, float b, float a) noexcept:red_(r), green_(g), blue_(b), alpha_(a){};
 	Color(const Color& other) = default;
 	Color(Color&& other) = default;
 	Color& operator=(const Color& other) = default;
@@ -39,4 +39,10 @@ public:
 	~Color() noexcept = default;
 };
 
+constexpr Color WHITE(1,1,1,1);
+constexpr Color BLACK(0,0,0,1);
+constexpr Color RED(1,0,0,1);
+constexpr Color BLUE(0,0,1,1);
+constexpr Color GREEN(0,1,0,1);
+constexpr Color GRAY(.5,.5,.5,1);
 }}
