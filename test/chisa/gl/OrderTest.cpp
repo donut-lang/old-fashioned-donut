@@ -22,29 +22,11 @@
 
 namespace chisa {
 namespace gl {
-
+#define ANTI(a,b,c,d) ASSERT_NE(order(std::make_pair(a,b),std::make_pair(c,d)), order(std::make_pair(c,d),std::make_pair(a,b)));
 //前提条件
 //http://www.sgi.com/tech/stl/StrictWeakOrdering.html
 
-TEST(BufferOrderTest, IrreflexivityTest)
-{
-	internal::BufferOrder order;
-	ASSERT_FALSE(order(std::make_pair(100,100),std::make_pair(100,100)));
-}
-
-TEST(BufferOrderTest, AntisymmetryTest)
-{
-	internal::BufferOrder order;
-	ASSERT_NE(order(std::make_pair(1,2),std::make_pair(3,4)), order(std::make_pair(3,4),std::make_pair(1,2)));
-}
-
-TEST(BufferOrderTest, TransitivityTest)
-{
-	internal::BufferOrder order;
-	ASSERT_EQ(order(std::make_pair(1,2),std::make_pair(3,4)) && order(std::make_pair(3,4),std::make_pair(5,6)), order(std::make_pair(1,2),std::make_pair(5,6)));
-}
-
-TEST(BufferOrderTest, ComplexTest)
+TEST(BufferOrderTest, BasicTest)
 {
 	internal::BufferOrder order;
 	//横幅が同じなら縦幅でソート
@@ -58,27 +40,32 @@ TEST(BufferOrderTest, ComplexTest)
 	ASSERT_TRUE (order(std::make_pair(1,2),std::make_pair(2,1)));
 }
 
-TEST(SpriteOrderTest, IrreflexivityTest)
+TEST(BufferOrderTest, IrreflexivityTest)
 {
-	internal::SpriteOrder order;
+	internal::BufferOrder order;
 	ASSERT_FALSE(order(std::make_pair(100,100),std::make_pair(100,100)));
 }
 
-TEST(SpriteOrderTest, AntisymmetryTest)
+TEST(BufferOrderTest, AntisymmetryTest)
 {
-	internal::SpriteOrder order;
-	ASSERT_NE(order(std::make_pair(1,2),std::make_pair(3,4)), order(std::make_pair(3,4),std::make_pair(1,2)));
+	internal::BufferOrder order;
+	ANTI(1,2,1,3);
+	ANTI(1,2,1,1);
+	ANTI(2,2,1,3);
+	ANTI(2,2,1,1);
+	ANTI(1,2,2,3);
+	ANTI(1,2,2,1);
 }
 
-TEST(SpriteOrderTest, TransitivityTest)
+TEST(BufferOrderTest, TransitivityTest)
 {
-	internal::SpriteOrder order;
+	internal::BufferOrder order;
 	ASSERT_EQ(order(std::make_pair(1,2),std::make_pair(3,4)) && order(std::make_pair(3,4),std::make_pair(5,6)), order(std::make_pair(1,2),std::make_pair(5,6)));
 }
 
-TEST(SpriteOrderTest, ComplexTest)
+TEST(SpriteOrderTest, BasicTest)
 {
-	//どちらも大きいときだけtrue
+	//どちらも同じか大きいときだけtrue
 	internal::SpriteOrder order;
 	ASSERT_FALSE(order(std::make_pair(1,2),std::make_pair(1,3)));
 	ASSERT_FALSE(order(std::make_pair(1,2),std::make_pair(1,1)));
@@ -88,6 +75,31 @@ TEST(SpriteOrderTest, ComplexTest)
 	//横幅が大きい
 	ASSERT_TRUE (order(std::make_pair(1,2),std::make_pair(2,3)));
 	ASSERT_FALSE(order(std::make_pair(1,2),std::make_pair(2,1)));
+}
+
+TEST(SpriteOrderTest, IrreflexivityTest)
+{
+	internal::SpriteOrder order;
+	ASSERT_FALSE(order(std::make_pair(100,100),std::make_pair(100,100)));
+}
+
+
+TEST(SpriteOrderTest, AntisymmetryTest)
+{
+	internal::SpriteOrder order;
+	ANTI(1,2,1,3);
+	ANTI(1,2,1,1);
+	ANTI(2,2,1,3);
+	ANTI(2,2,1,1);
+	ANTI(1,2,2,3);
+	ANTI(1,2,2,1);
+}
+
+
+TEST(SpriteOrderTest, TransitivityTest)
+{
+	internal::SpriteOrder order;
+	ASSERT_EQ(order(std::make_pair(1,2),std::make_pair(3,4)) && order(std::make_pair(3,4),std::make_pair(5,6)), order(std::make_pair(1,2),std::make_pair(5,6)));
 }
 
 

@@ -108,8 +108,9 @@ void Canvas::drawSprite(RawSprite* const sprite, const geom::Point& pt, const fl
 
 Handler<RawSprite> Canvas::queryRawSprite(const int width, const int height)
 {
-	auto it = std::lower_bound(this->unusedSprite_.begin(), this->unusedSprite_.end(), std::pair<int,int>(width,height), internal::SpriteOrder());
-	if(it == this->unusedSprite_.end()){
+	internal::SpriteOrder order;
+	auto it = std::lower_bound(this->unusedSprite_.begin(), this->unusedSprite_.end(), std::pair<int,int>(width,height), order);
+	if(it == this->unusedSprite_.end() || (*it)->width() != width){
 		RawSprite* spr = new RawSprite(this, width, height);
 		spr->resize(width, height);
 		return Handler<RawSprite>(spr);
@@ -166,12 +167,13 @@ void Canvas::backSprite(RawSprite* spr)
 
 Buffer* Canvas::queryBuffer(const int width, const int height)
 {
+	internal::BufferOrder order;
 	int const pHeight = getPower2Of(height);
-	auto it = std::lower_bound(this->unusedBuffer_.begin(), this->unusedBuffer_.end(), std::pair<int,int>(width,pHeight), internal::BufferOrder());
-	Buffer* const buf = *it;
+	auto it = std::lower_bound(this->unusedBuffer_.begin(), this->unusedBuffer_.end(), std::pair<int,int>(width,pHeight), order);
 	if(it == this->unusedBuffer_.end() || (*it)->width() != width ){
 		return new Buffer(width, pHeight);
 	}else{
+		Buffer* const buf = *it;
 		this->unusedBuffer_.erase(it);
 		return buf;
 	}

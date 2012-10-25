@@ -36,16 +36,18 @@ class Area;
 namespace gl {
 
 namespace internal {
-struct BufferOrder {
-	inline bool operator()(const Buffer* const a, const Buffer* const b) const noexcept
+
+template <class T>
+struct WidthOrder {
+	inline bool operator()(const T* const a, const T* const b) const noexcept
 	{
 		return a->width() == b->width() ? a->height() < b->height() : a->width() < b->width();
 	}
-	inline bool operator() (const Buffer* a, const std::pair<int,int>& b) const noexcept
+	inline bool operator() (const T* a, const std::pair<int,int>& b) const noexcept
 	{
 		return a->width() == b.first ? a->height() < b.second : a->width() < b.first;
 	}
-	inline bool operator() (const std::pair<int,int>& a, const Buffer* b) const noexcept
+	inline bool operator() (const std::pair<int,int>& a, const T* b) const noexcept
 	{
 		return a.first == b->width() ? a.second < b->height() : a.first < b->width();
 	}
@@ -54,16 +56,21 @@ struct BufferOrder {
 		return a.first == b.first ? a.second < b.second : a.first < b.first;
 	}
 };
-struct SpriteOrder {
-	inline bool operator()(const RawSprite* const a, const RawSprite* const b) const noexcept
+
+typedef WidthOrder<Buffer> BufferOrder;
+typedef WidthOrder<RawSprite> SpriteOrder;
+
+template <class T>
+struct VectorOrder {
+	inline bool operator()(const T* const a, const T* const b) const noexcept
 	{
 		return a->width() < b->width() && a->height() < b->height();
 	}
-	inline bool operator() (const RawSprite* a, const std::pair<int,int>& b) const noexcept
+	inline bool operator() (const T* a, const std::pair<int,int>& b) const noexcept
 	{
 		return a->width() < b.first && a->height() < b.second;
 	}
-	inline bool operator() (const std::pair<int,int>& a, const RawSprite* b) const noexcept
+	inline bool operator() (const std::pair<int,int>& a, const T* b) const noexcept
 	{
 		return a.first < b->width() && a.second < b->height();
 	}
@@ -72,6 +79,8 @@ struct SpriteOrder {
 		return a.first < b.first && a.second < b.second;
 	}
 };
+
+
 }
 
 class Canvas {
