@@ -23,7 +23,7 @@
 #include "../../../logging/Logger.h"
 #include "../../../util/ClassUtil.h"
 #include "../../../util/XMLUtil.h"
-#include "../../../geom/Margin.h"
+#include "../../../geom/Area.h"
 #include "../../../gl/StringRenderer.h"
 #include "Decl.h"
 #include "NodeWalker.h"
@@ -96,9 +96,9 @@ public:
 	inline std::shared_ptr<Node> at(size_t idx) const { return this->children_.at(idx); };
 	void parseAttribute(tinyxml2::XMLElement* elm);
 protected:
-	template <typename T> void addAttribute(const std::string& name, T& ptr, const T def=T())
+	template <typename T> void addAttribute(const std::string& name, T& ptr)
 	{
-		this->attrMap_.insert(std::make_pair(name, std::bind(chisa::util::xml::parseAttr<T>, std::string(name), std::ref(ptr), def, std::placeholders::_1)));
+		this->attrMap_.insert(std::make_pair(name, std::bind(chisa::util::xml::parseAttr<T>, std::string(name), std::ref(ptr), std::ref(ptr), std::placeholders::_1)));
 	}
 };
 

@@ -51,7 +51,7 @@ public:
 	void connectInternalVram(uint8_t* internalVram);
 	void changeMirrorType(NesFile::MirrorType mirrorType);
 protected:
-	inline constexpr uint8_t readSram(uint16_t addr) const noexcept
+	inline uint8_t readSram(uint16_t addr) const noexcept
 	{
 		return this->sram[addr & 0x1fff];
 	}

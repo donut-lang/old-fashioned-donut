@@ -16,33 +16,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Margin.h"
-#include "../util/XMLUtil.h"
+#include "Node.h"
 
 namespace chisa {
 namespace util {
 namespace xml {
 
-using namespace chisa::geom;
-
-template <>
-void parseAttr<Margin>(const std::string& name, Margin& v, const Margin& def, tinyxml2::XMLElement* elm)
+using namespace chisa::tk::widget;
+template <> void parseAttr<BlockNode::Direction>(const std::string& name, BlockNode::Direction& v, const BlockNode::Direction& def, tinyxml2::XMLElement* elm)
 {
-	float margin;
-	if(elm->QueryFloatAttribute(name.c_str(), &margin)){
-		v.margin(margin);
+	if(const char* c = elm->Attribute(name.c_str())){
+		std::string val(c);
+		if(val == "right"){
+			v = BlockNode::Direction::Right;
+			return;
+		}else if(val == "left"){
+			v = BlockNode::Direction::Left;
+			return;
+		}else if(val == "none"){
+			v = BlockNode::Direction::None;
+			return;
+		}
 	}
-	if(elm->QueryFloatAttribute((name+"-top").c_str(), &margin)){
-		v.top(margin);
-	}
-	if(elm->QueryFloatAttribute((name+"-left").c_str(), &margin)){
-		v.left(margin);
-	}
-	if(elm->QueryFloatAttribute((name+"-right").c_str(), &margin)){
-		v.right(margin);
-	}
-	if(elm->QueryFloatAttribute((name+"-bottom").c_str(), &margin)){
-		v.bottom(margin);
-	}
+	v = def;
 }
 }}}
