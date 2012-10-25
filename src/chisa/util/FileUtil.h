@@ -31,13 +31,13 @@ namespace file {
 #endif
 
 template <typename First, typename... Args>
-std::string join(const First& elem)
+constexpr std::string join(const First& elem)
 {
 	return elem;
 }
 
 template <typename First, typename... Args>
-std::string join(const First& elem, const Args&... left)
+constexpr std::string join(const First& elem, const Args&... left)
 {
 	return std::string(elem)+Sep+join(left...);
 }
