@@ -113,6 +113,7 @@ gl::Handler<gl::RawSprite> StringRenderer::Command::renderString(gl::Canvas& cv)
 		cairo_t* cr = cairo_create(surf);
 
 		//データは使いまわしているので一旦サーフェイスの中身を削除する
+		cairo_set_source_rgba(cr, 0, 0, 0, 0);
 		cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
 		cairo_paint(cr);
 
@@ -122,9 +123,10 @@ gl::Handler<gl::RawSprite> StringRenderer::Command::renderString(gl::Canvas& cv)
 			cairo_rotate(cr, 90.0f);
 		}
 
-		cairo_text_path(cr, this->str().c_str());
 		cairo_set_source_rgba(cr, 1,1,1,1);
-		cairo_paint(cr);
+		cairo_show_text(cr, this->str().c_str());
+		//cairo_text_path(cr, this->str().c_str());
+		//cairo_fill(cr);
 
 		cairo_destroy(cr);
 	}

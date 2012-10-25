@@ -31,6 +31,7 @@ static std::string const TAG("ContentWidget");
 
 CHISA_WIDGET_SUBKLASS_CONSTRUCTOR_DEF(ContentWidget)
 ,lastWidth_(NAN)
+,renderTree_(new RenderTree())
 {
 	tinyxml2::XMLElement* docElem = element->FirstChildElement("doc");
 	this->rootNode(NodeReader().parseTree(docElem));
@@ -41,11 +42,13 @@ CHISA_WIDGET_SUBKLASS_CONSTRUCTOR_DEF(ContentWidget)
 
 ContentWidget::~ContentWidget()
 {
+	delete this->renderTree();
+	this->renderTree(nullptr);
 }
 
 void ContentWidget::render(gl::Canvas& cv, const geom::Area& area)
 {
-
+	this->renderTree()->render(cv, area);
 }
 
 void ContentWidget::idle(const float delta_ms)
@@ -61,7 +64,7 @@ geom::Box ContentWidget::measure(const geom::Box& constraintSize)
 {
 	if(geom::isUnspecified(this->lastWidth()) || std::fabs(constraintSize.width()-this->lastWidth()) >= geom::VerySmall){
 		this->lastWidth(constraintSize.width());
-		this->lastSize(ContentMeasurer(constraintSize.width()).start(this->rootNode()));
+		this->lastSize(ContentMeasurer(constraintSize.width(), *this->renderTree()).start(this->rootNode()));
 	}
 	return this->lastSize();
 }

@@ -24,7 +24,6 @@
 namespace chisa {
 namespace gl {
 
-
 template<class S>
 class Handler
 {
@@ -133,6 +132,43 @@ public:
 	{
 		Handler<S>().swap(*this);
 	}
+};
+
+namespace internal {
+template<class S>
+class WeakHandlerEntity {
+	S* sprite;
+private:
+	WeakHandlerEntity() = delete;
+	WeakHandlerEntity(const WeakHandlerEntity<S>& o) = delete;
+	WeakHandlerEntity(WeakHandlerEntity<S>&& o) = delete;
+	WeakHandlerEntity& operator=(const WeakHandlerEntity<S>& o) = delete;
+	WeakHandlerEntity& operator=(WeakHandlerEntity<S>&& o) = delete;
+	~WeakHandlerEntity() { this->sprite = nullptr; }
+	WeakHandlerEntity(S* spr){ this->sprite = spr; };
+public:
+	void notifyDead(){
+		this->sprite = nullptr;
+	};
+	explicit operator bool () const noexcept {
+		return this->sprite;
+	}
+	bool expired () const noexcept {
+		return this->sprite;
+	}
+	static WeakHandlerEntity<S>* create(S* self){
+		if(!self->weakEntity){
+			self->weakEntity = new WeakHandlerEntity<S>(self);
+		}
+		return self->weakEntity;
+	}
+};
+}
+
+template<class S>
+class HandlerW
+{
+
 };
 
 template<class T>
