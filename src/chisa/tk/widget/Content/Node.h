@@ -16,16 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include "../../../logging/Logger.h"
-#include "../../../util/ClassUtil.h"
-#include "Decl.h"
-#include "NodeWalker.h"
-#include "Margin.h"
 #include <memory>
 #include <vector>
 #include <map>
 #include <tinyxml2.h>
+#include "../../../logging/Logger.h"
+#include "../../../util/ClassUtil.h"
+#include "../../../util/XMLUtil.h"
+#include "../../../geom/Margin.h"
 #include "../../../gl/StringRenderer.h"
+#include "Decl.h"
+#include "NodeWalker.h"
 
 namespace chisa {
 namespace tk {
@@ -95,10 +96,9 @@ public:
 	inline std::shared_ptr<Node> at(size_t idx) const { return this->children_.at(idx); };
 	void parseAttribute(tinyxml2::XMLElement* elm);
 protected:
-	template <typename T> static void parseAttr(const std::string& name, T& ptr, const T& def, tinyxml2::XMLElement* elm);
 	template <typename T> void addAttribute(const std::string& name, T& ptr, const T def=T())
 	{
-		this->attrMap_.insert(std::make_pair(name, std::bind(TreeNode::parseAttr<T>, std::string(name), std::ref(ptr), def, std::placeholders::_1)));
+		this->attrMap_.insert(std::make_pair(name, std::bind(chisa::util::xml::parseAttr<T>, std::string(name), std::ref(ptr), def, std::placeholders::_1)));
 	}
 };
 
@@ -110,7 +110,7 @@ public:
 		Left
 	};
 private:
-	DEFINE_MEMBER(public, private, Margin, margin);
+	DEFINE_MEMBER(public, private, geom::Margin, margin);
 	DEFINE_MEMBER(public, private, Direction, direction);
 	DEFINE_MEMBER(public, private, float, width);
 	DEFINE_MEMBER(public, private, float, height);

@@ -17,13 +17,12 @@
  */
 
 #pragma once
-#include "../../../util/ClassUtil.h"
-#include "../../../geom/Vector.h"
+#include "../util/ClassUtil.h"
+#include "../geom/Vector.h"
 #include <cstddef>
 
 namespace chisa {
-namespace tk {
-namespace widget {
+namespace geom {
 
 class Margin {
 	STACK_OBJECT(Margin);
@@ -33,6 +32,8 @@ class Margin {
 	DEFINE_MEMBER(public, public, float, right);
 public:
 	Margin() noexcept :top_(0),bottom_(0),left_(0),right_(0){};
+	Margin(float const m) noexcept :top_(m),bottom_(m),left_(m),right_(m){};
+	Margin(float const top,float const bottom,float const left,float const right) noexcept :top_(top),bottom_(bottom),left_(left),right_(right){};
 	Margin(const Margin& other) noexcept:
 		top_(other.top_),bottom_(other.bottom_),left_(other.left_),right_(other.right_){};
 	Margin& operator=(const Margin& other) noexcept{
@@ -54,8 +55,9 @@ public:
 	};
 	inline float totalWidth() const noexcept { return this->left()+this->right(); };
 	inline float totalHeight() const noexcept { return this->top()+this->bottom(); };
+	inline geom::Distance totalSpace() const noexcept { return geom::Distance(totalWidth(), totalHeight()); };
 	inline geom::Distance offset() const noexcept { return geom::Distance(this->left(), this->top()); };
 	~Margin() noexcept = default;
 };
 
-}}}
+}}

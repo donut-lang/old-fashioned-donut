@@ -18,6 +18,7 @@
 
 #pragma once
 #include "../Layout.h"
+#include "../../geom/Margin.h"
 
 namespace chisa {
 namespace tk {
@@ -26,8 +27,7 @@ namespace layout {
 class MarginLayout : public Layout {
 	CHISA_LAYOUT_SUBKLASS(MarginLayout);
 	std::weak_ptr<Layout> child_;
-	geom::Vector margin_;
-	geom::Vector removedSize_;
+	geom::Margin margin_;
 public:
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const override;
 	virtual size_t getChildCount() const override;

@@ -137,15 +137,20 @@ Handler<RawSprite> Canvas::queryRawSprite(const int width, const int height)
 	}
 }
 
-void Canvas::drawLine(const float width, const float r,const float g,const float b,const float a, const geom::Point& start, const geom::Point& end, const float depth)
+void Canvas::drawLine(const float width, const Color& color, const geom::Point& start, const geom::Point& end, const float depth)
 {
 	glLineWidth(width);
-	glColor4f(r,g,b,a);
+	this->setColor(color);
 	glBegin(GL_LINES);
 		glVertex3f(start.x(), start.y(), depth);
 		glVertex3f(end.x()  , end.y(), depth);
 	glEnd();
 	glFlush();
+}
+
+void Canvas::setColor(const Color& color)
+{
+	glColor4f(color.red(), color.green(), color.blue(), color.alpha());
 }
 
 void Canvas::backSprite(RawSprite* spr)

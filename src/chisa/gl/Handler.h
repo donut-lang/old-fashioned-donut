@@ -165,7 +165,7 @@ public:
 };
 }
 
-template<class S>
+template<class S, class Orig>
 class HandlerW
 {
 
