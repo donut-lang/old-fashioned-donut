@@ -32,8 +32,8 @@ public:
 public:
 	constexpr Color() noexcept:red_(0), green_(0), blue_(0), alpha_(0){};
 	constexpr Color(float r, float g, float b, float a) noexcept:red_(r), green_(g), blue_(b), alpha_(a){};
-	Color(const Color& other) = default;
-	Color(Color&& other) = default;
+	constexpr Color(const Color& other) = default;
+	constexpr Color(Color&& other) = default;
 	Color& operator=(const Color& other) = default;
 	Color& operator=(Color&& other) = default;
 	~Color() noexcept = default;

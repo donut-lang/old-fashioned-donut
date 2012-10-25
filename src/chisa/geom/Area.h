@@ -44,7 +44,7 @@ public:
 	constexpr Area(const Vector& point, const Box& box) noexcept:point_(point), box_(box){};
 	inline Area& operator=(const Area& other) noexcept = default;
 	inline Area& operator=(Area&& other) noexcept = default;
-	inline Area() noexcept:point_(), box_(){};
+	constexpr inline Area() noexcept:point_(), box_(){};
 	inline ~Area() noexcept = default;
 	void *operator new(std::size_t) = delete;
 	void operator delete(void* pv) = delete;
@@ -84,7 +84,7 @@ public:
 	//		const Vector endPoint(min(thisEnd, otherEnd));
 	//		return Area(startPoint, (endPoint-startPoint));
 	//	}
-	inline Area intersect(const Area& other) const noexcept
+	inline constexpr Area intersect(const Area& other) const noexcept
 	{
 		return intersectImpl(other, this->point()+this->box(), other.point()+other.box());
 	}

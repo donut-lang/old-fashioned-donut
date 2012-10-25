@@ -34,7 +34,7 @@ public:
 	virtual ~Hexe();
 	virtual std::string toString() const;
 	template <typename... Args>
-	std::string resolveFilepath(const Args&... path) const
+	constexpr std::string resolveFilepath(const Args&... path) const noexcept
 	{
 		return util::file::join(this->basepath(), path...);
 	}
