@@ -17,6 +17,7 @@
  */
 
 #pragma once
+#include <vector>
 #include <deque>
 #include <map>
 #include "../logging/Exception.h"
@@ -33,6 +34,45 @@ namespace geom {
 class Area;
 }
 namespace gl {
+
+namespace internal {
+struct BufferOrder {
+	inline bool operator()(const Buffer* const a, const Buffer* const b) const noexcept
+	{
+		return a->width() == b->width() ? a->height() < b->height() : a->width() < b->width();
+	}
+	inline bool operator() (const Buffer* a, const std::pair<int,int>& b) const noexcept
+	{
+		return a->width() == b.first ? a->height() < b.second : a->width() < b.first;
+	}
+	inline bool operator() (const std::pair<int,int>& a, const Buffer* b) const noexcept
+	{
+		return a.first == b->width() ? a.second < b->height() : a.first < b->width();
+	}
+	inline bool operator() (const std::pair<int,int>& a, const std::pair<int,int>& b) const noexcept
+	{
+		return a.first == b.first ? a.second < b.second : a.first < b.first;
+	}
+};
+struct SpriteOrder {
+	inline bool operator()(const RawSprite* const a, const RawSprite* const b) const noexcept
+	{
+		return a->width() < b->width() && a->height() < b->height();
+	}
+	inline bool operator() (const RawSprite* a, const std::pair<int,int>& b) const noexcept
+	{
+		return a->width() < b.first && a->height() < b.second;
+	}
+	inline bool operator() (const std::pair<int,int>& a, const RawSprite* b) const noexcept
+	{
+		return a.first < b->width() && a.second < b->height();
+	}
+	inline bool operator() (const std::pair<int,int>& a, const std::pair<int,int>& b) const noexcept
+	{
+		return a.first < b.first && a.second < b.second;
+	}
+};
+}
 
 class Canvas {
 	DISABLE_COPY_AND_ASSIGN(Canvas);

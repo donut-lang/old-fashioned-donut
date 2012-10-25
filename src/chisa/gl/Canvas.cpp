@@ -24,22 +24,6 @@
 #include <GL/gl.h>
 #include <cairo/cairo.h>
 
-template <typename T>
-struct Order {
-	bool operator()(const T* const a, const T* const b)
-	{
-		return a->width() < b->width() && a->height() < b->height();
-	}
-	bool operator() (const T* a, const std::pair<int,int>& b)
-	{
-		return a->width() < b.first && a->height() < b.second;
-	}
-	bool operator() (const std::pair<int,int>& a, const T* b)
-	{
-		return a.first < b->width() && a.second < b->height();
-	}
-};
-
 namespace chisa {
 namespace gl {
 
@@ -124,7 +108,7 @@ void Canvas::drawSprite(RawSprite* const sprite, const geom::Point& pt, const fl
 
 Handler<RawSprite> Canvas::queryRawSprite(const int width, const int height)
 {
-	auto it = std::lower_bound(this->unusedSprite_.begin(), this->unusedSprite_.end(), std::pair<int,int>(width,height), Order<RawSprite>());
+	auto it = std::lower_bound(this->unusedSprite_.begin(), this->unusedSprite_.end(), std::pair<int,int>(width,height), internal::SpriteOrder());
 	if(it == this->unusedSprite_.end()){
 		RawSprite* spr = new RawSprite(this, width, height);
 		spr->resize(width, height);
@@ -155,7 +139,7 @@ void Canvas::setColor(const Color& color)
 
 void Canvas::backSprite(RawSprite* spr)
 {
-	auto ins = std::lower_bound(this->unusedSprite_.begin(), this->unusedSprite_.end(), spr, Order<RawSprite>());
+	auto ins = std::upper_bound(this->unusedSprite_.begin(), this->unusedSprite_.end(), spr, internal::SpriteOrder());
 	this->unusedSprite_.insert(ins, spr);
 	while(Canvas::MaxCachedSpriteCount < this->unusedSprite_.size()){
 		RawSprite* deleted = 0;
@@ -164,7 +148,7 @@ void Canvas::backSprite(RawSprite* spr)
 			this->unusedSprite_.pop_back();
 		}else{
 			deleted = this->unusedSprite_.front();
-			this->unusedSprite_.pop_front();
+			this->unusedSprite_.	pop_front();
 		}
 		if(deleted){
 			RawSprite* const min = this->unusedSprite_.front();
@@ -183,11 +167,11 @@ void Canvas::backSprite(RawSprite* spr)
 Buffer* Canvas::queryBuffer(const int width, const int height)
 {
 	int const pHeight = getPower2Of(height);
-	auto it = std::lower_bound(this->unusedBuffer_.begin(), this->unusedBuffer_.end(), std::pair<int,int>(width,pHeight), Order<Buffer>());
+	auto it = std::lower_bound(this->unusedBuffer_.begin(), this->unusedBuffer_.end(), std::pair<int,int>(width,pHeight), internal::BufferOrder());
+	Buffer* const buf = *it;
 	if(it == this->unusedBuffer_.end() || (*it)->width() != width ){
 		return new Buffer(width, pHeight);
 	}else{
-		Buffer* const buf = *it;
 		this->unusedBuffer_.erase(it);
 		return buf;
 	}
@@ -195,7 +179,7 @@ Buffer* Canvas::queryBuffer(const int width, const int height)
 
 void Canvas::backBuffer(Buffer* buffer)
 {
-	auto ins = std::lower_bound(this->unusedBuffer_.begin(), this->unusedBuffer_.end(), buffer, Order<Buffer>());
+	auto ins = std::upper_bound(this->unusedBuffer_.begin(), this->unusedBuffer_.end(), buffer, internal::BufferOrder());
 	this->unusedBuffer_.insert(ins, buffer);
 	while(Canvas::MaxCachedBufferCount < this->unusedBuffer_.size()){
 		Buffer* deleted = 0;
