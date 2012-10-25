@@ -23,6 +23,7 @@
 namespace chisa {
 namespace gl {
 #define ANTI(a,b,c,d) ASSERT_NE(order(std::make_pair(a,b),std::make_pair(c,d)), order(std::make_pair(c,d),std::make_pair(a,b)));
+#define TRAN(a,b,c,d,e,f) ASSERT_EQ(order(std::make_pair(a,b),std::make_pair(c,d)) && order(std::make_pair(c,d),std::make_pair(e,f)), order(std::make_pair(a,b),std::make_pair(e,f)));
 //前提条件
 //http://www.sgi.com/tech/stl/StrictWeakOrdering.html
 
@@ -60,7 +61,9 @@ TEST(OrderTest, AntisymmetryTest)
 TEST(OrderTest, TransitivityTest)
 {
 	internal::BufferOrder order;
-	ASSERT_EQ(order(std::make_pair(1,2),std::make_pair(3,4)) && order(std::make_pair(3,4),std::make_pair(5,6)), order(std::make_pair(1,2),std::make_pair(5,6)));
+	TRAN(1,2,3,4,5,6);
+	TRAN(5,6,4,3,2,1);
+	TRAN(1,1,1,1,1,1);
 }
 
 }}
