@@ -30,16 +30,8 @@
 namespace chisa {
 namespace util {
 namespace file {
-
 namespace internal {
-const FileConstants<std::string>::string_type FileConstants<std::string>::CurrentDirStr(FileConstants<std::string>::CurrentDir);
-const FileConstants<std::string>::string_type FileConstants<std::string>::ParentDirStr(FileConstants<std::string>::ParentDir);
-const FileConstants<char>::string_type FileConstants<char>::CurrentDirStr(FileConstants<char>::CurrentDir);
-const FileConstants<char>::string_type FileConstants<char>::ParentDirStr(FileConstants<char>::ParentDir);
-const FileConstants<std::wstring>::string_type FileConstants<std::wstring>::CurrentDirStr(FileConstants<std::wstring>::CurrentDir);
-const FileConstants<std::wstring>::string_type FileConstants<std::wstring>::ParentDirStr(FileConstants<std::wstring>::ParentDir);
-const FileConstants<wchar_t>::string_type FileConstants<wchar_t>::CurrentDirStr(FileConstants<wchar_t>::CurrentDir);
-const FileConstants<wchar_t>::string_type FileConstants<wchar_t>::ParentDirStr(FileConstants<wchar_t>::ParentDir);
+
 }
 
 #if CHISA_WINDOWS
@@ -70,15 +62,18 @@ static std::string toUTF8(const std::wstring& str)
 static void enumFiles(const std::wstring& dir, std::set<std::string>& list, bool recursive)
 {
 	using namespace internal;
+	typedef FileConstants<std::wstring> ftype;
 	WIN32_FIND_DATAW findFileData;
 	HANDLE h = FindFirstFileW(join(dir,L"*.*").c_str(), &findFileData);
 	if(h == INVALID_HANDLE_VALUE){
 		return;
 	}
 	do{
+		static const std::wstring CurrentDirStr(ftype::CurrentDir);
+		static const std::wstring ParentDirStr(ftype::ParentDir);
 		std::wstring name(join(dir,findFileData.cFileName));
 		if(findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY){
-			if(FileConstants<std::wstring>::CurrentDirStr!=findFileData.cFileName && FileConstants<std::wstring>::ParentDirStr!=findFileData.cFileName && recursive){
+			if(CurrentDirStr!=findFileData.cFileName && ParentDirStr!=findFileData.cFileName && recursive){
 				enumFiles(name, list, recursive);
 			}
 		}else{
@@ -105,7 +100,9 @@ void enumFiles(const std::string& dir, std::set<std::string>& list, bool recursi
 			throw logging::Exception(__FILE__, __LINE__, "Failed to lstat64.");
 		}
 		if(S_IFDIR & st.st_mode){
-			if(ftype::CurrentDirStr!=de->d_name && ftype::ParentDirStr != de->d_name && recursive){
+			static const std::string CurrentDirStr(ftype::CurrentDir);
+			static const std::string ParentDirStr(ftype::ParentDir);
+			if(CurrentDirStr!=de->d_name && ParentDirStr != de->d_name && recursive){
 				enumFiles(name, list, recursive);
 			}
 		}else{
