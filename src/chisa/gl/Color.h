@@ -38,7 +38,7 @@ public:
 	Color& operator=(Color&& other) = default;
 	~Color() noexcept = default;
 public:
-	constexpr Color multAlpha(const float alpha){
+	constexpr Color multAlpha(const float alpha) const noexcept{
 		return Color(red_,green_, blue_, alpha_*alpha);
 	}
 };
