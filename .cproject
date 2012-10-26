@@ -281,9 +281,7 @@
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.exe.debug.1667991863" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.exe.debug"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug.756123520" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug">
 								<option id="gnu.cpp.link.option.libs.1581411382" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="icuuc"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="gtest"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="icudata"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="rt"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="glfw"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="X11"/>
@@ -292,6 +290,9 @@
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="cairo"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="png"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="pthread"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="icui18n"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="icuuc"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="icudata"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.880366432" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -352,9 +353,7 @@
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.exe.debug.1561992075" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.exe.debug"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug.1454142141" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug">
 								<option id="gnu.cpp.link.option.libs.1279995346" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="icuuc"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="gtest"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="icudata"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="glfw"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="pthread"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="GL"/>
@@ -363,6 +362,9 @@
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="Xrandr"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="cairo"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="png"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="icui18n"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="icuuc"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="icudata"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.770223447" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>

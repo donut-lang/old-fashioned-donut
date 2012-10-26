@@ -67,12 +67,11 @@ void enumFiles(const std::string& dir, std::set<std::string>& list, bool recursi
 #else
 void enumFiles(const std::string& dir, std::set<std::string>& list, bool recursive)
 {
-	using namespace internal;
-	typedef FileConstants<std::string> ftype;
+	typedef internal::FileConstants<std::string> ftype;
 	struct dirent* de;
 	DIR* d = opendir(dir.c_str());
 	while((de = readdir(d)) != nullptr){
-		std::string name = join(dir,ftype::Sep,de->d_name);
+		std::string name = join(dir, de->d_name);
 		struct stat64 st;
 		if(lstat64(name.c_str(), &st) != 0){
 			throw logging::Exception(__FILE__, __LINE__, "Failed to lstat64.");
@@ -83,7 +82,7 @@ void enumFiles(const std::string& dir, std::set<std::string>& list, bool recursi
 			if(CurrentDirStr!=de->d_name && ParentDirStr != de->d_name && recursive){
 				enumFiles(name, list, recursive);
 			}
-		}else{
+		} else {
 			list.insert(name);
 		}
 	}

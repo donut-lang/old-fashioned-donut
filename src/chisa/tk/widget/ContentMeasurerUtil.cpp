@@ -27,8 +27,9 @@ namespace widget {
 std::string shrinkSpace(const std::string& str_)
 {
 	UErrorCode st = U_ZERO_ERROR;
-	RegexMatcher matcher(L"\\s+", UnicodeString::fromUTF8(str_), 0, st);
-	UnicodeString out(matcher.replaceAll(L" ", st));
+	UnicodeString str = UnicodeString::fromUTF8(str_);
+	RegexMatcher matcher(reinterpret_cast<const UChar*>(u"[\\t\\n\\f\\r ]+"), str, 0, st);
+	UnicodeString out(matcher.replaceAll(reinterpret_cast<const UChar*>(u" "), st));
 
 	std::string ret;
 	out.toUTF8String(ret);
