@@ -56,8 +56,8 @@ TEST(FileUtilTest, MultiByteFileNameEnumTest)
 TEST(FileUtilTest, JoinTest)
 {
 	using namespace file::internal;
-	ASSERT_EQ(std::string("a")+FileUtil<std::string>::Sep+"b", file::join("a","b"));
-	ASSERT_EQ(std::string("a")+FileUtil<std::string>::Sep+FileUtil<std::string>::Sep+"b", file::join(std::string("a")+FileUtil<std::string>::Sep,"b"));
+	ASSERT_EQ(std::string("a")+FileConstants<std::string>::Sep+"b", file::join("a","b"));
+	ASSERT_EQ(std::string("a")+FileConstants<std::string>::Sep+FileConstants<std::string>::Sep+"b", file::join(std::string("a")+FileConstants<std::string>::Sep,"b"));
 }
 
 }}

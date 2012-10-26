@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "internal/Canvas.h"
 #include "Canvas.h"
 #include "../geom/Vector.h"
 #include "../geom/Area.h"
