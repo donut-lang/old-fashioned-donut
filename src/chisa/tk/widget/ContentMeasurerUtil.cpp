@@ -17,18 +17,22 @@
  */
 
 #include "ContentMeasurerUtil.h"
-#include "../../util/Regex.h"
+#include <unicode/unistr.h>
+#include <unicode/regex.h>
 
 namespace chisa {
 namespace tk {
 namespace widget {
 
-std::string shrinkSpace(const std::string& str)
+std::string shrinkSpace(const std::string& str_)
 {
-	std::regex reg(R"delimiter(\s+)delimiter");
-	std::string out;
-	std::string replacement(" ");
-	return std::regex_replace(str, reg, replacement);
+	UErrorCode st = U_ZERO_ERROR;
+	RegexMatcher matcher(L"\\s+", UnicodeString::fromUTF8(str_), 0, st);
+	UnicodeString out(matcher.replaceAll(L" ", st));
+
+	std::string ret;
+	out.toUTF8String(ret);
+	return ret;
 }
 
 }}}
