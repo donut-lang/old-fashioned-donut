@@ -19,7 +19,7 @@
 #include "FileUtil.h"
 #include "../logging/Exception.h"
 #if CHISA_WINDOWS
-#include <Windows.h>
+#include "internal/Win32.h"
 #else
 #include <dirent.h>
 #include <sys/types.h>
@@ -35,33 +35,10 @@ namespace internal {
 }
 
 #if CHISA_WINDOWS
-static std::wstring toUTF16(const std::string& str)
-{
-	int size = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), nullptr, 0);
-	wchar_t* buf = new wchar_t[size+1];
-	if(size != MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), buf, size+1)){
-		throw chisa::logging::Exception(__FILE__, __LINE__, "Failed to convert UTF8 to UTF16");
-	}
-	buf[size]=0;
-	std::wstring ret(buf);
-	delete [] buf;
-	return ret;
-}
-static std::string toUTF8(const std::wstring& str)
-{
-	int size = WideCharToMultiByte(CP_UTF8, 0, str.c_str(), str.length(), nullptr, 0, nullptr, nullptr);
-	char* buf = new char[size+1];
-	if(size != WideCharToMultiByte(CP_UTF8, 0, str.c_str(), str.length(), buf, size+1, nullptr, nullptr)){
-		throw chisa::logging::Exception(__FILE__, __LINE__, "Failed to convert UTF8 to UTF16");
-	}
-	buf[size]=0;
-	std::string ret(buf);
-	delete [] buf;
-	return ret;
-}
 static void enumFiles(const std::wstring& dir, std::set<std::string>& list, bool recursive)
 {
 	using namespace internal;
+	using namespace util::internal::win32;
 	typedef FileConstants<std::wstring> ftype;
 	WIN32_FIND_DATAW findFileData;
 	HANDLE h = FindFirstFileW(join(dir,L"*.*").c_str(), &findFileData);
@@ -84,6 +61,7 @@ static void enumFiles(const std::wstring& dir, std::set<std::string>& list, bool
 }
 void enumFiles(const std::string& dir, std::set<std::string>& list, bool recursive)
 {
+	using namespace util::internal::win32;
 	return enumFiles(toUTF16(dir), list, recursive);
 }
 #else
