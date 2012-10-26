@@ -16,9 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../gl/StringRenderer.h"
 #include "ContentWidgetImpl.h"
+#include "ContentMeasurerUtil.h"
 #include "Content/Node.h"
+#include "../../gl/StringRenderer.h"
 #include "../../geom/Area.h"
 
 namespace chisa {
@@ -237,7 +238,8 @@ void ContentMeasurer::walk(Text* model)
 	gl::StringRenderer renderer;
 	std::vector<std::string> lines;
 	util::splitLine(model->text(), lines);
-	for(const std::string& str : lines){
+	for(const std::string& str_ : lines){
+		std::string str(shrinkSpace(str_));
 		size_t now=0;
 		while(now < str.length()){
 			gl::StringRenderer::Command cmd = renderer.calcMaximumStringLength(str, this->calcLeftWidth(), now);

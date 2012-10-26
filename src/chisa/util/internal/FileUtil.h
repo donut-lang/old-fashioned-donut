@@ -44,7 +44,7 @@ typedef char* char_type;\
 typedef const char* const_char_type;\
 typedef std::string string_type;\
 typedef const std::string const_string_type;\
-static constexpr const_char_type Sep=(CHISA_FILE_SEP);\
+static constexpr const_char_type Sep = CHISA_FILE_SEP;\
 static constexpr const_char_type CurrentDir = ".";\
 static constexpr const_char_type ParentDir = "..";
 

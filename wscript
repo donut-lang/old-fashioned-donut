@@ -53,7 +53,7 @@ def configure(conf):
 		#boost
 		conf.env.append_value('CXXFLAGS', ['-DBOOST_THREAD_USE_LIB=1'])
 		conf.load('boost')
-		conf.check_boost(lib='system thread chrono')
+		conf.check_boost(lib='system thread chrono regex')
 	elif sys.platform in ['linux2', 'linux']:
 		#opengl
 		conf.check(features='cxx cxxprogram', lib=['glfw','GL', 'X11','rt','Xrandr','pthread'], cflags=['-Wall'], defines=['TEST=TEST'], uselib_store='OPENGL')
