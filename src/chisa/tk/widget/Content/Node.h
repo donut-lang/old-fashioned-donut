@@ -145,6 +145,12 @@ private:
 	Heading(int const level);
 };
 
+class BreakLine : public BlockNode {
+	NODE_SUBKLASS_LEAF(BreakLine);
+private:
+	BreakLine();
+};
+
 class Link : public InlineNode {
 	NODE_SUBKLASS_LEAF(Link);
 public:

@@ -108,7 +108,7 @@ public:
 		~BlockSession() noexcept;
 		float calcLeftWidth();
 		void flushBlock();
-		void nextLine();
+		void endLine();
 		geom::Area extendBlock(const geom::Box& size, BlockNode::Direction dir=BlockNode::Direction::None);
 		geom::Area extendInline(const geom::Box& size);
 	};
@@ -132,6 +132,7 @@ public:
 	virtual void walk(Heading* model) override;
 	virtual void walk(Link* model) override;
 	virtual void walk(Text* model) override;
+	virtual void walk(BreakLine* br) override;
 };
 
 }}}
