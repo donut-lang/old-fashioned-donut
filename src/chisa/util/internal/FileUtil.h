@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "Platform.h"
+#include "../Platform.h"
 #include <string>
 #include <set>
 
@@ -28,7 +28,7 @@ namespace file {
 
 namespace internal {
 template <class String>
-struct FileUtil ;
+struct FileConstants ;
 
 #if CHISA_WINDOWS
 #define CHISA_FILE_SEP "\\"
@@ -58,14 +58,14 @@ static constexpr const_char_type ParentDir = L"..";\
 static const string_type CurrentDirStr;\
 static const string_type ParentDirStr;\
 
-template<> struct FileUtil<std::string>{ STRING_INNER };
-template<> struct FileUtil<std::wstring> { WSTRING_INNER };
+template<> struct FileConstants<std::string>{ STRING_INNER };
+template<> struct FileConstants<std::wstring> { WSTRING_INNER };
 
-template<> struct FileUtil<char> { STRING_INNER };
-template<> struct FileUtil<wchar_t> { WSTRING_INNER };
+template<> struct FileConstants<char> { STRING_INNER };
+template<> struct FileConstants<wchar_t> { WSTRING_INNER };
 
-template<std::size_t N> struct FileUtil<char[N]> { STRING_INNER };
-template<std::size_t N> struct FileUtil<wchar_t [N]> { WSTRING_INNER };
+template<std::size_t N> struct FileConstants<char[N]> { STRING_INNER };
+template<std::size_t N> struct FileConstants<wchar_t [N]> { WSTRING_INNER };
 
 #undef STRING_INNER
 #undef WSTRING_INNER

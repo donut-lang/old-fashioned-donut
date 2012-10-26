@@ -32,14 +32,14 @@ namespace util {
 namespace file {
 
 namespace internal {
-const FileUtil<std::string>::string_type FileUtil<std::string>::CurrentDirStr(FileUtil<std::string>::CurrentDir);
-const FileUtil<std::string>::string_type FileUtil<std::string>::ParentDirStr(FileUtil<std::string>::ParentDir);
-const FileUtil<char>::string_type FileUtil<char>::CurrentDirStr(FileUtil<char>::CurrentDir);
-const FileUtil<char>::string_type FileUtil<char>::ParentDirStr(FileUtil<char>::ParentDir);
-const FileUtil<std::wstring>::string_type FileUtil<std::wstring>::CurrentDirStr(FileUtil<std::wstring>::CurrentDir);
-const FileUtil<std::wstring>::string_type FileUtil<std::wstring>::ParentDirStr(FileUtil<std::wstring>::ParentDir);
-const FileUtil<wchar_t>::string_type FileUtil<wchar_t>::CurrentDirStr(FileUtil<wchar_t>::CurrentDir);
-const FileUtil<wchar_t>::string_type FileUtil<wchar_t>::ParentDirStr(FileUtil<wchar_t>::ParentDir);
+const FileConstants<std::string>::string_type FileConstants<std::string>::CurrentDirStr(FileConstants<std::string>::CurrentDir);
+const FileConstants<std::string>::string_type FileConstants<std::string>::ParentDirStr(FileConstants<std::string>::ParentDir);
+const FileConstants<char>::string_type FileConstants<char>::CurrentDirStr(FileConstants<char>::CurrentDir);
+const FileConstants<char>::string_type FileConstants<char>::ParentDirStr(FileConstants<char>::ParentDir);
+const FileConstants<std::wstring>::string_type FileConstants<std::wstring>::CurrentDirStr(FileConstants<std::wstring>::CurrentDir);
+const FileConstants<std::wstring>::string_type FileConstants<std::wstring>::ParentDirStr(FileConstants<std::wstring>::ParentDir);
+const FileConstants<wchar_t>::string_type FileConstants<wchar_t>::CurrentDirStr(FileConstants<wchar_t>::CurrentDir);
+const FileConstants<wchar_t>::string_type FileConstants<wchar_t>::ParentDirStr(FileConstants<wchar_t>::ParentDir);
 }
 
 #if CHISA_WINDOWS
@@ -78,7 +78,7 @@ static void enumFiles(const std::wstring& dir, std::set<std::string>& list, bool
 	do{
 		std::wstring name(join(dir,findFileData.cFileName));
 		if(findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY){
-			if(FileUtil<std::wstring>::CurrentDirStr!=findFileData.cFileName && FileUtil<std::wstring>::ParentDirStr!=findFileData.cFileName && recursive){
+			if(FileConstants<std::wstring>::CurrentDirStr!=findFileData.cFileName && FileConstants<std::wstring>::ParentDirStr!=findFileData.cFileName && recursive){
 				enumFiles(name, list, recursive);
 			}
 		}else{
@@ -95,16 +95,17 @@ void enumFiles(const std::string& dir, std::set<std::string>& list, bool recursi
 void enumFiles(const std::string& dir, std::set<std::string>& list, bool recursive)
 {
 	using namespace internal;
+	typedef FileConstants<std::string> ftype;
 	struct dirent* de;
 	DIR* d = opendir(dir.c_str());
 	while((de = readdir(d)) != nullptr){
-		std::string name = join(dir,Sep,de->d_name);
+		std::string name = join(dir,ftype::Sep,de->d_name);
 		struct stat64 st;
 		if(lstat64(name.c_str(), &st) != 0){
 			throw logging::Exception(__FILE__, __LINE__, "Failed to lstat64.");
 		}
 		if(S_IFDIR & st.st_mode){
-			if(FileUtil<std::string>::CurrentDirStr!=de->d_name && FileUtil<std::string>::ParentDirStr != de->d_name && recursive){
+			if(ftype::CurrentDirStr!=de->d_name && ftype::ParentDirStr != de->d_name && recursive){
 				enumFiles(name, list, recursive);
 			}
 		}else{

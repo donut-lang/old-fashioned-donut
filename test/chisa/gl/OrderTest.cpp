@@ -17,7 +17,7 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../../src/chisa/gl/Canvas.h"
+#include "../../../src/chisa/gl/internal/Canvas.h"
 #include <math.h>
 
 namespace chisa {

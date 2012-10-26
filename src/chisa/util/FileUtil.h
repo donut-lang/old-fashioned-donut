@@ -21,16 +21,16 @@
 #include "Platform.h"
 #include <string>
 #include <set>
-#include "FileUtilInternal.h"
+#include "internal/FileUtil.h"
 
 namespace chisa {
 namespace util {
 namespace file {
 
 template <typename T, typename... Args>
-constexpr typename internal::FileUtil<T>::string_type join(const T& a, const Args&... left)
+constexpr typename internal::FileConstants<T>::string_type join(const T& a, const Args&... left)
 {
-	return typename internal::FileUtil<T>::string_type(a)+internal::FileUtil<T>::Sep+join(left...);
+	return typename internal::FileConstants<T>::string_type(a)+internal::FileConstants<T>::Sep+join(left...);
 }
 
 void enumFiles(const std::string& dir, std::set<std::string>& list, bool recursive=false);
