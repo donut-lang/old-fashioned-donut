@@ -44,13 +44,25 @@ TEST(FileUtilTest, FileEnumTest)
 	ASSERT_TRUE(list.find(file::join(dir,"d","z")) != list.end());
 }
 
-TEST(FileUtilTest, MultiByteTest)
+TEST(FileUtilTest, MultiByteFileNameEnumTest)
 {
 	std::set<std::string> list;
 	std::string dir=file::join(MATERIAL_DIR, "mb_file");
 	file::enumFiles(dir, list, true);
 	ASSERT_EQ(1, list.size());
 	ASSERT_TRUE(list.find(file::join(dir,u8"あ")) != list.end());
+}
+
+TEST(FileUtilTest, JoinTest)
+{
+	using namespace file::internal;
+	ASSERT_EQ(std::string("a")+FileUtil<std::string>::Sep+"b", file::join("a","b"));
+	ASSERT_EQ(std::string("a")+FileUtil<std::string>::Sep+"b", file::join(std::string("a")+FileUtil<std::string>::Sep,"b"));
+#ifdef CHISA_WINDOWS
+	ASSERT_EQ("a\\b", file::join("a\\","b"));
+#else
+	ASSERT_EQ("a\\/b", file::join("a\\","b"));
+#endif
 }
 
 }}

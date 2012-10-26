@@ -31,6 +31,13 @@ namespace chisa {
 namespace util {
 namespace file {
 
+namespace internal {
+FileUtil<std::string>::string_type FileUtil<std::string>::CurrentDirStr(FileUtil<std::string>::CurrentDir);
+FileUtil<std::string>::string_type FileUtil<std::string>::ParentDirStr(FileUtil<std::string>::ParentDir);
+FileUtil<std::wstring>::string_type FileUtil<std::wstring>::CurrentDirStr(FileUtil<std::wstring>::CurrentDir);
+FileUtil<std::wstring>::string_type FileUtil<std::wstring>::ParentDirStr(FileUtil<std::wstring>::ParentDir);
+}
+
 #if CHISA_WINDOWS
 static std::wstring toUTF16(const std::string& str)
 {
@@ -58,15 +65,16 @@ static std::string toUTF8(const std::wstring& str)
 }
 static void enumFiles(const std::wstring& dir, std::set<std::string>& list, bool recursive)
 {
+	using namespace internal;
 	WIN32_FIND_DATAW findFileData;
-	HANDLE h = FindFirstFileW((dir+SepW+L"*.*").c_str(), &findFileData);
+	HANDLE h = FindFirstFileW(join(dir,L"*.*").c_str(), &findFileData);
 	if(h == INVALID_HANDLE_VALUE){
 		return;
 	}
 	do{
-		std::wstring name(dir+SepW+findFileData.cFileName);
+		std::wstring name(join(dir,findFileData.cFileName));
 		if(findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY){
-			if(CurrentDirW!=findFileData.cFileName && ParentDirW!=findFileData.cFileName && recursive){
+			if(FileUtil<std::wstring>::CurrentDirStr!=findFileData.cFileName && FileUtil<std::wstring>::ParentDirStr!=findFileData.cFileName && recursive){
 				enumFiles(name, list, recursive);
 			}
 		}else{
@@ -82,6 +90,7 @@ void enumFiles(const std::string& dir, std::set<std::string>& list, bool recursi
 #else
 void enumFiles(const std::string& dir, std::set<std::string>& list, bool recursive)
 {
+	using namespace internal;
 	struct dirent* de;
 	DIR* d = opendir(dir.c_str());
 	while((de = readdir(d)) != nullptr){
@@ -91,10 +100,9 @@ void enumFiles(const std::string& dir, std::set<std::string>& list, bool recursi
 			throw logging::Exception(__FILE__, __LINE__, "Failed to lstat64.");
 		}
 		if(S_IFDIR & st.st_mode){
-			if(CurrentDir!=de->d_name && ParentDir != de->d_name && recursive){
-				continue;
+			if(FileUtil<std::string>::CurrentDirStr!=de->d_name && FileUtil<std::string>::ParentDirStr != de->d_name && recursive){
+				enumFiles(name, list, recursive);
 			}
-			enumFiles(name, list, recursive);
 		}else{
 			list.insert(name);
 		}

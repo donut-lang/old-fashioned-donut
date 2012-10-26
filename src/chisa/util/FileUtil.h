@@ -26,30 +26,64 @@ namespace chisa {
 namespace util {
 namespace file {
 
-#if CHISA_WINDOWS
-static constexpr const char* Sep="\\";
-static constexpr const wchar_t* SepW=L"\\";
-const std::string CurrentDir("..");
-const std::string ParentDir(".");
-const std::wstring CurrentDirW(L"..");
-const std::wstring ParentDirW(L".");
-#else
-static constexpr const char* Sep="/";
-const std::string CurrentDir("..");
-const std::string ParentDir(".");
-#endif
+namespace internal {
+template <class String>
+struct FileUtil ;
 
-
-template <typename First, typename... Args>
-constexpr std::string join(const First& elem)
+template<>
+struct FileUtil<std::string>
 {
-	return elem;
+	typedef const char* char_type;
+	typedef const std::string string_type;
+#if CHISA_WINDOWS
+	static constexpr char_type Sep="\\";
+#else
+	static constexpr char_type Sep = "/";
+#endif
+	static constexpr char_type CurrentDir = (".");
+	static constexpr char_type ParentDir = ("..");
+	static string_type CurrentDirStr;
+	static string_type ParentDirStr;
+};
+template<>
+
+struct FileUtil<std::wstring>
+{
+	typedef const wchar_t* char_type;
+	typedef const std::wstring string_type;
+#if CHISA_WINDOWS
+	static constexpr char_type Sep = L"\\";
+#else
+	static constexpr char_type Sep = L"/";
+#endif
+	static constexpr char_type CurrentDir = L".";
+	static constexpr char_type ParentDir = L"..";
+	static string_type CurrentDirStr;
+	static string_type ParentDirStr;
+};
+
 }
 
-template <typename First, typename... Args>
-constexpr std::string join(const First& elem, const Args&... left)
+inline const std::string& join(const std::string& a)
 {
-	return std::string(elem)+Sep+join(left...);
+	return a;
+}
+inline const std::wstring& join(const std::wstring& a)
+{
+	return a;
+}
+
+template <typename... Args>
+std::string join(const std::string& a, const Args&... left)
+{
+	using namespace internal;
+	return *(a.end()-1) != FileUtil<std::string>::Sep[0] ? a+FileUtil<std::string>::Sep+join(left...) : a+join(left...);
+}
+template <typename... Args>
+std::wstring join(const std::wstring& a, const Args&... left)
+{
+	using namespace internal;
+	return *(a.end()-1) != FileUtil<std::wstring>::Sep[0] ? a+FileUtil<std::wstring>::Sep+join(left...) : a+join(left...);
 }
 
 void enumFiles(const std::string& dir, std::set<std::string>& list, bool recursive=false);
