@@ -57,12 +57,7 @@ TEST(FileUtilTest, JoinTest)
 {
 	using namespace file::internal;
 	ASSERT_EQ(std::string("a")+FileUtil<std::string>::Sep+"b", file::join("a","b"));
-	ASSERT_EQ(std::string("a")+FileUtil<std::string>::Sep+"b", file::join(std::string("a")+FileUtil<std::string>::Sep,"b"));
-#ifdef CHISA_WINDOWS
-	ASSERT_EQ("a\\b", file::join("a\\","b"));
-#else
-	ASSERT_EQ("a\\/b", file::join("a\\","b"));
-#endif
+	ASSERT_EQ(std::string("a")+FileUtil<std::string>::Sep+FileUtil<std::string>::Sep+"b", file::join(std::string("a")+FileUtil<std::string>::Sep,"b"));
 }
 
 }}

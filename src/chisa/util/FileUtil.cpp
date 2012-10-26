@@ -32,10 +32,14 @@ namespace util {
 namespace file {
 
 namespace internal {
-FileUtil<std::string>::string_type FileUtil<std::string>::CurrentDirStr(FileUtil<std::string>::CurrentDir);
-FileUtil<std::string>::string_type FileUtil<std::string>::ParentDirStr(FileUtil<std::string>::ParentDir);
-FileUtil<std::wstring>::string_type FileUtil<std::wstring>::CurrentDirStr(FileUtil<std::wstring>::CurrentDir);
-FileUtil<std::wstring>::string_type FileUtil<std::wstring>::ParentDirStr(FileUtil<std::wstring>::ParentDir);
+const FileUtil<std::string>::string_type FileUtil<std::string>::CurrentDirStr(FileUtil<std::string>::CurrentDir);
+const FileUtil<std::string>::string_type FileUtil<std::string>::ParentDirStr(FileUtil<std::string>::ParentDir);
+const FileUtil<char>::string_type FileUtil<char>::CurrentDirStr(FileUtil<char>::CurrentDir);
+const FileUtil<char>::string_type FileUtil<char>::ParentDirStr(FileUtil<char>::ParentDir);
+const FileUtil<std::wstring>::string_type FileUtil<std::wstring>::CurrentDirStr(FileUtil<std::wstring>::CurrentDir);
+const FileUtil<std::wstring>::string_type FileUtil<std::wstring>::ParentDirStr(FileUtil<std::wstring>::ParentDir);
+const FileUtil<wchar_t>::string_type FileUtil<wchar_t>::CurrentDirStr(FileUtil<wchar_t>::CurrentDir);
+const FileUtil<wchar_t>::string_type FileUtil<wchar_t>::ParentDirStr(FileUtil<wchar_t>::ParentDir);
 }
 
 #if CHISA_WINDOWS
