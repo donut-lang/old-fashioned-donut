@@ -1,5 +1,5 @@
 /**
- * Saccubus
+ * Chisa
  * Copyright (C) 2012 psi
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,24 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SACCUBUS_TESTCOMMON_H_
-#define SACCUBUS_TESTCOMMON_H_
+#pragma once
 
-#include <memory>
-using std::shared_ptr;
-#include <gtest/gtest.h>
-#include <iostream>
-#include "../src/chisa/logging/Exception.h"
-#include "../src/chisa/logging/Logger.h"
-using namespace chisa::logging;
+#define CHISA_WINDOWS (defined(WIN32) || defined(WIN64) || defined(__WIN32__) || defined(__WIN64__))
 
-#define MATERIAL_DIR "__testfiles__"
 
-#define NULL_STREAM (*((std::ostream*)0))
-static Logger log_trace(std::cout, Logger::TRACE_);
-static Logger log_err(std::cout, Logger::ERROR_);
-
-#include <tinyxml2.h>
-std::shared_ptr<tinyxml2::XMLDocument> parse(const std::string& str);
-
-#endif /* SACCUBUS_TESTCOMMON_H_ */
