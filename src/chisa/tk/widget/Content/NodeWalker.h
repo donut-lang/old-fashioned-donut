@@ -34,6 +34,7 @@ public:
 	virtual void walk(Heading* model) = 0;
 	virtual void walk(Text* model) = 0;
 	virtual void walk(Link* link) = 0;
+	virtual void walk(BreakLine* br) = 0;
 };
 
 }}}

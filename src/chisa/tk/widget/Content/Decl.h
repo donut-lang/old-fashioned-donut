@@ -34,5 +34,6 @@ class Paragraph;
 class Text;
 class Link;
 class Heading;
+class BreakLine;
 
 }}}

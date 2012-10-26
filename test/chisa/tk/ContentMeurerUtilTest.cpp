@@ -33,7 +33,7 @@ TEST(ContentMeasurerUtilTest, ShrinkSpaceTest)
 	ASSERT_EQ("あ　 い う", shrinkSpace("あ　	い 		 	う"));
 	ASSERT_EQ(" あ　 い う ", shrinkSpace("   	 	 	あ　	い 		 	う		 	 	"));
 	ASSERT_EQ(" ", shrinkSpace("    "));
-	ASSERT_EQ(" ", shrinkSpace("  \r\n\t  "));
+	ASSERT_EQ(" ", shrinkSpace("  \t  "));
 }
 
 }}}

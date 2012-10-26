@@ -72,6 +72,7 @@ ContentMeasurer::BlockSession::BlockSession(ContentMeasurer& parent, BlockNode* 
 }
 ContentMeasurer::BlockSession::~BlockSession() noexcept
 {
+	this->endLine();
 	this->flushBlock();
 	if(this->lastSession_){
 		this->flushBlock();
@@ -116,7 +117,7 @@ geom::Area ContentMeasurer::BlockSession::extendBlock(const geom::Box& size, Blo
 	return area;
 }
 
-void ContentMeasurer::BlockSession::nextLine()
+void ContentMeasurer::BlockSession::endLine()
 {
 	this->reservedInlineHeight( this->reservedInlineHeight() + this->inlineHeight() );
 	this->consumedWidth( geom::max(this->consumedWidth(), this->reservedBlockWidth() + this->reservedInlineWidth()) );
@@ -132,7 +133,7 @@ geom::Area ContentMeasurer::BlockSession::extendInline(const geom::Box& size)
 	geom::Area area;
 	this->inlineRendered_ = true;
 	if(size.width() > this->calcLeftWidth()){
-		this->nextLine();
+		this->endLine();
 	}
 	if(this->lastDirection() == BlockNode::Direction::Left){
 		area = geom::Area(this->offsetFromTop() + geom::Distance(this->reservedInlineWidth(), this->reservedInlineHeight()),size);
@@ -191,7 +192,7 @@ float ContentMeasurer::calcLeftWidth()
 
 void ContentMeasurer::nextLine()
 {
-	this->nowSession_->nextLine();
+	this->nowSession_->endLine();
 }
 
 
@@ -233,26 +234,28 @@ public:
 	}
 };
 
+void ContentMeasurer::walk(BreakLine* br)
+{
+	//改行するだけ
+	this->nextLine();
+}
+
 void ContentMeasurer::walk(Text* model)
 {
 	gl::StringRenderer renderer;
 	std::vector<std::string> lines;
-	util::splitLine(model->text(), lines);
-	for(const std::string& str_ : lines){
-		std::string str(shrinkSpace(str_));
-		size_t now=0;
-		while(now < str.length()){
-			gl::StringRenderer::Command cmd = renderer.calcMaximumStringLength(str, this->calcLeftWidth(), now);
-			if(!cmd){//そもそも１文字すら入らない
-				this->nextLine();
-				continue;
-			}
-			now += cmd.str().size();
-			//文字分のエリアを確保し、その位置とレンダリングコマンドを記録
-			geom::Area rendered = this->extendInline(cmd.size());
-			this->renderTree_.append(new TextRenderCommand(rendered, cmd));
+	std::string str(shrinkSpace(model->text()));
+	size_t now=0;
+	while(now < str.length()){
+		gl::StringRenderer::Command cmd = renderer.calcMaximumStringLength(str, this->calcLeftWidth(), now);
+		if(!cmd){//そもそも１文字すら入らない
+			this->nextLine();
+			continue;
 		}
-		this->nextLine();
+		now += cmd.str().size();
+		//文字分のエリアを確保し、その位置とレンダリングコマンドを記録
+		geom::Area rendered = this->extendInline(cmd.size());
+		this->renderTree_.append(new TextRenderCommand(rendered, cmd));
 	}
 }
 

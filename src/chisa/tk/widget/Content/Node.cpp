@@ -77,6 +77,10 @@ Heading::Heading(int const level)
 {
 }
 
+BreakLine::BreakLine()
+{
+}
+
 Link::Link()
 {
 	//this->addAttribute("src", )
