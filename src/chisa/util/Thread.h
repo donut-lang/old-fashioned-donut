@@ -16,10 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _CXX_Chisa_THREAD_H_
-#define _CXX_Chisa_THREAD_H_
+#pragma once
+#include "Platform.h"
 
-#if (defined(WIN32) || defined(WIN64) || defined(__WIN32__) || defined(__WIN64__))
+#if CHISA_WINDOWS
 #include <boost/thread.hpp>
 #include <boost/interprocess/detail/atomic.hpp>
 #include <boost/atomic.hpp>
@@ -38,5 +38,3 @@ using boost::atomic;
 #include <mutex>
 #include <atomic>
 #endif
-
-#endif /* INCLUDE_GUARD */

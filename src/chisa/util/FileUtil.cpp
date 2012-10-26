@@ -17,9 +17,90 @@
  */
 
 #include "FileUtil.h"
+#include "../logging/Exception.h"
+#if CHISA_WINDOWS
+#include <Windows.h>
+#else
+#include <dirent.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#endif
 
 namespace chisa {
 namespace util {
 namespace file {
+
+#if CHISA_WINDOWS
+static std::wstring toUTF16(const std::string& str)
+{
+	int size = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), nullptr, 0);
+	wchar_t* buf = new wchar_t[size+1];
+	if(size != MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), buf, size+1)){
+		throw chisa::logging::Exception(__FILE__, __LINE__, "Failed to convert UTF8 to UTF16");
+	}
+	buf[size]=0;
+	std::wstring ret(buf);
+	delete [] buf;
+	return ret;
+}
+static std::string toUTF8(const std::wstring& str)
+{
+	int size = WideCharToMultiByte(CP_UTF8, 0, str.c_str(), str.length(), nullptr, 0, nullptr, nullptr);
+	char* buf = new char[size+1];
+	if(size != WideCharToMultiByte(CP_UTF8, 0, str.c_str(), str.length(), buf, size+1, nullptr, nullptr)){
+		throw chisa::logging::Exception(__FILE__, __LINE__, "Failed to convert UTF8 to UTF16");
+	}
+	buf[size]=0;
+	std::string ret(buf);
+	delete [] buf;
+	return ret;
+}
+static void enumFiles(const std::wstring& dir, std::set<std::string>& list, bool recursive)
+{
+	WIN32_FIND_DATAW findFileData;
+	HANDLE h = FindFirstFileW((dir+SepW+L"*.*").c_str(), &findFileData);
+	if(h == INVALID_HANDLE_VALUE){
+		return;
+	}
+	do{
+		std::wstring name(dir+SepW+findFileData.cFileName);
+		if(findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY){
+			if(CurrentDirW!=findFileData.cFileName && ParentDirW!=findFileData.cFileName && recursive){
+				enumFiles(name, list, recursive);
+			}
+		}else{
+			list.insert(toUTF8(name));
+		}
+	}while(FindNextFileW(h, &findFileData) != 0);
+	FindClose(h);
+}
+void enumFiles(const std::string& dir, std::set<std::string>& list, bool recursive)
+{
+	return enumFiles(toUTF16(dir), list, recursive);
+}
+#else
+void enumFiles(const std::string& dir, std::set<std::string>& list, bool recursive)
+{
+	struct dirent* de;
+	DIR* d = opendir(dir.c_str());
+	while((de = readdir(d)) != nullptr){
+		std::string name = join(dir,Sep,de->d_name);
+		struct stat64 st;
+		if(lstat64(name.c_str(), &st) != 0){
+			throw logging::Exception(__FILE__, __LINE__, "Failed to lstat64.");
+		}
+		if(S_IFDIR & st.st_mode){
+			if(CurrentDir!=de->d_name && ParentDir != de->d_name && recursive){
+				continue;
+			}
+			enumFiles(name, list, recursive);
+		}else{
+			list.insert(name);
+		}
+	}
+	closedir(d);
+}
+#endif
 
 }}}

@@ -18,17 +18,27 @@
 
 #pragma once
 
+#include "Platform.h"
 #include <string>
+#include <set>
 
 namespace chisa {
 namespace util {
 namespace file {
 
-#if defined(__WIN32__) || defined(__WIN64__)
-	static constexpr const char* Sep="\\";
+#if CHISA_WINDOWS
+static constexpr const char* Sep="\\";
+static constexpr const wchar_t* SepW=L"\\";
+const std::string CurrentDir("..");
+const std::string ParentDir(".");
+const std::wstring CurrentDirW(L"..");
+const std::wstring ParentDirW(L".");
 #else
-	static constexpr const char* Sep="/";
+static constexpr const char* Sep="/";
+const std::string CurrentDir("..");
+const std::string ParentDir(".");
 #endif
+
 
 template <typename First, typename... Args>
 constexpr std::string join(const First& elem)
@@ -42,5 +52,6 @@ constexpr std::string join(const First& elem, const Args&... left)
 	return std::string(elem)+Sep+join(left...);
 }
 
+void enumFiles(const std::string& dir, std::set<std::string>& list, bool recursive=false);
 
 }}}
