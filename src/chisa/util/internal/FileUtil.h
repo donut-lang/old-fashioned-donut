@@ -66,6 +66,9 @@ template<> struct FileConstants<wchar_t> { WSTRING_INNER };
 template<> struct FileConstants<char*> { STRING_INNER };
 template<> struct FileConstants<wchar_t*> { WSTRING_INNER };
 
+template<> struct FileConstants<const char*> { STRING_INNER };
+template<> struct FileConstants<const wchar_t*> { WSTRING_INNER };
+
 template<std::size_t N> struct FileConstants<char[N]> { STRING_INNER };
 template<std::size_t N> struct FileConstants<wchar_t [N]> { WSTRING_INNER };
 
