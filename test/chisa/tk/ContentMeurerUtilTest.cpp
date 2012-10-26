@@ -25,7 +25,6 @@ namespace widget {
 
 TEST(ContentMeasurerUtilTest, ShrinkSpaceTest)
 {
-	ASSERT_EQ(" ", shrinkSpace("    "));
 	ASSERT_EQ("あい う", shrinkSpace("あい う"));
 	ASSERT_EQ("あい う", shrinkSpace("あい  う"));
 	ASSERT_EQ("あい う", shrinkSpace("あい                             う"));
@@ -33,6 +32,7 @@ TEST(ContentMeasurerUtilTest, ShrinkSpaceTest)
 	ASSERT_EQ("あい　　　　　う", shrinkSpace("あい　　　　　う"));
 	ASSERT_EQ("あ　 い う", shrinkSpace("あ　	い 		 	う"));
 	ASSERT_EQ(" あ　 い う ", shrinkSpace("   	 	 	あ　	い 		 	う		 	 	"));
+	ASSERT_EQ(" ", shrinkSpace("    "));
 }
 
 }}}
