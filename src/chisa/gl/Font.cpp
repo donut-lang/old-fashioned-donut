@@ -54,6 +54,9 @@ void FontManager::onFree()
 
 Handler<Font> FontManager::queryFont(const std::string& name)
 {
+	if(name.empty()){
+		return this->defaultFont_;
+	}
 	for(auto it = this->unusedFonts_.begin(); it != this->unusedFonts_.end(); ++it){
 		Font* const font = *it;
 		if(font->family() == name){
