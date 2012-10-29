@@ -77,13 +77,19 @@ Font* FontManager::seachFont( const std::string& name )
 	if(name.empty()){
 		return nullptr;
 	}
-	FT_Face face;
+	FT_Face face = nullptr;
+	std::string family;
+	std::string style;
+	Font::analyzeFontName(name, family, style);
 	std::set<std::string> files;
 	util::file::enumFiles(this->fontdir_, files);
 	for(const std::string& fname : files){
-		unsigned int face_idx;
-		while(FT_New_Face(this->freetype_, fname.c_str(), (face_idx++), &face) != 0){
-			if(face->style_name && name == std::string(face->style_name) ){
+		unsigned int face_idx=0;
+		unsigned int face_max = 2;
+		while(FT_New_Face(this->freetype_, fname.c_str(), (face_idx++), &face) == 0 && face_idx < face_max){
+			face_max = face->num_faces;
+			if(face->family_name && family == std::string(face->family_name) &&
+					(!style.empty() && face->style_name) && style==std::string(face->style_name) ){
 				return new Font(*this, face);
 			}
 			FT_Done_Face(face);
