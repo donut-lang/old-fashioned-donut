@@ -61,6 +61,7 @@ void ContentMeasurer::walk(Paragraph* model)
 void ContentMeasurer::walk(Heading* model)
 {
 	BlockSession bs(*this, model);
+	this->renderer_.pushSize(ContentMeasurer::DefaultFontSize*(1.0f+model->level()/2.0f));
 	this->walkChildren(model);
 }
 
