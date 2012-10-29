@@ -38,11 +38,12 @@ public:
 		Italic = 2,
 		ItalicBold = 3
 	};
-	static constexpr float DefaultSize=16.0f;
+	static const float DefaultFontSize;
 public:
 	class Command {
 		DEFINE_MEMBER(private, private, bool, enabled);
 		DEFINE_MEMBER(private, private, bool, vertical);
+		Handler<gl::Font> font_;
 		Style style_;
 		float size_;
 		DEFINE_MEMBER(public, private, std::string, str);
@@ -51,8 +52,8 @@ public:
 		void* operator new(size_t) = delete;
 		void operator delete(void*) = delete;
 	public:
-		Command():enabled_(false),vertical_(false), style_(Style::Regular), size_(DefaultSize),str_(),area_(0,0,0,0){};
-		Command(const Style style, const float size, const std::string& str, const geom::Area& area):enabled_(true),vertical_(false),style_(style), size_(size),str_(str),area_(area){};
+		Command():enabled_(false),vertical_(false), font_(), style_(Style::Regular), size_(DefaultFontSize), str_(),area_(0,0,0,0){};
+		Command(Handler<gl::Font> font, const Style style, const float size, const std::string& str, const geom::Area& area):enabled_(true),vertical_(false), font_(font),style_(style), size_(size),str_(str),area_(area){};
 		Command(const Command& other) = default;
 		Command(Command&& other) = default;
 		Command& operator=(const Command& other) = default;
@@ -73,20 +74,32 @@ public:
 	};
 private:
 	Handler<gl::FontManager> fontManager_;
+	Handler<gl::Font> font_;
+	cairo_font_face_t* face_;
 	cairo_surface_t* nullSurface_;
 	cairo_t* cairo_;
-	Style style_;
-	float size_;
-	void style(Style style);
-	Style style();
-	void size(float size);
-	float size();
+	std::vector<Style> styleStack_;
+	std::vector<float> sizeStack_;
+	std::vector<std::string> fontStack_;
+	void pushStyle(Style style);
+	Style nowStyle() const;
+	void popStyle();
+
+	void pushSize(float size);
+	float nowSize() const;
+	void popSize();
+
+	void pushFont( const std::string& name );
+	std::string nowFont() const;
+	void popFont();
 public:
 	StringRenderer::Command measure(const std::string& strUtf8);
 	StringRenderer::Command calcMaximumStringLength(const std::string& str, const float limit, std::size_t beginInUtf8=0, std::size_t endInUtf8=0);
 public:
 	StringRenderer(Handler<gl::FontManager> fontManager);
 	virtual ~StringRenderer() noexcept;
+private:
+	static void setupCairo(cairo_t* cairo, cairo_font_face_t* face, float size, Style style);
 };
 
 }}

@@ -24,19 +24,23 @@
 #include <cstring>
 #include <unicode/unistr.h>
 #include <unicode/bytestream.h>
+#include <cairo/cairo-ft.h>
 
 namespace chisa {
 namespace gl {
 
+const float StringRenderer::DefaultFontSize=16.0f;
+
 StringRenderer::StringRenderer(Handler<gl::FontManager> fontManager)
 :fontManager_(fontManager)
+,font_()
+,face_(nullptr)
 ,nullSurface_(cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 1, 1))
 ,cairo_(cairo_create(nullSurface_))
-,style_(StringRenderer::Style::Regular)
-,size_(StringRenderer::DefaultSize)
 {
-	this->style(this->style_);
-	this->size(this->size_);
+	this->pushStyle(StringRenderer::Style::Regular);
+	this->pushSize(StringRenderer::DefaultFontSize);
+	this->pushFont("");
 	{
 		cairo_status_t st = cairo_surface_status(this->nullSurface_);
 		if(st != CAIRO_STATUS_SUCCESS){
@@ -51,35 +55,64 @@ StringRenderer::StringRenderer(Handler<gl::FontManager> fontManager)
 	}
 }
 
-void StringRenderer::style(Style style)
+void StringRenderer::pushStyle(Style style)
 {
-	switch(style)
-	{
-	case Regular:
-		break;
-	case Bold:
-		break;
-	case Italic:
-		break;
-	case ItalicBold:
-		break;
+	this->styleStack_.push_back(style);
+}
+
+StringRenderer::Style StringRenderer::nowStyle() const
+{
+	return this->styleStack_.back();
+}
+
+void StringRenderer::popStyle()
+{
+	this->styleStack_.pop_back();
+}
+
+void StringRenderer::pushSize(float size)
+{
+	this->sizeStack_.push_back(size);
+}
+
+float StringRenderer::nowSize() const
+{
+	return this->sizeStack_.back();
+}
+
+void StringRenderer::popSize()
+{
+	this->sizeStack_.pop_back();
+}
+
+void StringRenderer::pushFont( const std::string& name )
+{
+	this->fontStack_.push_back(name);
+	this->font_ = this->fontManager_->queryFont(name);
+	if(this->face_){
+		cairo_font_face_destroy(this->face_);
 	}
-	this->style_ = style;
+	gl::Font::RawFaceSession rfs(this->font_);
+	this->face_ = cairo_ft_font_face_create_for_ft_face(rfs.face(),0);
+
 }
 
-StringRenderer::Style StringRenderer::style()
+std::string StringRenderer::nowFont() const
 {
-	return this->style_;
+	return this->fontStack_.back();
 }
 
-void StringRenderer::size(float size)
+void StringRenderer::popFont()
 {
-	this->size_ = size;
-	cairo_set_font_size(this->cairo_, size);
-}
-float StringRenderer::size()
-{
-	return this->size_;
+	if(!this->face_){
+		throw logging::Exception(__FILE__, __LINE__, "[BUG] Oops. you call \"popFont\" before pushing!");
+	}
+	cairo_font_face_destroy(this->face_);
+	this->fontStack_.pop_back();
+	const std::string name = this->fontStack_.back();
+	this->font_ = this->fontManager_->queryFont(name);
+	gl::Font::RawFaceSession rfs(this->font_);
+	this->face_ = cairo_ft_font_face_create_for_ft_face(rfs.face(),0);
 }
 
 StringRenderer::~StringRenderer() noexcept
@@ -90,40 +123,38 @@ StringRenderer::~StringRenderer() noexcept
 
 StringRenderer::Command StringRenderer::measure(const std::string& strUtf8)
 {
+	StringRenderer::setupCairo(this->cairo_, this->face_, this->nowSize(), this->nowStyle());
 	cairo_text_extents_t ext;
 	cairo_text_extents(this->cairo_, strUtf8.c_str(), &ext);
 	auto offset = geom::Vector(ext.x_bearing, -ext.y_bearing);
 	auto size = geom::Box(ext.x_advance, ext.height+ext.y_advance);
-	return StringRenderer::Command(this->style(), this->size(), strUtf8, geom::Area(offset, size));
+	return StringRenderer::Command(this->font_, this->nowStyle(), this->nowSize(), strUtf8, geom::Area(offset, size));
 }
 
 StringRenderer::Command StringRenderer::calcMaximumStringLength(const std::string& ostr, const float limit, size_t beginInUtf8, size_t endInUtf8)
 {
-	UnicodeString str(UnicodeString::fromUTF8(ostr));
+	UnicodeString str(UnicodeString::fromUTF8(ostr.substr(beginInUtf8, (endInUtf8 == 0 ? static_cast<size_t>(ostr.length()) : endInUtf8)-beginInUtf8)));
 	const size_t len = ostr.length();
 	char* const buf = new char[len+1];
 	CheckedArrayByteSink sink(buf, len+1);
 
-	std::size_t const beg = beginInUtf8;
-	std::size_t const end = endInUtf8 == 0 ? static_cast<size_t>(str.length()) : endInUtf8;
-
 	{ //とりあえず全部で試してみる
 		sink.Reset();
-		str.tempSubStringBetween(beg, end).toUTF8(sink);
+		str.toUTF8(sink);
 		StringRenderer::Command cmdTry = this->measure(buf);
 		if(cmdTry.width() <= limit){
 			return cmdTry;
 		}
 	}
 
-	std::size_t min = beg;
-	std::size_t max = end;
+	int min = 0;
+	int max = str.length();
 	Command cmd;
 
 	while(min+1 < max){
 		std::size_t center = (min+max)/2;
 		sink.Reset();
-		str.tempSubStringBetween(beg, center).toUTF8(sink);
+		str.tempSubStringBetween(0, center).toUTF8(sink);
 		Command cmdTry = this->measure(buf);
 		if(cmdTry.width() <= limit){
 			cmd = cmdTry;
@@ -138,18 +169,20 @@ StringRenderer::Command StringRenderer::calcMaximumStringLength(const std::strin
 
 Handler<gl::RawSprite> StringRenderer::Command::renderString(gl::Canvas& cv) const
 {
-	Handler<gl::RawSprite> spr = cv.queryRawSprite(static_cast<int>(this->area().width()), static_cast<int>(this->area().height()));
+	Handler<gl::RawSprite> spr = cv.queryRawSprite(static_cast<int>(std::ceil(this->area().width())), static_cast<int>(std::ceil(this->area().height())));
 	gl::RawSprite::Session ss(spr);
+	gl::Font::RawFaceSession rfs(this->font_);
 	{
 		cairo_surface_t* surf = cairo_image_surface_create_for_data(ss.data(), CAIRO_FORMAT_ARGB32, ss.width(), ss.height(), ss.stride());
 		cairo_t* cr = cairo_create(surf);
+		cairo_font_face_t* face = cairo_ft_font_face_create_for_ft_face(rfs.face(),0);
 
 		//データは使いまわしているので一旦サーフェイスの中身を削除する
 		cairo_set_source_rgba(cr, 0, 0, 0, 0);
 		cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
 		cairo_paint(cr);
 
-		cairo_set_font_size(cr, this->size_);
+		StringRenderer::setupCairo(cr, face, this->size_, this->style_);
 
 		cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
 		cairo_move_to(cr, this->area().x(), this->area().y());
@@ -158,14 +191,26 @@ Handler<gl::RawSprite> StringRenderer::Command::renderString(gl::Canvas& cv) con
 		}
 
 		cairo_set_source_rgba(cr, 1,1,1,1);
-		cairo_show_text(cr, this->str().c_str());
-		//cairo_text_path(cr, this->str().c_str());
-		//cairo_fill(cr);
-
+		//cairo_show_text(cr, this->str().c_str());
+		cairo_text_path(cr, this->str().c_str());
+		cairo_fill(cr);
+		cairo_font_face_destroy(face);
+		cairo_surface_destroy(surf);
 		cairo_destroy(cr);
 	}
 	return spr;
 }
 
+void StringRenderer::setupCairo(cairo_t* cairo, cairo_font_face_t* face, float size, Style style)
+{
+	cairo_set_font_face(cairo, face);
+	cairo_set_font_size(cairo, size);
+	//FIXME Italic/Bold対応
+	cairo_font_options_t* opt = cairo_font_options_create();
+	cairo_font_options_set_subpixel_order(opt, CAIRO_SUBPIXEL_ORDER_RGB);
+	cairo_font_options_set_antialias(opt, CAIRO_ANTIALIAS_DEFAULT);
+	cairo_set_font_options(cairo, opt);
+	cairo_font_options_destroy(opt);
+}
 
 }}

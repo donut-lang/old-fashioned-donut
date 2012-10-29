@@ -95,8 +95,8 @@ void Canvas::drawSprite(RawSprite* const sprite, const geom::Point& pt, const fl
 	const float right = width/sprite->origWidth();
 	const float bottom = height/sprite->origHeight();
 	glBindTexture(GL_TEXTURE_2D, texId);
-	glColor4f(1.0f,1.0f,1.0f,1.0f);
 	glEnable(GL_TEXTURE_2D);
+	glColor4f(1.0f,1.0f,1.0f,1.0f);
 	glBegin(GL_POLYGON);
 		glTexCoord2f(0,		0);		glVertex3f(pt.x()      , pt.y(), depth);
 		glTexCoord2f(0,		bottom);glVertex3f(pt.x()      , pt.y()+height, depth);
