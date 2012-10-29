@@ -47,14 +47,15 @@ public:
 		Handler<gl::Font> font_;
 		Style style_;
 		float size_;
+		gl::Color color_;
 		DEFINE_MEMBER(public, private, std::string, str);
 		DEFINE_MEMBER(private, private, geom::Area, area);
 	private:
 		void* operator new(size_t) = delete;
 		void operator delete(void*) = delete;
 	public:
-		Command():enabled_(false),vertical_(false), font_(), style_(Style::Regular), size_(DefaultFontSize), str_(),area_(0,0,0,0){};
-		Command(Handler<gl::Font> font, const Style style, const float size, const std::string& str, const geom::Area& area):enabled_(true),vertical_(false), font_(font),style_(style), size_(size),str_(str),area_(area){};
+		Command():enabled_(false),vertical_(false), font_(), style_(Style::Regular), size_(DefaultFontSize), color_(gl::BLACK), str_(),area_(0,0,0,0){};
+		Command(Handler<gl::Font> font, const Style style, const float size, const gl::Color& color, const std::string& str, const geom::Area& area):enabled_(true),vertical_(false), font_(font),style_(style), size_(size), color_(color),str_(str),area_(area){};
 		Command(const Command& other) = default;
 		Command(Command&& other) = default;
 		Command& operator=(const Command& other) = default;
