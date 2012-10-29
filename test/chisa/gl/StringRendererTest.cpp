@@ -59,5 +59,36 @@ TEST_F(StringRendererTest, EmptySpaceTest)
 	ASSERT_FLOAT_EQ(0, cmd.width());
 }
 
+TEST_F(StringRendererTest, StylePushTest)
+{
+	r->pushStyle(StringRenderer::Style::Bold);
+	ASSERT_EQ(StringRenderer::Style::Bold, r->nowStyle());
+	r->pushStyle(StringRenderer::Style::Italic);
+	ASSERT_EQ(StringRenderer::Style::Italic, r->nowStyle());
+	r->popStyle();
+	ASSERT_EQ(StringRenderer::Style::Bold, r->nowStyle());
+}
+
+TEST_F(StringRendererTest, SizePushTest)
+{
+	r->pushSize(12.345);
+	ASSERT_FLOAT_EQ(12.345, r->nowSize());
+	r->pushSize(45.678);
+	ASSERT_FLOAT_EQ(45.678, r->nowSize());
+	r->popSize();
+	ASSERT_FLOAT_EQ(12.345, r->nowSize());
+}
+
+TEST_F(StringRendererTest, FontPushTest)
+{
+	r->pushFont("VL Gothic:regular");
+	ASSERT_EQ("VL Gothic:regular", r->nowFont());
+	r->pushFont("VL Gothic:bold");
+	ASSERT_EQ("VL Gothic:bold", r->nowFont());
+	r->popFont();
+	ASSERT_EQ("VL Gothic:regular", r->nowFont());
+}
+
+
 }}
 
