@@ -70,6 +70,9 @@ void enumFiles(const std::string& dir, std::set<std::string>& list, bool recursi
 	typedef internal::FileConstants<std::string> ftype;
 	struct dirent* de;
 	DIR* d = opendir(dir.c_str());
+	if( !d ){
+		throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to open dir: %s", dir.c_str());
+	}
 	while((de = readdir(d)) != nullptr){
 		std::string name = join(dir, de->d_name);
 		struct stat64 st;

@@ -34,8 +34,9 @@ TEST(ContentMeasurerTest, TextWrapTest)
 )delimiter");
 	NodeReader reader;
 	RenderTree tree;
+	Handler<gl::FontManager> fontManager( new gl::FontManager(log_trace, MATERIAL_DIR"/font") );
 	std::shared_ptr<Document> doc = reader.parseTree(docTree->RootElement());
-	ContentMeasurer(1000, tree).start(doc);
+	ContentMeasurer(log_trace, fontManager, 1000, tree).start(doc);
 	ASSERT_STREQ(typeid(Text).name(), typeid(*(doc->at(0).get())).name());
 	std::shared_ptr<Text> text(std::dynamic_pointer_cast<Text>(doc->at(0)));
 	ASSERT_EQ(1, tree.size());
@@ -43,10 +44,10 @@ TEST(ContentMeasurerTest, TextWrapTest)
 	const RenderCommand& set = *tree.at(0);
 	float const width = set.area().width();
 
-	ContentMeasurer(width/2, tree).start(doc);
+	ContentMeasurer(log_trace, fontManager, width/2, tree).start(doc);
 	ASSERT_LE(2, tree.size());
 
-	ContentMeasurer(width/5, tree).start(doc);
+	ContentMeasurer(log_trace, fontManager, width/5, tree).start(doc);
 	ASSERT_LE(5, tree.size());
 }
 

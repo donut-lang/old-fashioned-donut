@@ -19,6 +19,7 @@
 #include "Button.h"
 #include <tinyxml2.h>
 #include "../../gl/Canvas.h"
+#include "../World.h"
 #include "../../logging/Exception.h"
 
 namespace chisa {
@@ -26,6 +27,7 @@ namespace tk {
 namespace widget {
 
 CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(Button)
+,renderer_(world.lock()->fontManager())
 ,text_()
 ,sprite_()
 ,dirty_(false)

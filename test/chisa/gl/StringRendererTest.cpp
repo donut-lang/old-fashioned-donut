@@ -23,25 +23,38 @@
 namespace chisa {
 namespace gl {
 
-TEST(StringRendererTest, BasicTest)
+class StringRendererTest : public ::testing::Test
 {
-	StringRenderer r;
-	StringRenderer::Command aa = r.measure("a");
-	StringRenderer::Command ab = r.measure("あ");
-	StringRenderer::Command cmd = r.calcMaximumStringLength("aあc", aa.width()+ab.width()+0.0001);
+protected:
+	StringRenderer* r;
+public:
+	void SetUp(){
+		r = new StringRenderer(Handler<gl::FontManager>(new FontManager(log_trace, MATERIAL_DIR"/font")));
+	}
+	void TearDown(){
+		delete r;
+		r = nullptr;
+	}
+};
+
+
+TEST_F(StringRendererTest, BasicTest)
+{
+	StringRenderer::Command aa = r->measure("a");
+	StringRenderer::Command ab = r->measure("あ");
+	StringRenderer::Command cmd = r->calcMaximumStringLength("aあc", aa.width()+ab.width()+0.0001);
 	ASSERT_EQ("aあ", cmd.str());
 	ASSERT_FLOAT_EQ(aa.width()+ab.width(), cmd.width());
 
-	cmd = r.calcMaximumStringLength("aあc", aa.width()+ab.width()-0.0001);
+	cmd = r->calcMaximumStringLength("aあc", aa.width()+ab.width()-0.0001);
 	ASSERT_EQ("a", cmd.str());
 	ASSERT_FLOAT_EQ(aa.width(), cmd.width());
 }
 
-TEST(StringRendererTest, EmptySpaceTest)
+TEST_F(StringRendererTest, EmptySpaceTest)
 {
 
-	StringRenderer r;
-	StringRenderer::Command cmd = r.calcMaximumStringLength("aあc", r.measure("a").width()-0.0001);
+	StringRenderer::Command cmd = r->calcMaximumStringLength("aあc", r->measure("a").width()-0.0001);
 	ASSERT_EQ("", cmd.str());
 	ASSERT_FLOAT_EQ(0, cmd.width());
 }

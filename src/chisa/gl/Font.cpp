@@ -94,7 +94,7 @@ Font* FontManager::seachDefaultFont()
 	std::set<std::string> files;
 	util::file::enumFiles(this->fontdir_, files);
 	for(const std::string& fname : files){
-		if(FT_New_Face(this->freetype_, fname.c_str(), 0, &face) != 0){
+		if(FT_New_Face(this->freetype_, fname.c_str(), 0, &face) == 0){
 			return new Font(*this, face);
 		}else{
 			this->log().e(TAG, "Failed to open font: %s", fname.c_str());
