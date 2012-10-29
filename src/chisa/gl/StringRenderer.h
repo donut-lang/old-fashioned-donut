@@ -77,6 +77,7 @@ private:
 	Handler<gl::Font> font_;
 	cairo_font_face_t* face_;
 	cairo_surface_t* nullSurface_;
+	cairo_font_options_t* nullOption_;
 	cairo_t* cairo_;
 	std::vector<Style> styleStack_;
 	std::vector<float> sizeStack_;
@@ -99,7 +100,7 @@ public:
 	StringRenderer(Handler<gl::FontManager> fontManager);
 	virtual ~StringRenderer() noexcept;
 private:
-	static void setupCairo(cairo_t* cairo, cairo_font_face_t* face, float size, Style style);
+	static void setupCairo(cairo_t* cairo, cairo_font_face_t* face, cairo_font_options_t* opt, float size, Style style);
 };
 
 }}

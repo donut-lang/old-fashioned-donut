@@ -36,6 +36,7 @@ StringRenderer::StringRenderer(Handler<gl::FontManager> fontManager)
 ,font_()
 ,face_(nullptr)
 ,nullSurface_(cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 1, 1))
+,nullOption_(cairo_font_options_create())
 ,cairo_(cairo_create(nullSurface_))
 {
 	this->pushStyle(StringRenderer::Style::Regular);
@@ -117,13 +118,14 @@ void StringRenderer::popFont()
 
 StringRenderer::~StringRenderer() noexcept
 {
+	cairo_font_options_destroy(this->nullOption_);
 	cairo_destroy(this->cairo_);
 	cairo_surface_destroy(this->nullSurface_);
 }
 
 StringRenderer::Command StringRenderer::measure(const std::string& strUtf8)
 {
-	StringRenderer::setupCairo(this->cairo_, this->face_, this->nowSize(), this->nowStyle());
+	StringRenderer::setupCairo(this->cairo_, this->face_, this->nullOption_, this->nowSize(), this->nowStyle());
 	cairo_text_extents_t ext;
 	cairo_text_extents(this->cairo_, strUtf8.c_str(), &ext);
 	auto offset = geom::Vector(ext.x_bearing, -ext.y_bearing);
@@ -176,13 +178,14 @@ Handler<gl::RawSprite> StringRenderer::Command::renderString(gl::Canvas& cv) con
 		cairo_surface_t* surf = cairo_image_surface_create_for_data(ss.data(), CAIRO_FORMAT_ARGB32, ss.width(), ss.height(), ss.stride());
 		cairo_t* cr = cairo_create(surf);
 		cairo_font_face_t* face = cairo_ft_font_face_create_for_ft_face(rfs.face(),0);
+		cairo_font_options_t* opt = cairo_font_options_create();
 
 		//データは使いまわしているので一旦サーフェイスの中身を削除する
 		cairo_set_source_rgba(cr, 0, 0, 0, 0);
 		cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
 		cairo_paint(cr);
 
-		StringRenderer::setupCairo(cr, face, this->size_, this->style_);
+		StringRenderer::setupCairo(cr, face, opt, this->size_, this->style_);
 
 		cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
 		cairo_move_to(cr, this->area().x(), this->area().y());
@@ -194,6 +197,7 @@ Handler<gl::RawSprite> StringRenderer::Command::renderString(gl::Canvas& cv) con
 		//cairo_show_text(cr, this->str().c_str());
 		cairo_text_path(cr, this->str().c_str());
 		cairo_fill(cr);
+		cairo_font_options_destroy(opt);
 		cairo_font_face_destroy(face);
 		cairo_surface_destroy(surf);
 		cairo_destroy(cr);
@@ -201,16 +205,14 @@ Handler<gl::RawSprite> StringRenderer::Command::renderString(gl::Canvas& cv) con
 	return spr;
 }
 
-void StringRenderer::setupCairo(cairo_t* cairo, cairo_font_face_t* face, float size, Style style)
+void StringRenderer::setupCairo(cairo_t* cairo, cairo_font_face_t* face, cairo_font_options_t* opt, float size, Style style)
 {
-	cairo_set_font_face(cairo, face);
-	cairo_set_font_size(cairo, size);
-	//FIXME Italic/Bold対応
-	cairo_font_options_t* opt = cairo_font_options_create();
 	cairo_font_options_set_subpixel_order(opt, CAIRO_SUBPIXEL_ORDER_RGB);
 	cairo_font_options_set_antialias(opt, CAIRO_ANTIALIAS_DEFAULT);
 	cairo_set_font_options(cairo, opt);
-	cairo_font_options_destroy(opt);
+	cairo_set_font_face(cairo, face);
+	cairo_set_font_size(cairo, size);
+	//FIXME Italic/Bold対応
 }
 
 }}
