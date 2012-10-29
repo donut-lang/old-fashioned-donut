@@ -32,7 +32,7 @@ private:
 	gl::StringRenderer renderer_;
 	gl::StringRenderer::Command cmd_;
 	std::string text_;
-	gl::Handler<gl::RawSprite> sprite_;
+	Handler<gl::RawSprite> sprite_;
 	bool dirty_;
 	bool vertical_;
 private:

@@ -67,8 +67,8 @@ public:
 	 * 画像
 	 ******************************************************************************/
 public:
-	gl::Handler<gl::RawSprite> queryImage(const std::string& abs_filename);
-	gl::Handler<gl::RawSprite> queryRawSprite(const int width, const int height);
+	Handler<gl::RawSprite> queryImage(const std::string& abs_filename);
+	Handler<gl::RawSprite> queryRawSprite(const int width, const int height);
 	/******************************************************************************
 	 * タッチイベント
 	 ******************************************************************************/

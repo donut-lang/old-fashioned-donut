@@ -92,8 +92,8 @@ public:
 	 * Universeへの移譲
 	 ******************************************************************************/
 public:
-	gl::Handler<gl::RawSprite> queryImage(const std::string& abs_filename);
-	gl::Handler<gl::RawSprite> queryRawSprite(const int width, const int height);
+	Handler<gl::RawSprite> queryImage(const std::string& abs_filename);
+	Handler<gl::RawSprite> queryRawSprite(const int width, const int height);
 	template <typename... Args>
 	std::string resolveWorldFilepath(const Args&... related_filename) const
 	{

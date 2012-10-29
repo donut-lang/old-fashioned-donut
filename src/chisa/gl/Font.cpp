@@ -25,7 +25,8 @@ namespace gl {
 static std::string TAG("Font");
 
 FontManager::FontManager(logging::Logger& log, const std::string& fontdir)
-:log_(log)
+:refcount_(0)
+,log_(log)
 ,fontdir_(fontdir)
 ,freetype_(nullptr)
 {
@@ -43,6 +44,11 @@ FontManager::~FontManager() noexcept
 	this->defaultFont_.reset();
 	FT_Done_FreeType(this->freetype_);
 	this->freetype_ = nullptr;
+}
+
+void FontManager::onFree()
+{
+	delete this;
 }
 
 Handler<Font> FontManager::queryFont(const std::string& name)

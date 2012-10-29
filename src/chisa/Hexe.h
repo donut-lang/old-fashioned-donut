@@ -38,6 +38,7 @@ public:
 	{
 		return util::file::join(this->basepath(), path...);
 	}
+
 public:
 	virtual void registerWidgets(tk::widget::WidgetFactory& factory){};
 	virtual void registerLayouts(tk::layout::LayoutFactory& factory){};

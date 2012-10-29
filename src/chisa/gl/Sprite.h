@@ -17,7 +17,7 @@
  */
 #pragma once
 #include "../util/ClassUtil.h"
-#include "Handler.h"
+#include "../Handler.h"
 #include "../geom/Decl.h"
 #include "../util/Thread.h"
 
@@ -28,7 +28,7 @@ class RawSprite;
 
 class Sprite {
 	DISABLE_COPY_AND_ASSIGN(Sprite);
-	template <typename T> friend class gl::Handler;
+	template <typename T> friend class chisa::Handler;
 	friend class Canvas;
 private:
 	int refcount_;

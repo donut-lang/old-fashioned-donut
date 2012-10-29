@@ -46,13 +46,13 @@ public:
 	public:
 		Lock(NesGeist& parent);
 		virtual ~Lock();
-		inline chisa::gl::Handler<chisa::gl::RawSprite> getSprite() { return parent_.spr_; };
+		inline chisa::Handler<chisa::gl::RawSprite> getSprite() { return parent_.spr_; };
 	};
 private:
 	VirtualMachine* machine_;
 	std::thread* runner_t_;
 	Runner* runner_;
-	chisa::gl::Handler<chisa::gl::RawSprite> spr_;
+	chisa::Handler<chisa::gl::RawSprite> spr_;
 	std::mutex spr_mutex_;
 	std::mutex frame_mutex_;
 	float time_ms_;

@@ -135,9 +135,9 @@ StringRenderer::Command StringRenderer::calcMaximumStringLength(const std::strin
 	return cmd;
 }
 
-gl::Handler<gl::RawSprite> StringRenderer::Command::renderString(gl::Canvas& cv) const
+Handler<gl::RawSprite> StringRenderer::Command::renderString(gl::Canvas& cv) const
 {
-	gl::Handler<gl::RawSprite> spr = cv.queryRawSprite(static_cast<int>(this->area().width()), static_cast<int>(this->area().height()));
+	Handler<gl::RawSprite> spr = cv.queryRawSprite(static_cast<int>(this->area().width()), static_cast<int>(this->area().height()));
 	gl::RawSprite::Session ss(spr);
 	{
 		cairo_surface_t* surf = cairo_image_surface_create_for_data(ss.data(), CAIRO_FORMAT_ARGB32, ss.width(), ss.height(), ss.stride());

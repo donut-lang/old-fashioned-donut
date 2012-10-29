@@ -19,7 +19,7 @@
 #pragma once
 #include <string>
 #include <deque>
-#include "Handler.h"
+#include "../Handler.h"
 #include "../util/ClassUtil.h"
 #include "../logging/Logger.h"
 
@@ -57,9 +57,9 @@ public:
 		DISABLE_COPY_AND_ASSIGN(RawFaceSession);
 		STACK_OBJECT(RawFaceSession);
 	private:
-		gl::Handler<Font> parent_;
+		Handler<Font> parent_;
 	public:
-		RawFaceSession(gl::Handler<Font> font):parent_(font){
+		RawFaceSession(Handler<Font> font):parent_(font){
 			if(this->parent_->locked()){
 				throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to lock Font.");
 			}
@@ -75,13 +75,14 @@ public:
 class FontManager {
 	friend class Font;
 	DISABLE_COPY_AND_ASSIGN(FontManager);
+	HANDLER_KLASS_NORMAL;
 	DEFINE_MEMBER_REF(private, logging::Logger, log);
 	DEFINE_MEMBER_CONST(protected, std::string, fontdir);
 private:
 	static constexpr std::size_t MaxUnusedFonts = 100;
 	FT_Library freetype_;
 	std::deque<Font*> unusedFonts_;
-	gl::Handler<Font> defaultFont_;
+	Handler<Font> defaultFont_;
 public:
 	FontManager(logging::Logger& log, const std::string& fontdir);
 	~FontManager() noexcept;
