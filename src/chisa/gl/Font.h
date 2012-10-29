@@ -53,6 +53,8 @@ public:
 	std::string family() const noexcept;
 	std::string style() const noexcept;
 public:
+	static void analyzeFontName(const std::string& name, std::string& family, std::string& style) noexcept;
+public:
 	class RawFaceSession {
 		DISABLE_COPY_AND_ASSIGN(RawFaceSession);
 		STACK_OBJECT(RawFaceSession);

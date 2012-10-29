@@ -18,6 +18,7 @@
 
 #include "Font.h"
 #include "../util/FileUtil.h"
+#include "../util/StringUtil.h"
 
 namespace chisa {
 namespace gl {
@@ -152,5 +153,17 @@ std::string Font::style() const noexcept
 	}
 }
 
+void Font::analyzeFontName(const std::string& name, std::string& family, std::string& style) noexcept
+{
+	std::string::size_type const idx = name.find(':');
+	if(idx == std::string::npos){
+		family=name;
+		style="";
+	}else{
+		family = name.substr(0, idx);
+		std::string::size_type const last = name.find(':', idx+1);
+		style = name.substr(idx+1, last-idx-1);
+	}
+}
 
 }}
