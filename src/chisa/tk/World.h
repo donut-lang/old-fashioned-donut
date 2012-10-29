@@ -94,6 +94,7 @@ public:
 public:
 	Handler<gl::RawSprite> queryImage(const std::string& abs_filename);
 	Handler<gl::RawSprite> queryRawSprite(const int width, const int height);
+	Handler<gl::FontManager> fontManager() const;
 	template <typename... Args>
 	std::string resolveWorldFilepath(const Args&... related_filename) const
 	{

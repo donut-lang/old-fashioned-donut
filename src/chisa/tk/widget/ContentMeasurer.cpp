@@ -26,10 +26,12 @@ namespace chisa {
 namespace tk {
 namespace widget {
 
-ContentMeasurer::ContentMeasurer(float const width, RenderTree& tree) noexcept
-:widgetWidth_(width)
+ContentMeasurer::ContentMeasurer(logging::Logger& log, Handler<gl::FontManager> fontManager, float const width, RenderTree& tree) noexcept
+:log_(log)
+,widgetWidth_(width)
 ,nowSession_(nullptr)
 ,renderTree_(tree)
+,renderer_(fontManager)
 {
 	this->renderTree_.reset();
 }
@@ -242,12 +244,11 @@ void ContentMeasurer::walk(BreakLine* br)
 
 void ContentMeasurer::walk(Text* model)
 {
-	gl::StringRenderer renderer;
 	std::vector<std::string> lines;
 	std::string str(shrinkSpace(model->text()));
 	size_t now=0;
 	while(now < str.length()){
-		gl::StringRenderer::Command cmd = renderer.calcMaximumStringLength(str, this->calcLeftWidth(), now);
+		gl::StringRenderer::Command cmd = this->renderer_.calcMaximumStringLength(str, this->calcLeftWidth(), now);
 		if(!cmd){//そもそも１文字すら入らない
 			this->nextLine();
 			continue;

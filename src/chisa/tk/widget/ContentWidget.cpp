@@ -20,6 +20,7 @@
 #include "ContentWidgetImpl.h"
 #include "../../geom/Area.h"
 #include "../../geom/Vector.h"
+#include "../../tk/World.h"
 #include "Content/NodeReader.h"
 #include <tinyxml2.h>
 
@@ -32,6 +33,7 @@ static std::string const TAG("ContentWidget");
 CHISA_WIDGET_SUBKLASS_CONSTRUCTOR_DEF(ContentWidget)
 ,lastWidth_(NAN)
 ,renderTree_(new RenderTree())
+,fontManager_(world.lock()->fontManager())
 {
 	tinyxml2::XMLElement* docElem = element->FirstChildElement("doc");
 	this->rootNode(NodeReader().parseTree(docElem));
@@ -64,7 +66,7 @@ geom::Box ContentWidget::measure(const geom::Box& constraintSize)
 {
 	if(geom::isUnspecified(this->lastWidth()) || std::fabs(constraintSize.width()-this->lastWidth()) >= geom::VerySmall){
 		this->lastWidth(constraintSize.width());
-		this->lastSize(ContentMeasurer(constraintSize.width(), *this->renderTree()).start(this->rootNode()));
+		this->lastSize(ContentMeasurer(log(), fontManager(), constraintSize.width(), *this->renderTree()).start(this->rootNode()));
 	}
 	return geom::Box(geom::max(constraintSize.width(), this->lastSize().width()), this->lastSize().height());
 }

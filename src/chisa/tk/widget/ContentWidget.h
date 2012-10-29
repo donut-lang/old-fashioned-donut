@@ -21,6 +21,8 @@
 #include "Content/Decl.h"
 #include "Content/NodeWalker.h"
 #include "../../geom/Vector.h"
+#include "../../gl/Font.h"
+#include "../../Handler.h"
 
 namespace chisa {
 namespace tk {
@@ -34,6 +36,7 @@ class ContentWidget: public chisa::tk::Widget {
 	DEFINE_MEMBER(private, private, float, lastWidth);
 	DEFINE_MEMBER(private, private, geom::Box, lastSize);
 	DEFINE_MEMBER(private, private, RenderTree*, renderTree);
+	DEFINE_MEMBER(private, private, Handler<gl::FontManager>, fontManager);
 public:
 	virtual void render(gl::Canvas& cv, const geom::Area& area) override;
 	virtual void idle(const float delta_ms) override;

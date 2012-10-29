@@ -19,6 +19,7 @@
 #pragma once
 #include "../logging/Logger.h"
 #include "../gl/Canvas.h"
+#include "../gl/Font.h"
 #include "../geom/Area.h"
 #include "../geom/Vector.h"
 #include "../Hexe.h"
@@ -41,6 +42,7 @@ private:
 	DEFINE_MEMBER(public, private, geom::Area, area);
 	weak_ptr<Universe> self_;
 	gl::Canvas canvas_;
+	Handler<gl::FontManager> fontManager_;
 public:
 	void render();
 	void idle(const float delta_ms);
@@ -69,6 +71,7 @@ public:
 public:
 	Handler<gl::RawSprite> queryImage(const std::string& abs_filename);
 	Handler<gl::RawSprite> queryRawSprite(const int width, const int height);
+	Handler<gl::FontManager> fontManager() const { return this->fontManager_; };
 	/******************************************************************************
 	 * タッチイベント
 	 ******************************************************************************/

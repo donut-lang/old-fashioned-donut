@@ -81,6 +81,8 @@ protected:
 };
 
 class ContentMeasurer : public NodeWalker {
+	DISABLE_COPY_AND_ASSIGN(ContentMeasurer);
+	DEFINE_MEMBER_REF(private, logging::Logger, log);
 public:
 	class BlockSession {
 	private:
@@ -118,13 +120,15 @@ private:
 	BlockSession* nowSession_;
 	RenderTree& renderTree_;
 private:
+	gl::StringRenderer renderer_;
+private:
 	geom::Area extendBlock(const geom::Box& size, BlockNode::Direction dir=BlockNode::Direction::None);
 	geom::Area extendInline(const geom::Box& size);
 	float calcLeftWidth();
 	void nextLine();
 	void flushBlock();
 public:
-	ContentMeasurer(float const width, RenderTree& tree) noexcept;
+	ContentMeasurer(logging::Logger& log, Handler<gl::FontManager> fontManager, float const width, RenderTree& tree) noexcept;
 	geom::Box start(std::shared_ptr<Document> doc);
 	virtual ~ContentMeasurer() noexcept (true) = default;
 	virtual void walk(Document* model) override;

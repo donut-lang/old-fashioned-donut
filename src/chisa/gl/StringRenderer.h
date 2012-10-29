@@ -23,6 +23,8 @@
 #include <tuple>
 #include "RawSprite.h"
 #include "../geom/Area.h"
+#include "../Handler.h"
+#include "Font.h"
 #include "../util/ClassUtil.h"
 
 namespace chisa {
@@ -70,6 +72,7 @@ public:
 		Handler<gl::RawSprite> renderString(gl::Canvas& cv) const;
 	};
 private:
+	Handler<gl::FontManager> fontManager_;
 	cairo_surface_t* nullSurface_;
 	cairo_t* cairo_;
 	Style style_;
@@ -82,8 +85,8 @@ public:
 	StringRenderer::Command measure(const std::string& strUtf8);
 	StringRenderer::Command calcMaximumStringLength(const std::string& str, const float limit, std::size_t beginInUtf8=0, std::size_t endInUtf8=0);
 public:
-	StringRenderer();
-	virtual ~StringRenderer();
+	StringRenderer(Handler<gl::FontManager> fontManager);
+	virtual ~StringRenderer() noexcept;
 };
 
 }}

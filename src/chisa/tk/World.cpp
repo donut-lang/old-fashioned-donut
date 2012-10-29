@@ -181,14 +181,30 @@ Widget* World::createWidget(const string& klass, tinyxml2::XMLElement* elem)
 
 Handler<gl::RawSprite> World::queryImage(const string& abs_filename)
 {
-	return this->universe_.lock()->queryImage(abs_filename);
+	if(std::shared_ptr<Universe> uni = this->universe_.lock()){
+		return uni->queryImage(abs_filename);
+	}else{
+		return Handler<gl::RawSprite>();
+	}
 }
 
 Handler<gl::RawSprite> World::queryRawSprite(const int width, const int height)
 {
-	return this->universe_.lock()->queryRawSprite(width, height);
+	if(std::shared_ptr<Universe> uni = this->universe_.lock()){
+		return uni->queryRawSprite(width, height);
+	}else{
+		return Handler<gl::RawSprite>();
+	}
 }
 
+Handler<gl::FontManager> World::fontManager() const
+{
+	if(std::shared_ptr<Universe> uni = this->universe_.lock()){
+		return uni->fontManager();
+	}else{
+		return Handler<gl::FontManager>();
+	}
+}
 
 void World::onTouchDown(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint)
 {

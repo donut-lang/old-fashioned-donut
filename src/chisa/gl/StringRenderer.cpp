@@ -28,8 +28,9 @@
 namespace chisa {
 namespace gl {
 
-StringRenderer::StringRenderer()
-:nullSurface_(cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 1, 1))
+StringRenderer::StringRenderer(Handler<gl::FontManager> fontManager)
+:fontManager_(fontManager)
+,nullSurface_(cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 1, 1))
 ,cairo_(cairo_create(nullSurface_))
 ,style_(StringRenderer::Style::Regular)
 ,size_(StringRenderer::DefaultSize)
@@ -81,7 +82,7 @@ float StringRenderer::size()
 	return this->size_;
 }
 
-StringRenderer::~StringRenderer()
+StringRenderer::~StringRenderer() noexcept
 {
 	cairo_destroy(this->cairo_);
 	cairo_surface_destroy(this->nullSurface_);
