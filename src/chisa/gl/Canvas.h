@@ -38,7 +38,8 @@ namespace gl {
 
 class Canvas {
 	DISABLE_COPY_AND_ASSIGN(Canvas);
-	DEFINE_MEMBER_REF(private, logging::Logger, log)
+	DEFINE_MEMBER_REF(private, logging::Logger, log);
+private:
 	float width_;
 	float height_;
 private:

@@ -177,5 +177,20 @@ void swap(Handler<T>& a, Handler<T>& b) noexcept
 	a.swap(b);
 }
 
+#define HANDLER_KLASS_NORMAL\
+	template <typename T> friend class gl::Handler;\
+private:\
+	int refcount_;\
+private: /* from Handler */\
+	void incref(){ this->refcount_++; }\
+	void decref(){\
+		this->refcount_--;\
+		if(this->refcount_ < 0){\
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] Handler refcount = %d < 0", this->refcount_);\
+		}else if(this->refcount_ == 0){\
+			this->onFree(); }\
+	}\
+	void onFree();
+
 }}
 
