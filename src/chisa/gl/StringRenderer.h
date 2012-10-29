@@ -82,6 +82,7 @@ private:
 	std::vector<Style> styleStack_;
 	std::vector<float> sizeStack_;
 	std::vector<std::string> fontStack_;
+public:
 	void pushStyle(Style style);
 	Style nowStyle() const;
 	void popStyle();
