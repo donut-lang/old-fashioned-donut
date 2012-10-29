@@ -33,6 +33,7 @@ class Document;
 class Paragraph;
 class Text;
 class Link;
+class Font;
 class Heading;
 class BreakLine;
 

@@ -18,6 +18,7 @@
 
 #pragma once
 #include "../util/ClassUtil.h"
+#include <cmath>
 
 namespace chisa {
 namespace gl {
@@ -41,8 +42,16 @@ public:
 	constexpr Color multAlpha(const float alpha) const noexcept{
 		return Color(red_,green_, blue_, alpha_*alpha);
 	}
+	constexpr bool isUnchangedColor() const noexcept{
+		return
+				std::isnan(red_) ||
+				std::isnan(blue_) ||
+				std::isnan(green_) ||
+				std::isnan(alpha_);
+	}
 };
 
+constexpr Color UNCHANGED_COLOR(NAN, NAN, NAN, NAN);
 constexpr Color WHITE(1,1,1,1);
 constexpr Color BLACK(0,0,0,1);
 constexpr Color RED(1,0,0,1);
