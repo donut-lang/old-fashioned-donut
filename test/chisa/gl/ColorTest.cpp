@@ -50,6 +50,14 @@ TEST(ColorTest, AlphaMultiplyTest)
 	ASSERT_FALSE(c2.isUnchangedColor());
 }
 
+TEST(ColorTest, EqualityTest)
+{
+	ASSERT_TRUE(RED != BLUE);
+	ASSERT_FALSE(RED == BLUE);
+	ASSERT_TRUE(RED == RED);
+	ASSERT_FALSE(RED != RED);
+}
+
 TEST(ColorTest, UnchangedColorTest)
 {
 	ASSERT_TRUE(UNCHANGED_COLOR.isUnchangedColor());
@@ -128,7 +136,6 @@ TEST(ColorTest, StringNameParsingTest)
 	ASSERT_FLOAT_EQ(1.0f, c.red());
 	ASSERT_FLOAT_EQ(0.0f, c.green());
 	ASSERT_FLOAT_EQ(0.0f, c.blue());
-
 }
 
 }}

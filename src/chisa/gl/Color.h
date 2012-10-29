@@ -40,6 +40,8 @@ public:
 	Color& operator=(const Color& other) = default;
 	Color& operator=(Color&& other) = default;
 	~Color() noexcept = default;
+private:
+	static constexpr float DELTA = 1.0f/255.0f;
 public:
 	constexpr Color multAlpha(const float alpha) const noexcept{
 		return Color(red_,green_, blue_, alpha_*alpha);
@@ -50,6 +52,18 @@ public:
 				std::isnan(blue_) ||
 				std::isnan(green_) ||
 				std::isnan(alpha_);
+	}
+	constexpr bool operator==(const Color& o) const noexcept{
+		return std::fabs(this->red_ - o.red_) < DELTA &&
+				std::fabs(this->blue_ - o.blue_) < DELTA &&
+				std::fabs(this->green_ - o.green_) < DELTA &&
+				std::fabs(this->alpha_ - o.alpha_) < DELTA;
+	}
+	constexpr bool operator!=(const Color& o) const noexcept{
+		return std::fabs(this->red_ - o.red_) >= DELTA ||
+				std::fabs(this->blue_ - o.blue_) >= DELTA ||
+				std::fabs(this->green_ - o.green_) >= DELTA ||
+				std::fabs(this->alpha_ - o.alpha_) >= DELTA;
 	}
 };
 

@@ -71,9 +71,20 @@ void ContentMeasurer::walk(Link* model)
 	this->walkChildren(model);
 }
 
-void ContentMeasurer::walk(Font* model)
+void ContentMeasurer::walk(Font* font)
 {
-	this->walkChildren(model);
+	if(!font->color().isUnchangedColor()){
+
+	}
+	if(font->size() > 0){
+		this->renderer_.pushSize(font->size());
+	}
+	this->walkChildren(font);
+	if(!font->color().isUnchangedColor()){
+	}
+	if(font->size() > 0){
+		this->renderer_.popSize();
+	}
 }
 
 class TextRenderCommand : public RenderCommand
