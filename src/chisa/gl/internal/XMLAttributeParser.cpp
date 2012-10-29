@@ -37,17 +37,6 @@ float __atof(const std::string& str, bool& failed)
 	return (val & 0xff)/255.0f;
 }
 
-static const std::pair<std::string, gl::Color> gColorTable[] = {
-		std::pair<std::string, gl::Color>("unchanged", UNCHANGED_COLOR),
-		std::pair<std::string, gl::Color>("white", WHITE),
-		std::pair<std::string, gl::Color>("black", BLACK),
-		std::pair<std::string, gl::Color>("red", RED),
-		std::pair<std::string, gl::Color>("blue", BLUE),
-		std::pair<std::string, gl::Color>("green", GREEN),
-		std::pair<std::string, gl::Color>("gray", GRAY)
-};
-
-
 template <>
 void parseAttr<Color>(const std::string& name, Color& v, const Color& def, tinyxml2::XMLElement* elm)
 {
@@ -57,7 +46,7 @@ void parseAttr<Color>(const std::string& name, Color& v, const Color& def, tinyx
 		return;
 	}
 	if( cv[0] != '#' ){
-		for(auto tbl : gColorTable){
+		for(auto tbl : kColorTable){
 			if(tbl.first == cv){
 				v = tbl.second;
 				break;
