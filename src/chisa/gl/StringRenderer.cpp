@@ -209,6 +209,12 @@ void StringRenderer::setupCairo(cairo_t* cairo, cairo_font_face_t* face, cairo_f
 {
 	cairo_font_options_set_subpixel_order(opt, CAIRO_SUBPIXEL_ORDER_RGB);
 	cairo_font_options_set_antialias(opt, CAIRO_ANTIALIAS_DEFAULT);
+	cairo_font_options_set_hint_metrics(opt, CAIRO_HINT_METRICS_ON);
+	cairo_font_options_set_hint_style(opt, CAIRO_HINT_STYLE_MEDIUM);
+//	cairo_font_options_set_subpixel_order(opt, CAIRO_SUBPIXEL_ORDER_DEFAULT);
+//	cairo_font_options_set_antialias(opt, CAIRO_ANTIALIAS_NONE);
+//	cairo_font_options_set_hint_metrics(opt, CAIRO_HINT_METRICS_OFF);
+//	cairo_font_options_set_hint_style(opt, CAIRO_HINT_STYLE_NONE);
 	cairo_set_font_options(cairo, opt);
 	cairo_set_font_face(cairo, face);
 	cairo_set_font_size(cairo, size);
