@@ -19,6 +19,8 @@
 #pragma once
 #include "../util/ClassUtil.h"
 #include <cmath>
+#include <utility>
+#include <string>
 
 namespace chisa {
 namespace gl {
@@ -58,4 +60,14 @@ constexpr Color RED(1,0,0,1);
 constexpr Color BLUE(0,0,1,1);
 constexpr Color GREEN(0,1,0,1);
 constexpr Color GRAY(.5,.5,.5,1);
+
+const std::pair<std::string, gl::Color> kColorTable[] = {
+		std::pair<std::string, gl::Color>("unchanged", UNCHANGED_COLOR),
+		std::pair<std::string, gl::Color>("white", WHITE),
+		std::pair<std::string, gl::Color>("black", BLACK),
+		std::pair<std::string, gl::Color>("red", RED),
+		std::pair<std::string, gl::Color>("blue", BLUE),
+		std::pair<std::string, gl::Color>("green", GREEN),
+		std::pair<std::string, gl::Color>("gray", GRAY)
+};
 }}
