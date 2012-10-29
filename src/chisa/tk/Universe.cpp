@@ -29,7 +29,7 @@ Universe::Universe(logging::Logger& log, Hexe* hexe)
 :log_(log)
 ,hexe_(hexe)
 ,canvas_(log)
-,fontManager_( new gl::FontManager(log, hexe->resolveFilepath("__fonts__")) )
+,fontManager_( new gl::FontManager(log, hexe->resolveFilepath("__font__")) )
 {
 }
 Universe::~Universe() {
