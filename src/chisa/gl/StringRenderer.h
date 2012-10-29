@@ -67,7 +67,7 @@ public:
 		~Command () noexcept = default;
 		explicit operator bool () const noexcept { return this->enabled(); };
 	public:
-		gl::Handler<gl::RawSprite> renderString(gl::Canvas& cv) const;
+		Handler<gl::RawSprite> renderString(gl::Canvas& cv) const;
 	};
 private:
 	cairo_surface_t* nullSurface_;

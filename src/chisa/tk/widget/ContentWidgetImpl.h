@@ -58,7 +58,7 @@ public:
 
 class RenderCommand {
 	DISABLE_COPY_AND_ASSIGN(RenderCommand);
-	DEFINE_MEMBER(public, private, gl::Handler<gl::RawSprite>, sprite);
+	DEFINE_MEMBER(public, private, Handler<gl::RawSprite>, sprite);
 	DEFINE_MEMBER(public, private, geom::Area, area);
 private:
 	RenderCommand() noexcept = delete;
@@ -67,7 +67,7 @@ public:
 	virtual ~RenderCommand() noexcept = default;
 public:
 	bool hasSprite() const noexcept { return this->sprite().operator bool(); };
-	gl::Handler<gl::RawSprite> realize(gl::Canvas& cv) {
+	Handler<gl::RawSprite> realize(gl::Canvas& cv) {
 		if(!this->sprite()){
 			this->sprite(this->realizeImpl(cv));
 		}
@@ -77,7 +77,7 @@ public:
 		this->sprite().reset();
 	}
 protected:
-	virtual gl::Handler<gl::RawSprite> realizeImpl(gl::Canvas& cv) = 0;
+	virtual Handler<gl::RawSprite> realizeImpl(gl::Canvas& cv) = 0;
 };
 
 class ContentMeasurer : public NodeWalker {

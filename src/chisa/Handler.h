@@ -19,10 +19,9 @@
 #pragma once
 #include <utility>
 #include <typeinfo>
-#include "../logging/Exception.h"
+#include "logging/Exception.h"
 
 namespace chisa {
-namespace gl {
 
 template<class S>
 class Handler
@@ -178,7 +177,7 @@ void swap(Handler<T>& a, Handler<T>& b) noexcept
 }
 
 #define HANDLER_KLASS_NORMAL\
-	template <typename T> friend class gl::Handler;\
+	template <typename T> friend class chisa::Handler;\
 private:\
 	int refcount_;\
 private: /* from Handler */\
@@ -192,5 +191,5 @@ private: /* from Handler */\
 	}\
 	void onFree();
 
-}}
+}
 

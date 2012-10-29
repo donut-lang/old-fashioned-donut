@@ -228,7 +228,7 @@ public:
 	:RenderCommand(area),cmd_(cmd){};
 	virtual ~TextRenderCommand() noexcept = default;
 public:
-	virtual gl::Handler<gl::RawSprite> realizeImpl(gl::Canvas& cv) override
+	virtual Handler<gl::RawSprite> realizeImpl(gl::Canvas& cv) override
 	{
 		return this->cmd_.renderString(cv);
 	}

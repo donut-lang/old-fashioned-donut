@@ -25,7 +25,7 @@
 #include "../util/ClassUtil.h"
 #include "../geom/Decl.h"
 #include "Color.h"
-#include "Handler.h"
+#include "../Handler.h"
 #include "Sprite.h"
 #include "RawSprite.h"
 
