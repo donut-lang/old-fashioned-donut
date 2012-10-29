@@ -138,6 +138,7 @@ public:
 	virtual void walk(Heading* model) override;
 	virtual void walk(Link* model) override;
 	virtual void walk(Text* model) override;
+	virtual void walk(Font* font) override;
 	virtual void walk(BreakLine* br) override;
 };
 

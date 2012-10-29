@@ -25,6 +25,7 @@
 #include "../../../util/XMLUtil.h"
 #include "../../../geom/Area.h"
 #include "../../../gl/StringRenderer.h"
+#include "../../../gl/Color.h"
 #include "Decl.h"
 #include "NodeWalker.h"
 
@@ -155,6 +156,15 @@ class Link : public InlineNode {
 	NODE_SUBKLASS_LEAF(Link);
 public:
 	Link();
+};
+
+class Font : public InlineNode {
+	NODE_SUBKLASS_LEAF(Font);
+private:
+	DEFINE_MEMBER(public, private, gl::Color, color);
+	DEFINE_MEMBER(public, private, float, size);
+public:
+	Font();
 };
 
 class Text : public Node {

@@ -86,6 +86,15 @@ Link::Link()
 	//this->addAttribute("src", )
 }
 
+Font::Font()
+:size_(geom::Unspecified)
+{
+	this->color(gl::UNCHANGED_COLOR);
+	this->addAttribute("color", this->color_);
+	this->size(-1);
+	this->addAttribute("size", this->size_);
+}
+
 Text::Text(std::string text)
 :text_(text)
 {
