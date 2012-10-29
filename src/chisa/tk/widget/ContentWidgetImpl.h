@@ -83,6 +83,8 @@ protected:
 class ContentMeasurer : public NodeWalker {
 	DISABLE_COPY_AND_ASSIGN(ContentMeasurer);
 	DEFINE_MEMBER_REF(private, logging::Logger, log);
+private:
+	static const float DefaultFontSize;
 public:
 	class BlockSession {
 	private:
