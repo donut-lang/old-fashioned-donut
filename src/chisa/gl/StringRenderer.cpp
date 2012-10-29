@@ -18,7 +18,8 @@
 
 #include "StringRenderer.h"
 #include "../geom/Vector.h"
-#include "../gl/Canvas.h"
+#include "Canvas.h"
+#include "CairoUtil.h"
 #include "../logging/Exception.h"
 #include <cfloat>
 #include <cstring>
@@ -42,6 +43,7 @@ StringRenderer::StringRenderer(Handler<gl::FontManager> fontManager)
 	this->pushStyle(StringRenderer::Style::Regular);
 	this->pushSize(StringRenderer::DefaultFontSize);
 	this->pushFont("");
+	this->pushColor(gl::BLACK);
 	{
 		cairo_status_t st = cairo_surface_status(this->nullSurface_);
 		if(st != CAIRO_STATUS_SUCCESS){
@@ -144,7 +146,7 @@ StringRenderer::Command StringRenderer::measure(const std::string& strUtf8)
 	cairo_text_extents(this->cairo_, strUtf8.c_str(), &ext);
 	auto offset = geom::Vector(ext.x_bearing, -ext.y_bearing);
 	auto size = geom::Box(ext.x_advance, ext.height+ext.y_advance);
-	return StringRenderer::Command(this->font_, this->nowStyle(), this->nowSize(), strUtf8, geom::Area(offset, size));
+	return StringRenderer::Command(this->font_, this->nowStyle(), this->nowSize(), this->nowColor(), strUtf8, geom::Area(offset, size));
 }
 
 StringRenderer::Command StringRenderer::calcMaximumStringLength(const std::string& ostr, const float limit, size_t beginInUtf8, size_t endInUtf8)
@@ -207,7 +209,7 @@ Handler<gl::RawSprite> StringRenderer::Command::renderString(gl::Canvas& cv) con
 			cairo_rotate(cr, 90.0f);
 		}
 
-		cairo_set_source_rgba(cr, 1,1,1,1);
+		cairo::setColor(cr, this->color_);
 		//cairo_show_text(cr, this->str().c_str());
 		cairo_text_path(cr, this->str().c_str());
 		cairo_fill(cr);

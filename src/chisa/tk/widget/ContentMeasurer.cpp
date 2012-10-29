@@ -74,13 +74,14 @@ void ContentMeasurer::walk(Link* model)
 void ContentMeasurer::walk(Font* font)
 {
 	if(!font->color().isUnchangedColor()){
-
+		this->renderer_.pushColor(font->color());
 	}
 	if(font->size() > 0){
 		this->renderer_.pushSize(font->size());
 	}
 	this->walkChildren(font);
 	if(!font->color().isUnchangedColor()){
+		this->renderer_.popColor();
 	}
 	if(font->size() > 0){
 		this->renderer_.popSize();
