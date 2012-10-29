@@ -79,6 +79,16 @@ TEST_F(StringRendererTest, SizePushTest)
 	ASSERT_FLOAT_EQ(12.345, r->nowSize());
 }
 
+TEST_F(StringRendererTest, ColorPushTest)
+{
+	r->pushColor(RED);
+	ASSERT_EQ(RED, r->nowColor());
+	r->pushColor(BLUE);
+	ASSERT_EQ(BLUE, r->nowColor());
+	r->popColor();
+	ASSERT_EQ(RED, r->nowColor());
+}
+
 TEST_F(StringRendererTest, FontPushTest)
 {
 	r->pushFont("VL Gothic:regular");

@@ -25,6 +25,7 @@
 #include "../geom/Area.h"
 #include "../Handler.h"
 #include "Font.h"
+#include "Color.h"
 #include "../util/ClassUtil.h"
 
 namespace chisa {
@@ -82,6 +83,7 @@ private:
 	std::vector<Style> styleStack_;
 	std::vector<float> sizeStack_;
 	std::vector<std::string> fontStack_;
+	std::vector<gl::Color> colorStack_;
 public:
 	void pushStyle(Style style);
 	Style nowStyle() const;
@@ -90,6 +92,10 @@ public:
 	void pushSize(float size);
 	float nowSize() const;
 	void popSize();
+
+	void pushColor(const Color& c);
+	Color nowColor() const;
+	void popColor();
 
 	void pushFont( const std::string& name );
 	std::string nowFont() const;

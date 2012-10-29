@@ -42,6 +42,7 @@ NodeReader::NodeReader()
 	this->elementParser_.insert(std::make_pair("h3", createProxy<Heading>(3)));
 	this->elementParser_.insert(std::make_pair("p", createProxy<Paragraph>()));
 	this->elementParser_.insert(std::make_pair("br", createProxy<BreakLine>()));
+	this->elementParser_.insert(std::make_pair("font", createProxy<Font>()));
 }
 
 #define NODE_FOREACH(it, node)\

@@ -86,6 +86,20 @@ void StringRenderer::popSize()
 	this->sizeStack_.pop_back();
 }
 
+void StringRenderer::pushColor(const Color& c)
+{
+	this->colorStack_.push_back(c);
+}
+Color StringRenderer::nowColor() const
+{
+	return this->colorStack_.back();
+}
+void StringRenderer::popColor()
+{
+	this->colorStack_.pop_back();
+}
+
+
 void StringRenderer::pushFont( const std::string& name )
 {
 	this->fontStack_.push_back(name);
