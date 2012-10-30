@@ -26,23 +26,17 @@ namespace gl {
 class Canvas;
 class RawSprite;
 
-class Sprite {
-	DISABLE_COPY_AND_ASSIGN(Sprite);
-	template <typename T> friend class chisa::Handler;
-	friend class Canvas;
-private:
-	int refcount_;
+class Sprite : public HandlerBody<Sprite> {
 	std::mutex ref_mutex_;
-	DEFINE_MEMBER_CONST(public, Canvas*, canvas);
-public:
-	Sprite(Canvas* const canvas);
-	virtual ~Sprite();
-private: /* from Handler */
-	void incref();
-	void decref();
-	virtual void onFree() = 0;
-private: /* from Canvas */
-	virtual void drawImpl(const geom::Point& pt, const float depth=0.0f) = 0;
+protected:
+	Sprite() = default;
+	virtual ~Sprite() noexcept = default;
+public: /* from Handler */
+	void increfImpl() noexcept;
+	void decrefImpl();
+	virtual void onFree() noexcept = 0;
+public: /* from Canvas */
+	virtual void drawImpl(Canvas* const canvas, const geom::Point& pt, const float depth) = 0;
 };
 
 }}

@@ -74,10 +74,8 @@ public:
 	};
 };
 
-class FontManager {
+class FontManager : public HandlerBody<FontManager> {
 	friend class Font;
-	DISABLE_COPY_AND_ASSIGN(FontManager);
-	HANDLER_KLASS_WEAK(FontManager);
 	DEFINE_MEMBER_REF(private, logging::Logger, log);
 	DEFINE_MEMBER_CONST(protected, std::string, fontdir);
 private:
@@ -91,6 +89,7 @@ private:
 	~FontManager() noexcept;
 public:
 	Handler<Font> queryFont(const std::string& name = std::string());
+	void onFree() noexcept;
 private:
 	void backFont(Font* font);
 private:

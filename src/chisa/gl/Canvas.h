@@ -43,16 +43,12 @@ private:
 	float width_;
 	float height_;
 private:
-	static constexpr size_t MaxCachedBufferCount = 200;
-	static constexpr size_t MaxCachedSpriteCount = 200;
-private:
 	Handler<RawSprite> loadPNG(const std::string& filename);
 public:
 	Canvas(logging::Logger& log);
 	virtual ~Canvas();
 public:
-	std::deque<RawSprite*> unusedSprite_;
-	std::deque<Buffer*> unusedBuffer_;
+	RawSpriteManager spriteManager_;
 	std::deque<std::pair<std::string, Handler<RawSprite> > > imageCache_;
 public:
 	void ortho(const float left, const float right, const float bottom, const float top, const float near_val, const float far_val);
@@ -61,7 +57,7 @@ public:
 	void rotate(const float angle, const geom::Point& pt);
 	void scale(const geom::ScaleVector& scale);
 	void drawSprite(Handler<Sprite> sprite, const geom::Point& pt, const float depth=0.0f);
-	void drawSprite(RawSprite* const sprite, const geom::Point& pt, const float depth=0.0f);
+	void drawTexture(unsigned int texId, const geom::Area spriteArea, const geom::Point& pt, const float depth);
 	void drawLine(const float width, const Color& color, const geom::Point& start, const geom::Point& end, const float depth=0.0f);
 private:
 	void scissor(const geom::Area& area);
@@ -85,10 +81,6 @@ public:
 public:
 	Handler<RawSprite> queryRawSprite(const int width, const int height);
 	Handler<RawSprite> queryImage(const std::string& filename);
-public: /* ハンドラやセッションから参照されるメソッド。普通触らない。 */
-	Buffer* queryBuffer(const int width, const int height);
-	void backSprite(RawSprite* spr);
-	void backBuffer(Buffer* buffer);
 };
 
 }}

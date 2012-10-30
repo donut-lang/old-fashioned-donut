@@ -16,7 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "internal/Canvas.h"
 #include "Canvas.h"
 #include "../geom/Vector.h"
 #include "../geom/Area.h"
@@ -34,6 +33,7 @@ Canvas::Canvas(logging::Logger& log)
 :log_(log)
 ,width_(NAN)
 ,height_(NAN)
+,spriteManager_(log)
 {
 
 }
@@ -85,15 +85,14 @@ void Canvas::scissorReset()
 
 void Canvas::drawSprite(Handler<Sprite> sprite, const geom::Point& pt, const float depth)
 {
-	sprite->drawImpl(pt, depth);
+	sprite->drawImpl(this, pt, depth);
 }
-void Canvas::drawSprite(RawSprite* const sprite, const geom::Point& pt, const float depth)
+void Canvas::drawTexture(unsigned int texId, const geom::Area spriteArea, const geom::Point& pt, const float depth)
 {
-	const GLint texId = sprite->requestTexture();
-	const float width = sprite->width();
-	const float height = sprite->height();
-	const float right = width/sprite->origWidth();
-	const float bottom = height/sprite->origHeight();
+	const float width = spriteArea.width();
+	const float height = spriteArea.height();
+	const float right = width/spriteArea.x();
+	const float bottom = height/spriteArea.y();
 	glBindTexture(GL_TEXTURE_2D, texId);
 	glEnable(GL_TEXTURE_2D);
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
@@ -109,20 +108,7 @@ void Canvas::drawSprite(RawSprite* const sprite, const geom::Point& pt, const fl
 
 Handler<RawSprite> Canvas::queryRawSprite(const int width, const int height)
 {
-	internal::SpriteOrder order;
-	auto it = std::lower_bound(this->unusedSprite_.begin(), this->unusedSprite_.end(), std::pair<int,int>(width,height), order);
-	//横幅が同じ場合は、縦幅も大きいか同じであることが保証される。
-	//横幅が優先なので、横幅が違う場合は高さは短いかもしれない
-	if(it == this->unusedSprite_.end() || (*it)->height() < height){
-		RawSprite* spr = new RawSprite(this, width, height);
-		spr->resize(width, height);
-		return Handler<RawSprite>(spr);
-	}else{
-		(*it)->resize(width, height);
-		Handler<RawSprite> spr(*it);
-		this->unusedSprite_.erase(it);
-		return spr;
-	}
+	return this->spriteManager_.queryRawSprite(width, height);
 }
 
 void Canvas::drawLine(const float width, const Color& color, const geom::Point& start, const geom::Point& end, const float depth)
@@ -139,76 +125,6 @@ void Canvas::drawLine(const float width, const Color& color, const geom::Point& 
 void Canvas::setColor(const Color& color)
 {
 	glColor4f(color.red(), color.green(), color.blue(), color.alpha());
-}
-
-void Canvas::backSprite(RawSprite* spr)
-{
-	auto ins = std::upper_bound(this->unusedSprite_.begin(), this->unusedSprite_.end(), spr, internal::SpriteOrder());
-	this->unusedSprite_.insert(ins, spr);
-	while(Canvas::MaxCachedSpriteCount < this->unusedSprite_.size()){
-		RawSprite* deleted = 0;
-		if((rand() & 1U) == 1U){
-			deleted = this->unusedSprite_.back();
-			this->unusedSprite_.pop_back();
-		}else{
-			deleted = this->unusedSprite_.front();
-			this->unusedSprite_.	pop_front();
-		}
-		if(deleted){
-			RawSprite* const min = this->unusedSprite_.front();
-			RawSprite* const max = this->unusedSprite_.back();
-			if(log().d()){
-				log().d(TAG, "Sprite cache deleted. size: %dx%d / min:%dx%d, max:%dx%d",
-						deleted->width(), deleted->height(),
-						min->width(), min->height(),
-						max->width(), max->height());
-			}
-			delete deleted;
-		}
-	}
-}
-
-Buffer* Canvas::queryBuffer(const int width, const int height)
-{
-	internal::BufferOrder order;
-	int const pHeight = getPower2Of(height);
-	auto it = std::lower_bound(this->unusedBuffer_.begin(), this->unusedBuffer_.end(), std::pair<int,int>(width,pHeight), order);
-	//横幅が同じ場合は、縦幅も大きいか同じであることが保証される。
-	//横幅が優先なので、横幅が違う場合は高さは短いかもしれない
-	if(it == this->unusedBuffer_.end() || (*it)->width() != width ){
-		return new Buffer(width, pHeight);
-	}else{
-		Buffer* const buf = *it;
-		this->unusedBuffer_.erase(it);
-		return buf;
-	}
-}
-
-void Canvas::backBuffer(Buffer* buffer)
-{
-	auto ins = std::upper_bound(this->unusedBuffer_.begin(), this->unusedBuffer_.end(), buffer, internal::BufferOrder());
-	this->unusedBuffer_.insert(ins, buffer);
-	while(Canvas::MaxCachedBufferCount < this->unusedBuffer_.size()){
-		Buffer* deleted = 0;
-		if((rand() & 1U) == 1U){
-			deleted = this->unusedBuffer_.back();
-			this->unusedBuffer_.pop_back();
-		}else{
-			deleted = this->unusedBuffer_.front();
-			this->unusedBuffer_.pop_front();
-		}
-		if(deleted){
-			Buffer* const min = this->unusedBuffer_.front();
-			Buffer* const max = this->unusedBuffer_.back();
-			if(log().d()){
-				log().d(TAG, "Buffer cache deleted. size: %dx%d / min:%dx%d, max:%dx%d",
-						deleted->width(), deleted->height(),
-						min->width(), min->height(),
-						max->width(), max->height());
-			}
-			delete deleted;
-		}
-	}
 }
 
 Canvas::ScissorScope::ScissorScope(Canvas& canvas, const geom::Area& area)
