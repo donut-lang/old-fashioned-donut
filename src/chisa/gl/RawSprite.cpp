@@ -53,7 +53,7 @@ RawSprite::RawSprite(RawSpriteManager* const mgr, const int width, const int hei
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to transfer texture: %d", err);
 	}
 }
-RawSprite::~RawSprite() noexcept
+RawSprite::~RawSprite() noexcept (true)
 {
 	if(this->texId_ != MAGIC){
 		glDeleteTextures(1, &this->texId_);

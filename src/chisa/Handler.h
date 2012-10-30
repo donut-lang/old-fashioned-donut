@@ -288,14 +288,12 @@ private:
 	template <typename T> friend class chisa::internal::WeakHandlerEntity;
 private:
 	int refcount_;
-	bool deteted;
+	bool deleted;
 	chisa::internal::WeakHandlerEntity<Derived>* weakEntity_;
 protected:
 	HandlerBody()
-	:refcount_(0), deteted(false), weakEntity_(nullptr) {}
-	virtual ~HandlerBody() noexcept{
-
-	}
+	:refcount_(0), deleted(false), weakEntity_(nullptr) {}
+	virtual ~HandlerBody() noexcept (true) = default;
 protected: /* from Handler */
 	void increfImpl() noexcept { this->refcount_++; }
 	void decrefImpl(){
@@ -303,10 +301,10 @@ protected: /* from Handler */
 		if(this->refcount_ < 0){
 			throw logging::Exception(__FILE__, __LINE__, "[BUG] Handler refcount = %d < 0", this->refcount_);\
 		}else if(this->refcount_ == 0){
-			if(deteted){
+			if(deleted){
 				return;
 			}
-			this->deteted = true;
+			this->deleted = true;
 			if(this->weakEntity_){
 				this->weakEntity_->notifyDead();
 				this->weakEntity_ = nullptr;

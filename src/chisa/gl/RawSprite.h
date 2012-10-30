@@ -57,7 +57,7 @@ class RawSprite : public Sprite {
 	std::atomic<bool> locked_;
 public:
 	RawSprite(RawSpriteManager* const mgr, const int width, const int height);
-	virtual ~RawSprite() noexcept;
+	virtual ~RawSprite() noexcept(true);
 private:
 	Buffer* lock();
 	void unlock();
@@ -68,11 +68,12 @@ private:
 public:
 	class Session {
 		DISABLE_COPY_AND_ASSIGN(Session);
+		STACK_OBJECT(Session);
 	private:
 		Handler<RawSprite> parent_;
 	public:
 		Session(Handler<RawSprite> parent);
-		virtual ~Session();
+		~Session();
 		inline int width() const { return parent_->width(); };
 		inline int height() const { return parent_->height(); };
 		inline int stride() const { return parent_->buffer_->stride(); };
