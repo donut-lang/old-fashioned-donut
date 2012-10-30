@@ -30,7 +30,7 @@ class Sprite : public HandlerBody<Sprite> {
 	std::mutex ref_mutex_;
 protected:
 	Sprite() = default;
-	virtual ~Sprite() noexcept = default;
+	virtual ~Sprite() noexcept (true) {}; ///XXX: gccのバグでデフォルトにできない
 public: /* from Handler */
 	void increfImpl() noexcept;
 	void decrefImpl();
