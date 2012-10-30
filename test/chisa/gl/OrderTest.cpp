@@ -23,11 +23,11 @@
 namespace chisa {
 namespace gl {
 #define ANTI(a,b,c,d) ASSERT_NE(order(std::make_pair(a,b),std::make_pair(c,d)), order(std::make_pair(c,d),std::make_pair(a,b)));
-#define TRAN(a,b,c,d,e,f) ASSERT_EQ(order(std::make_pair(a,b),std::make_pair(c,d)) && order(std::make_pair(c,d),std::make_pair(e,f)), order(std::make_pair(a,b),std::make_pair(e,f)));
+#define TRAN(a,b,c,d,e,f) ASSERT_TRUE((order(std::make_pair(a,b),std::make_pair(c,d)) && order(std::make_pair(c,d),std::make_pair(e,f)))  == true ? order(std::make_pair(a,b), std::make_pair(e,f)) : true);
 //前提条件
 //http://www.sgi.com/tech/stl/StrictWeakOrdering.html
 
-TEST(OrderTest, BasicTest)
+TEST(WidthOrderTest, BasicTest)
 {
 	gl::internal::WidthOrder<std::pair<int,int> > order;
 	//横幅が同じなら縦幅でソート
@@ -41,13 +41,13 @@ TEST(OrderTest, BasicTest)
 	ASSERT_TRUE (order(std::make_pair(1,2),std::make_pair(2,1)));
 }
 
-TEST(OrderTest, IrreflexivityTest)
+TEST(WidthOrderTest, IrreflexivityTest)
 {
 	gl::internal::WidthOrder<std::pair<int,int> > order;
 	ASSERT_FALSE(order(std::make_pair(100,100),std::make_pair(100,100)));
 }
 
-TEST(OrderTest, AntisymmetryTest)
+TEST(WidthOrderTest, AntisymmetryTest)
 {
 	gl::internal::WidthOrder<std::pair<int,int> > order;
 	ANTI(1,2,1,3);
@@ -58,12 +58,57 @@ TEST(OrderTest, AntisymmetryTest)
 	ANTI(1,2,2,1);
 }
 
-TEST(OrderTest, TransitivityTest)
+TEST(WidthOrderTest, TransitivityTest)
 {
 	gl::internal::WidthOrder<std::pair<int,int> > order;
 	TRAN(1,2,3,4,5,6);
 	TRAN(5,6,4,3,2,1);
+	TRAN(3,5,3,1,4,5);
 	TRAN(1,1,1,1,1,1);
+}
+
+#undef ANTI
+#undef TRAN
+#define ANTI(a,b) ASSERT_NE(order(a,b), order(b,a));
+#define TRAN(a,b,c) ASSERT_TRUE((order(a,b) && order(b,c)) == true ? order(a,c) == true : true);
+
+TEST(SizeOrderTest, BasicTest)
+{
+	gl::internal::SizeOrder<std::vector<int> > order;
+
+	ASSERT_TRUE(order(1,2));
+	ASSERT_TRUE(order(3,4));
+}
+
+TEST(SizeOrderTest, IrreflexivityTest)
+{
+	gl::internal::SizeOrder<std::vector<int> > order;
+	ASSERT_FALSE(order(100,100));
+}
+
+TEST(SizeOrderTest, AntisymmetryTest)
+{
+	gl::internal::SizeOrder<std::vector<int> > order;
+	ANTI(1,2);
+	ANTI(3,4);
+	ANTI(2,1);
+	ANTI(4,3);
+	ANTI(1,2);
+}
+
+TEST(SizeOrderTest, TransitivityTest)
+{
+	gl::internal::SizeOrder<std::vector<int> > order;
+	TRAN(1,2,3);
+	TRAN(1,3,2);
+	TRAN(2,1,3);
+	TRAN(2,3,1);
+	TRAN(3,2,1);
+	TRAN(3,2,1);
+	TRAN(3,1,1);
+	TRAN(1,3,1);
+	TRAN(1,1,3);
+	TRAN(1,1,1);
 }
 
 }}
