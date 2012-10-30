@@ -62,6 +62,7 @@
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sicuin"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sicuuc"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sicudt"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="freetype"/>
 								</option>
 								<option id="gnu.cpp.link.option.flags.2140099511" name="Linker flags" superClass="gnu.cpp.link.option.flags" value="" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1518610472" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
@@ -142,6 +143,7 @@
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sicuin"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sicuuc"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sicudt"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="freetype"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.372687479" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
