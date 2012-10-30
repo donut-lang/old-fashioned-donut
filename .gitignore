@@ -21,10 +21,6 @@
 .waf*/
 
 #build dir
-build/
-TestWin/
-Debug/
-Release/
 Win*/
 Linux*/
 waf*/
