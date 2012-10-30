@@ -153,8 +153,7 @@ Font::~Font() noexcept
 
 void Font::onFree()
 {
-	if(!this->parent_.expired()){
-		Handler<FontManager> p = this->parent_.lock();
+	if(Handler<FontManager> p = this->parent_.lock()){
 		p->backFont(this);
 	}else{
 		delete this;
