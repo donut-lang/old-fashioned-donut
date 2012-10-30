@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "../util/Platform.h"
 #include "StringRenderer.h"
 #include "../geom/Vector.h"
 #include "Canvas.h"
@@ -188,7 +189,11 @@ StringRenderer::Command StringRenderer::calcMaximumStringLength(const std::strin
 Handler<gl::RawSprite> StringRenderer::Command::renderString(gl::Canvas& cv) const
 {
 	Handler<gl::RawSprite> spr = cv.queryRawSprite(static_cast<int>(std::ceil(this->area().width())), static_cast<int>(std::ceil(this->area().height())));
-	gl::RawSprite::Session ss(spr);
+#if IS_BIG_ENDIAN
+	gl::RawSprite::Session ss(spr, gl::RawSprite::BufferType::ARGB8);
+#else
+	gl::RawSprite::Session ss(spr, gl::RawSprite::BufferType::BGRA8);
+#endif
 	gl::Font::RawFaceSession rfs(this->font_);
 	{
 		cairo_surface_t* surf = cairo_image_surface_create_for_data(ss.data(), CAIRO_FORMAT_ARGB32, ss.width(), ss.height(), ss.stride());

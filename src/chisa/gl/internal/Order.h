@@ -43,5 +43,20 @@ struct WidthOrder {
 	}
 };
 
+template <class T>
+struct SizeOrder {
+	inline bool operator()(const T* a, std::size_t b) const noexcept {
+		return a->size() < b;
+	}
+	inline bool operator()(std::size_t a, std::size_t b) const noexcept {
+		return a < b;
+	}
+	inline bool operator()(const T* a, const T* b) const noexcept {
+		return a->size() < b->size();
+	}
+	inline bool operator()(std::size_t a, const T* b) const noexcept {
+		return a < b->size();
+	}
+};
 
 }}}

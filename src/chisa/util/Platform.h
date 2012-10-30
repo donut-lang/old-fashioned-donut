@@ -20,4 +20,10 @@
 
 #define CHISA_WINDOWS (defined(WIN32) || defined(WIN64) || defined(__WIN32__) || defined(__WIN64__))
 
+#if CHISA_WINDOWS
+#define IS_BIG_ENDIAN 0
+#else
+#include <endian.h>
+#define IS_BIG_ENDIAN (BYTE_ORDER == BIG_ENDIAN)
+#endif
 

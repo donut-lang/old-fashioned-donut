@@ -48,7 +48,8 @@ void NesGeist::dispatchRendering(const uint8_t nesBuffer[screenHeight][screenWid
 {
 	{
 		NesGeist::Lock lock(*this);
-		chisa::gl::RawSprite::Session s(lock.getSprite());
+		using namespace chisa::gl;
+		RawSprite::Session s(lock.getSprite(), RawSprite::BufferType::RGBA8);
 		unsigned char* mem8 = s.data();
 		unsigned int* mem32 = nullptr;
 		const int stride = s.stride();

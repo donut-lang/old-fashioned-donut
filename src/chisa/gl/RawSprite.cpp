@@ -40,6 +40,7 @@ RawSprite::RawSprite(RawSpriteManager* const mgr, const int width, const int hei
 ,texId_(MAGIC)
 ,locked_(false)
 ,buffer_(nullptr)
+,bufferType_(RawSprite::BufferType::Invalid)
 {
 	glGenTextures(1, &this->texId_);
 	glBindTexture(GL_TEXTURE_2D, this->texId_);
@@ -55,6 +56,7 @@ RawSprite::RawSprite(RawSpriteManager* const mgr, const int width, const int hei
 }
 RawSprite::~RawSprite() noexcept (true)
 {
+	this->flushBuffer();
 	if(this->texId_ != MAGIC){
 		glDeleteTextures(1, &this->texId_);
 	}
@@ -62,10 +64,16 @@ RawSprite::~RawSprite() noexcept (true)
 
 void RawSprite::drawImpl(Canvas* const canvas, const geom::Point& pt, const float depth)
 {
+	this->flushBuffer();
+	canvas->drawTexture(this->texId_, geom::Area(this->origWidth_, this->origHeight_, this->width_, this->height_), pt, depth);
+}
+
+void RawSprite::flushBuffer()
+{
 	if(this->buffer_){
 		glBindTexture(GL_TEXTURE_2D, this->texId_);
 		//ここのサイズはバッファのものにしないと変な所を読みに行くかもしれない。
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0,0, this->buffer_->width(), this->height(), GL_RGBA, GL_UNSIGNED_BYTE, this->buffer_->data());
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0,0, this->width(), this->height(), GL_RGBA, GL_UNSIGNED_BYTE, this->buffer_->ptr());
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
@@ -76,7 +84,6 @@ void RawSprite::drawImpl(Canvas* const canvas, const geom::Point& pt, const floa
 		this->mgr_->backBuffer(this->buffer_);
 		this->buffer_ = nullptr;
 	}
-	canvas->drawTexture(this->texId_, geom::Area(this->origWidth_, this->origHeight_, this->width_, this->height_), pt, depth);
 }
 
 void RawSprite::resize(int width, int height)
@@ -100,17 +107,19 @@ void RawSprite::onFree() noexcept {
 	this->mgr_->backSprite(this);
 }
 
-Buffer* RawSprite::lock()
+internal::Buffer* RawSprite::lock(RawSprite::BufferType bufferType)
 {
 	bool expected = false;
 	if(!this->locked_.compare_exchange_strong(expected, true)){
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Sprite already locked!");
 	}
-	if(this->buffer_){
+	if(this->buffer_ && this->bufferType_ == bufferType){
 		return this->buffer_;
 	}else{
-		//横幅はオリジナルでないとテクスチャ転送できないが、縦サイズは何でもよいので最小サイズを指定する
-		return (this->buffer_ = this->mgr_->queryBuffer(this->origWidth(), this->height()));
+		this->flushBuffer();
+		this->buffer_ = this->mgr_->queryBuffer(this->width() * this->height() * 4);
+		this->bufferType_ = bufferType;
+		return (this->buffer_);
 	}
 }
 void RawSprite::unlock()
@@ -123,10 +132,10 @@ void RawSprite::unlock()
 
 //-----------------------------------------------------------------------------
 
-RawSprite::Session::Session(Handler<RawSprite> parent)
+RawSprite::Session::Session(Handler<RawSprite> parent, RawSprite::BufferType bufferType)
 :parent_(parent)
 {
-	this->parent_->lock();
+	this->parent_->lock(bufferType);
 }
 RawSprite::Session::~Session()
 {
@@ -144,7 +153,7 @@ RawSpriteManager::RawSpriteManager(logging::Logger& log)
 }
 RawSpriteManager::~RawSpriteManager() noexcept
 {
-	for(Buffer* b : this->unusedBuffer_){
+	for(internal::Buffer* b : this->unusedBuffer_){
 		delete b;
 	}
 }
@@ -195,29 +204,26 @@ Handler<RawSprite> RawSpriteManager::queryRawSprite(const int width, const int h
 	}
 }
 
-Buffer* RawSpriteManager::queryBuffer(const int width, const int height)
+internal::Buffer* RawSpriteManager::queryBuffer(const std::size_t size)
 {
-	typedef chisa::gl::internal::WidthOrder<Buffer> BufferOrder;
-	int const pHeight = getPower2Of(height);
-	auto it = std::lower_bound(this->unusedBuffer_.begin(), this->unusedBuffer_.end(), std::pair<int,int>(width,pHeight), BufferOrder());
-	//横幅が同じ場合は、縦幅も大きいか同じであることが保証される。
-	//横幅が優先なので、横幅が違う場合は高さは短いかもしれない
-	if(it == this->unusedBuffer_.end() || (*it)->width() != width ){
-		return new Buffer(width, pHeight);
+	typedef chisa::gl::internal::SizeOrder<internal::Buffer> BufferOrder;
+	auto it = std::lower_bound(this->unusedBuffer_.begin(), this->unusedBuffer_.end(), size, BufferOrder());
+	if(it == this->unusedBuffer_.end() || (*it)->size() >= size*2){
+		return new internal::Buffer(size);
 	}else{
-		Buffer* const buf = *it;
+		internal::Buffer* const buf = *it;
 		this->unusedBuffer_.erase(it);
 		return buf;
 	}
 }
 
-void RawSpriteManager::backBuffer(Buffer* buffer)
+void RawSpriteManager::backBuffer(internal::Buffer* buffer)
 {
-	typedef chisa::gl::internal::WidthOrder<Buffer> BufferOrder;
+	typedef chisa::gl::internal::SizeOrder<internal::Buffer> BufferOrder;
 	auto ins = std::upper_bound(this->unusedBuffer_.begin(), this->unusedBuffer_.end(), buffer, BufferOrder());
 	this->unusedBuffer_.insert(ins, buffer);
 	while(MaxCachedBufferCount < this->unusedBuffer_.size()){
-		Buffer* deleted = 0;
+		internal::Buffer* deleted = 0;
 		if((rand() & 1U) == 1U){
 			deleted = this->unusedBuffer_.back();
 			this->unusedBuffer_.pop_back();
@@ -226,13 +232,11 @@ void RawSpriteManager::backBuffer(Buffer* buffer)
 			this->unusedBuffer_.pop_front();
 		}
 		if(deleted){
-			Buffer* const min = this->unusedBuffer_.front();
-			Buffer* const max = this->unusedBuffer_.back();
+			internal::Buffer* const min = this->unusedBuffer_.front();
+			internal::Buffer* const max = this->unusedBuffer_.back();
 			if(this->log().d()){
-				this->log().d(TAG, "Buffer cache deleted. size: %dx%d / min:%dx%d, max:%dx%d",
-						deleted->width(), deleted->height(),
-						min->width(), min->height(),
-						max->width(), max->height());
+				this->log().d(TAG, "Buffer cache deleted. size: %d / min:%d, max:%d",
+						deleted->size(), min->size(), max->size());
 			}
 			delete deleted;
 		}
@@ -240,4 +244,18 @@ void RawSpriteManager::backBuffer(Buffer* buffer)
 }
 
 
+//-----------------------------------------------------------------------------
+namespace internal {
+Buffer::Buffer(std::size_t size)
+:size_(size), ptr_(new unsigned char [size])
+{
+
+}
+Buffer::~Buffer() noexcept
+{
+	delete [] ptr_;
+}
+
+
+}
 }}
