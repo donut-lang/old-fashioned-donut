@@ -24,9 +24,14 @@ namespace chisa {
 class TestFix : public HandlerBody<TestFix> {
 private:
 	int* expired_;
+	int* deleted_;
 public:
-	TestFix( int* expired ):expired_(expired) {
+	TestFix( int* expired, int* deleted ):expired_(expired),deleted_(deleted) {
 		*this->expired_ = 0;
+		*this->deleted_ = 0;
+	}
+	virtual ~TestFix() noexcept {
+		(*this->deleted_)++;
 	}
 	void onFree() {
 		(*this->expired_)++;
@@ -36,18 +41,21 @@ public:
 
 TEST(WeakHandlerTest, HandlerTest)
 {
-	int c = 0;
-	TestFix* test = new TestFix(&c);
+	int e = 0;
+	int d = 0;
+	TestFix* test = new TestFix(&e, &d);
 	{
 		Handler<TestFix> handler(test);
 	}
-	ASSERT_EQ(1, c);
+	ASSERT_EQ(1, e);
+	ASSERT_EQ(1, d);
 }
 
 TEST(WeakHandlerTest, WeakHandlerTest)
 {
-	int c = 0;
-	TestFix* test = new TestFix(&c);
+	int e = 0;
+	int d = 0;
+	TestFix* test = new TestFix(&e, &d);
 	{
 		Handler<TestFix> handler(test);
 		{
@@ -57,7 +65,8 @@ TEST(WeakHandlerTest, WeakHandlerTest)
 			ASSERT_TRUE(weak.expired());
 		}
 	}
-	ASSERT_EQ(1, c);
+	ASSERT_EQ(1, e);
+	ASSERT_EQ(1, d);
 }
 
 }
