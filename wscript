@@ -36,9 +36,18 @@ def options(opt):
 	opt.load('compiler_c compiler_cxx')
 	opt.load('eclipse')
 	opt.load('boost')
+
 def configure(conf):
-	conf.load('compiler_c compiler_cxx')
+	conf.setenv('release')
 	conf.env.append_value('CXXFLAGS', ['-O3', '-std=c++0x', '-std=c++11', '-D__GXX_EXPERIMENTAL_CXX0X__=1'])
+	configureLibrary(conf)
+	
+	conf.setenv('debug')
+	conf.env.append_value('CXXFLAGS', ['-O0', '-g', '-std=c++0x', '-std=c++11', '-D__GXX_EXPERIMENTAL_CXX0X__=1'])
+	configureLibrary(conf)
+
+def configureLibrary(conf):
+	conf.load('compiler_c compiler_cxx')
 	conf.env.append_value('CXXFLAGS', ['-I'+TINYXML2_DIR])
 	conf.check_cfg(package='icu-uc icu-i18n', uselib_store='ICU', mandatory=True, args='--cflags --libs')
 	conf.check_cfg(package='libpng', uselib_store='LIBPNG', mandatory=True, args='--cflags --libs')
@@ -57,13 +66,26 @@ def configure(conf):
 	elif sys.platform in ['linux2', 'linux']:
 		#opengl
 		conf.check(features='cxx cxxprogram', lib=['glfw', 'GL', 'X11', 'rt', 'Xrandr', 'pthread'], cflags=['-Wall'], defines=['TEST=TEST'], uselib_store='OPENGL')
+	#リリースとデバッグで変更
 
 TEST_SRC=TINYXML2_SRC+enum('src', [udir('src/entrypoint')])+enum('test')
 MAIN_SRC=TINYXML2_SRC+enum('src', [udir('src/entrypoint')])+enum(udir('src/entrypoint/pc/'))
 
 def build(bld):
+	if not bld.variant:
+		bld.fatal('call "waf build_debug" or "waf build_release", and try "waf --help"')
 	bld(features = 'cxx cprogram', source = MAIN_SRC, target = 'chisa', use=['PTHREAD', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU'])
 	bld(features = 'cxx cprogram', source = TEST_SRC, target = 'chisa_test', use=['PTHREAD', 'OPENGL','FREETYPE2','CAIRO','GTEST','LIBPNG','BOOST','ICU'])
+
+# from http://docs.waf.googlecode.com/git/book_16/single.html#_custom_build_outputs
+from waflib.Build import BuildContext, CleanContext, InstallContext, UninstallContext
+
+for x in 'debug release'.split():
+	for y in (BuildContext, CleanContext, InstallContext, UninstallContext):
+		name = y.__name__.replace('Context','').lower()
+		class tmp(y):
+			cmd = name + '_' + x
+			variant = x
 
 def shutdown(ctx):
 	pass
