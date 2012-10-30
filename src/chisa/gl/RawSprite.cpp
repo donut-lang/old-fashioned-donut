@@ -60,6 +60,7 @@ void RawSprite::drawImpl(const geom::Point& pt, const float depth)
 	canvas()->drawSprite(this, pt, depth);
 }
 
+#define GL_BGRA 0x80E1
 unsigned int RawSprite::requestTexture()
 {
 	if(this->buffer_){

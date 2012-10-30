@@ -21,7 +21,7 @@ namespace chisa {
 namespace gl {
 
 Sprite::Sprite(Canvas* const canvas)
-:refcount_(0)
+:HANDLER_KLASS_INIT
 ,canvas_(canvas)
 {
 }

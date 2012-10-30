@@ -26,7 +26,7 @@ namespace gl {
 static std::string TAG("Font");
 
 FontManager::FontManager(logging::Logger& log, const std::string& fontdir)
-:refcount_(0)
+:HANDLER_KLASS_WEAK_INIT
 ,log_(log)
 ,fontdir_(fontdir)
 ,freetype_(nullptr)
@@ -39,9 +39,7 @@ FontManager::FontManager(logging::Logger& log, const std::string& fontdir)
 
 FontManager::~FontManager() noexcept
 {
-	for(Font* font : this->unusedFonts_){
-		delete font;
-	}
+	decltype(this->unusedFonts_)().swap(this->unusedFonts_);
 	this->defaultFont_.reset();
 	FT_Done_FreeType(this->freetype_);
 	this->freetype_ = nullptr;
@@ -49,7 +47,7 @@ FontManager::~FontManager() noexcept
 
 void FontManager::onFree()
 {
-	delete this;
+	HANDLER_KLASS_WEAK_DEAD;
 }
 
 Handler<Font> FontManager::queryFont(const std::string& name)
@@ -57,22 +55,25 @@ Handler<Font> FontManager::queryFont(const std::string& name)
 	if(name.empty()){
 		return this->defaultFont_;
 	}
+	std::string family;
+	std::string style;
+	Font::analyzeFontName(name, family, style);
 	for(auto it = this->unusedFonts_.begin(); it != this->unusedFonts_.end(); ++it){
-		Font* const font = *it;
-		if(font->family() == name){
+		Handler<Font> font(*it);
+		if(font->family() == family && (style.empty() || font->style() == style)){
 			this->unusedFonts_.erase(it);
-			return Handler<Font>( font );
+			return font;
 		}
 	}
-	Font* const font = seachFont( name );
+	Handler<Font> const font( searchFont( name ) );
 	if( font ){
-		return Handler<Font>( font );
+		return font;
 	}
 	this->log().w(TAG, "Failed to search font: %s", name.c_str());
 	return this->defaultFont_;
 }
 
-Font* FontManager::seachFont( const std::string& name )
+Font* FontManager::searchFont( const std::string& name )
 {
 	if(name.empty()){
 		return nullptr;
@@ -90,7 +91,7 @@ Font* FontManager::seachFont( const std::string& name )
 			face_max = face->num_faces;
 			if(face->family_name && family == std::string(face->family_name) &&
 					(!style.empty() && face->style_name) && style==std::string(face->style_name) ){
-				return new Font(*this, face);
+				return new Font(this, face);
 			}
 			FT_Done_Face(face);
 		}
@@ -105,7 +106,7 @@ Font* FontManager::seachDefaultFont()
 	util::file::enumFiles(this->fontdir_, files);
 	for(const std::string& fname : files){
 		if(FT_New_Face(this->freetype_, fname.c_str(), 0, &face) == 0){
-			return new Font(*this, face);
+			return new Font(this, face);
 		}else{
 			this->log().e(TAG, "Failed to open font: %s", fname.c_str());
 		}
@@ -115,16 +116,14 @@ Font* FontManager::seachDefaultFont()
 
 void FontManager::backFont(Font* font)
 {
-	this->unusedFonts_.push_back(font);
+	this->unusedFonts_.push_back(Handler<Font>(font));
 	while(this->unusedFonts_.size() >= FontManager::MaxUnusedFonts){
-		auto i = this->unusedFonts_.front();
-		delete i;
 		this->unusedFonts_.pop_front();
 	}
 }
 
-Font::Font(FontManager& parent, FT_Face face)
-:refcount_(0)
+Font::Font(FontManager* parent, FT_Face face)
+:HANDLER_KLASS_INIT
 ,parent_(parent)
 ,face_(face)
 ,locked_(false)
@@ -133,13 +132,19 @@ Font::Font(FontManager& parent, FT_Face face)
 
 Font::~Font()
 {
-	FT_Done_Face(this->face_);
+	if(!this->parent_.expired()){
+		FT_Done_Face(this->face_);
+	}
 	this->face_ = nullptr;
 }
 
 void Font::onFree()
 {
-	this->parent_.backFont(this);
+	if(Handler<FontManager> p = this->parent_.lock()){
+		p->backFont(this);
+	}else{
+		delete this;
+	}
 }
 
 std::string Font::family() const noexcept

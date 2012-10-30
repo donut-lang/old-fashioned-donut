@@ -41,13 +41,13 @@ public:
 		Bold = 1
 	};
 private:
-	FontManager& parent_;
+	HandlerW<FontManager> parent_;
 	FT_Face face_;
 	DEFINE_MEMBER(private, private, bool, locked);
 private:
-	Font(FontManager& parent, FT_Face face);
+	Font(FontManager* parent, FT_Face face);
 	friend class FontManager;
-public:
+private:
 	~Font();
 public:
 	std::string family() const noexcept;
@@ -77,23 +77,24 @@ public:
 class FontManager {
 	friend class Font;
 	DISABLE_COPY_AND_ASSIGN(FontManager);
-	HANDLER_KLASS_NORMAL;
+	HANDLER_KLASS_WEAK(FontManager);
 	DEFINE_MEMBER_REF(private, logging::Logger, log);
 	DEFINE_MEMBER_CONST(protected, std::string, fontdir);
 private:
 	static constexpr std::size_t MaxUnusedFonts = 100;
 	FT_Library freetype_;
-	std::deque<Font*> unusedFonts_;
+	std::deque<Handler<Font> > unusedFonts_;
 	Handler<Font> defaultFont_;
 public:
 	FontManager(logging::Logger& log, const std::string& fontdir);
+private:
 	~FontManager() noexcept;
 public:
 	Handler<Font> queryFont(const std::string& name = std::string());
 private:
 	void backFont(Font* font);
 private:
-	Font* seachFont( const std::string& name );
+	Font* searchFont( const std::string& name );
 	Font* seachDefaultFont();
 };
 

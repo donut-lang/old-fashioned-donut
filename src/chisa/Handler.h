@@ -40,7 +40,7 @@ public:
 		}
 		return spr;
 	}
-	Handler() noexcept:sprite(0){};
+	Handler() noexcept:sprite(nullptr){};
 	explicit Handler(S* const sprite)
 	:sprite(sprite)
 	{
@@ -82,6 +82,16 @@ public:
 		this->sprite = other.sprite;
 		return *this;
 	}
+	Handler<S>& operator=(Handler<S>&& other) noexcept
+	{
+		if(this->sprite){
+			this->sprite->decref();
+			this->sprite = nullptr;
+		}
+		this->sprite = other.sprite;
+		other.sprite = nullptr;
+		return *this;
+	}
 	template <class T>
 	Handler<S>& operator=(const Handler<T>& other) noexcept
 	{
@@ -107,7 +117,7 @@ public:
 	{
 		if(this->sprite){
 			this->sprite->decref();
-			this->sprite = 0;
+			this->sprite = nullptr;
 		}
 	}
 	S* operator->() const noexcept
@@ -136,18 +146,23 @@ public:
 namespace internal {
 template<class S>
 class WeakHandlerEntity {
-	S* sprite;
 private:
+	S* sprite;
+	int refcount_;
 	WeakHandlerEntity() = delete;
-	WeakHandlerEntity(const WeakHandlerEntity<S>& o) = delete;
-	WeakHandlerEntity(WeakHandlerEntity<S>&& o) = delete;
-	WeakHandlerEntity& operator=(const WeakHandlerEntity<S>& o) = delete;
-	WeakHandlerEntity& operator=(WeakHandlerEntity<S>&& o) = delete;
 	~WeakHandlerEntity() { this->sprite = nullptr; }
-	WeakHandlerEntity(S* spr){ this->sprite = spr; };
+	WeakHandlerEntity(S* spr):sprite(spr), refcount_(0){}
+private:
+	WeakHandlerEntity(const WeakHandlerEntity<S>& other) = delete;
+	WeakHandlerEntity(WeakHandlerEntity<S>&& other) = delete;
+	WeakHandlerEntity<S>& operator=(const WeakHandlerEntity<S>& other) = delete;
+	WeakHandlerEntity<S>& operator=(WeakHandlerEntity<S>&& other) = delete;
 public:
 	void notifyDead(){
 		this->sprite = nullptr;
+		if(this->refcount_ == 0){
+			delete this;
+		}
 	};
 	explicit operator bool () const noexcept {
 		return this->sprite;
@@ -155,25 +170,110 @@ public:
 	bool expired () const noexcept {
 		return this->sprite;
 	}
-	static WeakHandlerEntity<S>* create(S* self){
-		if(!self->weakEntity){
-			self->weakEntity = new WeakHandlerEntity<S>(self);
+	S* read() const noexcept {
+		return this->sprite;
+	}
+	void incref() noexcept {
+		this->refcount_++;
+	}
+	void decref() noexcept {
+		this->refcount_--;
+		if(this->refcount_ == 0 && !this->sprite){
+			delete this;
 		}
-		return self->weakEntity;
+	}
+public:
+	static WeakHandlerEntity<S>* create(S* self){
+		if(!self){
+			return nullptr;
+		}
+		if(!self->weakEntity_){
+			self->weakEntity_ = new WeakHandlerEntity<S>(self);
+		}
+		return self->weakEntity_;
 	}
 };
 }
 
-template<class S, class Orig>
+template<class S>
 class HandlerW
 {
-
+private:
+	internal::WeakHandlerEntity<S>* entity;
+public:
+	HandlerW():entity(nullptr){};
+	HandlerW(const Handler<S>& hand)
+	:entity(internal::WeakHandlerEntity<S>::create(hand.get()))
+	{
+		if(this->entity){
+			this->entity->incref();
+		}
+	}
+	HandlerW(S* spr)
+	:entity(internal::WeakHandlerEntity<S>::create(spr))
+	{
+		if(this->entity){
+			this->entity->incref();
+		}
+	}
+	HandlerW(const HandlerW<S>& other):entity(other.entity)
+	{
+		if(this->entity){
+			this->entity->incref();
+		}
+	}
+	HandlerW(HandlerW<S>&& other):entity(other.entity) {}
+	HandlerW& operator=(const HandlerW<S>& other)
+	{
+		if(this->entity){
+			this->entity->decref();
+		}
+		this->entity = other.entity;
+		if(this->entity){
+			this->entity->incref();
+		}
+		return *this;
+	}
+	HandlerW& operator=(HandlerW<S>&& other)
+	{
+		if(this->entity){
+			this->entity->decref();
+		}
+		this->entity = other.entity;
+		return *this;
+	}
+	~HandlerW() noexcept{
+		if(this->entity){
+			this->entity->decref();
+		}
+	}
+	Handler<S> lock() noexcept {
+		if(expired()){
+			return Handler<S>();
+		}
+		return Handler<S>::__internal__fromRawPointerWithoutCheck(entity->read());
+	}
+	bool expired() noexcept {
+		return !this->entity || !*(this->entity);
+	}
 };
 
 template<class T>
 void swap(Handler<T>& a, Handler<T>& b) noexcept
 {
 	a.swap(b);
+}
+
+template<class T, class U>
+bool operator==(const Handler<T>& a, const Handler<U>& b) noexcept
+{
+	return a.get() == b.get();
+}
+
+template<class T, class U>
+bool operator!=(const Handler<T>& a, const Handler<U>& b) noexcept
+{
+	return a.get() != b.get();
 }
 
 #define HANDLER_KLASS_NORMAL\
@@ -190,6 +290,34 @@ private: /* from Handler */\
 			this->onFree(); }\
 	}\
 	void onFree();
+
+#define HANDLER_KLASS_INIT refcount_(0)
+
+#define HANDLER_KLASS_WEAK(Klass)\
+	template <typename T> friend class chisa::Handler;\
+	template <typename T> friend class chisa::HandlerW;\
+	template <typename T> friend class chisa::internal::WeakHandlerEntity;\
+private:\
+	int refcount_;\
+	chisa::internal::WeakHandlerEntity<Klass>* weakEntity_;\
+private: /* from Handler */\
+	void incref(){ this->refcount_++; }\
+	void decref(){\
+		this->refcount_--;\
+		if(this->refcount_ < 0){\
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] Handler refcount = %d < 0", this->refcount_);\
+		}else if(this->refcount_ == 0){\
+			this->onFree();\
+		}\
+	}\
+	void onFree();
+
+#define HANDLER_KLASS_WEAK_INIT refcount_(0),weakEntity_(nullptr)
+#define HANDLER_KLASS_WEAK_DEAD\
+	if(this->weakEntity_){\
+		this->weakEntity_->notifyDead();\
+	}\
+	delete this;\
 
 }
 
