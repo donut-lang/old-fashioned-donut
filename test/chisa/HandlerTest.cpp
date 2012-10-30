@@ -21,39 +21,33 @@
 
 namespace chisa {
 
-class TestFix {
-	HANDLER_KLASS_WEAK(TestFix);
+class TestFix : public HandlerBody<TestFix> {
 private:
-	int expired_;
+	int* expired_;
 public:
-	TestFix():HANDLER_KLASS_WEAK_INIT{
-		this->expired_ = 0;
+	TestFix( int* expired ):expired_(expired) {
+		*this->expired_ = 0;
 	}
-	int expired() const noexcept {
-		return this->expired_;
+	void onFree() {
+		(*this->expired_)++;
+		delete this;
 	}
 };
 
-void TestFix::onFree() {
-	if(this->weakEntity_){
-		this->weakEntity_->notifyDead();
-	}
-	this->expired_++;
-}
-
 TEST(WeakHandlerTest, HandlerTest)
 {
-	TestFix* test = new TestFix();
+	int c = 0;
+	TestFix* test = new TestFix(&c);
 	{
 		Handler<TestFix> handler(test);
 	}
-	ASSERT_EQ(1, test->expired());
-	delete test;
+	ASSERT_EQ(1, c);
 }
 
 TEST(WeakHandlerTest, WeakHandlerTest)
 {
-	TestFix* test = new TestFix();
+	int c = 0;
+	TestFix* test = new TestFix(&c);
 	{
 		Handler<TestFix> handler(test);
 		{
@@ -63,8 +57,7 @@ TEST(WeakHandlerTest, WeakHandlerTest)
 			ASSERT_TRUE(weak.expired());
 		}
 	}
-	ASSERT_EQ(1, test->expired());
-	delete test;
+	ASSERT_EQ(1, c);
 }
 
 }
