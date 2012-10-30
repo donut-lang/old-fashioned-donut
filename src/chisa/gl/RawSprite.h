@@ -18,21 +18,37 @@
 
 #pragma once
 #include <cairo/cairo.h>
+#include "../logging/Logger.h"
 #include "../util/ClassUtil.h"
 #include "../util/Thread.h"
 #include "../Handler.h"
 #include "Buffer.h"
 #include "Sprite.h"
+#include <deque>
 
 namespace chisa {
 namespace gl {
 
-class Canvas;
+class RawSpriteManager {
+	DISABLE_COPY_AND_ASSIGN(RawSpriteManager);
+	DEFINE_MEMBER_REF(private, logging::Logger, log)
+private:
+	static constexpr size_t MaxCachedSpriteCount = 200;
+	static constexpr size_t MaxCachedBufferCount = 200;
+	std::deque<RawSprite*> unusedSprite_;
+	std::deque<Buffer*> unusedBuffer_;
+public:
+	RawSpriteManager(logging::Logger& log);
+	~RawSpriteManager() noexcept;
+	Handler<RawSprite> queryRawSprite(const int width, const int height);
+public:
+	void backSprite(RawSprite* spr);
+	Buffer* queryBuffer(const int width, const int height);
+	void backBuffer(Buffer* buffer);
+};
 
 class RawSprite : public Sprite {
-	DISABLE_COPY_AND_ASSIGN(RawSprite);
-	friend class Canvas;
-private:
+	RawSpriteManager* const mgr_;
 	DEFINE_MEMBER(public, private, int, origWidth);
 	DEFINE_MEMBER(public, private, int, origHeight);
 	DEFINE_MEMBER(public, private, int, width);
@@ -40,16 +56,14 @@ private:
 	unsigned int texId_;
 	std::atomic<bool> locked_;
 public:
-	RawSprite(Canvas* const canvas, const int width, const int height);
-	virtual ~RawSprite();
+	RawSprite(RawSpriteManager* const mgr, const int width, const int height);
+	virtual ~RawSprite() noexcept;
 private:
-	void resize(int width, int height);
 	Buffer* lock();
 	void unlock();
 private:
-	virtual void onFree() override;
-	virtual void drawImpl(const geom::Point& pt, const float depth=0.0f) override;
-	unsigned int requestTexture();
+	virtual void onFree() noexcept override;
+	virtual void drawImpl(Canvas* const canvas, const geom::Point& pt, const float depth) override;
 	Buffer* buffer_;
 public:
 	class Session {
@@ -64,6 +78,8 @@ public:
 		inline int stride() const { return parent_->buffer_->stride(); };
 		inline unsigned char* data() const { return parent_->buffer_->data(); };
 	};
+public:
+	void resize(int width, int height);
 };
 
 }}

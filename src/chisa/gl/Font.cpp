@@ -26,8 +26,7 @@ namespace gl {
 static std::string TAG("Font");
 
 FontManager::FontManager(logging::Logger& log, const std::string& fontdir)
-:HANDLER_KLASS_WEAK_INIT
-,log_(log)
+:log_(log)
 ,fontdir_(fontdir)
 ,freetype_(nullptr)
 {
@@ -45,9 +44,9 @@ FontManager::~FontManager() noexcept
 	this->freetype_ = nullptr;
 }
 
-void FontManager::onFree()
+void FontManager::onFree() noexcept
 {
-	HANDLER_KLASS_WEAK_DEAD;
+	this->suicide();
 }
 
 Handler<Font> FontManager::queryFont(const std::string& name)

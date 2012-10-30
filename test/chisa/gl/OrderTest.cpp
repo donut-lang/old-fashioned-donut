@@ -17,7 +17,7 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../../src/chisa/gl/internal/Canvas.h"
+#include "../../../src/chisa/gl/internal/Order.h"
 #include <math.h>
 
 namespace chisa {
@@ -29,7 +29,7 @@ namespace gl {
 
 TEST(OrderTest, BasicTest)
 {
-	internal::BufferOrder order;
+	gl::internal::WidthOrder<std::pair<int,int> > order;
 	//横幅が同じなら縦幅でソート
 	ASSERT_TRUE (order(std::make_pair(1,2),std::make_pair(1,3)));
 	ASSERT_FALSE(order(std::make_pair(1,2),std::make_pair(1,1)));
@@ -43,13 +43,13 @@ TEST(OrderTest, BasicTest)
 
 TEST(OrderTest, IrreflexivityTest)
 {
-	internal::BufferOrder order;
+	gl::internal::WidthOrder<std::pair<int,int> > order;
 	ASSERT_FALSE(order(std::make_pair(100,100),std::make_pair(100,100)));
 }
 
 TEST(OrderTest, AntisymmetryTest)
 {
-	internal::BufferOrder order;
+	gl::internal::WidthOrder<std::pair<int,int> > order;
 	ANTI(1,2,1,3);
 	ANTI(1,2,1,1);
 	ANTI(2,2,1,3);
@@ -60,7 +60,7 @@ TEST(OrderTest, AntisymmetryTest)
 
 TEST(OrderTest, TransitivityTest)
 {
-	internal::BufferOrder order;
+	gl::internal::WidthOrder<std::pair<int,int> > order;
 	TRAN(1,2,3,4,5,6);
 	TRAN(5,6,4,3,2,1);
 	TRAN(1,1,1,1,1,1);

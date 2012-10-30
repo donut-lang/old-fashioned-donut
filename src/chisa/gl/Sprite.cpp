@@ -20,30 +20,15 @@
 namespace chisa {
 namespace gl {
 
-Sprite::Sprite(Canvas* const canvas)
-:HANDLER_KLASS_INIT
-,canvas_(canvas)
-{
-}
-
-Sprite::~Sprite()
-{
-}
-
-void Sprite::incref()
+void Sprite::increfImpl() noexcept
 {
 	std::unique_lock<std::mutex> lock(this->ref_mutex_);
-	this->refcount_++;
+	this->HandlerBody<Sprite>::increfImpl();
 }
-void Sprite::decref()
+void Sprite::decrefImpl()
 {
 	std::unique_lock<std::mutex> lock(this->ref_mutex_);
-	this->refcount_--;
-	if(this->refcount_ < 0){
-		throw logging::Exception(__FILE__, __LINE__, "[BUG] Sprite::Handler refcount = %d < 0", this->refcount_);
-	}else if(this->refcount_ == 0){
-		this->onFree();
-	}
+	this->HandlerBody<Sprite>::decrefImpl();
 }
 
 }}

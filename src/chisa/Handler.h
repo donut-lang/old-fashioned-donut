@@ -319,5 +319,42 @@ private: /* from Handler */\
 	}\
 	delete this;\
 
+template <class Derived>
+class HandlerBody {
+private:
+	HandlerBody(const HandlerBody<Derived>& other) = delete;\
+	HandlerBody(HandlerBody<Derived>&& other) = delete;\
+	const HandlerBody<Derived>& operator=(const HandlerBody<Derived>& other) = delete;\
+	const HandlerBody<Derived>& operator=(const HandlerBody<Derived>&& other) = delete;
+	template <typename T> friend class chisa::Handler;
+	template <typename T> friend class chisa::HandlerW;
+	template <typename T> friend class chisa::internal::WeakHandlerEntity;
+private:
+	int refcount_;
+	chisa::internal::WeakHandlerEntity<Derived>* weakEntity_;
+protected:
+	HandlerBody()
+	:refcount_(0), weakEntity_(nullptr) {}
+	virtual ~HandlerBody() noexcept{
+		if(this->weakEntity_){
+			this->weakEntity_->notifyDead();
+			this->weakEntity_ = nullptr;
+		}
+	}
+protected: /* from Handler */
+	void increfImpl() noexcept { this->refcount_++; }
+	void decrefImpl(){
+		this->refcount_--;
+		if(this->refcount_ < 0){
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] Handler refcount = %d < 0", this->refcount_);\
+		}else if(this->refcount_ == 0){
+			static_cast<Derived*>(this)->onFree();
+		}
+	}
+private:
+	void incref() noexcept { static_cast<Derived*>(this)->increfImpl(); }
+	void decref(){ static_cast<Derived*>(this)->decrefImpl(); }
+};
+
 }
 

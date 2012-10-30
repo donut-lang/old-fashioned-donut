@@ -21,8 +21,6 @@
 
 namespace chisa {
 namespace gl {
-class Buffer;
-class RawSprite;
 namespace internal {
 
 template <class T>
@@ -45,27 +43,5 @@ struct WidthOrder {
 	}
 };
 
-typedef WidthOrder<Buffer> BufferOrder;
-typedef WidthOrder<RawSprite> SpriteOrder;
-
-template <class T>
-struct VectorOrder {
-	inline bool operator()(const T* const a, const T* const b) const noexcept
-	{
-		return a->width() < b->width() && a->height() < b->height();
-	}
-	inline bool operator() (const T* a, const std::pair<int,int>& b) const noexcept
-	{
-		return a->width() < b.first && a->height() < b.second;
-	}
-	inline bool operator() (const std::pair<int,int>& a, const T* b) const noexcept
-	{
-		return a.first < b->width() && a.second < b->height();
-	}
-	inline bool operator() (const std::pair<int,int>& a, const std::pair<int,int>& b) const noexcept
-	{
-		return a.first < b.first && a.second < b.second;
-	}
-};
 
 }}}
