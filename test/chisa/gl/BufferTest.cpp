@@ -17,18 +17,16 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../../src/chisa/gl/Buffer.h"
+#include "../../../src/chisa/gl/RawSprite.h"
 
 namespace chisa {
 namespace gl {
 
 TEST(BufferTest, GetSetTest)
 {
-	Buffer b(12,34);
-	ASSERT_EQ(12, b.width());
-	ASSERT_EQ(34, b.height());
-	ASSERT_EQ(0, b.stride() % b.width());
-	ASSERT_NE(nullptr, b.data());
+	chisa::gl::internal::Buffer b(12);
+	ASSERT_EQ(12, b.size());
+	ASSERT_NE(nullptr, b.ptr());
 }
 
 }}

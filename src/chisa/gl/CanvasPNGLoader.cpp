@@ -98,7 +98,7 @@ Handler<RawSprite> Canvas::loadPNG(const std::string& filename)
 
 	Handler<RawSprite> spr = this->queryRawSprite(width, height);
 	{
-		RawSprite::Session session(spr);
+		RawSprite::Session session(spr, RawSprite::BufferType::RGBA8);
 		unsigned char* data = session.data();
 		const int stride = session.stride();
 		unsigned char* ptr[height];
