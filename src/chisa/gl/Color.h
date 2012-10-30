@@ -75,7 +75,7 @@ constexpr Color BLUE(0,0,1,1);
 constexpr Color GREEN(0,1,0,1);
 constexpr Color GRAY(.5,.5,.5,1);
 
-const std::pair<std::string, gl::Color> kColorTable[] = {
+const std::pair<std::string, gl::Color> COLOR_TABLE[] = {
 		std::pair<std::string, gl::Color>("unchanged", UNCHANGED_COLOR),
 		std::pair<std::string, gl::Color>("white", WHITE),
 		std::pair<std::string, gl::Color>("black", BLACK),

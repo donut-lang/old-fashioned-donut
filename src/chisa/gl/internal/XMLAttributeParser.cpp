@@ -46,7 +46,7 @@ void parseAttr<Color>(const std::string& name, Color& v, const Color& def, tinyx
 		return;
 	}
 	if( cv[0] != '#' ){
-		for(auto tbl : kColorTable){
+		for(auto tbl : COLOR_TABLE){
 			if(tbl.first == cv){
 				v = tbl.second;
 				break;
