@@ -31,10 +31,8 @@ namespace gl {
 
 class FontManager;
 
-class Font
+class Font : public HandlerBody<Font>
 {
-	DISABLE_COPY_AND_ASSIGN(Font);
-	HANDLER_KLASS_NORMAL;
 public:
 	enum Flag {
 		Italic = 0,
@@ -44,11 +42,9 @@ private:
 	HandlerW<FontManager> parent_;
 	FT_Face face_;
 	DEFINE_MEMBER(private, private, bool, locked);
-private:
+public:
 	Font(FontManager* parent, FT_Face face);
-	friend class FontManager;
-private:
-	~Font();
+	virtual ~Font() noexcept;
 public:
 	std::string family() const noexcept;
 	std::string style() const noexcept;
@@ -72,6 +68,8 @@ public:
 		}
 		FT_Face face() const noexcept { return parent_->face_; };
 	};
+public:
+	void onFree();
 };
 
 class FontManager : public HandlerBody<FontManager> {

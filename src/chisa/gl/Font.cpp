@@ -46,7 +46,7 @@ FontManager::~FontManager() noexcept
 
 void FontManager::onFree() noexcept
 {
-	this->suicide();
+	delete this;
 }
 
 Handler<Font> FontManager::queryFont(const std::string& name)
@@ -122,14 +122,13 @@ void FontManager::backFont(Font* font)
 }
 
 Font::Font(FontManager* parent, FT_Face face)
-:HANDLER_KLASS_INIT
-,parent_(parent)
+:parent_(parent)
 ,face_(face)
 ,locked_(false)
 {
 }
 
-Font::~Font()
+Font::~Font() noexcept
 {
 	if(!this->parent_.expired()){
 		FT_Done_Face(this->face_);
@@ -139,7 +138,8 @@ Font::~Font()
 
 void Font::onFree()
 {
-	if(Handler<FontManager> p = this->parent_.lock()){
+	if(!this->parent_.expired()){
+		Handler<FontManager> p = this->parent_.lock();
 		p->backFont(this);
 	}else{
 		delete this;

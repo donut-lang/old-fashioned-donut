@@ -276,49 +276,6 @@ bool operator!=(const Handler<T>& a, const Handler<U>& b) noexcept
 	return a.get() != b.get();
 }
 
-#define HANDLER_KLASS_NORMAL\
-	template <typename T> friend class chisa::Handler;\
-private:\
-	int refcount_;\
-private: /* from Handler */\
-	void incref(){ this->refcount_++; }\
-	void decref(){\
-		this->refcount_--;\
-		if(this->refcount_ < 0){\
-			throw logging::Exception(__FILE__, __LINE__, "[BUG] Handler refcount = %d < 0", this->refcount_);\
-		}else if(this->refcount_ == 0){\
-			this->onFree(); }\
-	}\
-	void onFree();
-
-#define HANDLER_KLASS_INIT refcount_(0)
-
-#define HANDLER_KLASS_WEAK(Klass)\
-	template <typename T> friend class chisa::Handler;\
-	template <typename T> friend class chisa::HandlerW;\
-	template <typename T> friend class chisa::internal::WeakHandlerEntity;\
-private:\
-	int refcount_;\
-	chisa::internal::WeakHandlerEntity<Klass>* weakEntity_;\
-private: /* from Handler */\
-	void incref(){ this->refcount_++; }\
-	void decref(){\
-		this->refcount_--;\
-		if(this->refcount_ < 0){\
-			throw logging::Exception(__FILE__, __LINE__, "[BUG] Handler refcount = %d < 0", this->refcount_);\
-		}else if(this->refcount_ == 0){\
-			this->onFree();\
-		}\
-	}\
-	void onFree();
-
-#define HANDLER_KLASS_WEAK_INIT refcount_(0),weakEntity_(nullptr)
-#define HANDLER_KLASS_WEAK_DEAD\
-	if(this->weakEntity_){\
-		this->weakEntity_->notifyDead();\
-	}\
-	delete this;\
-
 template <class Derived>
 class HandlerBody {
 private:
@@ -331,15 +288,13 @@ private:
 	template <typename T> friend class chisa::internal::WeakHandlerEntity;
 private:
 	int refcount_;
+	bool deteted;
 	chisa::internal::WeakHandlerEntity<Derived>* weakEntity_;
 protected:
 	HandlerBody()
-	:refcount_(0), weakEntity_(nullptr) {}
+	:refcount_(0), deteted(false), weakEntity_(nullptr) {}
 	virtual ~HandlerBody() noexcept{
-		if(this->weakEntity_){
-			this->weakEntity_->notifyDead();
-			this->weakEntity_ = nullptr;
-		}
+
 	}
 protected: /* from Handler */
 	void increfImpl() noexcept { this->refcount_++; }
@@ -348,6 +303,14 @@ protected: /* from Handler */
 		if(this->refcount_ < 0){
 			throw logging::Exception(__FILE__, __LINE__, "[BUG] Handler refcount = %d < 0", this->refcount_);\
 		}else if(this->refcount_ == 0){
+			if(deteted){
+				return;
+			}
+			this->deteted = true;
+			if(this->weakEntity_){
+				this->weakEntity_->notifyDead();
+				this->weakEntity_ = nullptr;
+			}
 			static_cast<Derived*>(this)->onFree();
 		}
 	}
