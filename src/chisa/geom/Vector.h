@@ -297,14 +297,16 @@ constexpr T max(const BaseVector<T>& a, const BaseVector<T>& b) noexcept{
 
 }}
 
-#undef ENABLE_PM
-#undef ENABLE_PM_ASSGN
-#undef ENABLE_MD
-#undef ENABLE_MD_ASSGN
-#undef FRIEND_OP
+#undef SETUP
 #undef ENABLE_CAST
 #undef ENABLE_UNARY_OP
-#undef SETUP
+#undef ENABLE_PM
+#undef ENABLE_PLUS
+#undef ENABLE_MINUS
+#undef ENABLE_PM_ASSIGN
+#undef ENABLE_MD
+#undef ENABLE_MD_ASSIGN
+#undef ENABLE_MD_FLOAT
 
 #include "Decl.h"
 
