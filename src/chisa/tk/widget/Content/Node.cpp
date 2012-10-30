@@ -91,7 +91,7 @@ Font::Font()
 {
 	this->color(gl::UNCHANGED_COLOR);
 	this->addAttribute("color", this->color_);
-	this->size(-1);
+	this->size(NAN);
 	this->addAttribute("size", this->size_);
 }
 
