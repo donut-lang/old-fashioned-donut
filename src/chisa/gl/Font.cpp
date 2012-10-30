@@ -22,17 +22,35 @@
 
 namespace chisa {
 namespace gl {
+namespace internal {
+FreeType::FreeType()
+:library_(nullptr)
+{
+	if(FT_Init_FreeType(&this->library_) != 0){
+		throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to init Freetype.");
+	}
+}
+
+FreeType::~FreeType() noexcept
+{
+	FT_Done_FreeType(this->library_);
+	this->library_ = nullptr;
+}
+
+void FreeType::onFree() noexcept
+{
+	delete this;
+}
+
+}
 
 static std::string TAG("Font");
 
 FontManager::FontManager(logging::Logger& log, const std::string& fontdir)
 :log_(log)
 ,fontdir_(fontdir)
-,freetype_(nullptr)
+,freetype_( new internal::FreeType() )
 {
-	if(FT_Init_FreeType(&this->freetype_) != 0){
-		throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to init Freetype.");
-	}
 	this->defaultFont_ = Handler<Font>( this->seachDefaultFont() );
 }
 
@@ -40,8 +58,6 @@ FontManager::~FontManager() noexcept
 {
 	decltype(this->unusedFonts_)().swap(this->unusedFonts_);
 	this->defaultFont_.reset();
-	FT_Done_FreeType(this->freetype_);
-	this->freetype_ = nullptr;
 }
 
 void FontManager::onFree() noexcept
@@ -86,11 +102,11 @@ Font* FontManager::searchFont( const std::string& name )
 	for(const std::string& fname : files){
 		unsigned int face_idx=0;
 		unsigned int face_max = 2;
-		while(FT_New_Face(this->freetype_, fname.c_str(), (face_idx++), &face) == 0 && face_idx < face_max){
+		while(FT_New_Face(this->freetype_->raw(), fname.c_str(), (face_idx++), &face) == 0 && face_idx < face_max){
 			face_max = face->num_faces;
 			if(face->family_name && family == std::string(face->family_name) &&
 					(!style.empty() && face->style_name) && style==std::string(face->style_name) ){
-				return new Font(this, face);
+				return new Font(this, this->freetype_, face);
 			}
 			FT_Done_Face(face);
 		}
@@ -104,8 +120,8 @@ Font* FontManager::seachDefaultFont()
 	std::set<std::string> files;
 	util::file::enumFiles(this->fontdir_, files);
 	for(const std::string& fname : files){
-		if(FT_New_Face(this->freetype_, fname.c_str(), 0, &face) == 0){
-			return new Font(this, face);
+		if(FT_New_Face(this->freetype_->raw(), fname.c_str(), 0, &face) == 0){
+			return new Font(this, this->freetype_, face);
 		}else{
 			this->log().e(TAG, "Failed to open font: %s", fname.c_str());
 		}
@@ -121,8 +137,9 @@ void FontManager::backFont(Font* font)
 	}
 }
 
-Font::Font(FontManager* parent, FT_Face face)
+Font::Font(FontManager* parent, Handler<internal::FreeType> freetype, FT_Face face)
 :parent_(parent)
+,freetype_(freetype)
 ,face_(face)
 ,locked_(false)
 {
@@ -130,9 +147,7 @@ Font::Font(FontManager* parent, FT_Face face)
 
 Font::~Font() noexcept
 {
-	if(!this->parent_.expired()){
-		FT_Done_Face(this->face_);
-	}
+	FT_Done_Face(this->face_);
 	this->face_ = nullptr;
 }
 
