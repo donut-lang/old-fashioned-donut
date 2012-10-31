@@ -174,5 +174,27 @@ TEST(NodeReadingTest, TreeNodeFoundTest)
 	ASSERT_TRUE(dynamic_cast<Paragraph*>(m->findTreeNodeById("test")));
 }
 
+TEST(NodeReadingTest, NoTextFoundTest)
+{
+	std::shared_ptr<Document> m;
+	auto tree = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?>
+	<doc><p></p><br/><br/></doc>
+	)delimiter");
+	ASSERT_NO_THROW(m = NodeReader().parseTree(tree->RootElement()));
+	ASSERT_FALSE(m->findFirstTextNode());
+
+	tree = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?>
+	<doc>a<p id="test">b</p>c<br/><br/></doc>
+	)delimiter");
+	ASSERT_NO_THROW(m = NodeReader().parseTree(tree->RootElement()));
+	ASSERT_TRUE(m->findFirstTextNode());
+	ASSERT_EQ("a", m->findFirstTextNode()->text());
+
+	ASSERT_TRUE(m->findTreeNodeById("test")->findFirstTextNode());
+	ASSERT_EQ("b", m->findTreeNodeById("test")->findFirstTextNode()->text());
+}
+
 }}}
 

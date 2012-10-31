@@ -53,6 +53,19 @@ TreeNode* TreeNode::findTreeNodeById(const std::string& name) noexcept
 	return nullptr;
 }
 
+
+Text* TreeNode::findFirstTextNode() noexcept
+{
+	for (std::shared_ptr<Node>& it : this->children_) {
+		Text* const t = it->findFirstTextNode();
+		if (t) {
+			return t;
+		}
+	}
+	return nullptr;
+}
+
+
 void TreeNode::parseAttribute(tinyxml2::XMLElement* node)
 {
 	for(auto it : this->attrMap_){
@@ -112,6 +125,11 @@ Font::Font()
 Text::Text(std::string text)
 :text_(text)
 {
+}
+
+Text* Text::findFirstTextNode() noexcept
+{
+	return this;
 }
 
 }}}
