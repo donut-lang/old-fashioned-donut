@@ -19,7 +19,7 @@
 #pragma once
 
 #include "../Widget.h"
-#include "../../gl/RawSprite.h"
+#include "../../gl/Sprite.h"
 
 namespace chisa {
 namespace util{
@@ -32,7 +32,7 @@ namespace widget {
 class ImageWidget: public chisa::tk::Widget {
 	DISABLE_COPY_AND_ASSIGN(ImageWidget);
 private:
-	Handler<gl::RawSprite> imageSprite_;
+	Handler<gl::Sprite> imageSprite_;
 	util::ParamSet* const paramSet_;
 public:
 	ImageWidget(logging::Logger& log, weak_ptr<World> world, tinyxml2::XMLElement* element);

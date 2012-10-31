@@ -117,12 +117,12 @@ std::shared_ptr<chisa::WorldGeist> Universe::invokeWorldGeist(std::weak_ptr<tk::
 	return this->hexe()->invokeWorldGeist(world, nameOfGeist);
 }
 
-Handler<gl::RawSprite> Universe::queryImage(const std::string& abs_filename)
+Handler<gl::Sprite> Universe::queryImage(const std::string& abs_filename)
 {
 	return this->canvas_.queryImage(abs_filename);
 }
 
-Handler<gl::RawSprite> Universe::queryRawSprite(const int width, const int height)
+Handler<gl::Sprite> Universe::queryRawSprite(const int width, const int height)
 {
 	return this->canvas_.queryRawSprite(width, height);
 }

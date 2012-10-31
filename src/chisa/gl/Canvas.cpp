@@ -106,7 +106,7 @@ void Canvas::drawTexture(unsigned int texId, const geom::Area spriteArea, const 
 	glFlush();
 }
 
-Handler<RawSprite> Canvas::queryRawSprite(const int width, const int height)
+Handler<Sprite> Canvas::queryRawSprite(const int width, const int height)
 {
 	return this->spriteManager_.queryRawSprite(width, height);
 }

@@ -19,7 +19,7 @@
 #pragma once
 
 #include "../Layout.h"
-#include "../../gl/RawSprite.h"
+#include "../../gl/Sprite.h"
 #include "../../gl/StringRenderer.h"
 
 namespace chisa {
@@ -32,7 +32,7 @@ private:
 	gl::StringRenderer renderer_;
 	gl::StringRenderer::Command cmd_;
 	std::string text_;
-	Handler<gl::RawSprite> sprite_;
+	Handler<gl::Sprite> sprite_;
 	bool dirty_;
 	bool vertical_;
 private:

@@ -24,7 +24,7 @@
 namespace chisa {
 namespace gl {
 class Canvas;
-class RawSprite;
+class Sprite;
 
 class Drawable : public HandlerBody<Drawable> {
 public:
@@ -53,12 +53,12 @@ public:
 
 class SpriteDrawable : public Drawable {
 private:
-	Handler<gl::RawSprite> sprite_;
+	Handler<gl::Sprite> sprite_;
 public:
-	SpriteDrawable(Handler<gl::RawSprite> spr);
+	SpriteDrawable(Handler<gl::Sprite> spr);
 	virtual ~SpriteDrawable() noexcept = default;
 public:
-	Handler<gl::RawSprite> sprite() const;
+	Handler<gl::Sprite> sprite() const;
 	virtual geom::Box size() const noexcept override;
 	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) override;
 };

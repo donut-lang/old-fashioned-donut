@@ -186,13 +186,13 @@ StringRenderer::Command StringRenderer::calcMaximumStringLength(const std::strin
 	return cmd;
 }
 
-Handler<gl::RawSprite> StringRenderer::Command::renderString(gl::Canvas& cv) const
+Handler<gl::Sprite> StringRenderer::Command::renderString(gl::Canvas& cv) const
 {
-	Handler<gl::RawSprite> spr = cv.queryRawSprite(static_cast<int>(std::ceil(this->area().width())), static_cast<int>(std::ceil(this->area().height())));
+	Handler<gl::Sprite> spr = cv.queryRawSprite(static_cast<int>(std::ceil(this->area().width())), static_cast<int>(std::ceil(this->area().height())));
 #if IS_BIG_ENDIAN
-	gl::RawSprite::Session ss(spr, gl::RawSprite::BufferType::ARGB8);
+	gl::Sprite::Session ss(spr, gl::Sprite::BufferType::ARGB8);
 #else
-	gl::RawSprite::Session ss(spr, gl::RawSprite::BufferType::BGRA8);
+	gl::Sprite::Session ss(spr, gl::Sprite::BufferType::BGRA8);
 #endif
 	gl::Font::RawFaceSession rfs(this->font_);
 	{

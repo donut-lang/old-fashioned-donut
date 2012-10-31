@@ -49,7 +49,7 @@ TEST_F(DrawableTest, ColorDrawableTest)
 
 TEST_F(DrawableTest, SpriteDrawableTest)
 {
-	Handler<gl::RawSprite> spr = canv->queryImage(MATERIAL_DIR"/img/test.png");
+	Handler<gl::Sprite> spr = canv->queryImage(MATERIAL_DIR"/img/test.png");
 	SpriteDrawable* dr = new SpriteDrawable(spr);
 	ASSERT_FLOAT_EQ(spr->width(), dr->width());
 	ASSERT_FLOAT_EQ(spr->height(), dr->height());

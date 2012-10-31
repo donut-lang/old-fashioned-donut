@@ -69,8 +69,8 @@ public:
 	 * 画像
 	 ******************************************************************************/
 public:
-	Handler<gl::RawSprite> queryImage(const std::string& abs_filename);
-	Handler<gl::RawSprite> queryRawSprite(const int width, const int height);
+	Handler<gl::Sprite> queryImage(const std::string& abs_filename);
+	Handler<gl::Sprite> queryRawSprite(const int width, const int height);
 	Handler<gl::FontManager> fontManager() const { return this->fontManager_; };
 	/******************************************************************************
 	 * タッチイベント
