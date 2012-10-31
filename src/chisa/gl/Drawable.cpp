@@ -74,6 +74,7 @@ geom::Box SpriteDrawable::size() const noexcept
 
 void SpriteDrawable::draw(Canvas& canvas, const geom::Area& area, const float depth)
 {
+	canvas.drawSprite(this->sprite_, area.point(), geom::Area(geom::ZERO, area.box()), depth);
 }
 
 //-----------------------------------------------------------------------------
@@ -134,13 +135,14 @@ geom::Box StretchDrawable::size() const noexcept
 
 void StretchDrawable::draw(Canvas& canvas, const geom::Area& area, const float depth)
 {
-	//XXX: これでは動かない。たぶん表示されない。
 	geom::Area rendered(area.intersect(geom::Area(area.point(), this->size_)));
 	Canvas::AffineScope as(canvas);
 	{
+		canvas.translate(area.point());
 		float const scaleX = this->child_->width() / this->size_.width();
 		float const scaleY = this->child_->height() / this->size_.height();
 		canvas.scale(geom::ScaleVector(scaleX, scaleY));
+		this->child_->draw(canvas, geom::Area(geom::ZERO, this->child_->size()), depth);
 	}
 }
 
