@@ -87,6 +87,7 @@ void WidgetWrapperLayout::renderImpl(gl::Canvas& canvas, const geom::Area& scree
 	//areaからウィジットが実際にレンダリングされる位置を計算
 	canvas.scale(this->widgetScale());
 	//描画を投げる
+	//TODO: offsetが0を下回るかもしれない。
 	geom::Point offset(area.point()-this->widgetOffset());
 	using namespace chisa::geom;
 	geom::Box size(min(area.box(), widgetSizeReal()-offset));

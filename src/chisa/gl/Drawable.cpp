@@ -106,7 +106,7 @@ void RepeatDrawable::draw(Canvas& canvas, const geom::Area& area, const float de
 	while(y < my){
 		float x=rendered.x();
 		while(x < mx){
-			this->child_->draw(canvas, geom::Area(mx,my, cx, cy),depth);
+			this->child_->draw(canvas, geom::Area(x,y, geom::min(cx,mx-x), geom::min(cy,my-y)),depth);
 			x+=cy;
 		}
 		y += cy;
