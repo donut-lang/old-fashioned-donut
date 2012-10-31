@@ -97,8 +97,7 @@ Font* FontManager::searchFont( const std::string& name )
 	std::string family;
 	std::string style;
 	Font::analyzeFontName(name, family, style);
-	std::set<std::string> files;
-	util::file::enumFiles(this->fontdir_, files);
+	std::vector<std::string> files(util::file::enumFiles(this->fontdir_));
 	for(const std::string& fname : files){
 		unsigned int face_idx=0;
 		unsigned int face_max = 2;
@@ -117,8 +116,7 @@ Font* FontManager::searchFont( const std::string& name )
 Font* FontManager::seachDefaultFont()
 {
 	FT_Face face;
-	std::set<std::string> files;
-	util::file::enumFiles(this->fontdir_, files);
+	std::vector<std::string> files(util::file::enumFiles(this->fontdir_));
 	for(const std::string& fname : files){
 		if(FT_New_Face(this->freetype_->raw(), fname.c_str(), 0, &face) == 0){
 			return new Font(this, this->freetype_, face);

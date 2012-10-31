@@ -35,7 +35,7 @@ namespace internal {
 }
 
 #if CHISA_WINDOWS
-static void enumFiles(const std::wstring& dir, std::set<std::string>& list, bool recursive)
+static void enumFilesImpl(const std::wstring& dir, std::vector<std::string>& list, bool recursive)
 {
 	using namespace internal;
 	using namespace util::internal::win32;
@@ -51,21 +51,23 @@ static void enumFiles(const std::wstring& dir, std::set<std::string>& list, bool
 		std::wstring name(join(dir,findFileData.cFileName));
 		if(findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY){
 			if(CurrentDirStr!=findFileData.cFileName && ParentDirStr!=findFileData.cFileName && recursive){
-				enumFiles(name, list, recursive);
+				enumFilesImpl(name, list, recursive);
 			}
 		}else{
-			list.insert(toUTF8(name));
+			list.push_back(toUTF8(name));
 		}
 	}while(FindNextFileW(h, &findFileData) != 0);
 	FindClose(h);
 }
-void enumFiles(const std::string& dir, std::set<std::string>& list, bool recursive)
+std::vector<std::string> enumFiles(const std::string& dir, bool recursive)
 {
 	using namespace util::internal::win32;
-	return enumFiles(toUTF16(dir), list, recursive);
+	std::vector<std::string> list;
+	enumFilesImpl(toUTF16(dir), list, recursive);
+	return list;
 }
 #else
-void enumFiles(const std::string& dir, std::set<std::string>& list, bool recursive)
+static void enumFilesImpl(const std::string& dir, std::vector<std::string>& list, bool recursive)
 {
 	typedef internal::FileConstants<std::string> ftype;
 	struct dirent* de;
@@ -83,13 +85,20 @@ void enumFiles(const std::string& dir, std::set<std::string>& list, bool recursi
 			static const std::string CurrentDirStr(ftype::CurrentDir);
 			static const std::string ParentDirStr(ftype::ParentDir);
 			if(CurrentDirStr!=de->d_name && ParentDirStr != de->d_name && recursive){
-				enumFiles(name, list, recursive);
+				enumFilesImpl(name, list, recursive);
 			}
 		} else {
-			list.insert(name);
+			list.push_back(name);
 		}
 	}
 	closedir(d);
+}
+
+std::vector<std::string> enumFiles(const std::string& dir, bool recursive)
+{
+	std::vector<std::string> list;
+	enumFilesImpl(dir, list, recursive);
+	return list;
 }
 #endif
 

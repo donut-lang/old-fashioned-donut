@@ -20,7 +20,7 @@
 
 #include "Platform.h"
 #include <string>
-#include <set>
+#include <vector>
 #include "internal/FileUtil.h"
 
 namespace chisa {
@@ -33,6 +33,6 @@ constexpr typename internal::FileConstants<T>::string_type join(const T& a, cons
 	return typename internal::FileConstants<T>::string_type(a)+internal::FileConstants<T>::Sep+join(left...);
 }
 
-void enumFiles(const std::string& dir, std::set<std::string>& list, bool recursive=false);
+std::vector<std::string> enumFiles(const std::string& dir, bool recursive=false);
 
 }}}
