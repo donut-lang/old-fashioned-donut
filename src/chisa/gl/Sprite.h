@@ -106,7 +106,8 @@ public: /* from Handler */
 	void decrefImpl();
 	void onFree() noexcept;
 public: /* from Canvas */
-	void drawImpl(Canvas* const canvas, const geom::Point& pt, const geom::Area* renderArea, const float depth);
+	void drawImpl(Canvas* const canvas, const geom::Point& pt, const geom::Area& renderArea, const float depth);
+	void drawImpl(Canvas* const canvas, const geom::Point& pt, const float depth);
 };
 
 }}

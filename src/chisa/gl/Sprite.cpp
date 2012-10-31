@@ -59,17 +59,15 @@ Sprite::~Sprite() noexcept (true)
 	}
 }
 
-void Sprite::drawImpl(Canvas* const canvas, const geom::Point& pt, const geom::Area* renderArea_, const float depth)
+void Sprite::drawImpl(Canvas* const canvas, const geom::Point& pt, const geom::Area& renderArea, const float depth)
 {
 	this->flushBuffer();
-	if(renderArea_){
-		geom::Point const start(geom::max(geom::ZERO, renderArea_->point()));
-		geom::Box const end(geom::min(this->size()-start, renderArea_->box()));
-		geom::Area renderArea(start, end);
-		canvas->drawTexture(this->texId_, this->origSize(), pt, renderArea, depth);
-	}else{
-		canvas->drawTexture(this->texId_, this->origSize(), pt, geom::Area(geom::Point(0,0), this->size()), depth);
-	}
+	canvas->drawTexture(this->texId_, pt, this->origSize(), renderArea, depth);
+}
+void Sprite::drawImpl(Canvas* const canvas, const geom::Point& pt, const float depth)
+{
+	this->flushBuffer();
+	canvas->drawTexture(this->texId_, pt, this->origSize(), this->size(), depth);
 }
 
 void Sprite::flushBuffer()

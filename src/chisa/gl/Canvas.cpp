@@ -83,11 +83,15 @@ void Canvas::scissorReset()
 	glScissor(0,0,this->width_,this->height_);
 }
 
-void Canvas::drawSprite(Handler<Sprite> sprite, const geom::Point& pt, const geom::Area* renderArea, const float depth)
+void Canvas::drawSprite(Handler<Sprite> sprite, const geom::Point& pt, const float depth)
 {
-	sprite->drawImpl(this, pt, renderArea, depth);
+	sprite->drawImpl(this, pt, depth);
 }
-void Canvas::drawTexture(unsigned int texId, const geom::IntBox& texSize, const geom::Point& pt, const geom::Area& spriteArea, const float depth)
+void Canvas::drawSprite(Handler<Sprite> sprite, const geom::Point& pt, const geom::Area& spriteArea, const float depth)
+{
+	sprite->drawImpl(this, pt, spriteArea, depth);
+}
+void Canvas::drawTexture(unsigned int texId, const geom::Point& pt, const geom::IntBox& texSize, const geom::Area& spriteArea, const float depth)
 {
 	const float width = spriteArea.width();
 	const float height = spriteArea.height();
@@ -107,6 +111,10 @@ void Canvas::drawTexture(unsigned int texId, const geom::IntBox& texSize, const 
 	glEnd();
 	glDisable(GL_TEXTURE_2D);
 	glFlush();
+}
+void Canvas::drawTexture(unsigned int texId, const geom::Point& pt, const geom::IntBox& texSize, const geom::IntBox& spriteSize, const float depth)
+{
+	this->drawTexture(texId, pt, texSize, geom::Area(geom::ZERO, spriteSize), depth);
 }
 
 Handler<Sprite> Canvas::queryRawSprite(const int width, const int height)

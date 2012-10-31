@@ -55,11 +55,13 @@ public:
 	void translate(const geom::Point& pt);
 	void rotate(const float angle, const geom::Point& pt);
 	void scale(const geom::ScaleVector& scale);
-	void drawSprite(Handler<Sprite> sprite, const geom::Point& pt, const geom::Area* renderArea = nullptr, const float depth=0.0f);
+	void drawSprite(Handler<Sprite> sprite, const geom::Point& pt, const float depth = 0.0f);
+	void drawSprite(Handler<Sprite> sprite, const geom::Point& pt, const geom::Area& spriteArea, const float depth = 0.0f);
 	void drawLine(const float width, const Color& color, const geom::Point& start, const geom::Point& end, const float depth=0.0f);
 	void drawRect(const float width, const Color& color, const geom::Area& area, const float depth=0.0f);
 	void fillRect(const Color& color, const geom::Area& area, const float depth=0.0f);
-	void drawTexture(unsigned int texId, const geom::IntBox& texSize, const geom::Point& pt, const geom::Area& spriteArea, const float depth);
+	void drawTexture(unsigned int texId, const geom::Point& pt, const geom::IntBox& texSize, const geom::Area& spriteArea, const float depth);
+	void drawTexture(unsigned int texId, const geom::Point& pt, const geom::IntBox& texSize, const geom::IntBox& spriteSize, const float depth);
 private:
 	void scissor(const geom::Area& area);
 	void scissorReset();
