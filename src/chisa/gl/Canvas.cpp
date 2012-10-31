@@ -92,8 +92,8 @@ void Canvas::drawTexture(unsigned int texId, const geom::IntBox& texSize, const 
 	const float width = spriteArea.width();
 	const float height = spriteArea.height();
 
-	const float top = spriteArea.x()/texSize.height();
-	const float left = spriteArea.y()/texSize.width();
+	const float top = spriteArea.y()/texSize.height();
+	const float left = spriteArea.x()/texSize.width();
 	const float right = (spriteArea.x()+width)/texSize.width();
 	const float bottom = (spriteArea.y()+height)/texSize.height();
 	glBindTexture(GL_TEXTURE_2D, texId);
