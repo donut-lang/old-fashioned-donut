@@ -81,7 +81,6 @@ void WidgetWrapperLayout::renderImpl(gl::Canvas& canvas, const geom::Area& scree
 		return;
 	}
 	gl::Canvas::AffineScope as(canvas);
-	gl::Canvas::ScissorScope ss(canvas, screenArea);
 	//スクリーン上の位置に移動
 	canvas.translate(screenArea.point());
 	//areaからウィジットが実際にレンダリングされる位置を計算
@@ -89,7 +88,7 @@ void WidgetWrapperLayout::renderImpl(gl::Canvas& canvas, const geom::Area& scree
 	//描画を投げる
 	geom::Point offset(area.point()-this->widgetOffset());
 	using namespace chisa::geom;
-	geom::Box size(min(area.box(), widgetSizeReal()-area.point()));
+	geom::Box size(min(area.box(), widgetSizeReal()-offset));
 	this->widgetDrawnArea(geom::Area(offset / this->widgetScale(), size/this->widgetScale()));
 	widget()->render(canvas, this->widgetDrawnArea());
 }

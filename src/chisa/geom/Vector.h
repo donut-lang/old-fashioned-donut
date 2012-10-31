@@ -273,6 +273,7 @@ public:
 				std::fabs(this->y()) < geom::VerySmall;
 	}
 };
+constexpr Vector ZERO = Vector(0,0);
 
 class IntVector : public BaseVector<IntVector, int> {
 	SETUP(IntVector);
