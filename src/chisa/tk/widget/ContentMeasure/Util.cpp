@@ -16,15 +16,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../../gl/Canvas.h"
-#include "../ContentWidgetImpl.h"
-#include "../Content/Node.h"
-#include "../../../geom/Area.h"
-
+#include "Util.h"
+#include <unicode/unistr.h>
+#include <unicode/regex.h>
 
 namespace chisa {
 namespace tk {
 namespace widget {
 
+std::string shrinkSpace(const std::string& str_)
+{
+	UErrorCode st = U_ZERO_ERROR;
+	UnicodeString str = UnicodeString::fromUTF8(str_);
+	RegexMatcher matcher(reinterpret_cast<const UChar*>(u"[\\t\\n\\f\\r ]+"), str, 0, st);
+	UnicodeString out(matcher.replaceAll(reinterpret_cast<const UChar*>(u" "), st));
+
+	std::string ret;
+	out.toUTF8String(ret);
+	return ret;
+}
 
 }}}
+

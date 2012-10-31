@@ -279,9 +279,9 @@ bool operator!=(const Handler<T>& a, const Handler<U>& b) noexcept
 template <class Derived>
 class HandlerBody {
 private:
-	HandlerBody(const HandlerBody<Derived>& other) = delete;\
-	HandlerBody(HandlerBody<Derived>&& other) = delete;\
-	const HandlerBody<Derived>& operator=(const HandlerBody<Derived>& other) = delete;\
+	HandlerBody(const HandlerBody<Derived>& other) = delete;
+	HandlerBody(HandlerBody<Derived>&& other) = delete;
+	const HandlerBody<Derived>& operator=(const HandlerBody<Derived>& other) = delete;
 	const HandlerBody<Derived>& operator=(const HandlerBody<Derived>&& other) = delete;
 	template <typename T> friend class chisa::Handler;
 	template <typename T> friend class chisa::HandlerW;

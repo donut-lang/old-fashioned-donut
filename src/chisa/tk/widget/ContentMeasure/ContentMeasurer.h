@@ -17,9 +17,9 @@
  */
 #pragma once
 
-#include "Content/Node.h"
-#include "Content/NodeWalker.h"
-#include "../../geom/Area.h"
+#include "../Content/Node.h"
+#include "../Content/NodeWalker.h"
+#include "../../../geom/Area.h"
 
 namespace chisa {
 namespace tk {
