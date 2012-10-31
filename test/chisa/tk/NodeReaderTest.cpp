@@ -133,5 +133,46 @@ TEST(NodeReadingTest, SpaceStringTest)
 	ASSERT_EQ(0, p->count());
 }
 
+TEST(NodeReadingTest, TreeNodeNotFoundTest)
+{
+	std::shared_ptr<Document> m;
+	auto tree = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?>
+	<doc><p></p><br/><br/></doc>
+	)delimiter");
+	ASSERT_NO_THROW(m = NodeReader().parseTree(tree->RootElement()));
+	ASSERT_FALSE(m->findTreeNodeById("test"));
+	ASSERT_FALSE(m->findTreeNodeById(""));
+
+	tree = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?>
+	<doc><p id="test"></p><br/><br/></doc>
+	)delimiter");
+	ASSERT_NO_THROW(m = NodeReader().parseTree(tree->RootElement()));
+	ASSERT_FALSE(m->findTreeNodeById("test1"));
+	ASSERT_FALSE(m->findTreeNodeById("tes"));
+	ASSERT_FALSE(m->findTreeNodeById(""));
+}
+
+TEST(NodeReadingTest, TreeNodeFoundTest)
+{
+	std::shared_ptr<Document> m;
+	auto tree = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?>
+	<doc id="root"><p></p><br/><br/></doc>
+	)delimiter");
+	ASSERT_NO_THROW(m = NodeReader().parseTree(tree->RootElement()));
+	ASSERT_TRUE(m->findTreeNodeById("root"));
+	ASSERT_TRUE(dynamic_cast<Document*>(m->findTreeNodeById("root")));
+
+	tree = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?>
+	<doc><p id="test"></p><br/><br/></doc>
+	)delimiter");
+	ASSERT_NO_THROW(m = NodeReader().parseTree(tree->RootElement()));
+	ASSERT_TRUE(m->findTreeNodeById("test"));
+	ASSERT_TRUE(dynamic_cast<Paragraph*>(m->findTreeNodeById("test")));
+}
+
 }}}
 

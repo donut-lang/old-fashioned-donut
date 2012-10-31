@@ -58,6 +58,7 @@ std::shared_ptr<Document> NodeReader::parseTree(tinyxml2::XMLElement* elm)
 		throw logging::Exception(__FILE__, __LINE__, "Invalid document tag: %s",elm->Name());
 	}
 	std::shared_ptr<Document> doc(Node::createRootDocument());
+	doc->parseAttribute(elm);
 	NODE_FOREACH(it, elm) {
 		doc->add(this->parseNode(doc, doc, it));
 	}
