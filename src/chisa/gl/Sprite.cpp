@@ -63,8 +63,9 @@ void Sprite::drawImpl(Canvas* const canvas, const geom::Point& pt, const geom::A
 {
 	this->flushBuffer();
 	if(renderArea_){
-		geom::Box left(this->size()-renderArea_->point());
-		geom::Area renderArea(renderArea_->point(), geom::min(left, renderArea_->box()));
+		geom::Point const start(geom::max(geom::ZERO, renderArea_->point()));
+		geom::Box const end(geom::min(this->size()-start, renderArea_->box()));
+		geom::Area renderArea(start, end);
 		canvas->drawTexture(this->texId_, this->origSize(), pt, renderArea, depth);
 	}else{
 		canvas->drawTexture(this->texId_, this->origSize(), pt, geom::Area(geom::Point(0,0), this->size()), depth);

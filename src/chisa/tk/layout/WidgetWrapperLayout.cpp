@@ -81,6 +81,7 @@ void WidgetWrapperLayout::renderImpl(gl::Canvas& canvas, const geom::Area& scree
 		return;
 	}
 	gl::Canvas::AffineScope as(canvas);
+	gl::Canvas::ScissorScope ss(canvas, screenArea);
 	//スクリーン上の位置に移動
 	canvas.translate(screenArea.point());
 	//areaからウィジットが実際にレンダリングされる位置を計算
