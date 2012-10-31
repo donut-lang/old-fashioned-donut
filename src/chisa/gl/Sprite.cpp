@@ -30,12 +30,10 @@ namespace gl {
 
 static constexpr unsigned int MAGIC=0xDEADBEEF;
 
-Sprite::Sprite(SpriteManager* const mgr, const int width, const int height)
+Sprite::Sprite(SpriteManager* const mgr, const geom::IntVector& size)
 :mgr_(mgr)
-,origWidth_(getPower2Of(width))
-,origHeight_(getPower2Of(height))
-,width_(origWidth_)
-,height_(origHeight_)
+,origSize_(geom::IntBox(getPower2Of(size.width()), getPower2Of(size.height())))
+,size_(origSize_)
 ,texId_(MAGIC)
 ,locked_(false)
 ,buffer_(nullptr)
@@ -44,7 +42,7 @@ Sprite::Sprite(SpriteManager* const mgr, const int width, const int height)
 	glGenTextures(1, &this->texId_);
 	glBindTexture(GL_TEXTURE_2D, this->texId_);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->origWidth(), this->origHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->origSize().width(), this->origSize().height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
@@ -61,10 +59,17 @@ Sprite::~Sprite() noexcept (true)
 	}
 }
 
-void Sprite::drawImpl(Canvas* const canvas, const geom::Point& pt, const float depth)
+void Sprite::drawImpl(Canvas* const canvas, const geom::Point& pt, const geom::Area* renderArea_, const float depth)
 {
 	this->flushBuffer();
-	//canvas->drawTexture(this->texId_, geom::Area(this->origWidth_, this->origHeight_, this->width_, this->height_), pt, depth);
+	if(renderArea_){
+		geom::Box left(this->size()-renderArea_->point());
+		geom::Area renderArea(renderArea_->point(), geom::min(left, renderArea_->box()));
+		canvas->drawTexture(this->texId_, this->origSize(), pt, renderArea, depth);
+	}else{
+		geom::Area renderArea(geom::Point(0,0), this->size());
+		canvas->drawTexture(this->texId_, this->origSize(), pt, renderArea, depth);
+	}
 }
 
 void Sprite::flushBuffer()
@@ -72,7 +77,7 @@ void Sprite::flushBuffer()
 	if(this->buffer_){
 		glBindTexture(GL_TEXTURE_2D, this->texId_);
 		//ここのサイズはバッファのものにしないと変な所を読みに行くかもしれない。
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0,0, this->width(), this->height(), this->bufferType_, GL_UNSIGNED_BYTE, this->buffer_->ptr());
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0,0, this->size().width(), this->size().height(), this->bufferType_, GL_UNSIGNED_BYTE, this->buffer_->ptr());
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
@@ -87,11 +92,10 @@ void Sprite::flushBuffer()
 
 void Sprite::resize(int width, int height)
 {
-	if(width > this->origWidth() || height > this->origHeight()){
+	if(width > this->origSize().width() || height > this->origSize().height()){
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] You can't resize Sprite bigger than original.");
 	}
-	this->width(width);
-	this->height(height);
+	this->size(geom::IntBox(width, height));
 }
 
 //-----------------------------------------------------------------------------
@@ -108,8 +112,7 @@ void Sprite::decrefImpl()
 }
 
 void Sprite::onFree() noexcept {
-	this->width_ = this->origWidth_;
-	this->height_ = this->origHeight_;
+	this->size(this->origSize());
 	if(this->buffer_){
 		this->mgr_->backBuffer(this->buffer_);
 		this->buffer_ = nullptr;
@@ -127,7 +130,7 @@ internal::Buffer* Sprite::lock(Sprite::BufferType bufferType)
 		return this->buffer_;
 	}else{
 		this->flushBuffer();
-		this->buffer_ = this->mgr_->queryBuffer(this->width() * this->height() * 4);
+		this->buffer_ = this->mgr_->queryBuffer(this->size().width() * this->size().height() * 4);
 		this->bufferType_ = bufferType;
 		return (this->buffer_);
 	}
@@ -203,7 +206,7 @@ Handler<Sprite> SpriteManager::queryRawSprite(const int width, const int height)
 	//横幅が同じ場合は、縦幅も大きいか同じであることが保証される。
 	//横幅が優先なので、横幅が違う場合は高さは短いかもしれない
 	if(it == this->unusedSprite_.end() || (*it)->height() < height){
-		Handler<Sprite> spr ( new Sprite(this, width, height) );
+		Handler<Sprite> spr ( new Sprite(this, geom::IntBox(width, height)) );
 		spr->resize(width, height);
 		return spr;
 	}else{
