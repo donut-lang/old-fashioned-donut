@@ -51,8 +51,7 @@ protected:
 	virtual Handler<gl::RawSprite> realizeImpl(gl::Canvas& cv) = 0;
 };
 
-class TextRenderCommand : public SpriteRenderCommand
-{
+class TextRenderCommand : public SpriteRenderCommand {
 private:
 	gl::StringRenderer::Command cmd_;
 public:
@@ -63,5 +62,24 @@ protected:
 	virtual Handler<gl::RawSprite> realizeImpl(gl::Canvas& cv) override;
 };
 
+class UnderlineRenderCommand : public RenderCommand {
+private:
+	gl::Color color_;
+	float width_;
+public:
+	UnderlineRenderCommand(const geom::Area& area, const gl::Color& color, const float width) noexcept
+	:RenderCommand(area), color_(color), width_(width){};
+	virtual ~UnderlineRenderCommand() noexcept (true) = default;
+public:
+	virtual void execute(gl::Canvas& canvas, const geom::Point& offset) override;
+};
+
+class BackgroundRenderCommand : public RenderCommand {
+public:
+	enum Type {
+		Color,
+		Image
+	};
+};
 
 }}}

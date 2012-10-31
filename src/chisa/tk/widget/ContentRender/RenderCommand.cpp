@@ -44,5 +44,12 @@ Handler<gl::RawSprite> TextRenderCommand::realizeImpl(gl::Canvas& cv)
 	return this->cmd_.renderString(cv);
 }
 
+//-----------------------------------------------------------------------------
+
+void UnderlineRenderCommand::execute(gl::Canvas& canvas, const geom::Point& offset)
+{
+	const geom::Point pt(this->area().point() - offset +geom::Vector(0, area().height()));
+	canvas.drawLine(this->width_, this->color_, pt, pt+geom::Vector(area().width(), 0) );
+}
 
 }}}
