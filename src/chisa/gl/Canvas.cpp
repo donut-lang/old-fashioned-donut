@@ -87,20 +87,23 @@ void Canvas::drawSprite(Handler<Sprite> sprite, const geom::Point& pt, const flo
 {
 	sprite->drawImpl(this, pt, depth);
 }
-void Canvas::drawTexture(unsigned int texId, const geom::Area spriteArea, const geom::Point& pt, const float depth)
+void Canvas::drawTexture(unsigned int texId, const geom::Box& texSize, const geom::Area& renderArea, const geom::Point& pt, const float depth)
 {
-	const float width = spriteArea.width();
-	const float height = spriteArea.height();
-	const float right = width/spriteArea.x();
-	const float bottom = height/spriteArea.y();
+	const float width = renderArea.width();
+	const float height = renderArea.height();
+
+	const float top = renderArea.x()/texSize.height();
+	const float left = renderArea.y()/texSize.width();
+	const float right = (renderArea.x()+renderArea.width())/texSize.width();
+	const float bottom = (renderArea.y()+renderArea.height())/texSize.height();
 	glBindTexture(GL_TEXTURE_2D, texId);
 	glEnable(GL_TEXTURE_2D);
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
 	glBegin(GL_POLYGON);
-		glTexCoord2f(0,		0);		glVertex3f(pt.x()      , pt.y(), depth);
-		glTexCoord2f(0,		bottom);glVertex3f(pt.x()      , pt.y()+height, depth);
-		glTexCoord2f(right,	bottom);glVertex3f(pt.x()+width, pt.y()+height, depth);
-		glTexCoord2f(right,	0);		glVertex3f(pt.x()+width, pt.y(),depth);
+		glTexCoord2f(left, top   );glVertex3f(pt.x()      , pt.y(), depth);
+		glTexCoord2f(left, bottom);glVertex3f(pt.x()      , pt.y()+height, depth);
+		glTexCoord2f(right,bottom);glVertex3f(pt.x()+width, pt.y()+height, depth);
+		glTexCoord2f(right,top   );glVertex3f(pt.x()+width, pt.y(),depth);
 	glEnd();
 	glDisable(GL_TEXTURE_2D);
 	glFlush();

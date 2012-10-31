@@ -64,7 +64,7 @@ Sprite::~Sprite() noexcept (true)
 void Sprite::drawImpl(Canvas* const canvas, const geom::Point& pt, const float depth)
 {
 	this->flushBuffer();
-	canvas->drawTexture(this->texId_, geom::Area(this->origWidth_, this->origHeight_, this->width_, this->height_), pt, depth);
+	//canvas->drawTexture(this->texId_, geom::Area(this->origWidth_, this->origHeight_, this->width_, this->height_), pt, depth);
 }
 
 void Sprite::flushBuffer()
