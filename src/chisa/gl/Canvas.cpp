@@ -83,19 +83,19 @@ void Canvas::scissorReset()
 	glScissor(0,0,this->width_,this->height_);
 }
 
-void Canvas::drawSprite(Handler<Sprite> sprite, const geom::Point& pt, const float depth)
+void Canvas::drawSprite(Handler<Sprite> sprite, const geom::Point& pt, const geom::Area* renderArea, const float depth)
 {
-	sprite->drawImpl(this, pt, depth);
+	sprite->drawImpl(this, pt, renderArea, depth);
 }
-void Canvas::drawTexture(unsigned int texId, const geom::Box& texSize, const geom::Area& renderArea, const geom::Point& pt, const float depth)
+void Canvas::drawTexture(unsigned int texId, const geom::IntBox& texSize, const geom::Point& pt, const geom::Area& spriteArea, const float depth)
 {
-	const float width = renderArea.width();
-	const float height = renderArea.height();
+	const float width = spriteArea.width();
+	const float height = spriteArea.height();
 
-	const float top = renderArea.x()/texSize.height();
-	const float left = renderArea.y()/texSize.width();
-	const float right = (renderArea.x()+renderArea.width())/texSize.width();
-	const float bottom = (renderArea.y()+renderArea.height())/texSize.height();
+	const float top = spriteArea.x()/texSize.height();
+	const float left = spriteArea.y()/texSize.width();
+	const float right = (spriteArea.x()+width)/texSize.width();
+	const float bottom = (spriteArea.y()+height)/texSize.height();
 	glBindTexture(GL_TEXTURE_2D, texId);
 	glEnable(GL_TEXTURE_2D);
 	glColor4f(1.0f,1.0f,1.0f,1.0f);

@@ -29,6 +29,10 @@ typedef Vector Point;
 typedef Vector Distance;
 typedef Vector Box;
 
+class IntVector;
+typedef IntVector IntPoint;
+typedef IntVector IntBox;
+
 class Margin;
 
 class Matrix;

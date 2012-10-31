@@ -63,14 +63,12 @@ public:
 class Sprite : public HandlerBody<Sprite> {
 	std::mutex ref_mutex_;
 	SpriteManager* const mgr_;
-	DEFINE_MEMBER(public, private, int, origWidth);
-	DEFINE_MEMBER(public, private, int, origHeight);
-	DEFINE_MEMBER(public, private, int, width);
-	DEFINE_MEMBER(public, private, int, height);
+	DEFINE_MEMBER(public, private, geom::IntVector, origSize);
+	DEFINE_MEMBER(public, private, geom::IntVector, size);
 	unsigned int texId_;
 	std::atomic<bool> locked_;
 public:
-	Sprite(SpriteManager* const mgr, const int width, const int height);
+	Sprite(SpriteManager* const mgr, const geom::IntVector& size);
 	virtual ~Sprite() noexcept(true);
 	enum BufferType {
 		Invalid = 0,
@@ -93,19 +91,22 @@ public:
 	public:
 		Session(Handler<Sprite> parent, Sprite::BufferType bufferType);
 		~Session();
-		inline int width() const noexcept { return parent_->width(); };
-		inline int height() const noexcept { return parent_->height(); };
-		inline int stride() const noexcept { return parent_->width() * 4; };
+		inline int width() const noexcept { return parent_->size().width(); };
+		inline int height() const noexcept { return parent_->size().height(); };
+		inline geom::IntBox size() const noexcept { return parent_->size(); };
+		inline int stride() const noexcept { return parent_->size().width() * 4; };
 		inline unsigned char* data() const noexcept { return parent_->buffer_->ptr(); };
 	};
 public:
 	void resize(int width, int height);
+	inline int width() const noexcept { return this->size().width(); };
+	inline int height() const noexcept { return this->size().height(); };
 public: /* from Handler */
 	void increfImpl() noexcept;
 	void decrefImpl();
 	void onFree() noexcept;
 public: /* from Canvas */
-	void drawImpl(Canvas* const canvas, const geom::Point& pt, const float depth);
+	void drawImpl(Canvas* const canvas, const geom::Point& pt, const geom::Area* renderArea, const float depth);
 };
 
 }}

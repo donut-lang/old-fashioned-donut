@@ -57,7 +57,7 @@ string Button::toString() const
 
 void Button::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
 {
-	canvas.drawSprite(this->sprite_, this->renderOffset_, 0.0f);
+	canvas.drawSprite(this->sprite_, this->renderOffset_);
 }
 
 geom::Box Button::onMeasure(const geom::Box& constraint)

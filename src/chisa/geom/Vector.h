@@ -34,7 +34,7 @@ public:\
 	void operator delete(void* pv) = delete;
 
 #define ENABLE_CAST(Klass, From)\
-	explicit constexpr Klass(const From& o) noexcept:BaseVector<Klass>(o){};
+	implicit constexpr Klass(const From& o) noexcept:BaseVector<Klass>(o){};
 
 #define ENABLE_UNARY_OP(Klass)\
 	inline constexpr Klass operator-() const noexcept{\
@@ -244,6 +244,8 @@ public:
 	}
 };
 
+class IntVector;
+
 class Vector : public BaseVector<Vector, float> {
 	SETUP(Vector);
 public:
@@ -256,19 +258,41 @@ public:
 	ENABLE_MD(Vector, ScaleVector, Vector);
 	ENABLE_MD_ASSIGN(Vector, ScaleVector);
 	ENABLE_MD_FLOAT(Vector);
-	inline constexpr bool near(const Vector& other, const float precision) const noexcept{
+	inline constexpr bool near(const Vector& other, const ValType precision) const noexcept{
 		return
 				std::fabs(this->x() - other.x()) < precision &&
 				std::fabs(this->y() - other.y()) < precision;
 	}
-	inline constexpr float width() const noexcept{ return this->x(); };
-	inline constexpr float height() const noexcept{ return this->y(); };
-	inline void width(const float width) noexcept { this->x(width); };
-	inline void height(const float height) noexcept { this->y(height); };
+	inline constexpr ValType width() const noexcept{ return this->x(); };
+	inline constexpr ValType height() const noexcept{ return this->y(); };
+	inline void width(const ValType width) noexcept { this->x(width); };
+	inline void height(const ValType height) noexcept { this->y(height); };
 	inline constexpr bool empty() const noexcept {
 		return
 				std::fabs(this->x()) < geom::VerySmall ||
 				std::fabs(this->y()) < geom::VerySmall;
+	}
+};
+
+class IntVector : public BaseVector<IntVector, int> {
+	SETUP(IntVector);
+public:
+	inline std::string toString() const{
+		return util::format("(IntVector %f %f)", this->x(), this->y());
+	}
+	ENABLE_UNARY_OP(IntVector);
+	ENABLE_PM(IntVector , IntVector , IntVector );
+	ENABLE_PM(IntVector , Vector , Vector );
+	ENABLE_PM_ASSIGN(IntVector, IntVector);
+	inline constexpr ValType width() const noexcept{ return this->x(); };
+	inline constexpr ValType height() const noexcept{ return this->y(); };
+	inline constexpr operator Vector() {
+		return Vector(x(),y());
+	}
+	inline void width(const ValType width) noexcept { this->x(width); };
+	inline void height(const ValType height) noexcept { this->y(height); };
+	inline constexpr bool empty() const noexcept {
+		return this->x() <= 0 || this->y() <= 0;
 	}
 };
 

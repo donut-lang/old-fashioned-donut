@@ -54,7 +54,7 @@ void NesScreenWidget::render(chisa::gl::Canvas& cv, const chisa::geom::Area& are
 	chisa::gl::Canvas::AffineScope as(cv);
 	{
 		cv.translate(-area.point());
-		cv.drawSprite(lock.getSprite(), chisa::geom::Vector(0.0f, 0.0f), 0.0f);
+		cv.drawSprite(lock.getSprite(), chisa::geom::Vector(0.0f, 0.0f));
 	}
 }
 
