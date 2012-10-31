@@ -56,6 +56,7 @@ public:
 		return node;
 	}
 	static std::shared_ptr<Document> createRootDocument();
+	virtual TreeNode* findTreeNodeById(const std::string& name) noexcept{ return nullptr; };
 };
 
 #define NODE_SUBKLASS_DESTRUCTOR(Klass) public: virtual ~Klass() noexcept = default;
@@ -96,6 +97,7 @@ public:
 	inline size_t count() const { return this->children_.size(); };
 	inline std::shared_ptr<Node> at(size_t idx) const { return this->children_.at(idx); };
 	void parseAttribute(tinyxml2::XMLElement* elm);
+	virtual TreeNode* findTreeNodeById(const std::string& name) noexcept override;
 protected:
 	template <typename T> void addAttribute(const std::string& name, T& ptr)
 	{

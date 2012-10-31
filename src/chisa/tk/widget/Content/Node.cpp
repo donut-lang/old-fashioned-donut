@@ -39,6 +39,20 @@ TreeNode::TreeNode()
 	this->addAttribute("id", this->id_);
 }
 
+TreeNode* TreeNode::findTreeNodeById(const std::string& name) noexcept
+{
+	if(!(this->id().empty()) && name == this->id()){
+		return this;
+	}
+	for(std::shared_ptr<Node>& it : this->children_){
+		TreeNode* const n = it->findTreeNodeById(name);
+		if(n){
+			return n;
+		}
+	}
+	return nullptr;
+}
+
 void TreeNode::parseAttribute(tinyxml2::XMLElement* node)
 {
 	for(auto it : this->attrMap_){

@@ -17,7 +17,7 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../src/chisa/tk/widget/ContentMeasurerUtil.h"
+#include "../../src/chisa/tk/widget/ContentMeasure/Util.h"
 
 namespace chisa {
 namespace tk {
