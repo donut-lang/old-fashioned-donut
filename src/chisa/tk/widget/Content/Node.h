@@ -57,6 +57,7 @@ public:
 	}
 	static std::shared_ptr<Document> createRootDocument();
 	virtual TreeNode* findTreeNodeById(const std::string& name) noexcept{ return nullptr; };
+	virtual Text* findFirstTextNode() noexcept { return nullptr; };
 };
 
 #define NODE_SUBKLASS_DESTRUCTOR(Klass) public: virtual ~Klass() noexcept = default;
@@ -98,6 +99,7 @@ public:
 	inline std::shared_ptr<Node> at(size_t idx) const { return this->children_.at(idx); };
 	void parseAttribute(tinyxml2::XMLElement* elm);
 	virtual TreeNode* findTreeNodeById(const std::string& name) noexcept override;
+	virtual Text* findFirstTextNode() noexcept override;
 protected:
 	template <typename T> void addAttribute(const std::string& name, T& ptr)
 	{
@@ -187,6 +189,7 @@ public:
 	inline std::size_t areaSize() const noexcept{ return this->areas_.size(); };
 	inline DataType areaAt(std::size_t idx) const noexcept{ return this->areas_.at(idx); };
 	inline ListType const& areas() const noexcept { return this->areas_; }
+	virtual Text* findFirstTextNode() noexcept override;
 };
 
 }}}
