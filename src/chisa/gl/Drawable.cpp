@@ -57,12 +57,12 @@ void ColorDrawable::draw(Canvas& canvas, const geom::Area& area, const float dep
 
 //-----------------------------------------------------------------------------
 
-SpriteDrawable::SpriteDrawable(Handler<gl::RawSprite> spr)
+SpriteDrawable::SpriteDrawable(Handler<gl::Sprite> spr)
 :sprite_(spr)
 {
 }
 
-Handler<gl::RawSprite> SpriteDrawable::sprite() const
+Handler<gl::Sprite> SpriteDrawable::sprite() const
 {
 	return this->sprite_;
 }

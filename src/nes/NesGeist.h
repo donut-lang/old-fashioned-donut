@@ -21,7 +21,6 @@
 #include "../chisa/Hexe.h"
 #include "../chisa/tk/Task.h"
 #include "../chisa/gl/Sprite.h"
-#include "../chisa/gl/RawSprite.h"
 #include "../chisa/util/Thread.h"
 
 namespace nes {
@@ -46,13 +45,13 @@ public:
 	public:
 		Lock(NesGeist& parent);
 		virtual ~Lock();
-		inline chisa::Handler<chisa::gl::RawSprite> getSprite() { return parent_.spr_; };
+		inline chisa::Handler<chisa::gl::Sprite> getSprite() { return parent_.spr_; };
 	};
 private:
 	VirtualMachine* machine_;
 	std::thread* runner_t_;
 	Runner* runner_;
-	chisa::Handler<chisa::gl::RawSprite> spr_;
+	chisa::Handler<chisa::gl::Sprite> spr_;
 	std::mutex spr_mutex_;
 	std::mutex frame_mutex_;
 	float time_ms_;

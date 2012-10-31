@@ -27,7 +27,6 @@
 #include "Color.h"
 #include "../Handler.h"
 #include "Sprite.h"
-#include "RawSprite.h"
 
 namespace chisa {
 namespace geom {
@@ -43,13 +42,13 @@ private:
 	float width_;
 	float height_;
 private:
-	Handler<RawSprite> loadPNG(const std::string& filename);
+	Handler<Sprite> loadPNG(const std::string& filename);
 public:
 	Canvas(logging::Logger& log);
 	virtual ~Canvas();
 public:
-	RawSpriteManager spriteManager_;
-	std::deque<std::pair<std::string, Handler<RawSprite> > > imageCache_;
+	SpriteManager spriteManager_;
+	std::deque<std::pair<std::string, Handler<Sprite> > > imageCache_;
 public:
 	void ortho(const float left, const float right, const float bottom, const float top, const float near_val, const float far_val);
 	void resize2d(const geom::Box& box);
@@ -81,8 +80,8 @@ public:
 		virtual ~AffineScope();
 	};
 public:
-	Handler<RawSprite> queryRawSprite(const int width, const int height);
-	Handler<RawSprite> queryImage(const std::string& filename);
+	Handler<Sprite> queryRawSprite(const int width, const int height);
+	Handler<Sprite> queryImage(const std::string& filename);
 };
 
 }}

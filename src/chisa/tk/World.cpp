@@ -179,21 +179,21 @@ Widget* World::createWidget(const string& klass, tinyxml2::XMLElement* elem)
 	return this->widgetFactory_->createWidget(klass, elem);
 }
 
-Handler<gl::RawSprite> World::queryImage(const string& abs_filename)
+Handler<gl::Sprite> World::queryImage(const string& abs_filename)
 {
 	if(std::shared_ptr<Universe> uni = this->universe_.lock()){
 		return uni->queryImage(abs_filename);
 	}else{
-		return Handler<gl::RawSprite>();
+		return Handler<gl::Sprite>();
 	}
 }
 
-Handler<gl::RawSprite> World::queryRawSprite(const int width, const int height)
+Handler<gl::Sprite> World::queryRawSprite(const int width, const int height)
 {
 	if(std::shared_ptr<Universe> uni = this->universe_.lock()){
 		return uni->queryRawSprite(width, height);
 	}else{
-		return Handler<gl::RawSprite>();
+		return Handler<gl::Sprite>();
 	}
 }
 

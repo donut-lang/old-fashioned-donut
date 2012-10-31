@@ -21,7 +21,7 @@
 #include <cstdint>
 #include <cstddef>
 #include <tuple>
-#include "RawSprite.h"
+#include "Sprite.h"
 #include "../geom/Area.h"
 #include "../Handler.h"
 #include "Font.h"
@@ -72,7 +72,7 @@ public:
 		~Command () noexcept = default;
 		explicit operator bool () const noexcept { return this->enabled(); };
 	public:
-		Handler<gl::RawSprite> renderString(gl::Canvas& cv) const;
+		Handler<gl::Sprite> renderString(gl::Canvas& cv) const;
 	};
 private:
 	Handler<gl::FontManager> fontManager_;

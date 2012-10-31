@@ -26,7 +26,7 @@ namespace gl {
 
 static const std::string TAG("Canvas/PNG");
 
-Handler<RawSprite> Canvas::queryImage(const std::string& filename)
+Handler<Sprite> Canvas::queryImage(const std::string& filename)
 {
 	for(auto it = this->imageCache_.begin(); it != this->imageCache_.end(); ++it){
 		if(it->first == filename){
@@ -42,7 +42,7 @@ Handler<RawSprite> Canvas::queryImage(const std::string& filename)
 	if(log().t()){
 		log().t(TAG, "Cache not found: %s",filename.c_str());
 	}
-	Handler<RawSprite> img = this->loadPNG(filename);
+	Handler<Sprite> img = this->loadPNG(filename);
 	this->imageCache_.push_front(std::make_pair(filename, img));
 	while(this->imageCache_.size() > 10) {
 		this->imageCache_.pop_back();
@@ -50,7 +50,7 @@ Handler<RawSprite> Canvas::queryImage(const std::string& filename)
 	return img;
 }
 
-Handler<RawSprite> Canvas::loadPNG(const std::string& filename)
+Handler<Sprite> Canvas::loadPNG(const std::string& filename)
 {
 	FILE* fp = fopen(filename.c_str(), "rb");
 	if(!fp){
@@ -96,9 +96,9 @@ Handler<RawSprite> Canvas::loadPNG(const std::string& filename)
 	const int width = png_get_image_width(png, info);
 	const int height = png_get_image_height(png, info);
 
-	Handler<RawSprite> spr = this->queryRawSprite(width, height);
+	Handler<Sprite> spr = this->queryRawSprite(width, height);
 	{
-		RawSprite::Session session(spr, RawSprite::BufferType::RGBA8);
+		Sprite::Session session(spr, Sprite::BufferType::RGBA8);
 		unsigned char* data = session.data();
 		const int stride = session.stride();
 		unsigned char* ptr[height];

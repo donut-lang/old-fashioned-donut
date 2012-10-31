@@ -23,7 +23,7 @@ namespace chisa {
 namespace tk {
 namespace widget {
 
-Handler<gl::RawSprite> SpriteRenderCommand::realize(gl::Canvas& cv) {
+Handler<gl::Sprite> SpriteRenderCommand::realize(gl::Canvas& cv) {
 	if(!this->sprite()){
 		this->sprite(this->realizeImpl(cv));
 	}
@@ -39,7 +39,7 @@ void SpriteRenderCommand::execute(gl::Canvas& canvas, const geom::Point& offset)
 }
 
 //-----------------------------------------------------------------------------
-Handler<gl::RawSprite> TextRenderCommand::realizeImpl(gl::Canvas& cv)
+Handler<gl::Sprite> TextRenderCommand::realizeImpl(gl::Canvas& cv)
 {
 	return this->cmd_.renderString(cv);
 }

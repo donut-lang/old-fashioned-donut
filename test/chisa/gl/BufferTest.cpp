@@ -17,7 +17,7 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../../src/chisa/gl/RawSprite.h"
+#include "../../../src/chisa/gl/Sprite.h"
 
 namespace chisa {
 namespace gl {

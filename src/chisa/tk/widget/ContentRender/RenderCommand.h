@@ -39,16 +39,16 @@ public:
 };
 
 class SpriteRenderCommand : public RenderCommand {
-	DEFINE_MEMBER(public, private, Handler<gl::RawSprite>, sprite);
+	DEFINE_MEMBER(public, private, Handler<gl::Sprite>, sprite);
 public:
 	SpriteRenderCommand(const geom::Area& area) noexcept:RenderCommand(area){};
 	virtual ~SpriteRenderCommand() noexcept {};
 public:
-	Handler<gl::RawSprite> realize(gl::Canvas& cv);
+	Handler<gl::Sprite> realize(gl::Canvas& cv);
 	virtual void free() noexcept override;
 	virtual void execute(gl::Canvas& canvas, const geom::Point& offset) override;
 protected:
-	virtual Handler<gl::RawSprite> realizeImpl(gl::Canvas& cv) = 0;
+	virtual Handler<gl::Sprite> realizeImpl(gl::Canvas& cv) = 0;
 };
 
 class TextRenderCommand : public SpriteRenderCommand {
@@ -59,7 +59,7 @@ public:
 	:SpriteRenderCommand(area),cmd_(cmd){};
 	virtual ~TextRenderCommand() noexcept = default;
 protected:
-	virtual Handler<gl::RawSprite> realizeImpl(gl::Canvas& cv) override;
+	virtual Handler<gl::Sprite> realizeImpl(gl::Canvas& cv) override;
 };
 
 class UnderlineRenderCommand : public RenderCommand {
