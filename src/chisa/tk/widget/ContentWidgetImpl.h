@@ -133,11 +133,11 @@ public:
 	ContentMeasurer(logging::Logger& log, Handler<gl::FontManager> fontManager, float const width, RenderTree& tree) noexcept;
 	geom::Box start(std::shared_ptr<Document> doc);
 	virtual ~ContentMeasurer() noexcept (true) = default;
-	virtual void walk(Document* model) override;
-	virtual void walk(Paragraph* model) override;
-	virtual void walk(Heading* model) override;
-	virtual void walk(Link* model) override;
-	virtual void walk(Text* model) override;
+	virtual void walk(Document* doc) override;
+	virtual void walk(Paragraph* para) override;
+	virtual void walk(Heading* head) override;
+	virtual void walk(Link* link) override;
+	virtual void walk(Text* text) override;
 	virtual void walk(Font* font) override;
 	virtual void walk(BreakLine* br) override;
 };

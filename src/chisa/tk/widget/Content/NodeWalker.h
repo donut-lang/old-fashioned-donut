@@ -28,11 +28,11 @@ public:
 	NodeWalker() noexcept = default;
 	virtual ~NodeWalker() noexcept (true) = default;
 	void start(std::shared_ptr<Document> model);
-	void walkChildren(TreeNode* node);
-	virtual void walk(Document* model) = 0;
-	virtual void walk(Paragraph* model) = 0;
-	virtual void walk(Heading* model) = 0;
-	virtual void walk(Text* model) = 0;
+	void walkChildren(TreeNode* children);
+	virtual void walk(Document* doc) = 0;
+	virtual void walk(Paragraph* para) = 0;
+	virtual void walk(Heading* head) = 0;
+	virtual void walk(Text* text) = 0;
 	virtual void walk(Link* link) = 0;
 	virtual void walk(Font* br) = 0;
 	virtual void walk(BreakLine* br) = 0;

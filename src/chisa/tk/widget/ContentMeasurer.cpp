@@ -46,29 +46,29 @@ geom::Box ContentMeasurer::start(std::shared_ptr<Document> doc)
 }
 
 
-void ContentMeasurer::walk(Document* model)
+void ContentMeasurer::walk(Document* doc)
 {
-	BlockSession bs(*this, model);
-	this->walkChildren(model);
+	BlockSession bs(*this, doc);
+	this->walkChildren(doc);
 }
 
-void ContentMeasurer::walk(Paragraph* model)
+void ContentMeasurer::walk(Paragraph* para)
 {
-	BlockSession bs(*this, model);
-	this->walkChildren(model);
+	BlockSession bs(*this, para);
+	this->walkChildren(para);
 }
 
-void ContentMeasurer::walk(Heading* model)
+void ContentMeasurer::walk(Heading* heading)
 {
-	BlockSession bs(*this, model);
-	this->renderer_.pushSize(ContentMeasurer::DefaultFontSize*(1.0f+model->level()/2.0f));
-	this->walkChildren(model);
+	BlockSession bs(*this, heading);
+	this->renderer_.pushSize(ContentMeasurer::DefaultFontSize*(1.0f+heading->level()/2.0f));
+	this->walkChildren(heading);
 	this->renderer_.popSize();
 }
 
-void ContentMeasurer::walk(Link* model)
+void ContentMeasurer::walk(Link* link)
 {
-	this->walkChildren(model);
+	this->walkChildren(link);
 }
 
 void ContentMeasurer::walk(Font* font)
@@ -109,10 +109,10 @@ void ContentMeasurer::walk(BreakLine* br)
 	this->nextLine();
 }
 
-void ContentMeasurer::walk(Text* model)
+void ContentMeasurer::walk(Text* text)
 {
 	std::vector<std::string> lines;
-	std::string str(shrinkSpace(model->text()));
+	std::string str(shrinkSpace(text->text()));
 	size_t now=0;
 	while(now < str.length()){
 		gl::StringRenderer::Command cmd = this->renderer_.calcMaximumStringLength(str, this->calcLeftWidth(), now);
