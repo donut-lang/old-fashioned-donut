@@ -25,16 +25,16 @@ namespace util {
 
 TEST(FileUtilTest, FileEnumTest)
 {
-	std::set<std::string> list;
 	std::string dir=file::join(MATERIAL_DIR, "fileenum");
-	file::enumFiles(dir, list, false);
+	std::vector<std::string> vec = file::enumFiles(dir, false);
+	std::set<std::string> list(vec.begin(), vec.end());
 	ASSERT_EQ(3, list.size());
 	ASSERT_TRUE(list.find(file::join(dir,"a")) != list.end());
 	ASSERT_TRUE(list.find(file::join(dir,"b")) != list.end());
 	ASSERT_TRUE(list.find(file::join(dir,"c")) != list.end());
 
-	list.clear();
-	file::enumFiles(dir, list, true);
+	vec = file::enumFiles(dir, true);
+	list = std::set<std::string>(vec.begin(), vec.end());
 	ASSERT_EQ(6, list.size());
 	ASSERT_TRUE(list.find(file::join(dir,"a")) != list.end());
 	ASSERT_TRUE(list.find(file::join(dir,"b")) != list.end());
@@ -46,9 +46,9 @@ TEST(FileUtilTest, FileEnumTest)
 
 TEST(FileUtilTest, MultiByteFileNameEnumTest)
 {
-	std::set<std::string> list;
 	std::string dir=file::join(MATERIAL_DIR, "mb_file");
-	file::enumFiles(dir, list, true);
+	std::vector<std::string> vec = file::enumFiles(dir, true);
+	std::set<std::string> list(vec.begin(), vec.end());
 	ASSERT_EQ(1, list.size());
 	ASSERT_TRUE(list.find(file::join(dir,u8"あ")) != list.end());
 }
