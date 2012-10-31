@@ -110,11 +110,12 @@ public:
 		Right,
 		Left
 	};
-private:
 	DEFINE_MEMBER(public, private, geom::Margin, margin);
+	DEFINE_MEMBER(public, public, geom::Area, area);
 	DEFINE_MEMBER(public, private, Direction, direction);
 	DEFINE_MEMBER(public, private, float, width);
 	DEFINE_MEMBER(public, private, float, height);
+private:
 	NODE_SUBKLASS(BlockNode);
 };
 
@@ -169,10 +170,21 @@ public:
 
 class Text : public Node {
 private:
+	typedef std::pair<std::string, geom::Area> DataType;
+	typedef std::vector<DataType> ListType;
 	DEFINE_MEMBER(public, private, std::string, text);
 	NODE_SUBKLASS_LEAF(Text);
 private:
+	ListType areas_;
+private:
 	Text(std::string text);
+public:
+	inline void clearArea() { ListType().swap(this->areas_); };
+	inline void appendArea(const std::string& str, const geom::Area& area) { this->areas_.push_back( DataType(str, area)); };
+public:
+	inline std::size_t areaSize() const noexcept{ return this->areas_.size(); };
+	inline DataType areaAt(std::size_t idx) const noexcept{ return this->areas_.at(idx); };
+	inline ListType const& areas() const noexcept { return this->areas_; }
 };
 
 }}}

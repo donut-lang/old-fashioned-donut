@@ -16,11 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../gl/Canvas.h"
-#include "ContentWidgetImpl.h"
-#include "Content/Node.h"
-#include "../../geom/Area.h"
-
+#include "RenderCommand.h"
+#include "RenderTree.h"
 
 namespace chisa {
 namespace tk {
@@ -52,8 +49,9 @@ void RenderTree::render(gl::Canvas& cv, const geom::Area& area)
 {
 	const float limit = area.height()/2;
 	for(RenderCommand* cmd : this->objects_){
-		if(!cmd->area().intersect(area).empty()){
-			cv.drawSprite(cmd->realize(cv), cmd->area().point() - area.point());
+		geom::Area const intersect(cmd->area().intersect(area));
+		if(!intersect.empty()){
+			cmd->execute(cv, area.point());
 		}else{
 			const geom::Vector distV = geom::max(cmd->area().point() - area.point() - area.box(), area.point() - cmd->area().point() - cmd->area().box());
 			const float dist = std::max(distV.x(), distV.y());
