@@ -26,6 +26,13 @@ namespace gl {
 class Canvas;
 class Sprite;
 
+class DrawableFactory
+{
+public:
+	DrawableFactory();
+	~DrawableFactory() noexcept = default;
+};
+
 class Drawable : public HandlerBody<Drawable> {
 public:
 	Drawable() = default;

@@ -16,11 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ContentWidgetImpl.h"
-#include "ContentMeasurerUtil.h"
-#include "Content/Node.h"
-#include "../../gl/StringRenderer.h"
-#include "../../geom/Area.h"
+#include "ContentMeasurer.h"
+#include "../Content/Node.h"
+#include "../../../gl/StringRenderer.h"
+#include "../../../geom/Area.h"
 
 namespace chisa {
 namespace tk {

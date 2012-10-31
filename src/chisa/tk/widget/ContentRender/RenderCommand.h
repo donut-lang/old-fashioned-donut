@@ -26,7 +26,7 @@ namespace chisa {
 namespace tk {
 namespace widget {
 
-class RenderCommand {
+class RenderCommand : public HandlerBody<RenderCommand> {
 	DISABLE_COPY_AND_ASSIGN(RenderCommand);
 	DEFINE_MEMBER(public, private, geom::Area, area);
 protected:

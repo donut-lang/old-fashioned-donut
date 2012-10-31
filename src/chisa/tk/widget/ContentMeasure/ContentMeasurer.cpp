@@ -16,12 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../gl/StringRenderer.h"
-#include "ContentWidgetImpl.h"
-#include "ContentMeasurerUtil.h"
-#include "Content/Node.h"
-#include "ContentRender/RenderTree.h"
-#include "ContentRender/RenderCommand.h"
+#include "../../../gl/StringRenderer.h"
+#include "ContentMeasurer.h"
+#include "Util.h"
+#include "../Content/Node.h"
+#include "../ContentRender/RenderTree.h"
+#include "../ContentRender/RenderCommand.h"
 
 namespace chisa {
 namespace tk {
@@ -88,11 +88,6 @@ void ContentMeasurer::walk(Font* font)
 		this->renderer_.popSize();
 	}
 }
-
-class BottomLineCommand : public RenderCommand
-{
-
-};
 
 void ContentMeasurer::walk(BreakLine* br)
 {

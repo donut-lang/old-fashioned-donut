@@ -20,9 +20,9 @@
 #include "../../geom/Area.h"
 #include "../../geom/Vector.h"
 #include "ContentWidget.h"
-#include "ContentWidgetImpl.h"
 #include "Content/NodeReader.h"
 #include "ContentRender/RenderTree.h"
+#include "ContentMeasure/ContentMeasurer.h"
 #include <tinyxml2.h>
 
 namespace chisa {
