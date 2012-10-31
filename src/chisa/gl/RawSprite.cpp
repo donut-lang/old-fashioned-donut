@@ -73,7 +73,7 @@ void RawSprite::flushBuffer()
 	if(this->buffer_){
 		glBindTexture(GL_TEXTURE_2D, this->texId_);
 		//ここのサイズはバッファのものにしないと変な所を読みに行くかもしれない。
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0,0, this->width(), this->height(), GL_RGBA, GL_UNSIGNED_BYTE, this->buffer_->ptr());
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0,0, this->width(), this->height(), this->bufferType_, GL_UNSIGNED_BYTE, this->buffer_->ptr());
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);

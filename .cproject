@@ -68,12 +68,16 @@
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 				<configuration artifactName="${ProjName}" buildProperties="" description="" id="cdt.managedbuild.toolchain.gnu.base.272885173.1782848259" name="Win" parent="org.eclipse.cdt.build.core.emptycfg">
 					<folderInfo id="cdt.managedbuild.toolchain.gnu.base.272885173.1782848259." name="/" resourcePath="">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.mingw.base.240033497" name="MinGW GCC" nonInternalBuilderId="cdt.managedbuild.builder.gnu.cross" resourceTypeBasedDiscovery="false" superClass="cdt.managedbuild.toolchain.gnu.mingw.base">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.mingw.base.240033497" name="MinGW GCC" nonInternalBuilderId="cdt.managedbuild.builder.gnu.cross" resourceTypeBasedDiscovery="true" superClass="cdt.managedbuild.toolchain.gnu.mingw.base">
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.PE" id="cdt.managedbuild.target.gnu.platform.mingw.base.1878029884" name="Debug Platform" osList="win32" superClass="cdt.managedbuild.target.gnu.platform.mingw.base"/>
-							<builder arguments="buildWin.sh" buildPath="${ProjDirPath}" command="sh" id="cdt.managedbuild.builder.gnu.cross.2095008857" incrementalBuildTarget="build" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="cdt.managedbuild.builder.gnu.cross"/>
+							<builder arguments="buildWin.sh" buildPath="${ProjDirPath}" command="sh" id="cdt.managedbuild.builder.gnu.cross.2095008857" incrementalBuildTarget="build --targets=chisa" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="cdt.managedbuild.builder.gnu.cross">
+								<outputEntries>
+									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name=""/>
+								</outputEntries>
+							</builder>
 							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.base.1906636441" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.base">
 								<option id="gnu.both.asm.option.include.paths.99077832" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/external/tinyxml2&quot;"/>
+									<listOptionValue builtIn="false" value="../."/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1245247697" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
@@ -90,10 +94,33 @@
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.40907532" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.mingw.base.94861635" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.mingw.base">
+								<option id="gnu.c.compiler.option.include.paths.810491757" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="../."/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.214214961" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.mingw.base.2130400050" name="MinGW C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.base"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.base.1312585289" name="MinGW C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.base">
+								<option id="gnu.cpp.link.option.paths.1315079559" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
+									<listOptionValue builtIn="false" value="../."/>
+									<listOptionValue builtIn="false" value="D:/software/dev/msys/mingw/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/boost/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/cairo/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/ff/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/pcre/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/applib/xml/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/antlr/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/curl-7.27.0-devel-mingw32/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/glfw-2.7.6.bin.WIN32/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/glib/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/glut/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/gtest/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/icu/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/intl/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/perftools/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/readline/lib"/>
+									<listOptionValue builtIn="false" value="D:/software/dev/lib/sdl/lib"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.212670840" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -140,13 +167,43 @@
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.toolchain.gnu.base.272885173.1782848259">
-			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD &quot;${plugin_state_location}/specs.cpp&quot; -std=c++11" command="g++" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.toolchain.gnu.base.272885173.1782848259;cdt.managedbuild.toolchain.gnu.base.272885173.1782848259.;cdt.managedbuild.tool.gnu.cpp.compiler.mingw.base.1648521850;cdt.managedbuild.tool.gnu.cpp.compiler.input.40907532">
-			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD &quot;${plugin_state_location}/specs.cpp&quot; -std=c++11" command="g++" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.toolchain.gnu.base.272885173.1782848259;cdt.managedbuild.toolchain.gnu.base.272885173.1782848259.;cdt.managedbuild.tool.gnu.c.compiler.mingw.base.94861635;cdt.managedbuild.tool.gnu.c.compiler.input.214214961">
-			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
+			<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
+				<buildOutputProvider>
+					<openAction enabled="true" filePath=""/>
+					<parser enabled="true"/>
+				</buildOutputProvider>
+				<scannerInfoProvider id="specsFile">
+					<runAction arguments="-E -P -v -dD &quot;${plugin_state_location}/specs.c&quot; -std=gnu99" command="gcc" useDefault="true"/>
+					<parser enabled="true"/>
+				</scannerInfoProvider>
+			</profile>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.toolchain.gnu.base.272885173;cdt.managedbuild.toolchain.gnu.base.272885173.1435652953;cdt.managedbuild.tool.gnu.c.compiler.base.486560444;cdt.managedbuild.tool.gnu.c.compiler.input.262565991">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
