@@ -59,7 +59,7 @@ public:
 	void drawLine(const float width, const Color& color, const geom::Point& start, const geom::Point& end, const float depth=0.0f);
 	void drawRect(const float width, const Color& color, const geom::Area& area, const float depth=0.0f);
 	void fillRect(const Color& color, const geom::Area& area, const float depth=0.0f);
-	void drawTexture(unsigned int texId, const geom::Area spriteArea, const geom::Point& pt, const float depth);
+	void drawTexture(unsigned int texId, const geom::Box& texSize, const geom::Area& renderArea, const geom::Point& pt, const float depth);
 private:
 	void scissor(const geom::Area& area);
 	void scissorReset();
