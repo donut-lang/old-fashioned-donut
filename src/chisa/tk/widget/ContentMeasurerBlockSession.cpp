@@ -68,7 +68,10 @@ ContentMeasurer::BlockSession::~BlockSession() noexcept
 	this->flushBlock();
 	if(this->lastSession_){
 		this->flushBlock();
-		this->lastSession_->extendBlock(geom::Box(this->consumedWidth(), this->consumedHeight()), node_->direction());
+		geom::Area area(this->lastSession_->extendBlock(geom::Box(this->consumedWidth(), this->consumedHeight()), node_->direction()));
+		if(this->node_){
+			this->node_->area(area);
+		}
 	}
 	this->parent_.nowSession_ = this->lastSession_;
 }

@@ -16,11 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "../../gl/StringRenderer.h"
 #include "ContentWidgetImpl.h"
 #include "ContentMeasurerUtil.h"
 #include "Content/Node.h"
-#include "../../gl/StringRenderer.h"
-#include "../../geom/Area.h"
+#include "ContentRender/RenderTree.h"
+#include "ContentRender/RenderCommand.h"
 
 namespace chisa {
 namespace tk {
@@ -88,19 +89,9 @@ void ContentMeasurer::walk(Font* font)
 	}
 }
 
-class TextRenderCommand : public RenderCommand
+class BottomLineCommand : public RenderCommand
 {
-private:
-	gl::StringRenderer::Command cmd_;
-public:
-	TextRenderCommand(const geom::Area& area, const gl::StringRenderer::Command& cmd) noexcept
-	:RenderCommand(area),cmd_(cmd){};
-	virtual ~TextRenderCommand() noexcept = default;
-public:
-	virtual Handler<gl::RawSprite> realizeImpl(gl::Canvas& cv) override
-	{
-		return this->cmd_.renderString(cv);
-	}
+
 };
 
 void ContentMeasurer::walk(BreakLine* br)
@@ -114,6 +105,7 @@ void ContentMeasurer::walk(Text* text)
 	std::vector<std::string> lines;
 	std::string str(shrinkSpace(text->text()));
 	size_t now=0;
+	text->clearArea();
 	while(now < str.length()){
 		gl::StringRenderer::Command cmd = this->renderer_.calcMaximumStringLength(str, this->calcLeftWidth(), now);
 		if(!cmd){//そもそも１文字すら入らない
@@ -122,8 +114,9 @@ void ContentMeasurer::walk(Text* text)
 		}
 		now += cmd.str().size();
 		//文字分のエリアを確保し、その位置とレンダリングコマンドを記録
-		geom::Area rendered = this->extendInline(cmd.size());
+		geom::Area const rendered = this->extendInline(cmd.size());
 		this->renderTree_.append(new TextRenderCommand(rendered, cmd));
+		text->appendArea(cmd.str(), rendered);
 	}
 }
 

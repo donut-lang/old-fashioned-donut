@@ -16,12 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ContentWidget.h"
-#include "ContentWidgetImpl.h"
+#include "../../tk/World.h"
 #include "../../geom/Area.h"
 #include "../../geom/Vector.h"
-#include "../../tk/World.h"
+#include "ContentWidget.h"
+#include "ContentWidgetImpl.h"
 #include "Content/NodeReader.h"
+#include "ContentRender/RenderTree.h"
 #include <tinyxml2.h>
 
 namespace chisa {
