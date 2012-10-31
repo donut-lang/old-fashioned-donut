@@ -18,6 +18,7 @@
 
 #pragma once
 #include <cairo/cairo.h>
+#include "OpenGL.h"
 #include "../logging/Logger.h"
 #include "../util/ClassUtil.h"
 #include "../util/Thread.h"
@@ -70,8 +71,8 @@ public:
 	virtual ~RawSprite() noexcept(true);
 	enum BufferType {
 		Invalid = 0,
-		RGBA8,
-		BGRA8
+		RGBA8 = GL_RGBA,
+		BGRA8 = GL_BGRA
 	};
 private:
 	internal::Buffer* lock(BufferType type);
