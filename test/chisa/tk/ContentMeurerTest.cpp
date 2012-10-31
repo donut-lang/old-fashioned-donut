@@ -17,8 +17,11 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../src/chisa/tk/widget/ContentWidgetImpl.h"
 #include "../../src/chisa/tk/widget/Content/NodeReader.h"
+#include "../../src/chisa/tk/widget/Content/Node.h"
+#include "../../src/chisa/tk/widget/ContentRender/RenderTree.h"
+#include "../../src/chisa/tk/widget/ContentRender/RenderCommand.h"
+#include "../../src/chisa/tk/widget/ContentWidgetImpl.h"
 #include <tinyxml2.h>
 #include <typeinfo>
 
