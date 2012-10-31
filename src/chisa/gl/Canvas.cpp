@@ -122,6 +122,43 @@ void Canvas::drawLine(const float width, const Color& color, const geom::Point& 
 	glFlush();
 }
 
+void Canvas::drawRect(const float width, const Color& color, const geom::Area& area, const float depth)
+{
+	glLineWidth(width);
+	this->setColor(color);
+	float const sx = area.x();
+	float const ex = area.x()+area.width();
+	float const sy = area.y();
+	float const ey = area.y()+area.height();
+	glBegin(GL_LINE_LOOP);
+	{
+		glVertex3f(sx, sy, depth);
+		glVertex3f(ex, sy, depth);
+		glVertex3f(ex, ey, depth);
+		glVertex3f(sx, ey, depth);
+	}
+	glEnd();
+	glFlush();
+}
+void Canvas::fillRect(const Color& color, const geom::Area& area, const float depth)
+{
+	this->setColor(color);
+	float const sx = area.x();
+	float const ex = area.x()+area.width();
+	float const sy = area.y();
+	float const ey = area.y()+area.height();
+	glBegin(GL_TRIANGLE_FAN);
+	{
+		glVertex3f(sx, sy, depth);
+		glVertex3f(ex, sy, depth);
+		glVertex3f(ex, ey, depth);
+		glVertex3f(sx, ey, depth);
+	}
+	glEnd();
+	glFlush();
+}
+
+
 void Canvas::setColor(const Color& color)
 {
 	glColor4f(color.red(), color.green(), color.blue(), color.alpha());
