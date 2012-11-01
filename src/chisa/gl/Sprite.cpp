@@ -164,6 +164,11 @@ SpriteManager::~SpriteManager() noexcept
 	for(internal::Buffer* b : this->unusedBuffer_){
 		delete b;
 	}
+	for(Sprite* s : this->unusedSprite_){
+		delete s;
+	}
+	decltype(this->unusedBuffer_)().swap(this->unusedBuffer_);
+	decltype(this->unusedSprite_)().swap(this->unusedSprite_);
 }
 
 void SpriteManager::backSprite(Sprite* spr)
