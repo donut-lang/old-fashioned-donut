@@ -257,6 +257,15 @@ public:
 	bool expired() noexcept {
 		return !this->entity || !*(this->entity);
 	}
+	void swap(HandlerW<S>& other) noexcept
+	{
+		using std::swap;
+		swap(other.entity, this->entity);
+	}
+	void reset() noexcept
+	{
+		HandlerW<S>().swap(*this);
+	}
 };
 
 template<class T>

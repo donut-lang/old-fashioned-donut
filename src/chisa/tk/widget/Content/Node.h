@@ -20,18 +20,20 @@
 #include <vector>
 #include <map>
 #include <tinyxml2.h>
-#include "../../../logging/Logger.h"
+#include "../../../Handler.h"
 #include "../../../util/ClassUtil.h"
 #include "../../../util/XMLUtil.h"
 #include "../../../geom/Area.h"
-#include "../../../gl/StringRenderer.h"
 #include "../../../gl/Color.h"
+#include "../../../gl/Drawable.h"
 #include "Decl.h"
 #include "NodeWalker.h"
 
 namespace chisa {
 namespace tk {
 namespace widget {
+class RenderCache;
+class RenderCommand;
 
 /******************************************************************************
  * 基底ノード
@@ -122,6 +124,9 @@ public:
 	DEFINE_MEMBER(public, private, Direction, direction);
 	DEFINE_MEMBER(public, private, float, width);
 	DEFINE_MEMBER(public, private, float, height);
+	DEFINE_MEMBER(private, private, Handler<gl::Drawable>, background);
+public:
+	void onAreaDetected(const geom::Area& area);
 private:
 	NODE_SUBKLASS(BlockNode);
 };
@@ -177,21 +182,21 @@ public:
 
 class Text : public Node {
 private:
-	typedef std::pair<std::string, geom::Area> DataType;
+	typedef Handler<RenderCommand> DataType;
 	typedef std::vector<DataType> ListType;
 	DEFINE_MEMBER(public, private, std::string, text);
 	NODE_SUBKLASS_LEAF(Text);
 private:
-	ListType areas_;
+	ListType objects_;
 private:
 	Text(std::string text);
 public:
-	inline void clearArea() { ListType().swap(this->areas_); };
-	inline void appendArea(const std::string& str, const geom::Area& area) { this->areas_.push_back( DataType(str, area)); };
+	void clearObjects();
+	void appendObject( const DataType& d );
+	DataType objectAt(std::size_t idx) const noexcept;
+	inline std::size_t objectCount() const noexcept{ return this->objects_.size(); };
+	inline ListType const& objects() const noexcept { return this->objects_; }
 public:
-	inline std::size_t areaSize() const noexcept{ return this->areas_.size(); };
-	inline DataType areaAt(std::size_t idx) const noexcept{ return this->areas_.at(idx); };
-	inline ListType const& areas() const noexcept { return this->areas_; }
 	virtual Text* findFirstTextNode() noexcept override;
 };
 
