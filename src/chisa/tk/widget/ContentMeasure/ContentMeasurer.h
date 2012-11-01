@@ -21,6 +21,7 @@
 #include "../Content/Node.h"
 #include "../Content/NodeWalker.h"
 #include "../../../geom/Area.h"
+#include <functional>
 
 namespace chisa {
 namespace tk {
@@ -53,9 +54,10 @@ public:
 		DEFINE_MEMBER(public, private, float, inlineHeight);
 		//
 		bool inlineRendered_;
+		geom::Area& area_;
 	public:
-		BlockSession(ContentMeasurer& parent);
-		BlockSession(ContentMeasurer& parent, BlockNode* const node);
+		BlockSession(ContentMeasurer& parent, geom::Area& area);
+		BlockSession(ContentMeasurer& parent, geom::Area& area, BlockNode* const node);
 		~BlockSession() noexcept;
 		float calcLeftWidth();
 		void flushBlock();
@@ -76,10 +78,13 @@ private:
 	float calcLeftWidth();
 	void nextLine();
 	void flushBlock();
+private:
+	template <typename T, typename U> void walkBlock(T* block, U clos);
 public:
 	ContentMeasurer(logging::Logger& log, Handler<gl::FontManager> fontManager, RenderContext& context, float const width) noexcept;
 	geom::Box start(std::shared_ptr<Document> doc);
 	virtual ~ContentMeasurer() noexcept (true) = default;
+public:
 	virtual void walk(Document* doc) override;
 	virtual void walk(Paragraph* para) override;
 	virtual void walk(Heading* head) override;

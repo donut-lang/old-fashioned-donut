@@ -120,13 +120,15 @@ public:
 		Left
 	};
 	DEFINE_MEMBER(public, private, geom::Margin, margin);
-	DEFINE_MEMBER(public, public, geom::Area, area);
 	DEFINE_MEMBER(public, private, Direction, direction);
 	DEFINE_MEMBER(public, private, float, width);
 	DEFINE_MEMBER(public, private, float, height);
-	DEFINE_MEMBER(private, private, Handler<gl::Drawable>, background);
+	DEFINE_MEMBER(public, private, std::string, backgroundRepl);
+private:
+	Handler<RenderCommand> background_;
 public:
-	void onAreaDetected(const geom::Area& area);
+	Handler<RenderCommand> background() const;
+	void background(const Handler<RenderCommand>& handler);
 private:
 	NODE_SUBKLASS(BlockNode);
 };
