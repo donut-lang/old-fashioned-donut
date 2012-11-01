@@ -16,7 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #pragma once
-
+#include "../../../logging/Logger.h"
+#include "../../../gl/StringRenderer.h"
 #include "../Content/Node.h"
 #include "../Content/NodeWalker.h"
 #include "../../../geom/Area.h"
@@ -24,8 +25,7 @@
 namespace chisa {
 namespace tk {
 namespace widget {
-
-class RenderTree;
+class RenderContext;
 
 class ContentMeasurer : public NodeWalker {
 	DISABLE_COPY_AND_ASSIGN(ContentMeasurer);
@@ -67,9 +67,9 @@ private:
 	//ウィジットそのものの横幅。何があろうとも、これは厳守ですよ〜。
 	float const widgetWidth_;
 	BlockSession* nowSession_;
-	RenderTree& renderTree_;
 private:
 	gl::StringRenderer renderer_;
+	RenderContext& context_;
 private:
 	geom::Area extendBlock(const geom::Box& size, BlockNode::Direction dir=BlockNode::Direction::None);
 	geom::Area extendInline(const geom::Box& size);
@@ -77,7 +77,7 @@ private:
 	void nextLine();
 	void flushBlock();
 public:
-	ContentMeasurer(logging::Logger& log, Handler<gl::FontManager> fontManager, float const width, RenderTree& tree) noexcept;
+	ContentMeasurer(logging::Logger& log, Handler<gl::FontManager> fontManager, RenderContext& context, float const width) noexcept;
 	geom::Box start(std::shared_ptr<Document> doc);
 	virtual ~ContentMeasurer() noexcept (true) = default;
 	virtual void walk(Document* doc) override;

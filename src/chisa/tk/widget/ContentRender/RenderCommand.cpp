@@ -18,6 +18,7 @@
 
 #include "../../../gl/Canvas.h"
 #include "RenderCommand.h"
+#include "RenderCache.h"
 
 namespace chisa {
 namespace tk {
@@ -25,12 +26,27 @@ namespace widget {
 
 Handler<gl::Sprite> SpriteRenderCommand::realize(gl::Canvas& cv) {
 	if(!this->sprite()){
-		this->sprite(this->realizeImpl(cv));
+		if(this->spritew().expired()){ //キャッシュからも落ちてしまったので、再度構成しなければならない
+			this->sprite(this->realizeImpl(cv));
+			this->spritew().reset();
+		}else{ //まだキャッシュに載ってた
+			this->sprite(this->spritew().lock());
+			this->cache().unregisterSprite(this->sprite());
+			this->spritew().reset();
+		}
 	}
 	return this->sprite();
 }
 void SpriteRenderCommand::onHidden() noexcept{
+	this->cache().registerSprite(this->sprite());
+	this->spritew(this->sprite());
 	this->sprite().reset();
+}
+
+void SpriteRenderCommand::invalidate() noexcept
+{
+	this->sprite().reset();
+	this->spritew().reset();
 }
 
 void SpriteRenderCommand::execute(gl::Canvas& canvas, const geom::Point& offset)

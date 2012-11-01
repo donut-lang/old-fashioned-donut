@@ -20,7 +20,6 @@
 #include "ContentMeasurer.h"
 #include "Util.h"
 #include "../Content/Node.h"
-#include "../ContentRender/RenderTree.h"
 #include "../ContentRender/RenderCommand.h"
 
 namespace chisa {
@@ -29,14 +28,13 @@ namespace widget {
 
 const float ContentMeasurer::DefaultFontSize = 16.0f;
 
-ContentMeasurer::ContentMeasurer(logging::Logger& log, Handler<gl::FontManager> fontManager, float const width, RenderTree& tree) noexcept
+ContentMeasurer::ContentMeasurer(logging::Logger& log, Handler<gl::FontManager> fontManager, RenderContext& context, float const width) noexcept
 :log_(log)
 ,widgetWidth_(width)
 ,nowSession_(nullptr)
-,renderTree_(tree)
 ,renderer_(fontManager)
+,context_(context)
 {
-	this->renderTree_.reset();
 }
 
 geom::Box ContentMeasurer::start(std::shared_ptr<Document> doc)
@@ -100,7 +98,7 @@ void ContentMeasurer::walk(Text* text)
 	std::vector<std::string> lines;
 	std::string str(shrinkSpace(text->text()));
 	size_t now=0;
-	text->clearArea();
+	text->clearObjects();
 	while(now < str.length()){
 		gl::StringRenderer::Command cmd = this->renderer_.calcMaximumStringLength(str, this->calcLeftWidth(), now);
 		if(!cmd){//そもそも１文字すら入らない
@@ -110,8 +108,8 @@ void ContentMeasurer::walk(Text* text)
 		now += cmd.str().size();
 		//文字分のエリアを確保し、その位置とレンダリングコマンドを記録
 		geom::Area const rendered = this->extendInline(cmd.size());
-		this->renderTree_.append(new TextRenderCommand(rendered, cmd));
-		text->appendArea(cmd.str(), rendered);
+		//this->renderTree_.append(new TextRenderCommand(text->root()->renderCache(), rendered, cmd));
+		//text->appendArea(cmd.str(), rendered);
 	}
 }
 

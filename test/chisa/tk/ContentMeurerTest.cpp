@@ -19,8 +19,8 @@
 #include "../../TestCommon.h"
 #include "../../src/chisa/tk/widget/Content/NodeReader.h"
 #include "../../src/chisa/tk/widget/Content/Node.h"
-#include "../../src/chisa/tk/widget/ContentRender/RenderTree.h"
 #include "../../src/chisa/tk/widget/ContentRender/RenderCommand.h"
+#include "../../src/chisa/tk/widget/ContentRender/RenderContext.h"
 #include "../../src/chisa/tk/widget/ContentMeasure/ContentMeasurer.h"
 #include <tinyxml2.h>
 #include <typeinfo>
@@ -36,23 +36,24 @@ TEST(ContentMeasurerTest, TextWrapTest)
 <doc>Kitty on your lap.</doc>
 )delimiter");
 	NodeReader reader;
-	RenderTree tree;
 	Handler<gl::FontManager> fontManager( new gl::FontManager(log_trace, MATERIAL_DIR"/font") );
 	std::shared_ptr<Document> doc = reader.parseTree(docTree->RootElement());
-	ContentMeasurer(log_trace, fontManager, 1000, tree).start(doc);
+	RenderContext context;
+	ContentMeasurer(log_trace, fontManager, context, 1000).start(doc);
 	ASSERT_STREQ(typeid(Text).name(), typeid(*(doc->at(0))).name());
 	Text* text = dynamic_cast<Text*>(doc->at(0));
-	ASSERT_EQ(1, tree.size());
+	ASSERT_EQ(1, text->objectCount());
 
-	const RenderCommand& set = *tree.at(0);
-	float const width = set.area().width();
+	Handler<RenderCommand> set = text->objectAt(0);
+	float const width = set->area().width();
 
-	ContentMeasurer(log_trace, fontManager, width/2, tree).start(doc);
-	ASSERT_LE(2, tree.size());
+	ContentMeasurer(log_trace, fontManager, context, width/2).start(doc);
+	ASSERT_LE(2, text->objectCount());
 
-	ContentMeasurer(log_trace, fontManager, width/5, tree).start(doc);
-	ASSERT_LE(5, tree.size());
+	ContentMeasurer(log_trace, fontManager, context, width/5).start(doc);
+	ASSERT_LE(5, text->objectCount());
 }
+
 
 }}}
 

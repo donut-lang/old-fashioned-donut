@@ -16,12 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "Node.h"
+#include "../ContentRender/RenderCommand.h"
 
 namespace chisa {
 namespace tk {
 namespace widget {
 
 Node::Node()
+:root_(nullptr), parent_(nullptr)
 {
 }
 
@@ -137,6 +139,17 @@ Text::Text(std::string text)
 Text* Text::findFirstTextNode() noexcept
 {
 	return this;
+}
+Text::DataType Text::objectAt(std::size_t idx) const noexcept{
+	return this->objects_.at(idx);
+}
+
+void Text::clearObjects() {
+	Text::ListType().swap(this->objects_);
+}
+
+void Text::appendObject( const Text::DataType& d ) {
+	this->objects_.push_back( d );
 }
 
 }}}

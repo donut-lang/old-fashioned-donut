@@ -21,6 +21,8 @@
 #include "../Content/Node.h"
 #include "../Content/NodeWalker.h"
 #include "../../../geom/Area.h"
+#include "../../../gl/StringRenderer.h"
+#include "../../../gl/Sprite.h"
 
 namespace chisa {
 namespace gl {
@@ -29,13 +31,15 @@ class Drawable;
 
 namespace tk {
 namespace widget {
+class RenderCache;
 
 class RenderCommand : public HandlerBody<RenderCommand> {
 	DISABLE_COPY_AND_ASSIGN(RenderCommand);
+	DEFINE_MEMBER_REF(protected, RenderCache, cache)
 	geom::Area area_;
 protected:
 	RenderCommand() noexcept = delete;
-	RenderCommand(const geom::Area& area) noexcept:area_(area){};
+	RenderCommand(RenderCache& cache, const geom::Area& area) noexcept:cache_(cache), area_(area){};
 public:
 	virtual ~RenderCommand() noexcept (true) = default;
 	virtual void execute(gl::Canvas& canvas, const geom::Point& offset) = 0;
@@ -44,12 +48,15 @@ public:
 	virtual void onMoved(const geom::Area& before, const geom::Area& now) {};
 	inline geom::Area area() const noexcept { return this->area_; };
 	inline void move(const geom::Area& area) { this->onMoved(this->area_, area); this->area_=area; };
+public:
+	void onFree() noexcept { delete this; };
 };
 
 class SpriteRenderCommand : public RenderCommand {
 	DEFINE_MEMBER(public, private, Handler<gl::Sprite>, sprite);
+	DEFINE_MEMBER(public, private, HandlerW<gl::Sprite>, spritew);
 public:
-	SpriteRenderCommand(const geom::Area& area) noexcept:RenderCommand(area){};
+	SpriteRenderCommand(RenderCache& cache, const geom::Area& area) noexcept:RenderCommand(cache, area){};
 	virtual ~SpriteRenderCommand() noexcept {};
 public:
 	Handler<gl::Sprite> realize(gl::Canvas& cv);
@@ -57,14 +64,15 @@ public:
 	virtual void execute(gl::Canvas& canvas, const geom::Point& offset) override;
 protected:
 	virtual Handler<gl::Sprite> realizeImpl(gl::Canvas& cv) = 0;
+	void invalidate() noexcept;
 };
 
 class TextRenderCommand : public SpriteRenderCommand {
 private:
 	gl::StringRenderer::Command cmd_;
 public:
-	TextRenderCommand(const geom::Area& area, const gl::StringRenderer::Command& cmd) noexcept
-	:SpriteRenderCommand(area),cmd_(cmd){};
+	TextRenderCommand(RenderCache& cache, const geom::Area& area, const gl::StringRenderer::Command& cmd) noexcept
+	:SpriteRenderCommand(cache, area),cmd_(cmd){};
 	virtual ~TextRenderCommand() noexcept = default;
 protected:
 	virtual Handler<gl::Sprite> realizeImpl(gl::Canvas& cv) override;
