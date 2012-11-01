@@ -38,6 +38,7 @@ NesGeist::NesGeist(chisa::logging::Logger& log, std::weak_ptr<chisa::tk::World> 
 NesGeist::~NesGeist()
 {
 	this->stopNES();
+	delete this->machine_;
 }
 
 std::string NesGeist::toString() const
@@ -94,7 +95,9 @@ void NesGeist::stopNES()
 		delete this->runner_;
 		this->runner_t_ = nullptr;
 		this->runner_ = nullptr;
-		this->world()->unregisterTask(this);
+		if( std::shared_ptr<chisa::tk::World> world = this->world() ) {
+			world->unregisterTask(this);
+		}
 	}
 }
 
@@ -115,7 +118,9 @@ void NesGeist::startNES()
 	this->runner_ = new Runner(*this);
 	this->runner_t_ = new std::thread(std::ref(*this->runner_));
 	this->time_ms_ = 0.0f;
-	this->world()->registerTask(this);
+	if( std::shared_ptr<chisa::tk::World> world = this->world() ) {
+		world->registerTask(this);
+	}
 }
 
 NesGeist::Runner::Runner(NesGeist& parent)

@@ -48,7 +48,7 @@ public:
 	Canvas(logging::Logger& log);
 	virtual ~Canvas();
 public:
-	SpriteManager spriteManager_;
+	Handler<SpriteManager> spriteManager_;
 	DrawableFactory drawableFactory_;
 	std::deque<std::pair<std::string, Handler<Sprite> > > imageCache_;
 public:

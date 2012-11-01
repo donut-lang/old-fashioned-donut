@@ -42,7 +42,7 @@ namespace internal {
 	};
 }
 
-class SpriteManager {
+class SpriteManager : public HandlerBody<SpriteManager> {
 	DISABLE_COPY_AND_ASSIGN(SpriteManager);
 	DEFINE_MEMBER_REF(private, logging::Logger, log)
 private:
@@ -53,6 +53,7 @@ private:
 public:
 	SpriteManager(logging::Logger& log);
 	~SpriteManager() noexcept;
+	void onFree() noexcept;
 	Handler<Sprite> queryRawSprite(const int width, const int height);
 public:
 	void backSprite(Sprite* spr);
@@ -61,13 +62,13 @@ public:
 };
 
 class Sprite : public HandlerBody<Sprite, true> {
-	SpriteManager* const mgr_;
+	HandlerW<SpriteManager> mgr_;
 	DEFINE_MEMBER(public, private, geom::IntVector, origSize);
 	DEFINE_MEMBER(public, private, geom::IntVector, size);
 	unsigned int texId_;
 	std::atomic<bool> locked_;
 public:
-	Sprite(SpriteManager* const mgr, const geom::IntVector& size);
+	Sprite(HandlerW<SpriteManager> mgr, const geom::IntVector& size);
 	virtual ~Sprite() noexcept(true);
 	enum BufferType {
 		Invalid = 0,
@@ -78,6 +79,7 @@ private:
 	internal::Buffer* lock(BufferType type);
 	void unlock();
 	void flushBuffer();
+	void backBuffer();
 private:
 	internal::Buffer* buffer_;
 	BufferType bufferType_;

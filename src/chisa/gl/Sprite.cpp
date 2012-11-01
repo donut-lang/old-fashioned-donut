@@ -30,7 +30,7 @@ namespace gl {
 
 static constexpr unsigned int MAGIC=0xDEADBEEF;
 
-Sprite::Sprite(SpriteManager* const mgr, const geom::IntVector& size)
+Sprite::Sprite(HandlerW<SpriteManager> mgr, const geom::IntVector& size)
 :mgr_(mgr)
 ,origSize_(geom::IntBox(getPower2Of(size.width()), getPower2Of(size.height())))
 ,size_(origSize_)
@@ -91,8 +91,7 @@ void Sprite::flushBuffer()
 		if(err != GL_NO_ERROR){
 			throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to transfer texture: code 0x%x", err);
 		}
-		this->mgr_->backBuffer(this->buffer_);
-		this->buffer_ = nullptr;
+		this->backBuffer();
 	}
 }
 
@@ -105,14 +104,26 @@ void Sprite::resize(int width, int height)
 }
 
 //-----------------------------------------------------------------------------
+void Sprite::backBuffer()
+{
+	if( Handler<SpriteManager> mgr = this->mgr_.lock() ){
+		mgr->backBuffer(this->buffer_);
+	}else{
+		delete this->buffer_;
+	}
+	this->buffer_ = nullptr;
+}
 
 void Sprite::onFree() noexcept {
 	this->size(this->origSize());
 	if(this->buffer_){
-		this->mgr_->backBuffer(this->buffer_);
-		this->buffer_ = nullptr;
+		this->backBuffer();
 	}
-	this->mgr_->backSprite(this);
+	if( Handler<SpriteManager> mgr = this->mgr_.lock() ){
+		mgr->backSprite(this);
+	}else{
+		delete this;
+	}
 }
 
 internal::Buffer* Sprite::lock(Sprite::BufferType bufferType)
@@ -125,7 +136,11 @@ internal::Buffer* Sprite::lock(Sprite::BufferType bufferType)
 		return this->buffer_;
 	}else{
 		this->flushBuffer();
-		this->buffer_ = this->mgr_->queryBuffer(this->size().width() * this->size().height() * 4);
+		if( Handler<SpriteManager> mgr = this->mgr_.lock() ){
+			this->buffer_ = mgr->queryBuffer(this->size().width() * this->size().height() * 4);
+		}else{
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] SpriteManager already dead!!");
+		}
 		this->bufferType_ = bufferType;
 		return (this->buffer_);
 	}
@@ -169,6 +184,11 @@ SpriteManager::~SpriteManager() noexcept
 	}
 	decltype(this->unusedBuffer_)().swap(this->unusedBuffer_);
 	decltype(this->unusedSprite_)().swap(this->unusedSprite_);
+}
+
+void SpriteManager::onFree() noexcept
+{
+	delete this;
 }
 
 void SpriteManager::backSprite(Sprite* spr)
