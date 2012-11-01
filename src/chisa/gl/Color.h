@@ -37,6 +37,7 @@ public:
 	constexpr Color(float r, float g, float b, float a) noexcept:red_(r), green_(g), blue_(b), alpha_(a){};
 	constexpr Color(const Color& other) = default;
 	constexpr Color(Color&& other) = default;
+	static Color fromString( const std::string& name );
 	Color& operator=(const Color& other) = default;
 	Color& operator=(Color&& other) = default;
 	~Color() noexcept = default;

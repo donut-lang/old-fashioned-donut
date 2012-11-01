@@ -158,6 +158,9 @@ public:
 				std::fabs(this->x_ - other.x_) < precision &&
 				std::fabs(this->y_ - other.y_) < precision;
 	}
+	inline bool constexpr isSpecified() const noexcept{
+		return geom::isSpecified(this->x_) && geom::isSpecified(this->y_);
+	}
 public:
 	inline constexpr float x() const noexcept{return x_;};
 	inline constexpr float y() const noexcept{return y_;};

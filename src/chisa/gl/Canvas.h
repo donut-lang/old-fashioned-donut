@@ -27,6 +27,7 @@
 #include "Color.h"
 #include "../Handler.h"
 #include "Sprite.h"
+#include "Drawable.h"
 
 namespace chisa {
 namespace geom {
@@ -48,6 +49,7 @@ public:
 	virtual ~Canvas();
 public:
 	SpriteManager spriteManager_;
+	DrawableFactory drawableFactory_;
 	std::deque<std::pair<std::string, Handler<Sprite> > > imageCache_;
 public:
 	void ortho(const float left, const float right, const float bottom, const float top, const float near_val, const float far_val);
@@ -84,6 +86,8 @@ public:
 public:
 	Handler<Sprite> queryRawSprite(const int width, const int height);
 	Handler<Sprite> queryImage(const std::string& filename);
+public:
+	Handler<Drawable> queryDrawable(const std::string& repl, const geom::Box& box=geom::Box());
 };
 
 }}

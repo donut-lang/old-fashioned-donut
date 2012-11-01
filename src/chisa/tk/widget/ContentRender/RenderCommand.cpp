@@ -25,20 +25,25 @@ namespace tk {
 namespace widget {
 
 Handler<gl::Sprite> SpriteRenderCommand::realize(gl::Canvas& cv) {
-	if(!this->sprite()){
-		if(this->spritew().expired()){ //キャッシュからも落ちてしまったので、再度構成しなければならない
-			this->sprite(this->realizeImpl(cv));
-			this->spritew().reset();
-		}else{ //まだキャッシュに載ってた
-			this->sprite(this->spritew().lock());
-			this->cache().unregisterSprite(this->sprite());
-			this->spritew().reset();
-		}
+	if(this->sprite()){
+		return this->sprite();
 	}
+	if (!this->spritew().expired()) { //まだキャッシュに乗ってる
+		this->sprite(this->spritew().lock());
+		if (Handler<RenderCache> cache = this->cache().lock()) {
+			cache->unregisterSprite(this->sprite());
+		}
+		this->spritew().reset();
+	}
+	//作り直し
+	this->sprite(this->realizeImpl(cv));
+	this->spritew().reset();
 	return this->sprite();
 }
 void SpriteRenderCommand::onHidden() noexcept{
-	this->cache().registerSprite(this->sprite());
+	if(Handler<RenderCache> cache = this->cache().lock()){
+		cache->registerSprite(this->sprite());
+	}
 	this->spritew(this->sprite());
 	this->sprite().reset();
 }
@@ -49,7 +54,7 @@ void SpriteRenderCommand::invalidate() noexcept
 	this->spritew().reset();
 }
 
-void SpriteRenderCommand::execute(gl::Canvas& canvas, const geom::Point& offset)
+void SpriteRenderCommand::render(gl::Canvas& canvas, const geom::Point& offset)
 {
 	canvas.drawSprite(this->realize(canvas), this->area().point() - offset);
 }
@@ -62,7 +67,38 @@ Handler<gl::Sprite> TextRenderCommand::realizeImpl(gl::Canvas& cv)
 
 //-----------------------------------------------------------------------------
 
-//	const geom::Point pt(this->area().point() - offset +geom::Vector(0, area().height()));
-//	canvas.drawLine(this->width_, this->color_, pt, pt+geom::Vector(area().width(), 0) );
+DrawableRenderCommand::DrawableRenderCommand(HandlerW<RenderCache> cache, const geom::Area& area, const std::string& drawableRepl)
+:RenderCommand(cache, area), drawableRepl_(drawableRepl)
+{
+}
+
+void DrawableRenderCommand::onHidden() noexcept
+{
+	if(Handler<RenderCache> cache = this->cache().lock()){
+		cache->registerDrawable(this->drawable_);
+	}
+	this->drawablew_=this->drawable_;
+	this->drawable_.reset();
+}
+
+void DrawableRenderCommand::render(gl::Canvas& canvas, const geom::Point& offset)
+{
+	this->realize();
+}
+
+void DrawableRenderCommand::realize()
+{
+	if(this->drawable_){
+		return;
+	}
+	if(!this->drawablew_.expired()){
+		this->drawable_ = this->drawablew_.lock();
+		if(Handler<RenderCache> cache = this->cache().lock()){
+			cache->unregisterDrawable(this->drawable_);
+		}
+		this->drawablew_.reset();
+	}
+	//this->drawable_
+}
 
 }}}

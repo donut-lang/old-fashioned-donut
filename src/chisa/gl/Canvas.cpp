@@ -122,6 +122,12 @@ Handler<Sprite> Canvas::queryRawSprite(const int width, const int height)
 	return this->spriteManager_.queryRawSprite(width, height);
 }
 
+Handler<Drawable> Canvas::queryDrawable(const std::string& repl, const geom::Box& box)
+{
+	return this->drawableFactory_.queryDrawable(box, repl);
+}
+
+
 void Canvas::drawLine(const float width, const Color& color, const geom::Point& start, const geom::Point& end, const float depth)
 {
 	glLineWidth(width);
