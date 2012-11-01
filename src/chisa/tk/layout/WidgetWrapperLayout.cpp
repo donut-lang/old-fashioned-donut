@@ -50,13 +50,10 @@ WidgetWrapperLayout::~WidgetWrapperLayout()
 			// TODO　ウィジットにレイアウト通知入れたほうがいい？？
 		}
 	}else{
-		if(shared_ptr<World> world = this->world().lock()){
-			//ワールドからの削除と、ウィジットの開放
-			if(world->deleteWidget(this->widgetId_, this)){
-				delete widget();
-				this->widget(nullptr);
-			}
-		}
+		//このラッパの所属するワールドが所有権を持つので、何もせず黙って削除。
+		// INFO: ここで上のワールドはすでに開放済みなので、さわれません。
+		delete widget();
+		this->widget(nullptr);
 	}
 }
 

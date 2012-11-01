@@ -33,7 +33,7 @@ Canvas::Canvas(logging::Logger& log)
 :log_(log)
 ,width_(NAN)
 ,height_(NAN)
-,spriteManager_(log)
+,spriteManager_(new SpriteManager(log))
 ,drawableFactory_(log)
 {
 
@@ -120,7 +120,7 @@ void Canvas::drawTexture(unsigned int texId, const geom::Point& pt, const geom::
 
 Handler<Sprite> Canvas::queryRawSprite(const int width, const int height)
 {
-	return this->spriteManager_.queryRawSprite(width, height);
+	return this->spriteManager_->queryRawSprite(width, height);
 }
 
 Handler<Drawable> Canvas::queryDrawable(const std::string& repl, const geom::Box& box)
