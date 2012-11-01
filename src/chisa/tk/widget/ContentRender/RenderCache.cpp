@@ -74,6 +74,7 @@ void RenderCache::reset() noexcept
 
 void RenderCache::onFree()
 {
+	this->reset();
 	delete this;
 }
 

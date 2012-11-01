@@ -46,6 +46,7 @@ TreeNode::~TreeNode() noexcept
 	for(Node* n : this->children_){
 		delete n;
 	}
+	decltype(this->children_)().swap(this->children_);
 }
 
 TreeNode* TreeNode::findTreeNodeById(const std::string& name) noexcept

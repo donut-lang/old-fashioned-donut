@@ -197,6 +197,7 @@ StringRenderer::Command StringRenderer::calcMaximumStringLength(const std::strin
 		str.toUTF8(sink);
 		StringRenderer::Command cmdTry = this->measure(buf);
 		if(cmdTry.width() <= limit){
+			delete [] buf;
 			return cmdTry;
 		}
 	}
