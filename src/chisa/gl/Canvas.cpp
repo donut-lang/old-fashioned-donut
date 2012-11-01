@@ -34,6 +34,7 @@ Canvas::Canvas(logging::Logger& log)
 ,width_(NAN)
 ,height_(NAN)
 ,spriteManager_(log)
+,drawableFactory_(log)
 {
 
 }

@@ -171,12 +171,21 @@ Handler<Drawable> StretchDrawable::create( DrawableFactory& factory, const geom:
 
 //-----------------------------------------------------------------------------
 
-DrawableFactory::DrawableFactory()
+Handler<Drawable> NullDrawable::create( DrawableFactory& factory, const geom::Box& size, const std::string& repl )
+{
+	return Handler<Drawable>(new NullDrawable(size));
+}
+
+//-----------------------------------------------------------------------------
+
+DrawableFactory::DrawableFactory(logging::Logger& log)
+:log_(log)
 {
 	this->factories_.insert(std::make_pair("stretch:", StretchDrawable::create));
 	this->factories_.insert(std::make_pair("repeat:", RepeatDrawable::create));
 	this->factories_.insert(std::make_pair("image:", ImageDrawable::create));
 	this->factories_.insert(std::make_pair("color:", ColorDrawable::create));
+	this->factories_.insert(std::make_pair("none:", NullDrawable::create));
 }
 Handler<Drawable> DrawableFactory::queryDrawable( const geom::Box& size, const std::string& repl )
 {
@@ -186,7 +195,8 @@ Handler<Drawable> DrawableFactory::queryDrawable( const geom::Box& size, const s
 			return p.second(*this, size, left);
 		}
 	}
-	return Handler<Drawable>();
+	this->log().w("DrawableFactory", "oops. Invalid repl: %s", repl.c_str());
+	return NullDrawable::create(*this, size, repl);
 }
 
 }}

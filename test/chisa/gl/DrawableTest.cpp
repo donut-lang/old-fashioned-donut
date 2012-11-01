@@ -26,7 +26,6 @@ namespace gl {
 class DrawableTest : public ::testing::Test
 {
 protected:
-	DrawableFactory factory;
 	Canvas* canv;
 public:
 	void SetUp(){
@@ -40,7 +39,7 @@ public:
 
 TEST_F(DrawableTest, ColorDrawableTest)
 {
-	Handler<Drawable> dr = factory.queryDrawable(geom::Box(100,100), "color:red");
+	Handler<Drawable> dr = canv->queryDrawable("color:red", geom::Box(100,100));
 	ASSERT_TRUE(dynamic_cast<ColorDrawable*>(dr.get()));
 	ASSERT_FLOAT_EQ(100, dr->width());
 	ASSERT_FLOAT_EQ(100, dr->height());
@@ -50,19 +49,19 @@ TEST_F(DrawableTest, ColorDrawableTest)
 
 TEST_F(DrawableTest, ImageDrawableTest)
 {
-	Handler<Drawable> dr = factory.queryDrawable(geom::Box(100,100), "image:" MATERIAL_DIR "/img/test.png");
+	Handler<Drawable> dr = canv->queryDrawable("image:" MATERIAL_DIR "/img/test.png", geom::Box(100,100));
 	ASSERT_TRUE(dynamic_cast<ImageDrawable*>(dr.get()));
 }
 
 TEST_F(DrawableTest, RepeatDrawableTest)
 {
-	Handler<Drawable> dr = factory.queryDrawable(geom::Box(100,100), "repeat:color:red");
+	Handler<Drawable> dr = canv->queryDrawable("repeat:color:red", geom::Box(100,100));
 	ASSERT_TRUE(dynamic_cast<RepeatDrawable*>(dr.get()));
 }
 
 TEST_F(DrawableTest, StretchDrawableTest)
 {
-	Handler<Drawable> dr = factory.queryDrawable(geom::Box(100,100), "stretch:color:red");
+	Handler<Drawable> dr = canv->queryDrawable("stretch:color:red", geom::Box(100,100));
 	ASSERT_TRUE(dynamic_cast<StretchDrawable*>(dr.get()));
 }
 }}

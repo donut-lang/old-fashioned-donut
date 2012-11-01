@@ -21,6 +21,7 @@
 #include "Color.h"
 #include "../Handler.h"
 #include <map>
+#include "../logging/Logger.h"
 
 namespace chisa {
 namespace gl {
@@ -40,6 +41,16 @@ public:
 	float height() const noexcept;
 	virtual geom::Box size() const noexcept { return this->specSize_; }
 	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) = 0;
+};
+
+class NullDrawable : public Drawable {
+protected:
+	NullDrawable( const geom::Box& size ):Drawable(size){};
+public:
+	virtual ~NullDrawable() noexcept = default;
+	inline void onFree() { delete this; }
+	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) {};
+	static Handler<Drawable> create( DrawableFactory& factory, const geom::Box& size, const std::string& repl );
 };
 
 class ColorDrawable : public Drawable {
@@ -97,11 +108,12 @@ public:
 
 class DrawableFactory
 {
+	DEFINE_MEMBER_REF(private, logging::Logger, log)
 private:
 	typedef std::function<Handler<Drawable>(DrawableFactory&, const geom::Box&, const std::string&)> constructor;
 	std::map<std::string, constructor> factories_;
 public:
-	DrawableFactory();
+	DrawableFactory(logging::Logger& log);
 	~DrawableFactory() = default;
 public:
 	Handler<Drawable> queryDrawable( const geom::Box& size, const std::string& repl );
