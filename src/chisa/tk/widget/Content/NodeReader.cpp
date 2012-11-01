@@ -60,12 +60,12 @@ std::shared_ptr<Document> NodeReader::parseTree(tinyxml2::XMLElement* elm)
 	std::shared_ptr<Document> doc(Node::createRootDocument());
 	doc->parseAttribute(elm);
 	NODE_FOREACH(it, elm) {
-		doc->add(this->parseNode(doc, doc, it));
+		doc->add(this->parseNode(doc.get(), doc.get(), it));
 	}
 	return doc;
 }
 
-std::shared_ptr<Node> NodeReader::parseNode(std::weak_ptr<Document> root, std::weak_ptr<Node> parent, tinyxml2::XMLNode* node)
+Node* NodeReader::parseNode(Document* root, TreeNode* parent, tinyxml2::XMLNode* node)
 {
 	if(!node){
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] parsing null node!");
@@ -83,9 +83,9 @@ std::shared_ptr<Node> NodeReader::parseNode(std::weak_ptr<Document> root, std::w
 	throw logging::Exception(__FILE__, __LINE__, "Unknwon document node: %s", node->Value());
 }
 
-std::shared_ptr<TreeNode> NodeReader::parseTreeNode(TreeConstructor constructor, std::weak_ptr<Document> root, std::weak_ptr<Node> parent, tinyxml2::XMLElement* elm)
+TreeNode* NodeReader::parseTreeNode(TreeConstructor constructor, Document* root, TreeNode* parent, tinyxml2::XMLElement* elm)
 {
-	std::shared_ptr<TreeNode> tree(constructor(root, parent));
+	TreeNode* tree = constructor(root, parent);
 	tree->parseAttribute(elm);
 	NODE_FOREACH(it, elm) {
 		tree->add(this->parseNode(root, tree, it));
@@ -93,9 +93,9 @@ std::shared_ptr<TreeNode> NodeReader::parseTreeNode(TreeConstructor constructor,
 	return tree;
 }
 
-std::shared_ptr<Node> NodeReader::parseText(std::weak_ptr<Document> root, std::weak_ptr<Node> parent, tinyxml2::XMLText* txt)
+Node* NodeReader::parseText(Document* root, TreeNode* parent, tinyxml2::XMLText* txt)
 {
-	return std::shared_ptr<Node>(Node::create<Text>(root, parent, txt->Value()));
+	return Node::create<Text>(root, parent, txt->Value());
 }
 
 }}}
