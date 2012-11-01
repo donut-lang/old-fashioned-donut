@@ -41,11 +41,13 @@ Handler<gl::Sprite> SpriteRenderCommand::realize(gl::Canvas& cv) {
 	return this->sprite();
 }
 void SpriteRenderCommand::onHidden() noexcept{
-	if(Handler<RenderCache> cache = this->cache().lock()){
-		cache->registerSprite(this->sprite());
+	if(this->sprite()){
+		if(Handler<RenderCache> cache = this->cache().lock()){
+			cache->registerSprite(this->sprite());
+		}
+		this->spritew(this->sprite());
+		this->sprite().reset();
 	}
-	this->spritew(this->sprite());
-	this->sprite().reset();
 }
 
 void SpriteRenderCommand::invalidate() noexcept

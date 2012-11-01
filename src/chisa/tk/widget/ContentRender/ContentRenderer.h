@@ -25,14 +25,25 @@ namespace tk {
 namespace widget {
 
 class ContentRenderer: public chisa::tk::widget::NodeWalker {
+private:
+	gl::Canvas& canvas_;
+	geom::Area area_;
 public:
-	ContentRenderer();
+	ContentRenderer(gl::Canvas& canvas, const geom::Area& area);
 	virtual ~ContentRenderer() noexcept = default;
 private:
 	void walkCommon(Node* node);
 	void walkTree(TreeNode* node);
 	void walkImpl(BlockNode* tree);
 	void walkImpl(InlineNode* tree);
+public:
+	virtual void walk(Document* doc) override;
+	virtual void walk(Paragraph* para) override;
+	virtual void walk(Heading* head) override;
+	virtual void walk(Text* text) override;
+	virtual void walk(Link* link) override;
+	virtual void walk(Font* br) override;
+	virtual void walk(BreakLine* br) override;
 };
 
 }}}

@@ -181,9 +181,10 @@ public:
 };
 
 class Text : public Node {
-private:
+public:
 	typedef Handler<RenderCommand> DataType;
 	typedef std::vector<DataType> ListType;
+private:
 	DEFINE_MEMBER(public, private, std::string, text);
 	NODE_SUBKLASS_LEAF(Text);
 private:

@@ -226,13 +226,13 @@ public:
 	HandlerW(HandlerW<S>&& other):entity(other.entity) {}
 	HandlerW& operator=(const HandlerW<S>& other)
 	{
+		if(other.entity){
+			other.entity->incref();
+		}
 		if(this->entity){
 			this->entity->decref();
 		}
 		this->entity = other.entity;
-		if(this->entity){
-			this->entity->incref();
-		}
 		return *this;
 	}
 	HandlerW& operator=(HandlerW<S>&& other)
