@@ -91,7 +91,7 @@ BlockNode::BlockNode()
 	this->addAttribute("width", this->width_);
 	this->height(geom::Unspecified);
 	this->addAttribute("height", this->height_);
-	this->backgroundRepl("none");
+	this->backgroundRepl("none:");
 	this->addAttribute("background", this->backgroundRepl_);
 }
 

@@ -64,6 +64,7 @@ void ContentMeasurer::walk(Document* doc)
 	this->walkBlock(doc, [&](){
 		this->walkChildren(doc);
 	});
+	doc->background()->area().width(std::max(this->widgetWidth_, doc->background()->area().width()));
 }
 
 void ContentMeasurer::walk(Paragraph* para)
