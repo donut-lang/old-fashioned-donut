@@ -28,8 +28,9 @@ class ContentRenderer: public chisa::tk::widget::NodeWalker {
 private:
 	gl::Canvas& canvas_;
 	geom::Area area_;
+	float depth_;
 public:
-	ContentRenderer(gl::Canvas& canvas, const geom::Area& area);
+	ContentRenderer(gl::Canvas& canvas, const geom::Area& area, float depth=0.0f);
 	virtual ~ContentRenderer() noexcept = default;
 private:
 	void walkCommon(Node* node);

@@ -123,7 +123,7 @@ public:
 	DEFINE_MEMBER(public, private, Direction, direction);
 	DEFINE_MEMBER(public, private, float, width);
 	DEFINE_MEMBER(public, private, float, height);
-	DEFINE_MEMBER(public, private, std::string, backgroundRepl);
+	DEFINE_MEMBER(public, protected, std::string, backgroundRepl);
 private:
 	Handler<RenderCommand> background_;
 public:

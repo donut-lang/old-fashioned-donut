@@ -91,6 +91,8 @@ BlockNode::BlockNode()
 	this->addAttribute("width", this->width_);
 	this->height(geom::Unspecified);
 	this->addAttribute("height", this->height_);
+	this->backgroundRepl("color:white");
+	this->addAttribute("background", this->backgroundRepl_);
 }
 
 Handler<RenderCommand> BlockNode::background() const
@@ -111,7 +113,6 @@ InlineNode::InlineNode()
 
 Document::Document()
 {
-
 }
 
 Paragraph::Paragraph()

@@ -24,8 +24,12 @@ namespace tk {
 namespace widget {
 
 class NodeWalker {
+private:
+	int nodeDepth_;
+protected:
+	int nowDepth() const noexcept { return this->nodeDepth_; };
 public:
-	NodeWalker() noexcept = default;
+	NodeWalker() noexcept;
 	virtual ~NodeWalker() noexcept (true) = default;
 	void start(std::shared_ptr<Document> model);
 	void walkChildren(TreeNode* children);

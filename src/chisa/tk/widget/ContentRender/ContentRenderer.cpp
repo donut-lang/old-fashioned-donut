@@ -24,9 +24,10 @@ namespace chisa {
 namespace tk {
 namespace widget {
 
-ContentRenderer::ContentRenderer(gl::Canvas& canvas, const geom::Area& area)
+ContentRenderer::ContentRenderer(gl::Canvas& canvas, const geom::Area& area, float depth)
 :canvas_(canvas)
 ,area_(area)
+,depth_(depth)
 {
 
 }
@@ -43,6 +44,7 @@ void ContentRenderer::walkTree(TreeNode* node)
 }
 void ContentRenderer::walkImpl(BlockNode* tree)
 {
+	tree->background()->render(canvas_, area_.point(), this->depth_+this->nowDepth());
 	this->walkTree(tree);
 }
 void ContentRenderer::walkImpl(InlineNode* tree)
@@ -54,7 +56,7 @@ void ContentRenderer::walk(Text* text)
 	for(Text::DataType d : text->objects()){
 		geom::Area const intersect(d->area().intersect(this->area_));
 		if (!intersect.empty()) {
-			d->render(this->canvas_, this->area_.point());
+			d->render(this->canvas_, this->area_.point(), this->depth_+this->nowDepth()+0.000001);
 		}else{
 			d->onHidden();
 		}
