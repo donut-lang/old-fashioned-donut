@@ -93,6 +93,17 @@ BlockNode::BlockNode()
 	this->addAttribute("height", this->height_);
 }
 
+Handler<RenderCommand> BlockNode::background() const
+{
+	return this->background_;
+}
+
+void BlockNode::background(const Handler<RenderCommand>& handler)
+{
+	this->background_ = handler;
+}
+
+
 InlineNode::InlineNode()
 {
 

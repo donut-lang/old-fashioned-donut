@@ -40,30 +40,46 @@ ContentMeasurer::ContentMeasurer(logging::Logger& log, Handler<gl::FontManager> 
 
 geom::Box ContentMeasurer::start(std::shared_ptr<Document> doc)
 {
-	BlockSession bs(*this);
-	this->NodeWalker::start(doc);
-	return geom::Box(bs.reservedBlockWidth(), bs.reservedBlockHeight());
+	geom::Area rendered;
+	{
+		BlockSession bs(*this, rendered);
+		this->NodeWalker::start(doc);
+	}
+	return rendered.box();
 }
 
+template <typename T, typename U>
+void ContentMeasurer::walkBlock(T* block, U clos)
+{
+	geom::Area rendered;
+	{
+		BlockSession bs(*this, rendered, block);
+		clos();
+	}
+	block->background(this->context_.createDrawable(rendered, block->backgroundRepl()));
+}
 
 void ContentMeasurer::walk(Document* doc)
 {
-	BlockSession bs(*this, doc);
-	this->walkChildren(doc);
+	this->walkBlock(doc, [&](){
+		this->walkChildren(doc);
+	});
 }
 
 void ContentMeasurer::walk(Paragraph* para)
 {
-	BlockSession bs(*this, para);
-	this->walkChildren(para);
+	this->walkBlock(para, [&](){
+		this->walkChildren(para);
+	});
 }
 
 void ContentMeasurer::walk(Heading* heading)
 {
-	BlockSession bs(*this, heading);
-	this->renderer_.pushSize(ContentMeasurer::DefaultFontSize*(1.0f+heading->level()/2.0f));
-	this->walkChildren(heading);
-	this->renderer_.popSize();
+	this->walkBlock(heading, [&](){
+		this->renderer_.pushSize(ContentMeasurer::DefaultFontSize*(1.0f+heading->level()/2.0f));
+		this->walkChildren(heading);
+		this->renderer_.popSize();
+	});
 }
 
 void ContentMeasurer::walk(Link* link)

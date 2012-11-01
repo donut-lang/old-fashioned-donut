@@ -25,7 +25,7 @@ namespace chisa {
 namespace tk {
 namespace widget {
 
-ContentMeasurer::BlockSession::BlockSession(ContentMeasurer& parent)
+ContentMeasurer::BlockSession::BlockSession(ContentMeasurer& parent, geom::Area& area)
 :node_()
 ,parent_(parent)
 ,lastSession_(nullptr)
@@ -40,10 +40,11 @@ ContentMeasurer::BlockSession::BlockSession(ContentMeasurer& parent)
 ,reservedInlineHeight_(0.0f)
 ,inlineHeight_(0.0f)
 ,inlineRendered_(false)
+,area_(area)
 {
 	parent.nowSession_ = this;
 }
-ContentMeasurer::BlockSession::BlockSession(ContentMeasurer& parent, BlockNode* const node)
+ContentMeasurer::BlockSession::BlockSession(ContentMeasurer& parent, geom::Area& area, BlockNode* const node)
 :node_(node)
 ,parent_(parent)
 ,lastSession_(parent_.nowSession_)
@@ -58,6 +59,7 @@ ContentMeasurer::BlockSession::BlockSession(ContentMeasurer& parent, BlockNode* 
 ,reservedInlineHeight_(0.0f)
 ,inlineHeight_(0.0f)
 ,inlineRendered_(false)
+,area_(area)
 {
 	parent.nowSession_ = this;
 }
@@ -66,11 +68,9 @@ ContentMeasurer::BlockSession::~BlockSession() noexcept
 	this->endLine();
 	this->flushBlock();
 	if(this->lastSession_){
-		this->flushBlock();
-		geom::Area area(this->lastSession_->extendBlock(geom::Box(this->consumedWidth(), this->consumedHeight()), node_->direction()));
-		if(this->node_){
-			this->node_->area(area);
-		}
+		this->area_ = this->lastSession_->extendBlock(geom::Box(this->consumedWidth(), this->consumedHeight()), node_->direction());
+	}else{
+		this->area_ = geom::Area(geom::ZERO, geom::Box(this->consumedWidth(), this->consumedHeight()));
 	}
 	this->parent_.nowSession_ = this->lastSession_;
 }
