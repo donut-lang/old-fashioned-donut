@@ -98,17 +98,6 @@ void Sprite::resize(int width, int height)
 
 //-----------------------------------------------------------------------------
 
-void Sprite::increfImpl() noexcept
-{
-	std::unique_lock<std::mutex> lock(this->ref_mutex_);
-	this->HandlerBody<Sprite>::increfImpl();
-}
-void Sprite::decrefImpl()
-{
-	std::unique_lock<std::mutex> lock(this->ref_mutex_);
-	this->HandlerBody<Sprite>::decrefImpl();
-}
-
 void Sprite::onFree() noexcept {
 	this->size(this->origSize());
 	if(this->buffer_){

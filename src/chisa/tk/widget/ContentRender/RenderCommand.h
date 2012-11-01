@@ -23,19 +23,27 @@
 #include "../../../geom/Area.h"
 
 namespace chisa {
+namespace gl {
+class Drawable;
+}
+
 namespace tk {
 namespace widget {
 
 class RenderCommand : public HandlerBody<RenderCommand> {
 	DISABLE_COPY_AND_ASSIGN(RenderCommand);
-	DEFINE_MEMBER(public, private, geom::Area, area);
+	geom::Area area_;
 protected:
 	RenderCommand() noexcept = delete;
 	RenderCommand(const geom::Area& area) noexcept:area_(area){};
 public:
 	virtual ~RenderCommand() noexcept (true) = default;
 	virtual void execute(gl::Canvas& canvas, const geom::Point& offset) = 0;
-	virtual void free() noexcept {};
+	virtual void onHidden() noexcept {};
+public:
+	virtual void onMoved(const geom::Area& before, const geom::Area& now) {};
+	inline geom::Area area() const noexcept { return this->area_; };
+	inline void move(const geom::Area& area) { this->onMoved(this->area_, area); this->area_=area; };
 };
 
 class SpriteRenderCommand : public RenderCommand {
@@ -45,7 +53,7 @@ public:
 	virtual ~SpriteRenderCommand() noexcept {};
 public:
 	Handler<gl::Sprite> realize(gl::Canvas& cv);
-	virtual void free() noexcept override;
+	virtual void onHidden() noexcept override;
 	virtual void execute(gl::Canvas& canvas, const geom::Point& offset) override;
 protected:
 	virtual Handler<gl::Sprite> realizeImpl(gl::Canvas& cv) = 0;
@@ -62,24 +70,11 @@ protected:
 	virtual Handler<gl::Sprite> realizeImpl(gl::Canvas& cv) override;
 };
 
-class UnderlineRenderCommand : public RenderCommand {
+class DrawableRenderCommand : public RenderCommand {
 private:
-	gl::Color color_;
-	float width_;
+	Handler<gl::Drawable> drawable_;
 public:
-	UnderlineRenderCommand(const geom::Area& area, const gl::Color& color, const float width) noexcept
-	:RenderCommand(area), color_(color), width_(width){};
-	virtual ~UnderlineRenderCommand() noexcept (true) = default;
-public:
-	virtual void execute(gl::Canvas& canvas, const geom::Point& offset) override;
-};
-
-class BackgroundRenderCommand : public RenderCommand {
-public:
-	enum Type {
-		Color,
-		Image
-	};
+	DrawableRenderCommand();
 };
 
 }}}

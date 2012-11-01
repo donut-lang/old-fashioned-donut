@@ -19,6 +19,7 @@
 #pragma once
 #include <utility>
 #include <typeinfo>
+#include "util/Thread.h"
 #include "logging/Exception.h"
 
 namespace chisa {
@@ -276,13 +277,13 @@ bool operator!=(const Handler<T>& a, const Handler<U>& b) noexcept
 	return a.get() != b.get();
 }
 
-template <class Derived>
+template <class Derived, bool atomic=false>
 class HandlerBody {
 private:
-	HandlerBody(const HandlerBody<Derived>& other) = delete;
-	HandlerBody(HandlerBody<Derived>&& other) = delete;
-	const HandlerBody<Derived>& operator=(const HandlerBody<Derived>& other) = delete;
-	const HandlerBody<Derived>& operator=(const HandlerBody<Derived>&& other) = delete;
+	HandlerBody(const HandlerBody<Derived, atomic>& other) = delete;
+	HandlerBody(HandlerBody<Derived, atomic>&& other) = delete;
+	const HandlerBody<Derived, atomic>& operator=(const HandlerBody<Derived, atomic>& other) = delete;
+	const HandlerBody<Derived, atomic>& operator=(const HandlerBody<Derived, atomic>&& other) = delete;
 	template <typename T> friend class chisa::Handler;
 	template <typename T> friend class chisa::HandlerW;
 	template <typename T> friend class chisa::internal::WeakHandlerEntity;
@@ -293,7 +294,9 @@ private:
 protected:
 	HandlerBody()
 	:refcount_(0), deleted(false), weakEntity_(nullptr) {}
-	virtual ~HandlerBody() noexcept (true) = default;
+	virtual ~HandlerBody() noexcept (true) {}; //XXX: GCCのバグでデフォルトにできない？
+protected:
+	Handler<Derived> self() { return Handler<Derived>::__internal__fromRawPointerWithoutCheck(this); };
 protected: /* from Handler */
 	void increfImpl() noexcept { this->refcount_++; }
 	void decrefImpl(){
@@ -316,6 +319,52 @@ private:
 	void incref() noexcept { static_cast<Derived*>(this)->increfImpl(); }
 	void decref(){ static_cast<Derived*>(this)->decrefImpl(); }
 };
+
+template <class Derived>
+class HandlerBody<Derived, true> {
+private:
+	std::mutex ref_mutex_;
+	HandlerBody(const HandlerBody<Derived, true>& other) = delete;
+	HandlerBody(HandlerBody<Derived, true>&& other) = delete;
+	const HandlerBody<Derived, true>& operator=(const HandlerBody<Derived, true>& other) = delete;
+	const HandlerBody<Derived, true>& operator=(const HandlerBody<Derived, true>&& other) = delete;
+	template <typename T> friend class chisa::Handler;
+	template <typename T> friend class chisa::HandlerW;
+	template <typename T> friend class chisa::internal::WeakHandlerEntity;
+private:
+	int refcount_;
+	bool deleted;
+	chisa::internal::WeakHandlerEntity<Derived>* weakEntity_;
+protected:
+	HandlerBody()
+	:refcount_(0), deleted(false), weakEntity_(nullptr) {}
+	virtual ~HandlerBody() noexcept (true) {};//XXX: GCCのバグ？
+protected:
+	Handler<Derived> self() { return Handler<Derived>::__internal__fromRawPointerWithoutCheck(this); };
+protected: /* from Handler */
+	void increfImpl() noexcept { std::unique_lock<std::mutex> lock(this->ref_mutex_);this->refcount_++; }
+	void decrefImpl(){
+		std::unique_lock<std::mutex> lock(this->ref_mutex_);
+		this->refcount_--;
+		if(this->refcount_ < 0){
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] Handler refcount = %d < 0", this->refcount_);\
+		}else if(this->refcount_ == 0){
+			if(deleted){
+				return;
+			}
+			this->deleted = true;
+			if(this->weakEntity_){
+				this->weakEntity_->notifyDead();
+				this->weakEntity_ = nullptr;
+			}
+			static_cast<Derived*>(this)->onFree();
+		}
+	}
+private:
+	void incref() noexcept { static_cast<Derived*>(this)->increfImpl(); }
+	void decref(){ static_cast<Derived*>(this)->decrefImpl(); }
+};
+
 
 }
 

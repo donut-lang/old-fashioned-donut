@@ -29,7 +29,7 @@ Handler<gl::Sprite> SpriteRenderCommand::realize(gl::Canvas& cv) {
 	}
 	return this->sprite();
 }
-void SpriteRenderCommand::free() noexcept{
+void SpriteRenderCommand::onHidden() noexcept{
 	this->sprite().reset();
 }
 
@@ -46,10 +46,7 @@ Handler<gl::Sprite> TextRenderCommand::realizeImpl(gl::Canvas& cv)
 
 //-----------------------------------------------------------------------------
 
-void UnderlineRenderCommand::execute(gl::Canvas& canvas, const geom::Point& offset)
-{
-	const geom::Point pt(this->area().point() - offset +geom::Vector(0, area().height()));
-	canvas.drawLine(this->width_, this->color_, pt, pt+geom::Vector(area().width(), 0) );
-}
+//	const geom::Point pt(this->area().point() - offset +geom::Vector(0, area().height()));
+//	canvas.drawLine(this->width_, this->color_, pt, pt+geom::Vector(area().width(), 0) );
 
 }}}
