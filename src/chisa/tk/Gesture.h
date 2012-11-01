@@ -31,8 +31,8 @@ class Layout;
 class GestureListener {
 	DISABLE_COPY_AND_ASSIGN(GestureListener);
 public:
-	GestureListener(){};
-	virtual ~GestureListener(){};
+	GestureListener() = default;
+	virtual ~GestureListener() noexcept = default;
 public:
 	virtual bool onDownRaw(const float timeMs, const geom::Point& ptInScreen){return false;};
 	virtual bool onUpRaw(const float timeMs, const geom::Point& ptInScreen){return false;};

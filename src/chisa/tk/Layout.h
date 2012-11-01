@@ -83,7 +83,7 @@ public:
 		ptr->init(ptr);
 		return ptr;
 	}
-	virtual ~Layout();
+	virtual ~Layout() noexcept = default;
 public:
 	inline static float updateMax(const float a, const float b)
 	{
@@ -104,13 +104,13 @@ friend shared_ptr<Klass> Layout::create<Klass>(CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR
 private:\
 	Klass(CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_LIST);\
 public:\
-	virtual ~Klass();
+	virtual ~Klass() noexcept;
 
 #define CHISA_LAYOUT_SUBKLASS(Klass) \
 protected:\
 	Klass(CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_LIST);\
 public:\
-	virtual ~Klass();
+	virtual ~Klass() noexcept;
 
 #define CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_SETUP_BASE(Derived) Derived(CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_APPLY)
 

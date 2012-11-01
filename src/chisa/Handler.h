@@ -306,9 +306,9 @@ protected:
 	virtual ~HandlerBody() noexcept (true) {}; //XXX: GCCのバグでデフォルトにできない？
 protected:
 	Handler<Derived> self() { return Handler<Derived>::__internal__fromRawPointerWithoutCheck(this); };
-protected: /* from Handler */
-	void increfImpl() noexcept { this->refcount_++; }
-	void decrefImpl(){
+private:
+	void incref() noexcept { this->refcount_++; }
+	void decref(){
 		this->refcount_--;
 		if(this->refcount_ < 0){
 			throw logging::Exception(__FILE__, __LINE__, "[BUG] Handler refcount = %d < 0", this->refcount_);\
@@ -324,9 +324,6 @@ protected: /* from Handler */
 			static_cast<Derived*>(this)->onFree();
 		}
 	}
-private:
-	void incref() noexcept { static_cast<Derived*>(this)->increfImpl(); }
-	void decref(){ static_cast<Derived*>(this)->decrefImpl(); }
 };
 
 template <class Derived>
@@ -350,28 +347,30 @@ protected:
 	virtual ~HandlerBody() noexcept (true) {};//XXX: GCCのバグ？
 protected:
 	Handler<Derived> self() { return Handler<Derived>::__internal__fromRawPointerWithoutCheck(this); };
-protected: /* from Handler */
-	void increfImpl() noexcept { std::unique_lock<std::mutex> lock(this->ref_mutex_);this->refcount_++; }
-	void decrefImpl(){
-		std::unique_lock<std::mutex> lock(this->ref_mutex_);
-		this->refcount_--;
-		if(this->refcount_ < 0){
-			throw logging::Exception(__FILE__, __LINE__, "[BUG] Handler refcount = %d < 0", this->refcount_);\
-		}else if(this->refcount_ == 0){
-			if(deleted){
+private:
+	void incref() noexcept { std::unique_lock<std::mutex> lock(this->ref_mutex_);this->refcount_++; }
+	void decref(){
+		{ ///XXX: ロックの方針、これで本当に問題無いの？大丈夫？？
+			std::unique_lock<std::mutex> lock(this->ref_mutex_);
+			this->refcount_--;
+		}
+		// 問題はここから先リファレンスカウントが増えるという状況があり得るかどうか、ということ。
+		// 無いと思うんだけど…。
+		if(this->refcount_ < 0) {
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] Handler refcount = %d < 0", this->refcount_);
+		} else if( this->refcount_ == 0 ) {
+			if(deleted) {
 				return;
 			}
 			this->deleted = true;
-			if(this->weakEntity_){
+			if(this->weakEntity_) {
 				this->weakEntity_->notifyDead();
 				this->weakEntity_ = nullptr;
 			}
 			static_cast<Derived*>(this)->onFree();
 		}
 	}
-private:
-	void incref() noexcept { static_cast<Derived*>(this)->increfImpl(); }
-	void decref(){ static_cast<Derived*>(this)->decrefImpl(); }
+
 };
 
 

@@ -36,7 +36,7 @@ CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(WidgetWrapperLayout)
 {
 }
 
-WidgetWrapperLayout::~WidgetWrapperLayout()
+WidgetWrapperLayout::~WidgetWrapperLayout() noexcept
 {
 	if(!this->widget()){
 		return;

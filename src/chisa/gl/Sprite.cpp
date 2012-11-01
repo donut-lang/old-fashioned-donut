@@ -61,7 +61,7 @@ Sprite::Sprite(HandlerW<SpriteManager> mgr, const geom::IntVector& size)
 }
 Sprite::~Sprite() noexcept (true)
 {
-	this->flushBuffer();
+	this->backBuffer();
 	if(this->texId_ != MAGIC){
 		glDeleteTextures(1, &this->texId_);
 	}
@@ -106,19 +106,19 @@ void Sprite::resize(int width, int height)
 //-----------------------------------------------------------------------------
 void Sprite::backBuffer()
 {
-	if( Handler<SpriteManager> mgr = this->mgr_.lock() ){
-		mgr->backBuffer(this->buffer_);
-	}else{
-		delete this->buffer_;
+	if(this->buffer_){
+		if( Handler<SpriteManager> mgr = this->mgr_.lock() ){
+			mgr->backBuffer(this->buffer_);
+		}else{
+			delete this->buffer_;
+		}
+		this->buffer_ = nullptr;
 	}
-	this->buffer_ = nullptr;
 }
 
 void Sprite::onFree() noexcept {
 	this->size(this->origSize());
-	if(this->buffer_){
-		this->backBuffer();
-	}
+	this->backBuffer();
 	if( Handler<SpriteManager> mgr = this->mgr_.lock() ){
 		mgr->backSprite(this);
 	}else{

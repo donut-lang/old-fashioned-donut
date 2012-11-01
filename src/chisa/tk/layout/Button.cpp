@@ -36,7 +36,7 @@ CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(Button)
 {
 }
 
-Button::~Button()
+Button::~Button() noexcept
 {
 }
 
