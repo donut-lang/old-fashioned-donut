@@ -134,6 +134,8 @@ int main(int argc, char** argv) {
 		glfwTerminate();
 		return -3;
 	}
+	decltype(gUniverse)().swap(gUniverse);
+	delete gHexe;
 	glfwTerminate();
 	return 0;
 }
