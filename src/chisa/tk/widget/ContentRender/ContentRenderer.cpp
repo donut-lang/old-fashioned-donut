@@ -44,7 +44,7 @@ void ContentRenderer::walkTree(TreeNode* node)
 }
 void ContentRenderer::walkImpl(BlockNode* tree)
 {
-	tree->background()->render(canvas_, area_.point(), this->depth_+this->nowDepth());
+	tree->background()->render(canvas_, area_.point(), this->depth_+this->nowDepth()/10.0);
 	this->walkTree(tree);
 }
 void ContentRenderer::walkImpl(InlineNode* tree)
@@ -56,7 +56,7 @@ void ContentRenderer::walk(Text* text)
 	for(Text::DataType d : text->objects()){
 		geom::Area const intersect(d->area().intersect(this->area_));
 		if (!intersect.empty()) {
-			d->render(this->canvas_, this->area_.point(), this->depth_+this->nowDepth()+0.000001);
+			d->render(this->canvas_, this->area_.point(), this->depth_+this->nowDepth()/10.0+0.1);
 		}else{
 			d->onHidden();
 		}
