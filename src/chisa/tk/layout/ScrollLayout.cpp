@@ -31,7 +31,7 @@ CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(ScrollLayout)
 
 }
 
-ScrollLayout::~ScrollLayout()
+ScrollLayout::~ScrollLayout() noexcept
 {
 }
 

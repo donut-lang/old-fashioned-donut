@@ -52,7 +52,7 @@ private:
 	std::deque<internal::Buffer*> unusedBuffer_;
 public:
 	SpriteManager(logging::Logger& log);
-	~SpriteManager() noexcept;
+	virtual ~SpriteManager() noexcept;
 	void onFree() noexcept;
 	Handler<Sprite> queryRawSprite(const int width, const int height);
 public:

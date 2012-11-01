@@ -35,10 +35,6 @@ void Layout::init(weak_ptr<Layout> _self)
 {
 	this->self_.swap(_self);
 }
-Layout::~Layout()
-{
-
-}
 
 void Layout::idle(const float delta_ms)
 {

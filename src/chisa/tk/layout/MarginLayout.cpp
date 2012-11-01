@@ -29,7 +29,7 @@ CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(MarginLayout)
 
 }
 
-MarginLayout::~MarginLayout()
+MarginLayout::~MarginLayout() noexcept
 {
 
 }

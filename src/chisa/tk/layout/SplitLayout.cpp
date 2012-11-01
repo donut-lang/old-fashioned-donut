@@ -54,7 +54,8 @@ void SplitLayout::setMode(enum SplitMode mode)
 	point_setter = mode == Vertical ? (void(geom::Point::*)(float))&geom::Point::y : (void(geom::Point::*)(float))&geom::Point::x;
 }
 
-SplitLayout::~SplitLayout() {
+SplitLayout::~SplitLayout() noexcept
+{
 }
 
 string SplitLayout::toString() const
