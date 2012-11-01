@@ -130,9 +130,9 @@ void VirtualMachine::loadCartridge(const char* filename)
 			throw EmulatorException("[FIXME] Invalid file format: ") << filename;
 		}
 		VirtualMachine::loadCartridge(data, size);
-		delete data;
+		delete [] data;
 	} catch (...) {
-		delete data;
+		delete [] data;
 		throw;
 	}
 }
