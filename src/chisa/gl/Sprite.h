@@ -60,8 +60,7 @@ public:
 	void backBuffer(internal::Buffer* buffer);
 };
 
-class Sprite : public HandlerBody<Sprite> {
-	std::mutex ref_mutex_;
+class Sprite : public HandlerBody<Sprite, true> {
 	SpriteManager* const mgr_;
 	DEFINE_MEMBER(public, private, geom::IntVector, origSize);
 	DEFINE_MEMBER(public, private, geom::IntVector, size);
@@ -102,8 +101,6 @@ public:
 	inline int width() const noexcept { return this->size().width(); };
 	inline int height() const noexcept { return this->size().height(); };
 public: /* from Handler */
-	void increfImpl() noexcept;
-	void decrefImpl();
 	void onFree() noexcept;
 public: /* from Canvas */
 	void drawImpl(Canvas* const canvas, const geom::Point& pt, const geom::Area& renderArea, const float depth);

@@ -56,7 +56,7 @@ void RenderTree::render(gl::Canvas& cv, const geom::Area& area)
 			const geom::Vector distV = geom::max(cmd->area().point() - area.point() - area.box(), area.point() - cmd->area().point() - cmd->area().box());
 			const float dist = std::max(distV.x(), distV.y());
 			if(dist > limit){
-				cmd->free();
+				cmd->onHidden();
 			}
 		}
 	}
