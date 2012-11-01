@@ -35,14 +35,14 @@ class RenderCache;
 
 class RenderCommand : public HandlerBody<RenderCommand> {
 	DISABLE_COPY_AND_ASSIGN(RenderCommand);
-	DEFINE_MEMBER_REF(protected, RenderCache, cache)
+	DEFINE_MEMBER_REF(protected, HandlerW<RenderCache>, cache)
 	geom::Area area_;
 protected:
 	RenderCommand() noexcept = delete;
-	RenderCommand(RenderCache& cache, const geom::Area& area) noexcept:cache_(cache), area_(area){};
+	RenderCommand(HandlerW<RenderCache> cache, const geom::Area& area) noexcept:cache_(cache), area_(area){};
 public:
 	virtual ~RenderCommand() noexcept (true) = default;
-	virtual void execute(gl::Canvas& canvas, const geom::Point& offset) = 0;
+	virtual void render(gl::Canvas& canvas, const geom::Point& offset) = 0;
 	virtual void onHidden() noexcept {};
 public:
 	virtual void onMoved(const geom::Area& before, const geom::Area& now) {};
@@ -56,12 +56,12 @@ class SpriteRenderCommand : public RenderCommand {
 	DEFINE_MEMBER(public, private, Handler<gl::Sprite>, sprite);
 	DEFINE_MEMBER(public, private, HandlerW<gl::Sprite>, spritew);
 public:
-	SpriteRenderCommand(RenderCache& cache, const geom::Area& area) noexcept:RenderCommand(cache, area){};
+	SpriteRenderCommand(HandlerW<RenderCache> cache, const geom::Area& area) noexcept:RenderCommand(cache, area){};
 	virtual ~SpriteRenderCommand() noexcept {};
 public:
 	Handler<gl::Sprite> realize(gl::Canvas& cv);
 	virtual void onHidden() noexcept override;
-	virtual void execute(gl::Canvas& canvas, const geom::Point& offset) override;
+	virtual void render(gl::Canvas& canvas, const geom::Point& offset) override;
 protected:
 	virtual Handler<gl::Sprite> realizeImpl(gl::Canvas& cv) = 0;
 	void invalidate() noexcept;
@@ -71,7 +71,7 @@ class TextRenderCommand : public SpriteRenderCommand {
 private:
 	gl::StringRenderer::Command cmd_;
 public:
-	TextRenderCommand(RenderCache& cache, const geom::Area& area, const gl::StringRenderer::Command& cmd) noexcept
+	TextRenderCommand(HandlerW<RenderCache> cache, const geom::Area& area, const gl::StringRenderer::Command& cmd) noexcept
 	:SpriteRenderCommand(cache, area),cmd_(cmd){};
 	virtual ~TextRenderCommand() noexcept = default;
 protected:
@@ -81,8 +81,16 @@ protected:
 class DrawableRenderCommand : public RenderCommand {
 private:
 	Handler<gl::Drawable> drawable_;
+	HandlerW<gl::Drawable> drawablew_;
+	std::string drawableRepl_;
 public:
-	DrawableRenderCommand();
+	DrawableRenderCommand(HandlerW<RenderCache> cache, const geom::Area& area, const std::string& drawableRepl);
+	virtual ~DrawableRenderCommand() noexcept = default;
+public:
+	virtual void onHidden() noexcept override;
+	virtual void render(gl::Canvas& canvas, const geom::Point& offset) override;
+private:
+	void realize();
 };
 
 }}}

@@ -20,6 +20,7 @@
 #include "../geom/Area.h"
 #include "../geom/Vector.h"
 #include "../gl/Canvas.h"
+#include "../util/StringUtil.h"
 
 namespace chisa {
 namespace gl {
@@ -35,8 +36,8 @@ float Drawable::height() const noexcept
 
 //-----------------------------------------------------------------------------
 
-ColorDrawable::ColorDrawable(const Color& c, const geom::Box size)
-:color_(c), size_(size)
+ColorDrawable::ColorDrawable(const geom::Box size, const Color& c)
+:Drawable(size), color_(c)
 {
 
 }
@@ -45,43 +46,49 @@ Color ColorDrawable::color() const noexcept
 {
 	return this->color_;
 }
-geom::Box ColorDrawable::size() const noexcept
-{
-	return this->size_;
-}
 
 void ColorDrawable::draw(Canvas& canvas, const geom::Area& area, const float depth)
 {
-	canvas.fillRect(this->color_, area.intersect(geom::Area(area.point(), size_)), depth);
+	canvas.fillRect(this->color_, area.intersect(geom::Area(area.point(), geom::min(area.box(), this->specSize()))), depth);
 }
+
+Handler<Drawable> ColorDrawable::create( DrawableFactory& factory, const geom::Box& size, const std::string& repl )
+{
+	return Handler<Drawable>(new ColorDrawable(size, Color::fromString( repl )));
+}
+
 
 //-----------------------------------------------------------------------------
 
-SpriteDrawable::SpriteDrawable(Handler<gl::Sprite> spr)
-:sprite_(spr)
+ImageDrawable::ImageDrawable( const geom::Box& size, const std::string& filename )
+:Drawable(size)
+,filename_(filename)
 {
 }
 
-Handler<gl::Sprite> SpriteDrawable::sprite() const
+Handler<gl::Sprite> ImageDrawable::sprite() const
 {
 	return this->sprite_;
 }
 
-geom::Box SpriteDrawable::size() const noexcept
+geom::Box ImageDrawable::size() const noexcept
 {
 	return this->sprite_ ? geom::Box(this->sprite_->width(), this->sprite_->height()) : geom::Box();
 }
 
-void SpriteDrawable::draw(Canvas& canvas, const geom::Area& area, const float depth)
+void ImageDrawable::draw(Canvas& canvas, const geom::Area& area, const float depth)
 {
-	canvas.drawSprite(this->sprite_, area.point(), geom::Area(geom::ZERO, area.box()), depth);
+	if(!this->sprite_){
+		this->sprite_ = canvas.queryImage(this->filename_);
+	}
+	canvas.drawSprite(this->sprite_, area.point(), geom::Area(geom::ZERO, geom::min(area.box(), this->specSize())), depth);
 }
 
 //-----------------------------------------------------------------------------
 
-RepeatDrawable::RepeatDrawable(Handler<Drawable> child, const geom::Box& size)
-:child_(child)
-,size_(size)
+RepeatDrawable::RepeatDrawable(const geom::Box& size, Handler<Drawable> child)
+:Drawable(size)
+,child_(child)
 {
 
 }
@@ -98,7 +105,7 @@ geom::Box RepeatDrawable::size() const noexcept
 
 void RepeatDrawable::draw(Canvas& canvas, const geom::Area& area, const float depth)
 {
-	geom::Area rendered(area.intersect(geom::Area(area.point(), this->size_)));
+	geom::Area rendered(area.intersect(geom::Area(area.point(), geom::min(this->specSize(), area.box()))));
 	float y=rendered.y();
 	const float mx = rendered.width()+rendered.x();
 	const float my = rendered.height()+rendered.y();
@@ -116,9 +123,9 @@ void RepeatDrawable::draw(Canvas& canvas, const geom::Area& area, const float de
 
 //-----------------------------------------------------------------------------
 
-StretchDrawable::StretchDrawable(Handler<Drawable> child, const geom::Box& size)
-:child_(child)
-,size_(size)
+StretchDrawable::StretchDrawable(const geom::Box size, Handler<Drawable> child)
+:Drawable(size)
+,child_(child)
 {
 
 }
@@ -135,15 +142,34 @@ geom::Box StretchDrawable::size() const noexcept
 
 void StretchDrawable::draw(Canvas& canvas, const geom::Area& area, const float depth)
 {
-	geom::Area rendered(area.intersect(geom::Area(area.point(), this->size_)));
+	geom::Area rendered(area.intersect(geom::Area(area.point(), geom::min(area.box(), this->specSize()))));
 	Canvas::AffineScope as(canvas);
 	{
 		canvas.translate(area.point());
-		float const scaleX = this->child_->width() / this->size_.width();
-		float const scaleY = this->child_->height() / this->size_.height();
+		float const scaleX = this->child_->width() / rendered.width();
+		float const scaleY = this->child_->height() / rendered.height();
 		canvas.scale(geom::ScaleVector(scaleX, scaleY));
 		this->child_->draw(canvas, geom::Area(geom::ZERO, this->child_->size()), depth);
 	}
+}
+//-----------------------------------------------------------------------------
+
+DrawableFactory::DrawableFactory()
+{
+	this->factories_.insert(std::make_pair("stretch:", StretchDrawable::create));
+	this->factories_.insert(std::make_pair("repeat:", RepeatDrawable::create));
+	this->factories_.insert(std::make_pair("image:", ImageDrawable::create));
+	this->factories_.insert(std::make_pair("color:", ColorDrawable::create));
+}
+Handler<Drawable> DrawableFactory::queryDrawable( const geom::Box& size, const std::string& repl )
+{
+	for(std::pair<std::string, constructor> p : this->factories_){
+		if(util::startsWith(repl, p.first)){
+			std::string const left = repl.substr(p.first.size());
+			return p.second(*this, size, left);
+		}
+	}
+	return Handler<Drawable>();
 }
 
 }}
