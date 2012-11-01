@@ -43,7 +43,7 @@ protected:
 	HandlerW<RenderCache> cache() { return this->cache_; };
 public:
 	virtual ~RenderCommand() noexcept (true) = default;
-	virtual void render(gl::Canvas& canvas, const geom::Point& offset) = 0;
+	virtual void render(gl::Canvas& canvas, const geom::Point& offset, float depth=0.0f) = 0;
 	virtual void onHidden() noexcept {};
 public:
 	virtual void onMoved(const geom::Area& before, const geom::Area& now) {};
@@ -62,7 +62,7 @@ public:
 public:
 	Handler<gl::Sprite> realize(gl::Canvas& cv);
 	virtual void onHidden() noexcept override;
-	virtual void render(gl::Canvas& canvas, const geom::Point& offset) override;
+	virtual void render(gl::Canvas& canvas, const geom::Point& offset, float depth=0.0f) override;
 protected:
 	virtual Handler<gl::Sprite> realizeImpl(gl::Canvas& cv) = 0;
 	void invalidate() noexcept;
@@ -89,9 +89,9 @@ public:
 	virtual ~DrawableRenderCommand() noexcept = default;
 public:
 	virtual void onHidden() noexcept override;
-	virtual void render(gl::Canvas& canvas, const geom::Point& offset) override;
+	virtual void render(gl::Canvas& canvas, const geom::Point& offset, float depth=0.0f) override;
 private:
-	void realize();
+	void realize(gl::Canvas& canvas);
 };
 
 }}}

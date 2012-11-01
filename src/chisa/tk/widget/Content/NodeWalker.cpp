@@ -23,6 +23,12 @@ namespace chisa {
 namespace tk {
 namespace widget {
 
+NodeWalker::NodeWalker() noexcept
+:nodeDepth_(0)
+{
+
+}
+
 void NodeWalker::start(std::shared_ptr<Document> model)
 {
 	model->walk(*this);
@@ -30,9 +36,11 @@ void NodeWalker::start(std::shared_ptr<Document> model)
 
 void NodeWalker::walkChildren(TreeNode* children)
 {
+	this->nodeDepth_++;
 	for(Node* c : *children){
 		c->walk(*this);
 	}
+	this->nodeDepth_--;
 }
 
 

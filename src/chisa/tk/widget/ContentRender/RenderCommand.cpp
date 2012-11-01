@@ -56,9 +56,9 @@ void SpriteRenderCommand::invalidate() noexcept
 	this->spritew().reset();
 }
 
-void SpriteRenderCommand::render(gl::Canvas& canvas, const geom::Point& offset)
+void SpriteRenderCommand::render(gl::Canvas& canvas, const geom::Point& offset, float depth)
 {
-	canvas.drawSprite(this->realize(canvas), this->area().point() - offset);
+	canvas.drawSprite(this->realize(canvas), this->area().point() - offset, depth);
 }
 
 //-----------------------------------------------------------------------------
@@ -83,12 +83,13 @@ void DrawableRenderCommand::onHidden() noexcept
 	this->drawable_.reset();
 }
 
-void DrawableRenderCommand::render(gl::Canvas& canvas, const geom::Point& offset)
+void DrawableRenderCommand::render(gl::Canvas& canvas, const geom::Point& offset, float depth)
 {
-	this->realize();
+	this->realize(canvas);
+	this->drawable_->draw(canvas, geom::Area(this->area().point() - offset, this->area().box()), depth);
 }
 
-void DrawableRenderCommand::realize()
+void DrawableRenderCommand::realize(gl::Canvas& canvas)
 {
 	if(this->drawable_){
 		return;
@@ -100,7 +101,7 @@ void DrawableRenderCommand::realize()
 		}
 		this->drawablew_.reset();
 	}
-	//this->drawable_
+	this->drawable_ = canvas.queryDrawable(this->drawableRepl_, this->area().box());
 }
 
 }}}

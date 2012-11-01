@@ -88,7 +88,7 @@ int main(int argc, char** argv) {
 		return -1;
 	}
 	try {
-		if(GL_FALSE == glfwOpenWindow(1024,768, 8, 8, 8, 8, 8, 8, GLFW_WINDOW)){
+		if(GL_FALSE == glfwOpenWindow(1024,768, 8, 8, 8, 8, 16, 8, GLFW_WINDOW)){
 			throw logging::Exception(__FILE__, __LINE__, "Failed to open window.");
 		}
 
