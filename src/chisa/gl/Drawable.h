@@ -51,7 +51,6 @@ public:
 	virtual ~ColorDrawable() noexcept = default;
 public:
 	Color color() const noexcept;
-	virtual geom::Box size() const noexcept override;
 	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) override;
 };
 
@@ -59,6 +58,7 @@ class ImageDrawable : public Drawable {
 private:
 	Handler<gl::Sprite> sprite_;
 	std::string filename_;
+	geom::Box measured_;
 protected:
 	ImageDrawable(const geom::Box& size, const std::string& filename);
 	virtual ~ImageDrawable() noexcept = default;

@@ -21,6 +21,7 @@
 #include "Util.h"
 #include "../Content/Node.h"
 #include "../ContentRender/RenderCommand.h"
+#include "../ContentRender/RenderContext.h"
 
 namespace chisa {
 namespace tk {
@@ -108,8 +109,7 @@ void ContentMeasurer::walk(Text* text)
 		now += cmd.str().size();
 		//文字分のエリアを確保し、その位置とレンダリングコマンドを記録
 		geom::Area const rendered = this->extendInline(cmd.size());
-		//this->renderTree_.append(new TextRenderCommand(text->root()->renderCache(), rendered, cmd));
-		//text->appendArea(cmd.str(), rendered);
+		text->appendObject(this->context_.createText(rendered, cmd));
 	}
 }
 

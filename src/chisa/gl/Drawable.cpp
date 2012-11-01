@@ -37,7 +37,8 @@ float Drawable::height() const noexcept
 //-----------------------------------------------------------------------------
 
 ColorDrawable::ColorDrawable(const geom::Box size, const Color& c)
-:Drawable(size), color_(c)
+:Drawable(size)
+,color_(c)
 {
 
 }
@@ -80,8 +81,14 @@ void ImageDrawable::draw(Canvas& canvas, const geom::Area& area, const float dep
 {
 	if(!this->sprite_){
 		this->sprite_ = canvas.queryImage(this->filename_);
+		this->measured_ = geom::min(this-> specSize(), geom::Box(this->sprite()->size()));
 	}
-	canvas.drawSprite(this->sprite_, area.point(), geom::Area(geom::ZERO, geom::min(area.box(), this->specSize())), depth);
+	canvas.drawSprite(this->sprite_, area.point(), geom::Area(geom::ZERO, geom::min(area.box(), this->measured_)), depth);
+}
+
+Handler<Drawable> ImageDrawable::create( DrawableFactory& factory, const geom::Box& size, const std::string& repl )
+{
+	return Handler<Drawable>(new ImageDrawable(size, repl));
 }
 
 //-----------------------------------------------------------------------------
@@ -100,7 +107,7 @@ Handler<Drawable> RepeatDrawable::child() const
 
 geom::Box RepeatDrawable::size() const noexcept
 {
-	return this->child_ ? this->child_->size() : geom::Box();
+	return this->child_ ? this->child_->size() : this->specSize();
 }
 
 void RepeatDrawable::draw(Canvas& canvas, const geom::Area& area, const float depth)
@@ -121,6 +128,11 @@ void RepeatDrawable::draw(Canvas& canvas, const geom::Area& area, const float de
 	}
 }
 
+Handler<Drawable> RepeatDrawable::create( DrawableFactory& factory, const geom::Box& size, const std::string& repl )
+{
+	return Handler<Drawable>(new RepeatDrawable(size, factory.queryDrawable(size, repl)));
+}
+
 //-----------------------------------------------------------------------------
 
 StretchDrawable::StretchDrawable(const geom::Box size, Handler<Drawable> child)
@@ -137,7 +149,7 @@ Handler<Drawable> StretchDrawable::child() const
 
 geom::Box StretchDrawable::size() const noexcept
 {
-	return this->child_ ? this->child_->size() : geom::Box();
+	return this->child_ ? this->child_->size() : this->specSize();
 }
 
 void StretchDrawable::draw(Canvas& canvas, const geom::Area& area, const float depth)
@@ -152,6 +164,11 @@ void StretchDrawable::draw(Canvas& canvas, const geom::Area& area, const float d
 		this->child_->draw(canvas, geom::Area(geom::ZERO, this->child_->size()), depth);
 	}
 }
+Handler<Drawable> StretchDrawable::create( DrawableFactory& factory, const geom::Box& size, const std::string& repl )
+{
+	return Handler<Drawable>(new StretchDrawable(size, factory.queryDrawable(size, repl)));
+}
+
 //-----------------------------------------------------------------------------
 
 DrawableFactory::DrawableFactory()
