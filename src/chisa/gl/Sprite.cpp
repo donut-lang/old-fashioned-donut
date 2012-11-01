@@ -40,16 +40,24 @@ Sprite::Sprite(SpriteManager* const mgr, const geom::IntVector& size)
 ,bufferType_(Sprite::BufferType::Invalid)
 {
 	glGenTextures(1, &this->texId_);
+	const GLenum gerr = glGetError();
+	if(gerr != GL_NO_ERROR){
+		throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to generate texture: 0x%08x", gerr);
+	}
 	glBindTexture(GL_TEXTURE_2D, this->texId_);
+	const GLenum berr = glGetError();
+	if(berr != GL_NO_ERROR){
+		throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to bind texture: 0x%08x", berr);
+	}
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->origSize().width(), this->origSize().height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+	const GLenum terr = glGetError();
+	if(terr != GL_NO_ERROR){
+		throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to transfer texture: 0x%08x", terr);
+	}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	const GLenum err = glGetError();
-	if(err != GL_NO_ERROR){
-		throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to transfer texture: %d", err);
-	}
 }
 Sprite::~Sprite() noexcept (true)
 {

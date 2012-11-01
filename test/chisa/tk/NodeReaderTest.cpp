@@ -44,16 +44,16 @@ TEST(NodeReadingTest, TextNodeTest)
 	std::shared_ptr<Document> docNode;
 	ASSERT_NO_THROW(docNode = reader.parseTree(doc->RootElement()));
 	ASSERT_TRUE(docNode.get());
-	ASSERT_EQ(docNode, docNode->root().lock());
-	ASSERT_EQ(nullptr, docNode->parent().lock().get());
+	ASSERT_EQ(docNode.get(), docNode->root());
+	ASSERT_EQ(nullptr, docNode->parent());
 
-	std::shared_ptr<Node> child(docNode->at(0));
-	ASSERT_EQ(typeid(Text), typeid(*(child.get())));
-	ASSERT_EQ(docNode, child->root().lock());
-	ASSERT_EQ(docNode, child->parent().lock());
-	std::shared_ptr<Text> t = std::dynamic_pointer_cast<Text>(child);
+	Node* child(docNode->at(0));
+	ASSERT_EQ(typeid(Text), typeid(*(child)));
+	ASSERT_EQ(docNode.get(), child->root());
+	ASSERT_EQ(docNode.get(), child->parent());
+	Text* t = dynamic_cast<Text*>(child);
 
-	ASSERT_TRUE(t.get());
+	ASSERT_TRUE(t);
 	ASSERT_EQ("Kitty on your lap.", t->text());
 }
 
@@ -69,9 +69,9 @@ TEST(NodeReadingTest, HeadingTest)
 	ASSERT_EQ(3, m->count());
 	int cnt = 0;
 	for(TreeNode::Iterator it = m->begin(); it != m->end(); ++it){
-		std::shared_ptr<Node> node(*it);
-		std::shared_ptr<Heading> hnode(std::dynamic_pointer_cast<Heading>(node));
-		ASSERT_TRUE(hnode.get());
+		Node* node(*it);
+		Heading* hnode(dynamic_cast<Heading*>(node));
+		ASSERT_TRUE(hnode);
 		ASSERT_EQ(++cnt, hnode->level());
 	}
 }
@@ -87,18 +87,18 @@ TEST(NodeReadingTest, MixedTest)
 	ASSERT_TRUE(m.get());
 	ASSERT_EQ(3, m->count());
 
-	std::shared_ptr<Heading> hnode(std::dynamic_pointer_cast<Heading>(m->at(0)));
-	ASSERT_TRUE(hnode.get());
+	Heading* hnode(dynamic_cast<Heading*>(m->at(0)));
+	ASSERT_TRUE(hnode);
 	ASSERT_EQ(1, hnode->level());
-	ASSERT_EQ("a", std::dynamic_pointer_cast<Text>(hnode->at(0))->text());
+	ASSERT_EQ("a", dynamic_cast<Text*>(hnode->at(0))->text());
 
-	hnode = (std::dynamic_pointer_cast<Heading>(m->at(2)));
-	ASSERT_TRUE(hnode.get());
+	hnode = dynamic_cast<Heading*>(m->at(2));
+	ASSERT_TRUE(hnode);
 	ASSERT_EQ(3, hnode->level());
-	ASSERT_EQ("c", std::dynamic_pointer_cast<Text>(hnode->at(0))->text());
+	ASSERT_EQ("c", dynamic_cast<Text*>(hnode->at(0))->text());
 
-	std::shared_ptr<Text> tnode(std::dynamic_pointer_cast<Text>(m->at(1)));
-	ASSERT_TRUE(tnode.get());
+	Text* tnode(dynamic_cast<Text*>(m->at(1)));
+	ASSERT_TRUE(tnode);
 	ASSERT_EQ("kitty on your lap", tnode->text());
 }
 
@@ -112,8 +112,8 @@ TEST(NodeReadingTest, AttributeTest)
 	ASSERT_NO_THROW(m = NodeReader().parseTree(tree->RootElement()));
 	ASSERT_EQ(1, m->count());
 
-	std::shared_ptr<Paragraph> p(std::dynamic_pointer_cast<Paragraph>(m->at(0)));
-	ASSERT_TRUE(p.get());
+	Paragraph* p = dynamic_cast<Paragraph*>(m->at(0));
+	ASSERT_TRUE(p);
 	ASSERT_EQ("test", p->id());
 	ASSERT_EQ(0, p->count());
 }
@@ -128,8 +128,8 @@ TEST(NodeReadingTest, SpaceStringTest)
 	ASSERT_NO_THROW(m = NodeReader().parseTree(tree->RootElement()));
 	ASSERT_EQ(1, m->count());
 
-	std::shared_ptr<Paragraph> p(std::dynamic_pointer_cast<Paragraph>(m->at(0)));
-	ASSERT_TRUE(p.get());
+	Paragraph* p(dynamic_cast<Paragraph*>(m->at(0)));
+	ASSERT_TRUE(p);
 	ASSERT_EQ(0, p->count());
 }
 

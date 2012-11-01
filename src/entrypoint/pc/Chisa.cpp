@@ -89,8 +89,7 @@ int main(int argc, char** argv) {
 	}
 	try {
 		if(GL_FALSE == glfwOpenWindow(1024,768, 8, 8, 8, 8, 8, 8, GLFW_WINDOW)){
-			std::cerr << "Failed to open window." << std::endl;
-			return -1;
+			throw logging::Exception(__FILE__, __LINE__, "Failed to open window.");
 		}
 
 		glfwSetWindowTitle("Chisa");

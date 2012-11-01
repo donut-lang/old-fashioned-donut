@@ -40,8 +40,8 @@ TEST(ContentMeasurerTest, TextWrapTest)
 	Handler<gl::FontManager> fontManager( new gl::FontManager(log_trace, MATERIAL_DIR"/font") );
 	std::shared_ptr<Document> doc = reader.parseTree(docTree->RootElement());
 	ContentMeasurer(log_trace, fontManager, 1000, tree).start(doc);
-	ASSERT_STREQ(typeid(Text).name(), typeid(*(doc->at(0).get())).name());
-	std::shared_ptr<Text> text(std::dynamic_pointer_cast<Text>(doc->at(0)));
+	ASSERT_STREQ(typeid(Text).name(), typeid(*(doc->at(0))).name());
+	Text* text = dynamic_cast<Text*>(doc->at(0));
 	ASSERT_EQ(1, tree.size());
 
 	const RenderCommand& set = *tree.at(0);
