@@ -24,6 +24,7 @@ namespace tk {
 namespace widget {
 
 RenderContext::RenderContext()
+:cache_(new RenderCache())
 {
 	// TODO Auto-generated constructor stub
 

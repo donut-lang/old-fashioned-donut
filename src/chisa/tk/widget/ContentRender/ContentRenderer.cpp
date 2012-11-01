@@ -18,12 +18,15 @@
 
 #include "../Content/Node.h"
 #include "ContentRenderer.h"
+#include "RenderCommand.h"
 
 namespace chisa {
 namespace tk {
 namespace widget {
 
-ContentRenderer::ContentRenderer()
+ContentRenderer::ContentRenderer(gl::Canvas& canvas, const geom::Area& area)
+:canvas_(canvas)
+,area_(area)
 {
 
 }
@@ -46,6 +49,42 @@ void ContentRenderer::walkImpl(InlineNode* tree)
 {
 	this->walkTree(tree);
 }
+void ContentRenderer::walk(Text* text)
+{
+	for(Text::DataType d : text->objects()){
+		geom::Area const intersect(d->area().intersect(this->area_));
+		if (!intersect.empty()) {
+			d->render(this->canvas_, this->area_.point());
+		}else{
+			d->onHidden();
+		}
+	}
+}
 
+//-----------------------------------------------------------------------------
+
+void ContentRenderer::walk(Document* doc)
+{
+	this->walkImpl(doc);
+}
+void ContentRenderer::walk(Paragraph* para)
+{
+	this->walkImpl(para);
+}
+void ContentRenderer::walk(Heading* head)
+{
+	this->walkImpl(head);
+}
+void ContentRenderer::walk(Link* link)
+{
+	this->walkImpl(link);
+}
+void ContentRenderer::walk(Font* font)
+{
+	this->walkImpl(font);
+}
+void ContentRenderer::walk(BreakLine* br)
+{
+}
 
 }}}

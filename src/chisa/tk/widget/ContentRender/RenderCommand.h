@@ -35,11 +35,12 @@ class RenderCache;
 
 class RenderCommand : public HandlerBody<RenderCommand> {
 	DISABLE_COPY_AND_ASSIGN(RenderCommand);
-	DEFINE_MEMBER_REF(protected, HandlerW<RenderCache>, cache)
+	HandlerW<RenderCache> cache_;
 	geom::Area area_;
 protected:
 	RenderCommand() noexcept = delete;
 	RenderCommand(HandlerW<RenderCache> cache, const geom::Area& area) noexcept:cache_(cache), area_(area){};
+	HandlerW<RenderCache> cache() { return this->cache_; };
 public:
 	virtual ~RenderCommand() noexcept (true) = default;
 	virtual void render(gl::Canvas& canvas, const geom::Point& offset) = 0;

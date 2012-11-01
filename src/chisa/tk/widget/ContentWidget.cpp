@@ -21,7 +21,7 @@
 #include "../../geom/Vector.h"
 #include "ContentWidget.h"
 #include "Content/NodeReader.h"
-#include "ContentRender/RenderCache.h"
+#include "ContentRender/ContentRenderer.h"
 #include "ContentMeasure/ContentMeasurer.h"
 #include <tinyxml2.h>
 
@@ -48,7 +48,7 @@ ContentWidget::~ContentWidget()
 
 void ContentWidget::render(gl::Canvas& cv, const geom::Area& area)
 {
-	//this->renderTree()->render(cv, area);
+	ContentRenderer(cv, area).start(this->rootNode());
 }
 
 void ContentWidget::idle(const float delta_ms)
