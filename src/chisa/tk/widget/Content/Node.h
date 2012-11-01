@@ -39,8 +39,8 @@ namespace widget {
 
 class Node {
 	DISABLE_COPY_AND_ASSIGN(Node);
-	DEFINE_MEMBER(public, private, std::weak_ptr<Document>, root);
-	DEFINE_MEMBER(public, private, std::weak_ptr<Node>, parent);
+	DEFINE_MEMBER(public, private, Document*, root);
+	DEFINE_MEMBER(public, private, TreeNode*, parent);
 protected:
 	Node();
 public:
@@ -48,9 +48,9 @@ public:
 public:
 	virtual void walk(NodeWalker& walker) = 0;
 	template <typename Derived, typename... Args>
-	static std::shared_ptr<Derived> create(std::weak_ptr<Document> root, std::weak_ptr<Node> parent, const Args&... args)
+	static Derived* create(Document* root, TreeNode* parent, const Args&... args)
 	{
-		std::shared_ptr<Derived> node(new Derived(args...));
+		Derived* const node = new Derived(args...);
 		node->root(root);
 		node->parent(parent);
 		return node;
@@ -66,13 +66,13 @@ public:
 #define NODE_SUBKLASS(Klass)\
 protected:\
 	Klass();\
-NODE_SUBKLASS_DESTRUCTOR(Klass);\
+NODE_SUBKLASS_DESTRUCTOR(Klass);
 
 #define NODE_SUBKLASS_LEAF(Klass)\
 NODE_SUBKLASS_WALK(Klass);\
 NODE_SUBKLASS_DESTRUCTOR(Klass);\
 template <typename Derived, typename... Args>\
-friend std::shared_ptr<Derived> Node::create(std::weak_ptr<Document> root, std::weak_ptr<Node> parent, const Args&... args)
+friend Derived* Node::create(Document* root, TreeNode* parent, const Args&... args)
 
 /******************************************************************************
  * カテゴライズするためのノード
@@ -80,12 +80,15 @@ friend std::shared_ptr<Derived> Node::create(std::weak_ptr<Document> root, std::
 
 class TreeNode : public Node {
 public:
-	typedef std::vector<std::shared_ptr<Node> > ChildrenType;
+	typedef std::vector<Node*> ChildrenType;
 	typedef ChildrenType::iterator Iterator;
 	typedef ChildrenType::const_iterator ConstIterator;
 private:
 	DEFINE_MEMBER(public, private, std::string, id);
-	NODE_SUBKLASS(TreeNode);
+protected:
+	TreeNode();
+public:
+	virtual ~TreeNode() noexcept;
 private:
 	DEFINE_MEMBER(public, private, ChildrenType, children);
 	std::map<std::string, std::function<void(tinyxml2::XMLElement*)> > attrMap_;
@@ -94,9 +97,9 @@ public:
 	inline Iterator end() { return this->children_.end(); };
 	inline ConstIterator cbegin() const { return this->children_.cbegin(); };
 	inline ConstIterator cend() const { return this->children_.cend(); };
-	inline void add(std::shared_ptr<Node> child) { this->children_.push_back(child); };
+	inline void add(Node* child) { this->children_.push_back(child); };
 	inline size_t count() const { return this->children_.size(); };
-	inline std::shared_ptr<Node> at(size_t idx) const { return this->children_.at(idx); };
+	inline Node* at(size_t idx) const { return this->children_.at(idx); };
 	void parseAttribute(tinyxml2::XMLElement* elm);
 	virtual TreeNode* findTreeNodeById(const std::string& name) noexcept override;
 	virtual Text* findFirstTextNode() noexcept override;

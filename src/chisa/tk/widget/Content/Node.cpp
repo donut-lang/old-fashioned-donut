@@ -28,8 +28,8 @@ Node::Node()
 std::shared_ptr<Document> Node::createRootDocument()
 {
 	std::shared_ptr<Document> node(new Document);
-	node->root(node);
-	node->parent(std::weak_ptr<Node>());
+	node->root(node.get());
+	node->parent(nullptr);
 	return node;
 }
 
@@ -39,12 +39,19 @@ TreeNode::TreeNode()
 	this->addAttribute("id", this->id_);
 }
 
+TreeNode::~TreeNode() noexcept
+{
+	for(Node* n : this->children_){
+		delete n;
+	}
+}
+
 TreeNode* TreeNode::findTreeNodeById(const std::string& name) noexcept
 {
 	if(!(this->id().empty()) && name == this->id()){
 		return this;
 	}
-	for(std::shared_ptr<Node>& it : this->children_){
+	for(Node* it : this->children_){
 		TreeNode* const n = it->findTreeNodeById(name);
 		if(n){
 			return n;
@@ -56,7 +63,7 @@ TreeNode* TreeNode::findTreeNodeById(const std::string& name) noexcept
 
 Text* TreeNode::findFirstTextNode() noexcept
 {
-	for (std::shared_ptr<Node>& it : this->children_) {
+	for (Node* it : this->children_) {
 		Text* const t = it->findFirstTextNode();
 		if (t) {
 			return t;

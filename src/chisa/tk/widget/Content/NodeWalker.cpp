@@ -30,7 +30,7 @@ void NodeWalker::start(std::shared_ptr<Document> model)
 
 void NodeWalker::walkChildren(TreeNode* children)
 {
-	for(const std::shared_ptr<Node>& c : *children){
+	for(Node* c : *children){
 		c->walk(*this);
 	}
 }

@@ -35,8 +35,8 @@ namespace widget {
 class NodeReader {
 	DISABLE_COPY_AND_ASSIGN(NodeReader);
 public:
-	typedef std::function<std::shared_ptr<Node>(NodeReader&, std::weak_ptr<Document>, std::weak_ptr<Node>, tinyxml2::XMLElement*)> ParseFunc;
-	typedef std::function<std::shared_ptr<TreeNode>(std::weak_ptr<Document>, std::weak_ptr<Node>)> TreeConstructor;
+	typedef std::function<Node*(NodeReader&, Document*, TreeNode*, tinyxml2::XMLElement*)> ParseFunc;
+	typedef std::function<TreeNode*(Document*, TreeNode*)> TreeConstructor;
 private:
 	static const std::string RootElementName;
 	std::map<std::string, ParseFunc> elementParser_;
@@ -45,10 +45,10 @@ public:
 	virtual ~NodeReader() = default;
 public:
 	std::shared_ptr<Document> parseTree(tinyxml2::XMLElement* elm);
-	std::shared_ptr<Node> parseNode(std::weak_ptr<Document> root, std::weak_ptr<Node> parent, tinyxml2::XMLNode* node);
+	Node* parseNode(Document* root, TreeNode* parent, tinyxml2::XMLNode* node);
 private:
-	std::shared_ptr<TreeNode> parseTreeNode(TreeConstructor constructor, std::weak_ptr<Document> root, std::weak_ptr<Node> parent, tinyxml2::XMLElement* elm);
-	std::shared_ptr<Node> parseText(std::weak_ptr<Document> root, std::weak_ptr<Node> parent, tinyxml2::XMLText* txt);
+	TreeNode* parseTreeNode(TreeConstructor constructor, Document* root, TreeNode* parent, tinyxml2::XMLElement* elm);
+	Node* parseText(Document* root, TreeNode* parent, tinyxml2::XMLText* txt);
 };
 
 }}}
