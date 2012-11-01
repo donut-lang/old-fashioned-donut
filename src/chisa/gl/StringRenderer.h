@@ -36,8 +36,12 @@ public:
 	enum Style {
 		Regular = 0,
 		Bold = 1,
-		Italic = 2,
-		ItalicBold = 3
+		Italic = 2
+	};
+	enum Decoration {
+		None = 0,
+		Underline = 1,
+		Strike = 2
 	};
 	static const float DefaultFontSize;
 public:
@@ -46,16 +50,18 @@ public:
 		DEFINE_MEMBER(private, private, bool, vertical);
 		Handler<gl::Font> font_;
 		Style style_;
+		Decoration deco_;
 		float size_;
 		gl::Color color_;
+		gl::Color backColor_;
 		DEFINE_MEMBER(public, private, std::string, str);
 		DEFINE_MEMBER(private, private, geom::Area, area);
 	private:
 		void* operator new(size_t) = delete;
 		void operator delete(void*) = delete;
 	public:
-		Command():enabled_(false),vertical_(false), font_(), style_(Style::Regular), size_(DefaultFontSize), color_(gl::BLACK), str_(),area_(0,0,0,0){};
-		Command(Handler<gl::Font> font, const Style style, const float size, const gl::Color& color, const std::string& str, const geom::Area& area):enabled_(true),vertical_(false), font_(font),style_(style), size_(size), color_(color),str_(str),area_(area){};
+		Command():enabled_(false),vertical_(false), font_(), style_(Style::Regular), deco_(Decoration::None), size_(DefaultFontSize), color_(gl::BLACK), backColor_(0,0,0,0), str_(),area_(0,0,0,0){};
+		Command(Handler<gl::Font> font, const Style style, const Decoration deco, const float size, const gl::Color& color, const gl::Color& backColor, const std::string& str, const geom::Area& area):enabled_(true),vertical_(false), font_(font),style_(style), deco_(deco), size_(size), color_(color),str_(str),area_(area){};
 		Command(const Command& other) = default;
 		Command(Command&& other) = default;
 		Command& operator=(const Command& other) = default;
@@ -82,13 +88,19 @@ private:
 	cairo_font_options_t* nullOption_;
 	cairo_t* cairo_;
 	std::vector<Style> styleStack_;
+	std::vector<Decoration> decoStack_;
 	std::vector<float> sizeStack_;
 	std::vector<std::string> fontStack_;
 	std::vector<gl::Color> colorStack_;
+	std::vector<gl::Color> backColorStack_;
 public:
 	void pushStyle(Style style);
 	Style nowStyle() const;
 	void popStyle();
+
+	void pushDeco(Decoration deco);
+	Decoration nowDeco() const;
+	void popDeco();
 
 	void pushSize(float size);
 	float nowSize() const;
@@ -97,6 +109,10 @@ public:
 	void pushColor(const Color& c);
 	Color nowColor() const;
 	void popColor();
+
+	void pushBackColor(const Color& c);
+	Color nowBackColor() const;
+	void popBackColor();
 
 	void pushFont( const std::string& name );
 	std::string nowFont() const;

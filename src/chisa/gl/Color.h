@@ -75,6 +75,7 @@ constexpr Color RED(1,0,0,1);
 constexpr Color BLUE(0,0,1,1);
 constexpr Color GREEN(0,1,0,1);
 constexpr Color GRAY(.5,.5,.5,1);
+constexpr Color TRANSPARENT(0,0,0,0);
 
 const std::pair<std::string, gl::Color> COLOR_TABLE[] = {
 		std::pair<std::string, gl::Color>("unchanged", UNCHANGED_COLOR),
@@ -83,6 +84,7 @@ const std::pair<std::string, gl::Color> COLOR_TABLE[] = {
 		std::pair<std::string, gl::Color>("red", RED),
 		std::pair<std::string, gl::Color>("blue", BLUE),
 		std::pair<std::string, gl::Color>("green", GREEN),
-		std::pair<std::string, gl::Color>("gray", GRAY)
+		std::pair<std::string, gl::Color>("gray", GRAY),
+		std::pair<std::string, gl::Color>("transparent", TRANSPARENT)
 };
 }}

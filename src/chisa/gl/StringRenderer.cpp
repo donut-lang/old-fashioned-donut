@@ -42,9 +42,11 @@ StringRenderer::StringRenderer(Handler<gl::FontManager> fontManager)
 ,cairo_(cairo_create(nullSurface_))
 {
 	this->pushStyle(StringRenderer::Style::Regular);
+	this->pushDeco(StringRenderer::Decoration::None);
 	this->pushSize(StringRenderer::DefaultFontSize);
 	this->pushFont("");
 	this->pushColor(gl::BLACK);
+	this->pushBackColor(gl::TRANSPARENT);
 	{
 		cairo_status_t st = cairo_surface_status(this->nullSurface_);
 		if(st != CAIRO_STATUS_SUCCESS){
@@ -103,6 +105,32 @@ void StringRenderer::popColor()
 }
 
 
+void StringRenderer::pushBackColor(const Color& c)
+{
+	this->backColorStack_.push_back(c);
+}
+Color StringRenderer::nowBackColor() const
+{
+	return this->backColorStack_.back();
+}
+void StringRenderer::popBackColor()
+{
+	this->backColorStack_.pop_back();
+}
+
+void StringRenderer::pushDeco(Decoration deco)
+{
+	this->decoStack_.push_back(deco);
+}
+StringRenderer::Decoration StringRenderer::nowDeco() const
+{
+	return this->decoStack_.back();
+}
+void StringRenderer::popDeco()
+{
+	this->decoStack_.pop_back();
+}
+
 void StringRenderer::pushFont( const std::string& name )
 {
 	this->fontStack_.push_back(name);
@@ -147,7 +175,14 @@ StringRenderer::Command StringRenderer::measure(const std::string& strUtf8)
 	cairo_text_extents(this->cairo_, strUtf8.c_str(), &ext);
 	auto offset = geom::Vector(ext.x_bearing, -ext.y_bearing);
 	auto size = geom::Box(ext.x_advance, ext.height+ext.y_advance);
-	return StringRenderer::Command(this->font_, this->nowStyle(), this->nowSize(), this->nowColor(), strUtf8, geom::Area(offset, size));
+	return StringRenderer::Command(
+			this->font_,
+			this->nowStyle(),
+			this->nowDeco(),
+			this->nowSize(),
+			this->nowColor(),
+			this->nowBackColor(),
+			strUtf8, geom::Area(offset, size));
 }
 
 StringRenderer::Command StringRenderer::calcMaximumStringLength(const std::string& ostr, const float limit, size_t beginInUtf8, size_t endInUtf8)
