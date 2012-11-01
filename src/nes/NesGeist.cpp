@@ -37,6 +37,7 @@ NesGeist::NesGeist(chisa::logging::Logger& log, std::weak_ptr<chisa::tk::World> 
 
 NesGeist::~NesGeist()
 {
+	this->stopNES();
 }
 
 std::string NesGeist::toString() const
@@ -64,7 +65,7 @@ void NesGeist::dispatchRendering(const uint8_t nesBuffer[screenHeight][screenWid
 	{
 		std::unique_lock<std::mutex> lock(this->frame_mutex_);
 		if(this->runner_){
-			this->cond_.wait(lock);
+			this->cond_.wait_for(lock, std::chrono::milliseconds(20));
 		}
 	}
 }
@@ -87,6 +88,8 @@ void NesGeist::loadNES(const std::string& abs_filename)
 void NesGeist::stopNES()
 {
 	if(this->runner_){
+		this->runner_->queryStop();
+		this->runner_t_->join();
 		delete this->runner_t_;
 		delete this->runner_;
 		this->runner_t_ = nullptr;

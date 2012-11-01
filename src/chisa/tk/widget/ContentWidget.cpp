@@ -64,7 +64,7 @@ geom::Box ContentWidget::measure(const geom::Box& constraintSize)
 {
 	if(geom::isUnspecified(this->lastWidth()) || std::fabs(constraintSize.width()-this->lastWidth()) >= geom::VerySmall){
 		this->lastWidth(constraintSize.width());
-		this->lastSize(ContentMeasurer(log(), fontManager(), context(), constraintSize.width()).start(this->rootNode()));
+		this->lastSize(ContentMeasurer(log(), fontManager_, context(), constraintSize.width()).start(this->rootNode()));
 	}
 	return geom::Box(geom::max(constraintSize.width(), this->lastSize().width()), geom::max(constraintSize.height(), this->lastSize().height()));
 }

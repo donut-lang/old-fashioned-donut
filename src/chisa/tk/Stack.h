@@ -116,7 +116,9 @@ public:
 	}
 public:
 	explicit Stack(){}
-	virtual ~Stack(){}
+	virtual ~Stack(){
+		decltype(this->stack)().swap(this->stack);
+	}
 };
 
 }}
