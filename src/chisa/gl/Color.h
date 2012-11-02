@@ -41,6 +41,7 @@ public:
 	Color& operator=(const Color& other) = default;
 	Color& operator=(Color&& other) = default;
 	~Color() noexcept = default;
+	std::string toString() const noexcept;
 private:
 	static constexpr float DELTA = 1.0f/255.0f;
 public:

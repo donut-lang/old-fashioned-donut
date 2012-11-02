@@ -23,8 +23,12 @@ namespace chisa {
 namespace tk {
 namespace widget {
 
-RenderCache::RenderCache(const std::size_t maxSprites,const std::size_t maxDrawable)
-:maxSprites_(maxSprites), maxDrawable_(maxDrawable)
+static std::string const TAG("RenderCache");
+
+RenderCache::RenderCache(logging::Logger& log, const std::size_t maxSprites,const std::size_t maxDrawable)
+:log_(log)
+,maxSprites_(maxSprites)
+,maxDrawable_(maxDrawable)
 {
 }
 
@@ -32,6 +36,10 @@ void RenderCache::registerDrawable(Handler<gl::Drawable> d) noexcept
 {
 	this->drawableCache_.push_back(d);
 	while(this->drawableCache_.size() > this->maxSprites_){
+		if(this->log().t()){
+			Handler<gl::Drawable> del = this->drawableCache_.front();
+			this->log().t(TAG, "Drawable cache deleted: %s", del->toString().c_str());
+		}
 		this->drawableCache_.pop_front();
 	}
 }
@@ -40,6 +48,10 @@ void RenderCache::registerSprite(Handler<gl::Sprite> s) noexcept
 {
 	this->spriteCache_.push_back(s);
 	while (this->spriteCache_.size() > this->maxSprites_) {
+		if(this->log().t()){
+			Handler<gl::Sprite> del = this->spriteCache_.front();
+			this->log().t(TAG, "Sprite cache deleted: %s", s->toString().c_str());
+		}
 		this->spriteCache_.pop_front();
 	}
 }

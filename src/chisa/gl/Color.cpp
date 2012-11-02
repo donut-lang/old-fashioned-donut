@@ -17,6 +17,7 @@
  */
 
 #include "Color.h"
+#include "../util/StringUtil.h"
 #include <cstdlib>
 
 namespace chisa {
@@ -86,4 +87,8 @@ Color Color::fromString(const std::string& name)
 	}
 }
 
+std::string Color::toString() const noexcept
+{
+	return util::format("(Color %p r:%0.2f g:%0.2f b:%0.2f a:%0.2f)", this, red_, green_, blue_, alpha_);
+}
 }}

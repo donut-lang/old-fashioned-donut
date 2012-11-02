@@ -58,6 +58,10 @@ Handler<Drawable> ColorDrawable::create( DrawableFactory& factory, const geom::B
 	return Handler<Drawable>(new ColorDrawable(size, Color::fromString( repl )));
 }
 
+std::string ColorDrawable::toString() const noexcept
+{
+	return util::format("(ColorDrawable %p size:%s color: %s)", this, this->specSize().toString().c_str(), this->color_.toString().c_str());
+}
 
 //-----------------------------------------------------------------------------
 
@@ -74,7 +78,7 @@ Handler<gl::Sprite> ImageDrawable::sprite() const
 
 geom::Box ImageDrawable::size() const noexcept
 {
-	return this->sprite_ ? geom::Box(this->sprite_->width(), this->sprite_->height()) : geom::Box();
+	return this->sprite_ ? geom::Box(this->sprite_->width(), this->sprite_->height()) : this->specSize();
 }
 
 void ImageDrawable::draw(Canvas& canvas, const geom::Area& area, const float depth)
@@ -89,6 +93,11 @@ void ImageDrawable::draw(Canvas& canvas, const geom::Area& area, const float dep
 Handler<Drawable> ImageDrawable::create( DrawableFactory& factory, const geom::Box& size, const std::string& repl )
 {
 	return Handler<Drawable>(new ImageDrawable(size, repl));
+}
+
+std::string ImageDrawable::toString() const noexcept
+{
+	return util::format("(ImageDrawable %p size:%s file: %s sprite: %p)", this, this->specSize().toString().c_str(), this->filename_.c_str(), this->sprite_.get());
 }
 
 //-----------------------------------------------------------------------------
@@ -133,6 +142,12 @@ Handler<Drawable> RepeatDrawable::create( DrawableFactory& factory, const geom::
 	return Handler<Drawable>(new RepeatDrawable(size, factory.queryDrawable(size, repl)));
 }
 
+std::string RepeatDrawable::toString() const noexcept
+{
+	std::string const childRepl(this->child() ? this->child()->toString() : "none");
+	return util::format("(RepeatDrawable %p size:%s drawable: %s)", this, this->specSize().toString().c_str(), childRepl.c_str());
+}
+
 //-----------------------------------------------------------------------------
 
 StretchDrawable::StretchDrawable(const geom::Box size, Handler<Drawable> child)
@@ -169,11 +184,22 @@ Handler<Drawable> StretchDrawable::create( DrawableFactory& factory, const geom:
 	return Handler<Drawable>(new StretchDrawable(size, factory.queryDrawable(size, repl)));
 }
 
+std::string StretchDrawable::toString() const noexcept
+{
+	std::string const childRepl(this->child() ? this->child()->toString() : "none");
+	return util::format("(StretchDrawable %p size:%s drawable: %s)", this, this->specSize().toString().c_str(), childRepl.c_str());
+}
+
 //-----------------------------------------------------------------------------
 
 Handler<Drawable> NullDrawable::create( DrawableFactory& factory, const geom::Box& size, const std::string& repl )
 {
 	return Handler<Drawable>(new NullDrawable(size));
+}
+
+std::string NullDrawable::toString() const noexcept
+{
+	return util::format("(NullDrawable %p size: %s)", this, this->specSize().toString().c_str());
 }
 
 //-----------------------------------------------------------------------------
