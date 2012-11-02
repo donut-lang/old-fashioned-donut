@@ -41,6 +41,7 @@ public:
 	float height() const noexcept;
 	virtual geom::Box size() const noexcept { return this->specSize_; }
 	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) = 0;
+	virtual std::string toString() const noexcept = 0;
 };
 
 class NullDrawable : public Drawable {
@@ -50,6 +51,7 @@ public:
 	virtual ~NullDrawable() noexcept = default;
 	inline void onFree() { delete this; }
 	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) {};
+	virtual std::string toString() const noexcept override;
 	static Handler<Drawable> create( DrawableFactory& factory, const geom::Box& size, const std::string& repl );
 };
 
@@ -63,6 +65,7 @@ public:
 public:
 	Color color() const noexcept;
 	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) override;
+	virtual std::string toString() const noexcept override;
 };
 
 class ImageDrawable : public Drawable {
@@ -78,6 +81,7 @@ public:
 	Handler<gl::Sprite> sprite() const;
 	virtual geom::Box size() const noexcept override;
 	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) override;
+	virtual std::string toString() const noexcept override;
 };
 
 class RepeatDrawable : public Drawable {
@@ -90,6 +94,7 @@ public:
 	Handler<Drawable> child() const;
 	virtual geom::Box size() const noexcept override;
 	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) override;
+	virtual std::string toString() const noexcept override;
 };
 
 class StretchDrawable : public Drawable {
@@ -102,6 +107,7 @@ public:
 	Handler<Drawable> child() const;
 	virtual geom::Box size() const noexcept override;
 	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) override;
+	virtual std::string toString() const noexcept override;
 };
 
 //-------------------------------------------------------------------------------------------------

@@ -35,7 +35,7 @@ class ContentWidget: public chisa::tk::Widget {
 	DEFINE_MEMBER(private, private, float, lastWidth);
 	DEFINE_MEMBER(private, private, geom::Box, lastSize);
 	Handler<gl::FontManager> fontManager_;
-	DEFINE_MEMBER(private, private, RenderContext, context);
+	RenderContext context_;
 public:
 	virtual void render(gl::Canvas& cv, const geom::Area& area) override;
 	virtual void idle(const float delta_ms) override;

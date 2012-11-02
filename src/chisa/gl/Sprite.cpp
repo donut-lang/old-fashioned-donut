@@ -103,6 +103,11 @@ void Sprite::resize(int width, int height)
 	this->size(geom::IntBox(width, height));
 }
 
+std::string Sprite::toString() const noexcept
+{
+	return util::format("(Sprite %p tex: %d buffer: %p orig: %s now: %s)", this, this->texId_, this->buffer_, this->origSize().toString().c_str(), this->size().toString().c_str());
+}
+
 //-----------------------------------------------------------------------------
 void Sprite::backBuffer()
 {

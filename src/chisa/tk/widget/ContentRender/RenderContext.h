@@ -27,10 +27,12 @@ namespace widget {
 class RenderCommand;
 
 class RenderContext {
+	DISABLE_COPY_AND_ASSIGN(RenderContext);
+	DEFINE_MEMBER_REF(private, logging::Logger, log)
 private:
 	Handler<RenderCache> cache_;
 public:
-	RenderContext();
+	RenderContext(logging::Logger& log);
 	virtual ~RenderContext() noexcept = default;
 public:
 	Handler<RenderCommand> createText(const geom::Area& area, const gl::StringRenderer::Command& cmd);

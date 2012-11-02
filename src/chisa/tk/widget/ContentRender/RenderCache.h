@@ -19,6 +19,7 @@
 #pragma once
 #include "../../../Handler.h"
 #include "../../../util/ClassUtil.h"
+#include "../../../logging/Logger.h"
 #include <deque>
 
 namespace chisa {
@@ -32,13 +33,14 @@ namespace widget {
 
 class RenderCache : public HandlerBody<RenderCache> {
 	DISABLE_COPY_AND_ASSIGN(RenderCache)
+	DEFINE_MEMBER_REF(private, logging::Logger, log);
 private:
 	const std::size_t maxSprites_;
 	const std::size_t maxDrawable_;
 	std::deque<Handler<gl::Drawable> > drawableCache_;
 	std::deque<Handler<gl::Sprite> > spriteCache_;
 public:
-	RenderCache(const std::size_t maxSprites=100,const std::size_t maxDrawable=100);
+	RenderCache(logging::Logger& log, const std::size_t maxSprites=100,const std::size_t maxDrawable=100);
 	virtual ~RenderCache() noexcept = default;
 public:
 	void registerDrawable(Handler<gl::Drawable> d) noexcept;

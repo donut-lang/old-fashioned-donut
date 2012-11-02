@@ -102,6 +102,7 @@ public:
 	void resize(int width, int height);
 	inline int width() const noexcept { return this->size().width(); };
 	inline int height() const noexcept { return this->size().height(); };
+	std::string toString() const noexcept;
 public: /* from Handler */
 	void onFree() noexcept;
 public: /* from Canvas */

@@ -38,7 +38,7 @@ TEST(ContentMeasurerTest, TextWrapTest)
 	NodeReader reader;
 	Handler<gl::FontManager> fontManager( new gl::FontManager(log_trace, MATERIAL_DIR"/font") );
 	std::shared_ptr<Document> doc = reader.parseTree(docTree->RootElement());
-	RenderContext context;
+	RenderContext context(log_err);
 	ContentMeasurer(log_trace, fontManager, context, 1000).start(doc);
 	ASSERT_STREQ(typeid(Text).name(), typeid(*(doc->at(0))).name());
 	Text* text = dynamic_cast<Text*>(doc->at(0));

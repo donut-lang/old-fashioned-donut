@@ -23,8 +23,9 @@ namespace chisa {
 namespace tk {
 namespace widget {
 
-RenderContext::RenderContext()
-:cache_(new RenderCache())
+RenderContext::RenderContext(logging::Logger& log)
+:log_(log)
+,cache_(new RenderCache(log))
 {
 	// TODO Auto-generated constructor stub
 
