@@ -166,10 +166,10 @@ public:
 		}
 	};
 	explicit operator bool () const noexcept {
-		return this->sprite;
+		return !this->expired();
 	}
 	bool expired () const noexcept {
-		return this->sprite;
+		return this->sprite == nullptr;
 	}
 	S* read() const noexcept {
 		return this->sprite;
@@ -255,7 +255,7 @@ public:
 		return Handler<S>::__internal__fromRawPointerWithoutCheck(entity->read());
 	}
 	bool expired() noexcept {
-		return !this->entity || !*(this->entity);
+		return (!this->entity) || this->entity->expired();
 	}
 	void swap(HandlerW<S>& other) noexcept
 	{
@@ -339,11 +339,11 @@ private:
 	template <typename T> friend class chisa::internal::WeakHandlerEntity;
 private:
 	int refcount_;
-	bool deleted;
+	bool onDestroy_;
 	chisa::internal::WeakHandlerEntity<Derived>* weakEntity_;
 protected:
 	HandlerBody()
-	:refcount_(0), deleted(false), weakEntity_(nullptr) {}
+	:refcount_(0), onDestroy_(false), weakEntity_(nullptr) {}
 	virtual ~HandlerBody() noexcept (true) {};//XXX: GCCのバグ？
 protected:
 	Handler<Derived> self() { return Handler<Derived>::__internal__fromRawPointerWithoutCheck(this); };
@@ -359,10 +359,10 @@ private:
 		if(this->refcount_ < 0) {
 			throw logging::Exception(__FILE__, __LINE__, "[BUG] Handler refcount = %d < 0", this->refcount_);
 		} else if( this->refcount_ == 0 ) {
-			if(deleted) {
+			if(onDestroy_) {
 				return;
 			}
-			this->deleted = true;
+			this->onDestroy_ = true;
 			if(this->weakEntity_) {
 				this->weakEntity_->notifyDead();
 				this->weakEntity_ = nullptr;

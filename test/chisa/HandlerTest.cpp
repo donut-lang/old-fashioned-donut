@@ -25,21 +25,30 @@ class TestFix : public HandlerBody<TestFix> {
 private:
 	int* expired_;
 	int* deleted_;
+	std::function<void(void)> onDelete;
 public:
-	TestFix( int* expired, int* deleted ):expired_(expired),deleted_(deleted) {
+	TestFix( int* expired, int* deleted)
+	:expired_(expired)
+	,deleted_(deleted)
+	,onDelete([](){})
+	{
 		*this->expired_ = 0;
 		*this->deleted_ = 0;
 	}
 	virtual ~TestFix() noexcept {
 		(*this->deleted_)++;
+		this->onDelete();
 	}
 	void onFree() {
 		(*this->expired_)++;
 		delete this;
 	}
+	void setDestroyCallback(std::function<void(void)> f){
+		this->onDelete = f;
+	}
 };
 
-TEST(WeakHandlerTest, HandlerTest)
+TEST(HandlerTest, HandlerTest)
 {
 	int e = 0;
 	int d = 0;
@@ -51,7 +60,7 @@ TEST(WeakHandlerTest, HandlerTest)
 	ASSERT_EQ(1, d);
 }
 
-TEST(WeakHandlerTest, WeakHandlerTest)
+TEST(HandlerTest, WeakHandlerTest)
 {
 	int e = 0;
 	int d = 0;
@@ -69,5 +78,21 @@ TEST(WeakHandlerTest, WeakHandlerTest)
 	ASSERT_EQ(1, d);
 }
 
+TEST(HandlerTest, TouchWeakHandlerOnDestroyTest)
+{
+	int e = 0;
+	int d = 0;
+	HandlerW<TestFix> weak;
+	{
+		Handler<TestFix> handler( new TestFix(&e, &d) );
+		weak = handler;
+		ASSERT_FALSE(weak.expired());
+		handler->setDestroyCallback([&weak](){
+			SCOPED_TRACE("in lambda");
+			ASSERT_TRUE(weak.expired());
+		});
+	}
+	ASSERT_TRUE(weak.expired());
 }
 
+}
