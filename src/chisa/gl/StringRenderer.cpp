@@ -238,7 +238,7 @@ Handler<gl::Sprite> StringRenderer::Command::renderString(gl::Canvas& cv) const
 		cairo_font_options_t* opt = cairo_font_options_create();
 
 		//データは使いまわしているので一旦サーフェイスの中身を削除する
-		cairo_set_source_rgba(cr, 0, 0, 0, 0);
+		cairo::setColor(cr, this->backColor_);
 		cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
 		cairo_paint(cr);
 
@@ -254,6 +254,30 @@ Handler<gl::Sprite> StringRenderer::Command::renderString(gl::Canvas& cv) const
 		//cairo_show_text(cr, this->str().c_str());
 		cairo_text_path(cr, this->str().c_str());
 		cairo_fill(cr);
+
+		switch( this->deco_ ){
+		case Strike:{
+			const float hh = this->area().height()/2;
+			cairo_move_to(cr, 0, hh);
+			cairo_move_to(cr, this->area().width(), hh);
+			cairo_stroke(cr);
+			break;
+		}
+		case Underline: {
+			const float h = this->area().height();
+			cairo_move_to(cr, 0, h);
+			cairo_line_to(cr, this->area().width(), h);
+			cairo_stroke(cr);
+			break;
+		}
+		case None: {
+			break;
+		}
+		default: {
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] Oops. Invalid decoration: %d", this->deco_);
+		}
+		}
+
 		cairo_font_options_destroy(opt);
 		cairo_font_face_destroy(face);
 		cairo_surface_destroy(surf);
