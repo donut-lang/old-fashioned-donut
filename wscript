@@ -69,7 +69,7 @@ def configureLibrary(conf):
 		try:
 			conf.check(features='cxx cxxprogram', lib=['tcmalloc','profiler'], cflags=['-Wall'], uselib_store='PPROF')
 		except conf.errors.ConfigurationError:
-			self.to_log("Google perftools not found, so performance will not measureable.")
+			conf.to_log("Google perftools not found, so performance will not measureable.")
 	#リリースとデバッグで変更
 
 TEST_SRC=TINYXML2_SRC+enum('src', [udir('src/entrypoint')])+enum('test')
