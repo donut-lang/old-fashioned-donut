@@ -43,7 +43,7 @@ Handler<gl::Sprite> SpriteRenderCommand::realize(gl::Canvas& cv) {
 
 std::string SpriteRenderCommand::toString() const
 {
-	return util::format("(SpriteRenderCommand %p spr: %p weak: %d)",this,this->sprite_.get(), this->spritew_.expired());
+	return util::format("(SpriteRenderCommand %p spr: %p weak: %s)",this,this->sprite_.get(), this->spritew_.expired() ? "expired" : "available");
 }
 
 void SpriteRenderCommand::onHidden() noexcept{
@@ -117,7 +117,7 @@ void DrawableRenderCommand::realize(gl::Canvas& canvas)
 
 std::string DrawableRenderCommand::toString() const
 {
-	return util::format("(TextRenderCommand %p repl:%s drawable: %p weak: %d)",this,this->drawableRepl_.c_str(), this->drawable_.get(), this->drawablew_.expired());
+	return util::format("(TextRenderCommand %p repl:%s drawable: %p weak: %s)",this,this->drawableRepl_.c_str(), this->drawable_.get(), this->drawablew_.expired() ? "expired" : "available");
 }
 
 }}}
