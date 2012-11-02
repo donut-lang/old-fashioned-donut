@@ -47,7 +47,7 @@ public:
 	constexpr Color multAlpha(const float alpha) const noexcept{
 		return Color(red_,green_, blue_, alpha_*alpha);
 	}
-	constexpr bool isUnchangedColor() const noexcept{
+	constexpr bool isInvalid() const noexcept{
 		return
 				std::isnan(red_) ||
 				std::isnan(blue_) ||
@@ -68,7 +68,7 @@ public:
 	}
 };
 
-constexpr Color UNCHANGED_COLOR(NAN, NAN, NAN, NAN);
+constexpr Color INVALID_COLOR(NAN, NAN, NAN, NAN);
 constexpr Color WHITE(1,1,1,1);
 constexpr Color BLACK(0,0,0,1);
 constexpr Color RED(1,0,0,1);
@@ -78,7 +78,6 @@ constexpr Color GRAY(.5,.5,.5,1);
 constexpr Color TRANSPARENT(0,0,0,0);
 
 const std::pair<std::string, gl::Color> COLOR_TABLE[] = {
-		std::pair<std::string, gl::Color>("unchanged", UNCHANGED_COLOR),
 		std::pair<std::string, gl::Color>("white", WHITE),
 		std::pair<std::string, gl::Color>("black", BLACK),
 		std::pair<std::string, gl::Color>("red", RED),
