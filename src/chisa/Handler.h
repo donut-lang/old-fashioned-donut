@@ -166,10 +166,10 @@ public:
 		}
 	};
 	explicit operator bool () const noexcept {
-		return !this->expired();
+		return !(this->expired());
 	}
 	bool expired () const noexcept {
-		return this->sprite == nullptr;
+		return !(this->sprite);
 	}
 	S* read() const noexcept {
 		return this->sprite;
@@ -179,7 +179,7 @@ public:
 	}
 	void decref() noexcept {
 		this->refcount_--;
-		if(this->refcount_ == 0 && !this->sprite){
+		if(this->refcount_ == 0 && expired()){
 			delete this;
 		}
 	}
@@ -223,7 +223,9 @@ public:
 			this->entity->incref();
 		}
 	}
-	HandlerW(HandlerW<S>&& other):entity(other.entity) {}
+	HandlerW(HandlerW<S>&& other):entity(other.entity) {
+		other.entity = nullptr;
+	}
 	HandlerW& operator=(const HandlerW<S>& other)
 	{
 		if(other.entity){
@@ -239,13 +241,16 @@ public:
 	{
 		if(this->entity){
 			this->entity->decref();
+			this->entity = nullptr;
 		}
 		this->entity = other.entity;
+		other.entity = nullptr;
 		return *this;
 	}
 	~HandlerW() noexcept{
 		if(this->entity){
 			this->entity->decref();
+			this->entity=nullptr;
 		}
 	}
 	Handler<S> lock() noexcept {
@@ -254,7 +259,7 @@ public:
 		}
 		return Handler<S>::__internal__fromRawPointerWithoutCheck(entity->read());
 	}
-	bool expired() noexcept {
+	bool expired() const noexcept {
 		return (!this->entity) || this->entity->expired();
 	}
 	void swap(HandlerW<S>& other) noexcept
