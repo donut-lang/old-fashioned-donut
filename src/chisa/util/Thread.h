@@ -31,6 +31,9 @@ using boost::condition_variable;
 using boost::unique_lock;
 using boost::thread;
 using boost::atomic;
+namespace chrono {
+using namespace boost::chrono;
+}
 }
 #else
 #include <thread>
