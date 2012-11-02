@@ -66,7 +66,10 @@ def configureLibrary(conf):
 	elif sys.platform in ['linux2', 'linux']:
 		#opengl
 		conf.check(features='cxx cxxprogram', lib=['glfw', 'GL', 'X11', 'rt', 'Xrandr', 'pthread'], cflags=['-Wall'], uselib_store='OPENGL')
-		conf.check(features='cxx cxxprogram', lib=['tcmalloc','profiler'], cflags=['-Wall'], uselib_store='PPROF')
+		try:
+			conf.check(features='cxx cxxprogram', lib=['tcmalloc','profiler'], cflags=['-Wall'], uselib_store='PPROF')
+		except ctx.errors.ConfigurationError:
+			self.to_log("Google perftools not found, so performance will not measureable.")
 	#リリースとデバッグで変更
 
 TEST_SRC=TINYXML2_SRC+enum('src', [udir('src/entrypoint')])+enum('test')
