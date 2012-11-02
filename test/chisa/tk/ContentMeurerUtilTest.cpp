@@ -36,5 +36,13 @@ TEST(ContentMeasurerUtilTest, ShrinkSpaceTest)
 	ASSERT_EQ(" ", shrinkSpace("  \t  "));
 }
 
+TEST(ContentMeasurerUtilTest, EnglishNextStringTest)
+{
+	{
+		std::vector<std::string> list(breakLine("abcde"));
+		ASSERT_EQ(1, list.size());
+	}
+}
+
 }}}
 

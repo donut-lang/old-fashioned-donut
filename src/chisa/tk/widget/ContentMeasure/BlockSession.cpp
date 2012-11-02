@@ -29,9 +29,9 @@ ContentMeasurer::BlockSession::BlockSession(ContentMeasurer& parent, geom::Area&
 :node_()
 ,parent_(parent)
 ,lastSession_(nullptr)
+,blockDirection_(BlockNode::Direction::None)
 ,offsetFromTop_(0.0f,0.0f)
 ,maxWidth_(parent.widgetWidth_)
-,lastDirection_(BlockNode::Direction::None)
 ,consumedWidth_(0.0f)
 ,consumedHeight_(0.0f)
 ,reservedBlockWidth_(0.0f)
@@ -48,9 +48,9 @@ ContentMeasurer::BlockSession::BlockSession(ContentMeasurer& parent, geom::Area&
 :node_(node)
 ,parent_(parent)
 ,lastSession_(parent_.nowSession_)
+,blockDirection_(BlockNode::Direction::None)
 ,offsetFromTop_(lastSession_->offsetFromTop()+this->node_->margin().offset())
 ,maxWidth_(geom::min(node->width(), lastSession_->maxWidth() - this->node_->margin().totalWidth()))
-,lastDirection_(BlockNode::Direction::None)
 ,consumedWidth_(0.0f)
 ,consumedHeight_(0.0f)
 ,reservedBlockWidth_(0.0f)
@@ -75,31 +75,38 @@ ContentMeasurer::BlockSession::~BlockSession() noexcept
 	this->parent_.nowSession_ = this->lastSession_;
 }
 
-geom::Area ContentMeasurer::BlockSession::extendBlock(const geom::Box& size, BlockNode::Direction dir)
+geom::Area ContentMeasurer::BlockSession::extendBlock(const geom::Box& size, BlockNode::Direction const dir)
 {
 	float const limit = this->calcLeftWidth();
 	geom::Area area;
-	if(!this->inlineRendered_ && size.width() < limit && this->lastDirection() != BlockNode::Direction::None){
-		//隣にくっつける
-		if(this->lastDirection() == BlockNode::Direction::Left){
-			area = geom::Area(this->offsetFromTop()+geom::Distance(limit - this->reservedBlockWidth() - size.width(), this->consumedHeight()), size);
-			this->reservedBlockWidth(this->reservedBlockWidth()+size.width());
-			this->reservedBlockHeight(geom::max(this->reservedBlockHeight(), size.height()));
-		}else if(this->lastDirection() == BlockNode::Direction::Right){
+	float const width = dir == BlockNode::Direction::None ? limit : size.width();
+	bool const needFlush = dir != this->blockDirection_;
+	if(!needFlush && (!this->inlineRendered_) && size.width() < limit){
+		//インライン要素が挿入されておらず、かつ幅がある場合
+		switch(dir){
+		case BlockNode::Direction::None:
+		case BlockNode::Direction::Right:
 			area = geom::Area(this->offsetFromTop()+geom::Distance(this->reservedBlockWidth(), this->consumedHeight()), size);
-			this->reservedBlockWidth(this->reservedBlockWidth()+size.width());
+			this->reservedBlockWidth(this->reservedBlockWidth()+width);
 			this->reservedBlockHeight(geom::max(this->reservedBlockHeight(), size.height()));
-		}else{
-			throw logging::Exception(__FILE__, __LINE__, "[Bug] Unknwon direction: %d", this->lastDirection());
+			break;
+		case BlockNode::Direction::Left:
+			area = geom::Area(this->offsetFromTop()+geom::Distance(limit - this->reservedBlockWidth() - width, this->consumedHeight()), size);
+			this->reservedBlockWidth(this->reservedBlockWidth()+width);
+			this->reservedBlockHeight(geom::max(this->reservedBlockHeight(), size.height()));
+			break;
+		default:
+			throw logging::Exception(__FILE__, __LINE__, "[Bug] Unknwon direction: %d", dir);
+			break;
 		}
-	}else{
+	}else{//余裕が無いので次の行
 		//下へ
 		this->flushBlock();
-		this->reservedBlockWidth(size.width());
+		this->reservedBlockWidth(width);
 		this->reservedBlockHeight(size.height());
-		area = geom::Area(this->offsetFromTop() + geom::Distance(dir == BlockNode::Left ? limit-size.width() : 0, this->consumedHeight()),size);
+		area = geom::Area(this->offsetFromTop() + geom::Distance(dir == BlockNode::Left ? limit-width : 0, this->consumedHeight()),size);
+		this->blockDirection_ = dir;
 	}
-	this->lastDirection(dir == this->lastDirection() || this->lastDirection() == BlockNode::Direction::None ? dir : BlockNode::Direction::None);
 	this->inlineRendered_ = false;
 	return area;
 }
@@ -122,7 +129,7 @@ geom::Area ContentMeasurer::BlockSession::extendInline(const geom::Box& size)
 	if(size.width() > this->calcLeftWidth()){
 		this->endLine();
 	}
-	if(this->lastDirection() == BlockNode::Direction::Left){
+	if(this->blockDirection_ == BlockNode::Direction::Left){
 		area = geom::Area(this->offsetFromTop() + geom::Distance(this->reservedInlineWidth(), this->reservedInlineHeight()),size);
 		this->reservedInlineWidth( this->reservedInlineWidth() + size.width() );
 		this->inlineHeight( geom::max(this->inlineHeight(), size.height()) );
@@ -147,7 +154,7 @@ void ContentMeasurer::BlockSession::flushBlock()
 	this->reservedBlockHeight(0.0f);
 	this->reservedInlineWidth(0.0f);
 	this->reservedInlineHeight(0.0f);
-	this->lastDirection(BlockNode::Direction::None);
+	this->blockDirection_ = BlockNode::Direction::None;
 }
 
 float ContentMeasurer::BlockSession::calcLeftWidth()
@@ -157,7 +164,7 @@ float ContentMeasurer::BlockSession::calcLeftWidth()
 				this->maxWidth() - this->reservedBlockWidth() - this->reservedInlineWidth();//nodeが最大値を持ってるならそれ、無いなら親セッションの最大幅
 }
 
-geom::Area ContentMeasurer::extendBlock(const geom::Box& size, BlockNode::Direction dir)
+geom::Area ContentMeasurer::extendBlock(const geom::Box& size, BlockNode::Direction const dir)
 {
 	return this->nowSession_->extendBlock(size,dir);
 }
