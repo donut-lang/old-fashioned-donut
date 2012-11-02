@@ -32,7 +32,7 @@ private:
 	void *operator new(std::size_t) = delete;
 	void operator delete(void* pv) = delete;
 public:
-	static Handler<S> __internal__fromRawPointerWithoutCheck(S* const sprite) noexcept
+	inline static Handler<S> __internal__fromRawPointerWithoutCheck(S* const sprite) noexcept
 	{
 		Handler<S> spr;
 		spr.sprite = sprite;
@@ -72,7 +72,7 @@ public:
 			this->sprite->incref();
 		}
 	}
-	Handler<S>& operator=(const Handler<S>& other) noexcept
+	inline Handler<S>& operator=(const Handler<S>& other) noexcept
 	{
 		if(other.sprite){
 			other.sprite->incref();
@@ -83,7 +83,7 @@ public:
 		this->sprite = other.sprite;
 		return *this;
 	}
-	Handler<S>& operator=(Handler<S>&& other) noexcept
+	inline Handler<S>& operator=(Handler<S>&& other) noexcept
 	{
 		if(this->sprite){
 			this->sprite->decref();
@@ -121,28 +121,28 @@ public:
 			this->sprite = nullptr;
 		}
 	}
-	S* operator->() const noexcept
+	inline S* operator->() const noexcept
 	{
 		return this->sprite;
 	}
-	S* get() const noexcept
+	inline S* get() const noexcept
 	{
 		return this->sprite;
 	}
-	explicit operator bool() const noexcept
+	inline explicit operator bool() const noexcept
 	{
 		return this->sprite != 0;
 	}
-	void swap(Handler<S>& other) noexcept
+	inline void swap(Handler<S>& other) noexcept
 	{
 		using std::swap;
 		swap(other.sprite, this->sprite);
 	}
-	void reset() noexcept
+	inline void reset() noexcept
 	{
 		Handler<S>().swap(*this);
 	}
-	int refcount() const noexcept { return this->sprite ? this->sprite->refcount_ : 0; };
+	inline int refcount() const noexcept { return this->sprite ? this->sprite->refcount_ : 0; };
 };
 
 namespace internal {
@@ -160,32 +160,35 @@ private:
 	WeakHandlerEntity<S>& operator=(const WeakHandlerEntity<S>& other) = delete;
 	WeakHandlerEntity<S>& operator=(WeakHandlerEntity<S>&& other) = delete;
 public:
-	void notifyDead(){
+	inline void notifyDead(){
 		this->sprite = nullptr;
 		if(this->refcount_ == 0){
 			delete this;
 		}
 	};
-	explicit operator bool () const noexcept {
+	inline explicit operator bool () const noexcept {
 		return !(this->expired());
 	}
-	bool expired () const noexcept {
+	inline bool expired () const noexcept {
 		return !(this->sprite);
 	}
-	S* read() const noexcept {
+	inline S* read() const noexcept {
 		return this->sprite;
 	}
-	void incref() noexcept {
+	inline void incref() noexcept {
 		this->refcount_++;
 	}
-	void decref() noexcept {
+	inline void decref() noexcept {
 		this->refcount_--;
 		if(this->refcount_ == 0 && expired()){
 			delete this;
 		}
 	}
+	inline int refcount() const noexcept{
+		return this->refcount_;
+	}
 public:
-	static WeakHandlerEntity<S>* create(S* self){
+	inline static WeakHandlerEntity<S>* create(S* self){
 		if(!self){
 			return nullptr;
 		}
@@ -227,7 +230,7 @@ public:
 	HandlerW(HandlerW<S>&& other):entity(other.entity) {
 		other.entity = nullptr;
 	}
-	HandlerW& operator=(const HandlerW<S>& other)
+	inline HandlerW& operator=(const HandlerW<S>& other)
 	{
 		if(other.entity){
 			other.entity->incref();
@@ -238,7 +241,7 @@ public:
 		this->entity = other.entity;
 		return *this;
 	}
-	HandlerW& operator=(HandlerW<S>&& other)
+	inline HandlerW& operator=(HandlerW<S>&& other)
 	{
 		if(this->entity){
 			this->entity->decref();
@@ -254,25 +257,25 @@ public:
 			this->entity=nullptr;
 		}
 	}
-	Handler<S> lock() noexcept {
+	inline Handler<S> lock() noexcept {
 		if(expired()){
 			return Handler<S>();
 		}
 		return Handler<S>::__internal__fromRawPointerWithoutCheck(entity->read());
 	}
-	bool expired() const noexcept {
+	inline bool expired() const noexcept {
 		return (!this->entity) || this->entity->expired();
 	}
-	void swap(HandlerW<S>& other) noexcept
+	inline void swap(HandlerW<S>& other) noexcept
 	{
 		using std::swap;
 		swap(other.entity, this->entity);
 	}
-	void reset() noexcept
+	inline void reset() noexcept
 	{
 		HandlerW<S>().swap(*this);
 	}
-	int refcount() const noexcept { return this->entity ? this->entity->refcount_  : 0; };
+	inline int refcount() const noexcept { return this->entity ? this->entity->refcount() : 0; };
 };
 
 template<class T>
@@ -312,11 +315,11 @@ protected:
 	:refcount_(0), deleted(false), weakEntity_(nullptr) {}
 	virtual ~HandlerBody() noexcept (true) {}; //XXX: GCCのバグでデフォルトにできない？
 protected:
-	int refcount() const noexcept { return this->refcount_; };
-	Handler<Derived> self() { return Handler<Derived>::__internal__fromRawPointerWithoutCheck(this); };
+	inline int refcount() const noexcept { return this->refcount_; };
+	inline Handler<Derived> self() { return Handler<Derived>::__internal__fromRawPointerWithoutCheck(this); };
 private:
-	void incref() noexcept { this->refcount_++; }
-	void decref(){
+	inline void incref() noexcept { this->refcount_++; }
+	inline void decref(){
 		this->refcount_--;
 		if(this->refcount_ < 0){
 			throw logging::Exception(__FILE__, __LINE__, "[BUG] Handler refcount = %d < 0", this->refcount_);\
@@ -354,11 +357,11 @@ protected:
 	:refcount_(0), onDestroy_(false), weakEntity_(nullptr) {}
 	virtual ~HandlerBody() noexcept (true) {};//XXX: GCCのバグ？
 protected:
-	int refcount() const noexcept { return this->refcount_; };
-	Handler<Derived> self() { return Handler<Derived>::__internal__fromRawPointerWithoutCheck(this); };
+	inline int refcount() const noexcept { return this->refcount_; };
+	inline Handler<Derived> self() { return Handler<Derived>::__internal__fromRawPointerWithoutCheck(this); };
 private:
-	void incref() noexcept { std::unique_lock<std::mutex> lock(this->ref_mutex_);this->refcount_++; }
-	void decref(){
+	inline void incref() noexcept { std::unique_lock<std::mutex> lock(this->ref_mutex_);this->refcount_++; }
+	inline void decref(){
 		{ ///XXX: ロックの方針、これで本当に問題無いの？大丈夫？？
 			std::unique_lock<std::mutex> lock(this->ref_mutex_);
 			this->refcount_--;
