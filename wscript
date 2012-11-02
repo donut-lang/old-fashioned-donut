@@ -39,11 +39,11 @@ def options(opt):
 
 def configure(conf):
 	conf.setenv('release')
-	conf.env.append_value('CXXFLAGS', ['-O3', '-std=c++0x', '-std=c++11', '-D__GXX_EXPERIMENTAL_CXX0X__=1'])
+	conf.env.append_value('CXXFLAGS', ['-O3', '-Wall', '-std=c++0x', '-std=c++11', '-D__GXX_EXPERIMENTAL_CXX0X__=1'])
 	configureLibrary(conf)
 	
 	conf.setenv('debug')
-	conf.env.append_value('CXXFLAGS', ['-O0', '-g', '-std=c++0x', '-std=c++11', '-D__GXX_EXPERIMENTAL_CXX0X__=1'])
+	conf.env.append_value('CXXFLAGS', ['-g','-O0', '-Wall', '-std=c++0x', '-std=c++11', '-D__GXX_EXPERIMENTAL_CXX0X__=1'])
 	configureLibrary(conf)
 
 def configureLibrary(conf):
