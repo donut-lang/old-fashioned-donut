@@ -40,6 +40,12 @@ Handler<gl::Sprite> SpriteRenderCommand::realize(gl::Canvas& cv) {
 	this->spritew().reset();
 	return this->sprite();
 }
+
+std::string SpriteRenderCommand::toString() const
+{
+	return util::format("(SpriteRenderCommand %p spr: %p weak: %d)",this,this->sprite_.get(), this->spritew_.expired());
+}
+
 void SpriteRenderCommand::onHidden() noexcept{
 	if(this->sprite()){
 		if(Handler<RenderCache> cache = this->cache().lock()){
@@ -65,6 +71,11 @@ void SpriteRenderCommand::render(gl::Canvas& canvas, const geom::Point& offset, 
 Handler<gl::Sprite> TextRenderCommand::realizeImpl(gl::Canvas& cv)
 {
 	return this->cmd_.renderString(cv);
+}
+
+std::string TextRenderCommand::toString() const
+{
+	return util::format("(TextRenderCommand %p text:%s parent: %s)",this,this->cmd_.str().c_str(), this->SpriteRenderCommand::toString().c_str());
 }
 
 //-----------------------------------------------------------------------------
@@ -102,6 +113,11 @@ void DrawableRenderCommand::realize(gl::Canvas& canvas)
 		this->drawablew_.reset();
 	}
 	this->drawable_ = canvas.queryDrawable(this->drawableRepl_, this->area().box());
+}
+
+std::string DrawableRenderCommand::toString() const
+{
+	return util::format("(TextRenderCommand %p repl:%s drawable: %p weak: %d)",this,this->drawableRepl_.c_str(), this->drawable_.get(), this->drawablew_.expired());
 }
 
 }}}

@@ -43,6 +43,7 @@ protected:
 	HandlerW<RenderCache> cache() { return this->cache_; };
 public:
 	virtual ~RenderCommand() noexcept (true) = default;
+	virtual std::string toString() const = 0;
 	virtual void render(gl::Canvas& canvas, const geom::Point& offset, float depth=0.0f) = 0;
 	virtual void onHidden() noexcept {};
 public:
@@ -59,6 +60,7 @@ class SpriteRenderCommand : public RenderCommand {
 public:
 	SpriteRenderCommand(HandlerW<RenderCache> cache, const geom::Area& area) noexcept:RenderCommand(cache, area){};
 	virtual ~SpriteRenderCommand() noexcept {};
+		virtual std::string toString() const override;
 public:
 	Handler<gl::Sprite> realize(gl::Canvas& cv);
 	virtual void onHidden() noexcept override;
@@ -75,6 +77,7 @@ public:
 	TextRenderCommand(HandlerW<RenderCache> cache, const geom::Area& area, const gl::StringRenderer::Command& cmd) noexcept
 	:SpriteRenderCommand(cache, area),cmd_(cmd){};
 	virtual ~TextRenderCommand() noexcept = default;
+		virtual std::string toString() const override;
 protected:
 	virtual Handler<gl::Sprite> realizeImpl(gl::Canvas& cv) override;
 };
@@ -87,6 +90,7 @@ private:
 public:
 	DrawableRenderCommand(HandlerW<RenderCache> cache, const geom::Area& area, const std::string& drawableRepl);
 	virtual ~DrawableRenderCommand() noexcept = default;
+		virtual std::string toString() const override;
 public:
 	virtual void onHidden() noexcept override;
 	virtual void render(gl::Canvas& canvas, const geom::Point& offset, float depth=0.0f) override;
