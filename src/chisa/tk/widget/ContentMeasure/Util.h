@@ -18,11 +18,13 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 namespace chisa {
 namespace tk {
 namespace widget {
 
 std::string shrinkSpace(const std::string& str);
+std::vector<std::string> breakLine(const std::string& str_);
 
 }}}

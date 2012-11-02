@@ -39,9 +39,9 @@ public:
 		BlockNode* const node_;
 		ContentMeasurer& parent_;
 		BlockSession* const lastSession_;
+		BlockNode::Direction blockDirection_;
 		DEFINE_MEMBER(public, private, geom::Distance, offsetFromTop);
 		DEFINE_MEMBER(public, private, float, maxWidth);
-		DEFINE_MEMBER(private, private, BlockNode::Direction, lastDirection)
 		//完全に使い切った高さ
 		DEFINE_MEMBER(public, private, float, consumedWidth);
 		DEFINE_MEMBER(public, private, float, consumedHeight);
@@ -62,7 +62,7 @@ public:
 		float calcLeftWidth();
 		void flushBlock();
 		void endLine();
-		geom::Area extendBlock(const geom::Box& size, BlockNode::Direction dir=BlockNode::Direction::None);
+		geom::Area extendBlock(const geom::Box& size, BlockNode::Direction const dir=BlockNode::Direction::None);
 		geom::Area extendInline(const geom::Box& size);
 	};
 private:
@@ -73,7 +73,7 @@ private:
 	gl::StringRenderer renderer_;
 	RenderContext& context_;
 private:
-	geom::Area extendBlock(const geom::Box& size, BlockNode::Direction dir=BlockNode::Direction::None);
+	geom::Area extendBlock(const geom::Box& size, BlockNode::Direction const dir=BlockNode::Direction::None);
 	geom::Area extendInline(const geom::Box& size);
 	float calcLeftWidth();
 	void nextLine();
