@@ -17,6 +17,7 @@
  */
 
 #include "Color.h"
+#include <cstdlib>
 
 namespace chisa {
 namespace gl {
@@ -34,7 +35,7 @@ float __atof(const std::string& str, bool& failed)
 Color Color::fromString(const std::string& name)
 {
 	if( name.empty() ){
-		return UNCHANGED_COLOR;
+		return INVALID_COLOR;
 	}
 	if( name[0] != '#' ){
 		for(auto tbl : COLOR_TABLE){
@@ -43,6 +44,7 @@ Color Color::fromString(const std::string& name)
 				break;
 			}
 		}
+		return INVALID_COLOR;
 	}else{
 		float r,g,b,a;
 		bool failed = false;
@@ -77,7 +79,7 @@ Color Color::fromString(const std::string& name)
 			break;
 		}
 		if(failed){
-			return UNCHANGED_COLOR;
+			return INVALID_COLOR;
 		}else{
 			return Color(r,g,b,a);
 		}
