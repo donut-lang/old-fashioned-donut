@@ -215,8 +215,16 @@ TEST(HandlerTest, WeakHandlerTest)
 	{
 		Handler<TestFix> handler(new TestFix(&e, &d));
 		{
+			ASSERT_EQ(1, handler.refcount());
 			HandlerW<TestFix> weak(handler);
+			ASSERT_FALSE(weak.expired());
+			ASSERT_EQ(1, weak.refcount());
+			ASSERT_EQ(handler, weak.lock());
+			ASSERT_EQ(1, handler.refcount());
+			ASSERT_EQ(1, weak.refcount());
 			handler.reset();
+			ASSERT_EQ(0, handler.refcount());
+			ASSERT_EQ(1, weak.refcount());
 			ASSERT_FALSE(handler);
 			ASSERT_TRUE(weak.expired());
 		}
