@@ -42,16 +42,22 @@ TEST(ContentMeasurerTest, TextWrapTest)
 	ContentMeasurer(log_trace, fontManager, context, 1000).start(doc);
 	ASSERT_STREQ(typeid(Text).name(), typeid(*(doc->at(0))).name());
 	Text* text = dynamic_cast<Text*>(doc->at(0));
-	ASSERT_EQ(1, text->objectCount());
+	ASSERT_LE(1, text->objectCount());
+
+	const size_t count = text->objectCount();
 
 	Handler<RenderCommand> set = text->objectAt(0);
-	float const width = set->area().width();
+	float width = 0;
+	for(const chisa::Handler<chisa::tk::widget::RenderCommand>& o : text->objects()){
+		std::cout << o->toString() << std::endl;
+		width += o->area().width();
+	}
 
 	ContentMeasurer(log_trace, fontManager, context, width/2).start(doc);
-	ASSERT_LE(2, text->objectCount());
+	ASSERT_EQ(count, text->objectCount());
 
 	ContentMeasurer(log_trace, fontManager, context, width/5).start(doc);
-	ASSERT_LE(5, text->objectCount());
+	ASSERT_EQ(count, text->objectCount());
 }
 
 
