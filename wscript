@@ -68,7 +68,7 @@ def configureLibrary(conf):
 		conf.check(features='cxx cxxprogram', lib=['glfw', 'GL', 'X11', 'rt', 'Xrandr', 'pthread'], cflags=['-Wall'], uselib_store='OPENGL')
 		try:
 			conf.check(features='cxx cxxprogram', lib=['tcmalloc','profiler'], cflags=['-Wall'], uselib_store='PPROF')
-		except ctx.errors.ConfigurationError:
+		except conf.errors.ConfigurationError:
 			self.to_log("Google perftools not found, so performance will not measureable.")
 	#リリースとデバッグで変更
 
