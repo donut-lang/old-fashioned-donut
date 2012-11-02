@@ -65,7 +65,8 @@ def configureLibrary(conf):
 		conf.check_boost(lib='system thread chrono')
 	elif sys.platform in ['linux2', 'linux']:
 		#opengl
-		conf.check(features='cxx cxxprogram', lib=['glfw', 'GL', 'X11', 'rt', 'Xrandr', 'pthread'], cflags=['-Wall'], defines=['TEST=TEST'], uselib_store='OPENGL')
+		conf.check(features='cxx cxxprogram', lib=['glfw', 'GL', 'X11', 'rt', 'Xrandr', 'pthread'], cflags=['-Wall'], uselib_store='OPENGL')
+		conf.check(features='cxx cxxprogram', lib=['tcmalloc','profiler'], cflags=['-Wall'], uselib_store='PPROF')
 	#リリースとデバッグで変更
 
 TEST_SRC=TINYXML2_SRC+enum('src', [udir('src/entrypoint')])+enum('test')
@@ -74,7 +75,7 @@ MAIN_SRC=TINYXML2_SRC+enum('src', [udir('src/entrypoint')])+enum(udir('src/entry
 def build(bld):
 	if not bld.variant:
 		bld.fatal('call "waf build_debug" or "waf build_release", and try "waf --help"')
-	bld(features = 'cxx cprogram', source = MAIN_SRC, target = 'chisa', use=['PTHREAD', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU'])
+	bld(features = 'cxx cprogram', source = MAIN_SRC, target = 'chisa', use=['PPROF','PTHREAD', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU'])
 	bld(features = 'cxx cprogram', source = TEST_SRC, target = 'chisa_test', use=['PTHREAD', 'OPENGL','FREETYPE2','CAIRO','GTEST','LIBPNG','BOOST','ICU'])
 
 # from http://docs.waf.googlecode.com/git/book_16/single.html#_custom_build_outputs
