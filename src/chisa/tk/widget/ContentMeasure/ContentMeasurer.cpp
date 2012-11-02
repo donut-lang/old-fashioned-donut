@@ -113,12 +113,10 @@ void ContentMeasurer::walk(BreakLine* br)
 
 void ContentMeasurer::walk(Text* text)
 {
-	std::vector<std::string> lines(breakLine(shrinkSpace(text->text())));
-	size_t now=0;
 	text->clearObjects();
+	std::vector<std::string> lines(breakLine(shrinkSpace(text->text())));
 	for(const std::string& str : lines){
 		gl::StringRenderer::Command cmd = this->renderer_.measure(str);
-		now += cmd.str().size();
 		//文字分のエリアを確保し、その位置とレンダリングコマンドを記録
 		geom::Area const rendered = this->extendInline(cmd.size());
 		text->appendObject(this->context_.createText(rendered, cmd));
