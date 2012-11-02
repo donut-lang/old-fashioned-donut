@@ -119,7 +119,9 @@ void ContentMeasurer::walk(Text* text)
 		gl::StringRenderer::Command cmd = this->renderer_.measure(str);
 		//文字分のエリアを確保し、その位置とレンダリングコマンドを記録
 		geom::Area const rendered = this->extendInline(cmd.size());
-		text->appendObject(this->context_.createText(rendered, cmd));
+		Handler<RenderCommand> command(this->context_.createText(rendered, cmd));
+		text->appendObject(command);
+		log().t("ContentMeasurere", command->toString());
 	}
 }
 
