@@ -142,6 +142,7 @@ public:
 	{
 		Handler<S>().swap(*this);
 	}
+	int refcount() const noexcept { return this->sprite ? this->sprite->refcount_ : 0; };
 };
 
 namespace internal {
@@ -271,6 +272,7 @@ public:
 	{
 		HandlerW<S>().swap(*this);
 	}
+	int refcount() const noexcept { return this->entity ? this->entity->refcount_  : 0; };
 };
 
 template<class T>
@@ -310,6 +312,7 @@ protected:
 	:refcount_(0), deleted(false), weakEntity_(nullptr) {}
 	virtual ~HandlerBody() noexcept (true) {}; //XXX: GCCのバグでデフォルトにできない？
 protected:
+	int refcount() const noexcept { return this->refcount_; };
 	Handler<Derived> self() { return Handler<Derived>::__internal__fromRawPointerWithoutCheck(this); };
 private:
 	void incref() noexcept { this->refcount_++; }
@@ -351,6 +354,7 @@ protected:
 	:refcount_(0), onDestroy_(false), weakEntity_(nullptr) {}
 	virtual ~HandlerBody() noexcept (true) {};//XXX: GCCのバグ？
 protected:
+	int refcount() const noexcept { return this->refcount_; };
 	Handler<Derived> self() { return Handler<Derived>::__internal__fromRawPointerWithoutCheck(this); };
 private:
 	void incref() noexcept { std::unique_lock<std::mutex> lock(this->ref_mutex_);this->refcount_++; }
