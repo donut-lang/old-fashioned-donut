@@ -49,7 +49,7 @@ ContentMeasurer::BlockSession::BlockSession(ContentMeasurer& parent, geom::Area&
 ,parent_(parent)
 ,lastSession_(parent_.nowSession_)
 ,blockDirection_(BlockNode::Direction::None)
-,offsetFromTop_(lastSession_->offsetFromTop()+this->node_->margin().offset())
+,offsetFromTop_(geom::ZERO)
 ,maxWidth_(geom::min(node->width(), lastSession_->maxWidth() - this->node_->margin().totalWidth()))
 ,consumedWidth_(0.0f)
 ,consumedHeight_(0.0f)
@@ -61,6 +61,12 @@ ContentMeasurer::BlockSession::BlockSession(ContentMeasurer& parent, geom::Area&
 ,inlineRendered_(false)
 ,area_(area)
 {
+	this->lastSession_->flushBlock();
+	//XXX: よく考えたらブロックの位置は最後に決まるんだった
+	this->offsetFromTop(
+			this->lastSession_->offsetFromTop()+
+			geom::Distance(0,this->lastSession_->consumedHeight())+
+			this->node_->margin().offset());
 	parent.nowSession_ = this;
 }
 ContentMeasurer::BlockSession::~BlockSession() noexcept
@@ -85,6 +91,11 @@ geom::Area ContentMeasurer::BlockSession::extendBlock(const geom::Box& size, Blo
 		//インライン要素が挿入されておらず、かつ幅がある場合
 		switch(dir){
 		case BlockNode::Direction::None:
+			area = geom::Area(this->offsetFromTop()+geom::Distance(this->reservedBlockWidth(), this->consumedHeight()), size);
+			this->reservedBlockWidth(this->reservedBlockWidth()+width);
+			this->reservedBlockHeight(geom::max(this->reservedBlockHeight(), size.height()));
+			this->flushBlock();
+			break;
 		case BlockNode::Direction::Right:
 			area = geom::Area(this->offsetFromTop()+geom::Distance(this->reservedBlockWidth(), this->consumedHeight()), size);
 			this->reservedBlockWidth(this->reservedBlockWidth()+width);
@@ -102,9 +113,12 @@ geom::Area ContentMeasurer::BlockSession::extendBlock(const geom::Box& size, Blo
 	}else{//余裕が無いので次の行
 		//下へ
 		this->flushBlock();
+		area = geom::Area(this->offsetFromTop() + geom::Distance(dir == BlockNode::Left ? limit-width : 0, this->consumedHeight()),size);
 		this->reservedBlockWidth(width);
 		this->reservedBlockHeight(size.height());
-		area = geom::Area(this->offsetFromTop() + geom::Distance(dir == BlockNode::Left ? limit-width : 0, this->consumedHeight()),size);
+		if(BlockNode::Direction::None == dir){
+			this->flushBlock();
+		}
 		this->blockDirection_ = dir;
 	}
 	this->inlineRendered_ = false;
@@ -130,11 +144,11 @@ geom::Area ContentMeasurer::BlockSession::extendInline(const geom::Box& size)
 		this->endLine();
 	}
 	if(this->blockDirection_ == BlockNode::Direction::Left){
-		area = geom::Area(this->offsetFromTop() + geom::Distance(this->reservedInlineWidth(), this->reservedInlineHeight()),size);
+		area = geom::Area(this->offsetFromTop() + geom::Distance(this->reservedInlineWidth(), this->consumedHeight()+this->reservedInlineHeight()),size);
 		this->reservedInlineWidth( this->reservedInlineWidth() + size.width() );
 		this->inlineHeight( geom::max(this->inlineHeight(), size.height()) );
 	}else{
-		area = geom::Area(this->offsetFromTop() + geom::Distance(this->reservedBlockWidth()+this->reservedInlineWidth(), this->reservedInlineHeight()),size);
+		area = geom::Area(this->offsetFromTop() + geom::Distance(this->reservedBlockWidth()+this->reservedInlineWidth(), this->consumedHeight()+this->reservedInlineHeight()),size);
 		this->reservedInlineWidth( this->reservedInlineWidth() + size.width() );
 		this->inlineHeight( geom::max(this->inlineHeight(), size.height()) );
 	}
@@ -148,6 +162,12 @@ void ContentMeasurer::BlockSession::flushBlock()
 			this->reservedInlineHeight() < geom::VerySmall && this->reservedInlineWidth() < geom::VerySmall){
 		return;
 	}
+	//XXX: この辺、うまくまとめましょう。
+	this->reservedInlineHeight( this->reservedInlineHeight() + this->inlineHeight() );
+	this->consumedWidth( geom::max(this->consumedWidth(), this->reservedBlockWidth() + this->reservedInlineWidth()) );
+	this->reservedInlineWidth(0.0f);
+	this->inlineHeight(0.0f);
+
 	this->consumedHeight(this->consumedHeight() + geom::max(this->reservedBlockHeight(), this->reservedInlineHeight()));
 	this->consumedWidth(geom::max(this->reservedBlockWidth() + this->reservedInlineWidth(), this->consumedWidth()));
 	this->reservedBlockWidth(0.0f);

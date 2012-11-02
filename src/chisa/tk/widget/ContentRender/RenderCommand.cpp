@@ -43,7 +43,7 @@ Handler<gl::Sprite> SpriteRenderCommand::realize(gl::Canvas& cv) {
 
 std::string SpriteRenderCommand::toString() const
 {
-	return util::format("(SpriteRenderCommand %p spr: %p weak: %s)",this,this->sprite_.get(), this->spritew_.expired() ? "expired" : "available");
+	return util::format("(SpriteRenderCommand %p area:%s spr: %p weak: %s)",this,this->area().toString().c_str(),this->sprite_.get(), this->spritew_.expired() ? "expired" : "available");
 }
 
 void SpriteRenderCommand::onHidden() noexcept{
@@ -75,7 +75,7 @@ Handler<gl::Sprite> TextRenderCommand::realizeImpl(gl::Canvas& cv)
 
 std::string TextRenderCommand::toString() const
 {
-	return util::format("(TextRenderCommand %p text:%s parent: %s)",this,this->cmd_.str().c_str(), this->SpriteRenderCommand::toString().c_str());
+	return util::format("(TextRenderCommand %p area:%s text:%s parent: %s)",this,this->area().toString().c_str(),this->cmd_.str().c_str(), this->SpriteRenderCommand::toString().c_str());
 }
 
 //-----------------------------------------------------------------------------
@@ -117,7 +117,7 @@ void DrawableRenderCommand::realize(gl::Canvas& canvas)
 
 std::string DrawableRenderCommand::toString() const
 {
-	return util::format("(TextRenderCommand %p repl:%s drawable: %p weak: %s)",this,this->drawableRepl_.c_str(), this->drawable_.get(), this->drawablew_.expired() ? "expired" : "available");
+	return util::format("(TextRenderCommand %p area:%s repl:%s drawable: %p weak: %s)",this,this->area().toString().c_str(),this->drawableRepl_.c_str(), this->drawable_.get(), this->drawablew_.expired() ? "expired" : "available");
 }
 
 }}}

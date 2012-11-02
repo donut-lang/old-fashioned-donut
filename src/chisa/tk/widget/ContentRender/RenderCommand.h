@@ -49,6 +49,7 @@ public:
 public:
 	virtual void onMoved(const geom::Area& before, const geom::Area& now) {};
 	inline geom::Area& area() noexcept { return this->area_; };
+	inline geom::Area const& area() const noexcept { return this->area_; };
 	inline void move(const geom::Area& area) { this->onMoved(this->area_, area); this->area_=area; };
 public:
 	void onFree() noexcept { delete this; };
