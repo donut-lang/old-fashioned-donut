@@ -63,11 +63,17 @@ Handler<Font> DrawableManager::queryFont(const std::string& name)
 
 Handler<TextDrawable> DrawableManager::queryText(const std::string& str, const float size, Handler<Font> font, TextDrawable::Style style, TextDrawable::Decoration deco, const gl::Color& color, const gl::Color& backColor)
 {
+	if(font){
+		font = this->fontManager_->queryFont();
+	}
 	return TextDrawable::create(this->self(), str, false, size, font, style, deco, color, backColor);
 }
 
 Handler<TextDrawable> DrawableManager::queryVerticalText(const std::string& str, const float size, Handler<Font> font, TextDrawable::Style style, TextDrawable::Decoration deco, const gl::Color& color, const gl::Color& backColor)
 {
+	if(font){
+		font = this->fontManager_->queryFont();
+	}
 	return TextDrawable::create(this->self(), str, true, size, font, style, deco, color, backColor);
 }
 

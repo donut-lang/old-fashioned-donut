@@ -29,8 +29,7 @@ class Button: public chisa::tk::Layout {
 	CHISA_LAYOUT_SUBKLASS(Button);
 private:
 	std::string text_;
-	Handler<gl::Drawable> textImage_;
-	bool dirty_;
+	Handler<gl::TextDrawable> textImage_;
 	bool vertical_;
 private:
 	geom::Box renderOffset_;
@@ -39,8 +38,7 @@ private:
 	void text(const std::string& text);
 	std::string text() const{ return this->text_; };
 private:
-	void realizeText(gl::Canvas& canvas);
-	void measureTextSize();
+	Handler<gl::TextDrawable> textImage();
 	void onClick();
 public:
 	virtual weak_ptr<Layout> getChildAt(const size_t index) const override;
