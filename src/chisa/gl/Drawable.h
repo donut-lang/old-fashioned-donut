@@ -27,7 +27,7 @@ namespace chisa {
 namespace gl {
 class Canvas;
 class Sprite;
-class DrawableFactory;
+class DrawableInterpreter;
 
 class Drawable : public HandlerBody<Drawable> {
 private:
@@ -52,7 +52,7 @@ public:
 	inline void onFree() { delete this; }
 	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) {};
 	virtual std::string toString() const noexcept override;
-	static Handler<Drawable> create( DrawableFactory& factory, const geom::Box& size, const std::string& repl );
+	static Handler<Drawable> create( DrawableInterpreter& interpreter, const geom::Box& size, const std::string& repl );
 };
 
 class ColorDrawable : public Drawable {
@@ -60,7 +60,7 @@ private:
 	Color color_;
 	ColorDrawable(const geom::Box size, const gl::Color& c);
 public:
-	static Handler<Drawable> create( DrawableFactory& factory, const geom::Box& size, const std::string& repl );
+	static Handler<Drawable> create( DrawableInterpreter& interpreter, const geom::Box& size, const std::string& repl );
 	virtual ~ColorDrawable() noexcept = default;
 public:
 	Color color() const noexcept;
@@ -77,7 +77,7 @@ protected:
 	ImageDrawable(const geom::Box& size, const std::string& filename);
 	virtual ~ImageDrawable() noexcept = default;
 public:
-	static Handler<Drawable> create( DrawableFactory& factory, const geom::Box& size, const std::string& repl );
+	static Handler<Drawable> create( DrawableInterpreter& interpreter, const geom::Box& size, const std::string& repl );
 	Handler<gl::Sprite> sprite() const;
 	virtual geom::Box size() const noexcept override;
 	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) override;
@@ -89,7 +89,7 @@ private:
 	RepeatDrawable(const geom::Box& size, Handler<Drawable> child);
 	Handler<Drawable> child_;
 public:
-	static Handler<Drawable> create( DrawableFactory& factory, const geom::Box& size, const std::string& repl );
+	static Handler<Drawable> create( DrawableInterpreter& interpreter, const geom::Box& size, const std::string& repl );
 	virtual ~RepeatDrawable() noexcept = default;
 	Handler<Drawable> child() const;
 	virtual geom::Box size() const noexcept override;
@@ -102,7 +102,7 @@ private:
 	StretchDrawable(const geom::Box size, Handler<Drawable> child);
 	Handler<Drawable> child_;
 public:
-	static Handler<Drawable> create( DrawableFactory& factory, const geom::Box& size, const std::string& repl );
+	static Handler<Drawable> create( DrawableInterpreter& interpreter, const geom::Box& size, const std::string& repl );
 	virtual ~StretchDrawable() noexcept = default;
 	Handler<Drawable> child() const;
 	virtual geom::Box size() const noexcept override;
@@ -112,15 +112,15 @@ public:
 
 //-------------------------------------------------------------------------------------------------
 
-class DrawableFactory
+class DrawableInterpreter
 {
 	DEFINE_MEMBER_REF(private, logging::Logger, log)
 private:
-	typedef std::function<Handler<Drawable>(DrawableFactory&, const geom::Box&, const std::string&)> constructor;
+	typedef std::function<Handler<Drawable>(DrawableInterpreter&, const geom::Box&, const std::string&)> constructor;
 	std::map<std::string, constructor> factories_;
 public:
-	DrawableFactory(logging::Logger& log);
-	~DrawableFactory() = default;
+	DrawableInterpreter(logging::Logger& log);
+	~DrawableInterpreter() = default;
 public:
 	Handler<Drawable> queryDrawable( const geom::Box& size, const std::string& repl );
 };

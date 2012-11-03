@@ -34,7 +34,7 @@ Canvas::Canvas(logging::Logger& log)
 ,width_(NAN)
 ,height_(NAN)
 ,spriteManager_(new SpriteManager(log))
-,drawableFactory_(log)
+,drawableInterpreter_(log)
 {
 
 }
@@ -125,7 +125,7 @@ Handler<Sprite> Canvas::queryRawSprite(const int width, const int height)
 
 Handler<Drawable> Canvas::queryDrawable(const std::string& repl, const geom::Box& box)
 {
-	return this->drawableFactory_.queryDrawable(box, repl);
+	return this->drawableInterpreter_.queryDrawable(box, repl);
 }
 
 

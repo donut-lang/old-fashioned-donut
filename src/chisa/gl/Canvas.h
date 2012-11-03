@@ -49,7 +49,7 @@ public:
 	virtual ~Canvas();
 public:
 	Handler<SpriteManager> spriteManager_;
-	DrawableFactory drawableFactory_;
+	DrawableInterpreter drawableInterpreter_;
 	std::deque<std::pair<std::string, Handler<Sprite> > > imageCache_;
 public:
 	void ortho(const float left, const float right, const float bottom, const float top, const float near_val, const float far_val);
