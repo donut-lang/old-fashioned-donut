@@ -15,29 +15,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-#include "Node.h"
+#pragma once
+#include <memory>
+#include "Decl.h"
 
 namespace chisa {
-namespace util {
-namespace xml {
+namespace doc {
 
-using namespace chisa::tk::widget;
-template <> void parseAttr<BlockNode::Direction>(const std::string& name, BlockNode::Direction& v, const BlockNode::Direction& def, tinyxml2::XMLElement* elm)
-{
-	if(const char* c = elm->Attribute(name.c_str())){
-		std::string val(c);
-		if(val == "right"){
-			v = BlockNode::Direction::Right;
-			return;
-		}else if(val == "left"){
-			v = BlockNode::Direction::Left;
-			return;
-		}else if(val == "none"){
-			v = BlockNode::Direction::None;
-			return;
-		}
-	}
-	v = def;
-}
-}}}
+class NodeWalker {
+private:
+	int nodeDepth_;
+protected:
+	int nowDepth() const noexcept { return this->nodeDepth_; };
+public:
+	NodeWalker() noexcept;
+	virtual ~NodeWalker() noexcept (true) = default;
+	void start(std::shared_ptr<Document> model);
+	void walkChildren(TreeNode* children);
+	virtual void walk(Document* doc) = 0;
+	virtual void walk(Paragraph* para) = 0;
+	virtual void walk(Heading* head) = 0;
+	virtual void walk(Text* text) = 0;
+	virtual void walk(Link* link) = 0;
+	virtual void walk(Font* font) = 0;
+	virtual void walk(BreakLine* br) = 0;
+};
+
+}}

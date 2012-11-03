@@ -36,7 +36,7 @@ public:
 		canv = nullptr;
 	}
 };
-
+/*
 TEST_F(DrawableTest, ColorDrawableTest)
 {
 	Handler<Drawable> dr = canv->queryDrawable("color:red", geom::Box(100,100));
@@ -64,4 +64,6 @@ TEST_F(DrawableTest, StretchDrawableTest)
 	Handler<Drawable> dr = canv->queryDrawable("stretch:color:red", geom::Box(100,100));
 	ASSERT_TRUE(dynamic_cast<StretchDrawable*>(dr.get()));
 }
+
+*/
 }}

@@ -19,8 +19,7 @@
 #pragma once
 
 #include "../Layout.h"
-#include "../../gl/Sprite.h"
-#include "../../gl/StringRenderer.h"
+#include "../../gl/Drawable.h"
 
 namespace chisa {
 namespace tk {
@@ -29,10 +28,8 @@ namespace widget {
 class Button: public chisa::tk::Layout {
 	CHISA_LAYOUT_SUBKLASS(Button);
 private:
-	gl::StringRenderer renderer_;
-	gl::StringRenderer::Command cmd_;
 	std::string text_;
-	Handler<gl::Sprite> sprite_;
+	Handler<gl::Drawable> textImage_;
 	bool dirty_;
 	bool vertical_;
 private:

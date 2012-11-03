@@ -17,13 +17,12 @@
  */
 
 #include "NodeReader.h"
-#include "../../../logging/Exception.h"
+#include "../../logging/Exception.h"
 #include <tinyxml2.h>
 #include "Node.h"
 
 namespace chisa {
-namespace tk {
-namespace widget {
+namespace doc {
 
 const std::string NodeReader::RootElementName("doc");
 
@@ -133,4 +132,4 @@ Node* NodeReader::parseText(Document* root, BlockNode* block, TreeNode* parent, 
 	return Node::create<Text>(root, block, parent, txt->Value());
 }
 
-}}}
+}}

@@ -16,32 +16,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Node.h"
-#include "NodeWalker.h"
+#pragma once
+#include <deque>
+#include "../../Handler.h"
+#include "../../logging/Logger.h"
+#include "../../util/ClassUtil.h"
 
 namespace chisa {
-namespace tk {
-namespace widget {
+namespace gl {
+class Sprite;
 
-NodeWalker::NodeWalker() noexcept
-:nodeDepth_(0)
-{
+namespace internal {
+class SpriteManager;
 
-}
-
-void NodeWalker::start(std::shared_ptr<Document> model)
-{
-	model->walk(*this);
-}
-
-void NodeWalker::walkChildren(TreeNode* children)
-{
-	this->nodeDepth_++;
-	for(Node* c : *children){
-		c->walk(*this);
-	}
-	this->nodeDepth_--;
-}
-
+class ImageManager : public HandlerBody<ImageManager> {
+	DEFINE_MEMBER_REF(private, logging::Logger, log);
+private:
+	std::deque<std::pair<std::string, Handler<Sprite> > > imageCache_;
+	Handler<Sprite> loadPNG(const std::string& filename);
+	HandlerW<SpriteManager> spriteManager_;
+public:
+	ImageManager(logging::Logger& log, Handler<SpriteManager> spriteManager);
+	virtual ~ImageManager() noexcept = default;
+	Handler<Sprite> queryImage(const std::string& filename);
+public:
+	void onFree() noexcept { delete this; };
+};
 
 }}}

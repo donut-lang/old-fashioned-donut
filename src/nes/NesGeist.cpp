@@ -18,6 +18,7 @@
 
 #include "NesGeist.h"
 #include "../chisa/tk/World.h"
+#include "../chisa/gl/DrawableManager.h"
 
 namespace nes {
 
@@ -31,7 +32,7 @@ NesGeist::NesGeist(chisa::logging::Logger& log, std::weak_ptr<chisa::tk::World> 
 {
 	this->machine_ = new VirtualMachine(*this, *this, this, nullptr);
 	if( std::shared_ptr<chisa::tk::World> world = this->world_.lock() ){
-		this->spr_ = world->queryRawSprite(256, 240);
+		this->spr_ = world->drawableManager()->queryRawSprite(256, 240);
 	}
 }
 

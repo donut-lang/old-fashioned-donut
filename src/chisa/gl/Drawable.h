@@ -30,33 +30,34 @@ class Sprite;
 class DrawableInterpreter;
 
 class Drawable : public HandlerBody<Drawable> {
-private:
-	DEFINE_MEMBER(protected, protected, geom::Box, specSize);
 protected:
-	Drawable( const geom::Box& size ):specSize_(size){};
+	Drawable() = default;
 public:
 	virtual ~Drawable() noexcept = default;
 	inline void onFree() { delete this; }
 	float width() const noexcept;
 	float height() const noexcept;
-	virtual geom::Box size() const noexcept { return this->specSize_; }
+	virtual geom::Box size() const noexcept = 0;
 	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) = 0;
 	virtual std::string toString() const noexcept = 0;
 };
 
 class NullDrawable : public Drawable {
+private:
+	geom::Box size_;
 protected:
-	NullDrawable( const geom::Box& size ):Drawable(size){};
+	NullDrawable( const geom::Box& size ):size_(size){};
 public:
 	virtual ~NullDrawable() noexcept = default;
-	inline void onFree() { delete this; }
-	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) {};
+	virtual geom::Box size() const noexcept override { return this->size_; };
+	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) override {};
 	virtual std::string toString() const noexcept override;
 	static Handler<Drawable> create( DrawableInterpreter& interpreter, const geom::Box& size, const std::string& repl );
 };
 
 class ColorDrawable : public Drawable {
 private:
+	geom::Box size_;
 	Color color_;
 	ColorDrawable(const geom::Box size, const gl::Color& c);
 public:
@@ -64,15 +65,16 @@ public:
 	virtual ~ColorDrawable() noexcept = default;
 public:
 	Color color() const noexcept;
+	virtual geom::Box size() const noexcept override { return this->size_; };
 	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) override;
 	virtual std::string toString() const noexcept override;
 };
 
 class ImageDrawable : public Drawable {
 private:
+	geom::Box size_;
 	Handler<gl::Sprite> sprite_;
 	std::string filename_;
-	geom::Box measured_;
 protected:
 	ImageDrawable(const geom::Box& size, const std::string& filename);
 	virtual ~ImageDrawable() noexcept = default;
@@ -86,8 +88,9 @@ public:
 
 class RepeatDrawable : public Drawable {
 private:
-	RepeatDrawable(const geom::Box& size, Handler<Drawable> child);
+	geom::Box size_;
 	Handler<Drawable> child_;
+	RepeatDrawable(const geom::Box& size, Handler<Drawable> child);
 public:
 	static Handler<Drawable> create( DrawableInterpreter& interpreter, const geom::Box& size, const std::string& repl );
 	virtual ~RepeatDrawable() noexcept = default;
@@ -99,8 +102,9 @@ public:
 
 class StretchDrawable : public Drawable {
 private:
-	StretchDrawable(const geom::Box size, Handler<Drawable> child);
+	geom::Box size_;
 	Handler<Drawable> child_;
+	StretchDrawable(const geom::Box size, Handler<Drawable> child);
 public:
 	static Handler<Drawable> create( DrawableInterpreter& interpreter, const geom::Box& size, const std::string& repl );
 	virtual ~StretchDrawable() noexcept = default;
@@ -108,6 +112,22 @@ public:
 	virtual geom::Box size() const noexcept override;
 	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) override;
 	virtual std::string toString() const noexcept override;
+};
+
+class TextDrawable : public Drawable {
+public:
+	enum Style {
+		Regular = 0,
+		Bold = 1,
+		Italic = 2
+	};
+	enum Decoration {
+		None = 0,
+		Underline = 1,
+		Strike = 2
+	};
+	static const float DefaultFontSize;
+
 };
 
 //-------------------------------------------------------------------------------------------------

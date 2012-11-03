@@ -22,8 +22,7 @@
 #include <unicode/brkiter.h>
 
 namespace chisa {
-namespace tk {
-namespace widget {
+namespace doc {
 
 std::string shrinkSpace(const std::string& str_)
 {
@@ -61,5 +60,4 @@ std::vector<std::string> breakLine(const std::string& str_)
 	return list;
 }
 
-}}}
-
+}}

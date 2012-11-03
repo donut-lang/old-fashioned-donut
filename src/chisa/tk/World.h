@@ -92,9 +92,7 @@ public:
 	 * Universeへの移譲
 	 ******************************************************************************/
 public:
-	Handler<gl::Sprite> queryImage(const std::string& abs_filename);
-	Handler<gl::Sprite> queryRawSprite(const int width, const int height);
-	Handler<gl::FontManager> fontManager() const;
+	Handler<gl::DrawableManager> drawableManager() const;
 	template <typename... Args>
 	std::string resolveWorldFilepath(const Args&... related_filename) const
 	{

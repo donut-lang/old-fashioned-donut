@@ -17,58 +17,25 @@
  */
 
 #pragma once
-#include <cairo/cairo.h>
 #include "OpenGL.h"
 #include "../logging/Logger.h"
 #include "../util/ClassUtil.h"
 #include "../util/Thread.h"
 #include "../Handler.h"
 #include "../geom/Area.h"
-#include <deque>
+#include "internal/SpriteManager.h"
 
 namespace chisa {
 namespace gl {
-class Sprite;
-class Canvas;
-
-namespace internal {
-	class Buffer {
-		DISABLE_COPY_AND_ASSIGN(Buffer);
-		DEFINE_MEMBER_CONST(public, std::size_t, size);
-		DEFINE_MEMBER_CONST(public, unsigned char*, ptr);
-	public:
-		Buffer(std::size_t size);
-		~Buffer() noexcept;
-	};
-}
-
-class SpriteManager : public HandlerBody<SpriteManager> {
-	DISABLE_COPY_AND_ASSIGN(SpriteManager);
-	DEFINE_MEMBER_REF(private, logging::Logger, log)
-private:
-	static constexpr size_t MaxCachedSpriteCount = 200;
-	static constexpr size_t MaxCachedBufferCount = 200;
-	std::deque<Sprite*> unusedSprite_;
-	std::deque<internal::Buffer*> unusedBuffer_;
-public:
-	SpriteManager(logging::Logger& log);
-	virtual ~SpriteManager() noexcept;
-	void onFree() noexcept;
-	Handler<Sprite> queryRawSprite(const int width, const int height);
-public:
-	void backSprite(Sprite* spr);
-	internal::Buffer* queryBuffer(std::size_t size);
-	void backBuffer(internal::Buffer* buffer);
-};
 
 class Sprite : public HandlerBody<Sprite, true> {
-	HandlerW<SpriteManager> mgr_;
+	HandlerW<internal::SpriteManager> mgr_;
 	DEFINE_MEMBER(public, private, geom::IntVector, origSize);
 	DEFINE_MEMBER(public, private, geom::IntVector, size);
 	unsigned int texId_;
 	std::atomic<bool> locked_;
 public:
-	Sprite(HandlerW<SpriteManager> mgr, const geom::IntVector& size);
+	Sprite(HandlerW<internal::SpriteManager> mgr, const geom::IntVector& size);
 	virtual ~Sprite() noexcept(true);
 	enum BufferType {
 		Invalid = 0,

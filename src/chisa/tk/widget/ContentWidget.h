@@ -18,12 +18,9 @@
 #pragma once
 
 #include "../Widget.h"
-#include "Content/Decl.h"
-#include "Content/NodeWalker.h"
 #include "../../geom/Vector.h"
 #include "../../gl/Font.h"
 #include "../../Handler.h"
-#include "ContentRender/RenderContext.h"
 
 namespace chisa {
 namespace tk {
@@ -31,11 +28,9 @@ namespace widget {
 
 class ContentWidget: public chisa::tk::Widget {
 	CHISA_WIDGET_SUBKLASS(ContentWidget);
-	DEFINE_MEMBER(private, private, std::shared_ptr<Document>, rootNode);
+	//DEFINE_MEMBER(private, private, std::shared_ptr<Document>, rootNode);
 	DEFINE_MEMBER(private, private, float, lastWidth);
 	DEFINE_MEMBER(private, private, geom::Box, lastSize);
-	Handler<gl::FontManager> fontManager_;
-	RenderContext context_;
 public:
 	virtual void render(gl::Canvas& cv, const geom::Area& area) override;
 	virtual void idle(const float delta_ms) override;

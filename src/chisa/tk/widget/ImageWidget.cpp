@@ -19,6 +19,7 @@
 #include "ImageWidget.h"
 #include "../World.h"
 #include "../../util/Param.h"
+#include "../../gl/DrawableManager.h"
 
 namespace chisa {
 namespace tk {
@@ -36,7 +37,7 @@ ImageWidget::ImageWidget(logging::Logger& log, weak_ptr<World> world, tinyxml2::
 			std::string src;
 			if(paramSet_->get("src")->queryString(&src)){
 				std::string fpath = w->resolveUniverseFilepath(src);
-				this->imageSprite_ = w->queryImage(fpath);
+				this->imageSprite_ = w->drawableManager()->queryImage(fpath);
 				if(this->imageSprite_ && log.t()){
 					log.t(TAG, "file: %s loaded: %dx%d", fpath.c_str(), imageSprite_->width(), imageSprite_->height());
 				}else if(!this->imageSprite_){

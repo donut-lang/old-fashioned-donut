@@ -27,13 +27,16 @@ namespace tk {
 namespace widget {
 
 CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(Button)
-,renderer_(world.lock()->fontManager())
 ,text_()
-,sprite_()
+,textImage_()
 ,dirty_(false)
 ,vertical_(false)
 ,pushedCnt_(0)
 {
+	if( shared_ptr<World> w = this->world().lock()){
+		//FIXME
+		//this->textImage_ = w->drawableManager()->
+	}
 }
 
 Button::~Button() noexcept
@@ -57,18 +60,18 @@ string Button::toString() const
 
 void Button::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
 {
-	canvas.drawSprite(this->sprite_, this->renderOffset_);
+	//canvas.drawSprite(this->sprite_, this->renderOffset_);
 }
 
 geom::Box Button::onMeasure(const geom::Box& constraint)
 {
 	this->measureTextSize();
-	return this->cmd_.size();
+	//return this->cmd_.size();
 }
 
 void Button::onLayout(const geom::Box& size)
 {
-	this->renderOffset_ = (size-this->cmd_.size())/2;
+	//this->renderOffset_ = (size-this->cmd_.size())/2;
 }
 
 void Button::loadXMLimpl(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element)
@@ -91,14 +94,14 @@ void Button::realizeText(gl::Canvas& canvas)
 	}
 	this->dirty_ = false;
 	this->measureTextSize();
-	this->sprite_ = this->cmd_.renderString(canvas);
+	//this->sprite_ = this->cmd_.renderString(canvas);
 }
 
 void Button::measureTextSize()
 {
-	this->cmd_ = this->renderer_.measure(this->text().c_str());
+	//this->cmd_ = this->renderer_.measure(this->text().c_str());
 	if(this->vertical_){
-		this->cmd_ = this->cmd_.flip();
+		//this->cmd_ = this->cmd_.flip();
 	}
 }
 
@@ -127,10 +130,10 @@ bool Button::onUpRaw(const float timeMs, const geom::Point& ptInScreen)
 
 bool Button::onSingleTapUp(const float timeMs, const geom::Point& ptInScreen)
 {
-	geom::Area a(this->drawnArea().point()+this->renderOffset_, this->cmd_.size());
-	if(a.contain(ptInScreen)){
-		this->onClick();
-	}
+	//geom::Area a(this->drawnArea().point()+this->renderOffset_, this->cmd_.size());
+	//if(a.contain(ptInScreen)){
+	//	this->onClick();
+	//}
 	return true;
 }
 

@@ -17,12 +17,12 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../../src/chisa/gl/StringRenderer.h"
 #include <math.h>
 
 namespace chisa {
 namespace gl {
 
+/*
 class FontTest : public ::testing::Test
 {
 protected:
@@ -60,6 +60,7 @@ TEST_F(FontTest, AnalyzeTest)
 	ASSERT_EQ("Family", family);
 	ASSERT_EQ("Style", style);
 }
+*/
 
 }}
 
