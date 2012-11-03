@@ -39,13 +39,15 @@ class RenderTree : public HandlerBody<RenderTree> {
 	DEFINE_MEMBER_REF(private, logging::Logger, log);
 private:
 	const std::size_t maxDrawable_;
+	Handler<gl::DrawableManager> drawableManager_;
 	std::deque<Handler<gl::Drawable> > drawableCache_;
 	std::vector<Handler<RenderObject> > objects_;
 public:
-	RenderTree(logging::Logger& log, const std::size_t maxDrawable=100);
+	RenderTree(logging::Logger& log, Handler<gl::DrawableManager> drawableManager, const std::size_t maxDrawable=100);
 	virtual ~RenderTree() noexcept = default;
 public:
 	void render(gl::Canvas& canvas, const geom::Area& area, float depth);
+	Handler<gl::DrawableManager> drawableManager();
 public:
 	void registerDrawable(Handler<gl::Drawable> d) noexcept;
 	void reset() noexcept;
