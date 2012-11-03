@@ -42,7 +42,10 @@ class RenderCommand;
 class Node {
 	DISABLE_COPY_AND_ASSIGN(Node);
 	DEFINE_MEMBER(public, private, Document*, root);
+	DEFINE_MEMBER(public, private, BlockNode*, block);
 	DEFINE_MEMBER(public, private, TreeNode*, parent);
+	DEFINE_MEMBER(public, protected, geom::Area, areaInRoot);
+	DEFINE_MEMBER(public, protected, geom::Area, areaInBlock);
 protected:
 	Node();
 public:
@@ -50,11 +53,14 @@ public:
 public:
 	virtual void walk(NodeWalker& walker) = 0;
 	template <typename Derived, typename... Args>
-	static Derived* create(Document* root, TreeNode* parent, const Args&... args)
+	static Derived* create(Document* root, BlockNode* block, TreeNode* parent, const Args&... args)
 	{
 		Derived* const node = new Derived(args...);
 		node->root(root);
+		node->block(block);
 		node->parent(parent);
+		node->areaInBlock(geom::Area());
+		node->areaInRoot(geom::Area());
 		return node;
 	}
 	static std::shared_ptr<Document> createRootDocument();
@@ -74,7 +80,7 @@ NODE_SUBKLASS_DESTRUCTOR(Klass);
 NODE_SUBKLASS_WALK(Klass);\
 NODE_SUBKLASS_DESTRUCTOR(Klass);\
 template <typename Derived, typename... Args>\
-friend Derived* Node::create(Document* root, TreeNode* parent, const Args&... args)
+friend Derived* Node::create(Document* root, BlockNode* block, TreeNode* parent, const Args&... args)
 
 /******************************************************************************
  * カテゴライズするためのノード
