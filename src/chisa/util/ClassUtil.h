@@ -19,6 +19,20 @@
 #pragma once
 #include <cstddef>
 
+template <typename Derived, typename Base>
+struct IsBaseOf{
+private:
+	typedef char YES;
+	typedef struct {
+		char v[2];
+	} NO;
+	static YES check(const Base&);
+	static NO check(...);
+	static Derived d;
+public:
+	static const bool result = (sizeof(check(d)) == sizeof(YES));
+};
+
 //-----------------------------------------------------------------------------
 
 #define DISABLE_COPY_AND_ASSIGN(klass)\

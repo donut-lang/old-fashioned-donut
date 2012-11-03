@@ -27,23 +27,48 @@ namespace widget {
 
 const std::string NodeReader::RootElementName("doc");
 
-template <typename N, typename... Args>
-static NodeReader::ParseFunc createProxy(const Args&... args)
-{
-	NodeReader::TreeConstructor c = std::bind(Node::create<N, Args...>, std::placeholders::_1, std::placeholders::_2, args...);
-	return std::bind(&NodeReader::parseTreeNode, std::placeholders::_1, c, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
-}
+template <typename T, bool = IsBaseOf<T, BlockNode>::result>
+struct Proxy {
+private:
+	NodeReader::TreeConstructor c;
+public:
+	template <typename... Args>
+	Proxy(const Args&... args)
+	:c( std::bind(Node::create<T, Args...>, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, args...) )
+	{
+	}
+	Node* operator()(NodeReader& reader, Document* root, BlockNode* block, TreeNode* parent, tinyxml2::XMLElement* elm) const
+	{
+		return reader.parseTreeNode(c, root, block, parent, elm);
+	}
+};
+
+template <typename T>
+struct Proxy<T, true> {
+private:
+	NodeReader::BlockConstructor c;
+public:
+	template <typename... Args>
+	Proxy(const Args&... args)
+	:c( std::bind(Node::create<T, Args...>, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, args...) )
+	{
+	}
+	Node* operator()(NodeReader& reader, Document* root, BlockNode* block, TreeNode* parent, tinyxml2::XMLElement* elm) const
+	{
+		return reader.parseBlockNode(c, root, block, parent, elm);
+	}
+};
 
 NodeReader::NodeReader()
 {
 	using namespace std::placeholders;
-	this->elementParser_.insert(std::make_pair("h1", createProxy<Heading>(1)));
-	this->elementParser_.insert(std::make_pair("h2", createProxy<Heading>(2)));
-	this->elementParser_.insert(std::make_pair("h3", createProxy<Heading>(3)));
-	this->elementParser_.insert(std::make_pair("p", createProxy<Paragraph>()));
-	this->elementParser_.insert(std::make_pair("br", createProxy<BreakLine>()));
-	this->elementParser_.insert(std::make_pair("font", createProxy<Font>()));
-	this->elementParser_.insert(std::make_pair("link", createProxy<Link>()));
+	this->elementParser_.insert(std::make_pair("h1", Proxy<Heading>(1)));
+	this->elementParser_.insert(std::make_pair("h2", Proxy<Heading>(2)));
+	this->elementParser_.insert(std::make_pair("h3", Proxy<Heading>(3)));
+	this->elementParser_.insert(std::make_pair("p", Proxy<Paragraph>()));
+	this->elementParser_.insert(std::make_pair("br", Proxy<BreakLine>()));
+	this->elementParser_.insert(std::make_pair("font", Proxy<Font>()));
+	this->elementParser_.insert(std::make_pair("link", Proxy<Link>()));
 }
 
 #define NODE_FOREACH(it, node)\
@@ -60,12 +85,12 @@ std::shared_ptr<Document> NodeReader::parseTree(tinyxml2::XMLElement* elm)
 	std::shared_ptr<Document> doc(Node::createRootDocument());
 	doc->parseAttribute(elm);
 	NODE_FOREACH(it, elm) {
-		doc->add(this->parseNode(doc.get(), doc.get(), it));
+		doc->add(this->parseNode(doc.get(), doc.get(), doc.get(), it));
 	}
 	return doc;
 }
 
-Node* NodeReader::parseNode(Document* root, TreeNode* parent, tinyxml2::XMLNode* node)
+Node* NodeReader::parseNode(Document* root, BlockNode* block, TreeNode* parent, tinyxml2::XMLNode* node)
 {
 	if(!node){
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] parsing null node!");
@@ -76,26 +101,36 @@ Node* NodeReader::parseNode(Document* root, TreeNode* parent, tinyxml2::XMLNode*
 			throw logging::Exception(__FILE__, __LINE__, "Unknwon document tag: %s", elm->Name());
 		}
 		const ParseFunc f = it->second;
-		return f(*this, root, parent, elm);
+		return f(*this, root, block, parent, elm);
 	}else if(tinyxml2::XMLText* txt = node->ToText()){
-		return this->parseText(root, parent, txt);
+		return this->parseText(root, block, parent, txt);
 	}
 	throw logging::Exception(__FILE__, __LINE__, "Unknwon document node: %s", node->Value());
 }
 
-TreeNode* NodeReader::parseTreeNode(TreeConstructor constructor, Document* root, TreeNode* parent, tinyxml2::XMLElement* elm)
+TreeNode* NodeReader::parseTreeNode(TreeConstructor constructor, Document* root, BlockNode* block, TreeNode* parent, tinyxml2::XMLElement* elm)
 {
-	TreeNode* tree = constructor(root, parent);
+	TreeNode* tree = constructor(root, block, parent);
 	tree->parseAttribute(elm);
 	NODE_FOREACH(it, elm) {
-		tree->add(this->parseNode(root, tree, it));
+		tree->add(this->parseNode(root, block, tree, it));
 	}
 	return tree;
 }
 
-Node* NodeReader::parseText(Document* root, TreeNode* parent, tinyxml2::XMLText* txt)
+BlockNode* NodeReader::parseBlockNode(BlockConstructor constructor, Document* root, BlockNode* block, TreeNode* parent, tinyxml2::XMLElement* elm)
 {
-	return Node::create<Text>(root, parent, txt->Value());
+	BlockNode* tree = constructor(root, block, parent);
+	tree->parseAttribute(elm);
+	NODE_FOREACH(it, elm) {
+		tree->add(this->parseNode(root, tree, tree, it));
+	}
+	return tree;
+}
+
+Node* NodeReader::parseText(Document* root, BlockNode* block, TreeNode* parent, tinyxml2::XMLText* txt)
+{
+	return Node::create<Text>(root, block, parent, txt->Value());
 }
 
 }}}

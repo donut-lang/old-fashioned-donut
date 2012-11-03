@@ -35,8 +35,9 @@ namespace widget {
 class NodeReader {
 	DISABLE_COPY_AND_ASSIGN(NodeReader);
 public:
-	typedef std::function<Node*(NodeReader&, Document*, TreeNode*, tinyxml2::XMLElement*)> ParseFunc;
-	typedef std::function<TreeNode*(Document*, TreeNode*)> TreeConstructor;
+	typedef std::function<Node*(NodeReader&, Document*, BlockNode*, TreeNode*, tinyxml2::XMLElement*)> ParseFunc;
+	typedef std::function<TreeNode*(Document*, BlockNode*, TreeNode*)> TreeConstructor;
+	typedef std::function<BlockNode*(Document*, BlockNode*, TreeNode*)> BlockConstructor;
 private:
 	static const std::string RootElementName;
 	std::map<std::string, ParseFunc> elementParser_;
@@ -45,10 +46,11 @@ public:
 	virtual ~NodeReader() = default;
 public:
 	std::shared_ptr<Document> parseTree(tinyxml2::XMLElement* elm);
-	Node* parseNode(Document* root, TreeNode* parent, tinyxml2::XMLNode* node);
+	Node* parseNode(Document* root, BlockNode* block, TreeNode* parent, tinyxml2::XMLNode* node);
+	TreeNode* parseTreeNode(TreeConstructor constructor, Document* root, BlockNode* block, TreeNode* parent, tinyxml2::XMLElement* elm);
+	BlockNode* parseBlockNode(BlockConstructor constructor, Document* root, BlockNode* block, TreeNode* parent, tinyxml2::XMLElement* elm);
 private:
-	TreeNode* parseTreeNode(TreeConstructor constructor, Document* root, TreeNode* parent, tinyxml2::XMLElement* elm);
-	Node* parseText(Document* root, TreeNode* parent, tinyxml2::XMLText* txt);
+	Node* parseText(Document* root, BlockNode* block, TreeNode* parent, tinyxml2::XMLText* txt);
 };
 
 }}}
