@@ -20,9 +20,9 @@
 #include "Drawable.h"
 #include "../geom/Area.h"
 #include "../geom/Vector.h"
-#include "../gl/Canvas.h"
 #include "../util/StringUtil.h"
-#include "../gl/CairoUtil.h"
+#include "internal/CairoUtil.h"
+#include "Canvas.h"
 #include "DrawableManager.h"
 
 namespace chisa {

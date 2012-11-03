@@ -16,19 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Util.h"
-#include "CairoUtil.h"
-
+#pragma once
+#include <cairo/cairo.h>
 namespace chisa {
 namespace gl {
-
+class Color;
 
 namespace cairo{
 
-void setColor(cairo_t* cairo, const gl::Color& c)
-{
-	cairo_set_source_rgba(cairo, c.red(), c.green(), c.blue(), c.alpha());
-}
+void setColor(cairo_t* cairo, const gl::Color& c);
 
 }
 }}
