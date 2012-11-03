@@ -53,7 +53,7 @@ void ColorDrawable::draw(Canvas& canvas, const geom::Area& area, const float dep
 	canvas.fillRect(this->color_, area.intersect(geom::Area(area.point(), geom::min(area.box(), this->specSize()))), depth);
 }
 
-Handler<Drawable> ColorDrawable::create( DrawableFactory& factory, const geom::Box& size, const std::string& repl )
+Handler<Drawable> ColorDrawable::create( DrawableInterpreter& interpreter, const geom::Box& size, const std::string& repl )
 {
 	return Handler<Drawable>(new ColorDrawable(size, Color::fromString( repl )));
 }
@@ -90,7 +90,7 @@ void ImageDrawable::draw(Canvas& canvas, const geom::Area& area, const float dep
 	canvas.drawSprite(this->sprite_, area.point(), geom::Area(geom::ZERO, geom::min(area.box(), this->measured_)), depth);
 }
 
-Handler<Drawable> ImageDrawable::create( DrawableFactory& factory, const geom::Box& size, const std::string& repl )
+Handler<Drawable> ImageDrawable::create( DrawableInterpreter& interpreter, const geom::Box& size, const std::string& repl )
 {
 	return Handler<Drawable>(new ImageDrawable(size, repl));
 }
@@ -137,9 +137,9 @@ void RepeatDrawable::draw(Canvas& canvas, const geom::Area& area, const float de
 	}
 }
 
-Handler<Drawable> RepeatDrawable::create( DrawableFactory& factory, const geom::Box& size, const std::string& repl )
+Handler<Drawable> RepeatDrawable::create( DrawableInterpreter& interpreter, const geom::Box& size, const std::string& repl )
 {
-	return Handler<Drawable>(new RepeatDrawable(size, factory.queryDrawable(size, repl)));
+	return Handler<Drawable>(new RepeatDrawable(size, interpreter.queryDrawable(size, repl)));
 }
 
 std::string RepeatDrawable::toString() const noexcept
@@ -179,9 +179,9 @@ void StretchDrawable::draw(Canvas& canvas, const geom::Area& area, const float d
 		this->child_->draw(canvas, geom::Area(geom::ZERO, this->child_->size()), depth);
 	}
 }
-Handler<Drawable> StretchDrawable::create( DrawableFactory& factory, const geom::Box& size, const std::string& repl )
+Handler<Drawable> StretchDrawable::create( DrawableInterpreter& interpreter, const geom::Box& size, const std::string& repl )
 {
-	return Handler<Drawable>(new StretchDrawable(size, factory.queryDrawable(size, repl)));
+	return Handler<Drawable>(new StretchDrawable(size, interpreter.queryDrawable(size, repl)));
 }
 
 std::string StretchDrawable::toString() const noexcept
@@ -192,7 +192,7 @@ std::string StretchDrawable::toString() const noexcept
 
 //-----------------------------------------------------------------------------
 
-Handler<Drawable> NullDrawable::create( DrawableFactory& factory, const geom::Box& size, const std::string& repl )
+Handler<Drawable> NullDrawable::create( DrawableInterpreter& interpreter, const geom::Box& size, const std::string& repl )
 {
 	return Handler<Drawable>(new NullDrawable(size));
 }
@@ -204,7 +204,7 @@ std::string NullDrawable::toString() const noexcept
 
 //-----------------------------------------------------------------------------
 
-DrawableFactory::DrawableFactory(logging::Logger& log)
+DrawableInterpreter::DrawableInterpreter(logging::Logger& log)
 :log_(log)
 {
 	this->factories_.insert(std::make_pair("stretch:", StretchDrawable::create));
@@ -213,7 +213,7 @@ DrawableFactory::DrawableFactory(logging::Logger& log)
 	this->factories_.insert(std::make_pair("color:", ColorDrawable::create));
 	this->factories_.insert(std::make_pair("none:", NullDrawable::create));
 }
-Handler<Drawable> DrawableFactory::queryDrawable( const geom::Box& size, const std::string& repl )
+Handler<Drawable> DrawableInterpreter::queryDrawable( const geom::Box& size, const std::string& repl )
 {
 	for(std::pair<std::string, constructor> p : this->factories_){
 		if(util::startsWith(repl, p.first)){
