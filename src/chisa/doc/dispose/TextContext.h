@@ -23,13 +23,14 @@
 #include "../../gl/DrawableManager.h"
 #include "../../geom/Vector.h"
 #include "../../gl/Color.h"
+#include "../render/RenderTree.h"
 
 namespace chisa {
 namespace doc {
 
 class TextContext {
 private:
-	Handler<gl::DrawableManager> drawableManager_;
+	Handler<RenderTree> renderTree_;
 	Handler<gl::Font> font_;
 	cairo_font_face_t* face_;
 	cairo_surface_t* nullSurface_;
@@ -67,9 +68,9 @@ public:
 	void popFont();
 public:
 	geom::Box measure(const std::string& strUtf8);
-	Handler<gl::TextDrawable> create(const std::string& strUtf8);
+	Handler<TextDrawableObject> create(const std::string& strUtf8, HandlerW<Node> parentNode, const float relDepth );
 public:
-	TextContext(Handler<gl::DrawableManager> drawableManager);
+	TextContext(Handler<RenderTree> renderTree);
 	virtual ~TextContext() noexcept;
 };
 

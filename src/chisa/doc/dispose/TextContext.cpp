@@ -22,12 +22,13 @@
 #include <unicode/bytestream.h>
 #include <cairo/cairo-ft.h>
 #include "../../gl/Drawable.h"
+#include "../render/RenderObject.h"
 
 namespace chisa {
 namespace doc {
 
-TextContext::TextContext(Handler<gl::DrawableManager> drawableManager)
-:drawableManager_(drawableManager)
+TextContext::TextContext(Handler<RenderTree> renderTree)
+:renderTree_(renderTree)
 ,font_()
 ,face_(nullptr)
 ,nullSurface_(cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 1, 1))
@@ -127,7 +128,7 @@ void TextContext::popDeco()
 void TextContext::pushFont( const std::string& name )
 {
 	this->fontStack_.push_back(name);
-	this->font_ = this->drawableManager_->queryFont(name);
+	this->font_ = this->renderTree_->drawableManager()->queryFont(name);
 	if(this->face_){
 		cairo_font_face_destroy(this->face_);
 	}
@@ -149,7 +150,7 @@ void TextContext::popFont()
 	cairo_font_face_destroy(this->face_);
 	this->fontStack_.pop_back();
 	const std::string name = this->fontStack_.back();
-	this->font_ = this->drawableManager_->queryFont(name);
+	this->font_ = this->renderTree_->drawableManager()->queryFont(name);
 	gl::Font::RawFaceSession rfs(this->font_);
 	this->face_ = cairo_ft_font_face_create_for_ft_face(rfs.face(),0);
 }
@@ -171,9 +172,12 @@ geom::Box TextContext::measure(const std::string& strUtf8)
 	return size;
 }
 
-Handler<gl::TextDrawable> TextContext::create(const std::string& strUtf8)
+Handler<TextDrawableObject> TextContext::create(const std::string& strUtf8, HandlerW<Node> parentNode, const float relDepth )
 {
-	return this->drawableManager_->queryText(
+	return Handler<TextDrawableObject> ( new TextDrawableObject (
+			this->renderTree_,
+			parentNode,
+			relDepth,
 			strUtf8,
 			this->nowSize(),
 			this->font_,
@@ -181,7 +185,7 @@ Handler<gl::TextDrawable> TextContext::create(const std::string& strUtf8)
 			this->nowDeco(),
 			this->nowColor(),
 			this->nowBackColor()
-			);
+	) );
 }
 
 }}

@@ -17,15 +17,17 @@
  */
 
 #include "RenderTree.h"
+#include "../../gl/DrawableManager.h"
 
 namespace chisa {
 namespace doc {
 
 const static std::string TAG("RenderTree");
 
-RenderTree::RenderTree(logging::Logger& log, const std::size_t maxDrawable)
+RenderTree::RenderTree(logging::Logger& log, Handler<gl::DrawableManager> drawableManager, const std::size_t maxDrawable)
 :log_(log)
 ,maxDrawable_(maxDrawable)
+,drawableManager_(drawableManager)
 {
 }
 
@@ -41,6 +43,10 @@ void RenderTree::render(gl::Canvas& canvas, const geom::Area& area, float depth)
 	}
 }
 
+Handler<gl::DrawableManager> RenderTree::drawableManager()
+{
+	return this->drawableManager_;
+}
 
 void RenderTree::registerDrawable(Handler<gl::Drawable> d) noexcept
 {
