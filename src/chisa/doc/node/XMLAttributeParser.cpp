@@ -15,16 +15,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#pragma once
 
-#include <string>
-#include <vector>
+#include "Node.h"
 
 namespace chisa {
-namespace tk {
-namespace widget {
+namespace util {
+namespace xml {
 
-std::string shrinkSpace(const std::string& str);
-std::vector<std::string> breakLine(const std::string& str_);
-
+using namespace chisa::doc;
+template <> void parseAttr<BlockNode::Direction>(const std::string& name, BlockNode::Direction& v, const BlockNode::Direction& def, tinyxml2::XMLElement* elm)
+{
+	if(const char* c = elm->Attribute(name.c_str())){
+		std::string val(c);
+		if(val == "right"){
+			v = BlockNode::Direction::Right;
+			return;
+		}else if(val == "left"){
+			v = BlockNode::Direction::Left;
+			return;
+		}else if(val == "none"){
+			v = BlockNode::Direction::None;
+			return;
+		}
+	}
+	v = def;
+}
 }}}

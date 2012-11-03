@@ -17,12 +17,12 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../../src/chisa/gl/StringRenderer.h"
 #include <math.h>
 
 namespace chisa {
-namespace gl {
+namespace doc {
 
+/*
 class StringRendererTest : public ::testing::Test
 {
 protected:
@@ -98,7 +98,7 @@ TEST_F(StringRendererTest, FontPushTest)
 	r->popFont();
 	ASSERT_EQ("VL Gothic:regular", r->nowFont());
 }
-
+*/
 
 }}
 

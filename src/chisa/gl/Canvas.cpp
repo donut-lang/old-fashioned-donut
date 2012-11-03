@@ -33,8 +33,6 @@ Canvas::Canvas(logging::Logger& log)
 :log_(log)
 ,width_(NAN)
 ,height_(NAN)
-,spriteManager_(new SpriteManager(log))
-,drawableInterpreter_(log)
 {
 
 }
@@ -117,17 +115,6 @@ void Canvas::drawTexture(unsigned int texId, const geom::Point& pt, const geom::
 {
 	this->drawTexture(texId, pt, texSize, geom::Area(geom::ZERO, spriteSize), depth);
 }
-
-Handler<Sprite> Canvas::queryRawSprite(const int width, const int height)
-{
-	return this->spriteManager_->queryRawSprite(width, height);
-}
-
-Handler<Drawable> Canvas::queryDrawable(const std::string& repl, const geom::Box& box)
-{
-	return this->drawableInterpreter_.queryDrawable(box, repl);
-}
-
 
 void Canvas::drawLine(const float width, const Color& color, const geom::Point& start, const geom::Point& end, const float depth)
 {

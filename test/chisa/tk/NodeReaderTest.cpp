@@ -17,13 +17,12 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../src/chisa/tk/widget/Content/Node.h"
-#include "../../src/chisa/tk/widget/Content/NodeReader.h"
+#include "../../src/chisa/doc/node/Node.h"
+#include "../../src/chisa/doc/node/NodeReader.h"
 #include <typeinfo>
 
 namespace chisa {
-namespace tk {
-namespace widget {
+namespace doc {
 
 TEST(NodeReadingTest, NOPTest)
 {
@@ -196,5 +195,4 @@ TEST(NodeReadingTest, NoTextFoundTest)
 	ASSERT_EQ("b", m->findTreeNodeById("test")->findFirstTextNode()->text());
 }
 
-}}}
-
+}}

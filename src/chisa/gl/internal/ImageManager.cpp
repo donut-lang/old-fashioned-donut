@@ -16,17 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-#include "Canvas.h"
+#include "ImageManager.h"
 #include <algorithm>
 #include <libpng15/png.h>
+#include "../Sprite.h"
 
-namespace chisa{
+namespace chisa {
 namespace gl {
+namespace internal {
 
-static const std::string TAG("Canvas/PNG");
+static const std::string TAG("ImageManager");
 
-Handler<Sprite> Canvas::queryImage(const std::string& filename)
+ImageManager::ImageManager(logging::Logger& log, Handler<SpriteManager> spriteManager)
+:log_(log), spriteManager_(spriteManager)
+{
+}
+
+Handler<Sprite> ImageManager::queryImage(const std::string& filename)
 {
 	for(auto it = this->imageCache_.begin(); it != this->imageCache_.end(); ++it){
 		if(it->first == filename){
@@ -50,7 +56,7 @@ Handler<Sprite> Canvas::queryImage(const std::string& filename)
 	return img;
 }
 
-Handler<Sprite> Canvas::loadPNG(const std::string& filename)
+Handler<Sprite> ImageManager::loadPNG(const std::string& filename)
 {
 	FILE* fp = fopen(filename.c_str(), "rb");
 	if(!fp){
@@ -96,16 +102,21 @@ Handler<Sprite> Canvas::loadPNG(const std::string& filename)
 	const int width = png_get_image_width(png, info);
 	const int height = png_get_image_height(png, info);
 
-	Handler<Sprite> spr = this->queryRawSprite(width, height);
-	{
-		Sprite::Session session(spr, Sprite::BufferType::RGBA8);
-		unsigned char* data = session.data();
-		const int stride = session.stride();
-		unsigned char* ptr[height];
-		for(int i=0;i<height;++i){
-			ptr[i] = &data[i*stride];
+	Handler<Sprite> spr;
+	if(Handler<SpriteManager> mgr = this->spriteManager_.lock()){
+		spr = mgr->queryRawSprite(width, height);
+		{
+			Sprite::Session session(spr, Sprite::BufferType::RGBA8);
+			unsigned char* data = session.data();
+			const int stride = session.stride();
+			unsigned char* ptr[height];
+			for(int i=0;i<height;++i){
+				ptr[i] = &data[i*stride];
+			}
+			png_read_image(png, ptr);
 		}
-		png_read_image(png, ptr);
+	}else{
+		this->log().e(TAG, "Oops. SpriteManager already dead!!");
 	}
 	png_read_end(png, end_info);
 	png_destroy_read_struct(&png, &info, &end_info);
@@ -114,4 +125,4 @@ Handler<Sprite> Canvas::loadPNG(const std::string& filename)
 	return spr;
 }
 
-}}
+}}}

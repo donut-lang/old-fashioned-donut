@@ -15,31 +15,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #pragma once
-#include <memory>
-#include "Decl.h"
+#include "../../Handler.h"
+#include "../../util/ClassUtil.h"
+#include "../../geom/Area.h"
 
 namespace chisa {
-namespace tk {
-namespace widget {
+namespace gl {
+class Canvas;
+}
 
-class NodeWalker {
+namespace doc {
+class RenderTree;
+class Node;
+
+class RenderObject : public HandlerBody<RenderObject> {
 private:
-	int nodeDepth_;
-protected:
-	int nowDepth() const noexcept { return this->nodeDepth_; };
+	HandlerW<RenderTree> parentTree_;
+	HandlerW<Node> parentNode_;
+	DEFINE_MEMBER(public, public, geom::Area, area);
+	DEFINE_MEMBER(public, public, float, relDepth);
 public:
-	NodeWalker() noexcept;
-	virtual ~NodeWalker() noexcept (true) = default;
-	void start(std::shared_ptr<Document> model);
-	void walkChildren(TreeNode* children);
-	virtual void walk(Document* doc) = 0;
-	virtual void walk(Paragraph* para) = 0;
-	virtual void walk(Heading* head) = 0;
-	virtual void walk(Text* text) = 0;
-	virtual void walk(Link* link) = 0;
-	virtual void walk(Font* br) = 0;
-	virtual void walk(BreakLine* br) = 0;
+	RenderObject(HandlerW<RenderTree> parentTree, HandlerW<Node> parentNode, const float relDepth);
+	virtual ~RenderObject() noexcept = default;
+public:
+	void onFree() noexcept { delete this; };
+	virtual void render(gl::Canvas& canvas, const geom::Point& offset, const float depth) = 0;
+	virtual void onHidden() = 0;
 };
 
-}}}
+}}

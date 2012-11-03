@@ -16,29 +16,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "RenderContext.h"
-#include "RenderCommand.h"
+#include "Node.h"
+#include "NodeWalker.h"
 
 namespace chisa {
-namespace tk {
-namespace widget {
+namespace doc {
 
-RenderContext::RenderContext(logging::Logger& log)
-:log_(log)
-,cache_(new RenderCache(log))
+NodeWalker::NodeWalker() noexcept
+:nodeDepth_(0)
 {
-	// TODO Auto-generated constructor stub
 
 }
 
-Handler<RenderCommand> RenderContext::createText(const geom::Area& area, const gl::StringRenderer::Command& cmd)
+void NodeWalker::start(std::shared_ptr<Document> model)
 {
-	return Handler<RenderCommand>(new TextRenderCommand(this->cache_, area, cmd));
+	model->walk(*this);
 }
-Handler<RenderCommand> RenderContext::createDrawable(const geom::Area& area, const std::string& drawableRepl)
+
+void NodeWalker::walkChildren(TreeNode* children)
 {
-	return Handler<RenderCommand>(new DrawableRenderCommand(this->cache_, area, drawableRepl));
+	this->nodeDepth_++;
+	for(Node* c : *children){
+		c->walk(*this);
+	}
+	this->nodeDepth_--;
 }
 
 
-}}}
+}}

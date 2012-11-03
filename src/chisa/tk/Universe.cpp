@@ -19,6 +19,7 @@
 #include "Universe.h"
 #include "World.h"
 #include "../util/FileUtil.h"
+#include "../gl/DrawableManager.h"
 
 static const std::string TAG("Universe");
 
@@ -29,7 +30,7 @@ Universe::Universe(logging::Logger& log, Hexe* hexe)
 :log_(log)
 ,hexe_(hexe)
 ,canvas_(log)
-,fontManager_( new gl::FontManager(log, hexe->resolveFilepath("__font__")) )
+,drawableManager_() //FIXME
 {
 }
 Universe::~Universe() {
@@ -117,14 +118,9 @@ std::shared_ptr<chisa::WorldGeist> Universe::invokeWorldGeist(std::weak_ptr<tk::
 	return this->hexe()->invokeWorldGeist(world, nameOfGeist);
 }
 
-Handler<gl::Sprite> Universe::queryImage(const std::string& abs_filename)
+Handler<gl::DrawableManager> Universe::drawableManager() const
 {
-	return this->canvas_.queryImage(abs_filename);
-}
-
-Handler<gl::Sprite> Universe::queryRawSprite(const int width, const int height)
-{
-	return this->canvas_.queryRawSprite(width, height);
+	return this->drawableManager_;
 }
 
 

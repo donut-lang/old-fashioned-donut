@@ -17,11 +17,10 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../src/chisa/tk/widget/ContentMeasure/Util.h"
+#include "../../src/chisa/doc/Util.h"
 
 namespace chisa {
-namespace tk {
-namespace widget {
+namespace doc {
 
 TEST(ContentMeasurerUtilTest, ShrinkSpaceTest)
 {
@@ -44,5 +43,4 @@ TEST(ContentMeasurerUtilTest, EnglishNextStringTest)
 	}
 }
 
-}}}
-
+}}

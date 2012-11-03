@@ -20,9 +20,6 @@
 #include "../../geom/Area.h"
 #include "../../geom/Vector.h"
 #include "ContentWidget.h"
-#include "Content/NodeReader.h"
-#include "ContentRender/ContentRenderer.h"
-#include "ContentMeasure/ContentMeasurer.h"
 #include <tinyxml2.h>
 
 namespace chisa {
@@ -33,11 +30,9 @@ static std::string const TAG("ContentWidget");
 
 CHISA_WIDGET_SUBKLASS_CONSTRUCTOR_DEF(ContentWidget)
 ,lastWidth_(NAN)
-,fontManager_(world.lock()->fontManager())
-,context_(log)
 {
 	tinyxml2::XMLElement* docElem = element->FirstChildElement("doc");
-	this->rootNode(NodeReader().parseTree(docElem));
+	//this->rootNode(NodeReader().parseTree(docElem));
 	if(this->log().t()){
 		this->log().t(TAG, "Content Parsed.");
 	}
@@ -49,7 +44,7 @@ ContentWidget::~ContentWidget()
 
 void ContentWidget::render(gl::Canvas& cv, const geom::Area& area)
 {
-	ContentRenderer(cv, area).start(this->rootNode());
+	//ContentRenderer(cv, area).start(this->rootNode());
 }
 
 void ContentWidget::idle(const float delta_ms)
@@ -65,7 +60,7 @@ geom::Box ContentWidget::measure(const geom::Box& constraintSize)
 {
 	if(geom::isUnspecified(this->lastWidth()) || std::fabs(constraintSize.width()-this->lastWidth()) >= geom::VerySmall){
 		this->lastWidth(constraintSize.width());
-		this->lastSize(ContentMeasurer(log(), fontManager_, context_, constraintSize.width()).start(this->rootNode()));
+		//this->lastSize(ContentMeasurer(log(), fontManager_, context_, constraintSize.width()).start(this->rootNode()));
 	}
 	return geom::Box(geom::max(constraintSize.width(), this->lastSize().width()), geom::max(constraintSize.height(), this->lastSize().height()));
 }

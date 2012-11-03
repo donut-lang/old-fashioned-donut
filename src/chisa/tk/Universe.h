@@ -26,6 +26,10 @@
 #include "Stack.h"
 
 namespace chisa {
+namespace gl {
+class DrawableManager;
+}
+
 namespace tk {
 
 class World;
@@ -42,7 +46,7 @@ private:
 	DEFINE_MEMBER(public, private, geom::Area, area);
 	weak_ptr<Universe> self_;
 	gl::Canvas canvas_;
-	Handler<gl::FontManager> fontManager_;
+	Handler<gl::DrawableManager> drawableManager_;
 public:
 	void render();
 	void idle(const float delta_ms);
@@ -69,9 +73,7 @@ public:
 	 * 画像
 	 ******************************************************************************/
 public:
-	Handler<gl::Sprite> queryImage(const std::string& abs_filename);
-	Handler<gl::Sprite> queryRawSprite(const int width, const int height);
-	Handler<gl::FontManager> fontManager() const { return this->fontManager_; };
+	Handler<gl::DrawableManager> drawableManager() const;
 	/******************************************************************************
 	 * タッチイベント
 	 ******************************************************************************/

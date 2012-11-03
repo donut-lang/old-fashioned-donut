@@ -23,6 +23,7 @@
 #include "widget/WidgetFactory.h"
 #include "Universe.h"
 #include "Gesture.h"
+#include "../gl/DrawableManager.h"
 
 namespace chisa {
 namespace tk {
@@ -179,30 +180,12 @@ Widget* World::createWidget(const string& klass, tinyxml2::XMLElement* elem)
 	return this->widgetFactory_->createWidget(klass, elem);
 }
 
-Handler<gl::Sprite> World::queryImage(const string& abs_filename)
+Handler<gl::DrawableManager> World::drawableManager() const
 {
 	if(std::shared_ptr<Universe> uni = this->universe_.lock()){
-		return uni->queryImage(abs_filename);
+		return uni->drawableManager();
 	}else{
-		return Handler<gl::Sprite>();
-	}
-}
-
-Handler<gl::Sprite> World::queryRawSprite(const int width, const int height)
-{
-	if(std::shared_ptr<Universe> uni = this->universe_.lock()){
-		return uni->queryRawSprite(width, height);
-	}else{
-		return Handler<gl::Sprite>();
-	}
-}
-
-Handler<gl::FontManager> World::fontManager() const
-{
-	if(std::shared_ptr<Universe> uni = this->universe_.lock()){
-		return uni->fontManager();
-	}else{
-		return Handler<gl::FontManager>();
+		return Handler<gl::DrawableManager>();
 	}
 }
 

@@ -15,26 +15,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#pragma once
+
+#include "RenderObject.h"
 
 namespace chisa {
-namespace tk {
-namespace widget {
+namespace doc {
 
-class NodeReader;
-class NodeWalker;
+RenderObject::RenderObject(HandlerW<RenderTree> parentTree, HandlerW<Node> parentNode, const float relDepth)
+:parentTree_(parentTree)
+,parentNode_(parentNode)
+,area_()
+,relDepth_(relDepth)
+{
+}
 
-class Node;
-class TreeNode;
-class InlineNode;
-class BlockNode;
 
-class Document;
-class Paragraph;
-class Text;
-class Link;
-class Font;
-class Heading;
-class BreakLine;
-
-}}}
+}}

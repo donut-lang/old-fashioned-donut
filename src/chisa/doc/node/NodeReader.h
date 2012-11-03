@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include "../../../util/ClassUtil.h"
+#include "../../util/ClassUtil.h"
 #include <memory>
 #include <map>
 #include <string>
@@ -29,8 +29,7 @@ class XMLText;
 }
 
 namespace chisa {
-namespace tk {
-namespace widget {
+namespace doc {
 
 class NodeReader {
 	DISABLE_COPY_AND_ASSIGN(NodeReader);
@@ -53,4 +52,4 @@ private:
 	Node* parseText(Document* root, BlockNode* block, TreeNode* parent, tinyxml2::XMLText* txt);
 };
 
-}}}
+}}

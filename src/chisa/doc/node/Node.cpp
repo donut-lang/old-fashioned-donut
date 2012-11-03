@@ -16,11 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "Node.h"
-#include "../ContentRender/RenderCommand.h"
 
 namespace chisa {
-namespace tk {
-namespace widget {
+namespace doc {
 
 Node::Node()
 :root_(nullptr), block_(nullptr), parent_(nullptr)
@@ -97,16 +95,15 @@ BlockNode::BlockNode()
 	this->addAttribute("background", this->backgroundRepl_);
 }
 
-Handler<RenderCommand> BlockNode::background() const
+Handler<RenderObject> BlockNode::background() const
 {
 	return this->background_;
 }
 
-void BlockNode::background(const Handler<RenderCommand>& handler)
+void BlockNode::background(const Handler<RenderObject>& handler)
 {
 	this->background_ = handler;
 }
-
 
 InlineNode::InlineNode()
 {
@@ -167,5 +164,5 @@ void Text::appendObject( const Text::DataType& d ) {
 	this->objects_.push_back( d );
 }
 
-}}}
+}}
 

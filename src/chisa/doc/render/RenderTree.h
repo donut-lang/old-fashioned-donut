@@ -17,41 +17,41 @@
  */
 
 #pragma once
-#include "../../../Handler.h"
-#include "../../../util/ClassUtil.h"
-#include "../../../logging/Logger.h"
+#include "../../util/ClassUtil.h"
+#include "../../Handler.h"
+#include "../../logging/Logger.h"
 #include <deque>
+#include <vector>
+#include "../../gl/Drawable.h"
+#include "RenderObject.h"
 
 namespace chisa {
 namespace gl {
 class Drawable;
 class Sprite;
+class Canvas;
 }
 
-namespace tk {
-namespace widget {
+namespace doc {
+class RenderObject;
 
-class RenderCache : public HandlerBody<RenderCache> {
-	DISABLE_COPY_AND_ASSIGN(RenderCache)
+class RenderTree : public HandlerBody<RenderTree> {
 	DEFINE_MEMBER_REF(private, logging::Logger, log);
 private:
-	const std::size_t maxSprites_;
 	const std::size_t maxDrawable_;
 	std::deque<Handler<gl::Drawable> > drawableCache_;
-	std::deque<Handler<gl::Sprite> > spriteCache_;
+	std::vector<Handler<RenderObject> > objects_;
 public:
-	RenderCache(logging::Logger& log, const std::size_t maxSprites=100,const std::size_t maxDrawable=100);
-	virtual ~RenderCache() noexcept = default;
+	RenderTree(logging::Logger& log, const std::size_t maxDrawable=100);
+	virtual ~RenderTree() noexcept = default;
+public:
+	void render(gl::Canvas& canvas, const geom::Area& area, float depth);
 public:
 	void registerDrawable(Handler<gl::Drawable> d) noexcept;
-	void registerSprite(Handler<gl::Sprite> s) noexcept;
-public:
-	bool unregisterDrawable(const Handler<gl::Drawable>& d) noexcept;
-	bool unregisterSprite(const Handler<gl::Sprite>& s) noexcept;
-public:
 	void reset() noexcept;
-public:
 	void onFree();
+public:
+	Handler<RenderObject> newDrawable(const geom::Area& area, const std::string& drawableRepl);
 };
 
-}}}
+}}

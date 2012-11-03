@@ -35,22 +35,15 @@ class Area;
 }
 namespace gl {
 
-
 class Canvas {
 	DISABLE_COPY_AND_ASSIGN(Canvas);
 	DEFINE_MEMBER_REF(private, logging::Logger, log);
 private:
 	float width_;
 	float height_;
-private:
-	Handler<Sprite> loadPNG(const std::string& filename);
 public:
 	Canvas(logging::Logger& log);
 	virtual ~Canvas();
-public:
-	Handler<SpriteManager> spriteManager_;
-	DrawableInterpreter drawableInterpreter_;
-	std::deque<std::pair<std::string, Handler<Sprite> > > imageCache_;
 public:
 	void ortho(const float left, const float right, const float bottom, const float top, const float near_val, const float far_val);
 	void resize2d(const geom::Box& box);
@@ -83,11 +76,6 @@ public:
 		AffineScope(Canvas& canvas);
 		virtual ~AffineScope();
 	};
-public:
-	Handler<Sprite> queryRawSprite(const int width, const int height);
-	Handler<Sprite> queryImage(const std::string& filename);
-public:
-	Handler<Drawable> queryDrawable(const std::string& repl, const geom::Box& box=geom::Box());
 };
 
 }}

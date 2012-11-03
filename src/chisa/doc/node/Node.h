@@ -20,20 +20,18 @@
 #include <vector>
 #include <map>
 #include <tinyxml2.h>
-#include "../../../Handler.h"
-#include "../../../util/ClassUtil.h"
-#include "../../../util/XMLUtil.h"
-#include "../../../geom/Area.h"
-#include "../../../gl/Color.h"
-#include "../../../gl/Drawable.h"
+#include "../../Handler.h"
+#include "../../util/ClassUtil.h"
+#include "../../util/XMLUtil.h"
+#include "../../geom/Area.h"
+#include "../../gl/Color.h"
+#include "../../gl/Drawable.h"
 #include "Decl.h"
 #include "NodeWalker.h"
+#include "../render/RenderObject.h"
 
 namespace chisa {
-namespace tk {
-namespace widget {
-class RenderCache;
-class RenderCommand;
+namespace doc {
 
 /******************************************************************************
  * 基底ノード
@@ -44,13 +42,12 @@ class Node {
 	DEFINE_MEMBER(public, private, Document*, root);
 	DEFINE_MEMBER(public, private, BlockNode*, block);
 	DEFINE_MEMBER(public, private, TreeNode*, parent);
-	DEFINE_MEMBER(public, protected, geom::Area, areaInRoot);
-	DEFINE_MEMBER(public, protected, geom::Area, areaInBlock);
 protected:
 	Node();
 public:
-	virtual ~Node() noexcept = default;
-public:
+	virtual TreeNode* findTreeNodeById(const std::string& name) noexcept{ return nullptr; };
+	virtual Text* findFirstTextNode() noexcept { return nullptr; };
+public: //オブジェクトの生成
 	virtual void walk(NodeWalker& walker) = 0;
 	template <typename Derived, typename... Args>
 	static Derived* create(Document* root, BlockNode* block, TreeNode* parent, const Args&... args)
@@ -59,13 +56,10 @@ public:
 		node->root(root);
 		node->block(block);
 		node->parent(parent);
-		node->areaInBlock(geom::Area());
-		node->areaInRoot(geom::Area());
 		return node;
 	}
 	static std::shared_ptr<Document> createRootDocument();
-	virtual TreeNode* findTreeNodeById(const std::string& name) noexcept{ return nullptr; };
-	virtual Text* findFirstTextNode() noexcept { return nullptr; };
+	virtual ~Node() noexcept = default;
 };
 
 #define NODE_SUBKLASS_DESTRUCTOR(Klass) public: virtual ~Klass() noexcept = default;
@@ -93,10 +87,6 @@ public:
 	typedef ChildrenType::const_iterator ConstIterator;
 private:
 	DEFINE_MEMBER(public, private, std::string, id);
-protected:
-	TreeNode();
-public:
-	virtual ~TreeNode() noexcept;
 private:
 	DEFINE_MEMBER(public, private, ChildrenType, children);
 	std::map<std::string, std::function<void(tinyxml2::XMLElement*)> > attrMap_;
@@ -116,6 +106,10 @@ protected:
 	{
 		this->attrMap_.insert(std::make_pair(name, std::bind(chisa::util::xml::parseAttr<T>, std::string(name), std::ref(ptr), std::ref(ptr), std::placeholders::_1)));
 	}
+protected:
+	TreeNode();
+public:
+	virtual ~TreeNode() noexcept;
 };
 
 class BlockNode : public TreeNode {
@@ -131,12 +125,13 @@ public:
 	DEFINE_MEMBER(public, private, float, height);
 	DEFINE_MEMBER(public, protected, std::string, backgroundRepl);
 private:
-	Handler<RenderCommand> background_;
+	Handler<RenderObject> background_;
 public:
-	Handler<RenderCommand> background() const;
-	void background(const Handler<RenderCommand>& handler);
+	Handler<RenderObject> background() const;
+	void background(const Handler<RenderObject>& handler);
 private:
 	NODE_SUBKLASS(BlockNode);
+
 };
 
 class InlineNode : public TreeNode {
@@ -190,7 +185,7 @@ public:
 
 class Text : public Node {
 public:
-	typedef Handler<RenderCommand> DataType;
+	typedef Handler<RenderObject> DataType;
 	typedef std::vector<DataType> ListType;
 private:
 	DEFINE_MEMBER(public, private, std::string, text);
@@ -209,4 +204,4 @@ public:
 	virtual Text* findFirstTextNode() noexcept override;
 };
 
-}}}
+}}

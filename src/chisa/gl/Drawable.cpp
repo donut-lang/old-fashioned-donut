@@ -37,7 +37,7 @@ float Drawable::height() const noexcept
 //-----------------------------------------------------------------------------
 
 ColorDrawable::ColorDrawable(const geom::Box size, const Color& c)
-:Drawable(size)
+:size_(size)
 ,color_(c)
 {
 
@@ -50,7 +50,7 @@ Color ColorDrawable::color() const noexcept
 
 void ColorDrawable::draw(Canvas& canvas, const geom::Area& area, const float depth)
 {
-	canvas.fillRect(this->color_, area.intersect(geom::Area(area.point(), geom::min(area.box(), this->specSize()))), depth);
+	canvas.fillRect(this->color_, area.intersect(geom::Area(area.point(), geom::min(area.box(), size_))), depth);
 }
 
 Handler<Drawable> ColorDrawable::create( DrawableInterpreter& interpreter, const geom::Box& size, const std::string& repl )
@@ -60,13 +60,13 @@ Handler<Drawable> ColorDrawable::create( DrawableInterpreter& interpreter, const
 
 std::string ColorDrawable::toString() const noexcept
 {
-	return util::format("(ColorDrawable %p size:%s color: %s)", this, this->specSize().toString().c_str(), this->color_.toString().c_str());
+	return util::format("(ColorDrawable %p size:%s color: %s)", this, this->size_.toString().c_str(), this->color_.toString().c_str());
 }
 
 //-----------------------------------------------------------------------------
 
 ImageDrawable::ImageDrawable( const geom::Box& size, const std::string& filename )
-:Drawable(size)
+:size_(size)
 ,filename_(filename)
 {
 }
@@ -78,16 +78,14 @@ Handler<gl::Sprite> ImageDrawable::sprite() const
 
 geom::Box ImageDrawable::size() const noexcept
 {
-	return this->sprite_ ? geom::Box(this->sprite_->width(), this->sprite_->height()) : this->specSize();
+	return this->sprite_ ? geom::min(geom::Box(this->sprite_->size()), this->size_) : size_;
 }
 
 void ImageDrawable::draw(Canvas& canvas, const geom::Area& area, const float depth)
 {
-	if(!this->sprite_){
-		this->sprite_ = canvas.queryImage(this->filename_);
-		this->measured_ = geom::min(this-> specSize(), geom::Box(this->sprite()->size()));
+	if(this->sprite_){
+		canvas.drawSprite(this->sprite_, area.point(), geom::Area(geom::ZERO, geom::min(area.box(), this->size())), depth);
 	}
-	canvas.drawSprite(this->sprite_, area.point(), geom::Area(geom::ZERO, geom::min(area.box(), this->measured_)), depth);
 }
 
 Handler<Drawable> ImageDrawable::create( DrawableInterpreter& interpreter, const geom::Box& size, const std::string& repl )
@@ -97,13 +95,13 @@ Handler<Drawable> ImageDrawable::create( DrawableInterpreter& interpreter, const
 
 std::string ImageDrawable::toString() const noexcept
 {
-	return util::format("(ImageDrawable %p size:%s file: %s sprite: %p)", this, this->specSize().toString().c_str(), this->filename_.c_str(), this->sprite_.get());
+	return util::format("(ImageDrawable %p size:%s file: %s sprite: %p)", this, this->size_.toString().c_str(), this->filename_.c_str(), this->sprite_.get());
 }
 
 //-----------------------------------------------------------------------------
 
 RepeatDrawable::RepeatDrawable(const geom::Box& size, Handler<Drawable> child)
-:Drawable(size)
+:size_(size)
 ,child_(child)
 {
 
@@ -116,12 +114,12 @@ Handler<Drawable> RepeatDrawable::child() const
 
 geom::Box RepeatDrawable::size() const noexcept
 {
-	return this->child_ ? this->child_->size() : this->specSize();
+	return this->size_;
 }
 
 void RepeatDrawable::draw(Canvas& canvas, const geom::Area& area, const float depth)
 {
-	geom::Area rendered(area.intersect(geom::Area(area.point(), geom::min(this->specSize(), area.box()))));
+	geom::Area rendered(area.intersect(geom::Area(area.point(), geom::min(size_, area.box()))));
 	float y=rendered.y();
 	const float mx = rendered.width()+rendered.x();
 	const float my = rendered.height()+rendered.y();
@@ -145,13 +143,13 @@ Handler<Drawable> RepeatDrawable::create( DrawableInterpreter& interpreter, cons
 std::string RepeatDrawable::toString() const noexcept
 {
 	std::string const childRepl(this->child() ? this->child()->toString() : "none");
-	return util::format("(RepeatDrawable %p size:%s drawable: %s)", this, this->specSize().toString().c_str(), childRepl.c_str());
+	return util::format("(RepeatDrawable %p size:%s drawable: %s)", this, this->size_.toString().c_str(), childRepl.c_str());
 }
 
 //-----------------------------------------------------------------------------
 
 StretchDrawable::StretchDrawable(const geom::Box size, Handler<Drawable> child)
-:Drawable(size)
+:size_(size)
 ,child_(child)
 {
 
@@ -164,12 +162,12 @@ Handler<Drawable> StretchDrawable::child() const
 
 geom::Box StretchDrawable::size() const noexcept
 {
-	return this->child_ ? this->child_->size() : this->specSize();
+	return this->size_;
 }
 
 void StretchDrawable::draw(Canvas& canvas, const geom::Area& area, const float depth)
 {
-	geom::Area rendered(area.intersect(geom::Area(area.point(), geom::min(area.box(), this->specSize()))));
+	geom::Area rendered(area.intersect(geom::Area(area.point(), geom::min(area.box(), size_))));
 	Canvas::AffineScope as(canvas);
 	{
 		canvas.translate(area.point());
@@ -187,7 +185,7 @@ Handler<Drawable> StretchDrawable::create( DrawableInterpreter& interpreter, con
 std::string StretchDrawable::toString() const noexcept
 {
 	std::string const childRepl(this->child() ? this->child()->toString() : "none");
-	return util::format("(StretchDrawable %p size:%s drawable: %s)", this, this->specSize().toString().c_str(), childRepl.c_str());
+	return util::format("(StretchDrawable %p size:%s drawable: %s)", this, this->size_.toString().c_str(), childRepl.c_str());
 }
 
 //-----------------------------------------------------------------------------
@@ -199,7 +197,7 @@ Handler<Drawable> NullDrawable::create( DrawableInterpreter& interpreter, const 
 
 std::string NullDrawable::toString() const noexcept
 {
-	return util::format("(NullDrawable %p size: %s)", this, this->specSize().toString().c_str());
+	return util::format("(NullDrawable %p size: %s)", this, this->size_.toString().c_str());
 }
 
 //-----------------------------------------------------------------------------

@@ -18,31 +18,13 @@
 
 #pragma once
 #include <string>
-#include <deque>
 #include "../Handler.h"
 #include "../util/ClassUtil.h"
 #include "../logging/Logger.h"
-
-#include <ft2build.h>
-#include FT_FREETYPE_H
+#include "internal/FontManager.h"
 
 namespace chisa {
 namespace gl {
-namespace internal {
-class FreeType : public HandlerBody<FreeType> {
-private:
-	FT_Library library_;
-public:
-	FreeType();
-	~FreeType() noexcept;
-public:
-	FT_Library raw() const noexcept { return this->library_; };
-	void onFree() noexcept;
-};
-
-}
-
-class FontManager;
 
 class Font : public HandlerBody<Font>
 {
@@ -52,12 +34,12 @@ public:
 		Bold = 1
 	};
 private:
-	HandlerW<FontManager> parent_;
+	HandlerW<internal::FontManager> parent_;
 	Handler<internal::FreeType> freetype_;
 	FT_Face face_;
 	DEFINE_MEMBER(private, private, bool, locked);
 public:
-	Font(FontManager* parent, Handler<internal::FreeType> freetype, FT_Face face);
+	Font(internal::FontManager* parent, Handler<internal::FreeType> freetype, FT_Face face);
 	virtual ~Font() noexcept;
 public:
 	std::string family() const noexcept;
@@ -84,27 +66,6 @@ public:
 	};
 public:
 	void onFree();
-};
-
-class FontManager : public HandlerBody<FontManager> {
-	DEFINE_MEMBER_REF(private, logging::Logger, log);
-	DEFINE_MEMBER_CONST(protected, std::string, fontdir);
-private:
-	static constexpr std::size_t MaxUnusedFonts = 100;
-	Handler<internal::FreeType> freetype_;
-	std::deque<Handler<Font> > unusedFonts_;
-	Handler<Font> defaultFont_;
-public:
-	FontManager(logging::Logger& log, const std::string& fontdir);
-	Handler<Font> queryFont(const std::string& name = std::string());
-private:
-	~FontManager() noexcept;
-private:
-	Font* searchFont( const std::string& name );
-	Font* seachDefaultFont();
-public:
-	void onFree() noexcept;
-	void backFont(Font* font);
 };
 
 }}

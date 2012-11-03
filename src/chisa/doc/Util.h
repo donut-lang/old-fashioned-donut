@@ -15,28 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #pragma once
-#include "RenderCache.h"
-#include "../../../gl/StringRenderer.h"
-#include "../../../geom/Decl.h"
+
+#include <string>
+#include <vector>
 
 namespace chisa {
-namespace tk {
-namespace widget {
-class RenderCommand;
+namespace doc {
 
-class RenderContext {
-	DISABLE_COPY_AND_ASSIGN(RenderContext);
-	DEFINE_MEMBER_REF(private, logging::Logger, log)
-private:
-	Handler<RenderCache> cache_;
-public:
-	RenderContext(logging::Logger& log);
-	virtual ~RenderContext() noexcept = default;
-public:
-	Handler<RenderCommand> createText(const geom::Area& area, const gl::StringRenderer::Command& cmd);
-	Handler<RenderCommand> createDrawable(const geom::Area& area, const std::string& drawableRepl);
-};
+std::string shrinkSpace(const std::string& str);
+std::vector<std::string> breakLine(const std::string& str_);
 
-}}}
+}}
