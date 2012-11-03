@@ -28,6 +28,17 @@
 namespace chisa {
 namespace gl {
 
+class DrawableSetting {
+	DEFINE_MEMBER(public, public, std::string, fontdir);
+public:
+	DrawableSetting( const DrawableSetting& other) = default;
+	DrawableSetting( DrawableSetting&& other) = default;
+	DrawableSetting& operator=( const DrawableSetting& other) = default;
+	DrawableSetting& operator=( DrawableSetting&& other) = default;
+	~DrawableSetting() noexcept = default;
+	DrawableSetting( const std::string& fontdir ):fontdir_(fontdir){};
+};
+
 class DrawableManager : public HandlerBody<DrawableManager> {
 	DEFINE_MEMBER_REF(private, logging::Logger, log);
 private:
@@ -38,7 +49,7 @@ private:
 	Handler<internal::ImageManager> imageManager_;
 	Handler<internal::FontManager> fontManager_;
 public:
-	DrawableManager(logging::Logger& log);
+	DrawableManager(logging::Logger& log, const DrawableSetting& setting);
 	virtual ~DrawableManager() noexcept = default;
 public:
 	Handler<Sprite> queryRawSprite(const int width, const int height);

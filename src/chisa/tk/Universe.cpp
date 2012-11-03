@@ -30,7 +30,7 @@ Universe::Universe(logging::Logger& log, Hexe* hexe)
 :log_(log)
 ,hexe_(hexe)
 ,canvas_(log)
-,drawableManager_() //FIXME
+,drawableManager_( new gl::DrawableManager(log, gl::DrawableSetting(this->resolveUniverseFilepath("__font__"))) )
 {
 }
 Universe::~Universe() {
