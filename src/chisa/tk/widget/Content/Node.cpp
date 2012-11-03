@@ -23,7 +23,7 @@ namespace tk {
 namespace widget {
 
 Node::Node()
-:root_(nullptr), parent_(nullptr)
+:root_(nullptr), block_(nullptr), parent_(nullptr)
 {
 }
 
@@ -31,6 +31,7 @@ std::shared_ptr<Document> Node::createRootDocument()
 {
 	std::shared_ptr<Document> node(new Document);
 	node->root(node.get());
+	node->block(nullptr);
 	node->parent(nullptr);
 	return node;
 }
