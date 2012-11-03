@@ -208,6 +208,7 @@ std::string NullDrawable::toString() const
 }
 
 //-----------------------------------------------------------------------------
+const float TextDrawable::DefaultFontSize=16.0f;
 
 TextDrawable::TextDrawable(HandlerW<DrawableManager> manager, const std::string& str, bool vertical, const float size, Handler<Font> font, Style style, Decoration deco, const gl::Color& color, const gl::Color& backColor)
 :Drawable(manager)
