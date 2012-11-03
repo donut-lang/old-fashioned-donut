@@ -316,7 +316,7 @@ protected:
 	virtual ~HandlerBody() noexcept (true) {}; //XXX: GCCのバグでデフォルトにできない？
 protected:
 	inline int refcount() const noexcept { return this->refcount_; };
-	inline Handler<Derived> self() { return Handler<Derived>::__internal__fromRawPointerWithoutCheck(this); };
+	inline Handler<Derived> self() { return Handler<Derived>::__internal__fromRawPointerWithoutCheck(static_cast<Derived*>(this)); };
 private:
 	inline void incref() noexcept { this->refcount_++; }
 	inline void decref(){

@@ -50,8 +50,6 @@ public:
 	void registerDrawable(Handler<gl::Drawable> d) noexcept;
 	void reset() noexcept;
 	void onFree();
-public:
-	Handler<RenderObject> newDrawable(const geom::Area& area, const std::string& drawableRepl);
 };
 
 }}

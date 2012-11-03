@@ -204,4 +204,9 @@ public:
 	virtual Text* findFirstTextNode() noexcept override;
 };
 
+#undef NODE_SUBKLASS_DESTRUCTOR
+#undef NODE_SUBKLASS_WALK
+#undef NODE_SUBKLASS
+#undef NODE_SUBKLASS_LEAF
+
 }}

@@ -65,10 +65,4 @@ void RenderTree::onFree()
 	delete this;
 }
 
-Handler<RenderObject> RenderTree::newDrawable(const geom::Area& area, const std::string& drawableRepl)
-{
-
-}
-
-
 }}

@@ -18,6 +18,7 @@
 
 #pragma once
 #include <deque>
+#include "../util/ClassUtil.h"
 #include "../logging/Logger.h"
 #include "Sprite.h"
 #include "Font.h"
@@ -28,12 +29,16 @@ namespace chisa {
 namespace gl {
 
 class DrawableManager : public HandlerBody<DrawableManager> {
+	DEFINE_MEMBER_REF(private, logging::Logger, log);
+private:
+	typedef std::function<Handler<Drawable>(HandlerW<DrawableManager>, const geom::Box&, const std::string&)> constructor;
+	std::map<std::string, constructor> factories_;
 private:
 	Handler<internal::SpriteManager> spriteManager_;
 	Handler<internal::ImageManager> imageManager_;
 	Handler<internal::FontManager> fontManager_;
 public:
-	DrawableManager();
+	DrawableManager(logging::Logger& log);
 	virtual ~DrawableManager() noexcept = default;
 public:
 	Handler<Sprite> queryRawSprite(const int width, const int height);
@@ -41,7 +46,16 @@ public:
 	Handler<Drawable> queryDrawable(const std::string& repl, const geom::Box& box=geom::Box());
 	Handler<Font> queryFont( const std::string& name );
 	Handler<TextDrawable> queryText(
-			const std::string str,
+			const std::string& str,
+			const float size=TextDrawable::DefaultFontSize,
+			Handler<Font> font=Handler<Font>(),
+			TextDrawable::Style style=TextDrawable::Style::Regular,
+			TextDrawable::Decoration deco=TextDrawable::Decoration::None,
+			const gl::Color& color=BLACK,
+			const gl::Color& backColor=TRANSPARENT
+		);
+	Handler<TextDrawable> queryVerticalText(
+			const std::string& str,
 			const float size=TextDrawable::DefaultFontSize,
 			Handler<Font> font=Handler<Font>(),
 			TextDrawable::Style style=TextDrawable::Style::Regular,
