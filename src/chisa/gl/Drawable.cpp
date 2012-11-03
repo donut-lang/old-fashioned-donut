@@ -16,28 +16,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <cairo/cairo-ft.h>
 #include "Drawable.h"
 #include "../geom/Area.h"
 #include "../geom/Vector.h"
 #include "../gl/Canvas.h"
 #include "../util/StringUtil.h"
+#include "../gl/CairoUtil.h"
+#include "DrawableManager.h"
 
 namespace chisa {
 namespace gl {
 
-float Drawable::width() const noexcept
+float Drawable::width() const
 {
 	return this->size().width();
 }
-float Drawable::height() const noexcept
+float Drawable::height() const
 {
 	return this->size().height();
 }
 
 //-----------------------------------------------------------------------------
 
-ColorDrawable::ColorDrawable(const geom::Box size, const Color& c)
-:size_(size)
+ColorDrawable::ColorDrawable(HandlerW<DrawableManager> manager, const geom::Box size, const Color& c)
+:Drawable(manager)
+,size_(size)
 ,color_(c)
 {
 
@@ -53,20 +57,21 @@ void ColorDrawable::draw(Canvas& canvas, const geom::Area& area, const float dep
 	canvas.fillRect(this->color_, area.intersect(geom::Area(area.point(), geom::min(area.box(), size_))), depth);
 }
 
-Handler<Drawable> ColorDrawable::create( DrawableInterpreter& interpreter, const geom::Box& size, const std::string& repl )
+Handler<Drawable> ColorDrawable::create( HandlerW<DrawableManager> manager, const geom::Box& size, const std::string& repl )
 {
-	return Handler<Drawable>(new ColorDrawable(size, Color::fromString( repl )));
+	return Handler<Drawable>(new ColorDrawable(manager, size, Color::fromString( repl )));
 }
 
-std::string ColorDrawable::toString() const noexcept
+std::string ColorDrawable::toString() const
 {
 	return util::format("(ColorDrawable %p size:%s color: %s)", this, this->size_.toString().c_str(), this->color_.toString().c_str());
 }
 
 //-----------------------------------------------------------------------------
 
-ImageDrawable::ImageDrawable( const geom::Box& size, const std::string& filename )
-:size_(size)
+ImageDrawable::ImageDrawable( HandlerW<DrawableManager> manager, const geom::Box& size, const std::string& filename )
+:Drawable(manager)
+,size_(size)
 ,filename_(filename)
 {
 }
@@ -76,7 +81,7 @@ Handler<gl::Sprite> ImageDrawable::sprite() const
 	return this->sprite_;
 }
 
-geom::Box ImageDrawable::size() const noexcept
+geom::Box ImageDrawable::size() const
 {
 	return this->sprite_ ? geom::min(geom::Box(this->sprite_->size()), this->size_) : size_;
 }
@@ -88,20 +93,21 @@ void ImageDrawable::draw(Canvas& canvas, const geom::Area& area, const float dep
 	}
 }
 
-Handler<Drawable> ImageDrawable::create( DrawableInterpreter& interpreter, const geom::Box& size, const std::string& repl )
+Handler<Drawable> ImageDrawable::create( HandlerW<DrawableManager> manager, const geom::Box& size, const std::string& repl )
 {
-	return Handler<Drawable>(new ImageDrawable(size, repl));
+	return Handler<Drawable>(new ImageDrawable(manager, size, repl));
 }
 
-std::string ImageDrawable::toString() const noexcept
+std::string ImageDrawable::toString() const
 {
 	return util::format("(ImageDrawable %p size:%s file: %s sprite: %p)", this, this->size_.toString().c_str(), this->filename_.c_str(), this->sprite_.get());
 }
 
 //-----------------------------------------------------------------------------
 
-RepeatDrawable::RepeatDrawable(const geom::Box& size, Handler<Drawable> child)
-:size_(size)
+RepeatDrawable::RepeatDrawable(HandlerW<DrawableManager> manager, const geom::Box& size, Handler<Drawable> child)
+:Drawable(manager)
+,size_(size)
 ,child_(child)
 {
 
@@ -112,7 +118,7 @@ Handler<Drawable> RepeatDrawable::child() const
 	return this->child_;
 }
 
-geom::Box RepeatDrawable::size() const noexcept
+geom::Box RepeatDrawable::size() const
 {
 	return this->size_;
 }
@@ -135,12 +141,12 @@ void RepeatDrawable::draw(Canvas& canvas, const geom::Area& area, const float de
 	}
 }
 
-Handler<Drawable> RepeatDrawable::create( DrawableInterpreter& interpreter, const geom::Box& size, const std::string& repl )
+Handler<Drawable> RepeatDrawable::create( HandlerW<DrawableManager> manager, const geom::Box& size, const std::string& repl )
 {
-	return Handler<Drawable>(new RepeatDrawable(size, interpreter.queryDrawable(size, repl)));
+	return Handler<Drawable>(new RepeatDrawable(manager, size, manager.lock()->queryDrawable(repl, size)));
 }
 
-std::string RepeatDrawable::toString() const noexcept
+std::string RepeatDrawable::toString() const
 {
 	std::string const childRepl(this->child() ? this->child()->toString() : "none");
 	return util::format("(RepeatDrawable %p size:%s drawable: %s)", this, this->size_.toString().c_str(), childRepl.c_str());
@@ -148,8 +154,9 @@ std::string RepeatDrawable::toString() const noexcept
 
 //-----------------------------------------------------------------------------
 
-StretchDrawable::StretchDrawable(const geom::Box size, Handler<Drawable> child)
-:size_(size)
+StretchDrawable::StretchDrawable(HandlerW<DrawableManager> manager, const geom::Box size, Handler<Drawable> child)
+:Drawable(manager)
+,size_(size)
 ,child_(child)
 {
 
@@ -160,7 +167,7 @@ Handler<Drawable> StretchDrawable::child() const
 	return this->child_;
 }
 
-geom::Box StretchDrawable::size() const noexcept
+geom::Box StretchDrawable::size() const
 {
 	return this->size_;
 }
@@ -177,12 +184,12 @@ void StretchDrawable::draw(Canvas& canvas, const geom::Area& area, const float d
 		this->child_->draw(canvas, geom::Area(geom::ZERO, this->child_->size()), depth);
 	}
 }
-Handler<Drawable> StretchDrawable::create( DrawableInterpreter& interpreter, const geom::Box& size, const std::string& repl )
+Handler<Drawable> StretchDrawable::create( HandlerW<DrawableManager> manager, const geom::Box& size, const std::string& repl )
 {
-	return Handler<Drawable>(new StretchDrawable(size, interpreter.queryDrawable(size, repl)));
+	return Handler<Drawable>(new StretchDrawable(manager, size, manager.lock()->queryDrawable(repl, size)));
 }
 
-std::string StretchDrawable::toString() const noexcept
+std::string StretchDrawable::toString() const
 {
 	std::string const childRepl(this->child() ? this->child()->toString() : "none");
 	return util::format("(StretchDrawable %p size:%s drawable: %s)", this, this->size_.toString().c_str(), childRepl.c_str());
@@ -190,37 +197,164 @@ std::string StretchDrawable::toString() const noexcept
 
 //-----------------------------------------------------------------------------
 
-Handler<Drawable> NullDrawable::create( DrawableInterpreter& interpreter, const geom::Box& size, const std::string& repl )
+Handler<Drawable> NullDrawable::create( HandlerW<DrawableManager> manager, const geom::Box& size, const std::string& repl )
 {
-	return Handler<Drawable>(new NullDrawable(size));
+	return Handler<Drawable>(new NullDrawable(manager, size));
 }
 
-std::string NullDrawable::toString() const noexcept
+std::string NullDrawable::toString() const
 {
 	return util::format("(NullDrawable %p size: %s)", this, this->size_.toString().c_str());
 }
 
 //-----------------------------------------------------------------------------
 
-DrawableInterpreter::DrawableInterpreter(logging::Logger& log)
-:log_(log)
+TextDrawable::TextDrawable(HandlerW<DrawableManager> manager, const std::string& str, bool vertical, const float size, Handler<Font> font, Style style, Decoration deco, const gl::Color& color, const gl::Color& backColor)
+:Drawable(manager)
+,str_(str)
+,vertical_(vertical)
+,size_(size)
+,font_(font)
+,style_(style)
+,deco_(deco)
+,color_(color)
+,backColor_(color)
 {
-	this->factories_.insert(std::make_pair("stretch:", StretchDrawable::create));
-	this->factories_.insert(std::make_pair("repeat:", RepeatDrawable::create));
-	this->factories_.insert(std::make_pair("image:", ImageDrawable::create));
-	this->factories_.insert(std::make_pair("color:", ColorDrawable::create));
-	this->factories_.insert(std::make_pair("none:", NullDrawable::create));
-}
-Handler<Drawable> DrawableInterpreter::queryDrawable( const geom::Box& size, const std::string& repl )
-{
-	for(std::pair<std::string, constructor> p : this->factories_){
-		if(util::startsWith(repl, p.first)){
-			std::string const left = repl.substr(p.first.size());
-			return p.second(*this, size, left);
-		}
-	}
-	this->log().w("DrawableFactory", "oops. Invalid repl: %s", repl.c_str());
-	return NullDrawable::create(*this, size, repl);
+	this->revalidate();
 }
 
+void TextDrawable::revalidate()
+{
+	Font::RawFaceSession session(font_);
+	cairo_surface_t* surf = cairo_image_surface_create(CAIRO_FORMAT_A8, 1,1);
+	cairo_t* cr = cairo_create(surf);
+	cairo_font_options_t* opt = cairo_font_options_create();
+	cairo_font_face_t* face = cairo_ft_font_face_create_for_ft_face(session.face(), 0);
+	{
+		TextDrawable::setupCairo(cr, face, opt, size_, style_);
+		cairo_text_extents_t ext;
+		cairo_text_extents(cr, str_.c_str(), &ext);
+		auto offset = geom::Vector(ext.x_bearing, -ext.y_bearing);
+		auto size = geom::Box(ext.x_advance, ext.height+ext.y_advance);
+		this->renderInfo_ = geom::Area(offset, size);
+		if(this->vertical_){
+			this->renderInfo_ = this->renderInfo_.flip();
+		}
+	}
+	cairo_font_face_destroy(face);
+	cairo_font_options_destroy(opt);
+	cairo_destroy(cr);
+	cairo_surface_destroy(surf);
+}
+
+Handler<gl::Sprite> TextDrawable::sprite()
+{
+	if(this->sprite_){
+		return this->sprite_;
+	}
+	Handler<gl::Sprite> spr;
+	if(Handler<DrawableManager> mgr = this->manager().lock()){
+		spr = mgr->queryRawSprite(static_cast<int>(std::ceil(this->renderInfo_.width())), static_cast<int>(std::ceil(this->renderInfo_.height())));
+	}else{
+		return spr;
+	}
+#if IS_BIG_ENDIAN
+	gl::Sprite::Session ss(spr, gl::Sprite::BufferType::ARGB8);
+#else
+	gl::Sprite::Session ss(spr, gl::Sprite::BufferType::BGRA8);
+#endif
+	gl::Font::RawFaceSession rfs(this->font_);
+	{
+		cairo_surface_t* surf = cairo_image_surface_create_for_data(ss.data(), CAIRO_FORMAT_ARGB32, ss.width(), ss.height(), ss.stride());
+		cairo_t* cr = cairo_create(surf);
+		cairo_font_face_t* face = cairo_ft_font_face_create_for_ft_face(rfs.face(),0);
+		cairo_font_options_t* opt = cairo_font_options_create();
+
+		//データは使いまわしているので一旦サーフェイスの中身を削除する
+		cairo::setColor(cr, this->backColor_);
+		cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
+		cairo_paint(cr);
+
+		TextDrawable::setupCairo(cr, face, opt, this->size_, this->style_);
+
+		cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
+		cairo_move_to(cr, this->renderInfo_.x(), this->renderInfo_.y());
+		if(this->vertical_){
+			cairo_rotate(cr, 90.0f);
+		}
+
+		cairo::setColor(cr, this->color_);
+		//cairo_show_text(cr, this->str_.c_str());
+		cairo_text_path(cr, this->str_.c_str());
+		cairo_fill(cr);
+
+		switch( this->deco_ ){
+		case Strike:{
+			const float hh = this->renderInfo_.height()/2;
+			cairo_move_to(cr, 0, hh);
+			cairo_move_to(cr, this->renderInfo_.width(), hh);
+			cairo_stroke(cr);
+			break;
+		}
+		case Underline: {
+			const float h = this->renderInfo_.height();
+			cairo_move_to(cr, 0, h);
+			cairo_line_to(cr, this->renderInfo_.width(), h);
+			cairo_stroke(cr);
+			break;
+		}
+		case None: {
+			break;
+		}
+		default: {
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] Oops. Invalid decoration: %d", this->deco_);
+		}
+		}
+
+		cairo_font_options_destroy(opt);
+		cairo_font_face_destroy(face);
+		cairo_surface_destroy(surf);
+		cairo_destroy(cr);
+	}
+	return spr;
+}
+
+Handler<TextDrawable> TextDrawable::create(HandlerW<DrawableManager> manager, const std::string& str, bool vertical, const float size, Handler<Font> font, TextDrawable::Style style, TextDrawable::Decoration deco, const gl::Color& color, const gl::Color& backColor)
+{
+	return Handler<TextDrawable>(new TextDrawable(manager, str, vertical, size, font, style, deco, color, backColor));
+}
+
+geom::Box TextDrawable::size() const
+{
+	return this->renderInfo_.box();
+}
+
+void TextDrawable::draw(Canvas& canvas, const geom::Area& area, const float depth)
+{
+}
+
+std::string TextDrawable::toString() const
+{
+	return util::format("(TextDrawable %p str:\"%p\" size: %d)", this, this->str_.c_str(), size_);
+}
+
+void TextDrawable::setupCairo(cairo_t* cairo, cairo_font_face_t* face, cairo_font_options_t* opt, float size, Style style)
+{
+	cairo_font_options_set_subpixel_order(opt, CAIRO_SUBPIXEL_ORDER_RGB);
+	cairo_font_options_set_antialias(opt, CAIRO_ANTIALIAS_DEFAULT);
+	cairo_font_options_set_hint_metrics(opt, CAIRO_HINT_METRICS_ON);
+	cairo_font_options_set_hint_style(opt, CAIRO_HINT_STYLE_MEDIUM);
+//	cairo_font_options_set_subpixel_order(opt, CAIRO_SUBPIXEL_ORDER_DEFAULT);
+//	cairo_font_options_set_antialias(opt, CAIRO_ANTIALIAS_NONE);
+//	cairo_font_options_set_hint_metrics(opt, CAIRO_HINT_METRICS_OFF);
+//	cairo_font_options_set_hint_style(opt, CAIRO_HINT_STYLE_NONE);
+	cairo_set_font_options(cairo, opt);
+	cairo_set_font_face(cairo, face);
+	cairo_set_font_size(cairo, size);
+	//FIXME Italic/Bold対応
+}
+
+//-----------------------------------------------------------------------------
+
 }}
+

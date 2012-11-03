@@ -21,10 +21,14 @@
 namespace chisa {
 namespace gl {
 
-DrawableManager::DrawableManager()
+DrawableManager::DrawableManager(logging::Logger& log)
+:log_(log)
 {
-	// TODO Auto-generated constructor stub
-
+	this->factories_.insert(std::make_pair("stretch:", StretchDrawable::create));
+	this->factories_.insert(std::make_pair("repeat:", RepeatDrawable::create));
+	this->factories_.insert(std::make_pair("image:", ImageDrawable::create));
+	this->factories_.insert(std::make_pair("color:", ColorDrawable::create));
+	this->factories_.insert(std::make_pair("none:", NullDrawable::create));
 }
 
 Handler<Sprite> DrawableManager::queryRawSprite(const int width, const int height)
@@ -39,6 +43,14 @@ Handler<Sprite> DrawableManager::queryImage(const std::string& filename)
 
 Handler<Drawable> DrawableManager::queryDrawable(const std::string& repl, const geom::Box& box)
 {
+	for(std::pair<std::string, constructor> p : this->factories_){
+		if(util::startsWith(repl, p.first)){
+			std::string const left = repl.substr(p.first.size());
+			return p.second(this->self(), box, left);
+		}
+	}
+	this->log().w("DrawableFactory", "oops. Invalid repl: %s", repl.c_str());
+	return NullDrawable::create(this->self(), box, repl);
 }
 
 Handler<Font> DrawableManager::queryFont(const std::string& name)
@@ -46,9 +58,14 @@ Handler<Font> DrawableManager::queryFont(const std::string& name)
 	return this->fontManager_->queryFont(name);
 }
 
-Handler<TextDrawable> DrawableManager::queryText(const std::string str, const float size, Handler<Font> font, TextDrawable::Style style, TextDrawable::Decoration deco, const gl::Color& color, const gl::Color& backColor)
+Handler<TextDrawable> DrawableManager::queryText(const std::string& str, const float size, Handler<Font> font, TextDrawable::Style style, TextDrawable::Decoration deco, const gl::Color& color, const gl::Color& backColor)
 {
+	return TextDrawable::create(this->self(), str, false, size, font, style, deco, color, backColor);
+}
 
+Handler<TextDrawable> DrawableManager::queryVerticalText(const std::string& str, const float size, Handler<Font> font, TextDrawable::Style style, TextDrawable::Decoration deco, const gl::Color& color, const gl::Color& backColor)
+{
+	return TextDrawable::create(this->self(), str, true, size, font, style, deco, color, backColor);
 }
 
 }}
