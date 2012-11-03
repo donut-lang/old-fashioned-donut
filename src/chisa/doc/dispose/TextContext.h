@@ -20,6 +20,7 @@
 #include <cairo/cairo.h>
 #include <cstdint>
 #include <cstddef>
+#include "../../logging/Logger.h"
 #include "../../gl/DrawableManager.h"
 #include "../../geom/Vector.h"
 #include "../../gl/Color.h"
@@ -29,6 +30,7 @@ namespace chisa {
 namespace doc {
 
 class TextContext {
+	DEFINE_MEMBER_REF(private, logging::Logger, log);
 private:
 	Handler<RenderTree> renderTree_;
 	Handler<gl::Font> font_;
@@ -70,7 +72,7 @@ public:
 	geom::Box measure(const std::string& strUtf8);
 	Handler<TextDrawableObject> create(const std::string& strUtf8, HandlerW<Node> parentNode, const float relDepth );
 public:
-	TextContext(Handler<RenderTree> renderTree);
+	TextContext(logging::Logger& log, Handler<RenderTree> renderTree);
 	virtual ~TextContext() noexcept;
 };
 

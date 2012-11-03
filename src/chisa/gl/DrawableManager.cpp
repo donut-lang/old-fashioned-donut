@@ -21,8 +21,11 @@
 namespace chisa {
 namespace gl {
 
-DrawableManager::DrawableManager(logging::Logger& log)
+DrawableManager::DrawableManager(logging::Logger& log, const DrawableSetting& setting)
 :log_(log)
+,spriteManager_(new gl::internal::SpriteManager(log))
+,imageManager_(new gl::internal::ImageManager(log, this->spriteManager_))
+,fontManager_(new gl::internal::FontManager(log, setting.fontdir()))
 {
 	this->factories_.insert(std::make_pair("stretch:", StretchDrawable::create));
 	this->factories_.insert(std::make_pair("repeat:", RepeatDrawable::create));

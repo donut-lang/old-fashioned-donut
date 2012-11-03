@@ -27,8 +27,9 @@
 namespace chisa {
 namespace doc {
 
-TextContext::TextContext(Handler<RenderTree> renderTree)
-:renderTree_(renderTree)
+TextContext::TextContext(logging::Logger& log, Handler<RenderTree> renderTree)
+:log_(log)
+,renderTree_(renderTree)
 ,font_()
 ,face_(nullptr)
 ,nullSurface_(cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 1, 1))
