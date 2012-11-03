@@ -21,6 +21,7 @@
 #include "../../gl/Canvas.h"
 #include "../World.h"
 #include "../../logging/Exception.h"
+#include "../../gl/DrawableManager.h"
 
 namespace chisa {
 namespace tk {
@@ -29,14 +30,9 @@ namespace widget {
 CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(Button)
 ,text_()
 ,textImage_()
-,dirty_(false)
 ,vertical_(false)
 ,pushedCnt_(0)
 {
-	if( shared_ptr<World> w = this->world().lock()){
-		//FIXME
-		//this->textImage_ = w->drawableManager()->
-	}
 }
 
 Button::~Button() noexcept
@@ -60,18 +56,30 @@ string Button::toString() const
 
 void Button::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
 {
-	//canvas.drawSprite(this->sprite_, this->renderOffset_);
+	this->textImage_->draw(canvas, geom::Area(screenArea.point()+this->renderOffset_, area.box()));
 }
-
+Handler<gl::TextDrawable> Button::textImage()
+{
+	if(!this->textImage_){
+		if( shared_ptr<World> w = this->world().lock()){
+			//TODO: 色とか
+			if(vertical_){
+				this->textImage_ = w->drawableManager()->queryVerticalText(this->text());
+			}else{
+				this->textImage_ = w->drawableManager()->queryText(this->text());
+			}
+		}
+	}
+	return this->textImage_;
+}
 geom::Box Button::onMeasure(const geom::Box& constraint)
 {
-	this->measureTextSize();
-	//return this->cmd_.size();
+	return this->textImage()->size();
 }
 
 void Button::onLayout(const geom::Box& size)
 {
-	//this->renderOffset_ = (size-this->cmd_.size())/2;
+	this->renderOffset_ = (size-this->textImage_->size())/2;
 }
 
 void Button::loadXMLimpl(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element)
@@ -84,25 +92,7 @@ void Button::loadXMLimpl(layout::LayoutFactory* const factory, tinyxml2::XMLElem
 void Button::text(const std::string& text)
 {
 	this->text_ = text;
-	this->dirty_ = true;
-}
-
-void Button::realizeText(gl::Canvas& canvas)
-{
-	if(!this->dirty_){
-		return;
-	}
-	this->dirty_ = false;
-	this->measureTextSize();
-	//this->sprite_ = this->cmd_.renderString(canvas);
-}
-
-void Button::measureTextSize()
-{
-	//this->cmd_ = this->renderer_.measure(this->text().c_str());
-	if(this->vertical_){
-		//this->cmd_ = this->cmd_.flip();
-	}
+	this->textImage_.reset();
 }
 
 void Button::onClick()
@@ -130,10 +120,10 @@ bool Button::onUpRaw(const float timeMs, const geom::Point& ptInScreen)
 
 bool Button::onSingleTapUp(const float timeMs, const geom::Point& ptInScreen)
 {
-	//geom::Area a(this->drawnArea().point()+this->renderOffset_, this->cmd_.size());
-	//if(a.contain(ptInScreen)){
-	//	this->onClick();
-	//}
+	geom::Area a(this->drawnArea().point()+this->renderOffset_, this->textImage()->size());
+	if(a.contain(ptInScreen)){
+		this->onClick();
+	}
 	return true;
 }
 
