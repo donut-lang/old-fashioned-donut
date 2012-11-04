@@ -72,7 +72,7 @@ public:
 	};
 private:
 	DEFINE_MEMBER(private, private, enum SplitMode, splitMode);
-	DEFINE_MEMBER(private, private, vector<shared_ptr<SplitCtx> >, children)
+	DEFINE_VECTOR(private, private, std::vector, shared_ptr<SplitCtx>, children)
 	float totalSize_;
 	void setMode(enum SplitMode mode);
 private:
