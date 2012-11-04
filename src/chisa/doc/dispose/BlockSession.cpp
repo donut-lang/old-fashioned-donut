@@ -24,10 +24,10 @@ namespace doc {
 
 BlockSession::BlockSession(Disposer* disposer, BlockNode* node)
 :dispoer_(disposer)
-,parentSession_(disposer->nowSession())
+,parentSession_(disposer->nowSession() )
 ,node_(node)
 ,dir_(BlockNode::Direction::None)
-,widthLimit_( parentSession_->calcBlockLimit() )
+,widthLimit_( parentSession_->calcBlockLimit() - node->margin().totalWidth() )
 ,consumedHeight_(0.0f)
 ,consumedWidth_(0.0f)
 ,inlineConsumedHeight_(0.0f)
