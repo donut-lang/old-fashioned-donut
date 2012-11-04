@@ -33,7 +33,7 @@ RenderTree::RenderTree(logging::Logger& log, Handler<gl::DrawableManager> drawab
 
 void RenderTree::render(gl::Canvas& canvas, const geom::Area& area, float depth)
 {
-	glDisable(GL_DEPTH_TEST);
+	//glDisable(GL_DEPTH_TEST);
 	for(Handler<RenderObject>& obj : this->objects_){
 		geom::Area const intersect(obj->area().intersect(area));
 		if (!intersect.empty()) {
@@ -42,7 +42,7 @@ void RenderTree::render(gl::Canvas& canvas, const geom::Area& area, float depth)
 			obj->onHidden();
 		}
 	}
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 }
 
 Handler<gl::DrawableManager> RenderTree::drawableManager()
