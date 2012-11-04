@@ -57,6 +57,7 @@ BlockSession::BlockSession(Disposer* disposer, const float widthLimit)
 }
 BlockSession::~BlockSession() noexcept
 {
+	this->newInline();
 	this->newBlockLine();
 	if(this->node_){
 		this->node_->areaInBlock(geom::Area(0,0,this->consumedWidth_, this->consumedHeight_));
@@ -69,6 +70,7 @@ BlockSession::~BlockSession() noexcept
 void BlockSession::disposeInlineObject()
 {
 	for(Handler<RenderObject> obj : this->inlineObjects_){
+		//Y位置だけは最後に計算する。他はすでに計算済み
 		obj->area().y(obj->area().y() + this->inlineHeight_-obj->area().height());
 	}
 	this->inlineObjects_.clear();
@@ -82,24 +84,26 @@ void BlockSession::newBlockLine()
 	this->blockConsumedHeight_ = 0.0f;
 	this->blockPosX_ = 0.0f;
 	//
+	this->disposeInlineObject();
 	this->inlineConsumedHeight_ = 0.0f;
 	this->inlineHeight_ = 0.0f;
 	this->inlinePosX_ = 0.0f;
 	//
-	this->disposeInlineObject();
 	this->dir_ = BlockNode::Direction::None;
 }
 void BlockSession::newInline()
 {
 	this->disposeInlineObject();
-	//Y位置だけは最後に計算する。他はすでに計算済み
 	this->inlineConsumedHeight_ += this->inlineHeight_;
 	if(this->inlineConsumedHeight_ >= this->blockConsumedHeight_){
 		this->newBlockLine();
+		this->inlineConsumedHeight_ = 0.0f;
+		this->inlineHeight_ = 0.0f;
+		this->inlinePosX_ = 0.0f;
+	}else{
+		this->inlineHeight_ = 0.0f;
+		this->inlinePosX_ = 0.0f;
 	}
-	this->inlineHeight_ = 0.0f;
-	this->inlinePosX_ = 0.0f;
-	this->inlineConsumedHeight_ = 0.0f;
 }
 
 void BlockSession::extendInline(Handler<RenderObject> obj)

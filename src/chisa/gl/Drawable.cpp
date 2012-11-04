@@ -219,7 +219,7 @@ TextDrawable::TextDrawable(HandlerW<DrawableManager> manager, const std::string&
 ,style_(style)
 ,deco_(deco)
 ,color_(color)
-,backColor_(color)
+,backColor_(backColor)
 {
 	this->revalidate();
 }
@@ -272,8 +272,8 @@ Handler<gl::Sprite> TextDrawable::sprite()
 		cairo_font_options_t* opt = cairo_font_options_create();
 
 		//データは使いまわしているので一旦サーフェイスの中身を削除する
+		cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
 		cairo::setColor(cr, this->backColor_);
-		cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
 		cairo_paint(cr);
 
 		TextDrawable::setupCairo(cr, face, opt, this->size_, this->style_);
@@ -332,6 +332,7 @@ geom::Box TextDrawable::size() const
 
 void TextDrawable::draw(Canvas& canvas, const geom::Area& area, const float depth)
 {
+	canvas.drawSprite(this->sprite(), area.point(), depth);
 }
 
 std::string TextDrawable::toString() const
