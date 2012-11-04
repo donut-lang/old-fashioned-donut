@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../TestCommon.h"
+#include "../../../TestCommon.h"
 #include "../../src/chisa/doc/node/Node.h"
 #include "../../src/chisa/doc/node/NodeReader.h"
 #include <typeinfo>
