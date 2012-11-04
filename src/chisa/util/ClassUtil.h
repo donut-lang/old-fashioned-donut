@@ -54,23 +54,11 @@ private:\
 rscope:\
 	inline type const& name() const noexcept{return name##_;}
 
-#define DEFINE_MEMBER_CONST_LITERAL(rscope, type, name)\
-private:\
-	type const name##_;\
-rscope:\
-	inline constexpr type const& name() const noexcept{return name##_;}
-
 #define DEFINE_MEMBER_REF(rscope, type, name)\
 private:\
 	type& name##_;\
 rscope:\
 	inline type& name() const noexcept{return name##_;}
-
-#define DEFINE_MEMBER_REF_LITERAL(rscope, type, name)\
-private:\
-	type& name##_;\
-rscope:\
-	inline constexpr type& name() const noexcept{return name##_;}
 
 #define DEFINE_MEMBER(rscope, wscope, type, name)\
 private:\
@@ -80,16 +68,14 @@ rscope:\
 wscope:\
 	inline void name(type const& val){name##_ = val;}
 
-#define DEFINE_VECTOR(rscope, wscope, ctype, type, name)\
+#define DEFINE_CONTAINER(rscope, wscope, ctype, name)\
 private:\
-	ctype< type > name##_;\
-	inline ctype< type >& name() noexcept{return name##_;}\
-	inline ctype< type > const& name() const noexcept{return name##_;}\
+	ctype name##_;\
 rscope:\
-	inline type const& name##At(std::size_t idx){ return name##_.at(idx); }\
+	inline ctype const& name() const noexcept{return name##_;}\
 wscope:\
-	inline void name##Append(type const& val){ return name##_.push_back(val); }\
-	inline void name##Clear(){ return ctype< type >().swap(name##_); }
+	inline ctype& name() noexcept{return name##_;}\
+	inline void name(ctype const& val){name##_ = val;}
 
 #define DEFINE_MEMBER_LITERAL(rscope, wscope, type, name)\
 private:\
