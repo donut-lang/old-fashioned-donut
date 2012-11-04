@@ -23,7 +23,7 @@
 namespace chisa {
 namespace doc {
 
-RenderObject::RenderObject(HandlerW<RenderTree> parentTree, HandlerW<Node> parentNode, const float relDepth)
+RenderObject::RenderObject(HandlerW<RenderTree> parentTree, Node* parentNode, const float relDepth)
 :parentTree_(parentTree)
 ,parentNode_(parentNode)
 ,dirty_(true)
@@ -73,7 +73,7 @@ HandlerW<RenderTree> RenderObject::parentTree()
 {
 	return this->parentTree_;
 }
-HandlerW<Node> RenderObject::parentNode()
+Node* RenderObject::parentNode()
 {
 	return this->parentNode_;
 }
@@ -96,7 +96,7 @@ float RenderObject::height()
 }
 
 //-----------------------------------------------------------------------------
-NormalDrawableObject::NormalDrawableObject(HandlerW<RenderTree> parentTree, HandlerW<Node> parentNode, const float relDepth, const std::string repl, const geom::Box& size)
+NormalDrawableObject::NormalDrawableObject(HandlerW<RenderTree> parentTree, Node* parentNode, const float relDepth, const std::string& repl, const geom::Box& size)
 :RenderObject(parentTree, parentNode, relDepth),repl_(repl),size_(size)
 {
 
@@ -112,7 +112,7 @@ Handler<gl::Drawable> NormalDrawableObject::realize()
 
 //-----------------------------------------------------------------------------
 
-TextDrawableObject::TextDrawableObject(HandlerW<RenderTree> parentTree, HandlerW<Node> parentNode, const float relDepth, const std::string& str, const float size, Handler<gl::Font> font, gl::TextDrawable::Style style, gl::TextDrawable::Decoration deco, const gl::Color& color, const gl::Color& backColor)
+TextDrawableObject::TextDrawableObject(HandlerW<RenderTree> parentTree, Node* parentNode, const float relDepth, const std::string& str, const float size, Handler<gl::Font> font, gl::TextDrawable::Style style, gl::TextDrawable::Decoration deco, const gl::Color& color, const gl::Color& backColor)
 :RenderObject(parentTree, parentNode, relDepth)
 ,str_(str)
 ,size_(size)
