@@ -36,6 +36,7 @@ Disposer::Disposer(logging::Logger& log, Handler<RenderTree> renderTree, const f
 ,nowSession_(nullptr)
 ,nowDepth_(0.0f)
 {
+	this->renderTree_->reset();
 }
 
 BlockSession* Disposer::nowSession()
@@ -61,10 +62,12 @@ geom::Box Disposer::start(std::shared_ptr<Document> doc)
 template <typename T, typename U>
 void Disposer::walkBlock(T* block, U clos)
 {
+	this->nowDepth_+=0.1;
 	{
 		BlockSession bs(this, block);
 		clos();
 	}
+	this->nowDepth_-=0.1;
 	Handler<RenderObject> background(
 			new NormalDrawableObject(HandlerW<RenderTree>(this->renderTree_), block, this->nowDepth_, block->backgroundRepl(), geom::Box())
 	);

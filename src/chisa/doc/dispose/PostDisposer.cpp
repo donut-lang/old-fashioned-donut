@@ -45,8 +45,9 @@ void PostDisposer::walkBlock(T* block, U clos)
 	this->offsetStack_.push_back( offset + block->areaInBlock().point() + block->margin().offset());
 
 	clos();
+	this->walkChildren(block);
 
-	block->background()->area(geom::Area(offset, block->areaInBlock().box()));
+	block->background()->area(geom::Area(this->offset(), block->areaInBlock().box() - block->margin().totalSpace()));
 	this->offsetStack_.pop_back();
 }
 
@@ -68,8 +69,9 @@ void PostDisposer::walk(Heading* head)
 
 void PostDisposer::walk(Text* text)
 {
+	geom::Distance const offset(this->offset());
 	for(Handler<TextDrawableObject> obj : text->objects()){
-		geom::Area area(obj->area().point() + this->offset(), obj->area().box());
+		geom::Area area(obj->area().point() + offset, obj->area().box());
 		obj->area(area);
 	}
 }
