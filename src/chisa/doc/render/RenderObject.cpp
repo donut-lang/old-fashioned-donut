@@ -26,6 +26,7 @@ namespace doc {
 RenderObject::RenderObject(HandlerW<RenderTree> parentTree, HandlerW<Node> parentNode, const float relDepth)
 :parentTree_(parentTree)
 ,parentNode_(parentNode)
+,dirty_(true)
 ,area_()
 ,relDepth_(relDepth)
 {
@@ -33,7 +34,7 @@ RenderObject::RenderObject(HandlerW<RenderTree> parentTree, HandlerW<Node> paren
 
 void RenderObject::render(gl::Canvas& canvas, const geom::Point& offset, const float depth)
 {
-	this->render(canvas, this->area_.point()-offset, depth+this->relDepth_);
+	this->drawable()->draw(canvas, geom::Area(this->area_.point()-offset, this->area_.box()), depth+this->relDepth_);
 }
 void RenderObject::onHidden()
 {
@@ -52,15 +53,19 @@ void RenderObject::onHidden()
 
 Handler<gl::Drawable> RenderObject::drawable()
 {
-	if(this->drawable_){
-		return this->drawable_;
-	}else if(!this->drawablew_.expired()){
-		this->drawable_ = this->drawablew_.lock();
-		this->drawablew_.reset();
-	}else{
-		this->drawable_ = this->realize();
-		this->drawablew_.reset();
+	if(!dirty_){
+		if(this->drawable_){
+			return this->drawable_;
+		}else if(!this->drawablew_.expired()){
+			this->drawable_ = this->drawablew_.lock();
+			this->drawablew_.reset();
+			return this->drawable_;
+		}
 	}
+	this->drawablew_.reset();
+	this->drawable_ = this->realize();
+	this->dirty_ = false;
+	this->cachedSize_ = this->drawable_->size();
 	return this->drawable_;
 }
 
@@ -71,6 +76,23 @@ HandlerW<RenderTree> RenderObject::parentTree()
 HandlerW<Node> RenderObject::parentNode()
 {
 	return this->parentNode_;
+}
+
+geom::Box RenderObject::size()
+{
+	if(!this->dirty_){
+		return this->cachedSize_;
+	}else{
+		return this->drawable()->size();
+	}
+}
+float RenderObject::width()
+{
+	return this->size().width();
+}
+float RenderObject::height()
+{
+	return this->size().height();
 }
 
 //-----------------------------------------------------------------------------

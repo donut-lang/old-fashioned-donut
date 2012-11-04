@@ -35,6 +35,8 @@ class RenderObject : public HandlerBody<RenderObject> {
 private:
 	HandlerW<RenderTree> parentTree_;
 	HandlerW<Node> parentNode_;
+	bool dirty_;
+	geom::Box cachedSize_;
 	Handler<gl::Drawable> drawable_;
 	HandlerW<gl::Drawable> drawablew_;
 private:
@@ -49,6 +51,9 @@ public:
 	void onHidden();
 	HandlerW<RenderTree> parentTree();
 	HandlerW<Node> parentNode();
+	geom::Box size();
+	float width();
+	float height();
 private:
 	Handler<gl::Drawable> drawable();
 protected:
