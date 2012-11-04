@@ -22,7 +22,7 @@
 namespace chisa {
 namespace doc {
 
-TEST(ContentMeasurerUtilTest, ShrinkSpaceTest)
+TEST(DocumentUtilTest, ShrinkSpaceTest)
 {
 	ASSERT_EQ("あい う", shrinkSpace("あい う"));
 	ASSERT_EQ("あい う", shrinkSpace("あい  う"));
@@ -35,11 +35,15 @@ TEST(ContentMeasurerUtilTest, ShrinkSpaceTest)
 	ASSERT_EQ(" ", shrinkSpace("  \t  "));
 }
 
-TEST(ContentMeasurerUtilTest, EnglishNextStringTest)
+TEST(DocumentUtilTest, EnglishNextStringTest)
 {
 	{
 		std::vector<std::string> list(breakLine("abcde"));
 		ASSERT_EQ(1, list.size());
+	}
+	{
+		std::vector<std::string> list(breakLine("abc de"));
+		ASSERT_EQ(2, list.size());
 	}
 }
 
