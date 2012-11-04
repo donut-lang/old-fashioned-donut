@@ -51,6 +51,7 @@ void Disposer::rewriteSession(BlockSession* session)
 
 geom::Box Disposer::start(std::shared_ptr<Document> doc)
 {
+	BlockSession ss(this, widgetWidth_);
 	this->NodeWalker::start(doc);
 	return doc->areaInBlock().box();
 }
