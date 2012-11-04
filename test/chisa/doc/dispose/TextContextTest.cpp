@@ -96,6 +96,15 @@ TEST_F(TextContextTest, ColorPushTest)
 	ASSERT_EQ(gl::RED, r->nowColor());
 }
 
+TEST_F(TextContextTest, BackColorPushTest)
+{
+	r->pushBackColor(gl::RED);
+	ASSERT_EQ(gl::RED, r->nowBackColor());
+	r->pushBackColor(gl::BLUE);
+	ASSERT_EQ(gl::BLUE, r->nowBackColor());
+	r->popBackColor();
+	ASSERT_EQ(gl::RED, r->nowBackColor());
+}
 TEST_F(TextContextTest, FontPushTest)
 {
 	r->pushFont("VL Gothic:regular");
