@@ -77,9 +77,19 @@ private:\
 	type name##_;\
 rscope:\
 	inline type const& name() const noexcept{return name##_;}\
-	inline type& name() noexcept{return name##_;}\
 wscope:\
 	inline void name(type const& val){name##_ = val;}
+
+#define DEFINE_VECTOR(rscope, wscope, ctype, type, name)\
+private:\
+	ctype< type > name##_;\
+	inline ctype< type >& name() noexcept{return name##_;}\
+	inline ctype< type > const& name() const noexcept{return name##_;}\
+rscope:\
+	inline type const& name##At(std::size_t idx){ return name##_.at(idx); }\
+wscope:\
+	inline void name##Append(type const& val){ return name##_.push_back(val); }\
+	inline void name##Clear(){ return ctype< type >().swap(name##_); }
 
 #define DEFINE_MEMBER_LITERAL(rscope, wscope, type, name)\
 private:\
