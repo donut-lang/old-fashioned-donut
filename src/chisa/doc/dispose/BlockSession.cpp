@@ -58,7 +58,9 @@ BlockSession::BlockSession(Disposer* disposer, const float widthLimit)
 BlockSession::~BlockSession() noexcept
 {
 	this->newBlockLine();
-	this->node_->areaInBlock(geom::Area(0,0,this->consumedWidth_, this->consumedHeight_));
+	if(this->node_){
+		this->node_->areaInBlock(geom::Area(0,0,this->consumedWidth_, this->consumedHeight_));
+	}
 	if(this->parentSession_){
 		this->parentSession_->extendBlock(this->node_);
 	}
@@ -85,7 +87,7 @@ void BlockSession::newBlockLine()
 	this->inlinePosX_ = 0.0f;
 	//
 	this->disposeInlineObject();
-	this->dir_ = BlockNode::Direction::Unspecified;
+	this->dir_ = BlockNode::Direction::None;
 }
 void BlockSession::newInline()
 {

@@ -21,14 +21,20 @@
 #include "../../geom/Vector.h"
 #include "../../gl/Font.h"
 #include "../../Handler.h"
+#include "../../doc/render/RenderTree.h"
 
 namespace chisa {
+namespace doc {
+class Document;
+}
+
 namespace tk {
 namespace widget {
 
 class ContentWidget: public chisa::tk::Widget {
 	CHISA_WIDGET_SUBKLASS(ContentWidget);
-	//DEFINE_MEMBER(private, private, std::shared_ptr<Document>, rootNode);
+	DEFINE_MEMBER(private, private, std::shared_ptr<doc::Document>, rootNode);
+	Handler<doc::RenderTree> renderTree_;
 	DEFINE_MEMBER(private, private, float, lastWidth);
 	DEFINE_MEMBER(private, private, geom::Box, lastSize);
 public:
