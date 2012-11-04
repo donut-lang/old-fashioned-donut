@@ -73,7 +73,7 @@ void SplitLayout::addChild(const SplitDef& def, shared_ptr<Layout> layout)
 {
 	shared_ptr<SplitCtx> ctx(new SplitCtx(def));
 	ctx->layout = layout;
-	this->childrenAppend(ctx);
+	this->children().push_back(ctx);
 }
 
 void SplitLayout::loadXMLimpl(LayoutFactory* const factory, XMLElement* top)
