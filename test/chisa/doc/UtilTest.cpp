@@ -47,4 +47,24 @@ TEST(DocumentUtilTest, EnglishNextStringTest)
 	}
 }
 
+TEST(DocumentUtilTest, JapaneseNextStringTest)
+{
+	{
+		std::vector<std::string> list(breakLine("あいう"));
+		ASSERT_EQ(3, list.size());
+	}
+	{
+		std::vector<std::string> list(breakLine("あ"));
+		ASSERT_EQ(1, list.size());
+	}
+	{
+		std::vector<std::string> list(breakLine("あ。"));
+		ASSERT_EQ(1, list.size());
+	}
+	{
+		std::vector<std::string> list(breakLine("あ。いう。"));
+		ASSERT_EQ(3, list.size());
+	}
+}
+
 }}
