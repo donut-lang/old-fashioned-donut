@@ -70,7 +70,7 @@ public:
 	void popFont();
 public:
 	geom::Box measure(const std::string& strUtf8);
-	Handler<TextDrawableObject> create(const std::string& strUtf8, HandlerW<Node> parentNode, const float relDepth );
+	Handler<TextDrawableObject> create(const std::string& strUtf8, Node* parentNode, const float relDepth );
 public:
 	TextContext(logging::Logger& log, Handler<RenderTree> renderTree);
 	virtual ~TextContext() noexcept;

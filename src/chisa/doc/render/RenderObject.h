@@ -34,23 +34,23 @@ class Node;
 class RenderObject : public HandlerBody<RenderObject> {
 private:
 	HandlerW<RenderTree> parentTree_;
-	HandlerW<Node> parentNode_;
+	Node* parentNode_;
 	bool dirty_;
 	geom::Box cachedSize_;
 	Handler<gl::Drawable> drawable_;
 	HandlerW<gl::Drawable> drawablew_;
 private:
-	DEFINE_MEMBER(public, public, geom::Area, area);
+	DEFINE_CONTAINER(public, public, geom::Area, area);
 	DEFINE_MEMBER(public, public, float, relDepth);
 public:
-	RenderObject(HandlerW<RenderTree> parentTree, HandlerW<Node> parentNode, const float relDepth);
+	RenderObject(HandlerW<RenderTree> parentTree, Node* parentNode, const float relDepth);
 	virtual ~RenderObject() noexcept = default;
 public:
 	void onFree() noexcept { delete this; };
 	void render(gl::Canvas& canvas, const geom::Point& offset, const float depth);
 	void onHidden();
 	HandlerW<RenderTree> parentTree();
-	HandlerW<Node> parentNode();
+	Node* parentNode();
 	geom::Box size();
 	float width();
 	float height();
@@ -65,7 +65,7 @@ private:
 	std::string repl_;
 	geom::Box size_;
 public:
-	NormalDrawableObject(HandlerW<RenderTree> parentTree, HandlerW<Node> parentNode, const float relDepth, const std::string repl, const geom::Box& size);
+	NormalDrawableObject(HandlerW<RenderTree> parentTree, Node* parentNode, const float relDepth, const std::string& repl, const geom::Box& size);
 	virtual ~NormalDrawableObject() noexcept = default;
 	virtual Handler<gl::Drawable> realize() override;
 };
@@ -80,7 +80,7 @@ private:
 	gl::Color color_;
 	gl::Color backColor_;
 public:
-	TextDrawableObject(HandlerW<RenderTree> parentTree, HandlerW<Node> parentNode, const float relDepth, const std::string& str, const float size, Handler<gl::Font> font, gl::TextDrawable::Style style, gl::TextDrawable::Decoration deco, const gl::Color& color, const gl::Color& backColor);
+	TextDrawableObject(HandlerW<RenderTree> parentTree, Node* parentNode, const float relDepth, const std::string& str, const float size, Handler<gl::Font> font, gl::TextDrawable::Style style, gl::TextDrawable::Decoration deco, const gl::Color& color, const gl::Color& backColor);
 	virtual ~TextDrawableObject() noexcept = default;
 	virtual Handler<gl::Drawable> realize() override;
 };

@@ -115,6 +115,7 @@ public:
 class BlockNode : public TreeNode {
 public:
 	enum Direction {
+		Unspecified,
 		None,
 		Right,
 		Left

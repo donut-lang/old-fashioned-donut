@@ -173,7 +173,7 @@ geom::Box TextContext::measure(const std::string& strUtf8)
 	return size;
 }
 
-Handler<TextDrawableObject> TextContext::create(const std::string& strUtf8, HandlerW<Node> parentNode, const float relDepth )
+Handler<TextDrawableObject> TextContext::create(const std::string& strUtf8, Node* parentNode, const float relDepth )
 {
 	return Handler<TextDrawableObject> ( new TextDrawableObject (
 			this->renderTree_,
