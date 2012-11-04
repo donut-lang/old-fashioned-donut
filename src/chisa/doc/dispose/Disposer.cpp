@@ -20,6 +20,7 @@
 #include "BlockSession.h"
 #include "../Util.h"
 #include "../render/RenderObject.h"
+#include "../dispose/PostDisposer.h"
 
 namespace chisa {
 namespace doc {
@@ -53,6 +54,7 @@ geom::Box Disposer::start(std::shared_ptr<Document> doc)
 {
 	BlockSession ss(this, widgetWidth_);
 	this->NodeWalker::start(doc);
+	doc::PostDisposer(log()).start(doc);
 	return doc->areaInBlock().box();
 }
 
