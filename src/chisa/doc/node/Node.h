@@ -121,6 +121,7 @@ public:
 		Left
 	};
 	DEFINE_MEMBER(public, public, geom::Area, areaInBlock);
+	DEFINE_MEMBER(public, public, geom::Area, area);
 	DEFINE_MEMBER(public, private, geom::Margin, margin);
 	DEFINE_MEMBER(public, private, Direction, direction);
 	DEFINE_MEMBER(public, private, float, width);
@@ -187,7 +188,7 @@ public:
 
 class Text : public Node {
 public:
-	typedef Handler<RenderObject> DataType;
+	typedef Handler<TextDrawableObject> DataType;
 	typedef std::vector<DataType> ListType;
 private:
 	DEFINE_MEMBER(public, private, std::string, text);

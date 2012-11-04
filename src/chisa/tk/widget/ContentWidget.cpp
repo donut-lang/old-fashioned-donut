@@ -21,6 +21,7 @@
 #include "../../geom/Vector.h"
 #include "../../doc/node/NodeReader.h"
 #include "../../doc/dispose/Disposer.h"
+#include "../../doc/dispose/PostDisposer.h"
 #include "ContentWidget.h"
 #include <tinyxml2.h>
 
@@ -66,6 +67,7 @@ geom::Box ContentWidget::measure(const geom::Box& constraintSize)
 		this->lastSize(
 			doc::Disposer(log(), renderTree_, constraintSize.width()).start(this->rootNode_)
 		);
+		doc::PostDisposer(log()).start(this->rootNode_);
 	}
 	return geom::Box(geom::max(constraintSize.width(), this->lastSize().width()), geom::max(constraintSize.height(), this->lastSize().height()));
 }

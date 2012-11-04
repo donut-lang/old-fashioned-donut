@@ -67,7 +67,7 @@ void Disposer::walkBlock(T* block, U clos)
 			new NormalDrawableObject(HandlerW<RenderTree>(this->renderTree_), block, this->nowDepth_, block->backgroundRepl(), geom::Box())
 	);
 	block->background(background);
-	//this->renderTree_->a
+	this->renderTree_->addObject(background);
 }
 
 void Disposer::walk(Document* doc)
@@ -130,6 +130,7 @@ void Disposer::walk(Text* text)
 		//文字分のエリアを確保し、その位置とレンダリングコマンドを記録
 		this->extendInline(obj);
 		text->appendObject(obj);
+		this->renderTree_->addObject(obj);
 	}
 }
 
