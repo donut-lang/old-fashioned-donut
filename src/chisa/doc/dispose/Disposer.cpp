@@ -62,17 +62,17 @@ geom::Box Disposer::start(std::shared_ptr<Document> doc)
 template <typename T, typename U>
 void Disposer::walkBlock(T* block, U clos)
 {
-	this->nowDepth_+=0.1;
-	this->nowDepth_-=0.1;
 	Handler<RenderObject> background(
 			new NormalDrawableObject(HandlerW<RenderTree>(this->renderTree_), block, this->nowDepth_, block->backgroundRepl(), geom::Box())
 	);
 	block->background(background);
 	this->renderTree_->addObject(background);
+	this->nowDepth_+=0.1;
 	{
 		BlockSession bs(this, block);
 		clos();
 	}
+	this->nowDepth_-=0.1;
 }
 
 void Disposer::walk(Document* doc)
