@@ -17,43 +17,34 @@
  */
 
 #pragma once
+
+#include "../node/NodeWalker.h"
 #include "../../util/ClassUtil.h"
-#include "../../Handler.h"
 #include "../../logging/Logger.h"
-#include <deque>
+#include "../../geom/Vector.h"
 #include <vector>
-#include "../../gl/Drawable.h"
-#include "RenderObject.h"
 
 namespace chisa {
-namespace gl {
-class Drawable;
-class Sprite;
-class Canvas;
-}
-
 namespace doc {
-class RenderObject;
 
-class RenderTree : public HandlerBody<RenderTree> {
+class PostDisposer: public chisa::doc::NodeWalker {
 	DEFINE_MEMBER_REF(private, logging::Logger, log);
 private:
-	const std::size_t maxDrawable_;
-	Handler<gl::DrawableManager> drawableManager_;
-	std::deque<Handler<gl::Drawable> > drawableCache_;
-	std::vector<Handler<RenderObject> > objects_;
+	std::vector<geom::Point> offsetStack_;
 public:
-	RenderTree(logging::Logger& log, Handler<gl::DrawableManager> drawableManager, const std::size_t maxDrawable=100);
-	virtual ~RenderTree() noexcept = default;
+	PostDisposer(logging::Logger& log);
+	virtual ~PostDisposer() noexcept = default;
+private:
+	template <typename T, typename U> void walkBlock(T* block, U clos);
+	geom::Point offset();
 public:
-	void render(gl::Canvas& canvas, const geom::Area& area, float depth);
-	Handler<gl::DrawableManager> drawableManager();
-public:
-	void registerDrawable(Handler<gl::Drawable> d) noexcept;
-	void reset() noexcept;
-	void onFree();
-public:
-	void addObject(Handler<RenderObject> obj);
+	virtual void walk(Document* doc) override;
+	virtual void walk(Paragraph* para) override;
+	virtual void walk(Heading* head) override;
+	virtual void walk(Text* text) override;
+	virtual void walk(Link* link) override;
+	virtual void walk(Font* font) override;
+	virtual void walk(BreakLine* br) override;
 };
 
 }}

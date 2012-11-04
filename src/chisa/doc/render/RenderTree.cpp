@@ -63,12 +63,18 @@ void RenderTree::registerDrawable(Handler<gl::Drawable> d) noexcept
 void RenderTree::reset() noexcept
 {
 	(decltype(this->drawableCache_)()).swap(this->drawableCache_);
+	(decltype(this->objects_)()).swap(this->objects_);
 }
 
 void RenderTree::onFree()
 {
 	this->reset();
 	delete this;
+}
+
+void RenderTree::addObject(Handler<RenderObject> obj)
+{
+	this->objects_.push_back(obj);
 }
 
 }}
