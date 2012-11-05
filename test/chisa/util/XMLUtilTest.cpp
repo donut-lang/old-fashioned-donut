@@ -89,7 +89,7 @@ TEST(XMLUtilTest, IntNotFoundTest)
 	<?xml version="1.0" encoding="UTF-8"?><doc />
 	)delimiter");
 	PARSE(int, 1, 10);
-	ASSERT_FLOAT_EQ(10, v);
+	ASSERT_EQ(10, v);
 }
 
 TEST(XMLUtilTest, IntFoundTest)
@@ -101,6 +101,15 @@ TEST(XMLUtilTest, IntFoundTest)
 	ASSERT_EQ(5, v);
 }
 
+TEST(XMLUtilTest, IntMinusFoundTest)
+{
+	auto doc = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?><doc val="-5" />
+	)delimiter");
+	PARSE(int, 1, 10);
+	ASSERT_EQ(-5, v);
+}
+
 TEST(XMLUtilTest, IntInvalidTest)
 {
 	auto doc = parse(R"delimiter(
@@ -110,5 +119,123 @@ TEST(XMLUtilTest, IntInvalidTest)
 	ASSERT_EQ(10, v);
 }
 
+
+TEST(XMLUtilTest, UnsignedIntNotFoundTest)
+{
+	auto doc = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?><doc />
+	)delimiter");
+	PARSE(unsigned int, 1, 10);
+	ASSERT_EQ(10, v);
+}
+
+TEST(XMLUtilTest, UnsignedIntFoundTest)
+{
+	auto doc = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?><doc val="5" />
+	)delimiter");
+	PARSE(unsigned int, 1, 10);
+	ASSERT_EQ(5, v);
+}
+
+TEST(XMLUtilTest, UnsignedIntMinusTest)
+{
+	auto doc = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?><doc val="-5" />
+	)delimiter");
+	PARSE(unsigned int, 1, 10);
+	//XXX: …これでいいの？？
+	ASSERT_EQ(-5, v);
+}
+
+TEST(XMLUtilTest, UnsignedIntInvalidTest)
+{
+	auto doc = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?><doc val="string!!" />
+	)delimiter");
+	PARSE(unsigned int, 1, 10);
+	ASSERT_EQ(10, v);
+}
+
+TEST(XMLUtilTest, BoolNotFoundTest)
+{
+	auto doc = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?><doc />
+	)delimiter");
+	PARSE(bool, true, false);
+	ASSERT_FALSE(v);
+}
+
+TEST(XMLUtilTest, BoolFoundTrueTest)
+{
+	auto doc = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?><doc val="true" />
+	)delimiter");
+	PARSE(bool, true, false);
+	ASSERT_TRUE(v);
+}
+
+TEST(XMLUtilTest, BoolFoundCapitalTest)
+{
+	auto doc = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?><doc val="True" />
+	)delimiter");
+	PARSE(bool, true, false);
+	ASSERT_FALSE(v);
+}
+
+TEST(XMLUtilTest, BoolFoundYesTest)
+{
+	auto doc = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?><doc val="yes" />
+	)delimiter");
+	PARSE(bool, true, false);
+	ASSERT_FALSE(v);
+}
+
+TEST(XMLUtilTest, BoolFoundFalseTest)
+{
+	auto doc = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?><doc val="false" />
+	)delimiter");
+	PARSE(bool, true, false);
+	ASSERT_FALSE(v);
+}
+
+TEST(XMLUtilTest, BoolFoundNoTest)
+{
+	auto doc = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?><doc val="no" />
+	)delimiter");
+	PARSE(bool, true, false);
+	ASSERT_FALSE(v);
+}
+
+TEST(XMLUtilTest, BoolNumTrueTest)
+{
+	auto doc = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?><doc val="5" />
+	)delimiter");
+	PARSE(bool, true, false);
+	ASSERT_TRUE(v);
+}
+
+TEST(XMLUtilTest, BoolNumFalseTest)
+{
+	auto doc = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?><doc val="0" />
+	)delimiter");
+	PARSE(bool, true, false);
+	ASSERT_FALSE(v);
+}
+
+TEST(XMLUtilTest, BoolInvalidTest)
+{
+	auto doc = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?><doc val="string!!" />
+	)delimiter");
+	PARSE(bool, true, false);
+	ASSERT_FALSE(v);
+}
 
 }}
