@@ -207,10 +207,14 @@ TEST(NodeReadingTest, ParentNodeTest)
 	<doc id="root"><p id="para"><link id="link"><link id="ilink"></link></link></p></doc>
 	)delimiter");
 	ASSERT_NO_THROW(m = NodeReader().parseTree(tree->RootElement()));
-	ASSERT_TRUE(root = m->findTreeNodeById("root"));
-	ASSERT_TRUE(para = m->findTreeNodeById("para"));
-	ASSERT_TRUE(link = m->findTreeNodeById("link"));
-	ASSERT_TRUE(ilink = m->findTreeNodeById("ilink"));
+	root = m->findTreeNodeById("root");
+	ASSERT_TRUE(root);
+	para = m->findTreeNodeById("para");
+	ASSERT_TRUE(para);
+	link = m->findTreeNodeById("link");
+	ASSERT_TRUE(link);
+	ilink = m->findTreeNodeById("ilink");
+	ASSERT_TRUE(ilink);
 
 	ASSERT_EQ(root, para->parent());
 	ASSERT_EQ(root, para->block());
