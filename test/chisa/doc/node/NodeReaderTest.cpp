@@ -195,4 +195,31 @@ TEST(NodeReadingTest, NoTextFoundTest)
 	ASSERT_EQ("b", m->findTreeNodeById("test")->findFirstTextNode()->text());
 }
 
+TEST(NodeReadingTest, ParentNodeTest)
+{
+	std::shared_ptr<Document> m;
+	TreeNode* root;
+	TreeNode* para;
+	TreeNode* link;
+	TreeNode* ilink;
+	auto tree = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?>
+	<doc id="root"><p id="para"><link id="link"><link id="ilink"></link></link></p></doc>
+	)delimiter");
+	ASSERT_NO_THROW(m = NodeReader().parseTree(tree->RootElement()));
+	ASSERT_TRUE(root = m->findTreeNodeById("root"));
+	ASSERT_TRUE(para = m->findTreeNodeById("para"));
+	ASSERT_TRUE(link = m->findTreeNodeById("link"));
+	ASSERT_TRUE(ilink = m->findTreeNodeById("ilink"));
+
+	ASSERT_EQ(root, para->parent());
+	ASSERT_EQ(root, para->block());
+
+	ASSERT_EQ(para, link->parent());
+	ASSERT_EQ(para, link->block());
+
+	ASSERT_EQ(link, ilink->parent());
+	ASSERT_EQ(para, ilink->block());
+}
+
 }}
