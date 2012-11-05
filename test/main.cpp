@@ -22,15 +22,17 @@
 #include <GL/glfw.h>
 int main(int argc, char **argv) {
 	::testing::InitGoogleTest(&argc, argv);
-	if(GL_FALSE == glfwInit()){
+	if(GL_TRUE != glfwInit()){
 		std::cerr << "Failed to init gl." << std::endl;
 	}
-	if(GL_FALSE == glfwOpenWindow(100,100, 8, 8, 8, 8, 8, 8, GLFW_WINDOW)){
+	if(GL_TRUE != glfwOpenWindow(100,100, 8, 8, 8, 8, 8, 0, GLFW_WINDOW)){
 		std::cerr << "Failed to open window." << std::endl;
 		glfwTerminate();
 		return -1;
 	}
+	glfwSetWindowTitle("Chisa Test");
 	const int r = RUN_ALL_TESTS();
 	glfwCloseWindow();
 	glfwTerminate();
+	return r;
 }

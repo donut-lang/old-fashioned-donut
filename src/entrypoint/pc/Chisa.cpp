@@ -83,20 +83,23 @@ void mouseButton(int button, int action){
 }
 
 int main(int argc, char** argv) {
-	if(glfwInit() == GL_FALSE){
+	if(GL_TRUE != glfwInit()){
 		std::cerr << "Failed to initialize GLFW" << std::endl;
 		return -1;
 	}
 	try {
-		if(GL_FALSE == glfwOpenWindow(1024,768, 8, 8, 8, 8, 16, 8, GLFW_WINDOW)){
+		if(GL_TRUE != glfwOpenWindow(1024,768, 8, 8, 8, 8, 16, 0, GLFW_WINDOW)){
 			throw logging::Exception(__FILE__, __LINE__, "Failed to open window.");
 		}
 
 		glfwSetWindowTitle("Chisa");
-		glEnable(GL_SCISSOR_TEST);
-		glEnable(GL_BLEND);
+
 		glDisable(GL_ALPHA_TEST);
+		glDisable(GL_STENCIL_TEST);
+
+		glEnable(GL_SCISSOR_TEST);
 		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		tempInit();
