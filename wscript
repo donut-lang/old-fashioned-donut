@@ -76,8 +76,8 @@ TEST_SRC=TINYXML2_SRC+enum('src', [udir('src/entrypoint')])+enum('test')
 MAIN_SRC=TINYXML2_SRC+enum('src', [udir('src/entrypoint')])+enum(udir('src/entrypoint/pc/'))
 
 def build(bld):
-	if not bld.variant:
-		bld.fatal('call "waf build_debug" or "waf build_release", and try "waf --help"')
+#    if not bld.variant:
+#        bld.fatal('call "waf build_debug" or "waf build_release", and try "waf --help"')
 	bld(features = 'cxx cprogram', source = MAIN_SRC, target = 'chisa', use=['PPROF','PTHREAD', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU'])
 	bld(features = 'cxx cprogram', source = TEST_SRC, target = 'chisa_test', use=['PTHREAD', 'OPENGL','FREETYPE2','CAIRO','GTEST','LIBPNG','BOOST','ICU'])
 
