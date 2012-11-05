@@ -45,44 +45,70 @@ TEST(XMLUtilTest, StringFoundTest)
 	ASSERT_EQ("str", str);
 }
 
+#define PARSE(type, first, def) type v = first; util::xml::parseAttr<type>("val", std::ref(v), def, doc->RootElement());
+
 TEST(XMLUtilTest, FloatNotFoundTest)
 {
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc />
 	)delimiter");
-	float num = 1;
-	util::xml::parseAttr<float>("str", std::ref(num), 10, doc->RootElement());
-	ASSERT_FLOAT_EQ(10, num);
+	PARSE(float, 1, 10);
+	ASSERT_FLOAT_EQ(10, v);
 }
 
 TEST(XMLUtilTest, FloatFoundTest)
 {
 	auto doc = parse(R"delimiter(
-	<?xml version="1.0" encoding="UTF-8"?><doc float="1.12" />
+	<?xml version="1.0" encoding="UTF-8"?><doc val="1.12" />
 	)delimiter");
-	float num = 1;
-	util::xml::parseAttr<float>("float", std::ref(num), 10, doc->RootElement());
-	ASSERT_FLOAT_EQ(1.12, num);
+	PARSE(float, 1, 10);
+	ASSERT_FLOAT_EQ(1.12, v);
 }
 
 TEST(XMLUtilTest, FloatInvalidTest)
 {
 	auto doc = parse(R"delimiter(
-	<?xml version="1.0" encoding="UTF-8"?><doc float="string!!" />
+	<?xml version="1.0" encoding="UTF-8"?><doc val="string!!" />
 	)delimiter");
-	float num = 1;
-	util::xml::parseAttr<float>("float", std::ref(num), 10, doc->RootElement());
-	ASSERT_FLOAT_EQ(10, num);
+	PARSE(float, 1, 10);
+	ASSERT_FLOAT_EQ(10, v);
 }
 
 TEST(XMLUtilTest, FloatNANTest)
 {
 	auto doc = parse(R"delimiter(
-	<?xml version="1.0" encoding="UTF-8"?><doc float="nan" />
+	<?xml version="1.0" encoding="UTF-8"?><doc val="nan" />
 	)delimiter");
-	float num = 1;
-	util::xml::parseAttr<float>("float", std::ref(num), 10, doc->RootElement());
-	ASSERT_TRUE(std::isnan(num));
+	PARSE(float, 1, 10);
+	ASSERT_TRUE(std::isnan(v));
 }
+
+TEST(XMLUtilTest, IntNotFoundTest)
+{
+	auto doc = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?><doc />
+	)delimiter");
+	PARSE(int, 1, 10);
+	ASSERT_FLOAT_EQ(10, v);
+}
+
+TEST(XMLUtilTest, IntFoundTest)
+{
+	auto doc = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?><doc val="5" />
+	)delimiter");
+	PARSE(int, 1, 10);
+	ASSERT_EQ(5, v);
+}
+
+TEST(XMLUtilTest, IntInvalidTest)
+{
+	auto doc = parse(R"delimiter(
+	<?xml version="1.0" encoding="UTF-8"?><doc val="string!!" />
+	)delimiter");
+	PARSE(int, 1, 10);
+	ASSERT_EQ(10, v);
+}
+
 
 }}
