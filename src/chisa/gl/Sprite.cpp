@@ -55,8 +55,8 @@ Sprite::Sprite(HandlerW<internal::SpriteManager> mgr, const geom::IntVector& siz
 	if(terr != GL_NO_ERROR){
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to transfer texture: 0x%08x", terr);
 	}
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 }
 Sprite::~Sprite() noexcept (true)
@@ -84,9 +84,6 @@ void Sprite::flushBuffer()
 		glBindTexture(GL_TEXTURE_2D, this->texId_);
 		//ここのサイズはバッファのものにしないと変な所を読みに行くかもしれない。
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0,0, this->size().width(), this->size().height(), this->bufferType_, GL_UNSIGNED_BYTE, this->buffer_->ptr());
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 		const GLenum err = glGetError();
 		if(err != GL_NO_ERROR){
 			throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to transfer texture: code 0x%x", err);
