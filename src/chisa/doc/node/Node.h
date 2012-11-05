@@ -134,7 +134,6 @@ public:
 	void background(const Handler<RenderObject>& handler);
 private:
 	NODE_SUBKLASS(BlockNode);
-
 };
 
 class InlineNode : public TreeNode {
