@@ -39,9 +39,9 @@ protected:
 public:
 	virtual ~Drawable() noexcept = default;
 	inline void onFree() { delete this; }
-	float width() const;
-	float height() const;
-	virtual geom::Box size() const = 0;
+	float width();
+	float height();
+	virtual geom::Box size() = 0;
 	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) = 0;
 	virtual std::string toString() const = 0;
 };
@@ -53,7 +53,7 @@ protected:
 	NullDrawable( HandlerW<DrawableManager> manager, const geom::Box& size ):Drawable(manager), size_(size){};
 public:
 	virtual ~NullDrawable() noexcept = default;
-	virtual geom::Box size() const override { return this->size_; };
+	virtual geom::Box size() override { return this->size_; };
 	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) override {};
 	virtual std::string toString() const override;
 	static Handler<Drawable> create( HandlerW<DrawableManager> manager, const geom::Box& size, const std::string& repl );
@@ -69,7 +69,7 @@ public:
 	virtual ~ColorDrawable() noexcept = default;
 public:
 	Color color() const noexcept;
-	virtual geom::Box size() const override { return this->size_; };
+	virtual geom::Box size() override { return this->size_; };
 	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) override;
 	virtual std::string toString() const override;
 };
@@ -84,8 +84,8 @@ protected:
 	virtual ~ImageDrawable() noexcept = default;
 public:
 	static Handler<Drawable> create(  HandlerW<DrawableManager> manager, const geom::Box& size, const std::string& repl );
-	Handler<gl::Sprite> sprite() const;
-	virtual geom::Box size() const override;
+	Handler<gl::Sprite> sprite();
+	virtual geom::Box size() override;
 	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) override;
 	virtual std::string toString() const override;
 };
@@ -99,7 +99,7 @@ public:
 	static Handler<Drawable> create( HandlerW<DrawableManager> manager, const geom::Box& size, const std::string& repl );
 	virtual ~RepeatDrawable() noexcept = default;
 	Handler<Drawable> child() const;
-	virtual geom::Box size() const override;
+	virtual geom::Box size() override;
 	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) override;
 	virtual std::string toString() const override;
 };
@@ -113,7 +113,7 @@ public:
 	static Handler<Drawable> create( HandlerW<DrawableManager> manager, const geom::Box& size, const std::string& repl );
 	virtual ~StretchDrawable() noexcept = default;
 	Handler<Drawable> child() const;
-	virtual geom::Box size() const override;
+	virtual geom::Box size() override;
 	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) override;
 	virtual std::string toString() const override;
 };
@@ -150,7 +150,7 @@ public:
 	virtual ~TextDrawable() noexcept = default;
 	static void setupCairo(cairo_t* cairo, cairo_font_face_t* face, cairo_font_options_t* opt, float size, Style style);
 	static Handler<TextDrawable> create(HandlerW<DrawableManager> manager, const std::string& str, bool vertical, const float size, Handler<Font> font, TextDrawable::Style style, TextDrawable::Decoration deco, const gl::Color& color, const gl::Color& backColor);
-	virtual geom::Box size() const override;
+	virtual geom::Box size() override;
 	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) override;
 	virtual std::string toString() const override;
 };

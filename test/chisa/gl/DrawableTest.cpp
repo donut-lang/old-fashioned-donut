@@ -17,8 +17,7 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../../src/chisa/gl/Canvas.h"
-#include "../../../src/chisa/gl/Drawable.h"
+#include "../../../src/chisa/gl/DrawableManager.h"
 
 namespace chisa {
 namespace gl {
@@ -26,20 +25,18 @@ namespace gl {
 class DrawableTest : public ::testing::Test
 {
 protected:
-	Canvas* canv;
+	Handler<DrawableManager> dmanager;
 public:
 	void SetUp(){
-		canv = new Canvas(log_trace);
+		dmanager = Handler<DrawableManager>(new DrawableManager(log_trace, DrawableSetting(MATERIAL_DIR"/font")));
 	}
 	void TearDown(){
-		delete canv;
-		canv = nullptr;
+		dmanager.reset();
 	}
 };
-/*
 TEST_F(DrawableTest, ColorDrawableTest)
 {
-	Handler<Drawable> dr = canv->queryDrawable("color:red", geom::Box(100,100));
+	Handler<Drawable> dr = dmanager->queryDrawable("color:red", geom::Box(100,100));
 	ASSERT_TRUE(dynamic_cast<ColorDrawable*>(dr.get()));
 	ASSERT_FLOAT_EQ(100, dr->width());
 	ASSERT_FLOAT_EQ(100, dr->height());
@@ -47,23 +44,40 @@ TEST_F(DrawableTest, ColorDrawableTest)
 	ASSERT_EQ(RED, dr.cast<ColorDrawable>()->color());
 }
 
-TEST_F(DrawableTest, ImageDrawableTest)
+TEST_F(DrawableTest, ImageDrawableWithSizeTest)
 {
-	Handler<Drawable> dr = canv->queryDrawable("image:" MATERIAL_DIR "/img/test.png", geom::Box(100,100));
+	Handler<Drawable> dr = dmanager->queryDrawable("image:" MATERIAL_DIR "/img/test.png", geom::Box(100,100));
 	ASSERT_TRUE(dynamic_cast<ImageDrawable*>(dr.get()));
+	ASSERT_FLOAT_EQ(100, dr->width());
+	ASSERT_FLOAT_EQ(100, dr->height());
+	ASSERT_TRUE(dr->size().near(geom::Box(100, 100), 1));
+	Handler<ImageDrawable> img(dr.cast<ImageDrawable>());
+	ASSERT_EQ(360, img->sprite()->width());
+	ASSERT_EQ(480, img->sprite()->height());
+}
+
+TEST_F(DrawableTest, ImageDrawableWithoutSizeTest)
+{
+	Handler<Drawable> dr = dmanager->queryDrawable("image:" MATERIAL_DIR "/img/test.png", geom::Box());
+	ASSERT_TRUE(dynamic_cast<ImageDrawable*>(dr.get()));
+	ASSERT_FLOAT_EQ(360, dr->width());
+	ASSERT_FLOAT_EQ(480, dr->height());
+	ASSERT_TRUE(dr->size().near(geom::Box(360, 480), 1));
+	Handler<ImageDrawable> img(dr.cast<ImageDrawable>());
+	ASSERT_EQ(360, img->sprite()->width());
+	ASSERT_EQ(480, img->sprite()->height());
 }
 
 TEST_F(DrawableTest, RepeatDrawableTest)
 {
-	Handler<Drawable> dr = canv->queryDrawable("repeat:color:red", geom::Box(100,100));
+	Handler<Drawable> dr = dmanager->queryDrawable("repeat:color:red", geom::Box(100,100));
 	ASSERT_TRUE(dynamic_cast<RepeatDrawable*>(dr.get()));
 }
 
 TEST_F(DrawableTest, StretchDrawableTest)
 {
-	Handler<Drawable> dr = canv->queryDrawable("stretch:color:red", geom::Box(100,100));
+	Handler<Drawable> dr = dmanager->queryDrawable("stretch:color:red", geom::Box(100,100));
 	ASSERT_TRUE(dynamic_cast<StretchDrawable*>(dr.get()));
 }
 
-*/
 }}

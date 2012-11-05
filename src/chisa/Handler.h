@@ -257,7 +257,7 @@ public:
 			this->entity=nullptr;
 		}
 	}
-	inline Handler<S> lock() noexcept {
+	inline Handler<S> lock() const noexcept {
 		if(expired()){
 			return Handler<S>();
 		}
