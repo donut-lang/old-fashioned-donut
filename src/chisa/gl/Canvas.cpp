@@ -109,7 +109,6 @@ void Canvas::drawTexture(unsigned int texId, const geom::Point& pt, const geom::
 		glTexCoord2f(right,top   );glVertex3f(pt.x()+width, pt.y(),depth);
 	glEnd();
 	glDisable(GL_TEXTURE_2D);
-	glFlush();
 }
 void Canvas::drawTexture(unsigned int texId, const geom::Point& pt, const geom::IntBox& texSize, const geom::IntBox& spriteSize, const float depth)
 {
@@ -124,7 +123,6 @@ void Canvas::drawLine(const float width, const Color& color, const geom::Point& 
 		glVertex3f(start.x(), start.y(), depth);
 		glVertex3f(end.x()  , end.y(), depth);
 	glEnd();
-	glFlush();
 }
 
 void Canvas::drawRect(const float width, const Color& color, const geom::Area& area, const float depth)
@@ -143,7 +141,6 @@ void Canvas::drawRect(const float width, const Color& color, const geom::Area& a
 		glVertex3f(sx, ey, depth);
 	}
 	glEnd();
-	glFlush();
 }
 void Canvas::fillRect(const Color& color, const geom::Area& area, const float depth)
 {
@@ -160,7 +157,6 @@ void Canvas::fillRect(const Color& color, const geom::Area& area, const float de
 		glVertex3f(sx, ey, depth);
 	}
 	glEnd();
-	glFlush();
 }
 
 
