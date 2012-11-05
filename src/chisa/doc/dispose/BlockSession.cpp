@@ -136,7 +136,7 @@ void BlockSession::extendBlock(BlockNode* blockNode)
 		this->newInline();
 	}
 	//ここまでで、インライン要素が一切挿入されていないことが保証される
-	geom::Box const size = blockNode->areaInBlock().box();
+	geom::Box const size = blockNode->areaInBlock().box() + blockNode->margin().totalSpace();
 	if(size.width() > this->calcBlockLimit()){
 		this->newBlockLine();
 	}
