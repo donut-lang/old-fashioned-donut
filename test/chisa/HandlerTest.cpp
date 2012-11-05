@@ -48,6 +48,13 @@ public:
 	}
 };
 
+class TestFixDerived : public TestFix {
+public:
+	TestFixDerived( int* expired, int* deleted):TestFix(expired, deleted)
+	{
+	}
+};
+
 TEST(HandlerTest, HandlerTest)
 {
 	int e = 0;
@@ -252,6 +259,32 @@ TEST(HandlerTest, TouchWeakHandlerOnDestroyTest)
 	ASSERT_EQ(1, d);
 	ASSERT_FALSE(weak.lock());
 	ASSERT_TRUE(weak.expired());
+}
+
+TEST(HandlerTest, UpCastConstructorTest)
+{
+	int e = 0;
+	int d = 0;
+	{
+		Handler<TestFix> dhandler( new TestFixDerived(&e, &d) );
+		ASSERT_TRUE(static_cast<bool>(dhandler));
+	}
+	ASSERT_EQ(1, e);
+	ASSERT_EQ(1, d);
+}
+
+TEST(HandlerTest, UpCastTest)
+{
+	int e = 0;
+	int d = 0;
+	{
+		Handler<TestFix> bhandler( new TestFix(&e, &d) );
+		Handler<TestFixDerived> dhandler( new TestFixDerived(&e, &d) );
+		bhandler = dhandler;
+		ASSERT_TRUE(static_cast<bool>(bhandler));
+	}
+	ASSERT_EQ(2, e);
+	ASSERT_EQ(2, d);
 }
 
 }
