@@ -72,12 +72,16 @@ TEST_F(DrawableTest, RepeatDrawableTest)
 {
 	Handler<Drawable> dr = dmanager->queryDrawable("repeat:color:red", geom::Box(100,100));
 	ASSERT_TRUE(dynamic_cast<RepeatDrawable*>(dr.get()));
+	ASSERT_FLOAT_EQ(100, dr->width());
+	ASSERT_FLOAT_EQ(100, dr->height());
 }
 
 TEST_F(DrawableTest, StretchDrawableTest)
 {
 	Handler<Drawable> dr = dmanager->queryDrawable("stretch:color:red", geom::Box(100,100));
 	ASSERT_TRUE(dynamic_cast<StretchDrawable*>(dr.get()));
+	ASSERT_FLOAT_EQ(100, dr->width());
+	ASSERT_FLOAT_EQ(100, dr->height());
 }
 
 }}

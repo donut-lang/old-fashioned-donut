@@ -18,21 +18,21 @@
 
 #include "../../TestCommon.h"
 #include <math.h>
+#include "../../../src/chisa/gl/DrawableManager.h"
 
 namespace chisa {
 namespace gl {
 
-/*
 class FontTest : public ::testing::Test
 {
 protected:
-	Handler<gl::FontManager> manager;
+	Handler<DrawableManager> dmanager;
 public:
 	void SetUp(){
-		manager = Handler<gl::FontManager>(new FontManager(log_trace, MATERIAL_DIR"/font"));
+		dmanager = Handler<DrawableManager>(new DrawableManager(log_trace, DrawableSetting(MATERIAL_DIR"/font")));
 	}
 	void TearDown(){
-		manager.reset();
+		dmanager.reset();
 	}
 };
 
@@ -60,7 +60,6 @@ TEST_F(FontTest, AnalyzeTest)
 	ASSERT_EQ("Family", family);
 	ASSERT_EQ("Style", style);
 }
-*/
 
 }}
 
