@@ -122,7 +122,7 @@ public:
 	};
 	DEFINE_MEMBER(public, public, geom::Area, areaInBlock);
 	DEFINE_MEMBER(public, public, geom::Area, area);
-	DEFINE_MEMBER(public, private, geom::Margin, margin);
+	DEFINE_MEMBER(public, protected, geom::Margin, margin);
 	DEFINE_MEMBER(public, private, Direction, direction);
 	DEFINE_MEMBER(public, private, float, width);
 	DEFINE_MEMBER(public, private, float, height);

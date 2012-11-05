@@ -124,6 +124,19 @@ Paragraph::Paragraph()
 Heading::Heading(int const level)
 :level_(level)
 {
+	switch(this->level()){
+	case 1:
+		this->margin(geom::Margin(gl::TextDrawable::DefaultFontSize*1.5, gl::TextDrawable::DefaultFontSize, 0.0f,0.0f));
+		break;
+	case 2:
+		this->margin(geom::Margin(gl::TextDrawable::DefaultFontSize*1.25, gl::TextDrawable::DefaultFontSize*0.75, 0.0f,0.0f));
+		break;
+	case 3:
+		this->margin(geom::Margin(gl::TextDrawable::DefaultFontSize*1, gl::TextDrawable::DefaultFontSize*0.5, 0.0f,0.0f));
+		break;
+	default:
+		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon heading level: %d", this->level());
+	}
 }
 
 BreakLine::BreakLine()
