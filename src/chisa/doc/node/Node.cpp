@@ -85,7 +85,7 @@ void TreeNode::parseAttribute(tinyxml2::XMLElement* node)
 BlockNode::BlockNode()
 {
 	this->addAttribute("margin", this->margin_);
-	this->direction(None);
+	this->direction(Direction::None);
 	this->addAttribute("float", this->direction_);
 	this->width(geom::Unspecified);
 	this->addAttribute("width", this->width_);

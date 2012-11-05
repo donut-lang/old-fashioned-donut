@@ -26,7 +26,7 @@ BlockSession::BlockSession(Disposer* disposer, BlockNode* node)
 :dispoer_(disposer)
 ,parentSession_(disposer->nowSession() )
 ,node_(node)
-,dir_(BlockNode::Direction::None)
+,dir_(BlockNode::Direction::Unspecified)
 ,widthLimit_( parentSession_->calcBlockLimit() - node->margin().totalWidth() )
 ,consumedHeight_(0.0f)
 ,consumedWidth_(0.0f)
@@ -43,7 +43,7 @@ BlockSession::BlockSession(Disposer* disposer, const float widthLimit)
 :dispoer_(disposer)
 ,parentSession_( nullptr )
 ,node_(nullptr)
-,dir_(BlockNode::Direction::None)
+,dir_(BlockNode::Direction::Unspecified)
 ,widthLimit_( widthLimit )
 ,consumedHeight_(0.0f)
 ,consumedWidth_(0.0f)
@@ -61,9 +61,9 @@ BlockSession::~BlockSession() noexcept
 	this->newBlockLine();
 	if(this->node_){
 		this->node_->areaInBlock(geom::Area(0,0,this->consumedWidth_, this->consumedHeight_));
-	}
-	if(this->parentSession_){
-		this->parentSession_->extendBlock(this->node_);
+		if(this->parentSession_){
+			this->parentSession_->extendBlock(this->node_);
+		}
 	}
 	dispoer_->rewriteSession(this->parentSession_);
 }
@@ -79,7 +79,7 @@ void BlockSession::newBlockLine()
 {
 	float consumedHeight = std::max(this->inlineConsumedHeight_, this->blockConsumedHeight_);
 	this->consumedHeight_ += consumedHeight;
-	this->consumedWidth_ = std::max( this->consumedHeight_, this->blockPosX_ + this->inlinePosX_);
+	this->consumedWidth_ = std::max( this->consumedWidth_, this->blockPosX_ + this->inlinePosX_);
 	//
 	this->blockConsumedHeight_ = 0.0f;
 	this->blockPosX_ = 0.0f;
@@ -89,12 +89,13 @@ void BlockSession::newBlockLine()
 	this->inlineHeight_ = 0.0f;
 	this->inlinePosX_ = 0.0f;
 	//
-	this->dir_ = BlockNode::Direction::None;
+	this->dir_ = BlockNode::Direction::Unspecified;
 }
 void BlockSession::newInline()
 {
 	this->disposeInlineObject();
 	this->inlineConsumedHeight_ += this->inlineHeight_;
+	this->consumedWidth_ = std::max( this->consumedWidth_, this->blockPosX_ + this->inlinePosX_);
 	if(this->inlineConsumedHeight_ >= this->blockConsumedHeight_){
 		this->newBlockLine();
 		this->inlineConsumedHeight_ = 0.0f;
@@ -136,13 +137,15 @@ void BlockSession::extendBlock(BlockNode* blockNode)
 	}
 	//ここまでで、インライン要素が一切挿入されていないことが保証される
 	geom::Box const size = blockNode->areaInBlock().box();
-	if(size.width() < this->calcBlockLimit()){
+	if(size.width() > this->calcBlockLimit()){
 		this->newBlockLine();
+	}
+	if(this->dir_ == BlockNode::Direction::Unspecified){
+		this->dir_ = blockNode->direction();
 	}
 	switch (this->dir_) {
 	case BlockNode::Direction::None:
 		this->newBlockLine();
-		this->dir_ = blockNode->direction();
 		blockNode->areaInBlock(geom::Area(0, this->consumedHeight_, widthLimit_, size.height()));
 		this->consumedHeight_ += size.height();
 		break;
@@ -160,7 +163,7 @@ void BlockSession::extendBlock(BlockNode* blockNode)
 			this->newBlockLine();
 			this->dir_ = blockNode->direction();
 		}
-		blockNode->areaInBlock(geom::Area(widthLimit_ - this->blockPosX_, this->consumedHeight_, size.width(), size.height()));
+		blockNode->areaInBlock(geom::Area(widthLimit_ - this->blockPosX_ - size.width(), this->consumedHeight_, size.width(), size.height()));
 		this->blockConsumedHeight_ = std::max(this->blockConsumedHeight_, size.height());
 		this->blockPosX_ += size.width();
 		break;
