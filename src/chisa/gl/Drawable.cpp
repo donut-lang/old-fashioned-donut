@@ -253,16 +253,17 @@ Handler<gl::Sprite> TextDrawable::sprite()
 	if(this->sprite_){
 		return this->sprite_;
 	}
-	Handler<gl::Sprite> spr;
 	if(Handler<DrawableManager> mgr = this->manager().lock()){
-		spr = mgr->queryRawSprite(static_cast<int>(std::ceil(this->renderInfo_.width())), static_cast<int>(std::ceil(this->renderInfo_.height())));
+		const int width = static_cast<int>(std::ceil(this->renderInfo_.width()));
+		const int height = static_cast<int>(std::ceil(this->renderInfo_.height()));
+		this->sprite_ = mgr->queryRawSprite(width, height);
 	}else{
-		return spr;
+		return this->sprite_;
 	}
 #if IS_BIG_ENDIAN
 	gl::Sprite::Session ss(spr, gl::Sprite::BufferType::ARGB8);
 #else
-	gl::Sprite::Session ss(spr, gl::Sprite::BufferType::BGRA8);
+	gl::Sprite::Session ss(this->sprite_, gl::Sprite::BufferType::BGRA8);
 #endif
 	gl::Font::RawFaceSession rfs(this->font_);
 	{
@@ -318,7 +319,7 @@ Handler<gl::Sprite> TextDrawable::sprite()
 		cairo_surface_destroy(surf);
 		cairo_destroy(cr);
 	}
-	return spr;
+	return this->sprite_;
 }
 
 Handler<TextDrawable> TextDrawable::create(HandlerW<DrawableManager> manager, const std::string& str, bool vertical, const float size, Handler<Font> font, TextDrawable::Style style, TextDrawable::Decoration deco, const gl::Color& color, const gl::Color& backColor)

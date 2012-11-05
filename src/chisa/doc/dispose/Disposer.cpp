@@ -36,7 +36,6 @@ Disposer::Disposer(logging::Logger& log, Handler<RenderTree> renderTree, const f
 ,nowSession_(nullptr)
 ,nowDepth_(0.0f)
 {
-	this->renderTree_->reset();
 }
 
 BlockSession* Disposer::nowSession()
@@ -53,6 +52,7 @@ void Disposer::rewriteSession(BlockSession* session)
 
 geom::Box Disposer::start(std::shared_ptr<Document> doc)
 {
+	this->renderTree_->reset();
 	BlockSession ss(this, widgetWidth_);
 	this->NodeWalker::start(doc);
 	doc::PostDisposer(log()).start(doc);
