@@ -236,7 +236,7 @@ void TextDrawable::revalidate()
 		cairo_text_extents_t ext;
 		cairo_text_extents(cr, str_.c_str(), &ext);
 		auto offset = geom::Vector(ext.x_bearing, -ext.y_bearing);
-		auto size = geom::Box(ext.x_advance, ext.height+ext.y_advance);
+		auto size = geom::Box(ext.x_advance+ext.x_bearing, ext.height+ext.y_advance);
 		this->renderInfo_ = geom::Area(offset, size);
 		if(this->vertical_){
 			this->renderInfo_ = this->renderInfo_.flip();
