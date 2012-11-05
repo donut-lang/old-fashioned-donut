@@ -33,16 +33,14 @@ RenderTree::RenderTree(logging::Logger& log, Handler<gl::DrawableManager> drawab
 
 void RenderTree::render(gl::Canvas& canvas, const geom::Area& area, float depth)
 {
-	//glDisable(GL_DEPTH_TEST);
 	for(Handler<RenderObject>& obj : this->objects_){
 		geom::Area const intersect(obj->area().intersect(area));
 		if (!intersect.empty()) {
 			obj->render(canvas, area.point(), depth+obj->relDepth());
 		}else{
-			obj->onHidden();
+			//obj->onHidden();
 		}
 	}
-	//glEnable(GL_DEPTH_TEST);
 }
 
 Handler<gl::DrawableManager> RenderTree::drawableManager()
@@ -53,6 +51,9 @@ Handler<gl::DrawableManager> RenderTree::drawableManager()
 void RenderTree::registerDrawable(Handler<gl::Drawable> d) noexcept
 {
 	this->drawableCache_.push_back(d);
+	if(this->log().t()){
+		this->log().t(TAG, "Drawable cache size: %d", this->drawableCache_.size());
+	}
 	while(this->drawableCache_.size() > this->maxDrawable_){
 		if(this->log().t()){
 			Handler<gl::Drawable> del = this->drawableCache_.front();
