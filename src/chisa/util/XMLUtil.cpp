@@ -25,14 +25,14 @@ namespace xml {
 
 template <> void parseAttr<int>(const std::string& name, int& v, const int& def, tinyxml2::XMLElement* elm)
 {
-	if(elm->QueryIntAttribute(name.c_str(), &v) == tinyxml2::XML_SUCCESS){
+	if(elm->QueryIntAttribute(name.c_str(), &v) != tinyxml2::XML_SUCCESS){
 		v = def;
 	}
 }
 
 template <> void parseAttr<float>(const std::string& name, float& v, const float& def, tinyxml2::XMLElement* elm)
 {
-	if(elm->QueryFloatAttribute(name.c_str(), &v) == tinyxml2::XML_SUCCESS){
+	if(elm->QueryFloatAttribute(name.c_str(), &v) != tinyxml2::XML_SUCCESS){
 		v = def;
 	}
 }
@@ -48,14 +48,14 @@ template <> void parseAttr<std::string>(const std::string& name, std::string& v,
 
 template <> void parseAttr<unsigned int>(const std::string& name, unsigned int& v, const unsigned int& def, tinyxml2::XMLElement* elm)
 {
-	if(!elm->QueryUnsignedAttribute(name.c_str(), &v) == tinyxml2::XML_SUCCESS){
+	if(elm->QueryUnsignedAttribute(name.c_str(), &v) != tinyxml2::XML_SUCCESS){
 		v = def;
 	}
 }
 
 template <> void parseAttr<bool>(const std::string& name, bool& v, const bool& def, tinyxml2::XMLElement* elm)
 {
-	if(!elm->QueryBoolAttribute(name.c_str(), &v) == tinyxml2::XML_SUCCESS){
+	if(elm->QueryBoolAttribute(name.c_str(), &v) != tinyxml2::XML_SUCCESS){
 		v = def;
 	}
 }

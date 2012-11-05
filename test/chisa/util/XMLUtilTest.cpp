@@ -61,7 +61,7 @@ TEST(XMLUtilTest, FloatFoundTest)
 	<?xml version="1.0" encoding="UTF-8"?><doc float="1.12" />
 	)delimiter");
 	float num = 1;
-	util::xml::parseAttr<float>("str", std::ref(num), 10, doc->RootElement());
+	util::xml::parseAttr<float>("float", std::ref(num), 10, doc->RootElement());
 	ASSERT_FLOAT_EQ(1.12, num);
 }
 
@@ -71,7 +71,7 @@ TEST(XMLUtilTest, FloatInvalidTest)
 	<?xml version="1.0" encoding="UTF-8"?><doc float="string!!" />
 	)delimiter");
 	float num = 1;
-	util::xml::parseAttr<float>("str", std::ref(num), 10, doc->RootElement());
+	util::xml::parseAttr<float>("float", std::ref(num), 10, doc->RootElement());
 	ASSERT_FLOAT_EQ(10, num);
 }
 
@@ -81,7 +81,7 @@ TEST(XMLUtilTest, FloatNANTest)
 	<?xml version="1.0" encoding="UTF-8"?><doc float="nan" />
 	)delimiter");
 	float num = 1;
-	util::xml::parseAttr<float>("str", std::ref(num), 10, doc->RootElement());
+	util::xml::parseAttr<float>("float", std::ref(num), 10, doc->RootElement());
 	ASSERT_TRUE(std::isnan(num));
 }
 
