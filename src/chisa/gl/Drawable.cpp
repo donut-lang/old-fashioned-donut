@@ -28,11 +28,11 @@
 namespace chisa {
 namespace gl {
 
-float Drawable::width() const
+float Drawable::width()
 {
 	return this->size().width();
 }
-float Drawable::height() const
+float Drawable::height()
 {
 	return this->size().height();
 }
@@ -76,14 +76,20 @@ ImageDrawable::ImageDrawable( HandlerW<DrawableManager> manager, const geom::Box
 {
 }
 
-Handler<gl::Sprite> ImageDrawable::sprite() const
+Handler<gl::Sprite> ImageDrawable::sprite()
 {
+	if(!this->sprite_){
+		if(Handler<DrawableManager> mgr = this->manager().lock()){
+			this->sprite_ = mgr->queryImage(this->filename_);
+		}
+	}
 	return this->sprite_;
 }
 
-geom::Box ImageDrawable::size() const
+geom::Box ImageDrawable::size()
 {
-	return this->sprite_ ? geom::min(geom::Box(this->sprite_->size()), this->size_) : size_;
+	Handler<gl::Sprite> spr(this->sprite());
+	return spr ? geom::min(geom::Box(spr->size()), this->size_) : size_;
 }
 
 void ImageDrawable::draw(Canvas& canvas, const geom::Area& area, const float depth)
@@ -118,7 +124,7 @@ Handler<Drawable> RepeatDrawable::child() const
 	return this->child_;
 }
 
-geom::Box RepeatDrawable::size() const
+geom::Box RepeatDrawable::size()
 {
 	return this->size_;
 }
@@ -167,7 +173,7 @@ Handler<Drawable> StretchDrawable::child() const
 	return this->child_;
 }
 
-geom::Box StretchDrawable::size() const
+geom::Box StretchDrawable::size()
 {
 	return this->size_;
 }
@@ -327,7 +333,7 @@ Handler<TextDrawable> TextDrawable::create(HandlerW<DrawableManager> manager, co
 	return Handler<TextDrawable>(new TextDrawable(manager, str, vertical, size, font, style, deco, color, backColor));
 }
 
-geom::Box TextDrawable::size() const
+geom::Box TextDrawable::size()
 {
 	return this->renderInfo_.box();
 }
