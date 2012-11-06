@@ -54,6 +54,7 @@ def configureLibrary(conf):
 	conf.check_cfg(package='freetype2', uselib_store='FREETYPE2', mandatory=True, args='--cflags --libs')
 	conf.check_cfg(package='cairo cairo-ft', uselib_store='CAIRO', mandatory=True, args='--cflags --libs')
 	conf.check(features='cxx cxxprogram', lib=['gtest', 'gtest_main', 'pthread'], cflags=['-Wall'], uselib_store='GTEST')
+	conf.check(features='cxx cxxprogram', lib=['antlr3c'], cflags=['-Wall'], uselib_store='ANTLR')
 	conf.check(features='cxx cxxprogram', lib='pthread', cflags=['-Wall'], uselib_store='PTHREAD')
 	# プラットフォーム依存
 	if sys.platform == 'win32':
@@ -76,10 +77,10 @@ TEST_SRC=TINYXML2_SRC+enum('src', [udir('src/entrypoint')])+enum('test')
 MAIN_SRC=TINYXML2_SRC+enum('src', [udir('src/entrypoint')])+enum(udir('src/entrypoint/pc/'))
 
 def build(bld):
-#    if not bld.variant:
-#        bld.fatal('call "waf build_debug" or "waf build_release", and try "waf --help"')
-	bld(features = 'cxx cprogram', source = MAIN_SRC, target = 'chisa', use=['PPROF','PTHREAD', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU'])
-	bld(features = 'cxx cprogram', source = TEST_SRC, target = 'chisa_test', use=['PTHREAD', 'OPENGL','FREETYPE2','CAIRO','GTEST','LIBPNG','BOOST','ICU'])
+	if not bld.variant:
+		bld.fatal('call "waf build_debug" or "waf build_release", and try "waf --help"')
+	bld(features = 'cxx cprogram', source = MAIN_SRC, target = 'chisa', use=['PPROF','PTHREAD', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU','ANTLR'])
+	bld(features = 'cxx cprogram', source = TEST_SRC, target = 'chisa_test', use=['PTHREAD', 'OPENGL','FREETYPE2','CAIRO','GTEST','LIBPNG','BOOST','ICU','ANTLR'])
 
 # from http://docs.waf.googlecode.com/git/book_16/single.html#_custom_build_outputs
 from waflib.Build import BuildContext, CleanContext, InstallContext, UninstallContext

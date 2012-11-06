@@ -40,5 +40,6 @@ void splitSpace(const std::string& str, std::vector<std::string>& list);
 void splitLine(const std::string& str, std::vector<std::string>& list);
 bool startsWith(const std::string& target, const std::string& prefix);
 bool endsWith(const std::string& target, const std::string& suffix);
+const std::string unescapeString(const std::string& str);
 
 }}
