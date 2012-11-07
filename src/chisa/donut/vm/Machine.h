@@ -17,27 +17,30 @@
  */
 
 #pragma once
-#include "../../logging/Logger.h"
-#include "../../util/ClassUtil.h"
-#include "../../Handler.h"
+#include <vector>
+#include "../object/Object.h"
+#include "../object/ObjectPool.h"
+#include "../code/Code.h"
 
 namespace chisa {
 namespace donut {
+class ObjectPool;
 
-class ObjectPool {
-	DEFINE_MEMBER_REF(private, logging::Logger, log)
+class Machine {
 private:
-	unsigned int time_;
+	std::size_t pc_;
+	std::vector<Handler<Object> > stack_;
+	std::vector<Handler<Object> > local_;
+	std::vector<Handler<Object> > selfStack_;
+	std::vector<Handler<Object> > callStack_;
+	ObjectPool& pool_;
 public:
-	ObjectPool(logging::Logger& log);
-	virtual ~ObjectPool() noexcept = default;
+	Machine(ObjectPool& pool);
+	virtual ~Machine() noexcept = default;
 public:
-	template <typename T, typename... Args>
-	Handler<T> create(const Args&... args)
-	{
-		Handler<T> obj(new T(*this, args...));
-		return obj;
-	}
+	void start(Handler<Closure> clos);
+private:
+	void run();
 };
 
 }}

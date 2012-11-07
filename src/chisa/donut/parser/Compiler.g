@@ -272,13 +272,37 @@ expr [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	;
 
 index [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
-	: ^(IDX ^(DOT SCOPE IDENT) ^(ARGS exprlist[$code]))
-	| ^(IDX ^(DOT obj=expr[$code] IDENT) ^(ARGS exprlist[$code]))
+	: ^(IDX obj=expr[$code] ^(ARGS ex=exprlist[$code]))
+	{
+		$asmlist.insert($asmlist.end(), $ex.asmlist.begin(), $ex.asmlist.end());
+		$asmlist.insert($asmlist.end(), $obj.asmlist.begin(), $obj.asmlist.end());
+		$asmlist.push_back(Inst::PushCopy);
+		$asmlist.push_back(Inst::Push | $code->constCode<string>("opIdxGet"));
+		$asmlist.push_back(Inst::LoadObj);
+		$asmlist.push_back(Inst::Apply | $ex.count);
+	}
 	;
 
 apply [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	: ^(APPLY ^(DOT SCOPE IDENT) ^(ARGS exprlist[$code]))
+	{
+		$asmlist.insert($asmlist.end(), $ex.asmlist.begin(), $ex.asmlist.end());
+		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
+		$asmlist.push_back(Inst::SearchScope);
+		$asmlist.push_back(Inst::PushCopy);
+		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
+		$asmlist.push_back(Inst::LoadObj);
+		$asmlist.push_back(Inst::Apply | $ex.count);
+	}
 	| ^(APPLY ^(DOT obj=expr[$code] IDENT) ^(ARGS exprlist[$code]))
+	{
+		$asmlist.insert($asmlist.end(), $ex.asmlist.begin(), $ex.asmlist.end());
+		$asmlist.insert($asmlist.end(), $obj.asmlist.begin(), $obj.asmlist.end());
+		$asmlist.push_back(Inst::PushCopy);
+		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
+		$asmlist.push_back(Inst::LoadObj);
+		$asmlist.push_back(Inst::Apply | $ex.count);
+	}
 	;
 
 literal [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
