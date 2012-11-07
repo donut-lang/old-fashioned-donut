@@ -40,7 +40,7 @@ enum Inst {
 	//const mask
 	ConstKindMask  = 0xff<<16,
 	ConstKindShift  = 16,
-	ConstNone	= 0<<16,
+	ConstOperand= 0<<16,
 	ConstInt	= 1<<16,
 	ConstBool	= 2<<16,
 	ConstFloat	= 3<<16,
