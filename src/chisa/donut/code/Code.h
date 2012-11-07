@@ -70,6 +70,7 @@ public:
 	std::size_t numClosure() const;
 public:
 	std::string disasm( Instruction inst );
+	void disasm( Instruction inst, Instruction& opcode, Instruction& constKind, Instruction& constIndex );
 };
 
 }}
