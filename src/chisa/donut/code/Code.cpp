@@ -44,7 +44,8 @@ std::string Code::disasm( Instruction inst )
 	Instruction const constKind = inst & Inst::ConstKindMask;
 	Instruction const constIndex = (inst) & 0xffff;
 	switch(constKind) {
-	case Inst::ConstNone:
+	case Inst::ConstOperand:
+		repl += util::format("<%d>", constIndex);
 		break;
 	case Inst::ConstInt:
 		repl += util::format("<int> %d", this->intTable_.get(constIndex));
