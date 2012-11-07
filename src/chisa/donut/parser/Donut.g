@@ -42,6 +42,8 @@ tokens {
 	CEQ;
 	CNE;
 	
+	OBJECT;
+	PAIR;
 }
 
 @includes {
@@ -114,6 +116,7 @@ primary
 	| array
 	| name -> ^(DOT SCOPE name)
 	| '(' expr ')' -> expr
+	| object
 	;
 
 
@@ -121,9 +124,12 @@ name : IDENT;
 
 varlist : (name ((',') name)*)? -> ^(VARS name*);
 
-arglist : (expr ((',') expr)*)? -> ^(ARGS expr*);
+arglist : exprlist_for_literal -> ^(ARGS exprlist_for_literal);
+array : '[' exprlist_for_literal ','? ']' -> ^(ARRAY exprlist_for_literal);
+exprlist_for_literal : (expr (',' expr)*)? -> expr*;
 
-array : '[' arglist ']' -> ^(ARRAY arglist);
+object : '{' (object_pair (',' object_pair)* (',')?)? '}' -> ^(OBJECT object_pair*);
+object_pair : name '=>' expr -> ^(PAIR name expr);
 
 literal
 	: numeric_literal

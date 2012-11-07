@@ -12,6 +12,7 @@ options {
 #include <string>
 #include <vector>
 #include <cstdlib>
+#include <algorithm>
 #include "../../code/Code.h"
 #include "../../code/Closure.h"
 #include "../ParseUtil.h"
@@ -51,9 +52,14 @@ vars [ donut::Code* code ] returns [ std::vector<std::string> list ]
 	})*);
 
 block [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
+@after{
+	//最後のpopは削除する（＝値がひとつだけ残る）
+	$asmlist.erase($asmlist.end()-1);
+}
 	: ^(CONT (ex=expr[$code]
 	{
 		$asmlist.insert($asmlist.end(), $ex.asmlist.begin(), $ex.asmlist.end());
+		$asmlist.push_back(Inst::Pop | 0);
 	})*)
 	;
 
@@ -80,13 +86,9 @@ unary_operation returns [ std::string sym ]
 	;
 
 expr [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
-	: lt=literal[$code]
-	{
-		$asmlist.swap($lt.asmlist);
-	}
-//	| ^(APPLY)
-//	| ^(ACCESS)
-//	| ^(IDX)
+	: lt=literal[$code] { $asmlist.swap($lt.asmlist); }
+	| app=apply[$code] { $asmlist.swap($app.asmlist); }
+	| idx=index[$code] { $asmlist.swap($idx.asmlist); }
 	| ^(POST_OP postop=operation ^(DOT SCOPE IDENT) {
 		//操作対象オブジェクトを取得
 		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
@@ -269,6 +271,15 @@ expr [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	}
 	;
 
+index [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
+	: ^(IDX ^(DOT SCOPE IDENT) ^(ARGS exprlist[$code]))
+	| ^(IDX ^(DOT obj=expr[$code] IDENT) ^(ARGS exprlist[$code]))
+	;
+
+apply [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
+	: ^(APPLY ^(DOT SCOPE IDENT) ^(ARGS exprlist[$code]))
+	| ^(APPLY ^(DOT obj=expr[$code] IDENT) ^(ARGS exprlist[$code]))
+	;
 
 literal [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	: 'true'
@@ -316,19 +327,50 @@ literal [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist 
 		$asmlist.push_back(Inst::Push | $code->constCode<string>(str));
 	}
 	| array[$code] { $asmlist.swap($array.asmlist); }
+	| object[$code] { $asmlist.swap($object.asmlist); }
 	| closure[$code] { $asmlist.swap($closure.asmlist); }
+	;
+
+object [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
+@init {
+	int size=0;
+}
+	: ^(OBJECT (v=object_pair[$code]{
+		$asmlist.insert($asmlist.end(), $v.asmlist.begin(), $v.asmlist.end());
+		size+=1;
+	})*)
+	{
+		$asmlist.push_back(Inst::ConstructObject | size);
+	}
+	;
+
+object_pair [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
+	: ^(PAIR IDENT v=expr[$code])
+	{
+		$asmlist.insert($asmlist.end(), $v.asmlist.begin(), $v.asmlist.end());
+		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
+	}
 	;
 
 array [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 @init {
 	int array_count=0;
 }
-	: ^(ARRAY (arrayexpr=expr[$code] {
-		$asmlist.insert($asmlist.end(), $arrayexpr.asmlist.begin(), $arrayexpr.asmlist.end());
-		array_count+=1;
+	: ^(ARRAY exprlist[$code]) {
+		$asmlist.swap($exprlist.asmlist);
+		$asmlist.push_back(Inst::ConstructArray | $exprlist.count);
 	}
-	)* {
-		$asmlist.push_back(Inst::ConstructArray | array_count);
-	})
 	;
 
+exprlist [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist, int count ]
+@init {
+	$count = 0;
+}
+@after {
+	std::reverse($asmlist.begin(), $asmlist.end());
+}
+	: (v=expr[$code] {
+		$asmlist.insert($asmlist.end(), $v.asmlist.begin(), $v.asmlist.end());
+		$count+=1;
+	}
+	)*;
