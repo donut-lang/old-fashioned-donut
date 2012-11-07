@@ -18,36 +18,58 @@
 
 #pragma once
 #include "../../Handler.h"
+#include "Closure.h"
+#include <vector>
+#include <algorithm>
+#include "Inst.h"
 
 namespace chisa {
 namespace donut {
 
-typedef unsigned int Instruction;
-enum Inst {
-	Nop			= 0<<24,
-	Push			= 1<<24,
-	PushCopy		= 2<<24,
-	Pop			= 3<<24,
-	SearchScope	= 4<<24,
-	StoreObj		= 5<<24,
-	LoadObj		= 6<<24,
-	LoadLocal	= 7<<24,
-	StoreLocal	= 8<<24,
-	Apply		= 9<<24,
-	ConstInt		= 1<<16,
-	ConstBool	= 2<<16,
-	ConstFloat	= 3<<16,
-	ConstClosure	= 3<<16,
-	ConstString	= 4<<16
+template <typename T>
+class ConstTable {
+private:
+	std::vector<T> table_;
+public:
+	Instruction regist( T const& val ) {
+		auto it = std::find(table_.begin(), table_.end(), val);
+		if(it == table_.end()){
+			table_.push_back(val);
+			return table_.size()-1;
+		}else{
+			unsigned int idx = it-table_.begin();
+			return idx;
+		}
+	}
+	T get(std::size_t index)
+	{
+		if(index >= table_.size()){
+			throw logging::Exception(__FILE__, __LINE__, "Unknown const index: %d", index);
+		}
+		return table_.at(index);
+	}
+	std::size_t size() const
+	{
+		return this->table_.size();
+	}
 };
 
 class Code : public HandlerBody<Code> {
-
+private:
+	ConstTable<int> intTable_;
+	ConstTable<float> floatTable_;
+	ConstTable<std::string> stringTable_;
+	ConstTable<Handler<Closure> > closureTable_;
 public:
 	Code();
 	virtual ~Code() noexcept = default;
 	void onFree() noexcept { delete this; }
-	template <typename T> unsigned int constCode(T const& val);
+	template <typename T> Instruction constCode(T const& val);
+public:
+	Handler<Closure> getClosure(unsigned int index);
+	std::size_t numClosure() const;
+public:
+	std::string disasm( Instruction inst );
 };
 
 }}

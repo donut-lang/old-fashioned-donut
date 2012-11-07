@@ -17,8 +17,9 @@
  */
 
 #pragma once
+#include "../../Handler.h"
 #include <vector>
-#include "Code.h"
+#include "Inst.h"
 
 namespace chisa {
 namespace donut {
@@ -33,6 +34,9 @@ public:
 	void constCode(unsigned int code);
 public:
 	void onFree() noexcept { delete this; };
+public:
+	std::vector<std::string> const& arglist() const noexcept { return this->arglist_; };
+	std::vector<donut::Instruction> const& instlist() const noexcept { return this->instlist_; };
 };
 
 }}

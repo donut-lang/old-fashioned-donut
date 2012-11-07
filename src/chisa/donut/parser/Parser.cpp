@@ -151,30 +151,28 @@ public:
 			stream->free(this->stream);
 			this->stream = nullptr;
 		}
-		std::string t(createStringFromString(tree->toStringTree(tree)));
-		std::cout << t << std::endl;
 		if(this->tree && tree->free){
 			tree->free(tree);
 			this->tree = nullptr;
 		}
 	}
-	Handler<donut::Code> compile(){
-		Handler<donut::Code> code(new donut::Code());
-		compiler->prog(compiler, code.get());
+	unsigned int compile(Handler<donut::Code> code){
+		unsigned int no = compiler->prog(compiler, code.get());
 		if(compiler->pTreeParser->rec->state->error){
 			ANTLR3_EXCEPTION* ex = compiler->pTreeParser->rec->state->exception;
 			throw logging::Exception(__FILE__, __LINE__, "Parser error: %s line: %d pos: %d", ex->message, ex->line, ex->charPositionInLine);
 		}
-		return code;
+		return no;
 	}
 };
 
 Parser::Parser(ParserImpl* pimpl)
-:parserImpl(pimpl), compilerImpl(nullptr)
+:parserImpl(nullptr), compilerImpl(nullptr)
 {
 	if(!pimpl){
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Invalid parser impl pointer.");
 	}
+	this->parserImpl = pimpl;
 	pANTLR3_BASE_TREE tree = pimpl->parseProgram();
 	this->compilerImpl = new CompilerImpl(pimpl->filename(), tree);
 }
@@ -204,9 +202,10 @@ std::shared_ptr<Parser> Parser::fromStream(std::istream& stream_, const std::str
 	std::shared_ptr<Parser> parser(new Parser(impl));
 	return parser;
 }
-Handler<donut::Code> Parser::parseProgram()
+
+unsigned int Parser::parseProgram(Handler<donut::Code> code)
 {
-	return compilerImpl->compile();
+	return compilerImpl->compile(code);
 }
 
 }}

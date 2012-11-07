@@ -23,9 +23,34 @@
 namespace chisa {
 namespace donut {
 
-TEST(DonutParserTest, BasicTest)
+class DonutParserTest : public ::testing::Test
 {
-	ASSERT_NO_THROW( Parser::fromString("test=1;", "<MEM>", 0)->parseProgram() );
+protected:
+	Handler<Code> code;
+public:
+	void SetUp(){
+		code = Handler<Code>(new Code());
+	}
+	void TearDown(){
+		code.reset();
+	}
+};
+TEST_F(DonutParserTest, BasicTest)
+{
+	ASSERT_NO_THROW( Parser::fromString("test=1;", "<MEM>", 0)->parseProgram(code) );
+}
+
+TEST_F(DonutParserTest, CountTest)
+{
+	unsigned int const idx = Parser::fromString("test=1;", "<MEM>", 0)->parseProgram(code);
+	ASSERT_EQ(1, code->numClosure());
+	Handler<Closure> clos = code->getClosure(idx);
+
+	for(Instruction inst : clos->instlist()){
+		std::cout << code->disasm(inst) << std::endl;
+	}
+
+	ASSERT_LE(0, clos->instlist().size());
 }
 
 }}

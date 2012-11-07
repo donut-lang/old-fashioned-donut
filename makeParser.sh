@@ -12,7 +12,7 @@ if [ $MSYSTEM = MINGW32 ] ; then
 	ANTLR=${ANTLR} \
 	cmd << EOF
 set CLASSPATH=%CURDIR%\external\antlr\antlr-3.4-complete.jar;%CLASSPATH%
-java org.antlr.Tool -fo %ANTLR_OUT% -make %ANTLR_SRC%\Donut.g %ANTLR_SRC%\Compiler.g
+java -Dfile.encoding=UTF-8 -Duser.language=en -Duser.region=US org.antlr.Tool -fo %ANTLR_OUT% -make %ANTLR_SRC%\Donut.g %ANTLR_SRC%\Compiler.g
 EOF
 else
 	CLASSPATH=${ANTLR}:$CLASSPATH \

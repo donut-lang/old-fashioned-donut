@@ -37,7 +37,7 @@ public:
 	static std::shared_ptr<Parser> fromFile(const std::string& filename);
 	static std::shared_ptr<Parser> fromString(const std::string& src, const std::string& filename="<ON MEMORY>", int line=0);
 	static std::shared_ptr<Parser> fromStream(std::istream& stream_, const std::string& filename);
-	Handler<donut::Code> parseProgram();
+	unsigned int parseProgram(Handler<donut::Code> code);
 };
 
 }}
