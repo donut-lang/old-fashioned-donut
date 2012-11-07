@@ -40,18 +40,30 @@ TEST_F(DonutParserTest, BasicTest)
 	ASSERT_NO_THROW( Parser::fromString("test=1;", "<MEM>", 0)->parseProgram(code) );
 }
 
-TEST_F(DonutParserTest, CountTest)
+TEST_F(DonutParserTest, BasicCheckTest)
 {
 	unsigned int const idx = Parser::fromString("test=1;", "<MEM>", 0)->parseProgram(code);
 	ASSERT_EQ(1, code->numClosure());
 	Handler<Closure> clos = code->getClosure(idx);
 
-	for(Instruction inst : clos->instlist()){
-		std::cout << code->disasm(inst) << std::endl;
-	}
-
+	ASSERT_EQ(0, clos->arglist().size());
 	ASSERT_LE(0, clos->instlist().size());
 }
 
+TEST_F(DonutParserTest, DotTest)
+{
+	unsigned int const idx = Parser::fromString("func(zux){test.aux=1;};", "<MEM>", 0)->parseProgram(code);
+	ASSERT_EQ(2, code->numClosure());
+	Handler<Closure> clos = code->getClosure(idx);
+
+	for(Instruction inst : clos->instlist()){
+		std::cout << code->disasm(inst) << std::endl;
+	}
+	ASSERT_EQ(0, clos->arglist().size());
+	ASSERT_LE(0, clos->instlist().size());
+
+	Handler<Closure> another = code->getClosure(idx+1%2);
+	ASSERT_EQ(1, another->arglist().size());
+	ASSERT_LE(0, another->instlist().size());
 }}
 

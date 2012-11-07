@@ -47,7 +47,7 @@ enum Inst {
 	StoreLocal		= 8<<24,
 	Apply			= 9<<24,
 	ConstructArray	=10<<24,
-	ConstructObj	=11<<24,
+	ConstructObject	=11<<24,
 	//const mask
 	ConstKindMask  = 0xff<<16,
 	ConstKindShift  = 16,
