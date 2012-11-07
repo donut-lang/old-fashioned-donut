@@ -23,7 +23,6 @@
 #include "../logging/Exception.h"
 #include "StringUtil.h"
 #include <cmath>
-#include <sstream>
 
 namespace chisa {
 namespace util {
@@ -146,50 +145,6 @@ void splitSpace(const std::string& str, std::vector<std::string>& list)
 			"　"
 	};
 	split(str, spaces, list);
-}
-
-const std::string unescapeString(const std::string& str){
-	std::stringstream ss;
-	size_t last = 0;
-	size_t idx;
-	while(((idx = str.find("\\", last)) != std::string::npos) && (idx < str.size()-1) ){
-		ss << str.substr(last, (idx-last));
-		std::string tmp(ss.str());
-		switch(str.at(++idx)){
-		case 'n':
-			ss << "\n";
-			break;
-		case 'r':
-			ss << "\r";
-			break;
-		case 't':
-			ss << "\t";
-			break;
-		case 'b':
-			ss << "\b";
-			break;
-		case 'f':
-			ss << "\f";
-			break;
-		case '\"':
-			ss << "\"";
-			break;
-		case '\'':
-			ss << "\'";
-			break;
-		case '\\':
-			ss << "\\";
-			break;
-		default:
-			ss << "\\";
-			ss << str.at(idx);
-			break;
-		}
-		last = idx+1;
-	}
-	ss << str.substr(last);
-	std::string result = ss.str();
-	return result;
 }
 
 }}

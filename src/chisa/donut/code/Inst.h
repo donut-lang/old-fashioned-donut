@@ -1,5 +1,5 @@
 /**
- * Nekomata
+ * Chisa
  * Copyright (C) 2012 psi
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,15 +18,34 @@
 
 #pragma once
 #include <string>
-#include <antlr3.h>
 
-namespace chisa{
-namespace donut{
+namespace chisa {
+namespace donut {
 
-const std::string createStringFromString(pANTLR3_STRING string);
-const std::string createStringFromToken(pANTLR3_COMMON_TOKEN tok);
-int parseInt(const std::string& str, int radix);
-float parseFloat(const std::string& str);
-const std::string unescapeString(const std::string& str);
+typedef unsigned int Instruction;
+enum Inst {
+	// inst
+	OpcodeMask  = 0xff<<24,
+	OpcodeShift  = 24,
+	Nop			= 0<<24,
+	Push		= 1<<24,
+	PushCopy	= 2<<24,
+	Pop			= 3<<24,
+	SearchScope	= 4<<24,
+	StoreObj	= 5<<24,
+	LoadObj		= 6<<24,
+	LoadLocal	= 7<<24,
+	StoreLocal	= 8<<24,
+	Apply		= 9<<24,
+	//const mask
+	ConstKindMask  = 0xff<<16,
+	ConstKindShift  = 16,
+	ConstNone	= 0<<16,
+	ConstInt	= 1<<16,
+	ConstBool	= 2<<16,
+	ConstFloat	= 3<<16,
+	ConstClosure= 4<<16,
+	ConstString	= 5<<16
+};
 
 }}

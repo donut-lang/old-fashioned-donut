@@ -14,12 +14,13 @@ options {
 #include <cstdlib>
 #include "../../code/Code.h"
 #include "../../code/Closure.h"
-#include "../../../util/StringUtil.h"
 #include "../ParseUtil.h"
 using namespace chisa;
 using namespace chisa::donut;
 using std::string;
-using chisa::util::unescapeString;
+using chisa::donut::unescapeString;
+using chisa::donut::parseInt;
+using chisa::donut::parseFloat;
 
 typedef pANTLR3_COMMON_TOKEN Token;
 }
@@ -27,15 +28,19 @@ typedef pANTLR3_COMMON_TOKEN Token;
 #undef __cplusplus
 }
 
-prog [ donut::Code* code]
+prog [ donut::Code* code] returns [ unsigned int mainClosure ]
 	: closure[$code]
+	{
+		$mainClosure = $closure.closureNo;
+	}
 	;
 
-closure [ donut::Code* code] returns [ std::vector<donut::Instruction> asmlist ]
+closure [ donut::Code* code] returns [ std::vector<donut::Instruction> asmlist, unsigned int closureNo ]
 	: ^(CLOS args[$code] block[$code]
 	{
 		Handler<donut::Closure> closure = Handler<donut::Closure>(new donut::Closure($args.list, $block.asmlist));
-		$asmlist.push_back(Inst::Push | $code->constCode<Handler<donut::Closure> >(closure));
+		$closureNo = $code->constCode<Handler<donut::Closure> >(closure);
+		$asmlist.push_back(Inst::Push | $closureNo);
 	}
 	)
 	;
@@ -155,29 +160,39 @@ literal [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist 
 	}
 	| HEX_LITERAL
 	{
-		$asmlist.push_back(Inst::Push | $code->constCode<bool>(true));
+		std::string str(createStringFromString($HEX_LITERAL.text));
+		int const val = parseInt(str, 16);
+		$asmlist.push_back(Inst::Push | $code->constCode<int>(val));
 	}
 	| OCT_LITERAL
 	{
 		std::string str(createStringFromString($OCT_LITERAL.text));
+		int const val = parseInt(str, 8);
+		$asmlist.push_back(Inst::Push | $code->constCode<int>(val));
 	}
 	| INT_LITERAL
 	{
 		std::string str(createStringFromString($INT_LITERAL.text));
+		int const val = parseInt(str, 10);
+		$asmlist.push_back(Inst::Push | $code->constCode<int>(val));
 	}
 	| FLOAT_LITERAL
 	{
 		std::string str(createStringFromString($FLOAT_LITERAL.text));
+		float const val = parseFloat(str);
+		$asmlist.push_back(Inst::Push | $code->constCode<float>(val));
 	}
 	| STRING_SINGLE
 	{
 		std::string str(createStringFromString($STRING_SINGLE.text));
 		str = unescapeString(str.substr(1, str.length()-2));
+		$asmlist.push_back(Inst::Push | $code->constCode<string>(str));
 	}
 	| STRING_DOUBLE
 	{
 		std::string str(createStringFromString($STRING_DOUBLE.text));
 		str = unescapeString(str.substr(1, str.length()-2));
+		$asmlist.push_back(Inst::Push | $code->constCode<string>(str));
 	}
 	;
 

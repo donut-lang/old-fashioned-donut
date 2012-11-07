@@ -18,6 +18,8 @@
 
 #include "Code.h"
 #include "Closure.h"
+#include "../../logging/Exception.h"
+#include "../../util/StringUtil.h"
 
 namespace chisa {
 namespace donut {
@@ -28,34 +30,82 @@ Code::Code()
 
 }
 
-template<>
-unsigned int Code::constCode<bool>(bool const& val)
+std::string Code::disasm( Instruction inst )
 {
-	return Inst::ConstBool;
+	Instruction const opcode = (inst >> Inst::OpcodeShift) & 0xff;
+	std::string repl=util::format("#%02x ", opcode);
+
+	switch(opcode) {
+
+	}
+
+	repl += " ";
+
+	Instruction const constKind = inst & Inst::ConstKindMask;
+	Instruction const constIndex = (inst) & 0xffff;
+	switch(constKind) {
+	case Inst::ConstNone:
+		break;
+	case Inst::ConstInt:
+		repl += util::format("<int> %d", this->intTable_.get(constIndex));
+		break;
+	case Inst::ConstBool:
+		repl += util::format("<bool> %s", constIndex == 0 ? "false" : "true");
+		break;
+	case Inst::ConstFloat:
+		repl += util::format("<float> %f", this->floatTable_.get(constIndex));
+		break;
+	case Inst::ConstClosure:
+		repl += util::format("<closure> %d", constIndex); //TODO
+		break;
+	case Inst::ConstString:
+		repl += util::format("<string> %s", this->stringTable_.get(constIndex).c_str());
+		break;
+	default:
+		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon const kind: %d", (constKind >> Inst::ConstKindShift));
+	}
+	return repl;
+}
+
+Handler<Closure> Code::getClosure(unsigned int index)
+{
+	index &= 0xffff;
+	return this->closureTable_.get(index);
+}
+
+std::size_t Code::numClosure() const
+{
+	return this->closureTable_.size();
 }
 
 template<>
-unsigned int Code::constCode<int>(int const& val)
+Instruction Code::constCode<bool>(bool const& val)
 {
-	return Inst::ConstInt;
+	return Inst::ConstBool | (val ? 1 : 0);
 }
 
 template<>
-unsigned int Code::constCode<float>(float const& val)
+Instruction Code::constCode<int>(int const& val)
 {
-	return Inst::ConstFloat;
+	return Inst::ConstInt | this->intTable_.regist(val);
 }
 
 template<>
-unsigned int Code::constCode<Handler<donut::Closure> >(Handler<donut::Closure> const& val)
+Instruction Code::constCode<float>(float const& val)
 {
-	return Inst::ConstClosure;
+	return Inst::ConstFloat | this->floatTable_.regist(val);
 }
 
 template<>
-unsigned int Code::constCode<std::string>(std::string const& val)
+Instruction Code::constCode<Handler<donut::Closure> >(Handler<donut::Closure> const& val)
 {
-	return Inst::ConstString;
+	return Inst::ConstClosure | this->closureTable_.regist(val);
+}
+
+template<>
+Instruction Code::constCode<std::string>(std::string const& val)
+{
+	return Inst::ConstString | this->stringTable_.regist(val);
 }
 
 }}

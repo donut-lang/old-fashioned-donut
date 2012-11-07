@@ -1,5 +1,5 @@
 /**
- * Nekomata
+ * Chisa
  * Copyright (C) 2012 psi
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,21 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <string>
-#include <antlr3.h>
-#include "ParseUtil.h"
+#include "Inst.h"
+#include "Code.h"
 
-namespace chisa{
-namespace donut{
+namespace chisa {
+namespace donut {
 
-const std::string createStringFromString(pANTLR3_STRING string){
-	if(string->encoding != ANTLR3_ENC_UTF8){
-		pANTLR3_STRING str = string->toUTF8(string);
-		return std::string(reinterpret_cast<const char*>(str->chars));
-	}
-	return std::string(reinterpret_cast<const char*>(string->chars));
-}
-const std::string createStringFromToken(pANTLR3_COMMON_TOKEN tok){
-	return createStringFromString(tok->getText(tok));
-}
+
+
 }}
