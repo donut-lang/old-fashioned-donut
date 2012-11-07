@@ -56,14 +56,39 @@ TEST_F(DonutParserTest, DotTest)
 	ASSERT_EQ(2, code->numClosure());
 	Handler<Closure> clos = code->getClosure(idx);
 
+	ASSERT_EQ(0, clos->arglist().size());
+	ASSERT_LT(0, clos->instlist().size());
+
+	Handler<Closure> another = code->getClosure((idx+1)%2);
+	ASSERT_EQ(1, another->arglist().size());
+	ASSERT_LT(0, another->instlist().size());
+}
+
+TEST_F(DonutParserTest, BinaryOpTest)
+{
+	unsigned int const idx = Parser::fromString(R"delimiter(
+test1=2;
+test2+=1;
+test3-=5;
+test4*=5.2;
+test5/=5;
+test6%=5;
+test7=test*=2;
+test8=test+1;
+test9=test-1;
+test10=test*1;
+test11=test/1;
+test12=test%1;
+			)delimiter", "<MEM>", 0)->parseProgram(code);
+	ASSERT_EQ(1, code->numClosure());
+	Handler<Closure> clos = code->getClosure(idx);
+
 	for(Instruction inst : clos->instlist()){
 		std::cout << code->disasm(inst) << std::endl;
 	}
 	ASSERT_EQ(0, clos->arglist().size());
 	ASSERT_LE(0, clos->instlist().size());
-
-	Handler<Closure> another = code->getClosure(idx+1%2);
-	ASSERT_EQ(1, another->arglist().size());
-	ASSERT_LE(0, another->instlist().size());
+}
 }}
+
 
