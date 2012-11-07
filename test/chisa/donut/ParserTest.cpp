@@ -83,12 +83,41 @@ test12=test%1;
 	ASSERT_EQ(1, code->numClosure());
 	Handler<Closure> clos = code->getClosure(idx);
 
+	ASSERT_EQ(0, clos->arglist().size());
+	ASSERT_LE(0, clos->instlist().size());
+}
+
+TEST_F(DonutParserTest, ArrayLiteralTest)
+{
+	unsigned int const idx = Parser::fromString(R"delimiter(
+[10,20,30,"test",12.3,];
+[10,20,30,"test",12.3];
+[];
+			)delimiter", "<MEM>", 0)->parseProgram(code);
+	ASSERT_EQ(1, code->numClosure());
+	Handler<Closure> clos = code->getClosure(idx);
+
+	ASSERT_EQ(0, clos->arglist().size());
+	ASSERT_LE(0, clos->instlist().size());
+}
+
+TEST_F(DonutParserTest, ObjectLiteralTest)
+{
+	unsigned int const idx = Parser::fromString(R"delimiter(
+{a=>"a1", b=>"b2", c=>"c3",}; //カンマあり
+{a=>"a1", b=>"b2", c=>"c3"}; //カンマなし
+{}; //空
+	)delimiter", "<MEM>", 0)->parseProgram(code);
+	ASSERT_EQ(1, code->numClosure());
+	Handler<Closure> clos = code->getClosure(idx);
+
 	for(Instruction inst : clos->instlist()){
 		std::cout << code->disasm(inst) << std::endl;
 	}
 	ASSERT_EQ(0, clos->arglist().size());
 	ASSERT_LE(0, clos->instlist().size());
 }
+
 }}
 
 

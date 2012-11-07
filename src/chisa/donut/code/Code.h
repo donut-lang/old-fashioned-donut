@@ -41,7 +41,7 @@ public:
 			return idx;
 		}
 	}
-	T get(std::size_t index)
+	T get(std::size_t index) const
 	{
 		if(index >= table_.size()){
 			throw logging::Exception(__FILE__, __LINE__, "Unknown const index: %d", index);
@@ -70,7 +70,11 @@ public:
 	std::size_t numClosure() const;
 public:
 	std::string disasm( Instruction inst );
-	void disasm( Instruction inst, Instruction& opcode, Instruction& constKind, Instruction& constIndex );
+	inline void disasm( Instruction inst, Instruction& opcode, Instruction& constKind, Instruction& constIndex ) const {
+		opcode = inst & Inst::OpcodeMask;
+		constKind = inst & Inst::ConstKindMask;
+		constIndex = inst & 0xffff;
+	}
 };
 
 }}

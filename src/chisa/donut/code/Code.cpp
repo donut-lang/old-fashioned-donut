@@ -30,13 +30,6 @@ Code::Code()
 
 }
 
-void Code::disasm( Instruction inst, Instruction& opcode, Instruction& constKind, Instruction& constIndex )
-{
-	opcode = inst & Inst::OpcodeMask;
-	constKind = inst & Inst::ConstKindMask;
-	constIndex = inst & 0xffff;
-}
-
 std::string Code::disasm( Instruction inst )
 {
 	Instruction opcode;
