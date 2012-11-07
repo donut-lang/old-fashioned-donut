@@ -317,7 +317,7 @@ protected:
 protected:
 	inline int refcount() const noexcept { return this->refcount_; };
 	inline Handler<Derived> self() { return Handler<Derived>::__internal__fromRawPointerWithoutCheck(static_cast<Derived*>(this)); };
-private:
+protected:
 	inline void incref() noexcept { this->refcount_++; }
 	inline void decref(){
 		this->refcount_--;
