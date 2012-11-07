@@ -102,7 +102,7 @@ expr [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 		$asmlist.push_back(Inst::StoreObj);
 	})
 	| ^(ASSIGN_OP asopoperation=operation ^(DOT SCOPE IDENT) asoprhs=expr[$code] {
-		//予めスコープを解決しておく	
+		//予めスコープを解決して、ローカルに格納
 		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
 		$asmlist.push_back(Inst::SearchScope);
 		$asmlist.push_back(Inst::StoreLocal | 0);
@@ -111,7 +111,7 @@ expr [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 		{ //送信元オブジェクトを探す
 			$asmlist.push_back(Inst::LoadLocal | 0);
 			//適用先：解決されたスコープの先
-		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
+			$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
 			$asmlist.push_back(Inst::LoadObj);
 		}
 		//メソッドを解決して実行
@@ -132,9 +132,27 @@ expr [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 		//スコープオブジェクトをローカルにコピー
 		$asmlist.insert($asmlist.end(), $asscope.asmlist.begin(), $asscope.asmlist.end());
 		$asmlist.push_back(Inst::StoreLocal | 0);
-		// 
 		//第１引数：rhsオブジェクト
 		$asmlist.insert($asmlist.end(), $asoprhs.asmlist.begin(), $asoprhs.asmlist.end());
+		{ //送信元オブジェクトを探す
+			$asmlist.push_back(Inst::LoadLocal | 0);
+			//適用先：解決されたスコープの先
+			$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
+			$asmlist.push_back(Inst::LoadObj);
+		}
+		//メソッドを解決して実行
+		$asmlist.push_back(Inst::PushCopy | 0);
+		$asmlist.push_back(Inst::Push | $code->constCode<string>($asopoperation.sym));
+		$asmlist.push_back(Inst::LoadObj);
+		$asmlist.push_back(Inst::Apply | 1);
+		//ここまでで、スタック上に結果が乗っかってる
+		
+		//第一引数：名前
+		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
+		//適用先：解決されたスコープの先
+		$asmlist.push_back(Inst::LoadLocal | 0);
+		//設定
+		$asmlist.push_back(Inst::StoreObj);
 	})
 	| ^(unary_operation uobj=expr[$code] {
 		//適用先：オブジェクト

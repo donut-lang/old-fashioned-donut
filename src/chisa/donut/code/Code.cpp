@@ -30,9 +30,20 @@ Code::Code()
 
 }
 
+void Code::disasm( Instruction inst, Instruction& opcode, Instruction& constKind, Instruction& constIndex )
+{
+	opcode = inst & Inst::OpcodeMask;
+	constKind = inst & Inst::ConstKindMask;
+	constIndex = inst & 0xffff;
+}
+
 std::string Code::disasm( Instruction inst )
 {
-	Instruction const opcode = (inst >> Inst::OpcodeShift) & 0xff;
+	Instruction opcode;
+	Instruction constKind;
+	Instruction constIndex;
+	this->disasm(inst, opcode, constKind, constIndex);
+
 	std::string repl=util::format("#%02x ", opcode);
 
 	switch(opcode) {
@@ -41,8 +52,6 @@ std::string Code::disasm( Instruction inst )
 
 	repl += " ";
 
-	Instruction const constKind = inst & Inst::ConstKindMask;
-	Instruction const constIndex = (inst) & 0xffff;
 	switch(constKind) {
 	case Inst::ConstOperand:
 		repl += util::format("<%d>", constIndex);
