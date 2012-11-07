@@ -51,10 +51,10 @@ vars [ donut::Code* code ] returns [ std::vector<std::string> list ]
 	})*);
 
 block [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
-	: ^(CONT ex=expr[$code]*)
+	: ^(CONT (ex=expr[$code]
 	{
 		$asmlist.insert($asmlist.end(), $ex.asmlist.begin(), $ex.asmlist.end());
-	}
+	})*)
 	;
 
 operation returns [ std::string sym ]
