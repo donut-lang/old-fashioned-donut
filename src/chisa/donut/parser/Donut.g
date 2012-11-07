@@ -14,9 +14,6 @@ tokens {
 	IDX;
 	APPLY;
 	
-	TRUE;
-	FALSE;
-	
 	ASSIGN;
 	ASSIGN_OP;
 	POST_OP;
@@ -34,10 +31,22 @@ tokens {
 
 	SCOPE;
 	DOT;
+	
+	AND;
+	OR;
+	
+	CLT;
+	CGT;
+	CLE;
+	CGE;
+	CEQ;
+	CNE;
+	
 }
 
 @includes {
 #undef __cplusplus
+#undef LT
 }
 
 source : program EOF -> program;
@@ -60,15 +69,28 @@ expr6 : (a=expr5->$a)
 	)?;
 
 
-expr5 : expr4 ('||'^ expr4)*;
-expr4 : expr3 ('&&'^ expr3)*;
+expr5 : (a=expr4->$a) ('||' b=expr4 -> ^(OR $a $b))*;
+expr4 : (a=expr3->$a) ('&&' b=expr3 -> ^(AND $a $b))*;
 
+expr3 : (a=expr2->$a) 
+	( '<' b=expr2 -> ^(CLT $a $b)
+	| '>' b=expr2 -> ^(CGT $a $b)
+	| '==' b=expr2 -> ^(CEQ $a $b)
+	| '!=' b=expr2 -> ^(CNE $a $b)
+	| '<=' b=expr2 -> ^(CLE $a $b)
+	| '>=' b=expr2 -> ^(CGE $a $b)
+	)*;
 
-expr3 : expr2 (('<'^ | '>'^ | '=='^ | '!='^ | '<='^ | '>='^ ) expr2)*;
+expr2 : (a=expr1->$a)
+	( '+' b=expr1 -> ^(ADD $a $b)
+	| '-' b=expr1 -> ^(SUB $a $b)
+	)*;
 
-expr2 : expr1 (('+'^|'-'^) expr1)*;
-
-expr1  : term (('*'^|'/'^|'%'^) term)*;
+expr1  : (a=term->$a)
+	( '*' b=term -> ^(MUL $a $b)
+	| '/' b=term -> ^(DIV	$a $b)
+	| '%' b=term -> ^(MOD $a $b)
+	)*;
 
 term
 	: '++' term -> ^(PRE_OP ADD term)
