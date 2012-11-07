@@ -21,7 +21,8 @@
 namespace chisa {
 namespace donut {
 
-Object::Object()
+Object::Object(ObjectPool& pool)
+:pool_(pool)
 {
 	// TODO Auto-generated constructor stub
 

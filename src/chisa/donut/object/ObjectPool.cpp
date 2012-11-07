@@ -21,10 +21,12 @@
 namespace chisa {
 namespace donut {
 
-ObjectPool::ObjectPool()
+ObjectPool::ObjectPool(logging::Logger& log)
+:log_(log),time_(0)
 {
 	// TODO Auto-generated constructor stub
 
 }
+
 
 }}

@@ -20,13 +20,16 @@
 #include <cstdint>
 #include <map>
 #include <vector>
+#include <functional>
 #include "../../Handler.h"
 
 namespace chisa {
 namespace donut {
+class ObjectPool;
 
 class Object : public HandlerBody<Object> {
 private:
+	ObjectPool& pool_;
 	std::map<std::string, std::map<unsigned int, Handler<Object> > > slots_;
 public:
 	enum Tag{
@@ -36,7 +39,7 @@ public:
 		Bool=2U
 	};
 public:
-	Object();
+	Object(ObjectPool& pool);
 	virtual ~Object() noexcept = default;
 public:
 	std::string toString() const;
@@ -49,7 +52,10 @@ public:
 	inline void onFree() {};//参照カウント、どうしましょう？？
 	inline void incref() { if(isObject()) { this->HandlerBody<Object>::incref(); } };
 	inline void decref() { if(isObject()) { this->HandlerBody<Object>::decref(); } };
+};
 
+class NativeClosure {
+	std::function<void(Handler<Object> self, Handler<Object> arg)> func;
 };
 
 }}

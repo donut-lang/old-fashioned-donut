@@ -16,28 +16,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-#include "../../logging/Logger.h"
-#include "../../util/ClassUtil.h"
-#include "../../Handler.h"
+#include "Machine.h"
 
 namespace chisa {
 namespace donut {
 
-class ObjectPool {
-	DEFINE_MEMBER_REF(private, logging::Logger, log)
-private:
-	unsigned int time_;
-public:
-	ObjectPool(logging::Logger& log);
-	virtual ~ObjectPool() noexcept = default;
-public:
-	template <typename T, typename... Args>
-	Handler<T> create(const Args&... args)
-	{
-		Handler<T> obj(new T(*this, args...));
-		return obj;
+Machine::Machine(ObjectPool& pool)
+:pc_(0),pool_(pool)
+{
+	// TODO Auto-generated constructor stub
+
+}
+
+void Machine::start(Handler<Closure> clos)
+{
+
+}
+
+void Machine::run()
+{
+	while(1){
+		Handler<Object> clos(this->callStack_.back());
 	}
-};
+}
 
 }}
+
