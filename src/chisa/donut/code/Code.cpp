@@ -44,7 +44,7 @@ std::string Code::disasm( Instruction inst )
 	Instruction constIndex;
 	this->disasm(inst, opcode, constKind, constIndex);
 
-	std::string repl=util::format("#%02x ", opcode);
+	std::string repl=util::format("#%02x ", inst);
 
 	switch(opcode) {
 
@@ -57,19 +57,19 @@ std::string Code::disasm( Instruction inst )
 		repl += util::format("<%d>", constIndex);
 		break;
 	case Inst::ConstInt:
-		repl += util::format("<int> %d", this->intTable_.get(constIndex));
+		repl += util::format("<int:%d> %d", constIndex, this->intTable_.get(constIndex));
 		break;
 	case Inst::ConstBool:
-		repl += util::format("<bool> %s", constIndex == 0 ? "false" : "true");
+		repl += util::format("<bool:%d> %s, constIndex", constIndex == 0 ? "false" : "true");
 		break;
 	case Inst::ConstFloat:
-		repl += util::format("<float> %f", this->floatTable_.get(constIndex));
+		repl += util::format("<float:%d> %f", constIndex, this->floatTable_.get(constIndex));
 		break;
 	case Inst::ConstClosure:
-		repl += util::format("<closure> %d", constIndex); //TODO
+		repl += util::format("<closure:%d> %d", constIndex, constIndex); //TODO
 		break;
 	case Inst::ConstString:
-		repl += util::format("<string> %s", this->stringTable_.get(constIndex).c_str());
+		repl += util::format("<string:%d> %s", constIndex, this->stringTable_.get(constIndex).c_str());
 		break;
 	default:
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon const kind: %d", (constKind >> Inst::ConstKindShift));
