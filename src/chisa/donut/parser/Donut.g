@@ -51,7 +51,7 @@ tokens {
 
 source : program EOF -> program;
 
-program : exprlist -> ^(CLOS ARGS exprlist);
+program : exprlist -> ^(CLOS VARS exprlist);
 
 exprlist : expr ((';')+ expr)* (';')? -> ^(CONT expr*);
 

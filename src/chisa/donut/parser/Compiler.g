@@ -36,17 +36,17 @@ prog [ donut::Code* code] returns [ unsigned int mainClosure ]
 	;
 
 closure [ donut::Code* code] returns [ std::vector<donut::Instruction> asmlist, unsigned int closureNo ]
-	: ^(CLOS args[$code] block[$code]
+	: ^(CLOS vars[$code] block[$code]
 	{
-		Handler<donut::Closure> closure = Handler<donut::Closure>(new donut::Closure($args.list, $block.asmlist));
+		Handler<donut::Closure> closure = Handler<donut::Closure>(new donut::Closure($vars.list, $block.asmlist));
 		$closureNo = $code->constCode<Handler<donut::Closure> >(closure);
 		$asmlist.push_back(Inst::Push | $closureNo);
 	}
 	)
 	;
 
-args [ donut::Code* code ] returns [ std::vector<std::string> list ]
-	: ^(ARGS (IDENT{
+vars [ donut::Code* code ] returns [ std::vector<std::string> list ]
+	: ^(VARS (IDENT{
 		list.push_back(createStringFromString($IDENT.text));
 	})*);
 
@@ -80,20 +80,13 @@ unary_operation returns [ std::string sym ]
 	;
 
 expr [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
-@init {
-	int array_count=0;
-}
-	: closure[$code]
+	: lt=literal[$code]
+	{
+		$asmlist.swap($lt.asmlist);
+	}
 //	| ^(APPLY)
 //	| ^(ACCESS)
 //	| ^(IDX)
-	| ^(ARRAY (arrayexpr=expr[$code] {
-		$asmlist.insert($asmlist.end(), $arrayexpr.asmlist.begin(), $arrayexpr.asmlist.end());
-		array_count+=1;
-	}
-	)* {
-		$asmlist.push_back(Inst::ConstructArray | array_count);
-	})
 	| ^(POST_OP postop=operation ^(DOT SCOPE IDENT) {
 		//操作対象オブジェクトを取得
 		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
@@ -259,11 +252,23 @@ expr [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 		//実行：引数：１
 		$asmlist.push_back(Inst::Apply | 1);
 	})
-	| lt=literal[$code]
+	| ^(DOT dexpr=expr[$code] IDENT)
 	{
-		$asmlist.insert($asmlist.end(), $lt.asmlist.begin(), $lt.asmlist.end());
+		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
+		//スコープオブジェクトをローカルにコピーして、名前解決
+		$asmlist.insert($asmlist.end(), $dexpr.asmlist.begin(), $dexpr.asmlist.end());
+		$asmlist.push_back(Inst::LoadObj);
+	}
+	| ^(DOT SCOPE IDENT)
+	{
+		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
+		//スコープオブジェクトをローカルにコピーして、名前解決
+		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
+		$asmlist.push_back(Inst::SearchScope);
+		$asmlist.push_back(Inst::LoadObj);
 	}
 	;
+
 
 literal [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	: 'true'
@@ -310,5 +315,20 @@ literal [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist 
 		str = unescapeString(str.substr(1, str.length()-2));
 		$asmlist.push_back(Inst::Push | $code->constCode<string>(str));
 	}
+	| array[$code] { $asmlist.swap($array.asmlist); }
+	| closure[$code] { $asmlist.swap($closure.asmlist); }
+	;
+
+array [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
+@init {
+	int array_count=0;
+}
+	: ^(ARRAY (arrayexpr=expr[$code] {
+		$asmlist.insert($asmlist.end(), $arrayexpr.asmlist.begin(), $arrayexpr.asmlist.end());
+		array_count+=1;
+	}
+	)* {
+		$asmlist.push_back(Inst::ConstructArray | array_count);
+	})
 	;
 
