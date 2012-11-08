@@ -62,36 +62,36 @@ expr
 	| expr6;
 
 expr6 : (a=expr5->$a)
-	( '='  b=expr -> ^(ASSIGN $a $b)
-	| '+=' b=expr -> ^(ASSIGN_OP ADD $a $b)
-	| '-=' b=expr -> ^(ASSIGN_OP SUB $a $b)
-	| '*=' b=expr -> ^(ASSIGN_OP MUL $a $b)
-	| '/=' b=expr -> ^(ASSIGN_OP DIV $a $b)
-	| '%=' b=expr -> ^(ASSIGN_OP MOD $a $b)
+	( '='  b=expr -> ^(ASSIGN $expr6 $b)
+	| '+=' b=expr -> ^(ASSIGN_OP ADD $expr6 $b)
+	| '-=' b=expr -> ^(ASSIGN_OP SUB $expr6 $b)
+	| '*=' b=expr -> ^(ASSIGN_OP MUL $expr6 $b)
+	| '/=' b=expr -> ^(ASSIGN_OP DIV $expr6 $b)
+	| '%=' b=expr -> ^(ASSIGN_OP MOD $expr6 $b)
 	)?;
 
 
-expr5 : (a=expr4->$a) ('||' b=expr4 -> ^(OR $a $b))*;
-expr4 : (a=expr3->$a) ('&&' b=expr3 -> ^(AND $a $b))*;
+expr5 : (a=expr4->$a) ('||' b=expr4 -> ^(OR $expr5 $b))*;
+expr4 : (a=expr3->$a) ('&&' b=expr3 -> ^(AND $expr4 $b))*;
 
 expr3 : (a=expr2->$a) 
-	( '<' b=expr2 -> ^(CLT $a $b)
-	| '>' b=expr2 -> ^(CGT $a $b)
-	| '==' b=expr2 -> ^(CEQ $a $b)
-	| '!=' b=expr2 -> ^(CNE $a $b)
-	| '<=' b=expr2 -> ^(CLE $a $b)
-	| '>=' b=expr2 -> ^(CGE $a $b)
+	( '<' b=expr2 -> ^(CLT $expr3 $b)
+	| '>' b=expr2 -> ^(CGT $expr3 $b)
+	| '==' b=expr2 -> ^(CEQ $expr3 $b)
+	| '!=' b=expr2 -> ^(CNE $expr3 $b)
+	| '<=' b=expr2 -> ^(CLE $expr3 $b)
+	| '>=' b=expr2 -> ^(CGE $expr3 $b)
 	)*;
 
 expr2 : (a=expr1->$a)
-	( '+' b=expr1 -> ^(ADD $a $b)
-	| '-' b=expr1 -> ^(SUB $a $b)
+	( '+' b=expr1 -> ^(ADD $expr2 $b)
+	| '-' b=expr1 -> ^(SUB $expr2 $b)
 	)*;
 
 expr1  : (a=term->$a)
-	( '*' b=term -> ^(MUL $a $b)
-	| '/' b=term -> ^(DIV	$a $b)
-	| '%' b=term -> ^(MOD $a $b)
+	( '*' b=term -> ^(MUL $expr1 $b)
+	| '/' b=term -> ^(DIV $expr1 $b)
+	| '%' b=term -> ^(MOD $expr1 $b)
 	)*;
 
 term
@@ -104,11 +104,11 @@ term
 	;
 postfix
 	: (p=primary->$p)
-	( '++' -> ^(POST_OP ADD $p)
-	| '--'	-> ^(POST_OP SUB $p)
-	| '.' n=name -> ^(DOT $p $n)
-	| '[' arl=arglist ']' -> ^(IDX $p $arl)
-	| '(' apl=arglist ')' -> ^(APPLY $p $apl)
+	( '++' -> ^(POST_OP ADD $postfix)
+	| '--'	-> ^(POST_OP SUB $postfix)
+	| '.' n=name -> ^(DOT $postfix $n)
+	| '[' arl=arglist ']' -> ^(IDX $postfix $arl)
+	| '(' apl=arglist ')' -> ^(APPLY $postfix $apl)
 	)*
 	;
 primary

@@ -111,9 +111,6 @@ TEST_F(DonutParserTest, ObjectLiteralTest)
 	ASSERT_EQ(1, code->numClosure());
 	Handler<Closure> clos = code->getClosure(idx);
 
-	for(Instruction inst : clos->instlist()){
-		std::cout << code->disasm(inst) << std::endl;
-	}
 	ASSERT_EQ(0, clos->arglist().size());
 	ASSERT_LE(0, clos->instlist().size());
 }
