@@ -22,11 +22,15 @@ namespace chisa {
 namespace donut {
 
 ObjectPool::ObjectPool(logging::Logger& log)
-:log_(log),time_(0)
+:log_(log),generation_(0)
 {
 	// TODO Auto-generated constructor stub
 
 }
 
+unsigned int ObjectPool::nextGeneration()
+{
+	return ++this->generation_;
+}
 
 }}
