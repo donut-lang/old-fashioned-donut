@@ -284,7 +284,7 @@ index [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	;
 
 apply [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
-	: ^(APPLY ^(DOT SCOPE IDENT) ^(ARGS exprlist[$code]))
+	: ^(APPLY ^(DOT SCOPE IDENT) ^(ARGS ex=exprlist[$code]))
 	{
 		$asmlist.insert($asmlist.end(), $ex.asmlist.begin(), $ex.asmlist.end());
 		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
