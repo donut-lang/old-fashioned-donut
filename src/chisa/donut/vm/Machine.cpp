@@ -33,11 +33,11 @@ Machine::Machine(logging::Logger& log, World* world)
 {
 }
 
-void Machine::start( const std::size_t closureIndex )
+Handler<Object> Machine::start( const std::size_t closureIndex )
 {
 	this->closure_ = world_->create<ClosureObject>(world_->code()->getClosure(closureIndex));
 	this->pc_ = 0;
-	this->run();
+	return this->run();
 }
 
 void Machine::enterClosure(Handler<ClosureObject> clos)
@@ -56,7 +56,7 @@ void Machine::returnClosure()
 	this->closure_ = st.first;
 	this->pc_ = st.second;
 }
-void Machine::run()
+Handler<Object> Machine::run()
 {
 	Handler<Code> code = this->world_->code();
 	std::vector<Instruction> const& asmlist(closure_->closure()->instlist());
@@ -74,15 +74,19 @@ void Machine::run()
 			switch(constKind){
 			case Inst::ConstBool: {
 				this->stack_.push_back( world_->createBool( code->getInt(constIndex) ) );
+				break;
 			}
 			case Inst::ConstFloat: {
 				this->stack_.push_back( world_->create<FloatObject>( code->getFloat(constIndex) ) );
+				break;
 			}
 			case Inst::ConstClosure: {
 				this->stack_.push_back( world_->create<ClosureObject>( code->getClosure(constIndex) ) );
+				break;
 			}
 			case Inst::ConstInt: {
 				this->stack_.push_back( world_->createInt( code->getInt(constIndex) ) );
+				break;
 			}
 			case Inst::ConstString: {
 				this->stack_.push_back( world_->create<StringObject>( code->getString(constIndex) ) );
@@ -169,6 +173,9 @@ void Machine::run()
 			throw logging::Exception(__FILE__, __LINE__, "[BUG] Oops. Unknwon opcode: closure<%s>:%08x", closure_->toString(world_).c_str(), this->pc_-1);
 		}
 	}
+	Handler<Object> result(this->stack_.back());
+	this->stack_.pop_back();
+	return result;
 }
 
 }}
