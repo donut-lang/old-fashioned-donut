@@ -24,27 +24,34 @@ namespace donut {
 Machine::Machine(World* pool)
 :pc_(0),world_(pool)
 {
-	// TODO Auto-generated constructor stub
 
 }
 
 void Machine::enterClosure(Handler<Closure> clos)
 {
-
+	if(this->closure_){
+		this->callStack_.push_back( std::pair<Handler<ClosureObject>, pc_t >(this->closure_,this->pc_) );
+	}
 }
 
+void Machine::returnClosure()
+{
+	std::pair<Handler<ClosureObject>, pc_t > st = this->callStack_.back();
+	this->callStack_.pop_back();
+	this->closure_ = st.first;
+	this->pc_ = st.second;
+}
 void Machine::run()
 {
 	Handler<Code> code = this->world_->code();
-	Handler<ClosureObject> closObj(this->callStack_.back());
-	std::vector<Instruction> const& asmlist(closObj->closure()->instlist());
+	std::vector<Instruction> const& asmlist(closure_->closure()->instlist());
 	while(1){
 		Instruction inst = asmlist[this->pc_++];
 		Instruction opcode, constKind, constIndex;
 		code->disasm(inst, opcode, constKind, constIndex);
 		switch(opcode){
 		default:
-			throw logging::Exception(__FILE__, __LINE__, "[BUG] Oops. Unknwon opcode: closure<%s>:%08x", closObj->toString(world_).c_str(), this->pc_-1);
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] Oops. Unknwon opcode: closure<%s>:%08x", closure_->toString(world_).c_str(), this->pc_-1);
 		}
 	}
 }
