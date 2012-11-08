@@ -65,7 +65,7 @@ Handler<Object> Machine::run()
 		Instruction opcode, constKind, constIndex;
 		code->disasm(inst, opcode, constKind, constIndex);
 		if(this->log().t()){
-			this->log().t(TAG, code->disasm(inst));
+			this->log().t(TAG, util::format("$%04x ", this->pc_)+code->disasm(inst));
 		}
 		switch(opcode){
 		case Inst::Nop:
