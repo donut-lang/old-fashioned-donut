@@ -28,6 +28,7 @@ namespace util {
 
 std::string format(const std::string& fmt, ...);
 std::string formatv(const std::string& fmt, va_list args);
+std::string toString(const int val, int radix=10);
 std::string decodePercent(const std::string& str);
 void split(const std::string& str, const std::string& sep, std::vector<std::string>& list);
 void split(const std::string& str, const std::string* sep, size_t n, std::vector<std::string>& list);

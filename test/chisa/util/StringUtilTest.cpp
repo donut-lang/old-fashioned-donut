@@ -37,6 +37,16 @@ TEST(StringUtilTest, FormatTest)
 	ASSERT_EQ("test  test", format("test %s test", ""));
 }
 
+TEST(StringUtilTest, ToStringTest)
+{
+	ASSERT_EQ("12", toString(12));
+	ASSERT_EQ("12", toString(12, 0));
+	ASSERT_EQ("12", toString(12, 10));
+
+	ASSERT_EQ("014", toString(12, 8));
+	ASSERT_EQ("0xc", toString(12, 16));
+}
+
 TEST(StringUtilTest, NumericTest)
 {
 	ASSERT_EQ("123", format("%d", 123));
