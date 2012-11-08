@@ -32,7 +32,7 @@ Handler<Object> Proxy::load(const Object* ptr, const std::string& name)
 {
 	auto it = this->closureMap_.find(name);
 	if(it == this->closureMap_.end()){
-		throw DonutException(__FILE__, __LINE__, "Ccannot convert from boolean to float.");
+		throw DonutException(__FILE__, __LINE__, "\"%s\" for \"\%s\" not found.", name.c_str(), ptr->toString(world()).c_str());
 	}
 	return Handler<Object>::__internal__fromRawPointerWithoutCheck(it->second.get());
 }

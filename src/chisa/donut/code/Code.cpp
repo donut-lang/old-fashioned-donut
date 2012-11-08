@@ -18,7 +18,7 @@
 
 #include "Code.h"
 #include "Closure.h"
-#include "../../logging/Exception.h"
+#include "..//Exception.h"
 #include "../../util/StringUtil.h"
 
 namespace chisa {
@@ -40,32 +40,71 @@ std::string Code::disasm( Instruction inst )
 	std::string repl=util::format("#%02x ", inst);
 
 	switch(opcode) {
-
+	case Nop:
+		repl += "Nop";
+		break;
+	case Push:
+		repl += "Push";
+		break;
+	case PushCopy:
+		repl += "PushCopy";
+		break;
+	case Pop:
+		repl += "Pop";
+		break;
+	case SearchScope:
+		repl += "SearchScope";
+		break;
+	case StoreObj:
+		repl += "StoreObj";
+		break;
+	case LoadObj:
+		repl += "LoadObj";
+		break;
+	case LoadLocal:
+		repl += "LoadLocal";
+		break;
+	case StoreLocal:
+		repl += "StoreLocal";
+		break;
+	case Apply:
+		repl += "Apply";
+		break;
+	case ConstructArray:
+		repl += "ConstuctArray";
+		break;
+	case ConstructObject:
+		repl += "ConstuctObject";
+		break;
+	default:
+		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon opcode: %d", (opcode >> Inst::OpcodeShift));
 	}
 
-	repl += " ";
+	while(repl.size() < 22){
+		repl += " ";
+	}
 
 	switch(constKind) {
 	case Inst::ConstOperand:
-		repl += util::format("<%d>", constIndex);
+		repl += util::format("%d", constIndex);
 		break;
 	case Inst::ConstInt:
-		repl += util::format("<int:%d> %d", constIndex, this->intTable_.get(constIndex));
+		repl += util::format("int:%d -> %d", constIndex, this->intTable_.get(constIndex));
 		break;
 	case Inst::ConstBool:
-		repl += util::format("<bool:%d> %s, constIndex", constIndex == 0 ? "false" : "true");
+		repl += util::format("bool:%d -> %s, constIndex", constIndex == 0 ? "false" : "true");
 		break;
 	case Inst::ConstFloat:
-		repl += util::format("<float:%d> %f", constIndex, this->floatTable_.get(constIndex));
+		repl += util::format("float:%d -> %f", constIndex, this->floatTable_.get(constIndex));
 		break;
 	case Inst::ConstClosure:
-		repl += util::format("<closure:%d> %d", constIndex, constIndex); //TODO
+		repl += util::format("closure:%d -> %d", constIndex, constIndex); //TODO
 		break;
 	case Inst::ConstString:
-		repl += util::format("<string:%d> %s", constIndex, this->stringTable_.get(constIndex).c_str());
+		repl += util::format("string:%d -> %s", constIndex, this->stringTable_.get(constIndex).c_str());
 		break;
 	default:
-		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon const kind: %d", (constKind >> Inst::ConstKindShift));
+		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon const kind: %d", (constKind >> Inst::ConstKindShift));
 	}
 	return repl;
 }

@@ -87,6 +87,7 @@ Object* Slot::store(Object* obj)
 {
 	this->discardFuture();
 	this->rev_.push_back( std::pair<gen_t, Object*>(this->world_->nextGeneration(), obj) );
+	this->index_ = this->rev_.end()-1;
 	return obj;
 }
 
