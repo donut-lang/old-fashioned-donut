@@ -73,12 +73,22 @@ def configureLibrary(conf):
 			conf.to_log("Google perftools not found, so performance will not measureable.")
 	#リリースとデバッグで変更
 
-TEST_SRC=TINYXML2_SRC+enum('src', [udir('src/entrypoint')])+enum('test')
-MAIN_SRC=TINYXML2_SRC+enum('src', [udir('src/entrypoint')])+enum(udir('src/entrypoint/pc/'))
+ANTLR_IN_SRC = [
+		udir('src/chisa/donut/parser/Compiler.g'),
+		udir('src/chisa/donut/parser/Donut.g')]
+ANTLR_OUT_DIR=udir('src/chisa/donut/parser/output')
+ANTLR_OUT_SRC = [
+		udir('{0}/Compiler.cpp'.format(ANTLR_OUT_DIR)),
+		udir('{0}/DonutLexer.cpp'.format(ANTLR_OUT_DIR)),
+		udir('{0}/DonutParser.cpp'.format(ANTLR_OUT_DIR))]
+TEST_SRC=ANTLR_OUT_SRC+TINYXML2_SRC+enum('src', [udir('src/entrypoint'), ANTLR_OUT_DIR])+enum('test')
+MAIN_SRC=ANTLR_OUT_SRC+TINYXML2_SRC+enum('src', [udir('src/entrypoint'), ANTLR_OUT_DIR])+enum(udir('src/entrypoint/pc/'))
 
 def build(bld):
 	if not bld.variant:
 		bld.fatal('call "waf build_debug" or "waf build_release", and try "waf --help"')
+	srcdir=repr(bld.path)
+	bld(name="Parser", source=ANTLR_IN_SRC, target=ANTLR_OUT_SRC, rule="sh {0}/makeParser.sh".format(srcdir))
 	bld(features = 'cxx cprogram', source = MAIN_SRC, target = 'chisa', use=['PPROF','PTHREAD', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU','ANTLR'])
 	bld(features = 'cxx cprogram', source = TEST_SRC, target = 'chisa_test', use=['PTHREAD', 'OPENGL','FREETYPE2','CAIRO','GTEST','LIBPNG','BOOST','ICU','ANTLR'])
 
