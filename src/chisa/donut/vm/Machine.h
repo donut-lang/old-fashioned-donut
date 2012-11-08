@@ -27,18 +27,23 @@ namespace donut {
 class World;
 
 class Machine {
+	typedef unsigned int pc_t;
 private:
-	std::size_t pc_;
+	pc_t pc_;
 	std::vector<Handler<Object> > stack_;
 	std::vector<Handler<Object> > local_;
 	std::vector<Handler<Object> > selfStack_;
-	std::vector<Handler<ClosureObject> > callStack_;
+	std::vector<std::pair<Handler<ClosureObject>, pc_t> > callStack_;
+	Handler<ClosureObject> closure_;
 	World* const world_;
 public:
 	Machine(World* world);
 	virtual ~Machine() noexcept = default;
 public:
+
+private:
 	void enterClosure(Handler<Closure> clos);
+	void returnClosure();
 private:
 	void run();
 };
