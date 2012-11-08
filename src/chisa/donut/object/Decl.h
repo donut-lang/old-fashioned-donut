@@ -17,29 +17,10 @@
  */
 
 #pragma once
-#include "../../logging/Logger.h"
-#include "../../util/ClassUtil.h"
-#include "../../Handler.h"
 
 namespace chisa {
 namespace donut {
 
-class ObjectPool {
-	DEFINE_MEMBER_REF(public, logging::Logger, log)
-private:
-	unsigned int generation_;
-public:
-	ObjectPool(logging::Logger& log);
-	virtual ~ObjectPool() noexcept = default;
-public:
-	unsigned int nextGeneration();
-public:
-	template <typename T, typename... Args>
-	Handler<T> create(const Args&... args)
-	{
-		Handler<T> obj(new T(*this, args...));
-		return obj;
-	}
-};
+typedef unsigned int gen_t;
 
 }}

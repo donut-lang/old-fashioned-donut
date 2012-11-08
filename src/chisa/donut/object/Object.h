@@ -19,18 +19,20 @@
 #pragma once
 #include <cstdint>
 #include <map>
-#include <vector>
 #include <functional>
 #include "../../Handler.h"
+#include "../../util/ClassUtil.h"
+#include "Slot.h"
 
 namespace chisa {
 namespace donut {
 class ObjectPool;
 
 class Object : public HandlerBody<Object> {
+	DISABLE_COPY_AND_ASSIGN(Object);
 private:
-	ObjectPool& pool_;
-	std::map<std::string, std::map<unsigned int, Handler<Object> > > slots_;
+	ObjectPool* const pool_;
+	std::map<std::string, Slot> slots_;
 public:
 	enum Tag{
 		Mask=3U,
@@ -39,13 +41,16 @@ public:
 		Bool=2U
 	};
 public:
-	Object(ObjectPool& pool);
+	Object(ObjectPool* const pool);
 	virtual ~Object() noexcept = default;
 public:
 	std::string toString() const;
 	int toInt() const;
 	float toFloat() const;
 	bool toBool() const;
+public:
+	Handler<Object> store(const std::string& name, Handler<Object> obj);
+	Handler<Object> load(const std::string& name);
 public:
 	inline bool isObject() const noexcept { return Tag::Obj==tag(); };
 	inline intptr_t tag() const noexcept { return reinterpret_cast<std::uintptr_t>(this) & Tag::Mask; };

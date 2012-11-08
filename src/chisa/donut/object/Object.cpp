@@ -21,11 +21,89 @@
 namespace chisa {
 namespace donut {
 
-Object::Object(ObjectPool& pool)
+const std::string TAG("Object");
+
+Object::Object(ObjectPool* const pool)
 :pool_(pool)
 {
 	// TODO Auto-generated constructor stub
 
+}
+
+std::string Object::toString() const
+{
+	switch(this->tag()){
+	case Tag::Obj:
+		break;
+	case Tag::Int:
+		break;
+	case Tag::Bool:
+		break;
+	default:
+		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
+	}
+}
+
+int Object::toInt() const
+{
+	switch(this->tag()){
+	case Tag::Obj:
+		break;
+	case Tag::Int:
+		break;
+	case Tag::Bool:
+		break;
+	default:
+		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
+	}
+}
+
+float Object::toFloat() const
+{
+	switch(this->tag()){
+	case Tag::Obj:
+		break;
+	case Tag::Int:
+		break;
+	case Tag::Bool:
+		break;
+	default:
+		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
+	}
+}
+
+bool Object::toBool() const
+{
+	switch(this->tag()){
+	case Tag::Obj:
+		break;
+	case Tag::Int:
+		break;
+	case Tag::Bool:
+		break;
+	default:
+		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
+	}
+}
+
+Handler<Object> Object::store(const std::string& name, Handler<Object> obj)
+{
+	switch(this->tag()){
+	case Tag::Obj:
+		break;
+	case Tag::Int:
+		this->pool_->log().w(TAG, "Failed to store value to int object.");
+		return obj;
+	case Tag::Bool:
+		this->pool_->log().w(TAG, "Failed to store value to boolean object.");
+		return obj;
+	default:
+		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
+	}
+}
+
+Handler<Object> Object::load(const std::string& name)
+{
 }
 
 }}
