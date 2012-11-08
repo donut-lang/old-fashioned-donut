@@ -21,8 +21,10 @@
 #include <map>
 #include <functional>
 #include "../../Handler.h"
+#include "../Exception.h"
 #include "../../util/ClassUtil.h"
 #include "../code/Closure.h"
+#include "../../util/StringUtil.h"
 #include "Slot.h"
 
 namespace chisa {
@@ -73,7 +75,7 @@ private:
 public:
 	BaseObject(World* const world);
 	virtual ~BaseObject() noexcept = default;
-protected:
+public:
 	World* world() const noexcept { return this->world_; }
 protected:
 	virtual std::string toStringImpl() const override;
@@ -119,8 +121,54 @@ public:
 	Handler<Object> searchScope(const std::string& str);
 };
 
-class NativeClosure {
-	std::function<void(Handler<Object> self, Handler<Object> arg)> func;
+template <size_t idx, typename T>
+Object* call(Object* self, BaseObject* args, std::function<Object*(T)> const& funct)
+{
+	T s = dynamic_cast<T>(self);
+	if(!s){
+		throw DonutException(__FILE__, __LINE__, "oops. type mismatched. %s <-> %s", typeid(T).name(), typeid(self).name());
+	}
+	return funct(s);
+}
+
+template <size_t idx, typename T, typename... Args>
+Object* call(Object* self, BaseObject* args, std::function<Object*(T self, const int&, const Args&... args)> const& funct)
+{
+	std::string id(util::toString(idx));
+	if(!args->have(args->world(), id)){
+		throw DonutException(__FILE__, __LINE__, "oops. args size mismatched. need more than %d arguments.", idx);
+	}
+	const int val = args->load(args->world(), id)->toInt(args->world());
+	std::function<Object*(T self, const Args&... args)> left = [funct, val](T self, const Args&... args)->Object*{
+		return funct(self, val, args...);
+	};
+	return call<idx+1>(self, args, left);
+}
+
+template <typename T, typename... Args>
+std::function<Object*(Object* self, BaseObject* arg)> createBind(std::function<Object*(T self, const Args&... args)> f)
+{
+	return [f](Object* self, BaseObject* args)->Object*{
+		return call<0, T>(self, args, f);
+	};
+}
+
+class BuiltinNativeClosure : public Object {
+private:
+	std::function<Object*(Object* self, BaseObject* arg)> func_;
+public:
+	template <typename... Args>
+	BuiltinNativeClosure(World* const world, std::function<Object*(Object* self, const Args&... args)> func):func_( createBind(func) ){};
+	virtual ~BuiltinNativeClosure() noexcept {}
+public:
+	Object* apply(Object* self, BaseObject* arg){ return func_(self,arg); }
+	virtual std::string toStringImpl() const override;
+	virtual int toIntImpl() const override;
+	virtual float toFloatImpl() const override;
+	virtual bool toBoolImpl() const override;
+	virtual bool haveImpl(const std::string& name) const override;
+	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) override;
+	virtual Handler<Object> loadImpl(const std::string& name) override;
 };
 
 }}

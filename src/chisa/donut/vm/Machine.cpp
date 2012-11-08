@@ -122,9 +122,9 @@ Handler<Object> Machine::run()
 			break;
 		}
 		case Inst::LoadObj: {
-			Handler<Object> destObj = this->stack_.back();
-			this->stack_.pop_back();
 			Handler<Object> nameObj = this->stack_.back();
+			this->stack_.pop_back();
+			Handler<Object> destObj = this->stack_.back();
 			this->stack_.pop_back();
 			this->stack_.push_back( destObj->load(world_, nameObj->toString(world_)) );
 			break;
@@ -143,10 +143,19 @@ Handler<Object> Machine::run()
 		case Inst::Apply: {
 			Handler<Object> closureObj = this->stack_.back();
 			this->stack_.pop_back();
-			Handler<Object> selfObj = this->stack_.back();
+			Handler<BaseObject> obj(world_->create<BaseObject>());
+			for(unsigned int i=0;i<constIndex;++i){
+				Handler<Object> val = this->stack_.back();
+				this->stack_.pop_back();
+				obj->store(world_, util::toString(i), val);
+			}
+			Handler<Object> destObj = this->stack_.back();
 			this->stack_.pop_back();
-			Handler<Object> nameObj = this->stack_.back();
-			this->stack_.pop_back();
+			if( Handler<BuiltinNativeClosure> builtin = closureObj.cast<BuiltinNativeClosure>() ) {
+				this->stack_.push_back( Handler<Object>::__internal__fromRawPointerWithoutCheck( builtin->apply(destObj.get(), obj.get()) ) );
+			}else{
+				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. \"%s\" is not callable.", closureObj->toString(world_).c_str());
+			}
 			break;
 		}
 		case Inst::ConstructArray: {
@@ -172,7 +181,7 @@ Handler<Object> Machine::run()
 			break;
 		}
 		default:
-			throw logging::Exception(__FILE__, __LINE__, "[BUG] Oops. Unknwon opcode: closure<%s>:%08x", closure_->toString(world_).c_str(), this->pc_-1);
+			throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Unknwon opcode: closure<%s>:%08x", closure_->toString(world_).c_str(), this->pc_-1);
 		}
 	}
 	Handler<Object> result(this->stack_.back());

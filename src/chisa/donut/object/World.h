@@ -30,10 +30,22 @@ class World;
 class Proxy {
 private:
 	World* const world_;
+	std::map<std::string, std::shared_ptr<BuiltinNativeClosure> > closureMap_;
 protected:
 	Proxy(World* const world):world_(world){};
 	~Proxy() noexcept = default;
 	World* world() { return this->world_; };
+	template <typename... Args>
+	void registerClosure(const std::string& name, std::function<Object*(Object* self, const Args&... args)> f)
+	{
+		this->closureMap_.insert(std::pair<std::string, std::shared_ptr<BuiltinNativeClosure> >(
+				name,
+				std::shared_ptr<BuiltinNativeClosure>(new BuiltinNativeClosure(world_, f))
+				));
+	}
+public:
+	bool have(const Object* ptr, const std::string& name) const;
+	Handler<Object> load(const Object* ptr, const std::string& name);
 };
 
 class BoolProxy : public Proxy {
@@ -54,9 +66,7 @@ public:
 	int toInt(const Object* ptr) const;
 	float toFloat(const Object* ptr) const;
 	bool toBool(const Object* ptr) const;
-	bool have(const Object* ptr, const std::string& name) const;
 	Handler<Object> store(const Object* ptr, const std::string& name, Handler<Object> obj);
-	Handler<Object> load(const Object* ptr, const std::string& name);
 };
 
 class NullProxy : public Proxy {
@@ -71,9 +81,7 @@ public:
 	int toInt(const Object* ptr) const;
 	float toFloat(const Object* ptr) const;
 	bool toBool(const Object* ptr) const;
-	bool have(const Object* ptr, const std::string& name) const;
 	Handler<Object> store(const Object* ptr, const std::string& name, Handler<Object> obj);
-	Handler<Object> load(const Object* ptr, const std::string& name);
 };
 
 class IntProxy : public Proxy {
@@ -92,9 +100,7 @@ public:
 	int toInt(const Object* ptr) const;
 	float toFloat(const Object* ptr) const;
 	bool toBool(const Object* ptr) const;
-	bool have(const Object* ptr, const std::string& name) const;
 	Handler<Object> store(const Object* ptr, const std::string& name, Handler<Object> obj);
-	Handler<Object> load(const Object* ptr, const std::string& name);
 };
 
 //-----------------------------------------------------------------------------
