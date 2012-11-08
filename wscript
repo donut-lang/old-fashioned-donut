@@ -81,13 +81,35 @@ ANTLR_OUT_SRC = [
 		udir('{0}/Compiler.cpp'.format(ANTLR_OUT_DIR)),
 		udir('{0}/DonutLexer.cpp'.format(ANTLR_OUT_DIR)),
 		udir('{0}/DonutParser.cpp'.format(ANTLR_OUT_DIR))]
-TEST_SRC=ANTLR_OUT_SRC+TINYXML2_SRC+enum('src', [udir('src/entrypoint'), ANTLR_OUT_DIR])+enum('test')
-MAIN_SRC=ANTLR_OUT_SRC+TINYXML2_SRC+enum('src', [udir('src/entrypoint'), ANTLR_OUT_DIR])+enum(udir('src/entrypoint/pc/'))
+TEST_SRC=\
+		ANTLR_OUT_SRC+\
+		TINYXML2_SRC+\
+		enum('src', [udir('src/entrypoint'), ANTLR_OUT_DIR])+\
+		enum('test')
+MAIN_SRC=\
+		ANTLR_OUT_SRC+\
+		TINYXML2_SRC+\
+		enum('src', [udir('src/entrypoint'), ANTLR_OUT_DIR])+\
+		enum(udir('src/entrypoint/pc/'))
+#DONUT_SRC=\
+#        ANTLR_OUT_SRC+\
+#        TINYXML2_SRC+\
+#        enum(udir('src/chisa/donut'), [ANTLR_OUT_DIR])+\
+#        enum(udir('src/chisa/logging'))+\
+#        enum(udir('src/chisa/util'))+\
+#        enum(udir('src/entry/donut'))
+
+print(DONUT_SRC)
 
 def build(bld):
 	if not bld.variant:
 		bld.fatal('call "waf build_debug" or "waf build_release", and try "waf --help"')
 	srcdir=repr(bld.path)
+#    bld(
+#            features = 'cxx cprogram',
+#            source = DONUT_SRC,
+#            target = 'donut',
+#            use=['PPROF','PTHREAD','BOOST','ICU','ANTLR'])
 	bld(
 			features = 'cxx cprogram',
 			source = MAIN_SRC,
