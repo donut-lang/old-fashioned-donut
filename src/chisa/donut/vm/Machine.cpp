@@ -112,11 +112,11 @@ Handler<Object> Machine::run()
 			break;
 		}
 		case Inst::StoreObj: {
-			Handler<Object> destObj = this->stack_.back();
+			Handler<Object> storeObj = this->stack_.back();
 			this->stack_.pop_back();
 			Handler<Object> nameObj = this->stack_.back();
 			this->stack_.pop_back();
-			Handler<Object> storeObj = this->stack_.back();
+			Handler<Object> destObj = this->stack_.back();
 			this->stack_.pop_back();
 			this->stack_.push_back( destObj->store(world_, nameObj->toString(world_), storeObj) );
 			break;
@@ -124,15 +124,16 @@ Handler<Object> Machine::run()
 		case Inst::LoadObj: {
 			Handler<Object> nameObj = this->stack_.back();
 			this->stack_.pop_back();
+
 			Handler<Object> destObj = this->stack_.back();
 			this->stack_.pop_back();
+
 			this->stack_.push_back( destObj->load(world_, nameObj->toString(world_)) );
 			break;
 		}
 		case Inst::LoadLocal: {
 			Handler<Object> obj = this->local_[constIndex&31];
 			this->stack_.push_back(obj);
-			this->local_[constIndex&31];
 			break;
 		}
 		case Inst::StoreLocal: {
@@ -141,17 +142,22 @@ Handler<Object> Machine::run()
 			break;
 		}
 		case Inst::Apply: {
-			Handler<Object> closureObj = this->stack_.back();
-			this->stack_.pop_back();
 			Handler<BaseObject> obj(world_->create<BaseObject>());
 			for(unsigned int i=0;i<constIndex;++i){
 				Handler<Object> val = this->stack_.back();
 				this->stack_.pop_back();
 				obj->store(world_, util::toString(i), val);
 			}
+
+			Handler<Object> closureObj = this->stack_.back();
+			this->stack_.pop_back();
+
 			Handler<Object> destObj = this->stack_.back();
 			this->stack_.pop_back();
-			if( Handler<BuiltinNativeClosure> builtin = closureObj.cast<BuiltinNativeClosure>() ) {
+
+			if(!closureObj->isObject()){
+				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. \"%s\" is not callable.", closureObj->toString(world_).c_str());
+			} else if ( Handler<BuiltinNativeClosure> builtin = closureObj.tryCast<BuiltinNativeClosure>() ) {
 				this->stack_.push_back( Handler<Object>::__internal__fromRawPointerWithoutCheck( builtin->apply(destObj.get(), obj.get()) ) );
 			}else{
 				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. \"%s\" is not callable.", closureObj->toString(world_).c_str());
@@ -160,10 +166,10 @@ Handler<Object> Machine::run()
 		}
 		case Inst::ConstructArray: {
 			Handler<Object> obj(world_->create<BaseObject>());
-			for(unsigned int i=0;i<constIndex;++i){
+			for(unsigned int i=constIndex;i>0;--i){
 				Handler<Object> val = this->stack_.back();
 				this->stack_.pop_back();
-				obj->store(world_, util::toString(i), val);
+				obj->store(world_, util::toString(i-1), val);
 			}
 			this->stack_.push_back(obj);
 			break;
@@ -171,9 +177,9 @@ Handler<Object> Machine::run()
 		case Inst::ConstructObject: {
 			Handler<Object> obj(world_->create<BaseObject>());
 			for(unsigned int i=0;i<constIndex;++i){
-				Handler<Object> name = this->stack_.back();
-				this->stack_.pop_back();
 				Handler<Object> val = this->stack_.back();
+				this->stack_.pop_back();
+				Handler<Object> name = this->stack_.back();
 				this->stack_.pop_back();
 				obj->store(world_, name->toString(world_), val);
 			}
