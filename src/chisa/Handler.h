@@ -37,7 +37,7 @@ public:
 		Handler<S> spr;
 		spr.sprite = sprite;
 		if(spr.sprite){
-			spr.sprite->incref();
+			spr.sprite->incref(false);
 		}
 		return spr;
 	}
@@ -46,17 +46,14 @@ public:
 	:sprite(sprite)
 	{
 		if(this->sprite){
-			if(this->sprite->refcount_ != 0){
-				throw logging::Exception(__FILE__, __LINE__, "[BUG] Sprite::Handler created, but refcount = %d, not zero.", this->sprite->refcount_);
-			}
-			this->sprite->incref();
+			this->sprite->incref( true );
 		}
 	}
 	Handler(const Handler<S>& other) noexcept
 	:sprite(other.sprite)
 	{
 		if(this->sprite){
-			this->sprite->incref();
+			this->sprite->incref( false );
 		}
 	}
 	Handler(Handler<S>&& other) noexcept
@@ -69,13 +66,13 @@ public:
 	:sprite(other.get())
 	{
 		if(this->sprite){
-			this->sprite->incref();
+			this->sprite->incref( false );
 		}
 	}
 	inline Handler<S>& operator=(const Handler<S>& other) noexcept
 	{
 		if(other.sprite){
-			other.sprite->incref();
+			other.sprite->incref( false );
 		}
 		if(this->sprite){
 			this->sprite->decref();
@@ -97,7 +94,7 @@ public:
 	Handler<S>& operator=(const Handler<T>& other) noexcept
 	{
 		if(other.get()){
-			other.get()->incref();
+			other.get()->incref( false );
 		}
 		if(this->sprite){
 			this->sprite->decref();
@@ -318,7 +315,12 @@ protected:
 	inline int refcount() const noexcept { return this->refcount_; };
 	inline Handler<Derived> self() { return Handler<Derived>::__internal__fromRawPointerWithoutCheck(static_cast<Derived*>(this)); };
 protected:
-	inline void incref() noexcept { this->refcount_++; }
+	inline void incref( bool check ) {
+		if((this->refcount_++) != 0 && check){
+			this->refcount_--;
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] Handler created, but refcount = %d, not zero.", this->refcount_);
+		}
+	}
 	inline void decref(){
 		this->refcount_--;
 		if(this->refcount_ < 0){
@@ -340,7 +342,6 @@ protected:
 template <class Derived>
 class HandlerBody<Derived, true> {
 private:
-	std::mutex ref_mutex_;
 	HandlerBody(const HandlerBody<Derived, true>& other) = delete;
 	HandlerBody(HandlerBody<Derived, true>&& other) = delete;
 	const HandlerBody<Derived, true>& operator=(const HandlerBody<Derived, true>& other) = delete;
@@ -349,7 +350,7 @@ private:
 	template <typename T> friend class chisa::HandlerW;
 	template <typename T> friend class chisa::internal::WeakHandlerEntity;
 private:
-	int refcount_;
+	std::atomic<int> refcount_;
 	bool onDestroy_;
 	chisa::internal::WeakHandlerEntity<Derived>* weakEntity_;
 protected:
@@ -360,16 +361,17 @@ protected:
 	inline int refcount() const noexcept { return this->refcount_; };
 	inline Handler<Derived> self() { return Handler<Derived>::__internal__fromRawPointerWithoutCheck(this); };
 private:
-	inline void incref() noexcept { std::unique_lock<std::mutex> lock(this->ref_mutex_);this->refcount_++; }
-	inline void decref(){
-		{ ///XXX: ロックの方針、これで本当に問題無いの？大丈夫？？
-			std::unique_lock<std::mutex> lock(this->ref_mutex_);
+	inline void incref( bool check ) {
+		if((this->refcount_++) != 0 && check){
 			this->refcount_--;
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] Sprite::Handler created, but refcount = %d, not zero.", int(this->refcount_));
 		}
-		// 問題はここから先リファレンスカウントが増えるという状況があり得るかどうか、ということ。
-		// 無いと思うんだけど…。
+	}
+	inline void decref(){
+		//マルチスレッド性はこれで担保できるの？
+		this->refcount_--;
 		if(this->refcount_ < 0) {
-			throw logging::Exception(__FILE__, __LINE__, "[BUG] Handler refcount = %d < 0", this->refcount_);
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] Handler refcount = %d < 0", int(this->refcount_));
 		} else if( this->refcount_ == 0 ) {
 			if(onDestroy_) {
 				return;

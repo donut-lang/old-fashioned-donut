@@ -28,6 +28,7 @@ class World;
 
 class Machine {
 	typedef unsigned int pc_t;
+	DEFINE_MEMBER_REF(private, logging::Logger, log)
 private:
 	pc_t pc_;
 	std::vector<Handler<Object> > stack_;
@@ -37,7 +38,7 @@ private:
 	Handler<ClosureObject> closure_;
 	World* const world_;
 public:
-	Machine(World* world);
+	Machine(logging::Logger& log, World* world);
 	virtual ~Machine() noexcept = default;
 public:
 	void start( const std::size_t closureIndex );

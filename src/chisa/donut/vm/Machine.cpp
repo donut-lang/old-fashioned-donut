@@ -21,8 +21,8 @@
 namespace chisa {
 namespace donut {
 
-Machine::Machine(World* pool)
-:pc_(0),world_(pool)
+Machine::Machine(logging::Logger& log, World* world)
+:log_(log),pc_(0),world_(world)
 {
 
 }
@@ -30,6 +30,7 @@ Machine::Machine(World* pool)
 void Machine::start( const std::size_t closureIndex )
 {
 	this->enterClosure( world_->code()->getClosure(closureIndex) );
+	this->run();
 }
 
 void Machine::enterClosure(Handler<Closure> clos)
@@ -52,7 +53,7 @@ void Machine::run()
 {
 	Handler<Code> code = this->world_->code();
 	std::vector<Instruction> const& asmlist(closure_->closure()->instlist());
-	while(1){
+	while( this->pc_ < asmlist.size() ){
 		Instruction const inst(asmlist[this->pc_++]);
 		Instruction opcode, constKind, constIndex;
 		code->disasm(inst, opcode, constKind, constIndex);

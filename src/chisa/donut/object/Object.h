@@ -62,7 +62,7 @@ public:
 	inline bool isObject() const noexcept { return Tag::Obj==tag(); };
 	inline intptr_t tag() const noexcept { return reinterpret_cast<std::uintptr_t>(this) & Tag::Mask; };
 	inline void onFree() {};//参照カウント、どうしましょう？？
-	inline void incref() { if(isObject()) { this->HandlerBody<Object>::incref(); } };
+	inline void incref( bool check ) { if(isObject()) { this->HandlerBody<Object>::incref(check); } };
 	inline void decref() { if(isObject()) { this->HandlerBody<Object>::decref(); } };
 };
 
