@@ -18,27 +18,34 @@
 
 #include "Machine.h"
 #include "../Exception.h"
+#include "../../util/StringUtil.h"
+
 namespace chisa {
 namespace donut {
 
-Machine::Machine(logging::Logger& log, World* world)
-:log_(log),pc_(0),world_(world)
-{
+const static std::string TAG("Machine");
 
+Machine::Machine(logging::Logger& log, World* world)
+:log_(log)
+,pc_(0)
+,local_(32)
+,world_(world)
+{
 }
 
 void Machine::start( const std::size_t closureIndex )
 {
-	this->enterClosure( world_->code()->getClosure(closureIndex) );
+	this->closure_ = world_->create<ClosureObject>(world_->code()->getClosure(closureIndex));
+	this->pc_ = 0;
 	this->run();
 }
 
-void Machine::enterClosure(Handler<Closure> clos)
+void Machine::enterClosure(Handler<ClosureObject> clos)
 {
 	if(this->closure_){
 		this->callStack_.push_back( std::pair<Handler<ClosureObject>, pc_t >(this->closure_,this->pc_) );
 	}
-	this->closure_ = world_->create<ClosureObject>(clos);
+	this->closure_ = clos;
 	this->pc_ = 0;
 }
 
@@ -57,6 +64,9 @@ void Machine::run()
 		Instruction const inst(asmlist[this->pc_++]);
 		Instruction opcode, constKind, constIndex;
 		code->disasm(inst, opcode, constKind, constIndex);
+		if(this->log().t()){
+			this->log().t(TAG, code->disasm(inst));
+		}
 		switch(opcode){
 		case Inst::Nop:
 			break;
@@ -65,7 +75,9 @@ void Machine::run()
 			case Inst::ConstBool: {
 				this->stack_.push_back( world_->createBool( code->getInt(constIndex) ) );
 			}
-			case Inst::ConstFloat:
+			case Inst::ConstFloat: {
+				this->stack_.push_back( world_->create<FloatObject>( code->getFloat(constIndex) ) );
+			}
 			case Inst::ConstClosure: {
 				this->stack_.push_back( world_->create<ClosureObject>( code->getClosure(constIndex) ) );
 			}
@@ -73,6 +85,7 @@ void Machine::run()
 				this->stack_.push_back( world_->createInt( code->getInt(constIndex) ) );
 			}
 			case Inst::ConstString: {
+				this->stack_.push_back( world_->create<StringObject>( code->getString(constIndex) ) );
 				break;
 			}
 			default:
@@ -88,22 +101,70 @@ void Machine::run()
 		case Inst::Pop:
 			this->stack_.pop_back();
 			break;
-		case Inst::SearchScope:
+		case Inst::SearchScope: {
+			Handler<Object> nameObj = this->stack_.back();
+			this->stack_.pop_back();
+			this->stack_.push_back( this->closure_->searchScope(nameObj->toString(world_)) );
 			break;
-		case Inst::StoreObj:
+		}
+		case Inst::StoreObj: {
+			Handler<Object> destObj = this->stack_.back();
+			this->stack_.pop_back();
+			Handler<Object> nameObj = this->stack_.back();
+			this->stack_.pop_back();
+			Handler<Object> storeObj = this->stack_.back();
+			this->stack_.pop_back();
+			this->stack_.push_back( destObj->store(world_, nameObj->toString(world_), storeObj) );
 			break;
-		case Inst::LoadObj:
+		}
+		case Inst::LoadObj: {
+			Handler<Object> destObj = this->stack_.back();
+			this->stack_.pop_back();
+			Handler<Object> nameObj = this->stack_.back();
+			this->stack_.pop_back();
+			this->stack_.push_back( destObj->load(world_, nameObj->toString(world_)) );
 			break;
-		case Inst::LoadLocal:
+		}
+		case Inst::LoadLocal: {
+			Handler<Object> obj = this->local_[constIndex&31];
+			this->stack_.push_back(obj);
+			this->local_[constIndex&31];
 			break;
-		case Inst::StoreLocal:
+		}
+		case Inst::StoreLocal: {
+			Handler<Object> obj = this->stack_.back();
+			this->local_[constIndex&31] = obj;
 			break;
-		case Inst::Apply:
+		}
+		case Inst::Apply: {
+			Handler<Object> closureObj = this->stack_.back();
+			this->stack_.pop_back();
+			Handler<Object> selfObj = this->stack_.back();
+			this->stack_.pop_back();
+			Handler<Object> nameObj = this->stack_.back();
+			this->stack_.pop_back();
 			break;
-		case Inst::ConstructArray:
+		}
+		case Inst::ConstructArray: {
+			Handler<Object> obj(world_->create<BaseObject>());
+			for(unsigned int i=0;i<constIndex;++i){
+				Handler<Object> val = this->stack_.back();
+				this->stack_.pop_back();
+				obj->store(world_, util::toString(i), val);
+			}
+			this->stack_.push_back(obj);
 			break;
-		case Inst::ConstructObject:
+		}
+		case Inst::ConstructObject: {
+			Handler<Object> obj(world_->create<BaseObject>());
+			for(unsigned int i=0;i<constIndex;++i){
+				Handler<Object> name = this->stack_.back();
+				Handler<Object> val = this->stack_.back();
+				this->stack_.pop_back();
+				obj->store(world_, name->toString(world_), val);
+			}
 			break;
+		}
 		default:
 			throw logging::Exception(__FILE__, __LINE__, "[BUG] Oops. Unknwon opcode: closure<%s>:%08x", closure_->toString(world_).c_str(), this->pc_-1);
 		}

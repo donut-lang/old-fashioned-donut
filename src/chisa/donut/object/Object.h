@@ -85,6 +85,29 @@ protected:
 	virtual Handler<Object> loadImpl(const std::string& name) override;
 };
 
+class StringObject : public BaseObject {
+private:
+	const std::string str_;
+public:
+	StringObject(World* const world, const std::string& str);
+	virtual ~StringObject() noexcept = default;
+	virtual std::string toStringImpl() const override;
+	virtual int toIntImpl() const override;
+	virtual float toFloatImpl() const override;
+	virtual bool toBoolImpl() const override;
+};
+
+class FloatObject : public BaseObject {
+private:
+	const float val_;
+public:
+	FloatObject(World* const world, const float val);
+	virtual ~FloatObject() noexcept = default;
+	virtual std::string toStringImpl() const override;
+	virtual int toIntImpl() const override;
+	virtual float toFloatImpl() const override;
+};
+
 class ClosureObject : public BaseObject {
 private:
 	Handler<Closure> closure_;
@@ -93,6 +116,7 @@ public:
 	virtual ~ClosureObject() noexcept = default;
 public:
 	Handler<Closure> closure() const { return this->closure_; };
+	Handler<Object> searchScope(const std::string& str);
 };
 
 class NativeClosure {

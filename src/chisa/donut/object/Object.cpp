@@ -109,7 +109,7 @@ Handler<Object> Object::store(World* const world, const std::string& name, Handl
 {
 	switch(this->tag()){
 	case Tag::Obj:
-		return obj;
+		return this->storeImpl(name, obj);
 	case Tag::Int:
 		return world->intProxy().store(this, name, obj);
 	case Tag::Bool:
@@ -135,12 +135,6 @@ Handler<Object> Object::load(World* const world, const std::string& name)
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
-}
-
-ClosureObject::ClosureObject(World* const world, Handler<Closure> clos)
-:BaseObject(world)
-,closure_(clos)
-{
 }
 
 }}
