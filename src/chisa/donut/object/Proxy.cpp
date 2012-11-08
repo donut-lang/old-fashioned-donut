@@ -18,42 +18,24 @@
 
 #include "World.h"
 #include "../Exception.h"
-#include "../../util/StringUtil.h"
 
 namespace chisa {
 namespace donut {
+static const std::string TAG("Proxy");
 
-static const std::string TAG("NullProxy");
-
-NullProxy::NullProxy(World* const world)
-:Proxy(world)
+bool Proxy::have(const Object* ptr, const std::string& name) const
 {
-
+	return this->closureMap_.find(name) != this->closureMap_.end();
 }
 
-std::string NullProxy::toString(const Object* ptr) const
+Handler<Object> Proxy::load(const Object* ptr, const std::string& name)
 {
-	return "(null)";
-}
-
-int NullProxy::toInt(const Object* ptr) const
-{
-	throw DonutException(__FILE__, __LINE__, "Failed to convert null to int.");
-}
-
-float NullProxy::toFloat(const Object* ptr) const
-{
-	throw DonutException(__FILE__, __LINE__, "Failed to convert null to float.");
-}
-
-bool NullProxy::toBool(const Object* ptr) const
-{
-	return false;
-}
-
-Handler<Object> NullProxy::store(const Object* ptr, const std::string& name, Handler<Object> obj)
-{
-	throw DonutException(__FILE__, __LINE__, "Failed to store to null.");
+	auto it = this->closureMap_.find(name);
+	if(it == this->closureMap_.end()){
+		throw DonutException(__FILE__, __LINE__, "Ccannot convert from boolean to float.");
+	}
+	return Handler<Object>::__internal__fromRawPointerWithoutCheck(it->second.get());
 }
 
 }}
+

@@ -28,6 +28,11 @@ static const std::string TAG("IntProxy");
 IntProxy::IntProxy(World* const world)
 :Proxy(world)
 {
+	std::function<Object*(Object*, const int&)> a =
+			[&](Object* self, const int& v)->Object*{
+		return IntProxy::toPointer(v+IntProxy::fromPointer(self));
+	};
+	this->registerClosure("opAdd", a);
 }
 
 std::string IntProxy::toString(const Object* ptr) const
@@ -50,18 +55,10 @@ bool IntProxy::toBool(const Object* ptr) const
 	return fromPointer(ptr) != 0;
 }
 
-bool IntProxy::have(const Object* ptr, const std::string& name) const
-{
-}
-
 Handler<Object> IntProxy::store(const Object* ptr, const std::string& name, Handler<Object> obj)
 {
 	this->world()->log().w(TAG, "Failed to store value to int object.");
 	return obj;
-}
-
-Handler<Object> IntProxy::load(const Object* ptr, const std::string& name)
-{
 }
 
 }}

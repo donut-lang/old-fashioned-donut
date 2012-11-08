@@ -50,18 +50,10 @@ bool BoolProxy::toBool(const Object* ptr) const
 	return fromPointer(ptr);
 }
 
-bool BoolProxy::have(const Object* ptr, const std::string& name) const
-{
-}
-
 Handler<Object> BoolProxy::store(const Object* ptr, const std::string& name, Handler<Object> obj)
 {
 	this->world()->log().w(TAG, "Failed to store value to bool object.");
 	return obj;
-}
-
-Handler<Object> BoolProxy::load(const Object* ptr, const std::string& name)
-{
 }
 
 }}
