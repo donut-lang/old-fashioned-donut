@@ -43,7 +43,7 @@ public:
 public:
 	void start( const std::size_t closureIndex );
 private:
-	void enterClosure(Handler<Closure> clos);
+	void enterClosure(Handler<ClosureObject> clos);
 	void returnClosure();
 private:
 	void run();
