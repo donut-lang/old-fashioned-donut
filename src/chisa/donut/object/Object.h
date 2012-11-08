@@ -136,7 +136,8 @@ Object* call(Object* self, BaseObject* args, std::function<Object*(T self, const
 {
 	std::string id(util::toString(idx));
 	if(!args->have(args->world(), id)){
-		throw DonutException(__FILE__, __LINE__, "oops. args size mismatched. need more than %d arguments.", idx);
+		constexpr int _idx = idx+1;
+		throw DonutException(__FILE__, __LINE__, "oops. args size mismatched. need more than %d arguments.", _idx);
 	}
 	const int val = args->load(args->world(), id)->toInt(args->world());
 	std::function<Object*(T self, const Args&... args)> left = [funct, val](T self, const Args&... args)->Object*{

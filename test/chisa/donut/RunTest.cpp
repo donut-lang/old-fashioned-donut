@@ -106,6 +106,55 @@ TEST_F(DonutRunTest, AddTripleTest)
 	ASSERT_EQ(4, result->toInt(&world));
 }
 
+TEST_F(DonutRunTest, AssignOpTest)
+{
+	unsigned int idx = Parser::fromString("test=0; test+=1;", "<MEM>", 0)->parseProgram(code);
+	World world(log_trace, code);
+	Machine machine(log_trace, &world);
+
+	Handler<Object> result = machine.start(idx);
+	ASSERT_EQ(1, result->toInt(&world));
+}
+
+TEST_F(DonutRunTest, PostOpTest)
+{
+	{
+		unsigned int idx = Parser::fromString("test=0; test++;", "<MEM>", 0)->parseProgram(code);
+		World world(log_trace, code);
+		Machine machine(log_trace, &world);
+
+		Handler<Object> result = machine.start(idx);
+		ASSERT_EQ(0, result->toInt(&world));
+	}
+	{
+		unsigned int idx = Parser::fromString("test=0; test++; test;", "<MEM>", 0)->parseProgram(code);
+		World world(log_trace, code);
+		Machine machine(log_trace, &world);
+
+		Handler<Object> result = machine.start(idx);
+		ASSERT_EQ(1, result->toInt(&world));
+	}
+}
+
+TEST_F(DonutRunTest, PreOpTest)
+{
+	{
+		unsigned int idx = Parser::fromString("test=0; ++test;", "<MEM>", 0)->parseProgram(code);
+		World world(log_trace, code);
+		Machine machine(log_trace, &world);
+
+		Handler<Object> result = machine.start(idx);
+		ASSERT_EQ(1, result->toInt(&world));
+	}
+	{
+		unsigned int idx = Parser::fromString("test=0; ++test; test;", "<MEM>", 0)->parseProgram(code);
+		World world(log_trace, code);
+		Machine machine(log_trace, &world);
+
+		Handler<Object> result = machine.start(idx);
+		ASSERT_EQ(1, result->toInt(&world));
+	}
+}
 
 }}
 
