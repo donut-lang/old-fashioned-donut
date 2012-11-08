@@ -22,16 +22,17 @@
 #include <functional>
 #include "../../Handler.h"
 #include "../../util/ClassUtil.h"
+#include "../code/Closure.h"
 #include "Slot.h"
 
 namespace chisa {
 namespace donut {
-class ObjectPool;
+class World;
 
 class Object : public HandlerBody<Object> {
 	DISABLE_COPY_AND_ASSIGN(Object);
 private:
-	ObjectPool* const pool_;
+	World* const world_;
 	std::map<std::string, Slot> slots_;
 public:
 	enum Tag{
@@ -42,16 +43,16 @@ public:
 		Null=3U
 	};
 public:
-	Object(ObjectPool* const pool);
+	Object(World* const world);
 	virtual ~Object() noexcept = default;
 public: //すべてのオブジェクトに出来なければならないこと
-	std::string toString(ObjectPool* const pool) const;
-	int toInt(ObjectPool* const pool) const;
-	float toFloat(ObjectPool* const pool) const;
-	bool toBool(ObjectPool* const pool) const;
-	bool have(ObjectPool* const pool, const std::string& name) const;
-	Handler<Object> store(ObjectPool* const pool, const std::string& name, Handler<Object> obj);
-	Handler<Object> load(ObjectPool* const pool, const std::string& name);
+	std::string toString(World* const pool) const;
+	int toInt(World* const pool) const;
+	float toFloat(World* const pool) const;
+	bool toBool(World* const pool) const;
+	bool have(World* const pool, const std::string& name) const;
+	Handler<Object> store(World* const pool, const std::string& name, Handler<Object> obj);
+	Handler<Object> load(World* const pool, const std::string& name);
 protected:
 	virtual std::string toStringImpl() const = 0;
 	virtual int toIntImpl() const = 0;
@@ -66,6 +67,16 @@ public:
 	inline void onFree() {};//参照カウント、どうしましょう？？
 	inline void incref() { if(isObject()) { this->HandlerBody<Object>::incref(); } };
 	inline void decref() { if(isObject()) { this->HandlerBody<Object>::decref(); } };
+};
+
+class ClosureObject : public Object {
+private:
+	Handler<Closure> closure_;
+public:
+	ClosureObject(World* const pool, ClosureObject* parent);
+	virtual ~ClosureObject() noexcept = default;
+public:
+	Handler<Closure> closure() const { return this->closure_; };
 };
 
 class NativeClosure {

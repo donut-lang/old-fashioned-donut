@@ -16,15 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ObjectPool.h"
+#include "World.h"
 #include "../Exception.h"
 
 namespace chisa {
 namespace donut {
 static const std::string TAG("BoolProxy");
 
-BoolProxy::BoolProxy(ObjectPool* const pool)
-:pool_(pool)
+BoolProxy::BoolProxy(World* const world)
+:Proxy(world)
 {
 	// TODO Auto-generated constructor stub
 
@@ -56,7 +56,7 @@ bool BoolProxy::have(const Object* ptr, const std::string& name) const
 
 Handler<Object> BoolProxy::store(const Object* ptr, const std::string& name, Handler<Object> obj)
 {
-	this->pool_->log().w(TAG, "Failed to store value to bool object.");
+	this->world()->log().w(TAG, "Failed to store value to bool object.");
 	return obj;
 }
 

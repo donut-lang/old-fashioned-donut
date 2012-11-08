@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ObjectPool.h"
+#include "World.h"
 #include "../Exception.h"
 #include "../../util/StringUtil.h"
 
@@ -25,8 +25,8 @@ namespace donut {
 
 static const std::string TAG("IntProxy");
 
-IntProxy::IntProxy(ObjectPool* const pool)
-:pool_(pool)
+IntProxy::IntProxy(World* const world)
+:Proxy(world)
 {
 	// TODO Auto-generated constructor stub
 
@@ -58,7 +58,7 @@ bool IntProxy::have(const Object* ptr, const std::string& name) const
 
 Handler<Object> IntProxy::store(const Object* ptr, const std::string& name, Handler<Object> obj)
 {
-	this->pool_->log().w(TAG, "Failed to store value to int object.");
+	this->world()->log().w(TAG, "Failed to store value to int object.");
 	return obj;
 }
 

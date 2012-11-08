@@ -20,18 +20,26 @@
 #include "../../logging/Logger.h"
 #include "../../util/ClassUtil.h"
 #include "../../Handler.h"
+#include "../code/Code.h"
 #include "Object.h"
 
 namespace chisa {
 namespace donut {
-class ObjectPool;
+class World;
 
-class BoolProxy {
+class Proxy {
 private:
-	ObjectPool* const pool_;
+	World* const world_;
+protected:
+	Proxy(World* const world):world_(world){};
+	~Proxy() noexcept = default;
+	World* world() { return this->world_; };
+};
+
+class BoolProxy : public Proxy {
 public:
-	BoolProxy(ObjectPool* const pool_);
-	virtual ~BoolProxy() noexcept = default;
+	BoolProxy(World* const world_);
+	~BoolProxy() noexcept = default;
 public:
 	static inline bool fromPointer(const Object* const ptr) noexcept {
 		return (reinterpret_cast<std::uintptr_t>(ptr) & ~Object::Tag::Bool) != 0;
@@ -46,12 +54,10 @@ public:
 	Handler<Object> load(const Object* ptr, const std::string& name);
 };
 
-class NullProxy {
-private:
-	ObjectPool* const pool_;
+class NullProxy : public Proxy {
 public:
-	NullProxy(ObjectPool* const pool_);
-	virtual ~NullProxy() noexcept = default;
+	NullProxy(World* const world_);
+	~NullProxy() noexcept = default;
 public:
 	static inline bool fromPointer(const Object* const ptr) noexcept {
 		return (reinterpret_cast<std::uintptr_t>(ptr) & ~Object::Tag::Bool) != 0;
@@ -66,12 +72,10 @@ public:
 	Handler<Object> load(const Object* ptr, const std::string& name);
 };
 
-class IntProxy {
-private:
-	ObjectPool* const pool_;
+class IntProxy : public Proxy {
 public:
-	IntProxy(ObjectPool* const pool);
-	virtual ~IntProxy() noexcept = default;
+	IntProxy(World* const world);
+	~IntProxy() noexcept = default;
 public:
 	static inline int fromPointer(const Object* const ptr) noexcept {
 		return reinterpret_cast<std::intptr_t>(ptr) >> 2;
@@ -86,21 +90,25 @@ public:
 	Handler<Object> load(const Object* ptr, const std::string& name);
 };
 
-class ObjectPool {
+//-----------------------------------------------------------------------------
+
+class World {
 	DEFINE_MEMBER_REF(public, logging::Logger, log)
 private:
+	Handler<Code> code_;
 	unsigned int generation_;
 	BoolProxy boolProxy_;
 	IntProxy intProxy_;
 	NullProxy nullProxy_;
 public:
-	ObjectPool(logging::Logger& log);
-	virtual ~ObjectPool() noexcept = default;
+	World(logging::Logger& log, Handler<Code> code);
+	virtual ~World() noexcept = default;
 public:
 	unsigned int nextGeneration();
 	BoolProxy& boolProxy() {return boolProxy_;};
 	IntProxy& intProxy() {return intProxy_;};
 	NullProxy& nullProxy() {return nullProxy_;};
+	Handler<Code> code() { return this->code_; }
 public:
 	template <typename T, typename... Args>
 	Handler<T> create(const Args&... args)

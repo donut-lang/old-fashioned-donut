@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ObjectPool.h"
+#include "World.h"
 #include "../Exception.h"
 #include "../../util/StringUtil.h"
 
@@ -25,8 +25,8 @@ namespace donut {
 
 static const std::string TAG("NullProxy");
 
-NullProxy::NullProxy(ObjectPool* const pool)
-:pool_(pool)
+NullProxy::NullProxy(World* const world)
+:Proxy(world)
 {
 
 }
