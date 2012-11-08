@@ -99,8 +99,6 @@ MAIN_SRC=\
 #        enum(udir('src/chisa/util'))+\
 #        enum(udir('src/entry/donut'))
 
-print(DONUT_SRC)
-
 def build(bld):
 	if not bld.variant:
 		bld.fatal('call "waf build_debug" or "waf build_release", and try "waf --help"')

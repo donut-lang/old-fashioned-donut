@@ -96,6 +96,16 @@ TEST_F(DonutRunTest, AddTest)
 	ASSERT_EQ(3, result->toInt(&world));
 }
 
+TEST_F(DonutRunTest, AddTripleTest)
+{
+	unsigned int idx = Parser::fromString("2+1+1;", "<MEM>", 0)->parseProgram(code);
+	World world(log_trace, code);
+	Machine machine(log_trace, &world);
+
+	Handler<Object> result = machine.start(idx);
+	ASSERT_EQ(4, result->toInt(&world));
+}
+
 
 }}
 
