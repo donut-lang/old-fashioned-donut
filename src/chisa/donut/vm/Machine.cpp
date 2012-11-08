@@ -17,7 +17,7 @@
  */
 
 #include "Machine.h"
-
+#include "../Exception.h"
 namespace chisa {
 namespace donut {
 
@@ -27,11 +27,18 @@ Machine::Machine(World* pool)
 
 }
 
+void Machine::start( const std::size_t closureIndex )
+{
+	this->enterClosure( world_->code()->getClosure(closureIndex) );
+}
+
 void Machine::enterClosure(Handler<Closure> clos)
 {
 	if(this->closure_){
 		this->callStack_.push_back( std::pair<Handler<ClosureObject>, pc_t >(this->closure_,this->pc_) );
 	}
+	this->closure_ = world_->create<ClosureObject>(clos);
+	this->pc_ = 0;
 }
 
 void Machine::returnClosure()
@@ -46,10 +53,56 @@ void Machine::run()
 	Handler<Code> code = this->world_->code();
 	std::vector<Instruction> const& asmlist(closure_->closure()->instlist());
 	while(1){
-		Instruction inst = asmlist[this->pc_++];
+		Instruction const inst(asmlist[this->pc_++]);
 		Instruction opcode, constKind, constIndex;
 		code->disasm(inst, opcode, constKind, constIndex);
 		switch(opcode){
+		case Inst::Nop:
+			break;
+		case Inst::Push: {
+			switch(constKind){
+			case Inst::ConstBool: {
+				this->stack_.push_back( world_->createBool( code->getInt(constIndex) ) );
+			}
+			case Inst::ConstFloat:
+			case Inst::ConstClosure: {
+				this->stack_.push_back( world_->create<ClosureObject>( code->getClosure(constIndex) ) );
+			}
+			case Inst::ConstInt: {
+				this->stack_.push_back( world_->createInt( code->getInt(constIndex) ) );
+			}
+			case Inst::ConstString: {
+				break;
+			}
+			default:
+				throw DonutException(__FILE__, __LINE__, "Unknwon const type: %d", constKind);
+			}
+			break;
+		}
+		case Inst::PushCopy: {
+			Handler<Object> obj(this->stack_.back());
+			this->stack_.push_back(obj);
+			break;
+		}
+		case Inst::Pop:
+			this->stack_.pop_back();
+			break;
+		case Inst::SearchScope:
+			break;
+		case Inst::StoreObj:
+			break;
+		case Inst::LoadObj:
+			break;
+		case Inst::LoadLocal:
+			break;
+		case Inst::StoreLocal:
+			break;
+		case Inst::Apply:
+			break;
+		case Inst::ConstructArray:
+			break;
+		case Inst::ConstructObject:
+			break;
 		default:
 			throw logging::Exception(__FILE__, __LINE__, "[BUG] Oops. Unknwon opcode: closure<%s>:%08x", closure_->toString(world_).c_str(), this->pc_-1);
 		}

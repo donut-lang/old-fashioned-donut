@@ -28,8 +28,6 @@ static const std::string TAG("IntProxy");
 IntProxy::IntProxy(World* const world)
 :Proxy(world)
 {
-	// TODO Auto-generated constructor stub
-
 }
 
 std::string IntProxy::toString(const Object* ptr) const

@@ -25,12 +25,6 @@ namespace donut {
 
 const std::string TAG("Object");
 
-Object::Object(World* const world)
-:world_(world)
-{
-
-}
-
 std::string Object::toString(World* const world) const
 {
 	switch(this->tag()){
@@ -141,6 +135,12 @@ Handler<Object> Object::load(World* const world, const std::string& name)
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
+}
+
+ClosureObject::ClosureObject(World* const world, Handler<Closure> clos)
+:BaseObject(world)
+,closure_(clos)
+{
 }
 
 }}

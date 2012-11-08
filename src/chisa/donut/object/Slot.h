@@ -30,17 +30,17 @@ class Object;
 class Slot {
 	STACK_OBJECT(Slot);
 private:
-	World* pool_;
+	World* world_;
 	std::vector<std::pair<gen_t, Object*> > rev_;
 	std::vector<std::pair<gen_t, Object*> >::iterator index_;
 public:
-	Slot(World* const pool, Object* const obj);
+	Slot(World* const world, Object* const obj);
 	~Slot() noexcept = default;
 public:
-	Slot(const Slot& other):pool_(other.pool_),rev_(other.rev_),index_(other.index_){}
-	Slot(Slot&& other):pool_(other.pool_), index_(other.index_){ other.rev_.swap(rev_); }
-	Slot& operator=(const Slot& other) { pool_=other.pool_;rev_=other.rev_;index_=other.index_;return *this; }
-	Slot& operator=(Slot&& other) { pool_=other.pool_;rev_.swap(other.rev_);index_=other.index_;return *this; }
+	Slot(const Slot& other):world_(other.world_),rev_(other.rev_),index_(other.index_){}
+	Slot(Slot&& other):world_(other.world_), index_(other.index_){ other.rev_.swap(rev_); }
+	Slot& operator=(const Slot& other) { world_=other.world_;rev_=other.rev_;index_=other.index_;return *this; }
+	Slot& operator=(Slot&& other) { world_=other.world_;rev_.swap(other.rev_);index_=other.index_;return *this; }
 public:
 	void seek( gen_t gen );
 	void discardHistory();
@@ -49,6 +49,7 @@ public:
 	Object* store( Object* obj );
 	gen_t firstGen() const noexcept;
 	gen_t lastGen() const noexcept;
+	bool have() const;
 	inline std::size_t size() const noexcept { return this->rev_.size()-1; };
 };
 

@@ -66,14 +66,38 @@ public:
 	void onFree() noexcept { delete this; }
 	template <typename T> Instruction constCode(T const& val);
 public:
-	Handler<Closure> getClosure(unsigned int index);
-	std::size_t numClosure() const;
 public:
 	std::string disasm( Instruction inst );
 	inline void disasm( Instruction inst, Instruction& opcode, Instruction& constKind, Instruction& constIndex ) const {
 		opcode = inst & Inst::OpcodeMask;
 		constKind = inst & Inst::ConstKindMask;
 		constIndex = inst & 0xffff;
+	}
+public:
+	inline int getInt(const unsigned int& idx) const noexcept{
+		return intTable_.get(idx & 0xffff);
+	}
+	inline std::size_t numInt() const noexcept{
+		return intTable_.size();
+	}
+	inline float getFloat(const unsigned int& idx){
+		return floatTable_.get(idx & 0xffff);
+	}
+	inline std::size_t numFloat() const noexcept{
+		return floatTable_.size();
+	}
+	inline std::string getString(const unsigned int& idx){
+		return stringTable_.get(idx & 0xffff);
+	}
+	inline std::size_t numString() const noexcept {
+		return stringTable_.size();
+	}
+	inline Handler<Closure> getClosure(const unsigned int& index) {
+		return this->closureTable_.get(index & 0xffff);
+	}
+	inline std::size_t numClosure() const noexcept
+	{
+		return this->closureTable_.size();
 	}
 };
 

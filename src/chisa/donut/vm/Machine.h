@@ -40,7 +40,7 @@ public:
 	Machine(World* world);
 	virtual ~Machine() noexcept = default;
 public:
-
+	void start( const std::size_t closureIndex );
 private:
 	void enterClosure(Handler<Closure> clos);
 	void returnClosure();
