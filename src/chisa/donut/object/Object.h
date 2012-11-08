@@ -31,9 +31,6 @@ class World;
 
 class Object : public HandlerBody<Object> {
 	DISABLE_COPY_AND_ASSIGN(Object);
-private:
-	World* const world_;
-	std::map<std::string, Slot> slots_;
 public:
 	enum Tag{
 		Mask=3U,
@@ -43,7 +40,7 @@ public:
 		Null=3U
 	};
 public:
-	Object(World* const world);
+	Object() = default;
 	virtual ~Object() noexcept = default;
 public: //すべてのオブジェクトに出来なければならないこと
 	std::string toString(World* const pool) const;
@@ -69,11 +66,30 @@ public:
 	inline void decref() { if(isObject()) { this->HandlerBody<Object>::decref(); } };
 };
 
-class ClosureObject : public Object {
+class BaseObject : public Object {
+private:
+	World* const world_;
+	std::map<std::string, Slot> slots_;
+public:
+	BaseObject(World* const world);
+	virtual ~BaseObject() noexcept = default;
+protected:
+	World* world() const noexcept { return this->world_; }
+protected:
+	virtual std::string toStringImpl() const override;
+	virtual int toIntImpl() const override;
+	virtual float toFloatImpl() const override;
+	virtual bool toBoolImpl() const override;
+	virtual bool haveImpl(const std::string& name) const override;
+	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) override;
+	virtual Handler<Object> loadImpl(const std::string& name) override;
+};
+
+class ClosureObject : public BaseObject {
 private:
 	Handler<Closure> closure_;
 public:
-	ClosureObject(World* const pool, ClosureObject* parent);
+	ClosureObject(World* const world, Handler<Closure> clos);
 	virtual ~ClosureObject() noexcept = default;
 public:
 	Handler<Closure> closure() const { return this->closure_; };

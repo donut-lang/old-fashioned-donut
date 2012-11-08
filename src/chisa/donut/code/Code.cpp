@@ -70,16 +70,6 @@ std::string Code::disasm( Instruction inst )
 	return repl;
 }
 
-Handler<Closure> Code::getClosure(unsigned int index)
-{
-	index &= 0xffff;
-	return this->closureTable_.get(index);
-}
-
-std::size_t Code::numClosure() const
-{
-	return this->closureTable_.size();
-}
 
 template<>
 Instruction Code::constCode<bool>(bool const& val)

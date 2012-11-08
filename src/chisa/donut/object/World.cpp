@@ -38,4 +38,17 @@ unsigned int World::nextGeneration()
 	return ++this->generation_;
 }
 
+Handler<Object> World::createInt(const int& val)
+{
+	return Handler<Object>(IntProxy::toPointer(val));
+}
+Handler<Object> World::createBool(const bool& val)
+{
+	return Handler<Object>(BoolProxy::toPointer(val));
+}
+Handler<Object> World::createNull()
+{
+	return Handler<Object>(NullProxy::toPointer());
+}
+
 }}

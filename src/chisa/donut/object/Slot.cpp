@@ -40,7 +40,7 @@ struct Order {
 };
 
 Slot::Slot(World* const pool, Object* const obj)
-:pool_(pool)
+:world_(pool)
 ,rev_()
 ,index_()
 {
@@ -86,8 +86,13 @@ gen_t Slot::lastGen() const noexcept
 Object* Slot::store(Object* obj)
 {
 	this->discardFuture();
-	this->rev_.push_back( std::pair<gen_t, Object*>(this->pool_->nextGeneration(), obj) );
+	this->rev_.push_back( std::pair<gen_t, Object*>(this->world_->nextGeneration(), obj) );
 	return obj;
+}
+
+bool Slot::have() const
+{
+	return this->rev_.begin() != this->index_ && this->rev_.end() != this->index_;
 }
 
 }}
