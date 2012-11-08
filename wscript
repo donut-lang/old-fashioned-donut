@@ -88,9 +88,16 @@ def build(bld):
 	if not bld.variant:
 		bld.fatal('call "waf build_debug" or "waf build_release", and try "waf --help"')
 	srcdir=repr(bld.path)
-	bld(name="Parser", source=ANTLR_IN_SRC, target=ANTLR_OUT_SRC, rule="sh {0}/makeParser.sh".format(srcdir))
-	bld(features = 'cxx cprogram', source = MAIN_SRC, target = 'chisa', use=['PPROF','PTHREAD', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU','ANTLR'])
-	bld(features = 'cxx cprogram', source = TEST_SRC, target = 'chisa_test', use=['PTHREAD', 'OPENGL','FREETYPE2','CAIRO','GTEST','LIBPNG','BOOST','ICU','ANTLR'])
+	bld(
+			features = 'cxx cprogram',
+			source = MAIN_SRC,
+			target = 'chisa',
+			use=['PPROF','PTHREAD', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU','ANTLR'])
+	bld(
+			features = 'cxx cprogram',
+			source = TEST_SRC,
+			target = 'chisa_test',
+			use=['PTHREAD', 'OPENGL','FREETYPE2','CAIRO','GTEST','LIBPNG','BOOST','ICU','ANTLR'])
 
 # from http://docs.waf.googlecode.com/git/book_16/single.html#_custom_build_outputs
 from waflib.Build import BuildContext, CleanContext, InstallContext, UninstallContext
