@@ -16,13 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ObjectPool.h"
+#include "World.h"
 
 namespace chisa {
 namespace donut {
 
-ObjectPool::ObjectPool(logging::Logger& log)
+World::World(logging::Logger& log, Handler<Code> code)
 :log_(log)
+,code_(code)
 ,generation_(0)
 ,boolProxy_(this)
 ,intProxy_(this)
@@ -32,7 +33,7 @@ ObjectPool::ObjectPool(logging::Logger& log)
 
 }
 
-unsigned int ObjectPool::nextGeneration()
+unsigned int World::nextGeneration()
 {
 	return ++this->generation_;
 }

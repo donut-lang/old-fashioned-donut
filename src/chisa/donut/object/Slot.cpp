@@ -17,7 +17,7 @@
  */
 
 #include "Slot.h"
-#include "ObjectPool.h"
+#include "World.h"
 #include "Object.h"
 #include <algorithm>
 
@@ -39,7 +39,7 @@ struct Order {
 	}
 };
 
-Slot::Slot(ObjectPool* const pool, Object* const obj)
+Slot::Slot(World* const pool, Object* const obj)
 :pool_(pool)
 ,rev_()
 ,index_()

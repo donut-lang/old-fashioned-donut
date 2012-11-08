@@ -19,12 +19,12 @@
 #pragma once
 #include <vector>
 #include "../object/Object.h"
-#include "../object/ObjectPool.h"
+#include "../object/World.h"
 #include "../code/Code.h"
 
 namespace chisa {
 namespace donut {
-class ObjectPool;
+class World;
 
 class Machine {
 private:
@@ -32,13 +32,13 @@ private:
 	std::vector<Handler<Object> > stack_;
 	std::vector<Handler<Object> > local_;
 	std::vector<Handler<Object> > selfStack_;
-	std::vector<Handler<Object> > callStack_;
-	ObjectPool& pool_;
+	std::vector<Handler<ClosureObject> > callStack_;
+	World* const world_;
 public:
-	Machine(ObjectPool& pool);
+	Machine(World* world);
 	virtual ~Machine() noexcept = default;
 public:
-	void start(Handler<Closure> clos);
+	void enterClosure(Handler<Closure> clos);
 private:
 	void run();
 };

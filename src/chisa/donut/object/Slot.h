@@ -24,17 +24,17 @@
 
 namespace chisa {
 namespace donut {
-class ObjectPool;
+class World;
 class Object;
 
 class Slot {
 	STACK_OBJECT(Slot);
 private:
-	ObjectPool* pool_;
+	World* pool_;
 	std::vector<std::pair<gen_t, Object*> > rev_;
 	std::vector<std::pair<gen_t, Object*> >::iterator index_;
 public:
-	Slot(ObjectPool* const pool, Object* const obj);
+	Slot(World* const pool, Object* const obj);
 	~Slot() noexcept = default;
 public:
 	Slot(const Slot& other):pool_(other.pool_),rev_(other.rev_),index_(other.index_){}
