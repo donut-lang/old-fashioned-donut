@@ -43,7 +43,7 @@ int StringObject::toIntImpl() const
 	char* c;
 	int v = std::strtol(str_.c_str(), &c, 0);
 	if(c || *c){
-		throw DonutException(__FILE__, __LINE__, "Cannot convert %s to int.", str_.c_str());
+		throw DonutException(__FILE__, __LINE__, "Cannot convert \"%s\" to int.", str_.c_str());
 	}
 	return v;
 }
@@ -53,7 +53,7 @@ float StringObject::toFloatImpl() const
 	char* c;
 	float v = std::strtof(str_.c_str(), &c);
 	if(c || *c){
-		throw DonutException(__FILE__, __LINE__, "Cannot convert %s to int.", str_.c_str());
+		throw DonutException(__FILE__, __LINE__, "Cannot convert \"%s\" to float.", str_.c_str());
 	}
 	return v;
 }
@@ -67,7 +67,7 @@ bool StringObject::toBoolImpl() const
 	}else if(copy == "false" || copy=="no"){
 		return false;
 	}
-	throw DonutException(__FILE__, __LINE__, "Cannot convert %s to int.", str_.c_str());
+	throw DonutException(__FILE__, __LINE__, "Cannot convert \"%s\" to bool.", str_.c_str());
 }
 
 }}
