@@ -163,10 +163,12 @@ Handler<Object> Machine::run()
 			Handler<Object> obj(world_->create<BaseObject>());
 			for(unsigned int i=0;i<constIndex;++i){
 				Handler<Object> name = this->stack_.back();
+				this->stack_.pop_back();
 				Handler<Object> val = this->stack_.back();
 				this->stack_.pop_back();
 				obj->store(world_, name->toString(world_), val);
 			}
+			this->stack_.push_back(obj);
 			break;
 		}
 		default:

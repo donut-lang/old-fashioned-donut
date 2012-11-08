@@ -47,6 +47,17 @@ TEST_F(DonutRunTest, BasicTest)
 	ASSERT_EQ(1, result->toInt(&world));
 }
 
+TEST_F(DonutRunTest, ObjectTest)
+{
+	unsigned int idx = Parser::fromString("{a=>1};", "<MEM>", 0)->parseProgram(code);
+	World world(log_trace, code);
+	Machine machine(log_trace, &world);
+
+	Handler<Object> result = machine.start(idx);
+	ASSERT_TRUE(result->have(&world, "a"));
+	ASSERT_EQ(1, result->load(&world, "a")->toInt(&world));
+}
+
 }}
 
 
