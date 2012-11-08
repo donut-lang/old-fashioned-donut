@@ -38,19 +38,28 @@ public:
 		Mask=3U,
 		Obj=0U,
 		Int=1U,
-		Bool=2U
+		Bool=2U,
+		Null=3U
 	};
 public:
 	Object(ObjectPool* const pool);
 	virtual ~Object() noexcept = default;
-public:
-	std::string toString() const;
-	int toInt() const;
-	float toFloat() const;
-	bool toBool() const;
-public:
-	Handler<Object> store(const std::string& name, Handler<Object> obj);
-	Handler<Object> load(const std::string& name);
+public: //すべてのオブジェクトに出来なければならないこと
+	std::string toString(ObjectPool* const pool) const;
+	int toInt(ObjectPool* const pool) const;
+	float toFloat(ObjectPool* const pool) const;
+	bool toBool(ObjectPool* const pool) const;
+	bool have(ObjectPool* const pool, const std::string& name) const;
+	Handler<Object> store(ObjectPool* const pool, const std::string& name, Handler<Object> obj);
+	Handler<Object> load(ObjectPool* const pool, const std::string& name);
+protected:
+	virtual std::string toStringImpl() const = 0;
+	virtual int toIntImpl() const = 0;
+	virtual float toFloatImpl() const = 0;
+	virtual bool toBoolImpl() const = 0;
+	virtual bool haveImpl(const std::string& name) const = 0;
+	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) = 0;
+	virtual Handler<Object> loadImpl(const std::string& name) = 0;
 public:
 	inline bool isObject() const noexcept { return Tag::Obj==tag(); };
 	inline intptr_t tag() const noexcept { return reinterpret_cast<std::uintptr_t>(this) & Tag::Mask; };
