@@ -45,6 +45,22 @@ std::string formatv(const std::string& fmt, va_list args)
 	return buff;
 }
 
+std::string toString(const int val, int radix)
+{
+	switch(radix){
+	case 0:
+		return util::format("%d", val);
+	case 8:
+		return util::format("0%o", val);
+	case 10:
+		return util::format("%d", val);
+	case 16:
+		return util::format("0x%x", val);
+	default:
+		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon radix: %d", radix);
+	}
+}
+
 std::string decodePercent(const std::string& str)
 {
 	char* from(new char[str.length()+1]);
