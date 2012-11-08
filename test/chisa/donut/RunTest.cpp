@@ -43,7 +43,8 @@ TEST_F(DonutRunTest, BasicTest)
 	World world(log_trace, code);
 	Machine machine(log_trace, &world);
 
-	machine.start(idx);
+	Handler<Object> result = machine.start(idx);
+	ASSERT_EQ(1, result->toInt(&world));
 }
 
 }}

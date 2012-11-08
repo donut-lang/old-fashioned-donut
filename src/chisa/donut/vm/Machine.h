@@ -41,12 +41,12 @@ public:
 	Machine(logging::Logger& log, World* world);
 	virtual ~Machine() noexcept = default;
 public:
-	void start( const std::size_t closureIndex );
+	Handler<Object> start( const std::size_t closureIndex );
 private:
 	void enterClosure(Handler<ClosureObject> clos);
 	void returnClosure();
 private:
-	void run();
+	Handler<Object> run();
 };
 
 }}
