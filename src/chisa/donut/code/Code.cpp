@@ -78,7 +78,7 @@ std::string Code::disasm( Instruction inst )
 		repl += "ConstuctObject";
 		break;
 	default:
-		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon opcode: %d", (opcode >> Inst::OpcodeShift));
+		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon opcode: %d in %08x", (opcode >> Inst::OpcodeShift), opcode);
 	}
 
 	while(repl.size() < 22){
@@ -108,7 +108,7 @@ std::string Code::disasm( Instruction inst )
 		repl += util::format("null");
 		break;
 	default:
-		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon const kind: %d", (constKind >> Inst::ConstKindShift));
+		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon const kind: %d in %08x", (constKind >> Inst::ConstKindShift), opcode);
 	}
 	return repl;
 }
