@@ -167,6 +167,26 @@ TEST_F(DonutIntegerTest, NeTest)
 	}
 }
 
+TEST_F(DonutIntegerTest, PlusTest)
+{
+	{
+		SOURCE_TEST("+4", 4);
+	}
+	{
+		SOURCE_TEST("+(-4)", -4);
+	}
+}
+
+TEST_F(DonutIntegerTest, MinusTest)
+{
+	{
+		SOURCE_TEST("-4", -4);
+	}
+	{
+		SOURCE_TEST("-(-4)", 4);
+	}
+}
+
 }}
 
 
