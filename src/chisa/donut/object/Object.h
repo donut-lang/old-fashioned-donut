@@ -72,7 +72,7 @@ Object* call(Object* self, BaseObject* args, std::function<Object*(T)> const& fu
 }
 
 template <size_t idx, typename T, typename U, typename... Args>
-Object* call(Object* self, BaseObject* args, std::function<Object*(T self, U const& val, const Args&... args)> const& funct)
+Object* call(Object* self, BaseObject* args, std::function<Object*(T self, U const& val, Args const&... args)> const& funct)
 {
 	std::string id(util::toString(idx));
 	if(!args->have(args->world(), id)){
@@ -80,14 +80,14 @@ Object* call(Object* self, BaseObject* args, std::function<Object*(T self, U con
 		throw DonutException(__FILE__, __LINE__, "oops. args size mismatched. need more than %d arguments.", _idx);
 	}
 	const int val = native::decode<U>( args->world(), args->load(args->world(), id) );;
-	std::function<Object*(T self, const Args&... args)> left = [funct, val](T self, const Args&... args)->Object*{
+	std::function<Object*(T self, const Args&... args)> left = [funct, val](T self, Args const&... args)->Object*{
 		return funct(self, val, args...);
 	};
 	return call<idx+1>(self, args, left);
 }
 
 template <typename T, typename... Args>
-std::function<Object*(Object* self, BaseObject* arg)> createBind(std::function<Object*(T self, const Args&... args)> f)
+std::function<Object*(Object* self, BaseObject* arg)> createBind(std::function<Object*(T self, Args const&... args)> f)
 {
 	return [f](Object* self, BaseObject* args)->Object*{
 		return call<0, T>(self, args, f);
