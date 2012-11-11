@@ -28,6 +28,11 @@ int decode<int>(World* world, Handler<Object> obj)
 	return obj->toInt(world);
 }
 
+template <>
+bool decode<bool>(World* world, Handler<Object> obj)
+{
+	return obj->toBool(world);
+}
 template <typename T>
 Handler<Object> encode(World* world, T obj);
 

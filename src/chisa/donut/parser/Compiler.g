@@ -314,11 +314,11 @@ apply [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 literal [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	: 'true'
 	{
-		$asmlist.push_back(Inst::Push | $code->constCode<bool>(false));
+		$asmlist.push_back(Inst::Push | $code->constCode<bool>(true));
 	}
 	| 'false'
 	{
-		$asmlist.push_back(Inst::Push | $code->constCode<bool>(true));
+		$asmlist.push_back(Inst::Push | $code->constCode<bool>(false));
 	}
 	| HEX_LITERAL
 	{

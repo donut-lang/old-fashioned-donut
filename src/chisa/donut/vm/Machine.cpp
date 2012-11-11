@@ -106,7 +106,7 @@ Handler<Object> Machine::run()
 		case Inst::Push: {
 			switch(constKind){
 			case Inst::ConstBool: {
-				this->stack_.push_back( world_->createBool( code->getInt(constIndex) ) );
+				this->stack_.push_back( world_->createBool( code->getBool(constIndex) ) );
 				break;
 			}
 			case Inst::ConstFloat: {

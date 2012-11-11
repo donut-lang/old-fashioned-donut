@@ -74,6 +74,12 @@ public:
 		constIndex = inst & 0xffff;
 	}
 public:
+	inline bool getBool(const unsigned int& idx) const noexcept{
+		return (idx & 0xffff) == 0 ? false : true;
+	}
+	inline std::size_t numBool() const noexcept{
+		return 2;
+	}
 	inline int getInt(const unsigned int& idx) const noexcept{
 		return intTable_.get(idx & 0xffff);
 	}
