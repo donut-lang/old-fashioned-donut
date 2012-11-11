@@ -27,41 +27,43 @@ const static std::string TAG("Machine");
 
 Machine::Machine(logging::Logger& log, World* world)
 :log_(log)
+,world_(world)
 ,pc_(0)
 ,local_(32)
-,world_(world)
 {
 }
 
 Handler<Object> Machine::start( const std::size_t closureIndex )
 {
-	this->closure_ = world_->create<ClosureObject>(world_->code()->getClosure(closureIndex));
-	this->pc_ = 0;
+	this->enterClosure( world_->createNull(), world_->create<ClosureObject>(world_->code()->getClosure(closureIndex)));
 	return this->run();
 }
 
-void Machine::enterClosure(Handler<ClosureObject> clos)
+void Machine::enterClosure(Handler<Object> self, Handler<ClosureObject> clos)
 {
 	if(this->closure_){
-		this->callStack_.push_back( std::pair<Handler<ClosureObject>, pc_t >(this->closure_,this->pc_) );
+		this->callStack_.push_back( Callchain(this->pc_, this->self_, this->closure_) );
 	}
+	this->self_ = self;
 	this->closure_ = clos;
 	this->pc_ = 0;
+	this->asmlist_ = &(clos->closure()->instlist());
 }
 
 void Machine::returnClosure()
 {
-	std::pair<Handler<ClosureObject>, pc_t > st = this->callStack_.back();
+	Callchain& chain = this->callStack_.back();
+	this->closure_ = chain.closure_;
+	this->pc_ = chain.pc_;
+	this->self_ = chain.self_;
 	this->callStack_.pop_back();
-	this->closure_ = st.first;
-	this->pc_ = st.second;
+	this->asmlist_ = &(closure_->closure()->instlist());
 }
 Handler<Object> Machine::run()
 {
-	Handler<Code> code = this->world_->code();
-	std::vector<Instruction> const& asmlist(closure_->closure()->instlist());
-	while( this->pc_ < asmlist.size() ){
-		Instruction const inst(asmlist[this->pc_++]);
+	Handler<Code> const code = this->world_->code();
+	while( this->pc_ < asmlist_->size() ){
+		Instruction const inst((*asmlist_)[this->pc_++]);
 		Instruction opcode, constKind, constIndex;
 		code->disasm(inst, opcode, constKind, constIndex);
 		if(this->log().t()){
@@ -162,6 +164,8 @@ Handler<Object> Machine::run()
 			//XXX: ちゃんと型を使う
 			if(!closureObj->isObject()){
 				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. \"%s\" is not callable.", closureObj->toString(world_).c_str());
+			} else if ( Handler<ClosureObject> closObj = closureObj.tryCast<ClosureObject>() ) {
+				this->enterClosure(destObj, closObj);
 			} else if ( Handler<PureNativeClosure> builtin = closureObj.tryCast<PureNativeClosure>() ) {
 				this->stack_.push_back( Handler<Object>::__internal__fromRawPointerWithoutCheck( builtin->apply(destObj.get(), obj.get()) ) );
 			}else{
