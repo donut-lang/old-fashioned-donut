@@ -68,10 +68,13 @@ public:
 public:
 public:
 	std::string disasm( Instruction inst );
-	inline void disasm( Instruction inst, Instruction& opcode, Instruction& constKind, Instruction& constIndex ) const {
+	inline void disasm( Instruction inst, Instruction& opcode, Instruction& constKind, int& constIndex ) const {
 		opcode = inst & Inst::OpcodeMask;
 		constKind = inst & Inst::ConstKindMask;
 		constIndex = inst & 0xffff;
+		if(constIndex >= 0x8000) {
+			constIndex -= 0x10000;
+		}
 	}
 public:
 	inline bool getBool(const unsigned int& idx) const noexcept{
