@@ -17,7 +17,11 @@
  */
 
 #pragma once
+#include <functional>
+#include "../../util/StringUtil.h"
+#include "../Exception.h"
 #include "../object/ObjectBase.h"
+
 
 namespace chisa {
 namespace donut {
@@ -30,5 +34,39 @@ T decode(World* world, Handler<Object> obj);
 
 template <typename T>
 Handler<Object> encode(World* world, T obj);
+
+template <size_t idx, typename T>
+Object* callWithBind(Object* self, BaseObject* args, std::function<Object*(T)> const& funct)
+{
+	T s = dynamic_cast<T>(self);
+	if(!s){
+		throw DonutException(__FILE__, __LINE__, "oops. type mismatched. %s <-> %s", typeid(T).name(), typeid(self).name());
+	}
+	return funct(s);
+}
+
+template <size_t idx, typename T, typename U, typename... Args>
+Object* callWithBind(Object* self, BaseObject* args, std::function<Object*(T self, U const& val, Args const&... args)> const& funct)
+{
+	std::string id(util::toString(idx));
+	if(!args->have(args->world(), id)){
+		constexpr int _idx = idx+1;
+		throw DonutException(__FILE__, __LINE__, "oops. args size mismatched. need more than %d arguments.", _idx);
+	}
+	const int val = native::decode<U>( args->world(), args->load(args->world(), id) );;
+	std::function<Object*(T self, const Args&... args)> left = [funct, val](T self, Args const&... args)->Object*{
+		return funct(self, val, args...);
+	};
+	return callWithBind<idx+1>(self, args, left);
+}
+
+template <typename T, typename... Args>
+std::function<Object*(Object* self, BaseObject* arg)> createBind(std::function<Object*(T self, Args const&... args)> f)
+{
+	return [f](Object* self, BaseObject* args)->Object*{
+		return callWithBind<0, T>(self, args, f);
+	};
+}
+
 
 }}}
