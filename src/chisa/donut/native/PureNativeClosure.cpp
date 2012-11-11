@@ -16,46 +16,47 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "World.h"
-#include "Object.h"
+#include "PureNativeClosure.h"
+#include "../object/World.h"
 #include "../Exception.h"
+#include "../../util/StringUtil.h"
 
 namespace chisa {
 namespace donut {
 
-const std::string TAG("BuiltinNativeClosure");
+const std::string TAG("PureNativeClosure");
 
-std::string BuiltinNativeClosure::toStringImpl() const
+std::string PureNativeClosure::toStringImpl() const
 {
-	return util::format("(BuiltinNativeClosure %p)", this);
+	return util::format("(PureNativeClosure %p)", this);
 }
 
-int BuiltinNativeClosure::toIntImpl() const
+int PureNativeClosure::toIntImpl() const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to convert builtin native closure to int.");
 }
 
-float BuiltinNativeClosure::toFloatImpl() const
+float PureNativeClosure::toFloatImpl() const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to convert builtin native closure to float.");
 }
 
-bool BuiltinNativeClosure::toBoolImpl() const
+bool PureNativeClosure::toBoolImpl() const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to convert builtin native closure to bool.");
 }
 
-bool BuiltinNativeClosure::haveImpl(const std::string& name) const
+bool PureNativeClosure::haveImpl(const std::string& name) const
 {
 	return false;
 }
 
-Handler<Object> BuiltinNativeClosure::storeImpl(const std::string& name, Handler<Object> obj)
+Handler<Object> PureNativeClosure::storeImpl(const std::string& name, Handler<Object> obj)
 {
 	return obj;
 }
 
-Handler<Object> BuiltinNativeClosure::loadImpl(const std::string& name)
+Handler<Object> PureNativeClosure::loadImpl(const std::string& name)
 {
 	throw DonutException(__FILE__, __LINE__, "builtin native closure does not have any property.");
 }

@@ -16,38 +16,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "World.h"
+#pragma once
+#include "../../../util/ClassUtil.h"
+#include "../Object.h"
+#include "../World.h"
+#include "../../native/PureNativeClosure.h"
+#include "../../native/Convert.h"
+#include "Proxy.h"
 
 namespace chisa {
 namespace donut {
+class World;
 
-World::World(logging::Logger& log, Handler<Code> code)
-:log_(log)
-,code_(code)
-,generation_(0)
-,boolProxy_(this)
-,intProxy_(this)
-,nullProxy_(this)
+template <typename... Args>
+void Proxy::registerClosure(const std::string& name, std::function<Object*(Object* self, const Args&... args)> f)
 {
-
-}
-
-unsigned int World::nextGeneration()
-{
-	return ++this->generation_;
-}
-
-Handler<Object> World::createInt(const int& val)
-{
-	return Handler<Object>(IntProxy::toPointer(val));
-}
-Handler<Object> World::createBool(const bool& val)
-{
-	return Handler<Object>(BoolProxy::toPointer(val));
-}
-Handler<Object> World::createNull()
-{
-	return Handler<Object>(NullProxy::toPointer());
-}
+	this->closureMap_.insert(std::pair<std::string, Handler<PureNativeClosure> >(
+			name,
+			world()->create<PureNativeClosure>( f )
+			));
+};
 
 }}

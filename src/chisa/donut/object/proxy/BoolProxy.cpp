@@ -16,44 +16,43 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "World.h"
-#include "../Exception.h"
-#include "../../util/StringUtil.h"
+#include "ProxyImpl.h"
+#include "../../Exception.h"
 
 namespace chisa {
 namespace donut {
+static const std::string TAG("BoolProxy");
 
-static const std::string TAG("NullProxy");
-
-NullProxy::NullProxy(World* const world)
+BoolProxy::BoolProxy(World* const world)
 :Proxy(world)
 {
 
 }
 
-std::string NullProxy::toString(const Object* ptr) const
+std::string BoolProxy::toString(const Object* ptr) const
 {
-	return "(null)";
+	return fromPointer(ptr) ? "true" : "false";
 }
 
-int NullProxy::toInt(const Object* ptr) const
+int BoolProxy::toInt(const Object* ptr) const
 {
-	throw DonutException(__FILE__, __LINE__, "Failed to convert null to int.");
+	throw DonutException(__FILE__, __LINE__, "Ccannot convert from boolean to integer.");
 }
 
-float NullProxy::toFloat(const Object* ptr) const
+float BoolProxy::toFloat(const Object* ptr) const
 {
-	throw DonutException(__FILE__, __LINE__, "Failed to convert null to float.");
+	throw DonutException(__FILE__, __LINE__, "Ccannot convert from boolean to float.");
 }
 
-bool NullProxy::toBool(const Object* ptr) const
+bool BoolProxy::toBool(const Object* ptr) const
 {
-	return false;
+	return fromPointer(ptr);
 }
 
-Handler<Object> NullProxy::store(const Object* ptr, const std::string& name, Handler<Object> obj)
+Handler<Object> BoolProxy::store(const Object* ptr, const std::string& name, Handler<Object> obj)
 {
-	throw DonutException(__FILE__, __LINE__, "Failed to store to null.");
+	this->world()->log().w(TAG, "Failed to store value to bool object.");
+	return obj;
 }
 
 }}
