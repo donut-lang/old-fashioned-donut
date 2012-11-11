@@ -29,25 +29,45 @@ Machine::Machine(logging::Logger& log, World* world)
 :log_(log)
 ,world_(world)
 ,pc_(0)
+,asmlist_(nullptr)
 ,local_(32)
 {
 }
 
 Handler<Object> Machine::start( const std::size_t closureIndex )
 {
-	this->enterClosure( world_->createNull(), world_->create<ClosureObject>(world_->code()->getClosure(closureIndex)));
+	this->enterClosure(world_->createNull(), createClosure( world_->code()->getClosure( closureIndex ) ), world_->createNull());
 	return this->run();
 }
 
-void Machine::enterClosure(Handler<Object> self, Handler<ClosureObject> clos)
+Handler<ClosureObject> Machine::createClosure(Handler<Closure> closureCode)
+{
+	if( this->context_ ){
+		return world_->create<ClosureObject>(closureCode, this->context_);
+	}else{
+		return world_->create<ClosureObject>(closureCode, world_->createNull());
+	}
+}
+
+void Machine::enterClosure(Handler<Object> self, Handler<ClosureObject> clos, Handler<Object> args)
 {
 	if(this->closure_){
-		this->callStack_.push_back( Callchain(this->pc_, this->self_, this->closure_) );
+		this->callStack_.push_back( Callchain(this->pc_, this->self_, this->closure_, this->context_) );
 	}
+	this->context_ = world_->create<BaseObject>();
+	this->context_->store(world_, "__scope__", clos);
 	this->self_ = self;
 	this->closure_ = clos;
 	this->pc_ = 0;
 	this->asmlist_ = &(clos->closure()->instlist());
+	{
+		Handler<Closure> c = clos->closure();
+		const std::size_t max = c->arglist().size();
+		for(std::size_t i=0;i<max;++i){
+			const std::string arg = c->arglist().at(i);
+			this->context_->store( world_, arg, args->load(world_, i) );
+		}
+	}
 }
 
 void Machine::returnClosure()
@@ -83,7 +103,7 @@ Handler<Object> Machine::run()
 				break;
 			}
 			case Inst::ConstClosure: {
-				this->stack_.push_back( world_->create<ClosureObject>( code->getClosure(constIndex), this->closure_ ) );
+				this->stack_.push_back( createClosure( code->getClosure(constIndex) ) );
 				break;
 			}
 			case Inst::ConstInt: {
@@ -113,8 +133,27 @@ Handler<Object> Machine::run()
 			break;
 		case Inst::SearchScope: {
 			Handler<Object> nameObj = this->stack_.back();
+			const std::string name = nameObj->toString(world_);
 			this->stack_.pop_back();
-			this->stack_.push_back( this->closure_->searchScope(nameObj->toString(world_)) );
+			if(name == "self"){
+				this->stack_.push_back(this->self_);
+			}
+			bool found = false;
+			Handler<Object> obj = this->context_;
+			while(!found){
+				if(obj->have(world_, name)){
+					this->stack_.push_back( obj );
+					found = true;
+					break;
+				}else if( obj->have(world_, "__scope__") ){
+					obj = obj->load(world_, "__scope__");
+				}else{
+					break;
+				}
+			}
+			if(!found){
+				this->stack_.push_back( this->context_ );
+			}
 			break;
 		}
 		case Inst::StoreObj: {
@@ -152,7 +191,7 @@ Handler<Object> Machine::run()
 			for(unsigned int i=0;i<constIndex;++i){
 				Handler<Object> val = this->stack_.back();
 				this->stack_.pop_back();
-				obj->store(world_, util::toString(i), val);
+				obj->store(world_, i, val);
 			}
 
 			Handler<Object> closureObj = this->stack_.back();
@@ -165,7 +204,7 @@ Handler<Object> Machine::run()
 			if(!closureObj->isObject()){
 				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. \"%s\" is not callable.", closureObj->toString(world_).c_str());
 			} else if ( Handler<ClosureObject> closObj = closureObj.tryCast<ClosureObject>() ) {
-				this->enterClosure(destObj, closObj);
+				this->enterClosure(destObj, closObj, obj);
 			} else if ( Handler<PureNativeClosure> builtin = closureObj.tryCast<PureNativeClosure>() ) {
 				this->stack_.push_back( Handler<Object>::__internal__fromRawPointerWithoutCheck( builtin->apply(destObj.get(), obj.get()) ) );
 			}else{

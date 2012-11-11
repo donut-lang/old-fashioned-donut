@@ -31,9 +31,10 @@ struct Callchain {
 	pc_t pc_;
 	Handler<Object> self_;
 	Handler<ClosureObject> closure_;
+	Handler<Object> context_;
 public:
-	Callchain(pc_t pc, Handler<Object> self, Handler<ClosureObject> closure)
-	:pc_(pc_), self_(self), closure_(closure){
+	Callchain(pc_t pc, Handler<Object> self, Handler<ClosureObject> closure, Handler<Object> context)
+	:pc_(pc_), self_(self), closure_(closure), context_(context){
 	}
 };
 
@@ -44,6 +45,7 @@ private:
 	pc_t pc_;
 	Handler<Object> self_;
 	Handler<ClosureObject> closure_;
+	Handler<Object> context_;
 	std::vector<Instruction> const* asmlist_;
 	std::vector<Handler<Object> > stack_;
 	std::vector<Handler<Object> > local_;
@@ -54,8 +56,9 @@ public:
 public:
 	Handler<Object> start( const std::size_t closureIndex );
 private:
-	void enterClosure(Handler<Object> self, Handler<ClosureObject> clos);
+	void enterClosure(Handler<Object> self, Handler<ClosureObject> clos, Handler<Object> args);
 	void returnClosure();
+	Handler<ClosureObject> createClosure(Handler<Closure> closureCode);
 private:
 	Handler<Object> run();
 };

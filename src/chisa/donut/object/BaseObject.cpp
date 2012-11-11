@@ -24,7 +24,7 @@
 namespace chisa {
 namespace donut {
 
-const std::string TAG("BaseObject");
+static const std::string TAG("BaseObject");
 
 BaseObject::BaseObject(World* world)
 :world_(world)
