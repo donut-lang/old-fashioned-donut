@@ -317,7 +317,7 @@ apply [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 		$asmlist.push_back(Inst::Branch | $iff.asmlist.size());
 		$asmlist.insert($asmlist.end(), $iff.asmlist.begin(), $iff.asmlist.end());
 	}
-	| ^(FOR forstart=expr[$code] forcond=expr[$code] fornext=expr[$code] forblock=block[$code])
+	| ^(FOR forstart=block[$code] forcond=block[$code] fornext=block[$code] forblock=block[$code])
 	{
 		$asmlist.insert($asmlist.end(), $forstart.asmlist.begin(), $forstart.asmlist.end());
 		$asmlist.insert($asmlist.end(), $forcond.asmlist.begin(), $forcond.asmlist.end());
@@ -338,6 +338,10 @@ literal [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist 
 	| 'false'
 	{
 		$asmlist.push_back(Inst::Push | $code->constCode<bool>(false));
+	}
+	| 'null'
+	{
+		$asmlist.push_back(Inst::Push | $code->constCode<std::nullptr_t>(nullptr));
 	}
 	| HEX_LITERAL
 	{

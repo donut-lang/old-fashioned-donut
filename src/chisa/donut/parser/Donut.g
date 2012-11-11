@@ -63,7 +63,8 @@ exprlist : expr ((';')+ expr)* (';')? -> ^(CONT expr*);
 expr
 	: 'func' '(' varlist ')' '{' exprlist '}' -> ^(CLOS varlist exprlist)
 	| 'if' '(' expr ')' '{' a=exprlist '}' 'else' '{' b=exprlist '}' -> ^(IF expr $a $b)
-	| 'for' '(' fa=expr? ';' fb=expr? ';' fc=expr? ')' '{' fd=exprlist '}' -> ^(FOR $fa $fb $fc $fd)
+	| 'for' '(' fa=expr? ';' fb=expr? ';' fc=expr? ')' '{' fd=exprlist '}' -> ^(FOR ^(CONT $fa?) ^(CONT $fb?) ^(CONT $fc?) $fd)
+	| 'while' '(' fb=expr? ')' '{' fd=exprlist '}' -> ^(FOR ^(CONT) ^(CONT $fb) ^(CONT) $fd)
 	| expr6;
 
 expr6 : (a=expr5->$a)
@@ -140,6 +141,7 @@ literal
 	: numeric_literal
 	| boolean_literal
 	| string_literal
+	| 'null'
 	;
 
 boolean_literal
