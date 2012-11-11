@@ -44,6 +44,14 @@ IntProxy::IntProxy(World* const world)
 			[&](Object* self, const int& v)->Object*{
 		return IntProxy::toPointer(IntProxy::fromPointer(self) / v);
 	}));
+	this->registerClosure("opPlus", std::function<Object*(Object*)>(
+			[&](Object* self)->Object*{
+		return IntProxy::toPointer(+IntProxy::fromPointer(self));
+	}));
+	this->registerClosure("opMinus", std::function<Object*(Object*)>(
+			[&](Object* self)->Object*{
+		return IntProxy::toPointer(-IntProxy::fromPointer(self));
+	}));
 	this->registerClosure("opMod", std::function<Object*(Object*, const int&)>(
 			[&](Object* self, const int& v)->Object*{
 		return IntProxy::toPointer(IntProxy::fromPointer(self) % v);
