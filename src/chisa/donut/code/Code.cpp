@@ -35,7 +35,7 @@ std::string Code::disasm( Instruction inst )
 {
 	Instruction opcode;
 	Instruction constKind;
-	Instruction constIndex;
+	int constIndex;
 	this->disasm(inst, opcode, constKind, constIndex);
 
 	std::string repl=util::format("#%02x ", inst);

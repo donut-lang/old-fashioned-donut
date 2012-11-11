@@ -317,6 +317,17 @@ apply [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 		$asmlist.push_back(Inst::Branch | $iff.asmlist.size());
 		$asmlist.insert($asmlist.end(), $iff.asmlist.begin(), $iff.asmlist.end());
 	}
+	| ^(FOR forstart=expr[$code] forcond=expr[$code] fornext=expr[$code] forblock=block[$code])
+	{
+		$asmlist.insert($asmlist.end(), $forstart.asmlist.begin(), $forstart.asmlist.end());
+		$asmlist.insert($asmlist.end(), $forcond.asmlist.begin(), $forcond.asmlist.end());
+		$asmlist.push_back(Inst::BranchFalse | $forblock.asmlist.size() + $fornext.asmlist.size()+3);
+		$asmlist.push_back(Inst::Pop);
+		$asmlist.insert($asmlist.end(), $forblock.asmlist.begin(), $forblock.asmlist.end());
+		$asmlist.insert($asmlist.end(), $fornext.asmlist.begin(), $fornext.asmlist.end());
+		$asmlist.push_back(Inst::Pop);
+		$asmlist.push_back(Inst::Branch | ((-($forcond.asmlist.size()+$forblock.asmlist.size()+$fornext.asmlist.size()+4)) & 0xffff));
+	}
 	;
 
 literal [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]

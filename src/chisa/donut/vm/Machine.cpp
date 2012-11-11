@@ -95,7 +95,8 @@ Handler<Object> Machine::run()
 			continue;
 		}
 		Instruction const inst((*asmlist_)[this->pc_++]);
-		Instruction opcode, constKind, constIndex;
+		Instruction opcode, constKind;
+		int constIndex;
 		code->disasm(inst, opcode, constKind, constIndex);
 		if(this->log().t()){
 			this->log().t(TAG, util::format("$%04x ", this->pc_)+code->disasm(inst));
