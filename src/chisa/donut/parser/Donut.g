@@ -44,6 +44,8 @@ tokens {
 	
 	OBJECT;
 	PAIR;
+	
+	IF;
 }
 
 @includes {
@@ -59,6 +61,7 @@ exprlist : expr ((';')+ expr)* (';')? -> ^(CONT expr*);
 
 expr
 	: 'func' '(' varlist ')' '{' exprlist '}' -> ^(CLOS varlist exprlist)
+	| 'if' '(' expr ')' '{' a=exprlist '}' 'else' '{' b=exprlist '}' -> ^(IF expr $a $b)
 	| expr6;
 
 expr6 : (a=expr5->$a)

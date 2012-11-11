@@ -48,6 +48,9 @@ enum Inst {
 	Apply			= 9<<24,
 	ConstructArray	=10<<24,
 	ConstructObject	=11<<24,
+	Branch			=12<<24,
+	BranchTrue		=13<<24,
+	BranchFalse		=14<<24,
 	//const mask
 	ConstKindMask  = 0xff<<16,
 	ConstKindShift  = 16,

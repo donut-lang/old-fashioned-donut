@@ -243,6 +243,26 @@ Handler<Object> Machine::run()
 			this->stack_.push_back(obj);
 			break;
 		}
+		case Inst::Branch: {
+			this->pc_ += constIndex;
+			break;
+		}
+		case Inst::BranchTrue: {
+			Handler<Object> val = this->stack_.back();
+			this->stack_.pop_back();
+			if(val->toBool(world_)){
+				this->pc_ += constIndex;
+			}
+			break;
+		}
+		case Inst::BranchFalse: {
+			Handler<Object> val = this->stack_.back();
+			this->stack_.pop_back();
+			if(!val->toBool(world_)){
+				this->pc_ += constIndex;
+			}
+			break;
+		}
 		default:
 			throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Unknwon opcode: closure<%s>:%08x", closure_->toString(world_).c_str(), this->pc_-1);
 		}

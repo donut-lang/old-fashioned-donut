@@ -309,6 +309,14 @@ apply [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 		$asmlist.insert($asmlist.end(), $ex.asmlist.begin(), $ex.asmlist.end());
 		$asmlist.push_back(Inst::Apply | $ex.count);
 	}
+	| ^(IF ifcond=expr[$code] ift=block[$code] iff=block[$code])
+	{
+		$asmlist.insert($asmlist.end(), $ifcond.asmlist.begin(), $ifcond.asmlist.end());
+		$asmlist.push_back(Inst::BranchFalse | $ift.asmlist.size()+1);
+		$asmlist.insert($asmlist.end(), $ift.asmlist.begin(), $ift.asmlist.end());
+		$asmlist.push_back(Inst::Branch | $iff.asmlist.size());
+		$asmlist.insert($asmlist.end(), $iff.asmlist.begin(), $iff.asmlist.end());
+	}
 	;
 
 literal [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
