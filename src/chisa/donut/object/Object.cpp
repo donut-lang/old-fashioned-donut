@@ -17,7 +17,7 @@
  */
 
 #include "World.h"
-#include "Object.h"
+#include "ObjectBase.h"
 #include "../Exception.h"
 
 namespace chisa {

@@ -17,75 +17,15 @@
  */
 
 #pragma once
-#include <cstdint>
-#include <map>
+#include "ObjectBase.h"
 #include <functional>
-#include "../../Handler.h"
 #include "../Exception.h"
-#include "../../util/ClassUtil.h"
 #include "../code/Closure.h"
 #include "../../util/StringUtil.h"
-#include "Slot.h"
+#include "../native/Convert.h"
 
 namespace chisa {
 namespace donut {
-class World;
-
-class Object : public HandlerBody<Object> {
-	DISABLE_COPY_AND_ASSIGN(Object);
-public:
-	enum Tag{
-		Mask=3U,
-		Obj=0U,
-		Int=1U,
-		Bool=2U,
-		Null=3U
-	};
-public:
-	Object() = default;
-	virtual ~Object() noexcept = default;
-public: //すべてのオブジェクトに出来なければならないこと
-	std::string toString(World* const pool) const;
-	int toInt(World* const pool) const;
-	float toFloat(World* const pool) const;
-	bool toBool(World* const pool) const;
-	bool have(World* const pool, const std::string& name) const;
-	Handler<Object> store(World* const pool, const std::string& name, Handler<Object> obj);
-	Handler<Object> load(World* const pool, const std::string& name);
-protected:
-	virtual std::string toStringImpl() const = 0;
-	virtual int toIntImpl() const = 0;
-	virtual float toFloatImpl() const = 0;
-	virtual bool toBoolImpl() const = 0;
-	virtual bool haveImpl(const std::string& name) const = 0;
-	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) = 0;
-	virtual Handler<Object> loadImpl(const std::string& name) = 0;
-public:
-	inline bool isObject() const noexcept { return Tag::Obj==tag(); };
-	inline intptr_t tag() const noexcept { return reinterpret_cast<std::uintptr_t>(this) & Tag::Mask; };
-	inline void onFree() {};//参照カウント、どうしましょう？？
-	inline void incref( bool check ) { if(isObject()) { this->HandlerBody<Object>::incref(check); } };
-	inline void decref() { if(isObject()) { this->HandlerBody<Object>::decref(); } };
-};
-
-class BaseObject : public Object {
-private:
-	World* const world_;
-	std::map<std::string, Slot> slots_;
-public:
-	BaseObject(World* const world);
-	virtual ~BaseObject() noexcept = default;
-public:
-	World* world() const noexcept { return this->world_; }
-protected:
-	virtual std::string toStringImpl() const override;
-	virtual int toIntImpl() const override;
-	virtual float toFloatImpl() const override;
-	virtual bool toBoolImpl() const override;
-	virtual bool haveImpl(const std::string& name) const override;
-	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) override;
-	virtual Handler<Object> loadImpl(const std::string& name) override;
-};
 
 class StringObject : public BaseObject {
 private:
@@ -131,15 +71,15 @@ Object* call(Object* self, BaseObject* args, std::function<Object*(T)> const& fu
 	return funct(s);
 }
 
-template <size_t idx, typename T, typename... Args>
-Object* call(Object* self, BaseObject* args, std::function<Object*(T self, const int&, const Args&... args)> const& funct)
+template <size_t idx, typename T, typename U, typename... Args>
+Object* call(Object* self, BaseObject* args, std::function<Object*(T self, U const& val, const Args&... args)> const& funct)
 {
 	std::string id(util::toString(idx));
 	if(!args->have(args->world(), id)){
 		constexpr int _idx = idx+1;
 		throw DonutException(__FILE__, __LINE__, "oops. args size mismatched. need more than %d arguments.", _idx);
 	}
-	const int val = args->load(args->world(), id)->toInt(args->world());
+	const int val = native::decode<U>( args->world(), args->load(args->world(), id) );;
 	std::function<Object*(T self, const Args&... args)> left = [funct, val](T self, const Args&... args)->Object*{
 		return funct(self, val, args...);
 	};
