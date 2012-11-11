@@ -49,17 +49,6 @@ TEST_F(DonutRunTest, NullTest)
 	ASSERT_FALSE(result->isObject());
 }
 
-TEST_F(DonutRunTest, IntTest)
-{
-	unsigned int idx = Parser::fromString("1;", "<MEM>", 0)->parseProgram(code);
-	World world(log_trace, code);
-	Machine machine(log_trace, &world);
-
-	Handler<Object> result = machine.start(idx);
-	ASSERT_TRUE(result->isInt());
-	ASSERT_EQ(1, result->toInt(&world));
-}
-
 TEST_F(DonutRunTest, StringTest)
 {
 	unsigned int idx = Parser::fromString("'abc';", "<MEM>", 0)->parseProgram(code);
