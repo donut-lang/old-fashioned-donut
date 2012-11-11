@@ -28,11 +28,10 @@ static const std::string TAG("IntProxy");
 IntProxy::IntProxy(World* const world)
 :Proxy(world)
 {
-	std::function<Object*(Object*, const int&)> a =
+	this->registerClosure("opAdd", std::function<Object*(Object*, const int&)>(
 			[&](Object* self, const int& v)->Object*{
 		return IntProxy::toPointer(v+IntProxy::fromPointer(self));
-	};
-	this->registerClosure("opAdd", a);
+	}));
 }
 
 std::string IntProxy::toString(const Object* ptr) const

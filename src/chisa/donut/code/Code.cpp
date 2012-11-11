@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <cstddef>
 #include "Code.h"
 #include "Closure.h"
 #include "..//Exception.h"
@@ -103,6 +104,9 @@ std::string Code::disasm( Instruction inst )
 	case Inst::ConstString:
 		repl += util::format("string:%d -> %s", constIndex, this->stringTable_.get(constIndex).c_str());
 		break;
+	case Inst::ConstNull:
+		repl += util::format("null");
+		break;
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon const kind: %d", (constKind >> Inst::ConstKindShift));
 	}
@@ -132,6 +136,12 @@ template<>
 Instruction Code::constCode<Handler<donut::Closure> >(Handler<donut::Closure> const& val)
 {
 	return Inst::ConstClosure | this->closureTable_.regist(val);
+}
+
+template<>
+Instruction Code::constCode<std::nullptr_t>(std::nullptr_t const& null)
+{
+	return Inst::ConstNull;
 }
 
 template<>

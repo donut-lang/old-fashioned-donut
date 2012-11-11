@@ -56,7 +56,8 @@ enum Inst {
 	ConstBool	= 2<<16,
 	ConstFloat	= 3<<16,
 	ConstClosure= 4<<16,
-	ConstString	= 5<<16
+	ConstString	= 5<<16,
+	ConstNull	= 6<<16
 };
 
 }}

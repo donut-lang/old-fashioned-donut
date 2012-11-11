@@ -92,6 +92,10 @@ Handler<Object> Machine::run()
 				this->stack_.push_back( world_->create<StringObject>( code->getString(constIndex) ) );
 				break;
 			}
+			case Inst::ConstNull: {
+				this->stack_.push_back( world_->createNull() );
+				break;
+			}
 			default:
 				throw DonutException(__FILE__, __LINE__, "Unknwon const type: %d", constKind);
 			}

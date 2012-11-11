@@ -31,10 +31,13 @@ class World {
 	DEFINE_MEMBER_REF(public, logging::Logger, log)
 private:
 	Handler<Code> code_;
+private:
 	unsigned int generation_;
+private:
 	BoolProxy boolProxy_;
 	IntProxy intProxy_;
 	NullProxy nullProxy_;
+private:
 public:
 	World(logging::Logger& log, Handler<Code> code);
 	virtual ~World() noexcept = default;

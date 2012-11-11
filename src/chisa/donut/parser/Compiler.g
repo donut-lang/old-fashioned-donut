@@ -12,6 +12,7 @@ options {
 #include <string>
 #include <vector>
 #include <cstdlib>
+#include <cstddef>
 #include <algorithm>
 #include "../../code/Code.h"
 #include "../../code/Closure.h"
@@ -53,8 +54,13 @@ vars [ donut::Code* code ] returns [ std::vector<std::string> list ]
 
 block [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 @after{
-	//最後のpopは削除する（＝値がひとつだけ残る）
-	$asmlist.erase($asmlist.end()-1);
+	if( $asmlist.empty() ){
+		//null値がセットされる
+			$asmlist.push_back(Inst::Push | $code->constCode<std::nullptr_t>(nullptr));
+	}else{
+		//最後のpopは削除する（＝値がひとつだけ残る）
+		$asmlist.erase($asmlist.end()-1);
+	}
 }
 	: ^(CONT (ex=expr[$code]
 	{
