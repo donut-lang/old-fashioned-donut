@@ -70,19 +70,26 @@ void Machine::enterClosure(Handler<Object> self, Handler<ClosureObject> clos, Ha
 	}
 }
 
-void Machine::returnClosure()
+bool Machine::returnClosure()
 {
+	if(this->callStack_.empty()){
+		return false;
+	}
 	Callchain& chain = this->callStack_.back();
 	this->closure_ = chain.closure_;
 	this->pc_ = chain.pc_;
 	this->self_ = chain.self_;
+	this->context_ = chain.context_;
 	this->callStack_.pop_back();
+
 	this->asmlist_ = &(closure_->closure()->instlist());
+	return true;
 }
 Handler<Object> Machine::run()
 {
 	Handler<Code> const code = this->world_->code();
-	while( this->pc_ < asmlist_->size() ){
+	bool running = true;
+	while( running ){
 		Instruction const inst((*asmlist_)[this->pc_++]);
 		Instruction opcode, constKind, constIndex;
 		code->disasm(inst, opcode, constKind, constIndex);
@@ -135,9 +142,7 @@ Handler<Object> Machine::run()
 			Handler<Object> nameObj = this->stack_.back();
 			const std::string name = nameObj->toString(world_);
 			this->stack_.pop_back();
-			if(name == "self"){
-				this->stack_.push_back(this->self_);
-			}
+
 			bool found = false;
 			Handler<Object> obj = this->context_;
 			while(!found){
@@ -236,6 +241,10 @@ Handler<Object> Machine::run()
 		}
 		default:
 			throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Unknwon opcode: closure<%s>:%08x", closure_->toString(world_).c_str(), this->pc_-1);
+		}
+		//終了時のスタック処理
+		if( this->pc_ >= asmlist_->size() ){
+			running &= this->returnClosure();
 		}
 	}
 	Handler<Object> result(this->stack_.back());

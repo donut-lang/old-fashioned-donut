@@ -34,7 +34,7 @@ struct Callchain {
 	Handler<Object> context_;
 public:
 	Callchain(pc_t pc, Handler<Object> self, Handler<ClosureObject> closure, Handler<Object> context)
-	:pc_(pc_), self_(self), closure_(closure), context_(context){
+	:pc_(pc), self_(self), closure_(closure), context_(context){
 	}
 };
 
@@ -57,7 +57,7 @@ public:
 	Handler<Object> start( const std::size_t closureIndex );
 private:
 	void enterClosure(Handler<Object> self, Handler<ClosureObject> clos, Handler<Object> args);
-	void returnClosure();
+	bool returnClosure();
 	Handler<ClosureObject> createClosure(Handler<Closure> closureCode);
 private:
 	Handler<Object> run();
