@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "World.h"
-#include "../Exception.h"
-#include "../../util/StringUtil.h"
+#include "ProxyImpl.h"
+#include "../../Exception.h"
+#include "../../../util/StringUtil.h"
 
 namespace chisa {
 namespace donut {

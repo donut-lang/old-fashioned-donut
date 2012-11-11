@@ -16,38 +16,43 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "World.h"
+#include "ProxyImpl.h"
+#include "../../../util/StringUtil.h"
 
 namespace chisa {
 namespace donut {
 
-World::World(logging::Logger& log, Handler<Code> code)
-:log_(log)
-,code_(code)
-,generation_(0)
-,boolProxy_(this)
-,intProxy_(this)
-,nullProxy_(this)
+static const std::string TAG("NullProxy");
+
+NullProxy::NullProxy(World* const world)
+:Proxy(world)
 {
 
 }
 
-unsigned int World::nextGeneration()
+std::string NullProxy::toString(const Object* ptr) const
 {
-	return ++this->generation_;
+	return "(null)";
 }
 
-Handler<Object> World::createInt(const int& val)
+int NullProxy::toInt(const Object* ptr) const
 {
-	return Handler<Object>(IntProxy::toPointer(val));
+	throw DonutException(__FILE__, __LINE__, "Failed to convert null to int.");
 }
-Handler<Object> World::createBool(const bool& val)
+
+float NullProxy::toFloat(const Object* ptr) const
 {
-	return Handler<Object>(BoolProxy::toPointer(val));
+	throw DonutException(__FILE__, __LINE__, "Failed to convert null to float.");
 }
-Handler<Object> World::createNull()
+
+bool NullProxy::toBool(const Object* ptr) const
 {
-	return Handler<Object>(NullProxy::toPointer());
+	return false;
+}
+
+Handler<Object> NullProxy::store(const Object* ptr, const std::string& name, Handler<Object> obj)
+{
+	throw DonutException(__FILE__, __LINE__, "Failed to store to null.");
 }
 
 }}

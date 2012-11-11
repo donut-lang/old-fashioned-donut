@@ -17,44 +17,29 @@
  */
 
 #pragma once
-#include "ObjectBase.h"
-#include "../code/Closure.h"
+#include "Convert.h"
+#include "../object/Object.h"
 
 namespace chisa {
 namespace donut {
 
-class StringObject : public BaseObject {
+class PureNativeClosure : public Object {
 private:
-	const std::string str_;
+	std::function<Object*(Object* self, BaseObject* arg)> func_;
 public:
-	StringObject(World* const world, const std::string& str);
-	virtual ~StringObject() noexcept = default;
+	template <typename... Args>
+	PureNativeClosure(World* const world, std::function<Object*(Object* self, const Args&... args)> func)
+	:func_( native::createBind(func) ){};
+	virtual ~PureNativeClosure() noexcept {}
+public:
+	Object* apply(Object* self, BaseObject* arg){ return func_(self,arg); }
 	virtual std::string toStringImpl() const override;
 	virtual int toIntImpl() const override;
 	virtual float toFloatImpl() const override;
 	virtual bool toBoolImpl() const override;
-};
-
-class FloatObject : public BaseObject {
-private:
-	const float val_;
-public:
-	FloatObject(World* const world, const float val);
-	virtual ~FloatObject() noexcept = default;
-	virtual std::string toStringImpl() const override;
-	virtual int toIntImpl() const override;
-	virtual float toFloatImpl() const override;
-};
-
-class ClosureObject : public BaseObject {
-private:
-	Handler<Closure> closure_;
-public:
-	ClosureObject(World* const world, Handler<Closure> clos);
-	virtual ~ClosureObject() noexcept = default;
-public:
-	Handler<Closure> closure() const { return this->closure_; };
-	Handler<Object> searchScope(const std::string& str);
+	virtual bool haveImpl(const std::string& name) const override;
+	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) override;
+	virtual Handler<Object> loadImpl(const std::string& name) override;
 };
 
 }}
