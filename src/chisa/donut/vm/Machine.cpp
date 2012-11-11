@@ -81,7 +81,7 @@ Handler<Object> Machine::run()
 				break;
 			}
 			case Inst::ConstClosure: {
-				this->stack_.push_back( world_->create<ClosureObject>( code->getClosure(constIndex) ) );
+				this->stack_.push_back( world_->create<ClosureObject>( code->getClosure(constIndex), this->closure_ ) );
 				break;
 			}
 			case Inst::ConstInt: {
@@ -159,6 +159,7 @@ Handler<Object> Machine::run()
 			Handler<Object> destObj = this->stack_.back();
 			this->stack_.pop_back();
 
+			//XXX: ちゃんと型を使う
 			if(!closureObj->isObject()){
 				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. \"%s\" is not callable.", closureObj->toString(world_).c_str());
 			} else if ( Handler<PureNativeClosure> builtin = closureObj.tryCast<PureNativeClosure>() ) {

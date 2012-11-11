@@ -50,7 +50,7 @@ class ClosureObject : public BaseObject {
 private:
 	Handler<Closure> closure_;
 public:
-	ClosureObject(World* const world, Handler<Closure> clos);
+	ClosureObject(World* const world, Handler<Closure> clos, Handler<ClosureObject> scope=Handler<ClosureObject>());
 	virtual ~ClosureObject() noexcept = default;
 public:
 	Handler<Closure> closure() const { return this->closure_; };
