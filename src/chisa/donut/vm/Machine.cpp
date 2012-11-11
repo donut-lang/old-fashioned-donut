@@ -90,6 +90,10 @@ Handler<Object> Machine::run()
 	Handler<Code> const code = this->world_->code();
 	bool running = true;
 	while( running ){
+		if( this->pc_ >= asmlist_->size() ){
+			running &= this->returnClosure();
+			continue;
+		}
 		Instruction const inst((*asmlist_)[this->pc_++]);
 		Instruction opcode, constKind, constIndex;
 		code->disasm(inst, opcode, constKind, constIndex);
@@ -241,10 +245,6 @@ Handler<Object> Machine::run()
 		}
 		default:
 			throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Unknwon opcode: closure<%s>:%08x", closure_->toString(world_).c_str(), this->pc_-1);
-		}
-		//終了時のスタック処理
-		if( this->pc_ >= asmlist_->size() ){
-			running &= this->returnClosure();
 		}
 	}
 	Handler<Object> result(this->stack_.back());

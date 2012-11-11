@@ -30,7 +30,43 @@ IntProxy::IntProxy(World* const world)
 {
 	this->registerClosure("opAdd", std::function<Object*(Object*, const int&)>(
 			[&](Object* self, const int& v)->Object*{
-		return IntProxy::toPointer(v+IntProxy::fromPointer(self));
+		return IntProxy::toPointer(IntProxy::fromPointer(self) + v);
+	}));
+	this->registerClosure("opSub", std::function<Object*(Object*, const int&)>(
+			[&](Object* self, const int& v)->Object*{
+		return IntProxy::toPointer(IntProxy::fromPointer(self) - v);
+	}));
+	this->registerClosure("opMul", std::function<Object*(Object*, const int&)>(
+			[&](Object* self, const int& v)->Object*{
+		return IntProxy::toPointer(IntProxy::fromPointer(self) * v);
+	}));
+	this->registerClosure("opMod", std::function<Object*(Object*, const int&)>(
+			[&](Object* self, const int& v)->Object*{
+		return IntProxy::toPointer(IntProxy::fromPointer(self) % v);
+	}));
+	this->registerClosure("opLt", std::function<Object*(Object*, const int&)>(
+			[&](Object* self, const int& v)->Object*{
+		return IntProxy::toPointer(IntProxy::fromPointer(self) < v);
+	}));
+	this->registerClosure("opLe", std::function<Object*(Object*, const int&)>(
+			[&](Object* self, const int& v)->Object*{
+		return IntProxy::toPointer(IntProxy::fromPointer(self) <= v);
+	}));
+	this->registerClosure("opGt", std::function<Object*(Object*, const int&)>(
+			[&](Object* self, const int& v)->Object*{
+		return IntProxy::toPointer(IntProxy::fromPointer(self) > v);
+	}));
+	this->registerClosure("opGe", std::function<Object*(Object*, const int&)>(
+			[&](Object* self, const int& v)->Object*{
+		return IntProxy::toPointer(IntProxy::fromPointer(self) >= v);
+	}));
+	this->registerClosure("opEq", std::function<Object*(Object*, const int&)>(
+			[&](Object* self, const int& v)->Object*{
+		return IntProxy::toPointer(IntProxy::fromPointer(self) == v);
+	}));
+	this->registerClosure("opNe", std::function<Object*(Object*, const int&)>(
+			[&](Object* self, const int& v)->Object*{
+		return IntProxy::toPointer(IntProxy::fromPointer(self) != v);
 	}));
 }
 
