@@ -25,10 +25,13 @@ namespace donut {
 
 const std::string TAG("ClosureObject");
 
-ClosureObject::ClosureObject(World* const world, Handler<Closure> clos)
+ClosureObject::ClosureObject(World* const world, Handler<Closure> clos, Handler<ClosureObject> scope)
 :BaseObject(world)
 ,closure_(clos)
 {
+	if(scope){
+		this->store(world, "__scope__", scope);
+	}
 }
 
 Handler<Object> ClosureObject::searchScope(const std::string& str)
