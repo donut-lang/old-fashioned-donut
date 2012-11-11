@@ -93,7 +93,7 @@ std::string Code::disasm( Instruction inst )
 		repl += util::format("int:%d -> %d", constIndex, this->intTable_.get(constIndex));
 		break;
 	case Inst::ConstBool:
-		repl += util::format("bool:%d -> %s, constIndex", constIndex == 0 ? "false" : "true");
+		repl += util::format("bool:%d -> %s", constIndex, constIndex == 0 ? "false" : "true");
 		break;
 	case Inst::ConstFloat:
 		repl += util::format("float:%d -> %f", constIndex, this->floatTable_.get(constIndex));

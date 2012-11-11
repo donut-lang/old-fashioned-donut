@@ -26,7 +26,18 @@ static const std::string TAG("BoolProxy");
 BoolProxy::BoolProxy(World* const world)
 :Proxy(world)
 {
-
+	this->registerClosure("opAnd", std::function<Object*(Object*, const bool&)>(
+			[&](Object* self, const bool& v)->Object*{
+		return BoolProxy::toPointer(BoolProxy::fromPointer(self) && v);
+	}));
+	this->registerClosure("opOr", std::function<Object*(Object*, const bool&)>(
+			[&](Object* self, const bool& v)->Object*{
+		return BoolProxy::toPointer(BoolProxy::fromPointer(self) || v);
+	}));
+	this->registerClosure("opNot", std::function<Object*(Object*)>(
+			[&](Object* self)->Object*{
+		return BoolProxy::toPointer(!BoolProxy::fromPointer(self));
+	}));
 }
 
 std::string BoolProxy::toString(const Object* ptr) const
