@@ -77,6 +77,15 @@ std::string Code::disasm( Instruction inst )
 	case ConstructObject:
 		repl += "ConstuctObject";
 		break;
+	case Branch:
+		repl += "Branch";
+		break;
+	case BranchTrue:
+		repl += "BranchTrue";
+		break;
+	case BranchFalse:
+		repl += "BranchFalse";
+		break;
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon opcode: %d in %08x", (opcode >> Inst::OpcodeShift), opcode);
 	}
