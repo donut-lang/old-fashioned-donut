@@ -53,7 +53,7 @@ TEST_F(DonutForTest, CountTest)
 
 TEST_F(DonutForTest, ZeroCountTest)
 {
-	unsigned int idx = Parser::fromString("cnt=10;for(i=0;i<0;++i){cnt+=1;};", "<MEM>", 0)->parseProgram(code);
+	unsigned int idx = Parser::fromString("cnt=10;for(i=-12;i>0;++i){cnt+=1;};", "<MEM>", 0)->parseProgram(code);
 	World world(log_trace, code);
 	Machine machine(log_trace, &world);
 
@@ -61,7 +61,7 @@ TEST_F(DonutForTest, ZeroCountTest)
 	ASSERT_FALSE(result->isNull());
 	ASSERT_FALSE(result->isObject());
 	ASSERT_TRUE(result->isInt());
-	ASSERT_EQ(0, result->toInt(&world));
+	ASSERT_EQ(-12, result->toInt(&world));
 }
 
 
