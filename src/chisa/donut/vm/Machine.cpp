@@ -193,10 +193,10 @@ Handler<Object> Machine::run()
 		}
 		case Inst::Apply: {
 			Handler<BaseObject> obj(world_->create<BaseObject>());
-			for(unsigned int i=0;i<constIndex;++i){
+			for(unsigned int i=constIndex;i>0;--i){
 				Handler<Object> val = this->stack_.back();
 				this->stack_.pop_back();
-				obj->store(world_, i, val);
+				obj->store(world_, i-1, val);
 			}
 
 			Handler<Object> closureObj = this->stack_.back();
