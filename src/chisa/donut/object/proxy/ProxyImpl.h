@@ -28,6 +28,7 @@ namespace chisa {
 namespace donut {
 class World;
 
+//XXX: 具体的なworldの実装が必要なのでここに書いてる。醜すぎる。
 template <typename... Args>
 void Proxy::registerClosure(const std::string& name, std::function<Object*(Object* self, const Args&... args)> f)
 {
