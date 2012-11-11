@@ -48,6 +48,9 @@ public: //すべてのオブジェクトに出来なければならないこと
 	bool have(World* const pool, const std::string& name) const;
 	Handler<Object> store(World* const pool, const std::string& name, Handler<Object> obj);
 	Handler<Object> load(World* const pool, const std::string& name);
+	bool have(World* const pool, const int& idx) const;
+	Handler<Object> store(World* const pool, const int& idx, Handler<Object> obj);
+	Handler<Object> load(World* const pool, const int& idx);
 protected:
 	virtual std::string toStringImpl() const = 0;
 	virtual int toIntImpl() const = 0;

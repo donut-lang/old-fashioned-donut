@@ -50,11 +50,10 @@ class ClosureObject : public BaseObject {
 private:
 	Handler<Closure> closure_;
 public:
-	ClosureObject(World* const world, Handler<Closure> clos, Handler<ClosureObject> scope=Handler<ClosureObject>());
+	ClosureObject(World* const world, Handler<Closure> clos, Handler<Object> scope=Handler<Object>());
 	virtual ~ClosureObject() noexcept = default;
 public:
 	Handler<Closure> closure() const { return this->closure_; };
-	Handler<Object> searchScope(const std::string& str);
 };
 
 }}
