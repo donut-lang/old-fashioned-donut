@@ -25,25 +25,36 @@
 namespace chisa {
 namespace donut {
 class World;
+typedef unsigned int pc_t;
+
+struct Callchain {
+	pc_t pc_;
+	Handler<Object> self_;
+	Handler<ClosureObject> closure_;
+public:
+	Callchain(pc_t pc, Handler<Object> self, Handler<ClosureObject> closure)
+	:pc_(pc_), self_(self), closure_(closure){
+	}
+};
 
 class Machine {
-	typedef unsigned int pc_t;
 	DEFINE_MEMBER_REF(private, logging::Logger, log)
 private:
+	World* const world_;
 	pc_t pc_;
+	Handler<Object> self_;
+	Handler<ClosureObject> closure_;
+	std::vector<Instruction> const* asmlist_;
 	std::vector<Handler<Object> > stack_;
 	std::vector<Handler<Object> > local_;
-	std::vector<Handler<Object> > selfStack_;
-	std::vector<std::pair<Handler<ClosureObject>, pc_t> > callStack_;
-	Handler<ClosureObject> closure_;
-	World* const world_;
+	std::vector<Callchain> callStack_;
 public:
 	Machine(logging::Logger& log, World* world);
 	virtual ~Machine() noexcept = default;
 public:
 	Handler<Object> start( const std::size_t closureIndex );
 private:
-	void enterClosure(Handler<ClosureObject> clos);
+	void enterClosure(Handler<Object> self, Handler<ClosureObject> clos);
 	void returnClosure();
 private:
 	Handler<Object> run();
