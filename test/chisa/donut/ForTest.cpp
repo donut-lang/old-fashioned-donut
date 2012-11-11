@@ -65,6 +65,34 @@ TEST_F(DonutForTest, ZeroCountTest)
 }
 
 
+TEST_F(DonutForTest, WhileTest)
+{
+	unsigned int idx = Parser::fromString("cnt=0;i=0;while(i<10){++i;cnt+=1;};", "<MEM>", 0)->parseProgram(code);
+	World world(log_trace, code);
+	Machine machine(log_trace, &world);
+
+	Handler<Object> result = machine.start(idx);
+	ASSERT_FALSE(result->isNull());
+	ASSERT_FALSE(result->isObject());
+	ASSERT_TRUE(result->isInt());
+	ASSERT_EQ(10, result->toInt(&world));
+}
+
+TEST_F(DonutForTest, ForWhileTest)
+{
+	unsigned int idx = Parser::fromString("cnt=0;i=0;for(;i<10;){++i;cnt+=1;};", "<MEM>", 0)->parseProgram(code);
+	World world(log_trace, code);
+	Machine machine(log_trace, &world);
+
+	Handler<Object> result = machine.start(idx);
+	ASSERT_FALSE(result->isNull());
+	ASSERT_FALSE(result->isObject());
+	ASSERT_TRUE(result->isInt());
+	ASSERT_EQ(10, result->toInt(&world));
+}
+
+
+
 }}
 
 
