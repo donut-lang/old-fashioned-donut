@@ -58,6 +58,9 @@ protected:
 	virtual Handler<Object> loadImpl(const std::string& name) = 0;
 public:
 	inline bool isObject() const noexcept { return Tag::Obj==tag(); };
+	inline bool isNull() const noexcept { return Tag::Null==tag(); };
+	inline bool isBool() const noexcept { return Tag::Bool==tag(); };
+	inline bool isInt() const noexcept { return Tag::Int==tag(); };
 	inline intptr_t tag() const noexcept { return reinterpret_cast<std::uintptr_t>(this) & Tag::Mask; };
 	inline void onFree() {};//参照カウント、どうしましょう？？
 	inline void incref( bool check ) { if(isObject()) { this->HandlerBody<Object>::incref(check); } };

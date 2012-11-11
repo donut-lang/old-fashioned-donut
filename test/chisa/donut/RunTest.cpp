@@ -38,6 +38,17 @@ public:
 	}
 };
 
+TEST_F(DonutRunTest, NullTest)
+{
+	unsigned int idx = Parser::fromString("", "<MEM>", 0)->parseProgram(code);
+	World world(log_trace, code);
+	Machine machine(log_trace, &world);
+
+	Handler<Object> result = machine.start(idx);
+	ASSERT_TRUE(result->isNull());
+	ASSERT_FALSE(result->isObject());
+}
+
 TEST_F(DonutRunTest, IntTest)
 {
 	unsigned int idx = Parser::fromString("1;", "<MEM>", 0)->parseProgram(code);
@@ -45,7 +56,19 @@ TEST_F(DonutRunTest, IntTest)
 	Machine machine(log_trace, &world);
 
 	Handler<Object> result = machine.start(idx);
+	ASSERT_TRUE(result->isInt());
 	ASSERT_EQ(1, result->toInt(&world));
+}
+
+TEST_F(DonutRunTest, StringTest)
+{
+	unsigned int idx = Parser::fromString("'abc';", "<MEM>", 0)->parseProgram(code);
+	World world(log_trace, code);
+	Machine machine(log_trace, &world);
+
+	Handler<Object> result = machine.start(idx);
+	ASSERT_TRUE(result->isObject());
+	ASSERT_EQ("abc", result->toString(&world));
 }
 
 TEST_F(DonutRunTest, AssignTest)
@@ -55,6 +78,7 @@ TEST_F(DonutRunTest, AssignTest)
 	Machine machine(log_trace, &world);
 
 	Handler<Object> result = machine.start(idx);
+	ASSERT_TRUE(result->isInt());
 	ASSERT_EQ(1, result->toInt(&world));
 }
 
@@ -66,6 +90,7 @@ TEST_F(DonutRunTest, ObjectTest)
 
 	Handler<Object> result = machine.start(idx);
 	ASSERT_TRUE(result->have(&world, "a"));
+	ASSERT_TRUE(result->isObject());
 	ASSERT_EQ(1, result->load(&world, "a")->toInt(&world));
 }
 
