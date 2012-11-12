@@ -45,7 +45,7 @@ Handler<ClosureObject> Machine::createClosure(Handler<Closure> closureCode)
 	if( this->context_ ){
 		return world_->create<ClosureObject>(closureCode, this->context_);
 	}else{
-		return world_->create<ClosureObject>(closureCode, world_->createNull());
+		return world_->create<ClosureObject>(closureCode, world_->global());
 	}
 }
 

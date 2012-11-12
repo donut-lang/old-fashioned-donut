@@ -32,11 +32,12 @@ private:
 protected:
 	Proxy(World* const world):world_(world){};
 	~Proxy() noexcept = default;
-	World* world() { return this->world_; };
+	World* world() const { return this->world_; };
 	template <typename... Args>
 	void registerClosure(const std::string& name, std::function<Object*(Args... args)> f);
 public:
 	bool have(const Object* ptr, const std::string& name) const;
+	bool haveOwn(const Object* ptr, const std::string& name) const;
 	Handler<Object> load(const Object* ptr, const std::string& name);
 };
 

@@ -38,6 +38,8 @@ private:
 	IntProxy intProxy_;
 	NullProxy nullProxy_;
 private:
+	Handler<BaseObject> globalObject_;
+	Handler<BaseObject> objectProto_;
 	Handler<FloatObject> floatProto_;
 	Handler<StringObject> stringProto_;
 public:
@@ -49,6 +51,8 @@ public:
 	IntProxy& intProxy() {return intProxy_;};
 	NullProxy& nullProxy() {return nullProxy_;};
 	Handler<Code> code() { return this->code_; }
+	Handler<BaseObject> global() { return this->globalObject_; }
+	Handler<BaseObject> objectPrototype() { return this->objectProto_; };
 public:
 	template <typename T, typename... Args>
 	Handler<T> create(Args... args)

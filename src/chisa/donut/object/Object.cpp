@@ -110,6 +110,22 @@ bool Object::have(World* const world, const std::string& name) const
 	}
 }
 
+bool Object::haveOwn(World* const world, const std::string& name) const
+{
+	switch(this->tag()){
+	case Tag::Obj:
+		return this->haveOwnImpl(name);
+	case Tag::Int:
+		return world->intProxy().haveOwn(this, name);
+	case Tag::Bool:
+		return world->boolProxy().haveOwn(this, name);
+	case Tag::Null:
+		return world->nullProxy().haveOwn(this, name);
+	default:
+		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
+	}
+}
+
 Handler<Object> Object::store(World* const world, const std::string& name, Handler<Object> obj)
 {
 	switch(this->tag()){
