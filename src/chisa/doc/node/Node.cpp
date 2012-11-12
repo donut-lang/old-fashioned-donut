@@ -151,7 +151,7 @@ Link::Link()
 Font::Font()
 :size_(geom::Unspecified)
 {
-	this->color(gl::INVALID_COLOR);
+	this->color(gl::InvalidColor);
 	this->addAttribute("color", this->color_);
 	this->size(NAN);
 	this->addAttribute("size", this->size_);

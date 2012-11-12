@@ -25,7 +25,7 @@ namespace chisa {
 namespace tk {
 namespace widget {
 
-WidgetFactory::WidgetFactory(logging::Logger& log, weak_ptr<World> world)
+WidgetFactory::WidgetFactory(logging::Logger& log, std::weak_ptr<World> world)
 :log_(log)
 ,world_(world)
 {
@@ -37,12 +37,12 @@ WidgetFactory::~WidgetFactory()
 {
 }
 
-void WidgetFactory::registerWidget(const string& klass, std::function<Widget*(logging::Logger& log, weak_ptr<World> world, tinyxml2::XMLElement* elem)> func)
+void WidgetFactory::registerWidget(const std::string& klass, std::function<Widget*(logging::Logger& log, std::weak_ptr<World> world, tinyxml2::XMLElement* elem)> func)
 {
 	this->widgetMap_.insert(std::make_pair(klass, func));
 }
 
-Widget* WidgetFactory::createWidget(const string& klass, tinyxml2::XMLElement* elem)
+Widget* WidgetFactory::createWidget(const std::string& klass, tinyxml2::XMLElement* elem)
 {
 	auto it = this->widgetMap_.find(klass);
 	if(it == this->widgetMap_.end()){

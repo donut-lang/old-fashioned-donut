@@ -40,8 +40,8 @@ TextContext::TextContext(logging::Logger& log, Handler<RenderTree> renderTree)
 	this->pushDeco(gl::TextDrawable::Decoration::None);
 	this->pushSize(gl::TextDrawable::DefaultFontSize);
 	this->pushFont("");
-	this->pushColor(gl::BLACK);
-	this->pushBackColor(gl::TRANSPARENT);
+	this->pushColor(gl::Black);
+	this->pushBackColor(gl::Transparent);
 	{
 		cairo_status_t st = cairo_surface_status(this->nullSurface_);
 		if(st != CAIRO_STATUS_SUCCESS){

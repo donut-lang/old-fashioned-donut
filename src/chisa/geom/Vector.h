@@ -153,6 +153,9 @@ public:
 	inline constexpr bool operator!=(const Self& other) const noexcept{
 		return !(*this==other);
 	}
+#ifdef near
+#undef near
+#endif
 	inline constexpr bool near(const Self& other, const float precision) const noexcept{
 		return
 				std::fabs(this->x_ - other.x_) < precision &&

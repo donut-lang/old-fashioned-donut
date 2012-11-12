@@ -65,7 +65,7 @@ void ScrollLayout::loadXMLimpl(LayoutFactory* const factory, tinyxml2::XMLElemen
 			this->scrollMode_ = Vertical;
 		}
 	}
-	XMLElement* const childElement = element->FirstChildElement();
+	tinyxml2::XMLElement* const childElement = element->FirstChildElement();
 	if(childElement) {
 		this->child_ = factory->parseTree(root(), self(), childElement);
 	}

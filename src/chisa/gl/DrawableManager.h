@@ -24,6 +24,13 @@
 #include "Font.h"
 #include "internal/ImageManager.h"
 #include "Drawable.h"
+#ifdef TRANSPARENT
+#undef TRANSPARENT
+#endif
+
+#ifdef Handler
+#undef Handler
+#endif
 
 namespace chisa {
 namespace gl {
@@ -62,8 +69,8 @@ public:
 			Handler<Font> font=Handler<Font>(),
 			TextDrawable::Style style=TextDrawable::Style::Regular,
 			TextDrawable::Decoration deco=TextDrawable::Decoration::None,
-			const gl::Color& color=BLACK,
-			const gl::Color& backColor=TRANSPARENT
+			const gl::Color& color=gl::Black,
+			const gl::Color& backColor=gl::Transparent
 		);
 	Handler<TextDrawable> queryVerticalText(
 			const std::string& str,
@@ -71,8 +78,8 @@ public:
 			Handler<Font> font=Handler<Font>(),
 			TextDrawable::Style style=TextDrawable::Style::Regular,
 			TextDrawable::Decoration deco=TextDrawable::Decoration::None,
-			const gl::Color& color=BLACK,
-			const gl::Color& backColor=TRANSPARENT
+			const gl::Color& color=gl::Black,
+			const gl::Color& backColor=gl::Transparent
 		);
 public:
 	void onFree() noexcept { delete this; };

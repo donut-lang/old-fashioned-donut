@@ -58,7 +58,7 @@ source : program EOF -> program;
 
 program : exprlist -> ^(CLOS VARS exprlist);
 
-exprlist : expr ((';')+ expr)* (';')? -> ^(CONT expr*);
+exprlist : expr? ((';')+ expr)* (';')? -> ^(CONT expr*);
 
 expr
 	: 'func' '(' varlist ')' '{' exprlist '}' -> ^(CLOS varlist exprlist)

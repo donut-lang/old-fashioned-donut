@@ -88,22 +88,22 @@ TEST_F(TextContextTest, SizePushTest)
 
 TEST_F(TextContextTest, ColorPushTest)
 {
-	r->pushColor(gl::RED);
-	ASSERT_EQ(gl::RED, r->nowColor());
-	r->pushColor(gl::BLUE);
-	ASSERT_EQ(gl::BLUE, r->nowColor());
+	r->pushColor(gl::Red);
+	ASSERT_EQ(gl::Red, r->nowColor());
+	r->pushColor(gl::Blue);
+	ASSERT_EQ(gl::Blue, r->nowColor());
 	r->popColor();
-	ASSERT_EQ(gl::RED, r->nowColor());
+	ASSERT_EQ(gl::Red, r->nowColor());
 }
 
 TEST_F(TextContextTest, BackColorPushTest)
 {
-	r->pushBackColor(gl::RED);
-	ASSERT_EQ(gl::RED, r->nowBackColor());
-	r->pushBackColor(gl::BLUE);
-	ASSERT_EQ(gl::BLUE, r->nowBackColor());
+	r->pushBackColor(gl::Red);
+	ASSERT_EQ(gl::Red, r->nowBackColor());
+	r->pushBackColor(gl::Blue);
+	ASSERT_EQ(gl::Blue, r->nowBackColor());
 	r->popBackColor();
-	ASSERT_EQ(gl::RED, r->nowBackColor());
+	ASSERT_EQ(gl::Red, r->nowBackColor());
 }
 TEST_F(TextContextTest, FontPushTest)
 {

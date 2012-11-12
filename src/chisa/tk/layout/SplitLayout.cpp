@@ -76,7 +76,7 @@ void SplitLayout::addChild(const SplitDef& def, shared_ptr<Layout> layout)
 	this->children().push_back(ctx);
 }
 
-void SplitLayout::loadXMLimpl(LayoutFactory* const factory, XMLElement* top)
+void SplitLayout::loadXMLimpl(LayoutFactory* const factory, tinyxml2::XMLElement* top)
 {
 	const std::string name(top->Name());
 	if(name == "horizontal"){
@@ -87,8 +87,8 @@ void SplitLayout::loadXMLimpl(LayoutFactory* const factory, XMLElement* top)
 		log().e(TAG, "Oops. you might miss-spelled? \"s\"", name.c_str());
 		this->setMode(Vertical);
 	}
-	for(XMLNode* _node = top->FirstChild(); _node; _node=_node->NextSibling()){
-		XMLElement* elem = _node->ToElement();
+	for(tinyxml2::XMLNode* _node = top->FirstChild(); _node; _node=_node->NextSibling()){
+		tinyxml2::XMLElement* elem = _node->ToElement();
 		if(!elem){
 			continue;
 		}
@@ -125,15 +125,15 @@ void SplitLayout::resetChildrenLayout()
 	this->totalSize_ = geom::Unspecified;
 }
 
-weak_ptr<Layout> SplitLayout::getChildAt(const size_t index) const
+std::weak_ptr<Layout> SplitLayout::getChildAt(const std::size_t index) const
 {
 	if(index < this->children().size()){
 		shared_ptr<SplitCtx> ctx = this->children_.at(index);
-		return weak_ptr<Layout>(ctx->layout);
+		return std::weak_ptr<Layout>(ctx->layout);
 	}
-	return weak_ptr<Layout>();
+	return std::weak_ptr<Layout>();
 }
-size_t SplitLayout::getChildCount() const
+std::size_t SplitLayout::getChildCount() const
 {
 	return this->children().size();
 }
@@ -289,15 +289,15 @@ void SplitLayout::onLayout(const geom::Box& size)
 	}
 }
 
-weak_ptr<Layout> SplitLayout::getLayoutByIdImpl(const std::string& id)
+std::weak_ptr<Layout> SplitLayout::getLayoutByIdImpl(const std::string& id)
 {
 	for(shared_ptr<SplitCtx> childCtx : this->children()){
-		weak_ptr<Layout> res = childCtx->layout->getLayoutById(id);
+		std::weak_ptr<Layout> res = childCtx->layout->getLayoutById(id);
 		if(!res.expired()){
 			return res;
 		}
 	}
-	return weak_ptr<Layout>();
+	return std::weak_ptr<Layout>();
 }
 
 

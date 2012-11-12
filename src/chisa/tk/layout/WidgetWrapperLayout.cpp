@@ -45,7 +45,7 @@ WidgetWrapperLayout::~WidgetWrapperLayout() noexcept
 		if(shared_ptr<World> world = this->world().lock()){
 			//ワールドの書き換えと、ウィジットへの現親レイアウトの通知
 			if(world->replaceWidget(this->widgetId_, this->borrowed_)) {
-				this->widget()->updateWrapper(dynamic_pointer_cast<WidgetWrapperLayout>(this->self().lock()));
+				this->widget()->updateWrapper(std::dynamic_pointer_cast<WidgetWrapperLayout>(this->self().lock()));
 			}
 			// TODO　ウィジットにレイアウト通知入れたほうがいい？？
 		}
@@ -57,11 +57,11 @@ WidgetWrapperLayout::~WidgetWrapperLayout() noexcept
 	}
 }
 
-weak_ptr<Layout> WidgetWrapperLayout::getChildAt(const size_t index) const
+weak_ptr<Layout> WidgetWrapperLayout::getChildAt(const std::size_t index) const
 {
 	return weak_ptr<Layout>();
 }
-size_t WidgetWrapperLayout::getChildCount() const
+std::size_t WidgetWrapperLayout::getChildCount() const
 {
 	return 0;
 }
@@ -187,7 +187,7 @@ std::string WidgetWrapperLayout::toString() const
 {
 	return util::format( "(WidgetWrapperLayout \"%s\")", this->widgetId_.c_str());
 }
-void WidgetWrapperLayout::loadXMLimpl(LayoutFactory* const factory, XMLElement* const element)
+void WidgetWrapperLayout::loadXMLimpl(LayoutFactory* const factory, tinyxml2::XMLElement* const element)
 {
 	if(element->Attribute("fit", "fit")){
 		this->fitMode_ = Fit;
@@ -202,11 +202,11 @@ void WidgetWrapperLayout::loadXMLimpl(LayoutFactory* const factory, XMLElement* 
 		this->log().e(TAG, "Oops. widget-klass not defined for id \"%s\".", widgetId);
 		return;
 	}
-	if(shared_ptr<World> world = this->world().lock()){
+	if(std::shared_ptr<World> world = this->world().lock()){
 		if(widgetId && (this->borrowed_ = world->getWidgetById(widgetId))){
 			world->replaceWidget(widgetId, this);
 			this->widget(this->borrowed_->widget());
-			this->widget()->updateWrapper(dynamic_pointer_cast<WidgetWrapperLayout>(this->self().lock()));
+			this->widget()->updateWrapper(std::dynamic_pointer_cast<WidgetWrapperLayout>(this->self().lock()));
 		}else{
 			this->widget(world->createWidget(widgetKlass, element));
 			if(!this->widget()){

@@ -69,22 +69,22 @@ public:
 	}
 };
 
-constexpr Color INVALID_COLOR(NAN, NAN, NAN, NAN);
-constexpr Color WHITE(1,1,1,1);
-constexpr Color BLACK(0,0,0,1);
-constexpr Color RED(1,0,0,1);
-constexpr Color BLUE(0,0,1,1);
-constexpr Color GREEN(0,1,0,1);
-constexpr Color GRAY(.5,.5,.5,1);
-constexpr Color TRANSPARENT(0,0,0,0);
+constexpr Color InvalidColor(NAN, NAN, NAN, NAN);
+constexpr Color White(1,1,1,1);
+constexpr Color Black(0,0,0,1);
+constexpr Color Red(1,0,0,1);
+constexpr Color Blue(0,0,1,1);
+constexpr Color Green(0,1,0,1);
+constexpr Color Gray(.5,.5,.5,1);
+constexpr Color Transparent(0.0f,0.0f,0.0f,0.0f);
 
 const std::pair<std::string, gl::Color> COLOR_TABLE[] = {
-		std::pair<std::string, gl::Color>("white", WHITE),
-		std::pair<std::string, gl::Color>("black", BLACK),
-		std::pair<std::string, gl::Color>("red", RED),
-		std::pair<std::string, gl::Color>("blue", BLUE),
-		std::pair<std::string, gl::Color>("green", GREEN),
-		std::pair<std::string, gl::Color>("gray", GRAY),
-		std::pair<std::string, gl::Color>("transparent", TRANSPARENT)
+		std::pair<std::string, gl::Color>("white", gl::White),
+		std::pair<std::string, gl::Color>("black", gl::Black),
+		std::pair<std::string, gl::Color>("red", gl::Red),
+		std::pair<std::string, gl::Color>("blue", gl::Blue),
+		std::pair<std::string, gl::Color>("green", gl::Green),
+		std::pair<std::string, gl::Color>("gray", gl::Gray),
+		std::pair<std::string, gl::Color>("transparent", gl::Transparent)
 };
 }}
