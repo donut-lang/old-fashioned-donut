@@ -38,6 +38,8 @@ private:
 	IntProxy intProxy_;
 	NullProxy nullProxy_;
 private:
+	Handler<FloatObject> floatProto_;
+	Handler<StringObject> stringProto_;
 public:
 	World(logging::Logger& log, Handler<Code> code);
 	virtual ~World() noexcept = default;
@@ -49,7 +51,7 @@ public:
 	Handler<Code> code() { return this->code_; }
 public:
 	template <typename T, typename... Args>
-	Handler<T> create(const Args&... args)
+	Handler<T> create(Args... args)
 	{
 		Handler<T> obj(new T(this, args...));
 		return obj;
@@ -58,5 +60,8 @@ public:
 	Handler<Object> createBool(const bool& val);
 	Handler<Object> createNull();
 };
+
+template <> Handler<StringObject> World::create<StringObject>(std::string const& val);
+template <> Handler<FloatObject> World::create<FloatObject>(float const& val);
 
 }}

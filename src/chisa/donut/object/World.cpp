@@ -28,13 +28,26 @@ World::World(logging::Logger& log, Handler<Code> code)
 ,boolProxy_(this)
 ,intProxy_(this)
 ,nullProxy_(this)
+,floatProto_(new FloatObject(this))
+,stringProto_(new StringObject(this))
 {
-
 }
 
 unsigned int World::nextGeneration()
 {
 	return ++this->generation_;
+}
+
+template <>
+Handler<StringObject> World::create<StringObject>(std::string const& val)
+{
+
+}
+
+template <>
+Handler<FloatObject> World::create<FloatObject>(float const& val)
+{
+
 }
 
 Handler<Object> World::createInt(const int& val)
