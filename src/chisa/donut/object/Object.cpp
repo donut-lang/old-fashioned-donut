@@ -142,7 +142,7 @@ Handler<Object> Object::store(World* const world, const std::string& name, Handl
 	}
 }
 
-Handler<Object> Object::load(World* const world, const std::string& name)
+Handler<Object> Object::load(World* const world, const std::string& name) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
@@ -163,7 +163,7 @@ Handler<Object> Object::store(World* const pool, const int& idx, Handler<Object>
 {
 	return this->store(pool, toName(idx), obj);
 }
-Handler<Object> Object::load(World* const pool, const int& idx)
+Handler<Object> Object::load(World* const pool, const int& idx) const
 {
 	return this->load(pool, toName(idx));
 }

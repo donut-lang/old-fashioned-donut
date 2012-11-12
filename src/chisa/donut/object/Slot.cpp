@@ -68,7 +68,7 @@ void Slot::discardFuture()
 	this->index_=this->rev_.begin()+idx;
 }
 
-Object* Slot::load()
+Object* Slot::load() const
 {
 	return this->index_->second;
 }
