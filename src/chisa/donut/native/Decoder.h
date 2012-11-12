@@ -27,9 +27,16 @@ class World;
 
 namespace native {
 
+template <typename T>
+T decode(World* world, Handler<chisa::donut::Object> obj);
+
+//-----------------------------------------------------------------------------
+
 template <typename T, bool = IsBaseOf<T, Object>::result >
 struct PointerDecoder {
-	static T* exec(World* world, Handler<chisa::donut::Object> obj);
+	static T* exec(World* world, Handler<chisa::donut::Object> obj) {
+		return decode<T*>( world, obj );
+	}
 };
 
 template <typename T>
@@ -40,10 +47,36 @@ struct PointerDecoder<T, true> {
 	}
 };
 
+//-----------------------------------------------------------------------------
+
+template <typename T, bool = IsBaseOf<T, Object>::result >
+struct HandlerDecoder {
+	static Handler<T> exec(World* world, Handler<chisa::donut::Object> obj)
+	{
+		return decode<Handler<T> >( world, obj );
+	}
+};
+
+template <typename T>
+struct HandlerDecoder<T, true> {
+	static Handler<T> exec(World* world, Handler<chisa::donut::Object> obj)
+	{
+		if( obj->isObject() ){
+			return obj.cast<T>();
+		}else{
+			return decode<Handler<T> >(world, obj);
+		}
+	}
+};
+
+//-----------------------------------------------------------------------------
 
 template <typename T>
 struct Decoder {
-	static T exec(World* world, Handler<Object> obj);
+	static T exec(World* world, Handler<Object> obj)
+	{
+		return decode<T>(world, obj);
+	}
 };
 
 template <typename T>
@@ -58,11 +91,7 @@ template <typename T>
 struct Decoder< Handler<T> > {
 	static Handler<T> exec(World* world, Handler<Object> obj)
 	{
-		if( obj->isObject() ){
-			return obj.cast<T>();
-		}else{
-			throw DonutException(__FILE__, __LINE__, "Oops. cannot cast from primitive object.");
-		}
+		return HandlerDecoder<T>::exec(world, obj);
 	}
 };
 
