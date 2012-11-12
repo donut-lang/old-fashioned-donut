@@ -26,9 +26,16 @@ class World;
 
 namespace native {
 
+template <typename T>
+Handler<Object> encode(World* world, T obj);
+
+//-----------------------------------------------------------------------------
+
 template <typename T, bool = IsBaseOf<T, Object>::result >
 struct PointerEncoder {
-	static Handler<Object> exec(World* world, T* obj);
+	static Handler<Object> exec(World* world, T* obj) {
+		return encode<T*>( world, obj );
+	}
 };
 
 template <typename T>
@@ -39,9 +46,31 @@ struct PointerEncoder<T, true> {
 	}
 };
 
+//-----------------------------------------------------------------------------
+
+template <typename T, bool = IsBaseOf<T, Object>::result >
+struct HandlerEncoder {
+	static Handler<Object> exec(World* world, Handler<T> obj)
+	{
+		return encode<Handler<T> >( world, obj );
+	}
+};
+
+template <typename T>
+struct HandlerEncoder<T, true> {
+	static Handler<Object> exec(World* world, Handler<T> obj)
+	{
+		return obj;
+	}
+};
+
+//-----------------------------------------------------------------------------
+
 template <typename T>
 struct Encoder{
-	static Handler<Object> exec(World* world, T obj);
+	static Handler<Object> exec(World* world, T obj) {
+		return encode<T>(world, obj);
+	}
 };
 
 template <typename T>
@@ -56,7 +85,7 @@ template <typename T>
 struct Encoder< Handler<T> > {
 	static Handler<Object> exec(World* world, Handler<T> obj)
 	{
-		return obj;
+		return HandlerEncoder<T>::exec( world, obj );
 	}
 };
 }}}

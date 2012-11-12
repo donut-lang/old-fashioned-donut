@@ -22,11 +22,6 @@ namespace chisa {
 namespace donut {
 namespace native {
 
-template <>
-Handler<Object> Encoder<Object*>::exec(World* world, Object* obj){
-	return Handler<Object>::__internal__fromRawPointerWithoutCheck( obj );
-}
-
 }}}
 
 
