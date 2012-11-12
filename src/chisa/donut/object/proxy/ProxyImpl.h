@@ -21,7 +21,6 @@
 #include "../Object.h"
 #include "../World.h"
 #include "../../native/PureNativeClosure.h"
-#include "../../native/Convert.h"
 #include "Proxy.h"
 
 namespace chisa {

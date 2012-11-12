@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Convert.h"
+#include "Bind.h"
 
 namespace chisa {
 namespace donut {
