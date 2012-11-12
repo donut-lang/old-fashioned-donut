@@ -21,48 +21,41 @@
 #include "../../util/StringUtil.h"
 #include "../Exception.h"
 #include "../object/ObjectBase.h"
-
+#include "Decoder.h"
+#include "Encoder.h"
 
 namespace chisa {
 namespace donut {
-class World;
-
 namespace native {
 
-template <typename T>
-T decode(World* world, Handler<Object> obj);
-
-template <typename T>
-Handler<Object> encode(World* world, T obj);
-
-template <size_t idx, typename T>
-Object* callWithBind(Object* self, BaseObject* args, std::function<Object*(T)> const& funct)
+template <size_t idx, typename R, typename T>
+Handler<Object> callWithBind(Handler<Object> self, Handler<BaseObject> args, std::function<R(T)> const& funct)
 {
-	T s = dynamic_cast<T>(self);
+	T s = native::Decoder<T>::exec( args->world(), self );
 	if(!s){
 		throw DonutException(__FILE__, __LINE__, "oops. type mismatched. %s <-> %s", typeid(T).name(), typeid(self).name());
 	}
-	return funct(s);
+	return native::Encoder<R>::exec( args->world(), funct(s) );
 }
 
-template <size_t idx, typename T, typename U, typename... Args>
-Object* callWithBind(Object* self, BaseObject* args, std::function<Object*(T self, U val, Args... args)> const& funct)
+template <size_t idx, typename R, typename T, typename U, typename... Args>
+Handler<Object> callWithBind(Handler<Object> self, Handler<BaseObject> args, std::function<R(T self, U val, Args... args)> const& funct)
 {
 	if(!args->have(args->world(), idx)){
 		constexpr int _idx = idx+1;
 		throw DonutException(__FILE__, __LINE__, "oops. args size mismatched. need more than %d arguments.", _idx);
 	}
-	U const val = native::decode<U>( args->world(), args->load(args->world(), idx) );;
-	std::function<Object*(T self, Args... args)> left = [funct, val](T self, Args... args)->Object*{
+	U const val = native::Decoder<U>::exec( args->world(), args->load(args->world(), idx) );
+	std::function<R(T self, Args... args)> left = [funct, val](T self, Args... args)->R{
 		return funct(self, val, args...);
 	};
 	return callWithBind<idx+1>(self, args, left);
 }
 
-template <typename... Args>
-std::function<Object*(Object* self, BaseObject* arg)> createBind(std::function<Object*(Args... args)> f)
+template <typename R, typename... Args>
+std::function<Handler<Object>(Handler<Object> self, Handler<BaseObject> args)> createBind(std::function<R(Args... args)> f)
 {
-	return [f](Object* self, BaseObject* args)->Object*{
+	return [f](Handler<Object> self, Handler<BaseObject> args){
 		return callWithBind<0>(self, args, f);
 	};
 }

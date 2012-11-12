@@ -16,12 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Convert.h"
+#include "Encoder.h"
 
 namespace chisa {
 namespace donut {
 namespace native {
 
+template <>
+Handler<Object> Encoder<Object*>::exec(World* world, Object* obj){
+	return Handler<Object>::__internal__fromRawPointerWithoutCheck( obj );
+}
 
 }}}
 

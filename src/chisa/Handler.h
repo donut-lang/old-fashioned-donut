@@ -32,6 +32,7 @@ private:
 	void *operator new(std::size_t) = delete;
 	void operator delete(void* pv) = delete;
 public:
+	typedef S value_type;
 	inline static Handler<S> __internal__fromRawPointerWithoutCheck(S* const sprite) noexcept
 	{
 		Handler<S> spr;

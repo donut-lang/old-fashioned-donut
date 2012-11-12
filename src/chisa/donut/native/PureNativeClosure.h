@@ -25,14 +25,14 @@ namespace donut {
 
 class PureNativeClosure : public Object {
 private:
-	std::function<Object*(Object* self, BaseObject* arg)> func_;
+	std::function<Handler<Object>(Handler<Object> self, Handler<BaseObject> arg)> func_;
 public:
-	template <typename... Args>
-	PureNativeClosure(World* const world, std::function<Object*(Args... args)> func)
+	template <typename R, typename... Args>
+	PureNativeClosure(World* const world, std::function<R(Args... args)> func)
 	:func_( native::createBind(func) ){};
 	virtual ~PureNativeClosure() noexcept {}
 public:
-	Object* apply(Object* self, BaseObject* arg){ return func_(self,arg); }
+	Handler<Object> apply(Handler<Object> self, Handler<BaseObject> arg){ return func_(self,arg); }
 	virtual std::string toStringImpl() const override;
 	virtual int toIntImpl() const override;
 	virtual float toFloatImpl() const override;

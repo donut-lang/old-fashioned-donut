@@ -216,7 +216,7 @@ Handler<Object> Machine::run()
 			} else if ( Handler<ClosureObject> closObj = closureObj.tryCast<ClosureObject>() ) {
 				this->enterClosure(destObj, closObj, obj);
 			} else if ( Handler<PureNativeClosure> builtin = closureObj.tryCast<PureNativeClosure>() ) {
-				this->stack_.push_back( Handler<Object>::__internal__fromRawPointerWithoutCheck( builtin->apply(destObj.get(), obj.get()) ) );
+				this->stack_.push_back( builtin->apply(destObj, obj) );
 			}else{
 				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. \"%s\" is not callable.", closureObj->toString(world_).c_str());
 			}

@@ -16,12 +16,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Convert.h"
+#include "Decoder.h"
 
 namespace chisa {
 namespace donut {
 namespace native {
 
+template <>
+int Decoder<int>::exec(World* world, Handler<Object> obj)
+{
+	return obj->toInt(world);
+}
+
+template <>
+float Decoder<float>::exec(World* world, Handler<Object> obj)
+{
+	return obj->toFloat(world);
+}
+
+template <>
+bool Decoder<bool>::exec(World* world, Handler<Object> obj)
+{
+	return obj->toBool(world);
+}
+
+template <>
+Object* Decoder<Object*>::exec(World* world, Handler<Object> obj)
+{
+	return obj.get();
+}
 
 }}}
 
