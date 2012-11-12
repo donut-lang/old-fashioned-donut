@@ -28,7 +28,7 @@ private:
 	std::function<Object*(Object* self, BaseObject* arg)> func_;
 public:
 	template <typename... Args>
-	PureNativeClosure(World* const world, std::function<Object*(Object* self, const Args&... args)> func)
+	PureNativeClosure(World* const world, std::function<Object*(Args... args)> func)
 	:func_( native::createBind(func) ){};
 	virtual ~PureNativeClosure() noexcept {}
 public:

@@ -34,7 +34,7 @@ protected:
 	~Proxy() noexcept = default;
 	World* world() { return this->world_; };
 	template <typename... Args>
-	void registerClosure(const std::string& name, std::function<Object*(Object* self, const Args&... args)> f);
+	void registerClosure(const std::string& name, std::function<Object*(Args... args)> f);
 public:
 	bool have(const Object* ptr, const std::string& name) const;
 	Handler<Object> load(const Object* ptr, const std::string& name);

@@ -27,6 +27,12 @@ namespace chisa {
 namespace donut {
 
 const std::string TAG("StringObject");
+StringObject::StringObject(World* world)
+:BaseObject(world)
+,str_("")
+{
+}
+
 StringObject::StringObject(World* world, const std::string& str)
 :BaseObject(world)
 ,str_(str)

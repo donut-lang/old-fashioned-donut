@@ -28,20 +28,20 @@ static const std::string TAG("IntProxy");
 IntProxy::IntProxy(World* const world)
 :Proxy(world)
 {
-	this->registerClosure("opAdd", std::function<Object*(Object*, const int&)>(
-			[&](Object* self, const int& v)->Object*{
+	this->registerClosure("opAdd", std::function<Object*(Object*, int)>(
+			[&](Object* self, int v)->Object*{
 		return IntProxy::toPointer(IntProxy::fromPointer(self) + v);
 	}));
-	this->registerClosure("opSub", std::function<Object*(Object*, const int&)>(
-			[&](Object* self, const int& v)->Object*{
+	this->registerClosure("opSub", std::function<Object*(Object*, int)>(
+			[&](Object* self, int v)->Object*{
 		return IntProxy::toPointer(IntProxy::fromPointer(self) - v);
 	}));
-	this->registerClosure("opMul", std::function<Object*(Object*, const int&)>(
-			[&](Object* self, const int& v)->Object*{
+	this->registerClosure("opMul", std::function<Object*(Object*, int)>(
+			[&](Object* self, int v)->Object*{
 		return IntProxy::toPointer(IntProxy::fromPointer(self) * v);
 	}));
-	this->registerClosure("opDiv", std::function<Object*(Object*, const int&)>(
-			[&](Object* self, const int& v)->Object*{
+	this->registerClosure("opDiv", std::function<Object*(Object*, int)>(
+			[&](Object* self, int v)->Object*{
 		return IntProxy::toPointer(IntProxy::fromPointer(self) / v);
 	}));
 	this->registerClosure("opPlus", std::function<Object*(Object*)>(
@@ -52,32 +52,32 @@ IntProxy::IntProxy(World* const world)
 			[&](Object* self)->Object*{
 		return IntProxy::toPointer(-IntProxy::fromPointer(self));
 	}));
-	this->registerClosure("opMod", std::function<Object*(Object*, const int&)>(
-			[&](Object* self, const int& v)->Object*{
+	this->registerClosure("opMod", std::function<Object*(Object*, int)>(
+			[&](Object* self, int v)->Object*{
 		return IntProxy::toPointer(IntProxy::fromPointer(self) % v);
 	}));
-	this->registerClosure("opLt", std::function<Object*(Object*, const int&)>(
-			[&](Object* self, const int& v)->Object*{
+	this->registerClosure("opLt", std::function<Object*(Object*, int)>(
+			[&](Object* self, int v)->Object*{
 		return BoolProxy::toPointer(IntProxy::fromPointer(self) < v);
 	}));
-	this->registerClosure("opLe", std::function<Object*(Object*, const int&)>(
-			[&](Object* self, const int& v)->Object*{
+	this->registerClosure("opLe", std::function<Object*(Object*, int)>(
+			[&](Object* self, int v)->Object*{
 		return BoolProxy::toPointer(IntProxy::fromPointer(self) <= v);
 	}));
-	this->registerClosure("opGt", std::function<Object*(Object*, const int&)>(
-			[&](Object* self, const int& v)->Object*{
+	this->registerClosure("opGt", std::function<Object*(Object*, int)>(
+			[&](Object* self, int v)->Object*{
 		return BoolProxy::toPointer(IntProxy::fromPointer(self) > v);
 	}));
-	this->registerClosure("opGe", std::function<Object*(Object*, const int&)>(
-			[&](Object* self, const int& v)->Object*{
+	this->registerClosure("opGe", std::function<Object*(Object*, int)>(
+			[&](Object* self, int v)->Object*{
 		return BoolProxy::toPointer(IntProxy::fromPointer(self) >= v);
 	}));
-	this->registerClosure("opEq", std::function<Object*(Object*, const int&)>(
-			[&](Object* self, const int& v)->Object*{
+	this->registerClosure("opEq", std::function<Object*(Object*, int)>(
+			[&](Object* self, int v)->Object*{
 		return BoolProxy::toPointer(IntProxy::fromPointer(self) == v);
 	}));
-	this->registerClosure("opNe", std::function<Object*(Object*, const int&)>(
-			[&](Object* self, const int& v)->Object*{
+	this->registerClosure("opNe", std::function<Object*(Object*, int)>(
+			[&](Object* self, int v)->Object*{
 		return BoolProxy::toPointer(IntProxy::fromPointer(self) != v);
 	}));
 }

@@ -33,6 +33,13 @@ bool decode<bool>(World* world, Handler<Object> obj)
 {
 	return obj->toBool(world);
 }
+
+template <>
+Object* decode<Object*>(World* world, Handler<Object> obj)
+{
+	return obj.get();
+}
+
 template <typename T>
 Handler<Object> encode(World* world, T obj);
 

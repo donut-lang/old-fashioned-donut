@@ -27,6 +27,7 @@ class StringObject : public BaseObject {
 private:
 	const std::string str_;
 public:
+	StringObject(World* const world);
 	StringObject(World* const world, const std::string& str);
 	virtual ~StringObject() noexcept = default;
 	virtual std::string toStringImpl() const override;
@@ -39,6 +40,7 @@ class FloatObject : public BaseObject {
 private:
 	const float val_;
 public:
+	FloatObject(World* const world);
 	FloatObject(World* const world, const float val);
 	virtual ~FloatObject() noexcept = default;
 	virtual std::string toStringImpl() const override;
