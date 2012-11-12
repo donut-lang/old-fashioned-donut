@@ -41,7 +41,7 @@ TEST_F(DrawableTest, ColorDrawableTest)
 	ASSERT_FLOAT_EQ(100, dr->width());
 	ASSERT_FLOAT_EQ(100, dr->height());
 	ASSERT_TRUE(dr->size().near(geom::Box(100, 100), 1));
-	ASSERT_EQ(RED, dr.cast<ColorDrawable>()->color());
+	ASSERT_EQ(Red, dr.cast<ColorDrawable>()->color());
 }
 
 TEST_F(DrawableTest, ImageDrawableWithSizeTest)

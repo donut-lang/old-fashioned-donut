@@ -50,6 +50,9 @@ public:
 	void *operator new(std::size_t) = delete;
 	void operator delete(void* pv) = delete;
 public:
+#ifdef near
+#undef near
+#endif
 	inline bool near(const Area& other, const float precision) const noexcept{
 		return this->box_.near(other.box_, precision) && point_.near(other.point_, precision);
 	}

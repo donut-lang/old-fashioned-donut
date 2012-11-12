@@ -34,10 +34,8 @@ class World;
 class Widget;
 namespace widget {
 
-using namespace std;
-
 template <typename WidgetKlass>
-WidgetKlass* widgetConstructor(logging::Logger& log, weak_ptr<World> world, tinyxml2::XMLElement* elem){
+WidgetKlass* widgetConstructor(logging::Logger& log, std::weak_ptr<World> world, tinyxml2::XMLElement* elem){
 	return new WidgetKlass(log, world, elem);
 }
 
@@ -45,19 +43,19 @@ class WidgetFactory {
 	DISABLE_COPY_AND_ASSIGN(WidgetFactory);
 private:
 	logging::Logger& log_;
-	weak_ptr<World> world_;
-	std::map<std::string, std::function<Widget*(logging::Logger& log, weak_ptr<World> world, tinyxml2::XMLElement* elem)> > widgetMap_;
+	std::weak_ptr<World> world_;
+	std::map<std::string, std::function<Widget*(logging::Logger& log, std::weak_ptr<World> world, tinyxml2::XMLElement* elem)> > widgetMap_;
 public:
-	WidgetFactory(logging::Logger& log, weak_ptr<World> world);
+	WidgetFactory(logging::Logger& log, std::weak_ptr<World> world);
 	virtual ~WidgetFactory();
 public:
-	void registerWidget(const string& klass, std::function<Widget*(logging::Logger& log, weak_ptr<World> world, tinyxml2::XMLElement* elem)> func);
+	void registerWidget(const std::string& klass, std::function<Widget*(logging::Logger& log, std::weak_ptr<World> world, tinyxml2::XMLElement* elem)> func);
 	template <typename WidgetKlass>
-	void registerWidget(const string& klass) {
+	void registerWidget(const std::string& klass) {
 		this->registerWidget(klass, widgetConstructor<WidgetKlass>);
 	}
 
-	Widget* createWidget(const string& klass, tinyxml2::XMLElement* elem);
+	Widget* createWidget(const std::string& klass, tinyxml2::XMLElement* elem);
 };
 
 }}}

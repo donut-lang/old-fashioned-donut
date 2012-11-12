@@ -26,8 +26,6 @@ namespace chisa {
 namespace tk {
 namespace layout {
 class LayoutFactory;
-using namespace std;
-using namespace tinyxml2;
 
 class WidgetWrapperLayout: public chisa::tk::Layout {
 	CHISA_LAYOUT_SUBKLASS_FINAL(WidgetWrapperLayout);
@@ -48,17 +46,17 @@ private:
 	DEFINE_MEMBER(private, private, geom::Box, widgetSizeReal);
 	DEFINE_MEMBER(private, private, geom::Area, widgetDrawnArea);
 public:
-	virtual weak_ptr<Layout> getChildAt(const size_t index) const override;
-	virtual size_t getChildCount() const override;
+	virtual std::weak_ptr<Layout> getChildAt(const std::size_t index) const override;
+	virtual std::size_t getChildCount() const override;
 public:
 	virtual void idle(const float delta_ms) override;
-	virtual string toString() const override;
+	virtual std::string toString() const override;
 private:
 	virtual void renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area) override;
 	virtual geom::Box onMeasure(const geom::Box& constraint) override;
 	virtual void onLayout(const geom::Box& size) override;
 	virtual void loadXMLimpl(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element) override;
-	virtual weak_ptr<Layout> getLayoutByIdImpl(const std::string& id) override;
+	virtual std::weak_ptr<Layout> getLayoutByIdImpl(const std::string& id) override;
 private:
 	float calcScale(const geom::Box& widget, const geom::Box& constraint);
 private:

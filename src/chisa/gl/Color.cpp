@@ -36,7 +36,7 @@ float __atof(const std::string& str, bool& failed)
 Color Color::fromString(const std::string& name)
 {
 	if( name.empty() ){
-		return INVALID_COLOR;
+		return InvalidColor;
 	}
 	if( name[0] != '#' ){
 		for(auto tbl : COLOR_TABLE){
@@ -45,7 +45,7 @@ Color Color::fromString(const std::string& name)
 				break;
 			}
 		}
-		return INVALID_COLOR;
+		return InvalidColor;
 	}else{
 		float r,g,b,a;
 		bool failed = false;
@@ -80,7 +80,7 @@ Color Color::fromString(const std::string& name)
 			break;
 		}
 		if(failed){
-			return INVALID_COLOR;
+			return InvalidColor;
 		}else{
 			return Color(r,g,b,a);
 		}

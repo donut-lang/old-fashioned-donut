@@ -33,11 +33,9 @@ namespace tk {
 class World;
 
 namespace layout {
-using namespace std;
-using namespace tinyxml2;
 
 template <typename T>
-shared_ptr<T> layoutConstructor(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent)
+shared_ptr<T> layoutConstructor(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Layout> root, std::weak_ptr<Layout> parent)
 {
 	return Layout::create<T>(log, world, root, parent);
 }
@@ -59,27 +57,27 @@ public:
 	};
 private:
 	logging::Logger& log_;
-	weak_ptr<World> world_;
-	std::map<std::string, std::function<shared_ptr<Layout>(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent)> > layoutMap_;
+	std::weak_ptr<World> world_;
+	std::map<std::string, std::function<shared_ptr<Layout>(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Layout> root, std::weak_ptr<Layout> parent)> > layoutMap_;
 public:
 	inline logging::Logger& log() const { return log_; }
-	inline weak_ptr<World> world() const { return world_; }
+	inline std::weak_ptr<World> world() const { return world_; }
 private:
 	std::string filename_;
-	XMLDocument* doc_;
+	tinyxml2::XMLDocument* doc_;
 	const bool doc_free_by_me_;
-	XMLElement* root_;
+	tinyxml2::XMLElement* root_;
 public:
-	LayoutFactory(logging::Logger& log, weak_ptr<World> world, const string& filename);
-	LayoutFactory(logging::Logger& log, weak_ptr<World> world, const string& filename, XMLDocument* document, bool doc_free_by_me);
-	LayoutFactory(logging::Logger& log, weak_ptr<World> world, const string& filename, const char* buffer, std::size_t lenb);
+	LayoutFactory(logging::Logger& log, std::weak_ptr<World> world, const string& filename);
+	LayoutFactory(logging::Logger& log, std::weak_ptr<World> world, const string& filename, tinyxml2::XMLDocument* document, bool doc_free_by_me);
+	LayoutFactory(logging::Logger& log, std::weak_ptr<World> world, const string& filename, const char* buffer, std::size_t lenb);
 	virtual ~LayoutFactory();
 private:
 	void init();
 public:
 	shared_ptr<Layout> parseTree(const string& layoutname);
-	shared_ptr<Layout> parseTree(weak_ptr<Layout> root, weak_ptr<Layout> parent, XMLElement* top);
-	void registerLayout(const std::string& layoutName, std::function<shared_ptr<Layout>(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent)> constructor);
+	shared_ptr<Layout> parseTree(std::weak_ptr<Layout> root, std::weak_ptr<Layout> parent, tinyxml2::XMLElement* top);
+	void registerLayout(const std::string& layoutName, std::function<shared_ptr<Layout>(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Layout> root, std::weak_ptr<Layout> parent)> constructor);
 	template <typename T>
 	void registerLayout(const std::string& layoutName)
 	{

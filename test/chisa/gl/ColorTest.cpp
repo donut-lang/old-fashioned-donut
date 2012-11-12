@@ -52,16 +52,16 @@ TEST(ColorTest, AlphaMultiplyTest)
 
 TEST(ColorTest, EqualityTest)
 {
-	ASSERT_TRUE(RED != BLUE);
-	ASSERT_FALSE(RED == BLUE);
-	ASSERT_TRUE(RED == RED);
-	ASSERT_FALSE(RED != RED);
+	ASSERT_TRUE(Red != Blue);
+	ASSERT_FALSE(Red == Blue);
+	ASSERT_TRUE(Red == Red);
+	ASSERT_FALSE(Red != Red);
 }
 
 TEST(ColorTest, UnchangedColorTest)
 {
-	ASSERT_TRUE(INVALID_COLOR.isInvalid());
-	ASSERT_FALSE(RED.isInvalid());
+	ASSERT_TRUE(InvalidColor.isInvalid());
+	ASSERT_FALSE(Red.isInvalid());
 }
 
 TEST(ColorTest, StringParsingTest)
@@ -71,15 +71,15 @@ TEST(ColorTest, StringParsingTest)
 	XMLDocument doc;
 	XMLElement* elm = doc.NewElement("a");
 	Color c;
-	parseAttr<Color>("color", c, INVALID_COLOR, elm);
+	parseAttr<Color>("color", c, InvalidColor, elm);
 	ASSERT_TRUE(c.isInvalid());
 
 	elm->SetAttribute("color", "fff");
-	parseAttr<Color>("color", c, INVALID_COLOR, elm);
+	parseAttr<Color>("color", c, InvalidColor, elm);
 	ASSERT_TRUE(c.isInvalid());
 
 	elm->SetAttribute("color", "#fff");
-	parseAttr<Color>("color", c, INVALID_COLOR, elm);
+	parseAttr<Color>("color", c, InvalidColor, elm);
 	ASSERT_FALSE(c.isInvalid());
 	ASSERT_FLOAT_EQ(1, c.alpha());
 	ASSERT_FLOAT_EQ(1, c.red());
@@ -87,7 +87,7 @@ TEST(ColorTest, StringParsingTest)
 	ASSERT_FLOAT_EQ(1, c.blue());
 
 	elm->SetAttribute("color", "#8888");
-	parseAttr<Color>("color", c, INVALID_COLOR, elm);
+	parseAttr<Color>("color", c, InvalidColor, elm);
 	float const middle = 0x88/255.0f;
 	ASSERT_FLOAT_EQ(middle, c.alpha());
 	ASSERT_FLOAT_EQ(middle, c.red());
@@ -95,14 +95,14 @@ TEST(ColorTest, StringParsingTest)
 	ASSERT_FLOAT_EQ(middle, c.blue());
 
 	elm->SetAttribute("color", "#ffffff");
-	parseAttr<Color>("color", c, INVALID_COLOR, elm);
+	parseAttr<Color>("color", c, InvalidColor, elm);
 	ASSERT_FLOAT_EQ(1.0f, c.alpha());
 	ASSERT_FLOAT_EQ(1.0f, c.red());
 	ASSERT_FLOAT_EQ(1.0f, c.green());
 	ASSERT_FLOAT_EQ(1.0f, c.blue());
 
 	elm->SetAttribute("color", "#80808080");
-	parseAttr<Color>("color", c, INVALID_COLOR, elm);
+	parseAttr<Color>("color", c, InvalidColor, elm);
 	float const middle2 = 0x80/255.0f;
 	ASSERT_FLOAT_EQ(middle2, c.alpha());
 	ASSERT_FLOAT_EQ(middle2, c.red());
@@ -110,14 +110,14 @@ TEST(ColorTest, StringParsingTest)
 	ASSERT_FLOAT_EQ(middle2, c.blue());
 
 	elm->SetAttribute("color", "#8080808021212");
-	parseAttr<Color>("color", c, INVALID_COLOR, elm);
+	parseAttr<Color>("color", c, InvalidColor, elm);
 	ASSERT_TRUE(c.isInvalid());
 
 	elm->SetAttribute("color", "#80808080");
-	parseAttr<Color>("color", c, INVALID_COLOR, elm);
+	parseAttr<Color>("color", c, InvalidColor, elm);
 
 	elm->SetAttribute("color", "#yyyyyyyy");
-	parseAttr<Color>("color", c, INVALID_COLOR, elm);
+	parseAttr<Color>("color", c, InvalidColor, elm);
 	ASSERT_TRUE(c.isInvalid());
 }
 
@@ -129,7 +129,7 @@ TEST(ColorTest, StringNameParsingTest)
 	Color c;
 	XMLElement* elm = doc.NewElement("a");
 	elm->SetAttribute("color", "red");
-	parseAttr<Color>("color", c, INVALID_COLOR, elm);
+	parseAttr<Color>("color", c, InvalidColor, elm);
 	ASSERT_FALSE(c.isInvalid());
 
 	ASSERT_FLOAT_EQ(1.0f, c.alpha());
