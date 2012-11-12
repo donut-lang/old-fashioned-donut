@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include "Convert.h"
+#include "Bind.h"
 #include "../object/Object.h"
 
 namespace chisa {

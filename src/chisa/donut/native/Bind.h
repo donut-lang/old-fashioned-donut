@@ -41,7 +41,7 @@ Handler<Object> callWithBind(Handler<Object> self, Handler<BaseObject> args, std
 template <size_t idx, typename R, typename T, typename U, typename... Args>
 Handler<Object> callWithBind(Handler<Object> self, Handler<BaseObject> args, std::function<R(T self, U val, Args... args)> const& funct)
 {
-	if(!args->have(args->world(), idx)){
+	if( !args->have(args->world(), idx) ) {
 		constexpr int _idx = idx+1;
 		throw DonutException(__FILE__, __LINE__, "oops. args size mismatched. need more than %d arguments.", _idx);
 	}
