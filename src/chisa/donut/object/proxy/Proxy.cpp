@@ -17,6 +17,7 @@
  */
 
 #include "Proxy.h"
+#include "../World.h"
 #include "../../Exception.h"
 
 namespace chisa {
@@ -25,16 +26,21 @@ static const std::string TAG("Proxy");
 
 bool Proxy::have(const Object* ptr, const std::string& name) const
 {
-	return this->closureMap_.find(name) != this->closureMap_.end();
+	return haveOwn(ptr, name) || this->world()->objectPrototype()->have(world(), name);
+}
+
+bool Proxy::haveOwn(const Object* ptr, const std::string& name) const
+{
+	return (this->closureMap_.find(name) != this->closureMap_.end());
 }
 
 Handler<Object> Proxy::load(const Object* ptr, const std::string& name)
 {
 	auto it = this->closureMap_.find(name);
-	if(it == this->closureMap_.end()){
-		throw DonutException(__FILE__, __LINE__, "\"%s\" for \"\%s\" not found.", name.c_str(), ptr->toString(world()).c_str());
+	if(it != this->closureMap_.end()){
+		return Handler<Object>::__internal__fromRawPointerWithoutCheck(it->second.get());
 	}
-	return Handler<Object>::__internal__fromRawPointerWithoutCheck(it->second.get());
+	return world()->objectPrototype()->load(world(), name);
 }
 
 }}

@@ -46,6 +46,7 @@ public: //すべてのオブジェクトに出来なければならないこと
 	float toFloat(World* const pool) const;
 	bool toBool(World* const pool) const;
 	bool have(World* const pool, const std::string& name) const;
+	bool haveOwn(World* const pool, const std::string& name) const;
 	Handler<Object> store(World* const pool, const std::string& name, Handler<Object> obj);
 	Handler<Object> load(World* const pool, const std::string& name);
 	bool have(World* const pool, const int& idx) const;
@@ -57,6 +58,7 @@ protected:
 	virtual float toFloatImpl() const = 0;
 	virtual bool toBoolImpl() const = 0;
 	virtual bool haveImpl(const std::string& name) const = 0;
+	virtual bool haveOwnImpl(const std::string& name) const = 0;
 	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) = 0;
 	virtual Handler<Object> loadImpl(const std::string& name) = 0;
 public:
@@ -85,6 +87,7 @@ protected:
 	virtual float toFloatImpl() const override;
 	virtual bool toBoolImpl() const override;
 	virtual bool haveImpl(const std::string& name) const override;
+	virtual bool haveOwnImpl(const std::string& name) const override;
 	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) override;
 	virtual Handler<Object> loadImpl(const std::string& name) override;
 };

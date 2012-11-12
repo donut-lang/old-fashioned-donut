@@ -54,6 +54,11 @@ bool BaseObject::toBoolImpl() const
 
 bool BaseObject::haveImpl(const std::string& name) const
 {
+	return haveOwnImpl(name) || world()->objectPrototype()->have(world(), name);
+}
+
+bool BaseObject::haveOwnImpl(const std::string& name) const
+{
 	auto it = this->slots_.find(name);
 	return it != this->slots_.end() && it->second.have();
 }
@@ -72,10 +77,10 @@ Handler<Object> BaseObject::storeImpl(const std::string& name, Handler<Object> o
 Handler<Object> BaseObject::loadImpl(const std::string& name)
 {
 	auto it = this->slots_.find(name);
-	if(it == this->slots_.end()){
-		throw DonutException(__FILE__, __LINE__, "%s not found.", name.c_str());
+	if(it != this->slots_.end()){
+		return Handler<Object>::__internal__fromRawPointerWithoutCheck(it->second.load());
 	}
-	return Handler<Object>::__internal__fromRawPointerWithoutCheck(it->second.load());
+	return world()->objectPrototype()->load(world(), name);
 }
 
 }}

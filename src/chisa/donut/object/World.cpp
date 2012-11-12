@@ -28,9 +28,17 @@ World::World(logging::Logger& log, Handler<Code> code)
 ,boolProxy_(this)
 ,intProxy_(this)
 ,nullProxy_(this)
-,floatProto_(new FloatObject(this))
-,stringProto_(new StringObject(this))
+,floatProto_()
+,stringProto_()
 {
+	this->globalObject_ = Handler<BaseObject>( new BaseObject(this) );
+	this->objectProto_ = Handler<BaseObject>( new BaseObject(this) );
+	this->globalObject_->store(this, "Object", objectProto_);
+
+	this->floatProto_ = Handler<FloatObject>( new FloatObject(this) );
+	this->stringProto_ = Handler<StringObject>( new StringObject(this) );
+	this->globalObject_->store(this, "Float", floatProto_);
+	this->globalObject_->store(this, "String", stringProto_);
 }
 
 unsigned int World::nextGeneration()

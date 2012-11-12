@@ -48,6 +48,11 @@ bool PureNativeClosure::toBoolImpl() const
 
 bool PureNativeClosure::haveImpl(const std::string& name) const
 {
+	return this->world_->objectPrototype()->have(world_, name);
+}
+
+bool PureNativeClosure::haveOwnImpl(const std::string& name) const
+{
 	return false;
 }
 
@@ -58,7 +63,7 @@ Handler<Object> PureNativeClosure::storeImpl(const std::string& name, Handler<Ob
 
 Handler<Object> PureNativeClosure::loadImpl(const std::string& name)
 {
-	throw DonutException(__FILE__, __LINE__, "builtin native closure does not have any property.");
+	return this->world_->objectPrototype()->load(world_, name);
 }
 
 
