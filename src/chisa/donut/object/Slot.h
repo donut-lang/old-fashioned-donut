@@ -45,7 +45,7 @@ public:
 	void seek( gen_t gen );
 	void discardHistory();
 	void discardFuture();
-	Object* load();
+	Object* load() const;
 	Object* store( Object* obj );
 	gen_t firstGen() const noexcept;
 	gen_t lastGen() const noexcept;

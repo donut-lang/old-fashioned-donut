@@ -41,7 +41,7 @@ public:
 	virtual bool haveImpl(const std::string& name) const override;
 	virtual bool haveOwnImpl(const std::string& name) const override;
 	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) override;
-	virtual Handler<Object> loadImpl(const std::string& name) override;
+	virtual Handler<Object> loadImpl(const std::string& name) const override;
 };
 
 }}

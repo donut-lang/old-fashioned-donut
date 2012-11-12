@@ -61,7 +61,7 @@ Handler<Object> PureNativeClosure::storeImpl(const std::string& name, Handler<Ob
 	return obj;
 }
 
-Handler<Object> PureNativeClosure::loadImpl(const std::string& name)
+Handler<Object> PureNativeClosure::loadImpl(const std::string& name) const
 {
 	return this->world_->objectPrototype()->load(world_, name);
 }
