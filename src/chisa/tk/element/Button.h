@@ -19,13 +19,14 @@
 #pragma once
 
 #include "../Element.h"
+#include "LeafElement.h"
 #include "../../gl/Drawable.h"
 
 namespace chisa {
 namespace tk {
 namespace element {
 
-class Button: public chisa::tk::Element {
+class Button: public LeafElement {
 	CHISA_ELEMENT_SUBKLASS(Button);
 private:
 	std::string text_;
@@ -41,15 +42,12 @@ private:
 	Handler<gl::TextDrawable> textImage();
 	void onClick();
 public:
-	virtual weak_ptr<Element> getChildAt(const size_t index) const override;
-	virtual size_t getChildCount() const override;
 	virtual string toString() const override;
 private:
 	virtual void renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area) override;
 	virtual geom::Box onMeasure(const geom::Box& constraint) override;
 	virtual void onLayout(const geom::Box& size) override;
 	virtual void loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
-	virtual weak_ptr<Element> getElementByIdImpl(const std::string& id) override;
 public:
 	virtual bool onDownRaw(const float timeMs, const geom::Point& ptInScreen) override;
 	virtual bool onUpRaw(const float timeMs, const geom::Point& ptInScreen) override;

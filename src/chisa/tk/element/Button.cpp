@@ -27,7 +27,7 @@ namespace chisa {
 namespace tk {
 namespace element {
 
-CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(Button)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(Button, LeafElement)
 ,text_()
 ,textImage_()
 ,vertical_(false)
@@ -37,16 +37,6 @@ CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(Button)
 
 Button::~Button() noexcept
 {
-}
-
-weak_ptr<Element> Button::getChildAt(const size_t index) const
-{
-	return weak_ptr<Element>();
-}
-
-size_t Button::getChildCount() const
-{
-	return 0;
 }
 
 string Button::toString() const
@@ -98,11 +88,6 @@ void Button::text(const std::string& text)
 void Button::onClick()
 {
 
-}
-
-weak_ptr<Element> Button::getElementByIdImpl(const std::string& id)
-{
-	return weak_ptr<Element>();
 }
 
 bool Button::onDownRaw(const float timeMs, const geom::Point& ptInScreen)
