@@ -216,7 +216,7 @@ void WidgetElement::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElem
 	}
 }
 
-weak_ptr<Element> WidgetElement::getLayoutByIdImpl(const std::string& id)
+weak_ptr<Element> WidgetElement::getElementByIdImpl(const std::string& id)
 {
 	return weak_ptr<Element>();
 }

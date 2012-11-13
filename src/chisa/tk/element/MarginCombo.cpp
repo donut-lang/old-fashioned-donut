@@ -82,10 +82,10 @@ void MarginCombo::loadXMLimpl(element::ElementFactory* const factory, tinyxml2::
 	factory->parseTree(this->root(), this->self(), element->FirstChildElement());
 }
 
-weak_ptr<Element> MarginCombo::getLayoutByIdImpl(const std::string& id)
+weak_ptr<Element> MarginCombo::getElementByIdImpl(const std::string& id)
 {
 	if( shared_ptr<Element> child = this->child_.lock() ){
-		return child->getLayoutById(id);
+		return child->getElementById(id);
 	}
 	return weak_ptr<Element>();
 }

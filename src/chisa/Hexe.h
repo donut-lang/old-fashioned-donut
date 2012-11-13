@@ -41,7 +41,7 @@ public:
 
 public:
 	virtual void registerWidgets(tk::widget::WidgetFactory& factory){};
-	virtual void registerLayouts(tk::element::ElementFactory& factory){};
+	virtual void registerElements(tk::element::ElementFactory& factory){};
 public:
 	virtual std::shared_ptr<WorldGeist> invokeWorldGeist(std::weak_ptr<chisa::tk::World> world, const std::string& nameOfGeist) = 0;
 };

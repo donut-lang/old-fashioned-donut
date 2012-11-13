@@ -100,7 +100,7 @@ void Button::onClick()
 
 }
 
-weak_ptr<Element> Button::getLayoutByIdImpl(const std::string& id)
+weak_ptr<Element> Button::getElementByIdImpl(const std::string& id)
 {
 	return weak_ptr<Element>();
 }

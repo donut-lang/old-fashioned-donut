@@ -45,7 +45,7 @@ void GestureMediator::onTouchDown(const float timeMs, const unsigned int pointer
 		this->session_[pointerIndex] = nullptr;
 	}
 	if(std::shared_ptr<World> world = this->world().lock()){
-		GestureSession* const session = new GestureSession(this->log(), pointerIndex, world->getLayoutByPoint(screenPoint), screenPoint, timeMs);
+		GestureSession* const session = new GestureSession(this->log(), pointerIndex, world->getElementByPoint(screenPoint), screenPoint, timeMs);
 		this->session_[pointerIndex] = session;
 	}
 }

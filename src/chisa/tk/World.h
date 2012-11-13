@@ -58,14 +58,14 @@ private:
 	const weak_ptr<Universe> universe_;
 	DEFINE_MEMBER_CONST(public, std::string, name);
 	TaskHandler taskHandler_;
-	Stack<shared_ptr<Element> > layoutStack_;
+	Stack<shared_ptr<Element> > elementStack_;
 	std::map<std::string, element::WidgetElement*> widgetMap_;
 	DEFINE_MEMBER(private, private, geom::Area, area);
 private:
 	tinyxml2::XMLDocument* doc_;
 	DEFINE_MEMBER(public, private, std::shared_ptr<WorldGeist>, geist);
 private:
-	element::ElementFactory* layoutFactory_;
+	element::ElementFactory* elementFactory_;
 	widget::WidgetFactory* widgetFactory_;
 	GestureMediator* gestureMediator_;
 public:
@@ -73,15 +73,15 @@ public:
 	void idle(const float delta_ms);
 	void reshape(const geom::Area& area);
 private:
-	void popLayout();
-	void pushLayout(const string& filename);
+	void popElement();
+	void pushElement(const string& filename);
 public:
 	element::WidgetElement* getWidgetById(const std::string& name);
 	bool replaceWidget(const string& widgetId, element::WidgetElement* const newHandler);
 	bool deleteWidget(const string& widgetId, element::WidgetElement* const handler);
 	Widget* createWidget(const string& klass, tinyxml2::XMLElement* elem);
 public:
-	weak_ptr<Element> getLayoutByPoint(const geom::Point& screenVector);
+	weak_ptr<Element> getElementByPoint(const geom::Point& screenVector);
 	/******************************************************************************
 	 * タスク管理
 	 ******************************************************************************/

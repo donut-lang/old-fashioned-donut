@@ -37,7 +37,7 @@ World::World(logging::Logger& log, weak_ptr<Universe> _universe, const string& w
 ,taskHandler_(log)
 ,doc_(nullptr)
 ,geist_(nullptr)
-,layoutFactory_(nullptr)
+,elementFactory_(nullptr)
 ,widgetFactory_(nullptr)
 ,gestureMediator_(nullptr)
 {
@@ -50,9 +50,9 @@ World::~World()
 		delete this->doc_;
 		this->doc_=nullptr;
 	}
-	if(this->layoutFactory_){
-		delete this->layoutFactory_;
-		this->layoutFactory_ = nullptr;
+	if(this->elementFactory_){
+		delete this->elementFactory_;
+		this->elementFactory_ = nullptr;
 	}
 	if(this->widgetFactory_){
 		delete this->widgetFactory_;
@@ -71,10 +71,10 @@ void World::init(weak_ptr<World> _self)
 		const std::string filename(universe->resolveWorldFilepath(this->name_, "layout.xml"));
 		this->doc_ = new tinyxml2::XMLDocument();
 		this->doc_->LoadFile(filename.c_str());
-		this->layoutFactory_ = new element::ElementFactory(this->log_, _self, filename, this->doc_, false);
+		this->elementFactory_ = new element::ElementFactory(this->log_, _self, filename, this->doc_, false);
 
 		if( const char* geistName = this->doc_->RootElement()->Attribute("geist", nullptr)){
-			universe->hexe()->registerLayouts(*this->layoutFactory_);
+			universe->hexe()->registerElements(*this->elementFactory_);
 			this->geist(universe->invokeWorldGeist(_self, geistName));
 		}else{
 			if(log().t()){
@@ -85,41 +85,41 @@ void World::init(weak_ptr<World> _self)
 		universe->hexe()->registerWidgets(*this->widgetFactory_);
 	}
 	this->gestureMediator_ = new GestureMediator(this->log_, _self);
-	this->pushLayout("main");
+	this->pushElement("main");
 }
 
 void World::render(gl::Canvas& canvas)
 {
-	if(shared_ptr<Element> layout = this->layoutStack_.top()){
-		layout->render(canvas, this->area(), geom::Area(0,0,this->area().width(), this->area().height()));
+	if(shared_ptr<Element> elm = this->elementStack_.top()){
+		elm->render(canvas, this->area(), geom::Area(0,0,this->area().width(), this->area().height()));
 	}
 }
 void World::idle(const float delta_ms)
 {
-	if(shared_ptr<Element> layout = this->layoutStack_.top()){
-		layout->idle(delta_ms);
+	if(shared_ptr<Element> elm = this->elementStack_.top()){
+		elm->idle(delta_ms);
 	}
 	this->taskHandler_.run(delta_ms);
 }
 void World::reshape(const geom::Area& area)
 {
-	if(shared_ptr<Element> layout = this->layoutStack_.top()){
-		layout->measure(area.box());
-		layout->layout(area.box());
+	if(shared_ptr<Element> elm = this->elementStack_.top()){
+		elm->measure(area.box());
+		elm->layout(area.box());
 	}
 	this->area(area);
 }
 
-void World::pushLayout(const string& layoutname)
+void World::pushElement(const string& filename)
 {
-	shared_ptr<Element> l = this->layoutFactory_->parseTree(layoutname);
-	this->layoutStack_.push(l);
+	shared_ptr<Element> l = this->elementFactory_->parseTree(filename);
+	this->elementStack_.push(l);
 }
 
-void World::popLayout()
+void World::popElement()
 {
-	this->layoutStack_.pop();
-	if(shared_ptr<Element> layout = this->layoutStack_.top()){
+	this->elementStack_.pop();
+	if(shared_ptr<Element> elm = this->elementStack_.top()){
 		this->reshape(this->area());
 	}
 }
@@ -134,10 +134,10 @@ void World::unregisterTask(Task* task)
 	this->taskHandler_.unregisterTask(task);
 }
 
-weak_ptr<Element> World::getLayoutByPoint(const geom::Point& screenPoint)
+weak_ptr<Element> World::getElementByPoint(const geom::Point& screenPoint)
 {
-	if(shared_ptr<Element> layout = this->layoutStack_.top()){
-		return layout->getLayoutByPoint(screenPoint);
+	if(shared_ptr<Element> elm = this->elementStack_.top()){
+		return elm->getElementByPoint(screenPoint);
 	}
 	return weak_ptr<Element>();
 }

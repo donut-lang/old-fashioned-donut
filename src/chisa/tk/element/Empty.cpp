@@ -49,7 +49,7 @@ void Empty::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElement* ele
 
 string Empty::toString() const
 {
-	return util::format("(EmptyLayout)");
+	return util::format("(Empty %p)",this);
 }
 
 void Empty::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
@@ -67,7 +67,7 @@ void Empty::onLayout(const geom::Box& size)
 	//何もしない
 }
 
-weak_ptr<Element> Empty::getLayoutByIdImpl(const std::string& id)
+weak_ptr<Element> Empty::getElementByIdImpl(const std::string& id)
 {
 	return weak_ptr<Element>();
 }
