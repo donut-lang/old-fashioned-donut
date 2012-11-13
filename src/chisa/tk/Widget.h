@@ -33,7 +33,7 @@ class Canvas;
 }
 
 namespace tk {
-namespace layout {
+namespace element {
 class WidgetWrapperLayout;
 }
 
@@ -47,12 +47,12 @@ class Widget {
 	DISABLE_COPY_AND_ASSIGN(Widget);
 	DEFINE_MEMBER_REF(protected, logging::Logger, log);
 	DEFINE_MEMBER(protected, private, weak_ptr<World>, world)
-	DEFINE_MEMBER(private, private, weak_ptr<layout::WidgetWrapperLayout>, wrapper);
+	DEFINE_MEMBER(private, private, weak_ptr<element::WidgetWrapperLayout>, wrapper);
 public:
 	Widget(logging::Logger& log, weak_ptr<World> world, tinyxml2::XMLElement* element);
 	virtual ~Widget();
 public:
-	void updateWrapper(weak_ptr<layout::WidgetWrapperLayout> wrapper) { this->wrapper_ = wrapper; };
+	void updateWrapper(weak_ptr<element::WidgetWrapperLayout> wrapper) { this->wrapper_ = wrapper; };
 public:
 	geom::Vector calcAbsolutePosition();
 public:

@@ -40,7 +40,7 @@ class Element;
 class Widget;
 class GestureMediator;
 
-namespace layout {
+namespace element {
 class WidgetWrapperLayout;
 class LayoutFactory;
 }
@@ -59,13 +59,13 @@ private:
 	DEFINE_MEMBER_CONST(public, std::string, name);
 	TaskHandler taskHandler_;
 	Stack<shared_ptr<Element> > layoutStack_;
-	std::map<std::string, layout::WidgetWrapperLayout*> widgetMap_;
+	std::map<std::string, element::WidgetWrapperLayout*> widgetMap_;
 	DEFINE_MEMBER(private, private, geom::Area, area);
 private:
 	tinyxml2::XMLDocument* doc_;
 	DEFINE_MEMBER(public, private, std::shared_ptr<WorldGeist>, geist);
 private:
-	layout::LayoutFactory* layoutFactory_;
+	element::LayoutFactory* layoutFactory_;
 	widget::WidgetFactory* widgetFactory_;
 	GestureMediator* gestureMediator_;
 public:
@@ -76,9 +76,9 @@ private:
 	void popLayout();
 	void pushLayout(const string& filename);
 public:
-	layout::WidgetWrapperLayout* getWidgetById(const std::string& name);
-	bool replaceWidget(const string& widgetId, layout::WidgetWrapperLayout* const newHandler);
-	bool deleteWidget(const string& widgetId, layout::WidgetWrapperLayout* const handler);
+	element::WidgetWrapperLayout* getWidgetById(const std::string& name);
+	bool replaceWidget(const string& widgetId, element::WidgetWrapperLayout* const newHandler);
+	bool deleteWidget(const string& widgetId, element::WidgetWrapperLayout* const handler);
 	Widget* createWidget(const string& klass, tinyxml2::XMLElement* elem);
 public:
 	weak_ptr<Element> getLayoutByPoint(const geom::Point& screenVector);

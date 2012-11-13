@@ -32,7 +32,7 @@ namespace chisa {
 namespace tk {
 class World;
 
-namespace layout {
+namespace element {
 
 template <typename T>
 shared_ptr<T> layoutConstructor(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent)

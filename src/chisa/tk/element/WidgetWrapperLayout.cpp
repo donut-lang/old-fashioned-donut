@@ -24,7 +24,7 @@
 
 namespace chisa {
 namespace tk {
-namespace layout {
+namespace element {
 
 static const string TAG("WidgetWrapperLayout");
 
