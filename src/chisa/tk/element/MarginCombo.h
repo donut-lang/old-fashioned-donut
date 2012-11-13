@@ -24,8 +24,8 @@ namespace chisa {
 namespace tk {
 namespace element {
 
-class MarginLayout : public Element {
-	CHISA_ELEMENT_SUBKLASS(MarginLayout);
+class MarginCombo : public Element {
+	CHISA_ELEMENT_SUBKLASS(MarginCombo);
 	std::weak_ptr<Element> child_;
 	geom::Margin margin_;
 public:

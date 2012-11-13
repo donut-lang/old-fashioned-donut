@@ -21,10 +21,10 @@
 #include "../../logging/Exception.h"
 #include <memory>
 #include <tinyxml2.h>
-#include "SplitLayout.h"
+#include "SplitCombo.h"
 #include "Empty.h"
-#include "ScrollLayout.h"
-#include "WidgetWrapperLayout.h"
+#include "ScrollCombo.h"
+#include "WidgetElement.h"
 
 namespace chisa {
 namespace tk {
@@ -95,11 +95,11 @@ ElementFactory::ElementFactory(logging::Logger& log, weak_ptr<World> world, cons
 
 void ElementFactory::init()
 {
-	this->registerLayout<SplitLayout>(ElemName::Horizontal);
-	this->registerLayout<SplitLayout>(ElemName::Vertical);
+	this->registerLayout<SplitCombo>(ElemName::Horizontal);
+	this->registerLayout<SplitCombo>(ElemName::Vertical);
 	this->registerLayout<Empty>(ElemName::Empty);
-	this->registerLayout<ScrollLayout>(ElemName::Scroll);
-	this->registerLayout<WidgetWrapperLayout>(ElemName::WidgetWrapper);
+	this->registerLayout<ScrollCombo>(ElemName::Scroll);
+	this->registerLayout<WidgetElement>(ElemName::WidgetWrapper);
 	//this->registerLayout<TabLayout>(ElemName::Tab);
 }
 

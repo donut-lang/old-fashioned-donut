@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "ScrollLayout.h"
+#include "ScrollCombo.h"
 #include "../World.h"
 
 namespace chisa {
@@ -23,7 +23,7 @@ namespace tk {
 namespace element {
 
 
-CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(ScrollLayout)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(ScrollCombo)
 ,scrollMode_(None)
 ,scrollOffset_(0,0)
 ,lastMovedFrom_(0)
@@ -31,11 +31,11 @@ CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(ScrollLayout)
 
 }
 
-ScrollLayout::~ScrollLayout() noexcept
+ScrollCombo::~ScrollCombo() noexcept
 {
 }
 
-weak_ptr<Element> ScrollLayout::getChildAt(const size_t index) const
+weak_ptr<Element> ScrollCombo::getChildAt(const size_t index) const
 {
 	if(index == 0 && this->child_){
 		return this->child_;
@@ -44,7 +44,7 @@ weak_ptr<Element> ScrollLayout::getChildAt(const size_t index) const
 	}
 }
 
-size_t ScrollLayout::getChildCount() const
+size_t ScrollCombo::getChildCount() const
 {
 	if(this->child_){
 		return 1;
@@ -53,7 +53,7 @@ size_t ScrollLayout::getChildCount() const
 	}
 }
 
-void ScrollLayout::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElement* element)
+void ScrollCombo::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElement* element)
 {
 	if( const char* _mode = element->Attribute("mode", nullptr) ){
 		std::string mode(_mode);
@@ -71,12 +71,12 @@ void ScrollLayout::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLEleme
 	}
 }
 
-string ScrollLayout::toString() const
+string ScrollCombo::toString() const
 {
-	return util::format("(ScrollLayout %p)", this);
+	return util::format("(ScrollCombo %p)", this);
 }
 
-void ScrollLayout::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
+void ScrollCombo::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
 {
 	const geom::Area clipArea(this->scrollOffset_, this->size());
 	const geom::Area logicalArea(area.point()+this->scrollOffset_, area.box());
@@ -103,12 +103,12 @@ void ScrollLayout::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, 
 	}
 }
 
-geom::Box ScrollLayout::onMeasure(const geom::Box& constraint)
+geom::Box ScrollCombo::onMeasure(const geom::Box& constraint)
 {
 	return geom::Box(geom::Unspecified, geom::Unspecified);
 }
 
-void ScrollLayout::onLayout(const geom::Box& size)
+void ScrollCombo::onLayout(const geom::Box& size)
 {
 	if(this->child_){
 		geom::Box childBox((this->scrollMode_ & Horizontal) == Horizontal ? geom::Unspecified : size.width(), (this->scrollMode_ & Vertical) == Vertical ? geom::Unspecified : size.height());
@@ -121,7 +121,7 @@ void ScrollLayout::onLayout(const geom::Box& size)
 	}
 }
 
-void ScrollLayout::idle(const float delta_ms)
+void ScrollCombo::idle(const float delta_ms)
 {
 	geom::Point ptStart(this->scrollOffset_);
 	geom::Point ptEnd(this->scrollOffset_+this->size());
@@ -140,7 +140,7 @@ void ScrollLayout::idle(const float delta_ms)
 	this->lastMovedFrom_ += delta_ms;
 }
 
-bool ScrollLayout::onScroll(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Distance& distance)
+bool ScrollCombo::onScroll(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Distance& distance)
 {
 	if(this->scrollMode_ == Both){
 		this->scrollOffset_ -= distance;
@@ -154,7 +154,7 @@ bool ScrollLayout::onScroll(const float timeMs, const geom::Point& start, const 
 }
 
 
-weak_ptr<Element> ScrollLayout::getLayoutByIdImpl(const std::string& id)
+weak_ptr<Element> ScrollCombo::getLayoutByIdImpl(const std::string& id)
 {
 	if(this->child_){
 		return this->child_->getLayoutById(id);

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "MarginLayout.h"
+#include "MarginCombo.h"
 #include "ElementFactory.h"
 #include "../../util/XMLUtil.h"
 
@@ -24,32 +24,32 @@ namespace chisa {
 namespace tk {
 namespace element {
 
-CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(MarginLayout)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(MarginCombo)
 {
 
 }
 
-MarginLayout::~MarginLayout() noexcept
+MarginCombo::~MarginCombo() noexcept
 {
 
 }
 
-weak_ptr<Element> MarginLayout::getChildAt(const size_t index) const
+weak_ptr<Element> MarginCombo::getChildAt(const size_t index) const
 {
 	return index == 0 ? this->child_ : weak_ptr<Element>();
 }
 
-size_t MarginLayout::getChildCount() const
+size_t MarginCombo::getChildCount() const
 {
 	return this->child_.expired() ? 0 : 1;
 }
 
-string MarginLayout::toString() const
+string MarginCombo::toString() const
 {
-	return util::format("(MarginLayout %p)", this);
+	return util::format("(MarginCombo %p)", this);
 }
 
-void MarginLayout::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
+void MarginCombo::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
 {
 	if( shared_ptr<Element> child = this->child_.lock() ){
 		child->render(
@@ -60,7 +60,7 @@ void MarginLayout::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, 
 	}
 }
 
-geom::Box MarginLayout::onMeasure(const geom::Box& constraint)
+geom::Box MarginCombo::onMeasure(const geom::Box& constraint)
 {
 	if( shared_ptr<Element> child = this->child_.lock() ){
 		return child->measure( constraint-this->margin_.totalSpace() ) + this->margin_.totalSpace();
@@ -68,21 +68,21 @@ geom::Box MarginLayout::onMeasure(const geom::Box& constraint)
 	return constraint;
 }
 
-void MarginLayout::onLayout(const geom::Box& size)
+void MarginCombo::onLayout(const geom::Box& size)
 {
 	if( shared_ptr<Element> child = this->child_.lock() ){
 		child->layout( size-this->margin_.totalSpace() );
 	}
 }
 
-void MarginLayout::loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
+void MarginCombo::loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
 	chisa::util::xml::parseAttr("margin", this->margin_, geom::Margin(0,0,0,0), element);
 
 	factory->parseTree(this->root(), this->self(), element->FirstChildElement());
 }
 
-weak_ptr<Element> MarginLayout::getLayoutByIdImpl(const std::string& id)
+weak_ptr<Element> MarginCombo::getLayoutByIdImpl(const std::string& id)
 {
 	if( shared_ptr<Element> child = this->child_.lock() ){
 		return child->getLayoutById(id);

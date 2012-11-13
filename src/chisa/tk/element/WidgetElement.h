@@ -27,8 +27,8 @@ namespace tk {
 namespace element {
 class ElementFactory;
 
-class WidgetWrapperLayout: public chisa::tk::Element {
-	CHISA_ELEMENT_SUBKLASS_FINAL(WidgetWrapperLayout);
+class WidgetElement: public chisa::tk::Element {
+	CHISA_ELEMENT_SUBKLASS_FINAL(WidgetElement);
 public:
 	enum FitMode {
 		Center,
@@ -36,7 +36,7 @@ public:
 		Expand
 	};
 private:
-	WidgetWrapperLayout* borrowed_;
+	WidgetElement* borrowed_;
 	DEFINE_MEMBER(private, private, Widget*, widget);
 	std::string widgetId_;
 	FitMode fitMode_;

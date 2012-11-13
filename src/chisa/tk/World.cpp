@@ -19,7 +19,7 @@
 #include "World.h"
 #include "Element.h"
 #include "element/ElementFactory.h"
-#include "element/WidgetWrapperLayout.h"
+#include "element/WidgetElement.h"
 #include "widget/WidgetFactory.h"
 #include "Universe.h"
 #include "Gesture.h"
@@ -142,7 +142,7 @@ weak_ptr<Element> World::getLayoutByPoint(const geom::Point& screenPoint)
 	return weak_ptr<Element>();
 }
 
-element::WidgetWrapperLayout* World::getWidgetById(const std::string& name)
+element::WidgetElement* World::getWidgetById(const std::string& name)
 {
 	auto it = this->widgetMap_.find(name);
 	if(it == this->widgetMap_.end()){
@@ -151,18 +151,18 @@ element::WidgetWrapperLayout* World::getWidgetById(const std::string& name)
 	return it->second;
 }
 
-bool World::replaceWidget(const string& widgetId, element::WidgetWrapperLayout* const newHandler)
+bool World::replaceWidget(const string& widgetId, element::WidgetElement* const newHandler)
 {
-	std::map<std::string, element::WidgetWrapperLayout*>::iterator it = this->widgetMap_.find(widgetId);
+	std::map<std::string, element::WidgetElement*>::iterator it = this->widgetMap_.find(widgetId);
 	if(it != widgetMap_.end()) {
 		this->widgetMap_.erase(it);
 	}
-	this->widgetMap_.insert(std::pair<string, element::WidgetWrapperLayout*>(widgetId, newHandler));
+	this->widgetMap_.insert(std::pair<string, element::WidgetElement*>(widgetId, newHandler));
 	return true;
 }
-bool World::deleteWidget(const string& widgetId, element::WidgetWrapperLayout* const handler)
+bool World::deleteWidget(const string& widgetId, element::WidgetElement* const handler)
 {
-	std::map<std::string, element::WidgetWrapperLayout*>::iterator it = this->widgetMap_.find(widgetId);
+	std::map<std::string, element::WidgetElement*>::iterator it = this->widgetMap_.find(widgetId);
 	if(it != widgetMap_.end()) {
 		log_.w(TAG, "Oops. WidgetID: %s not found.", widgetId.c_str());
 		return false;
