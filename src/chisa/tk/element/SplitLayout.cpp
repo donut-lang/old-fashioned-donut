@@ -22,7 +22,7 @@
 
 namespace chisa {
 namespace tk {
-namespace layout {
+namespace element {
 
 static const std::string TAG("SplitLayout");
 const std::string SplitLayout::AttrName::Weight("split-weight");

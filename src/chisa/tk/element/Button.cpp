@@ -82,7 +82,7 @@ void Button::onLayout(const geom::Box& size)
 	this->renderOffset_ = (size-this->textImage_->size())/2;
 }
 
-void Button::loadXMLimpl(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element)
+void Button::loadXMLimpl(element::LayoutFactory* const factory, tinyxml2::XMLElement* const element)
 {
 	if(const char* text = element->Attribute("text")){
 		this->text(text);

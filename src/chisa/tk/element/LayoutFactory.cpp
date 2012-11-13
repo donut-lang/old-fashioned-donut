@@ -28,7 +28,7 @@
 
 namespace chisa {
 namespace tk {
-namespace layout {
+namespace element {
 
 using std::shared_ptr;
 using std::weak_ptr;

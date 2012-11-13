@@ -22,7 +22,7 @@
 
 namespace chisa {
 namespace tk {
-namespace layout {
+namespace element {
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(Empty)
 {

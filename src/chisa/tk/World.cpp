@@ -71,7 +71,7 @@ void World::init(weak_ptr<World> _self)
 		const std::string filename(universe->resolveWorldFilepath(this->name_, "layout.xml"));
 		this->doc_ = new tinyxml2::XMLDocument();
 		this->doc_->LoadFile(filename.c_str());
-		this->layoutFactory_ = new layout::LayoutFactory(this->log_, _self, filename, this->doc_, false);
+		this->layoutFactory_ = new element::LayoutFactory(this->log_, _self, filename, this->doc_, false);
 
 		if( const char* geistName = this->doc_->RootElement()->Attribute("geist", nullptr)){
 			universe->hexe()->registerLayouts(*this->layoutFactory_);
@@ -142,7 +142,7 @@ weak_ptr<Element> World::getLayoutByPoint(const geom::Point& screenPoint)
 	return weak_ptr<Element>();
 }
 
-layout::WidgetWrapperLayout* World::getWidgetById(const std::string& name)
+element::WidgetWrapperLayout* World::getWidgetById(const std::string& name)
 {
 	auto it = this->widgetMap_.find(name);
 	if(it == this->widgetMap_.end()){
@@ -151,18 +151,18 @@ layout::WidgetWrapperLayout* World::getWidgetById(const std::string& name)
 	return it->second;
 }
 
-bool World::replaceWidget(const string& widgetId, layout::WidgetWrapperLayout* const newHandler)
+bool World::replaceWidget(const string& widgetId, element::WidgetWrapperLayout* const newHandler)
 {
-	std::map<std::string, layout::WidgetWrapperLayout*>::iterator it = this->widgetMap_.find(widgetId);
+	std::map<std::string, element::WidgetWrapperLayout*>::iterator it = this->widgetMap_.find(widgetId);
 	if(it != widgetMap_.end()) {
 		this->widgetMap_.erase(it);
 	}
-	this->widgetMap_.insert(std::pair<string, layout::WidgetWrapperLayout*>(widgetId, newHandler));
+	this->widgetMap_.insert(std::pair<string, element::WidgetWrapperLayout*>(widgetId, newHandler));
 	return true;
 }
-bool World::deleteWidget(const string& widgetId, layout::WidgetWrapperLayout* const handler)
+bool World::deleteWidget(const string& widgetId, element::WidgetWrapperLayout* const handler)
 {
-	std::map<std::string, layout::WidgetWrapperLayout*>::iterator it = this->widgetMap_.find(widgetId);
+	std::map<std::string, element::WidgetWrapperLayout*>::iterator it = this->widgetMap_.find(widgetId);
 	if(it != widgetMap_.end()) {
 		log_.w(TAG, "Oops. WidgetID: %s not found.", widgetId.c_str());
 		return false;

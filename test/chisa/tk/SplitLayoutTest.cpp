@@ -23,7 +23,7 @@
 
 namespace chisa {
 namespace tk {
-using namespace layout;
+using namespace element;
 using namespace std;
 using namespace tinyxml2;
 const string fname = "memory";

@@ -22,7 +22,7 @@
 
 namespace chisa {
 namespace tk {
-namespace layout {
+namespace element {
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(MarginLayout)
 {
@@ -75,7 +75,7 @@ void MarginLayout::onLayout(const geom::Box& size)
 	}
 }
 
-void MarginLayout::loadXMLimpl(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element)
+void MarginLayout::loadXMLimpl(element::LayoutFactory* const factory, tinyxml2::XMLElement* const element)
 {
 	chisa::util::xml::parseAttr("margin", this->margin_, geom::Margin(0,0,0,0), element);
 
