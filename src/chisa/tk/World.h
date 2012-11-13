@@ -42,7 +42,7 @@ class GestureMediator;
 
 namespace element {
 class WidgetWrapperLayout;
-class LayoutFactory;
+class ElementFactory;
 }
 namespace widget{
 class WidgetFactory;
@@ -65,7 +65,7 @@ private:
 	tinyxml2::XMLDocument* doc_;
 	DEFINE_MEMBER(public, private, std::shared_ptr<WorldGeist>, geist);
 private:
-	element::LayoutFactory* layoutFactory_;
+	element::ElementFactory* layoutFactory_;
 	widget::WidgetFactory* widgetFactory_;
 	GestureMediator* gestureMediator_;
 public:

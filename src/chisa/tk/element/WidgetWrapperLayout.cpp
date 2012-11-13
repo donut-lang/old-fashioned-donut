@@ -187,7 +187,7 @@ std::string WidgetWrapperLayout::toString() const
 {
 	return util::format( "(WidgetWrapperLayout \"%s\")", this->widgetId_.c_str());
 }
-void WidgetWrapperLayout::loadXMLimpl(LayoutFactory* const factory, tinyxml2::XMLElement* const element)
+void WidgetWrapperLayout::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
 	if(element->Attribute("fit", "fit")){
 		this->fitMode_ = Fit;

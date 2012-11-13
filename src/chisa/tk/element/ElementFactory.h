@@ -40,8 +40,8 @@ shared_ptr<T> layoutConstructor(logging::Logger& log, std::weak_ptr<World> world
 	return Element::create<T>(log, world, root, parent);
 }
 
-class LayoutFactory {
-	DISABLE_COPY_AND_ASSIGN(LayoutFactory);
+class ElementFactory {
+	DISABLE_COPY_AND_ASSIGN(ElementFactory);
 public:
 	struct ElemName{
 		static const std::string World;
@@ -68,10 +68,10 @@ private:
 	const bool doc_free_by_me_;
 	tinyxml2::XMLElement* root_;
 public:
-	LayoutFactory(logging::Logger& log, std::weak_ptr<World> world, const string& filename);
-	LayoutFactory(logging::Logger& log, std::weak_ptr<World> world, const string& filename, tinyxml2::XMLDocument* document, bool doc_free_by_me);
-	LayoutFactory(logging::Logger& log, std::weak_ptr<World> world, const string& filename, const char* buffer, std::size_t lenb);
-	virtual ~LayoutFactory();
+	ElementFactory(logging::Logger& log, std::weak_ptr<World> world, const string& filename);
+	ElementFactory(logging::Logger& log, std::weak_ptr<World> world, const string& filename, tinyxml2::XMLDocument* document, bool doc_free_by_me);
+	ElementFactory(logging::Logger& log, std::weak_ptr<World> world, const string& filename, const char* buffer, std::size_t lenb);
+	virtual ~ElementFactory();
 private:
 	void init();
 public:

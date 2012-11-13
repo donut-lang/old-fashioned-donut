@@ -53,7 +53,7 @@ size_t ScrollLayout::getChildCount() const
 	}
 }
 
-void ScrollLayout::loadXMLimpl(LayoutFactory* const factory, tinyxml2::XMLElement* element)
+void ScrollLayout::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElement* element)
 {
 	if( const char* _mode = element->Attribute("mode", nullptr) ){
 		std::string mode(_mode);

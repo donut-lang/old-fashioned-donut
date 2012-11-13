@@ -46,7 +46,7 @@ void Element::idle(const float delta_ms)
 	}
 }
 
-void Element::loadXML(element::LayoutFactory* const factory, tinyxml2::XMLElement* const element)
+void Element::loadXML(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
 
 	if(const char* id = element->Attribute("id", nullptr)){

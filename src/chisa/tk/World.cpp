@@ -18,7 +18,7 @@
 
 #include "World.h"
 #include "Element.h"
-#include "element/LayoutFactory.h"
+#include "element/ElementFactory.h"
 #include "element/WidgetWrapperLayout.h"
 #include "widget/WidgetFactory.h"
 #include "Universe.h"
@@ -71,7 +71,7 @@ void World::init(weak_ptr<World> _self)
 		const std::string filename(universe->resolveWorldFilepath(this->name_, "layout.xml"));
 		this->doc_ = new tinyxml2::XMLDocument();
 		this->doc_->LoadFile(filename.c_str());
-		this->layoutFactory_ = new element::LayoutFactory(this->log_, _self, filename, this->doc_, false);
+		this->layoutFactory_ = new element::ElementFactory(this->log_, _self, filename, this->doc_, false);
 
 		if( const char* geistName = this->doc_->RootElement()->Attribute("geist", nullptr)){
 			universe->hexe()->registerLayouts(*this->layoutFactory_);

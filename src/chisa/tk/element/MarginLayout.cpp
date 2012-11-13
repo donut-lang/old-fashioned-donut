@@ -17,7 +17,7 @@
  */
 
 #include "MarginLayout.h"
-#include "LayoutFactory.h"
+#include "ElementFactory.h"
 #include "../../util/XMLUtil.h"
 
 namespace chisa {
@@ -75,7 +75,7 @@ void MarginLayout::onLayout(const geom::Box& size)
 	}
 }
 
-void MarginLayout::loadXMLimpl(element::LayoutFactory* const factory, tinyxml2::XMLElement* const element)
+void MarginLayout::loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
 	chisa::util::xml::parseAttr("margin", this->margin_, geom::Margin(0,0,0,0), element);
 
