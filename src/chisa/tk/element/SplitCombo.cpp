@@ -61,18 +61,18 @@ SplitCombo::~SplitCombo() noexcept
 string SplitCombo::toString() const
 {
 	if(this->splitMode() == Horizontal){
-		return util::format("(HorizontalLayout %p)", this);
+		return util::format("(HorizontalCombo %p)", this);
 	}else if(this->splitMode() == Vertical){
-		return util::format("(VerticalLayout %p)", this);
+		return util::format("(VerticalCombo %p)", this);
 	}else{
 		return util::format("(InvalidSplitCombo %p)", this);
 	}
 }
 
-void SplitCombo::addChild(const SplitDef& def, shared_ptr<Element> layout)
+void SplitCombo::addChild(const SplitDef& def, shared_ptr<Element> element)
 {
 	shared_ptr<SplitCtx> ctx(new SplitCtx(def));
-	ctx->layout = layout;
+	ctx->element = element;
 	this->children().push_back(ctx);
 }
 
@@ -113,11 +113,11 @@ void SplitCombo::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElement
 void SplitCombo::idle(const float delta_ms)
 {
 	for(shared_ptr<SplitCtx> ctx : this->children()){
-		ctx->layout->idle(delta_ms);
+		ctx->element->idle(delta_ms);
 	}
 }
 
-void SplitCombo::resetChildrenLayout()
+void SplitCombo::resetChildren()
 {
 	for(shared_ptr<SplitCtx> ctx : this->children()){
 		ctx->size=geom::Unspecified;
@@ -129,7 +129,7 @@ std::weak_ptr<Element> SplitCombo::getChildAt(const std::size_t index) const
 {
 	if(index < this->children().size()){
 		shared_ptr<SplitCtx> ctx = this->children_.at(index);
-		return std::weak_ptr<Element>(ctx->layout);
+		return std::weak_ptr<Element>(ctx->element);
 	}
 	return std::weak_ptr<Element>();
 }
@@ -165,7 +165,7 @@ void SplitCombo::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, co
 		geom::Point screenPoint(screenArea.point());
 		(screenPoint.*point_setter)(screenStart+offset+drawnStart-drawnStartOffset);
 
-		ctx->layout->render(canvas, geom::Area(screenPoint, drawnBox), geom::Area(drawnPoint, drawnBox));
+		ctx->element->render(canvas, geom::Area(screenPoint, drawnBox), geom::Area(drawnPoint, drawnBox));
 		offset += size;
 	}
 }
@@ -181,7 +181,7 @@ geom::Box SplitCombo::onMeasure(const geom::Box& constraint)
 		float totalSize = 0;
 		float fixedMaxSize = 0;
 		for(shared_ptr<SplitCtx> childCtx : this->children()){
-			const geom::Box childSize(childCtx->layout->measure(cbox));
+			const geom::Box childSize(childCtx->element->measure(cbox));
 			const float size = this->wrapSize((childSize.*changed_getter)(), childCtx->def);
 			if(geom::isSpecified(size)){
 				totalSize += size;
@@ -216,7 +216,7 @@ geom::Box SplitCombo::onMeasure(const geom::Box& constraint)
 		float nonWeightedSizeTotal = 0;
 		for(shared_ptr<SplitCtx> childCtx : this->children()){
 			const bool weightSpecified = geom::isSpecified(childCtx->def.weight);
-			const geom::Box childSize(childCtx->layout->measure(cbox));
+			const geom::Box childSize(childCtx->element->measure(cbox));
 			if(weightSpecified){
 				//ウェイトがかかっている場合は最小サイズを。
 				childCtx->weight = childCtx->def.weight;
@@ -285,14 +285,14 @@ void SplitCombo::onLayout(const geom::Box& size)
 		geom::Box box;
 		(box.*changed_setter)(ctx->size);
 		(box.*fixed_setter)((size.*fixed_getter)());
-		ctx->layout->layout(box);
+		ctx->element->layout(box);
 	}
 }
 
-std::weak_ptr<Element> SplitCombo::getLayoutByIdImpl(const std::string& id)
+std::weak_ptr<Element> SplitCombo::getElementByIdImpl(const std::string& id)
 {
 	for(shared_ptr<SplitCtx> childCtx : this->children()){
-		std::weak_ptr<Element> res = childCtx->layout->getLayoutById(id);
+		std::weak_ptr<Element> res = childCtx->element->getElementById(id);
 		if(!res.expired()){
 			return res;
 		}

@@ -43,12 +43,12 @@ public:
 struct SplitCtx
 {
 	const SplitDef def;
-	shared_ptr<Element> layout;
+	shared_ptr<Element> element;
 	float size;
 	float weight;
 	SplitCtx(const SplitDef& def)
 	:def(def)
-	,layout(nullptr)
+	,element(nullptr)
 	,size(NAN)
 	,weight(def.weight)
 	{
@@ -91,9 +91,9 @@ private:
 	float (geom::Point::*point_getter)(void) const;
 	void (geom::Point::*point_setter)(float);
 private:
-	void addChild(const SplitDef& def, shared_ptr<Element> layout);
+	void addChild(const SplitDef& def, shared_ptr<Element> element);
 private:
-	void resetChildrenLayout();
+	void resetChildren();
 	float calcTotalSize();
 public:
 	virtual string toString() const override;
@@ -105,7 +105,7 @@ private:
 	virtual geom::Box onMeasure(const geom::Box& constraint) override;
 	virtual void onLayout(const geom::Box& size) override;
 	virtual void loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
-	virtual std::weak_ptr<Element> getLayoutByIdImpl(const std::string& id) override;
+	virtual std::weak_ptr<Element> getElementByIdImpl(const std::string& id) override;
 };
 
 }}}

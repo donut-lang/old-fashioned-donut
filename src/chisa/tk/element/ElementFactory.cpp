@@ -95,12 +95,12 @@ ElementFactory::ElementFactory(logging::Logger& log, weak_ptr<World> world, cons
 
 void ElementFactory::init()
 {
-	this->registerLayout<SplitCombo>(ElemName::Horizontal);
-	this->registerLayout<SplitCombo>(ElemName::Vertical);
-	this->registerLayout<Empty>(ElemName::Empty);
-	this->registerLayout<ScrollCombo>(ElemName::Scroll);
-	this->registerLayout<WidgetElement>(ElemName::WidgetWrapper);
-	//this->registerLayout<TabLayout>(ElemName::Tab);
+	this->registerElement<SplitCombo>(ElemName::Horizontal);
+	this->registerElement<SplitCombo>(ElemName::Vertical);
+	this->registerElement<Empty>(ElemName::Empty);
+	this->registerElement<ScrollCombo>(ElemName::Scroll);
+	this->registerElement<WidgetElement>(ElemName::WidgetWrapper);
+	//this->registerElement<TabElement>(ElemName::Tab);
 }
 
 ElementFactory::~ElementFactory()
@@ -111,32 +111,32 @@ ElementFactory::~ElementFactory()
 	this->doc_ = nullptr;
 }
 
-void ElementFactory::registerLayout(const std::string& layoutName, std::function<shared_ptr<Element>(logging::Logger& log, weak_ptr<World> world, weak_ptr<Element> root, weak_ptr<Element> parent)> constructor)
+void ElementFactory::registerElement(const std::string& elementName, std::function<shared_ptr<Element>(logging::Logger& log, weak_ptr<World> world, weak_ptr<Element> root, weak_ptr<Element> parent)> constructor)
 {
-	this->layoutMap_.insert(std::make_pair(layoutName, constructor));
+	this->elementMap_.insert(std::make_pair(elementName, constructor));
 }
 
 shared_ptr<Element> ElementFactory::parseTree(weak_ptr<Element> root, weak_ptr<Element> parent, XMLElement* top)
 {
 	const char* name = top->Name();
-	auto it = this->layoutMap_.find(name);
-	if(this->layoutMap_.end() == it){
-		throw logging::Exception(__FILE__,__LINE__, "Unknwon Layout: %s", name);
+	auto it = this->elementMap_.find(name);
+	if(this->elementMap_.end() == it){
+		throw logging::Exception(__FILE__,__LINE__, "Unknwon Element: %s", name);
 	}
-	shared_ptr<Element> layout(it->second(this->log(), this->world(), root, parent));
-	layout->loadXML(this, top);
-	return layout;
+	shared_ptr<Element> elm(it->second(this->log(), this->world(), root, parent));
+	elm->loadXML(this, top);
+	return elm;
 }
 
-shared_ptr<Element> ElementFactory::parseTree(const string& layoutname)
+shared_ptr<Element> ElementFactory::parseTree(const string& elementId)
 {
 	for(XMLElement* elem = this->root_->FirstChildElement(); elem; elem = elem->NextSiblingElement()){
 		const char* id = elem->Attribute(AttrName::Id.c_str(), nullptr);
-		if(id && layoutname == id){
+		if(id && elementId == id){
 			return this->parseTree(weak_ptr<Element>(), weak_ptr<Element>(), elem);
 		}
 	}
-	throw logging::Exception(__FILE__, __LINE__, "Layout \"%s\" not found in %s", layoutname.c_str(), this->filename_.c_str());
+	throw logging::Exception(__FILE__, __LINE__, "Element ID \"%s\" not found in %s", elementId.c_str(), this->filename_.c_str());
 }
 
 }}}

@@ -18,8 +18,8 @@
 
 
 #include "../../TestCommon.h"
-#include "../../src/chisa/tk/element/SplitLayout.h"
-#include "../../src/chisa/tk/element/LayoutFactory.h"
+#include "../../src/chisa/tk/element/SplitCombo.h"
+#include "../../src/chisa/tk/element/ElementFactory.h"
 
 namespace chisa {
 namespace tk {
@@ -27,7 +27,7 @@ using namespace element;
 using namespace std;
 using namespace tinyxml2;
 const string fname = "memory";
-class HorizontalLayoutTest : public ::testing::Test
+class HorizontalComboTest : public ::testing::Test
 {
 protected:
 	XMLDocument doc;
@@ -62,17 +62,17 @@ static XMLElement* newHorizontalChild(XMLDocument& doc, const std::string& id)
 	return elem;
 }
 
-TEST_F(HorizontalLayoutTest, EmptyTest)
+TEST_F(HorizontalComboTest, EmptyTest)
 {
 	XMLElement* hor = newHorizontalChild(doc, "test");
 	world->InsertFirstChild(hor);
 	ElementFactory factory(log_trace, weak_ptr<World>(), fname, &doc, false);
 	shared_ptr<Element> root = factory.parseTree("test");
 	ASSERT_EQ(root->getChildCount(), 0);
-	ASSERT_TRUE(util::startsWith(root->toString(), "(HorizontalLayout"));
+	ASSERT_TRUE(util::startsWith(root->toString(), "(HorizontalCombo"));
 }
 
-TEST_F(HorizontalLayoutTest, BasicLayoutTest)
+TEST_F(HorizontalComboTest, BasicLayoutTest)
 {
 	XMLElement* hor = newHorizontalChild(doc, "test");
 	world->InsertFirstChild(hor);
@@ -101,7 +101,7 @@ TEST_F(HorizontalLayoutTest, BasicLayoutTest)
 	ASSERT_NEAR(100, root->size().height(), 1.0/10);
 }
 
-TEST_F(HorizontalLayoutTest, MixedTest)
+TEST_F(HorizontalComboTest, MixedTest)
 {
 	XMLElement* hor = newHorizontalChild(doc, "test");
 	world->InsertFirstChild(hor);

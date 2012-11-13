@@ -39,7 +39,7 @@ void Hexe::registerWidgets(chisa::tk::widget::WidgetFactory& factory)
 	factory.registerWidget<nes::widget::NesMemoryWidget>("nes-memory");
 }
 
-void Hexe::registerLayouts(chisa::tk::element::ElementFactory& factory)
+void Hexe::registerElements(chisa::tk::element::ElementFactory& factory)
 {
 }
 

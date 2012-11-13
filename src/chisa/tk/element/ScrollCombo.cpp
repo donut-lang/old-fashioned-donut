@@ -154,10 +154,10 @@ bool ScrollCombo::onScroll(const float timeMs, const geom::Point& start, const g
 }
 
 
-weak_ptr<Element> ScrollCombo::getLayoutByIdImpl(const std::string& id)
+weak_ptr<Element> ScrollCombo::getElementByIdImpl(const std::string& id)
 {
 	if(this->child_){
-		return this->child_->getLayoutById(id);
+		return this->child_->getElementById(id);
 	}else{
 		return weak_ptr<Element>();
 	}

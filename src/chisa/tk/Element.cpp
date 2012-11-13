@@ -55,12 +55,12 @@ void Element::loadXML(element::ElementFactory* const factory, tinyxml2::XMLEleme
 	this->loadXMLimpl(factory, element);
 }
 
-weak_ptr<Element> Element::getLayoutById(const std::string& id)
+weak_ptr<Element> Element::getElementById(const std::string& id)
 {
-	return id == this->id() ? this->self() : this->getLayoutByIdImpl(id);
+	return id == this->id() ? this->self() : this->getElementByIdImpl(id);
 }
 
-weak_ptr<Element> Element::getLayoutByPoint(const geom::Vector& screenPoint)
+weak_ptr<Element> Element::getElementByPoint(const geom::Vector& screenPoint)
 {
 	if(!this->screenArea().contain(screenPoint)){
 		return weak_ptr<Element>();
@@ -69,7 +69,7 @@ weak_ptr<Element> Element::getLayoutByPoint(const geom::Vector& screenPoint)
 	for(size_t i=0;i<max;++i){
 		if(shared_ptr<Element> child = this->getChildAt(i).lock()){
 			if(child->screenArea().contain(screenPoint)){
-				return child->getLayoutByPoint(screenPoint);
+				return child->getElementByPoint(screenPoint);
 			}
 		}
 	}
