@@ -35,7 +35,7 @@ private:
 	Handler<gl::Sprite> imageSprite_;
 	util::ParamSet* const paramSet_;
 public:
-	ImageWidget(logging::Logger& log, weak_ptr<World> world, tinyxml2::XMLElement* element);
+	ImageWidget(logging::Logger& log, std::weak_ptr<World> world, tinyxml2::XMLElement* element);
 	virtual ~ImageWidget();
 public:
 	virtual void render(gl::Canvas& cv, const geom::Area& area) override;

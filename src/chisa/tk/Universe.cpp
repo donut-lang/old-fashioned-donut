@@ -36,7 +36,7 @@ Universe::Universe(logging::Logger& log, Hexe* hexe)
 Universe::~Universe() {
 }
 
-void Universe::init(weak_ptr<Universe> _self)
+void Universe::init(std::weak_ptr<Universe> _self)
 {
 	this->self_=_self;
 }
@@ -44,13 +44,13 @@ void Universe::init(weak_ptr<Universe> _self)
 void Universe::render()
 {
 	//TODO: 下のスタックについて、オフスクリーンレンダリングしたほうがいい？？
-	if(shared_ptr<World> topWorld = this->worldStack.top()){
+	if(std::shared_ptr<World> topWorld = this->worldStack.top()){
 		topWorld->render(this->canvas_);
 	}
 }
 void Universe::idle(const float delta_ms)
 {
-	if(shared_ptr<World> topWorld = this->worldStack.top()){
+	if(std::shared_ptr<World> topWorld = this->worldStack.top()){
 		topWorld->idle(delta_ms);
 	}
 }
@@ -60,21 +60,21 @@ void Universe::reshape(const geom::Area& area)
 		log().t(TAG, "reshaped: %s", area.toString().c_str());
 	}
 	this->canvas_.resize2d(area.box());
-	if(shared_ptr<World> topWorld = this->worldStack.top()){
+	if(std::shared_ptr<World> topWorld = this->worldStack.top()){
 		topWorld->reshape(geom::Area(0,0, area.width(), area.height()));
 	}
 	this->area(area);
 }
 
-void Universe::createNewWorld(const string& worldName)
+void Universe::createNewWorld(const std::string& worldName)
 {
-	shared_ptr<World> newWorld(World::create(log(),this->self_, worldName));
+	std::shared_ptr<World> newWorld(World::create(log(),this->self_, worldName));
 	this->worldStack.push(newWorld);
 }
 
-void Universe::notifyWorldEnd(weak_ptr<World> me)
+void Universe::notifyWorldEnd(std::weak_ptr<World> me)
 {
-	if(shared_ptr<World> world = me.lock()){
+	if(std::shared_ptr<World> world = me.lock()){
 		const int idx = this->worldStack.indexOf(world);
 		if(idx < 0){
 			log().w(TAG, "oops. notified unknown world.");
@@ -82,7 +82,7 @@ void Universe::notifyWorldEnd(weak_ptr<World> me)
 		}
 		this->worldStack.erase(idx);
 
-		if(shared_ptr<World> topWorld = this->worldStack.top()){
+		if(std::shared_ptr<World> topWorld = this->worldStack.top()){
 			// FIXME: 下の画面について、以前よりサイズが変わってるようならreshape
 			topWorld->reshape(this->area());
 		}
@@ -92,21 +92,21 @@ void Universe::notifyWorldEnd(weak_ptr<World> me)
 }
 void Universe::onTouchDown(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint)
 {
-	if(shared_ptr<World> topWorld = this->worldStack.top()){
+	if(std::shared_ptr<World> topWorld = this->worldStack.top()){
 		topWorld->onTouchDown(timeMs, pointerIndex, screenPoint);
 	}
 }
 
 void Universe::onTouchUp(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint)
 {
-	if(shared_ptr<World> topWorld = this->worldStack.top()){
+	if(std::shared_ptr<World> topWorld = this->worldStack.top()){
 		topWorld->onTouchUp(timeMs, pointerIndex, screenPoint);
 	}
 }
 
 void Universe::onTouchMove(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint)
 {
-	if(shared_ptr<World> topWorld = this->worldStack.top()){
+	if(std::shared_ptr<World> topWorld = this->worldStack.top()){
 		topWorld->onTouchMove(timeMs, pointerIndex, screenPoint);
 	}
 }

@@ -22,7 +22,7 @@
 namespace chisa {
 namespace tk {
 
-Element::Element(logging::Logger& log, weak_ptr<World> world, weak_ptr<Element> root, weak_ptr<Element> parent)
+Element::Element(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent)
 :log_(log)
 ,world_(world)
 ,root_(root)
@@ -31,7 +31,7 @@ Element::Element(logging::Logger& log, weak_ptr<World> world, weak_ptr<Element> 
 
 }
 
-void Element::init(weak_ptr<Element> _self)
+void Element::init(std::weak_ptr<Element> _self)
 {
 	this->self_.swap(_self);
 }
@@ -40,7 +40,7 @@ void Element::idle(const float delta_ms)
 {
 	const size_t max = this->getChildCount();
 	for(size_t i=0;i<max;++i){
-		if( shared_ptr<Element> child = this->getChildAt(i).lock()){
+		if( std::shared_ptr<Element> child = this->getChildAt(i).lock()){
 			child->idle(delta_ms);
 		}
 	}
@@ -55,19 +55,19 @@ void Element::loadXML(element::ElementFactory* const factory, tinyxml2::XMLEleme
 	this->loadXMLimpl(factory, element);
 }
 
-weak_ptr<Element> Element::getElementById(const std::string& id)
+std::weak_ptr<Element> Element::getElementById(const std::string& id)
 {
 	return id == this->id() ? this->self() : this->getElementByIdImpl(id);
 }
 
-weak_ptr<Element> Element::getElementByPoint(const geom::Vector& screenPoint)
+std::weak_ptr<Element> Element::getElementByPoint(const geom::Vector& screenPoint)
 {
 	if(!this->screenArea().contain(screenPoint)){
-		return weak_ptr<Element>();
+		return std::weak_ptr<Element>();
 	}
 	const size_t max = this->getChildCount();
 	for(size_t i=0;i<max;++i){
-		if(shared_ptr<Element> child = this->getChildAt(i).lock()){
+		if(std::shared_ptr<Element> child = this->getChildAt(i).lock()){
 			if(child->screenArea().contain(screenPoint)){
 				return child->getElementByPoint(screenPoint);
 			}
@@ -77,7 +77,7 @@ weak_ptr<Element> Element::getElementByPoint(const geom::Vector& screenPoint)
 }
 
 
-string Element::toString() const
+std::string Element::toString() const
 {
 	return util::format("(Layout %p)", this);
 }

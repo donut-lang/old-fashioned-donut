@@ -27,12 +27,12 @@ namespace widget {
 
 const static std::string TAG("ImageWidget");
 
-ImageWidget::ImageWidget(logging::Logger& log, weak_ptr<World> world, tinyxml2::XMLElement* element)
+ImageWidget::ImageWidget(logging::Logger& log, std::weak_ptr<World> world, tinyxml2::XMLElement* element)
 :Widget(log, world, element)
 ,paramSet_(new util::ParamSet())
 {
 	paramSet_->parseTree(element);
-	if(shared_ptr<World> w = world.lock()) {
+	if( std::shared_ptr<World> w = world.lock() ) {
 		if(paramSet_->has("src")){
 			std::string src;
 			if(paramSet_->get("src")->queryString(&src)){

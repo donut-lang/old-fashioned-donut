@@ -35,7 +35,7 @@ class World;
 namespace element {
 
 template <typename T>
-shared_ptr<T> elementConstructor(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent)
+std::shared_ptr<T> elementConstructor(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent)
 {
 	return Element::create<T>(log, world, root, parent);
 }
@@ -58,7 +58,7 @@ public:
 private:
 	logging::Logger& log_;
 	std::weak_ptr<World> world_;
-	std::map<std::string, std::function<shared_ptr<Element>(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent)> > elementMap_;
+	std::map<std::string, std::function<std::shared_ptr<Element>(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent)> > elementMap_;
 public:
 	inline logging::Logger& log() const { return log_; }
 	inline std::weak_ptr<World> world() const { return world_; }
@@ -68,16 +68,16 @@ private:
 	const bool doc_free_by_me_;
 	tinyxml2::XMLElement* root_;
 public:
-	ElementFactory(logging::Logger& log, std::weak_ptr<World> world, const string& filename);
-	ElementFactory(logging::Logger& log, std::weak_ptr<World> world, const string& filename, tinyxml2::XMLDocument* document, bool doc_free_by_me);
-	ElementFactory(logging::Logger& log, std::weak_ptr<World> world, const string& filename, const char* buffer, std::size_t lenb);
+	ElementFactory(logging::Logger& log, std::weak_ptr<World> world, const std::string& filename);
+	ElementFactory(logging::Logger& log, std::weak_ptr<World> world, const std::string& filename, tinyxml2::XMLDocument* document, bool doc_free_by_me);
+	ElementFactory(logging::Logger& log, std::weak_ptr<World> world, const std::string& filename, const char* buffer, std::size_t lenb);
 	virtual ~ElementFactory();
 private:
 	void init();
 public:
-	shared_ptr<Element> parseTree(const string& layoutId);
-	shared_ptr<Element> parseTree(std::weak_ptr<Element> root, std::weak_ptr<Element> parent, tinyxml2::XMLElement* top);
-	void registerElement(const std::string& elementName, std::function<shared_ptr<Element>(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent)> constructor);
+	std::shared_ptr<Element> parseTree(const std::string& layoutId);
+	std::shared_ptr<Element> parseTree(std::weak_ptr<Element> root, std::weak_ptr<Element> parent, tinyxml2::XMLElement* top);
+	void registerElement(const std::string& elementName, std::function<std::shared_ptr<Element>(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent)> constructor);
 	template <typename T>
 	void registerElement(const std::string& elementName)
 	{

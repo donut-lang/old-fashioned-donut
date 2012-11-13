@@ -37,22 +37,19 @@ namespace element {
 class WidgetElement;
 }
 
-using std::shared_ptr;
-using std::weak_ptr;
-
 class Element;
 class World;
 
 class Widget {
 	DISABLE_COPY_AND_ASSIGN(Widget);
 	DEFINE_MEMBER_REF(protected, logging::Logger, log);
-	DEFINE_MEMBER(protected, private, weak_ptr<World>, world)
-	DEFINE_MEMBER(private, private, weak_ptr<element::WidgetElement>, wrapper);
+	DEFINE_MEMBER(protected, private, std::weak_ptr<World>, world)
+	DEFINE_MEMBER(private, private, std::weak_ptr<element::WidgetElement>, wrapper);
 public:
-	Widget(logging::Logger& log, weak_ptr<World> world, tinyxml2::XMLElement* element);
+	Widget(logging::Logger& log, std::weak_ptr<World> world, tinyxml2::XMLElement* element);
 	virtual ~Widget();
 public:
-	void updateWrapper(weak_ptr<element::WidgetElement> wrapper) { this->wrapper_ = wrapper; };
+	void updateWrapper(std::weak_ptr<element::WidgetElement> wrapper) { this->wrapper_ = wrapper; };
 public:
 	geom::Vector calcAbsolutePosition();
 public:
@@ -86,7 +83,7 @@ public:
 
 };
 
-#define CHISA_WIDGET_SUBKLASS_CONSTRUCTOR_PARAM_LIST logging::Logger& log, weak_ptr<World> world, tinyxml2::XMLElement* element
+#define CHISA_WIDGET_SUBKLASS_CONSTRUCTOR_PARAM_LIST logging::Logger& log, std::weak_ptr<World> world, tinyxml2::XMLElement* element
 #define CHISA_WIDGET_SUBKLASS_CONSTRUCTOR_PARAM_APPLY log, world, element
 
 #define CHISA_WIDGET_SUBKLASS(Klass)\
