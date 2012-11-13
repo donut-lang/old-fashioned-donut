@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SplitLayout.h"
+#include "SplitCombo.h"
 #include "ElementFactory.h"
 #include "../../geom/Vector.h"
 
@@ -24,13 +24,13 @@ namespace chisa {
 namespace tk {
 namespace element {
 
-static const std::string TAG("SplitLayout");
-const std::string SplitLayout::AttrName::Weight("split-weight");
-const std::string SplitLayout::AttrName::Max("split-max");
-const std::string SplitLayout::AttrName::Min("split-min");
+static const std::string TAG("SplitCombo");
+const std::string SplitCombo::AttrName::Weight("split-weight");
+const std::string SplitCombo::AttrName::Max("split-max");
+const std::string SplitCombo::AttrName::Min("split-min");
 
 
-CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(SplitLayout)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(SplitCombo)
 ,splitMode_(Vertical)
 ,totalSize_(geom::Unspecified)
 ,changed_getter(nullptr)
@@ -43,7 +43,7 @@ CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(SplitLayout)
 	this->setMode(Vertical);
 }
 
-void SplitLayout::setMode(enum SplitMode mode)
+void SplitCombo::setMode(enum SplitMode mode)
 {
 	this->splitMode(mode);
 	changed_getter = mode == Vertical ? (float(geom::Box::*)(void) const)&geom::Box::height : (float(geom::Box::*)(void) const)&geom::Box::width;
@@ -54,29 +54,29 @@ void SplitLayout::setMode(enum SplitMode mode)
 	point_setter = mode == Vertical ? (void(geom::Point::*)(float))&geom::Point::y : (void(geom::Point::*)(float))&geom::Point::x;
 }
 
-SplitLayout::~SplitLayout() noexcept
+SplitCombo::~SplitCombo() noexcept
 {
 }
 
-string SplitLayout::toString() const
+string SplitCombo::toString() const
 {
 	if(this->splitMode() == Horizontal){
 		return util::format("(HorizontalLayout %p)", this);
 	}else if(this->splitMode() == Vertical){
 		return util::format("(VerticalLayout %p)", this);
 	}else{
-		return util::format("(InvalidSplitLayout %p)", this);
+		return util::format("(InvalidSplitCombo %p)", this);
 	}
 }
 
-void SplitLayout::addChild(const SplitDef& def, shared_ptr<Element> layout)
+void SplitCombo::addChild(const SplitDef& def, shared_ptr<Element> layout)
 {
 	shared_ptr<SplitCtx> ctx(new SplitCtx(def));
 	ctx->layout = layout;
 	this->children().push_back(ctx);
 }
 
-void SplitLayout::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElement* top)
+void SplitCombo::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElement* top)
 {
 	const std::string name(top->Name());
 	if(name == "horizontal"){
@@ -110,14 +110,14 @@ void SplitLayout::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElemen
 	}
 }
 
-void SplitLayout::idle(const float delta_ms)
+void SplitCombo::idle(const float delta_ms)
 {
 	for(shared_ptr<SplitCtx> ctx : this->children()){
 		ctx->layout->idle(delta_ms);
 	}
 }
 
-void SplitLayout::resetChildrenLayout()
+void SplitCombo::resetChildrenLayout()
 {
 	for(shared_ptr<SplitCtx> ctx : this->children()){
 		ctx->size=geom::Unspecified;
@@ -125,7 +125,7 @@ void SplitLayout::resetChildrenLayout()
 	this->totalSize_ = geom::Unspecified;
 }
 
-std::weak_ptr<Element> SplitLayout::getChildAt(const std::size_t index) const
+std::weak_ptr<Element> SplitCombo::getChildAt(const std::size_t index) const
 {
 	if(index < this->children().size()){
 		shared_ptr<SplitCtx> ctx = this->children_.at(index);
@@ -133,12 +133,12 @@ std::weak_ptr<Element> SplitLayout::getChildAt(const std::size_t index) const
 	}
 	return std::weak_ptr<Element>();
 }
-std::size_t SplitLayout::getChildCount() const
+std::size_t SplitCombo::getChildCount() const
 {
 	return this->children().size();
 }
 
-void SplitLayout::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
+void SplitCombo::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
 {
 	const float boxSize = (area.box().*changed_getter)();
 	const float drawnStartOffset = (area.point().*point_getter)();
@@ -170,7 +170,7 @@ void SplitLayout::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, c
 	}
 }
 
-geom::Box SplitLayout::onMeasure(const geom::Box& constraint)
+geom::Box SplitCombo::onMeasure(const geom::Box& constraint)
 {
 	const bool changedSpecified = geom::isSpecified((constraint.*changed_getter)());
 	const bool fixedSpecified = geom::isSpecified((constraint.*fixed_getter)());
@@ -279,7 +279,7 @@ geom::Box SplitLayout::onMeasure(const geom::Box& constraint)
 	}
 }
 
-void SplitLayout::onLayout(const geom::Box& size)
+void SplitCombo::onLayout(const geom::Box& size)
 {
 	for(shared_ptr<SplitCtx> ctx : this->children()){
 		geom::Box box;
@@ -289,7 +289,7 @@ void SplitLayout::onLayout(const geom::Box& size)
 	}
 }
 
-std::weak_ptr<Element> SplitLayout::getLayoutByIdImpl(const std::string& id)
+std::weak_ptr<Element> SplitCombo::getLayoutByIdImpl(const std::string& id)
 {
 	for(shared_ptr<SplitCtx> childCtx : this->children()){
 		std::weak_ptr<Element> res = childCtx->layout->getLayoutById(id);

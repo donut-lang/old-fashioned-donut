@@ -25,8 +25,8 @@ namespace chisa {
 namespace tk {
 namespace element {
 
-class ScrollLayout: public chisa::tk::Element {
-	CHISA_ELEMENT_SUBKLASS_FINAL(ScrollLayout);
+class ScrollCombo: public chisa::tk::Element {
+	CHISA_ELEMENT_SUBKLASS_FINAL(ScrollCombo);
 private:
 	static constexpr float ScrollBarTimeOut = 500.0f;
 	enum Mode {

@@ -56,8 +56,8 @@ struct SplitCtx
 };
 
 
-class SplitLayout: public chisa::tk::Element {
-	CHISA_ELEMENT_SUBKLASS_FINAL(SplitLayout);
+class SplitCombo: public chisa::tk::Element {
+	CHISA_ELEMENT_SUBKLASS_FINAL(SplitCombo);
 public:
 	enum SplitMode {
 		Vertical,
