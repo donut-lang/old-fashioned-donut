@@ -39,7 +39,7 @@ void Empty::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElement* ele
 
 }
 
-string Empty::toString() const
+std::string Empty::toString() const
 {
 	return util::format("(Empty %p)",this);
 }

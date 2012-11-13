@@ -42,7 +42,7 @@ private:
 	Handler<gl::TextDrawable> textImage();
 	void onClick();
 public:
-	virtual string toString() const override;
+	virtual std::string toString() const override;
 private:
 	virtual void renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area) override;
 	virtual geom::Box onMeasure(const geom::Box& constraint) override;

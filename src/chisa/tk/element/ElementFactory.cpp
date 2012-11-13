@@ -30,10 +30,6 @@ namespace chisa {
 namespace tk {
 namespace element {
 
-using std::shared_ptr;
-using std::weak_ptr;
-using std::auto_ptr;
-using std::string;
 using namespace tinyxml2;
 using namespace logging;
 
@@ -47,7 +43,7 @@ const std::string ElementFactory::ElemName::Tab("tab");
 
 const std::string ElementFactory::AttrName::Id("id");
 
-ElementFactory::ElementFactory(logging::Logger& log, weak_ptr<World> world, const string& filename)
+ElementFactory::ElementFactory(logging::Logger& log, std::weak_ptr<World> world, const std::string& filename)
 :log_(log)
 ,world_(world)
 ,filename_(filename)
@@ -65,7 +61,7 @@ ElementFactory::ElementFactory(logging::Logger& log, weak_ptr<World> world, cons
 	}
 }
 
-ElementFactory::ElementFactory(logging::Logger& log, weak_ptr<World> world, const string& filename, XMLDocument* document, bool doc_free_by_me)
+ElementFactory::ElementFactory(logging::Logger& log, std::weak_ptr<World> world, const std::string& filename, XMLDocument* document, bool doc_free_by_me)
 :log_(log)
 ,world_(world)
 ,filename_(filename)
@@ -79,7 +75,7 @@ ElementFactory::ElementFactory(logging::Logger& log, weak_ptr<World> world, cons
 	}
 }
 
-ElementFactory::ElementFactory(logging::Logger& log, weak_ptr<World> world, const string& filename, const char* buffer, size_t lenb)
+ElementFactory::ElementFactory(logging::Logger& log, std::weak_ptr<World> world, const std::string& filename, const char* buffer, size_t lenb)
 :log_(log)
 ,world_(world)
 ,doc_()
@@ -111,29 +107,29 @@ ElementFactory::~ElementFactory()
 	this->doc_ = nullptr;
 }
 
-void ElementFactory::registerElement(const std::string& elementName, std::function<shared_ptr<Element>(logging::Logger& log, weak_ptr<World> world, weak_ptr<Element> root, weak_ptr<Element> parent)> constructor)
+void ElementFactory::registerElement(const std::string& elementName, std::function<std::shared_ptr<Element>(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent)> constructor)
 {
 	this->elementMap_.insert(std::make_pair(elementName, constructor));
 }
 
-shared_ptr<Element> ElementFactory::parseTree(weak_ptr<Element> root, weak_ptr<Element> parent, XMLElement* top)
+std::shared_ptr<Element> ElementFactory::parseTree(std::weak_ptr<Element> root, std::weak_ptr<Element> parent, XMLElement* top)
 {
 	const char* name = top->Name();
 	auto it = this->elementMap_.find(name);
 	if(this->elementMap_.end() == it){
 		throw logging::Exception(__FILE__,__LINE__, "Unknwon Element: %s", name);
 	}
-	shared_ptr<Element> elm(it->second(this->log(), this->world(), root, parent));
+	std::shared_ptr<Element> elm(it->second(this->log(), this->world(), root, parent));
 	elm->loadXML(this, top);
 	return elm;
 }
 
-shared_ptr<Element> ElementFactory::parseTree(const string& elementId)
+std::shared_ptr<Element> ElementFactory::parseTree(const std::string& elementId)
 {
 	for(XMLElement* elem = this->root_->FirstChildElement(); elem; elem = elem->NextSiblingElement()){
 		const char* id = elem->Attribute(AttrName::Id.c_str(), nullptr);
 		if(id && elementId == id){
-			return this->parseTree(weak_ptr<Element>(), weak_ptr<Element>(), elem);
+			return this->parseTree(std::weak_ptr<Element>(), std::weak_ptr<Element>(), elem);
 		}
 	}
 	throw logging::Exception(__FILE__, __LINE__, "Element ID \"%s\" not found in %s", elementId.c_str(), this->filename_.c_str());

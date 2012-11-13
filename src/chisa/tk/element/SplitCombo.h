@@ -43,7 +43,7 @@ public:
 struct SplitCtx
 {
 	const SplitDef def;
-	shared_ptr<Element> element;
+	std::shared_ptr<Element> element;
 	float size;
 	float weight;
 	SplitCtx(const SplitDef& def)
@@ -70,7 +70,7 @@ public:
 	};
 private:
 	DEFINE_MEMBER(private, private, enum SplitMode, splitMode);
-	DEFINE_CONTAINER(private, private, std::vector<shared_ptr<SplitCtx> >, children)
+	DEFINE_CONTAINER(private, private, std::vector<std::shared_ptr<SplitCtx> >, children)
 	float totalSize_;
 	void setMode(enum SplitMode mode);
 private:
@@ -91,12 +91,12 @@ private:
 	float (geom::Point::*point_getter)(void) const;
 	void (geom::Point::*point_setter)(float);
 private:
-	void addChild(const SplitDef& def, shared_ptr<Element> element);
+	void addChild(const SplitDef& def, std::shared_ptr<Element> element);
 private:
 	void resetChildren();
 	float calcTotalSize();
 public:
-	virtual string toString() const override;
+	virtual std::string toString() const override;
 	virtual void idle(const float delta_ms) override;
 	virtual std::weak_ptr<Element> getChildAt(const std::size_t index) const override;
 	virtual std::size_t getChildCount() const override;

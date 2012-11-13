@@ -42,9 +42,9 @@ class Universe {
 private:
 	DEFINE_MEMBER_REF(private, logging::Logger, log);
 	DEFINE_MEMBER_CONST(public, Hexe*, hexe);
-	Stack<shared_ptr<World> > worldStack;
+	Stack<std::shared_ptr<World> > worldStack;
 	DEFINE_MEMBER(public, private, geom::Area, area);
-	weak_ptr<Universe> self_;
+	std::weak_ptr<Universe> self_;
 	gl::Canvas canvas_;
 	Handler<gl::DrawableManager> drawableManager_;
 public:
@@ -52,8 +52,8 @@ public:
 	void idle(const float delta_ms);
 	void reshape(const geom::Area& area);
 public: //worldからの通知
-	void createNewWorld(const string& worldName);
-	void notifyWorldEnd(weak_ptr<World> me);
+	void createNewWorld(const std::string& worldName);
+	void notifyWorldEnd(std::weak_ptr<World> me);
 	/******************************************************************************
 	 * Hexeへ移譲
 	 ******************************************************************************/
@@ -86,11 +86,11 @@ public:
 	 ******************************************************************************/
 private:
 	Universe(logging::Logger& log, Hexe* hexe);
-	void init(weak_ptr<Universe> _self);
+	void init(std::weak_ptr<Universe> _self);
 public:
-	static shared_ptr<Universe> create(logging::Logger& log, Hexe* hexe)
+	static std::shared_ptr<Universe> create(logging::Logger& log, Hexe* hexe)
 	{
-		shared_ptr<Universe> ptr(new Universe(log, hexe));
+		std::shared_ptr<Universe> ptr(new Universe(log, hexe));
 		ptr->init(ptr);
 		return ptr;
 	}

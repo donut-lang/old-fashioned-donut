@@ -35,12 +35,12 @@ ScrollCombo::~ScrollCombo() noexcept
 {
 }
 
-weak_ptr<Element> ScrollCombo::getChildAt(const size_t index) const
+std::weak_ptr<Element> ScrollCombo::getChildAt(const size_t index) const
 {
 	if(index == 0 && this->child_){
 		return this->child_;
 	}else{
-		return weak_ptr<Element>();
+		return std::weak_ptr<Element>();
 	}
 }
 
@@ -71,7 +71,7 @@ void ScrollCombo::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElemen
 	}
 }
 
-string ScrollCombo::toString() const
+std::string ScrollCombo::toString() const
 {
 	return util::format("(ScrollCombo %p)", this);
 }
@@ -154,12 +154,12 @@ bool ScrollCombo::onScroll(const float timeMs, const geom::Point& start, const g
 }
 
 
-weak_ptr<Element> ScrollCombo::getElementByIdImpl(const std::string& id)
+std::weak_ptr<Element> ScrollCombo::getElementByIdImpl(const std::string& id)
 {
 	if(this->child_){
 		return this->child_->getElementById(id);
 	}else{
-		return weak_ptr<Element>();
+		return std::weak_ptr<Element>();
 	}
 }
 

@@ -24,15 +24,11 @@
 namespace chisa {
 namespace tk {
 
-using std::deque;
-using std::shared_ptr;
-using std::shared_ptr;
-
 template <typename T>
 class Stack
 {
 private:
-	deque<T> stack;
+	std::deque<T> stack;
 public:
 	T push(const T elm)
 	{
@@ -76,8 +72,8 @@ public:
 	{
 		return stack.size();
 	}
-	typedef typename deque<T >::const_iterator Iterator;
-	typedef typename deque<T >::reverse_iterator ReverseIterator;
+	typedef typename std::deque<T >::const_iterator Iterator;
+	typedef typename std::deque<T >::reverse_iterator ReverseIterator;
 	Iterator begin(){
 		return stack.begin();
 	}

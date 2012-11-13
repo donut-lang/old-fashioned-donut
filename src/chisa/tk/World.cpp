@@ -28,9 +28,9 @@
 namespace chisa {
 namespace tk {
 
-const static string& TAG("World");
+const static std::string& TAG("World");
 
-World::World(logging::Logger& log, weak_ptr<Universe> _universe, const string& worldname)
+World::World(logging::Logger& log, std::weak_ptr<Universe> _universe, const std::string& worldname)
 :log_(log)
 ,universe_(_universe)
 ,name_(worldname)
@@ -65,9 +65,9 @@ World::~World()
 }
 
 
-void World::init(weak_ptr<World> _self)
+void World::init(std::weak_ptr<World> _self)
 {
-	if(shared_ptr<Universe> universe = this->universe_.lock()){
+	if(std::shared_ptr<Universe> universe = this->universe_.lock()){
 		const std::string filename(universe->resolveWorldFilepath(this->name_, "layout.xml"));
 		this->doc_ = new tinyxml2::XMLDocument();
 		this->doc_->LoadFile(filename.c_str());
@@ -90,36 +90,36 @@ void World::init(weak_ptr<World> _self)
 
 void World::render(gl::Canvas& canvas)
 {
-	if(shared_ptr<Element> elm = this->elementStack_.top()){
+	if(std::shared_ptr<Element> elm = this->elementStack_.top()){
 		elm->render(canvas, this->area(), geom::Area(0,0,this->area().width(), this->area().height()));
 	}
 }
 void World::idle(const float delta_ms)
 {
-	if(shared_ptr<Element> elm = this->elementStack_.top()){
+	if(std::shared_ptr<Element> elm = this->elementStack_.top()){
 		elm->idle(delta_ms);
 	}
 	this->taskHandler_.run(delta_ms);
 }
 void World::reshape(const geom::Area& area)
 {
-	if(shared_ptr<Element> elm = this->elementStack_.top()){
+	if(std::shared_ptr<Element> elm = this->elementStack_.top()){
 		elm->measure(area.box());
 		elm->layout(area.box());
 	}
 	this->area(area);
 }
 
-void World::pushElement(const string& filename)
+void World::pushElement(const std::string& filename)
 {
-	shared_ptr<Element> l = this->elementFactory_->parseTree(filename);
+	std::shared_ptr<Element> l = this->elementFactory_->parseTree(filename);
 	this->elementStack_.push(l);
 }
 
 void World::popElement()
 {
 	this->elementStack_.pop();
-	if(shared_ptr<Element> elm = this->elementStack_.top()){
+	if(std::shared_ptr<Element> elm = this->elementStack_.top()){
 		this->reshape(this->area());
 	}
 }
@@ -134,12 +134,12 @@ void World::unregisterTask(Task* task)
 	this->taskHandler_.unregisterTask(task);
 }
 
-weak_ptr<Element> World::getElementByPoint(const geom::Point& screenPoint)
+std::weak_ptr<Element> World::getElementByPoint(const geom::Point& screenPoint)
 {
-	if(shared_ptr<Element> elm = this->elementStack_.top()){
+	if(std::shared_ptr<Element> elm = this->elementStack_.top()){
 		return elm->getElementByPoint(screenPoint);
 	}
-	return weak_ptr<Element>();
+	return std::weak_ptr<Element>();
 }
 
 element::WidgetElement* World::getWidgetById(const std::string& name)
@@ -151,16 +151,16 @@ element::WidgetElement* World::getWidgetById(const std::string& name)
 	return it->second;
 }
 
-bool World::replaceWidget(const string& widgetId, element::WidgetElement* const newHandler)
+bool World::replaceWidget(const std::string& widgetId, element::WidgetElement* const newHandler)
 {
 	std::map<std::string, element::WidgetElement*>::iterator it = this->widgetMap_.find(widgetId);
 	if(it != widgetMap_.end()) {
 		this->widgetMap_.erase(it);
 	}
-	this->widgetMap_.insert(std::pair<string, element::WidgetElement*>(widgetId, newHandler));
+	this->widgetMap_.insert(std::pair<std::string, element::WidgetElement*>(widgetId, newHandler));
 	return true;
 }
-bool World::deleteWidget(const string& widgetId, element::WidgetElement* const handler)
+bool World::deleteWidget(const std::string& widgetId, element::WidgetElement* const handler)
 {
 	std::map<std::string, element::WidgetElement*>::iterator it = this->widgetMap_.find(widgetId);
 	if(it != widgetMap_.end()) {
@@ -175,7 +175,7 @@ bool World::deleteWidget(const string& widgetId, element::WidgetElement* const h
 	return true;
 }
 
-Widget* World::createWidget(const string& klass, tinyxml2::XMLElement* elem)
+Widget* World::createWidget(const std::string& klass, tinyxml2::XMLElement* elem)
 {
 	return this->widgetFactory_->createWidget(klass, elem);
 }

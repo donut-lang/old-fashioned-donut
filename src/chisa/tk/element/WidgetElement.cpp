@@ -26,7 +26,7 @@ namespace chisa {
 namespace tk {
 namespace element {
 
-static const string TAG("WidgetElement");
+static const std::string TAG("WidgetElement");
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(WidgetElement, LeafElement)
 ,borrowed_(nullptr)
@@ -42,7 +42,7 @@ WidgetElement::~WidgetElement() noexcept
 		return;
 	}
 	if(this->borrowed_){
-		if(shared_ptr<World> world = this->world().lock()){
+		if(std::shared_ptr<World> world = this->world().lock()){
 			//ワールドの書き換えと、ウィジットへの現親レイアウトの通知
 			if(world->replaceWidget(this->widgetId_, this->borrowed_)) {
 				this->widget()->updateWrapper(std::dynamic_pointer_cast<WidgetElement>(this->self().lock()));
@@ -57,9 +57,9 @@ WidgetElement::~WidgetElement() noexcept
 	}
 }
 
-weak_ptr<Element> WidgetElement::getChildAt(const std::size_t index) const
+std::weak_ptr<Element> WidgetElement::getChildAt(const std::size_t index) const
 {
-	return weak_ptr<Element>();
+	return std::weak_ptr<Element>();
 }
 std::size_t WidgetElement::getChildCount() const
 {
@@ -216,9 +216,9 @@ void WidgetElement::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElem
 	}
 }
 
-weak_ptr<Element> WidgetElement::getElementByIdImpl(const std::string& id)
+std::weak_ptr<Element> WidgetElement::getElementByIdImpl(const std::string& id)
 {
-	return weak_ptr<Element>();
+	return std::weak_ptr<Element>();
 }
 
 geom::Point WidgetElement::calcPtInWidget(const geom::Point& ptInScreen)

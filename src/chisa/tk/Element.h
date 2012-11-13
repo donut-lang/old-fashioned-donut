@@ -37,49 +37,46 @@ class ElementFactory;
 }
 
 class World;
-using std::string;
-using std::weak_ptr;
-using std::size_t;
 
 class Element : public GestureListener {
 	DISABLE_COPY_AND_ASSIGN(Element);
 private:
 	DEFINE_MEMBER_REF(protected, logging::Logger, log);
-	DEFINE_MEMBER(protected, private, weak_ptr<World>, world);
-	DEFINE_MEMBER(public, private, weak_ptr<Element>, root);
-	DEFINE_MEMBER(public, private, weak_ptr<Element>, parent);
-	DEFINE_MEMBER(protected, private, weak_ptr<Element>, self);
+	DEFINE_MEMBER(protected, private, std::weak_ptr<World>, world);
+	DEFINE_MEMBER(public, private, std::weak_ptr<Element>, root);
+	DEFINE_MEMBER(public, private, std::weak_ptr<Element>, parent);
+	DEFINE_MEMBER(protected, private, std::weak_ptr<Element>, self);
 	DEFINE_MEMBER(public, private, geom::Box, size);
 	DEFINE_MEMBER(public, private, geom::Area, screenArea);
 	DEFINE_MEMBER(protected, private, geom::Area, drawnArea);
 	DEFINE_MEMBER(public, private, std::string, id);
 public:
-	virtual weak_ptr<Element> getChildAt(const size_t index) const = 0;
+	virtual std::weak_ptr<Element> getChildAt(const size_t index) const = 0;
 	virtual size_t getChildCount() const = 0;
 public:
 	void render(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area);
 	geom::Box measure(const geom::Box& constraint);
 	void layout(const geom::Box& size);
-	virtual string toString() const = 0;
+	virtual std::string toString() const = 0;
 	void loadXML(element::ElementFactory* const factory, tinyxml2::XMLElement* const element);
-	weak_ptr<Element> getElementById(const std::string& id);
-	weak_ptr<Element> getElementByPoint(const geom::Vector& screenPoint);
+	std::weak_ptr<Element> getElementById(const std::string& id);
+	std::weak_ptr<Element> getElementByPoint(const geom::Vector& screenPoint);
 	virtual void idle(const float delta_ms);
 private:
 	virtual void renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area) = 0;
 	virtual geom::Box onMeasure(const geom::Box& constraint) = 0;
 	virtual void onLayout(const geom::Box& size) = 0;
 	virtual void loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) = 0;
-	virtual weak_ptr<Element> getElementByIdImpl(const std::string& id) = 0;
+	virtual std::weak_ptr<Element> getElementByIdImpl(const std::string& id) = 0;
 protected:
-	Element(logging::Logger& log, weak_ptr<World> world, weak_ptr<Element> root, weak_ptr<Element> parent);
+	Element(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent);
 private:
-	void init(weak_ptr<Element> _self);
+	void init(std::weak_ptr<Element> _self);
 public:
 	template <typename SubKlass>
-	static shared_ptr<SubKlass> create(logging::Logger& log, weak_ptr<World> world, weak_ptr<Element> root, weak_ptr<Element> parent)
+	static std::shared_ptr<SubKlass> create(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent)
 	{
-		shared_ptr<SubKlass> ptr(new SubKlass(log, world, root, parent));
+		std::shared_ptr<SubKlass> ptr(new SubKlass(log, world, root, parent));
 		ptr->init(ptr);
 		return ptr;
 	}

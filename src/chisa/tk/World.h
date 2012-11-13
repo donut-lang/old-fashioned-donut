@@ -48,17 +48,13 @@ namespace widget{
 class WidgetFactory;
 }
 
-using std::shared_ptr;
-using std::weak_ptr;
-using std::string;
-
 class World {
 private:
 	DEFINE_MEMBER_REF(public, logging::Logger, log);
-	const weak_ptr<Universe> universe_;
+	const std::weak_ptr<Universe> universe_;
 	DEFINE_MEMBER_CONST(public, std::string, name);
 	TaskHandler taskHandler_;
-	Stack<shared_ptr<Element> > elementStack_;
+	Stack<std::shared_ptr<Element> > elementStack_;
 	std::map<std::string, element::WidgetElement*> widgetMap_;
 	DEFINE_MEMBER(private, private, geom::Area, area);
 private:
@@ -74,14 +70,14 @@ public:
 	void reshape(const geom::Area& area);
 private:
 	void popElement();
-	void pushElement(const string& filename);
+	void pushElement(const std::string& filename);
 public:
 	element::WidgetElement* getWidgetById(const std::string& name);
-	bool replaceWidget(const string& widgetId, element::WidgetElement* const newHandler);
-	bool deleteWidget(const string& widgetId, element::WidgetElement* const handler);
-	Widget* createWidget(const string& klass, tinyxml2::XMLElement* elem);
+	bool replaceWidget(const std::string& widgetId, element::WidgetElement* const newHandler);
+	bool deleteWidget(const std::string& widgetId, element::WidgetElement* const handler);
+	Widget* createWidget(const std::string& klass, tinyxml2::XMLElement* elem);
 public:
-	weak_ptr<Element> getElementByPoint(const geom::Point& screenVector);
+	std::weak_ptr<Element> getElementByPoint(const geom::Point& screenVector);
 	/******************************************************************************
 	 * タスク管理
 	 ******************************************************************************/
@@ -96,7 +92,7 @@ public:
 	template <typename... Args>
 	std::string resolveWorldFilepath(const Args&... related_filename) const
 	{
-		if(shared_ptr<Universe> universe = this->universe_.lock()){
+		if(std::shared_ptr<Universe> universe = this->universe_.lock()){
 			return universe->resolveWorldFilepath(this->name(), related_filename...);
 		}else{
 			throw logging::Exception(__FILE__, __LINE__, "Oops. Universe already removed.");
@@ -105,7 +101,7 @@ public:
 	template <typename... Args>
 	std::string resolveUniverseFilepath(const Args&... related_filename) const
 	{
-		if(shared_ptr<Universe> universe = this->universe_.lock()){
+		if(std::shared_ptr<Universe> universe = this->universe_.lock()){
 			return universe->resolveUniverseFilepath(related_filename...);
 		}else{
 			throw logging::Exception(__FILE__, __LINE__, "Oops. Universe already removed.");
@@ -123,12 +119,12 @@ public:
 	 * 生成
 	 ******************************************************************************/
 private:
-	World(logging::Logger& log, weak_ptr<Universe> _universe, const string& worldname);
-	void init(weak_ptr<World> _self);
+	World(logging::Logger& log, std::weak_ptr<Universe> _universe, const std::string& worldname);
+	void init(std::weak_ptr<World> _self);
 public:
-	static shared_ptr<World> create(logging::Logger& log, weak_ptr<Universe> _universe, const string& worldname)
+	static std::shared_ptr<World> create(logging::Logger& log, std::weak_ptr<Universe> _universe, const std::string& worldname)
 	{
-		shared_ptr<World> ptr(new World(log, _universe, worldname));
+		std::shared_ptr<World> ptr(new World(log, _universe, worldname));
 		ptr->init(ptr);
 		return ptr;
 	}

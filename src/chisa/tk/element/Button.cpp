@@ -39,7 +39,7 @@ Button::~Button() noexcept
 {
 }
 
-string Button::toString() const
+std::string Button::toString() const
 {
 	return util::format("(Button text:\"%s\")", this->text_.c_str());
 }
@@ -51,7 +51,7 @@ void Button::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const 
 Handler<gl::TextDrawable> Button::textImage()
 {
 	if(!this->textImage_){
-		if( shared_ptr<World> w = this->world().lock()){
+		if( std::shared_ptr<World> w = this->world().lock()){
 			//TODO: 色とか
 			if(vertical_){
 				this->textImage_ = w->drawableManager()->queryVerticalText(this->text());
