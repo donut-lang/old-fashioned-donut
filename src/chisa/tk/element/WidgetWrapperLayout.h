@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "../Layout.h"
+#include "../Element.h"
 #include <memory>
 #include <tinyxml2.h>
 
@@ -27,8 +27,8 @@ namespace tk {
 namespace layout {
 class LayoutFactory;
 
-class WidgetWrapperLayout: public chisa::tk::Layout {
-	CHISA_LAYOUT_SUBKLASS_FINAL(WidgetWrapperLayout);
+class WidgetWrapperLayout: public chisa::tk::Element {
+	CHISA_ELEMENT_SUBKLASS_FINAL(WidgetWrapperLayout);
 public:
 	enum FitMode {
 		Center,
@@ -46,7 +46,7 @@ private:
 	DEFINE_MEMBER(private, private, geom::Box, widgetSizeReal);
 	DEFINE_MEMBER(private, private, geom::Area, widgetDrawnArea);
 public:
-	virtual std::weak_ptr<Layout> getChildAt(const std::size_t index) const override;
+	virtual std::weak_ptr<Element> getChildAt(const std::size_t index) const override;
 	virtual std::size_t getChildCount() const override;
 public:
 	virtual void idle(const float delta_ms) override;
@@ -56,7 +56,7 @@ private:
 	virtual geom::Box onMeasure(const geom::Box& constraint) override;
 	virtual void onLayout(const geom::Box& size) override;
 	virtual void loadXMLimpl(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element) override;
-	virtual std::weak_ptr<Layout> getLayoutByIdImpl(const std::string& id) override;
+	virtual std::weak_ptr<Element> getLayoutByIdImpl(const std::string& id) override;
 private:
 	float calcScale(const geom::Box& widget, const geom::Box& constraint);
 private:

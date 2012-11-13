@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "../Layout.h"
+#include "../Element.h"
 #include <tinyxml2.h>
 #include <vector>
 #include <memory>
@@ -43,7 +43,7 @@ public:
 struct SplitCtx
 {
 	const SplitDef def;
-	shared_ptr<Layout> layout;
+	shared_ptr<Element> layout;
 	float size;
 	float weight;
 	SplitCtx(const SplitDef& def)
@@ -56,8 +56,8 @@ struct SplitCtx
 };
 
 
-class SplitLayout: public chisa::tk::Layout {
-	CHISA_LAYOUT_SUBKLASS_FINAL(SplitLayout);
+class SplitLayout: public chisa::tk::Element {
+	CHISA_ELEMENT_SUBKLASS_FINAL(SplitLayout);
 public:
 	enum SplitMode {
 		Vertical,
@@ -91,21 +91,21 @@ private:
 	float (geom::Point::*point_getter)(void) const;
 	void (geom::Point::*point_setter)(float);
 private:
-	void addChild(const SplitDef& def, shared_ptr<Layout> layout);
+	void addChild(const SplitDef& def, shared_ptr<Element> layout);
 private:
 	void resetChildrenLayout();
 	float calcTotalSize();
 public:
 	virtual string toString() const override;
 	virtual void idle(const float delta_ms) override;
-	virtual std::weak_ptr<Layout> getChildAt(const std::size_t index) const override;
+	virtual std::weak_ptr<Element> getChildAt(const std::size_t index) const override;
 	virtual std::size_t getChildCount() const override;
 private:
 	virtual void renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area) override;
 	virtual geom::Box onMeasure(const geom::Box& constraint) override;
 	virtual void onLayout(const geom::Box& size) override;
 	virtual void loadXMLimpl(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element) override;
-	virtual std::weak_ptr<Layout> getLayoutByIdImpl(const std::string& id) override;
+	virtual std::weak_ptr<Element> getLayoutByIdImpl(const std::string& id) override;
 };
 
 }}}

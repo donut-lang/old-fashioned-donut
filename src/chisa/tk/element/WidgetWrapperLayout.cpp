@@ -28,7 +28,7 @@ namespace layout {
 
 static const string TAG("WidgetWrapperLayout");
 
-CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(WidgetWrapperLayout)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(WidgetWrapperLayout)
 ,borrowed_(nullptr)
 ,widget_(nullptr)
 ,fitMode_(Center)
@@ -57,9 +57,9 @@ WidgetWrapperLayout::~WidgetWrapperLayout() noexcept
 	}
 }
 
-weak_ptr<Layout> WidgetWrapperLayout::getChildAt(const std::size_t index) const
+weak_ptr<Element> WidgetWrapperLayout::getChildAt(const std::size_t index) const
 {
-	return weak_ptr<Layout>();
+	return weak_ptr<Element>();
 }
 std::size_t WidgetWrapperLayout::getChildCount() const
 {
@@ -216,9 +216,9 @@ void WidgetWrapperLayout::loadXMLimpl(LayoutFactory* const factory, tinyxml2::XM
 	}
 }
 
-weak_ptr<Layout> WidgetWrapperLayout::getLayoutByIdImpl(const std::string& id)
+weak_ptr<Element> WidgetWrapperLayout::getLayoutByIdImpl(const std::string& id)
 {
-	return weak_ptr<Layout>();
+	return weak_ptr<Element>();
 }
 
 geom::Point WidgetWrapperLayout::calcPtInWidget(const geom::Point& ptInScreen)

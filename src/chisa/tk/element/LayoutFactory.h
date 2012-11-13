@@ -26,7 +26,7 @@
 #include "../../logging/Exception.h"
 #include "../../logging/Logger.h"
 #include "../../util/ClassUtil.h"
-#include "../Layout.h"
+#include "../Element.h"
 
 namespace chisa {
 namespace tk {
@@ -35,9 +35,9 @@ class World;
 namespace layout {
 
 template <typename T>
-shared_ptr<T> layoutConstructor(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Layout> root, std::weak_ptr<Layout> parent)
+shared_ptr<T> layoutConstructor(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent)
 {
-	return Layout::create<T>(log, world, root, parent);
+	return Element::create<T>(log, world, root, parent);
 }
 
 class LayoutFactory {
@@ -58,7 +58,7 @@ public:
 private:
 	logging::Logger& log_;
 	std::weak_ptr<World> world_;
-	std::map<std::string, std::function<shared_ptr<Layout>(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Layout> root, std::weak_ptr<Layout> parent)> > layoutMap_;
+	std::map<std::string, std::function<shared_ptr<Element>(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent)> > layoutMap_;
 public:
 	inline logging::Logger& log() const { return log_; }
 	inline std::weak_ptr<World> world() const { return world_; }
@@ -75,9 +75,9 @@ public:
 private:
 	void init();
 public:
-	shared_ptr<Layout> parseTree(const string& layoutname);
-	shared_ptr<Layout> parseTree(std::weak_ptr<Layout> root, std::weak_ptr<Layout> parent, tinyxml2::XMLElement* top);
-	void registerLayout(const std::string& layoutName, std::function<shared_ptr<Layout>(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Layout> root, std::weak_ptr<Layout> parent)> constructor);
+	shared_ptr<Element> parseTree(const string& layoutname);
+	shared_ptr<Element> parseTree(std::weak_ptr<Element> root, std::weak_ptr<Element> parent, tinyxml2::XMLElement* top);
+	void registerLayout(const std::string& layoutName, std::function<shared_ptr<Element>(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent)> constructor);
 	template <typename T>
 	void registerLayout(const std::string& layoutName)
 	{

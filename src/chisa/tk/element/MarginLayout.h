@@ -15,44 +15,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#pragma once
 
-#include "../Layout.h"
-#include "../Task.h"
-#include "LayoutFactory.h"
+#pragma once
+#include "../Element.h"
+#include "../../geom/Area.h"
 
 namespace chisa {
 namespace tk {
 namespace layout {
 
-class ScrollLayout: public chisa::tk::Layout {
-	CHISA_LAYOUT_SUBKLASS_FINAL(ScrollLayout);
-private:
-	static constexpr float ScrollBarTimeOut = 500.0f;
-	enum Mode {
-		None = 0x00,
-		Vertical = 0x01,
-		Horizontal = 0x10,
-		Both = 0x11
-	};
-	enum Mode scrollMode_;
-	geom::Point scrollOffset_;
-	shared_ptr<Layout> child_;
-	geom::Box childSize_;
-	float lastMovedFrom_;
+class MarginLayout : public Element {
+	CHISA_ELEMENT_SUBKLASS(MarginLayout);
+	std::weak_ptr<Element> child_;
+	geom::Margin margin_;
 public:
-	virtual weak_ptr<Layout> getChildAt(const size_t index) const override;
-	virtual size_t getChildCount() const override;
-	virtual string toString() const override;
-	virtual void idle(const float delta_ms) override;
+	virtual std::weak_ptr<Element> getChildAt(const size_t index) const override;
+	virtual std::size_t getChildCount() const override;
+	virtual std::string toString() const override;
 private:
 	virtual void renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area) override;
 	virtual geom::Box onMeasure(const geom::Box& constraint) override;
 	virtual void onLayout(const geom::Box& size) override;
 	virtual void loadXMLimpl(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element) override;
-	virtual weak_ptr<Layout> getLayoutByIdImpl(const std::string& id) override;
-public:
-	virtual bool onScroll(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Distance& distance) override;
+	virtual std::weak_ptr<Element> getLayoutByIdImpl(const std::string& id) override;
 };
 
 }}}

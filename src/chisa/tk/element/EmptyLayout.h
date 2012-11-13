@@ -19,17 +19,17 @@
 #pragma once
 #include <memory>
 #include <tinyxml2.h>
-#include "../Layout.h"
+#include "../Element.h"
 
 namespace chisa {
 namespace tk {
 namespace layout {
 class LayoutFactory;
 
-class EmptyLayout : public Layout {
-	CHISA_LAYOUT_SUBKLASS_FINAL(EmptyLayout);
+class EmptyLayout : public Element {
+	CHISA_ELEMENT_SUBKLASS_FINAL(EmptyLayout);
 public:
-	virtual std::weak_ptr<Layout> getChildAt(const std::size_t index) const override;
+	virtual std::weak_ptr<Element> getChildAt(const std::size_t index) const override;
 	virtual std::size_t getChildCount() const override;
 	virtual std::string toString() const override;
 private:
@@ -37,7 +37,7 @@ private:
 	virtual geom::Box onMeasure(const geom::Box& constraint) override;
 	virtual void onLayout(const geom::Box& size) override;
 	virtual void loadXMLimpl(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element) override;
-	virtual std::weak_ptr<Layout> getLayoutByIdImpl(const std::string& id) override;
+	virtual std::weak_ptr<Element> getLayoutByIdImpl(const std::string& id) override;
 };
 
 }}}

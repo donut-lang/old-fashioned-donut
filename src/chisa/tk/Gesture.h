@@ -26,7 +26,7 @@
 namespace chisa {
 namespace tk {
 class World;
-class Layout;
+class Element;
 
 class GestureListener {
 	DISABLE_COPY_AND_ASSIGN(GestureListener);
@@ -55,16 +55,16 @@ class GestureSession {
 	DISABLE_COPY_AND_ASSIGN(GestureSession);
 	DEFINE_MEMBER_REF(private, logging::Logger, log)
 public:
-	GestureSession(logging::Logger& log, const unsigned int pointerIndex, std::weak_ptr<Layout> targetLayout, const geom::Point& startPoint, const float startTimeMs);
+	GestureSession(logging::Logger& log, const unsigned int pointerIndex, std::weak_ptr<Element> targetLayout, const geom::Point& startPoint, const float startTimeMs);
 	virtual ~GestureSession();
 private:
 	//static constexpr float MaxFlingVelocity=4000;
 	static constexpr float MinFlingVelocity=5/1000;
 private:
-	std::weak_ptr<Layout> target_;
-	std::deque<std::weak_ptr<Layout> > layoutChain_;
-	typedef std::deque<std::weak_ptr<Layout> >::const_iterator LayoutConstIterator;
-	typedef std::deque<std::weak_ptr<Layout> >::iterator LayoutIterator;
+	std::weak_ptr<Element> target_;
+	std::deque<std::weak_ptr<Element> > layoutChain_;
+	typedef std::deque<std::weak_ptr<Element> >::const_iterator LayoutConstIterator;
+	typedef std::deque<std::weak_ptr<Element> >::iterator LayoutIterator;
 	const unsigned int pointerIndex_;
 	const geom::Point startPoint_;
 	const float startTimeMs_;

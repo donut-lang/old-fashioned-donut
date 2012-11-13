@@ -18,7 +18,7 @@
 #pragma once
 #include <memory>
 #include "logging/Logger.h"
-#include "tk/layout/LayoutFactory.h"
+#include "tk/element/LayoutFactory.h"
 #include "tk/widget/WidgetFactory.h"
 #include "util/FileUtil.h"
 

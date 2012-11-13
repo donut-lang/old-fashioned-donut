@@ -17,7 +17,7 @@
  */
 
 #include "Widget.h"
-#include "layout/WidgetWrapperLayout.h"
+#include "element/WidgetWrapperLayout.h"
 #include <GL/gl.h>
 
 namespace chisa {
