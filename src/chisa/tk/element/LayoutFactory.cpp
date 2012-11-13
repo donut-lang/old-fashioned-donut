@@ -22,7 +22,7 @@
 #include <memory>
 #include <tinyxml2.h>
 #include "SplitLayout.h"
-#include "EmptyLayout.h"
+#include "Empty.h"
 #include "ScrollLayout.h"
 #include "WidgetWrapperLayout.h"
 
@@ -97,7 +97,7 @@ void LayoutFactory::init()
 {
 	this->registerLayout<SplitLayout>(ElemName::Horizontal);
 	this->registerLayout<SplitLayout>(ElemName::Vertical);
-	this->registerLayout<EmptyLayout>(ElemName::Empty);
+	this->registerLayout<Empty>(ElemName::Empty);
 	this->registerLayout<ScrollLayout>(ElemName::Scroll);
 	this->registerLayout<WidgetWrapperLayout>(ElemName::WidgetWrapper);
 	//this->registerLayout<TabLayout>(ElemName::Tab);

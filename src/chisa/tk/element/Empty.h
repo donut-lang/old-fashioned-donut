@@ -26,8 +26,8 @@ namespace tk {
 namespace layout {
 class LayoutFactory;
 
-class EmptyLayout : public Element {
-	CHISA_ELEMENT_SUBKLASS_FINAL(EmptyLayout);
+class Empty : public Element {
+	CHISA_ELEMENT_SUBKLASS_FINAL(Empty);
 public:
 	virtual std::weak_ptr<Element> getChildAt(const std::size_t index) const override;
 	virtual std::size_t getChildCount() const override;
