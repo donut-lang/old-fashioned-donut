@@ -66,7 +66,7 @@ TEST_F(HorizontalLayoutTest, EmptyTest)
 {
 	XMLElement* hor = newHorizontalChild(doc, "test");
 	world->InsertFirstChild(hor);
-	LayoutFactory factory(log_trace, weak_ptr<World>(), fname, &doc, false);
+	ElementFactory factory(log_trace, weak_ptr<World>(), fname, &doc, false);
 	shared_ptr<Element> root = factory.parseTree("test");
 	ASSERT_EQ(root->getChildCount(), 0);
 	ASSERT_TRUE(util::startsWith(root->toString(), "(HorizontalLayout"));
@@ -80,7 +80,7 @@ TEST_F(HorizontalLayoutTest, BasicLayoutTest)
 	addHorizontalChild(doc, hor, "empty", 3);
 	addHorizontalChild(doc, hor, "empty", 1);
 
-	LayoutFactory factory(log_trace, weak_ptr<World>(), fname, &doc, false);
+	ElementFactory factory(log_trace, weak_ptr<World>(), fname, &doc, false);
 	shared_ptr<Element> root = factory.parseTree("test");
 
 	root->measure(geom::Box(100, 100));
@@ -109,7 +109,7 @@ TEST_F(HorizontalLayoutTest, MixedTest)
 	addHorizontalChild(doc, hor, "empty", geom::Unspecified, 10, 50);
 	addHorizontalChild(doc, hor, "empty", 1);
 
-	LayoutFactory factory(log_trace, weak_ptr<World>(), fname, &doc, false);
+	ElementFactory factory(log_trace, weak_ptr<World>(), fname, &doc, false);
 	shared_ptr<Element> root = factory.parseTree("test");
 
 	root->measure(geom::Box(100, 100));

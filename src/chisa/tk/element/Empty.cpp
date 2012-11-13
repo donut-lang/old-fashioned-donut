@@ -17,7 +17,7 @@
  */
 
 #include "Empty.h"
-#include "LayoutFactory.h"
+#include "ElementFactory.h"
 #include "../../util/StringUtil.h"
 
 namespace chisa {
@@ -42,7 +42,7 @@ size_t Empty::getChildCount() const
 	return 0;
 }
 
-void Empty::loadXMLimpl(LayoutFactory* const factory, tinyxml2::XMLElement* element)
+void Empty::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElement* element)
 {
 
 }

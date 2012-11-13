@@ -18,7 +18,7 @@
 #pragma once
 #include <memory>
 #include "logging/Logger.h"
-#include "tk/element/LayoutFactory.h"
+#include "tk/element/ElementFactory.h"
 #include "tk/widget/WidgetFactory.h"
 #include "util/FileUtil.h"
 
@@ -41,7 +41,7 @@ public:
 
 public:
 	virtual void registerWidgets(tk::widget::WidgetFactory& factory){};
-	virtual void registerLayouts(tk::element::LayoutFactory& factory){};
+	virtual void registerLayouts(tk::element::ElementFactory& factory){};
 public:
 	virtual std::shared_ptr<WorldGeist> invokeWorldGeist(std::weak_ptr<chisa::tk::World> world, const std::string& nameOfGeist) = 0;
 };

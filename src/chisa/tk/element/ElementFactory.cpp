@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "LayoutFactory.h"
+#include "ElementFactory.h"
 #include "../Element.h"
 #include "../../logging/Exception.h"
 #include <memory>
@@ -37,17 +37,17 @@ using std::string;
 using namespace tinyxml2;
 using namespace logging;
 
-const std::string LayoutFactory::ElemName::World("world");
-const std::string LayoutFactory::ElemName::Vertical("vertical");
-const std::string LayoutFactory::ElemName::Horizontal("horizontal");
-const std::string LayoutFactory::ElemName::Empty("empty");
-const std::string LayoutFactory::ElemName::WidgetWrapper("widget");
-const std::string LayoutFactory::ElemName::Scroll("scroll");
-const std::string LayoutFactory::ElemName::Tab("tab");
+const std::string ElementFactory::ElemName::World("world");
+const std::string ElementFactory::ElemName::Vertical("vertical");
+const std::string ElementFactory::ElemName::Horizontal("horizontal");
+const std::string ElementFactory::ElemName::Empty("empty");
+const std::string ElementFactory::ElemName::WidgetWrapper("widget");
+const std::string ElementFactory::ElemName::Scroll("scroll");
+const std::string ElementFactory::ElemName::Tab("tab");
 
-const std::string LayoutFactory::AttrName::Id("id");
+const std::string ElementFactory::AttrName::Id("id");
 
-LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, const string& filename)
+ElementFactory::ElementFactory(logging::Logger& log, weak_ptr<World> world, const string& filename)
 :log_(log)
 ,world_(world)
 ,filename_(filename)
@@ -65,7 +65,7 @@ LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, const 
 	}
 }
 
-LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, const string& filename, XMLDocument* document, bool doc_free_by_me)
+ElementFactory::ElementFactory(logging::Logger& log, weak_ptr<World> world, const string& filename, XMLDocument* document, bool doc_free_by_me)
 :log_(log)
 ,world_(world)
 ,filename_(filename)
@@ -79,7 +79,7 @@ LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, const 
 	}
 }
 
-LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, const string& filename, const char* buffer, size_t lenb)
+ElementFactory::ElementFactory(logging::Logger& log, weak_ptr<World> world, const string& filename, const char* buffer, size_t lenb)
 :log_(log)
 ,world_(world)
 ,doc_()
@@ -93,7 +93,7 @@ LayoutFactory::LayoutFactory(logging::Logger& log, weak_ptr<World> world, const 
 	this->root_ = doc_->RootElement();
 }
 
-void LayoutFactory::init()
+void ElementFactory::init()
 {
 	this->registerLayout<SplitLayout>(ElemName::Horizontal);
 	this->registerLayout<SplitLayout>(ElemName::Vertical);
@@ -103,7 +103,7 @@ void LayoutFactory::init()
 	//this->registerLayout<TabLayout>(ElemName::Tab);
 }
 
-LayoutFactory::~LayoutFactory()
+ElementFactory::~ElementFactory()
 {
 	if(doc_free_by_me_){
 		delete this->doc_;
@@ -111,12 +111,12 @@ LayoutFactory::~LayoutFactory()
 	this->doc_ = nullptr;
 }
 
-void LayoutFactory::registerLayout(const std::string& layoutName, std::function<shared_ptr<Element>(logging::Logger& log, weak_ptr<World> world, weak_ptr<Element> root, weak_ptr<Element> parent)> constructor)
+void ElementFactory::registerLayout(const std::string& layoutName, std::function<shared_ptr<Element>(logging::Logger& log, weak_ptr<World> world, weak_ptr<Element> root, weak_ptr<Element> parent)> constructor)
 {
 	this->layoutMap_.insert(std::make_pair(layoutName, constructor));
 }
 
-shared_ptr<Element> LayoutFactory::parseTree(weak_ptr<Element> root, weak_ptr<Element> parent, XMLElement* top)
+shared_ptr<Element> ElementFactory::parseTree(weak_ptr<Element> root, weak_ptr<Element> parent, XMLElement* top)
 {
 	const char* name = top->Name();
 	auto it = this->layoutMap_.find(name);
@@ -128,7 +128,7 @@ shared_ptr<Element> LayoutFactory::parseTree(weak_ptr<Element> root, weak_ptr<El
 	return layout;
 }
 
-shared_ptr<Element> LayoutFactory::parseTree(const string& layoutname)
+shared_ptr<Element> ElementFactory::parseTree(const string& layoutname)
 {
 	for(XMLElement* elem = this->root_->FirstChildElement(); elem; elem = elem->NextSiblingElement()){
 		const char* id = elem->Attribute(AttrName::Id.c_str(), nullptr);

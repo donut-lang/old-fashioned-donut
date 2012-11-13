@@ -27,7 +27,7 @@ public:
 	virtual ~Hexe();
 public:
 	virtual void registerWidgets(chisa::tk::widget::WidgetFactory& factory) override;
-	virtual void registerLayouts(chisa::tk::element::LayoutFactory& factory) override;
+	virtual void registerLayouts(chisa::tk::element::ElementFactory& factory) override;
 public:
 	virtual std::shared_ptr<chisa::WorldGeist> invokeWorldGeist(std::weak_ptr<chisa::tk::World> world, const std::string& nameOfGeist) override;
 };

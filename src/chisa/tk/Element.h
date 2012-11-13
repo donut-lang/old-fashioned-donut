@@ -33,7 +33,7 @@ class XMLElement;
 namespace chisa {
 namespace tk {
 namespace element {
-class LayoutFactory;
+class ElementFactory;
 }
 
 class World;
@@ -61,7 +61,7 @@ public:
 	geom::Box measure(const geom::Box& constraint);
 	void layout(const geom::Box& size);
 	virtual string toString() const = 0;
-	void loadXML(element::LayoutFactory* const factory, tinyxml2::XMLElement* const element);
+	void loadXML(element::ElementFactory* const factory, tinyxml2::XMLElement* const element);
 	weak_ptr<Element> getLayoutById(const std::string& id);
 	weak_ptr<Element> getLayoutByPoint(const geom::Vector& screenPoint);
 	virtual void idle(const float delta_ms);
@@ -69,7 +69,7 @@ private:
 	virtual void renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area) = 0;
 	virtual geom::Box onMeasure(const geom::Box& constraint) = 0;
 	virtual void onLayout(const geom::Box& size) = 0;
-	virtual void loadXMLimpl(element::LayoutFactory* const factory, tinyxml2::XMLElement* const element) = 0;
+	virtual void loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) = 0;
 	virtual weak_ptr<Element> getLayoutByIdImpl(const std::string& id) = 0;
 protected:
 	Element(logging::Logger& log, weak_ptr<World> world, weak_ptr<Element> root, weak_ptr<Element> parent);

@@ -36,7 +36,7 @@ private:
 	virtual void renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area) override;
 	virtual geom::Box onMeasure(const geom::Box& constraint) override;
 	virtual void onLayout(const geom::Box& size) override;
-	virtual void loadXMLimpl(element::LayoutFactory* const factory, tinyxml2::XMLElement* const element) override;
+	virtual void loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
 	virtual std::weak_ptr<Element> getLayoutByIdImpl(const std::string& id) override;
 };
 

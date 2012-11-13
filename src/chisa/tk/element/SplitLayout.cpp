@@ -17,7 +17,7 @@
  */
 
 #include "SplitLayout.h"
-#include "LayoutFactory.h"
+#include "ElementFactory.h"
 #include "../../geom/Vector.h"
 
 namespace chisa {
@@ -76,7 +76,7 @@ void SplitLayout::addChild(const SplitDef& def, shared_ptr<Element> layout)
 	this->children().push_back(ctx);
 }
 
-void SplitLayout::loadXMLimpl(LayoutFactory* const factory, tinyxml2::XMLElement* top)
+void SplitLayout::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElement* top)
 {
 	const std::string name(top->Name());
 	if(name == "horizontal"){
