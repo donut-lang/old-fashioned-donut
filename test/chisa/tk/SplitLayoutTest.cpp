@@ -18,8 +18,8 @@
 
 
 #include "../../TestCommon.h"
-#include "../../src/chisa/tk/layout/SplitLayout.h"
-#include "../../src/chisa/tk/layout/LayoutFactory.h"
+#include "../../src/chisa/tk/element/SplitLayout.h"
+#include "../../src/chisa/tk/element/LayoutFactory.h"
 
 namespace chisa {
 namespace tk {
@@ -67,7 +67,7 @@ TEST_F(HorizontalLayoutTest, EmptyTest)
 	XMLElement* hor = newHorizontalChild(doc, "test");
 	world->InsertFirstChild(hor);
 	LayoutFactory factory(log_trace, weak_ptr<World>(), fname, &doc, false);
-	shared_ptr<Layout> root = factory.parseTree("test");
+	shared_ptr<Element> root = factory.parseTree("test");
 	ASSERT_EQ(root->getChildCount(), 0);
 	ASSERT_TRUE(util::startsWith(root->toString(), "(HorizontalLayout"));
 }
@@ -81,7 +81,7 @@ TEST_F(HorizontalLayoutTest, BasicLayoutTest)
 	addHorizontalChild(doc, hor, "empty", 1);
 
 	LayoutFactory factory(log_trace, weak_ptr<World>(), fname, &doc, false);
-	shared_ptr<Layout> root = factory.parseTree("test");
+	shared_ptr<Element> root = factory.parseTree("test");
 
 	root->measure(geom::Box(100, 100));
 	root->layout(geom::Box(100, 100));
@@ -110,7 +110,7 @@ TEST_F(HorizontalLayoutTest, MixedTest)
 	addHorizontalChild(doc, hor, "empty", 1);
 
 	LayoutFactory factory(log_trace, weak_ptr<World>(), fname, &doc, false);
-	shared_ptr<Layout> root = factory.parseTree("test");
+	shared_ptr<Element> root = factory.parseTree("test");
 
 	root->measure(geom::Box(100, 100));
 	root->layout(geom::Box(100, 100));

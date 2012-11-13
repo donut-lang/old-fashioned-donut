@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "EmptyLayout.h"
+#include "Empty.h"
 #include "LayoutFactory.h"
 #include "../../util/StringUtil.h"
 
@@ -24,50 +24,50 @@ namespace chisa {
 namespace tk {
 namespace layout {
 
-CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(EmptyLayout)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(Empty)
 {
 
 }
 
-EmptyLayout::~EmptyLayout() noexcept
+Empty::~Empty() noexcept
 {
 }
 
-weak_ptr<Element> EmptyLayout::getChildAt(const size_t index) const
+weak_ptr<Element> Empty::getChildAt(const size_t index) const
 {
 	return weak_ptr<Element>();
 }
-size_t EmptyLayout::getChildCount() const
+size_t Empty::getChildCount() const
 {
 	return 0;
 }
 
-void EmptyLayout::loadXMLimpl(LayoutFactory* const factory, tinyxml2::XMLElement* element)
+void Empty::loadXMLimpl(LayoutFactory* const factory, tinyxml2::XMLElement* element)
 {
 
 }
 
-string EmptyLayout::toString() const
+string Empty::toString() const
 {
 	return util::format("(EmptyLayout)");
 }
 
-void EmptyLayout::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
+void Empty::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
 {
 	//何も描画しない
 }
 
-geom::Box EmptyLayout::onMeasure(const geom::Box& constraint)
+geom::Box Empty::onMeasure(const geom::Box& constraint)
 {
 	return geom::Box(geom::Unspecified, geom::Unspecified);
 }
 
-void EmptyLayout::onLayout(const geom::Box& size)
+void Empty::onLayout(const geom::Box& size)
 {
 	//何もしない
 }
 
-weak_ptr<Element> EmptyLayout::getLayoutByIdImpl(const std::string& id)
+weak_ptr<Element> Empty::getLayoutByIdImpl(const std::string& id)
 {
 	return weak_ptr<Element>();
 }
