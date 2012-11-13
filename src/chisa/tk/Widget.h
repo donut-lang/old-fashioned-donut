@@ -40,7 +40,7 @@ class WidgetWrapperLayout;
 using std::shared_ptr;
 using std::weak_ptr;
 
-class Layout;
+class Element;
 class World;
 
 class Widget {

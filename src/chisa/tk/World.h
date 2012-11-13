@@ -36,7 +36,7 @@ class XMLDocument;
 namespace chisa {
 
 namespace tk {
-class Layout;
+class Element;
 class Widget;
 class GestureMediator;
 
@@ -58,7 +58,7 @@ private:
 	const weak_ptr<Universe> universe_;
 	DEFINE_MEMBER_CONST(public, std::string, name);
 	TaskHandler taskHandler_;
-	Stack<shared_ptr<Layout> > layoutStack_;
+	Stack<shared_ptr<Element> > layoutStack_;
 	std::map<std::string, layout::WidgetWrapperLayout*> widgetMap_;
 	DEFINE_MEMBER(private, private, geom::Area, area);
 private:
@@ -81,7 +81,7 @@ public:
 	bool deleteWidget(const string& widgetId, layout::WidgetWrapperLayout* const handler);
 	Widget* createWidget(const string& klass, tinyxml2::XMLElement* elem);
 public:
-	weak_ptr<Layout> getLayoutByPoint(const geom::Point& screenVector);
+	weak_ptr<Element> getLayoutByPoint(const geom::Point& screenVector);
 	/******************************************************************************
 	 * タスク管理
 	 ******************************************************************************/

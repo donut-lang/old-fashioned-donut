@@ -16,13 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Layout.h"
+#include "Element.h"
 #include <tinyxml2.h>
 
 namespace chisa {
 namespace tk {
 
-Layout::Layout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent)
+Element::Element(logging::Logger& log, weak_ptr<World> world, weak_ptr<Element> root, weak_ptr<Element> parent)
 :log_(log)
 ,world_(world)
 ,root_(root)
@@ -31,22 +31,22 @@ Layout::Layout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> roo
 
 }
 
-void Layout::init(weak_ptr<Layout> _self)
+void Element::init(weak_ptr<Element> _self)
 {
 	this->self_.swap(_self);
 }
 
-void Layout::idle(const float delta_ms)
+void Element::idle(const float delta_ms)
 {
 	const size_t max = this->getChildCount();
 	for(size_t i=0;i<max;++i){
-		if( shared_ptr<Layout> child = this->getChildAt(i).lock()){
+		if( shared_ptr<Element> child = this->getChildAt(i).lock()){
 			child->idle(delta_ms);
 		}
 	}
 }
 
-void Layout::loadXML(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element)
+void Element::loadXML(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element)
 {
 
 	if(const char* id = element->Attribute("id", nullptr)){
@@ -55,19 +55,19 @@ void Layout::loadXML(layout::LayoutFactory* const factory, tinyxml2::XMLElement*
 	this->loadXMLimpl(factory, element);
 }
 
-weak_ptr<Layout> Layout::getLayoutById(const std::string& id)
+weak_ptr<Element> Element::getLayoutById(const std::string& id)
 {
 	return id == this->id() ? this->self() : this->getLayoutByIdImpl(id);
 }
 
-weak_ptr<Layout> Layout::getLayoutByPoint(const geom::Vector& screenPoint)
+weak_ptr<Element> Element::getLayoutByPoint(const geom::Vector& screenPoint)
 {
 	if(!this->screenArea().contain(screenPoint)){
-		return weak_ptr<Layout>();
+		return weak_ptr<Element>();
 	}
 	const size_t max = this->getChildCount();
 	for(size_t i=0;i<max;++i){
-		if(shared_ptr<Layout> child = this->getChildAt(i).lock()){
+		if(shared_ptr<Element> child = this->getChildAt(i).lock()){
 			if(child->screenArea().contain(screenPoint)){
 				return child->getLayoutByPoint(screenPoint);
 			}
@@ -77,16 +77,16 @@ weak_ptr<Layout> Layout::getLayoutByPoint(const geom::Vector& screenPoint)
 }
 
 
-string Layout::toString() const
+string Element::toString() const
 {
 	return util::format("(Layout %p)", this);
 }
 
-geom::Box Layout::measure(const geom::Box& constraint)
+geom::Box Element::measure(const geom::Box& constraint)
 {
 	return this->onMeasure(constraint);
 }
-void Layout::render(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
+void Element::render(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
 {
 	this->screenArea(screenArea);
 	this->drawnArea(area);
@@ -100,7 +100,7 @@ void Layout::render(gl::Canvas& canvas, const geom::Area& screenArea, const geom
 	this->renderImpl(canvas, screenArea, area);
 }
 
-void Layout::layout(const geom::Box& size)
+void Element::layout(const geom::Box& size)
 {
 	this->onLayout(size);
 	this->size(size);

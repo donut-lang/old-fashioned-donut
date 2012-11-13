@@ -30,7 +30,7 @@ const std::string SplitLayout::AttrName::Max("split-max");
 const std::string SplitLayout::AttrName::Min("split-min");
 
 
-CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(SplitLayout)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(SplitLayout)
 ,splitMode_(Vertical)
 ,totalSize_(geom::Unspecified)
 ,changed_getter(nullptr)
@@ -69,7 +69,7 @@ string SplitLayout::toString() const
 	}
 }
 
-void SplitLayout::addChild(const SplitDef& def, shared_ptr<Layout> layout)
+void SplitLayout::addChild(const SplitDef& def, shared_ptr<Element> layout)
 {
 	shared_ptr<SplitCtx> ctx(new SplitCtx(def));
 	ctx->layout = layout;
@@ -125,13 +125,13 @@ void SplitLayout::resetChildrenLayout()
 	this->totalSize_ = geom::Unspecified;
 }
 
-std::weak_ptr<Layout> SplitLayout::getChildAt(const std::size_t index) const
+std::weak_ptr<Element> SplitLayout::getChildAt(const std::size_t index) const
 {
 	if(index < this->children().size()){
 		shared_ptr<SplitCtx> ctx = this->children_.at(index);
-		return std::weak_ptr<Layout>(ctx->layout);
+		return std::weak_ptr<Element>(ctx->layout);
 	}
-	return std::weak_ptr<Layout>();
+	return std::weak_ptr<Element>();
 }
 std::size_t SplitLayout::getChildCount() const
 {
@@ -246,7 +246,7 @@ geom::Box SplitLayout::onMeasure(const geom::Box& constraint)
 			float leftWeight = totalWeight;
 			float leftSize = limitChangedSize - nonWeightedSizeTotal;
 			for(shared_ptr<SplitCtx> childCtx : this->children()){
-				shared_ptr<Layout> child;
+				shared_ptr<Element> child;
 				const bool weightSpecified = geom::isSpecified(childCtx->weight);
 				if(weightSpecified){
 					//ウェイトがかかっている
@@ -289,15 +289,15 @@ void SplitLayout::onLayout(const geom::Box& size)
 	}
 }
 
-std::weak_ptr<Layout> SplitLayout::getLayoutByIdImpl(const std::string& id)
+std::weak_ptr<Element> SplitLayout::getLayoutByIdImpl(const std::string& id)
 {
 	for(shared_ptr<SplitCtx> childCtx : this->children()){
-		std::weak_ptr<Layout> res = childCtx->layout->getLayoutById(id);
+		std::weak_ptr<Element> res = childCtx->layout->getLayoutById(id);
 		if(!res.expired()){
 			return res;
 		}
 	}
-	return std::weak_ptr<Layout>();
+	return std::weak_ptr<Element>();
 }
 
 

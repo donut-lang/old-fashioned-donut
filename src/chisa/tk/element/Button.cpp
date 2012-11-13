@@ -27,7 +27,7 @@ namespace chisa {
 namespace tk {
 namespace widget {
 
-CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(Button)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(Button)
 ,text_()
 ,textImage_()
 ,vertical_(false)
@@ -39,9 +39,9 @@ Button::~Button() noexcept
 {
 }
 
-weak_ptr<Layout> Button::getChildAt(const size_t index) const
+weak_ptr<Element> Button::getChildAt(const size_t index) const
 {
-	return weak_ptr<Layout>();
+	return weak_ptr<Element>();
 }
 
 size_t Button::getChildCount() const
@@ -100,9 +100,9 @@ void Button::onClick()
 
 }
 
-weak_ptr<Layout> Button::getLayoutByIdImpl(const std::string& id)
+weak_ptr<Element> Button::getLayoutByIdImpl(const std::string& id)
 {
-	return weak_ptr<Layout>();
+	return weak_ptr<Element>();
 }
 
 bool Button::onDownRaw(const float timeMs, const geom::Point& ptInScreen)

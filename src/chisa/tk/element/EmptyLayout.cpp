@@ -24,7 +24,7 @@ namespace chisa {
 namespace tk {
 namespace layout {
 
-CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(EmptyLayout)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(EmptyLayout)
 {
 
 }
@@ -33,9 +33,9 @@ EmptyLayout::~EmptyLayout() noexcept
 {
 }
 
-weak_ptr<Layout> EmptyLayout::getChildAt(const size_t index) const
+weak_ptr<Element> EmptyLayout::getChildAt(const size_t index) const
 {
-	return weak_ptr<Layout>();
+	return weak_ptr<Element>();
 }
 size_t EmptyLayout::getChildCount() const
 {
@@ -67,9 +67,9 @@ void EmptyLayout::onLayout(const geom::Box& size)
 	//何もしない
 }
 
-weak_ptr<Layout> EmptyLayout::getLayoutByIdImpl(const std::string& id)
+weak_ptr<Element> EmptyLayout::getLayoutByIdImpl(const std::string& id)
 {
-	return weak_ptr<Layout>();
+	return weak_ptr<Element>();
 }
 
 }}}

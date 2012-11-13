@@ -23,7 +23,7 @@ namespace tk {
 namespace layout {
 
 
-CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(ScrollLayout)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(ScrollLayout)
 ,scrollMode_(None)
 ,scrollOffset_(0,0)
 ,lastMovedFrom_(0)
@@ -35,12 +35,12 @@ ScrollLayout::~ScrollLayout() noexcept
 {
 }
 
-weak_ptr<Layout> ScrollLayout::getChildAt(const size_t index) const
+weak_ptr<Element> ScrollLayout::getChildAt(const size_t index) const
 {
 	if(index == 0 && this->child_){
 		return this->child_;
 	}else{
-		return weak_ptr<Layout>();
+		return weak_ptr<Element>();
 	}
 }
 
@@ -154,12 +154,12 @@ bool ScrollLayout::onScroll(const float timeMs, const geom::Point& start, const 
 }
 
 
-weak_ptr<Layout> ScrollLayout::getLayoutByIdImpl(const std::string& id)
+weak_ptr<Element> ScrollLayout::getLayoutByIdImpl(const std::string& id)
 {
 	if(this->child_){
 		return this->child_->getLayoutById(id);
 	}else{
-		return weak_ptr<Layout>();
+		return weak_ptr<Element>();
 	}
 }
 

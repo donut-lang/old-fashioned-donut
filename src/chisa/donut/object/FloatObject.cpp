@@ -38,11 +38,6 @@ FloatObject::FloatObject(World* const world)
 :BaseObject(world), val_(NAN)
 {
 	this->store(world, "__proto__", world->objectPrototype());
-	this->store(world, "opAdd", world->create<PureNativeClosure>( std::function<Object*(FloatObject*, Object*)>(
-	[](FloatObject*, Object*)->Object*{
-
-	}
-	)));
 }
 
 std::string FloatObject::toStringImpl() const

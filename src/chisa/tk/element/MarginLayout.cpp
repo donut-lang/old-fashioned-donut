@@ -24,7 +24,7 @@ namespace chisa {
 namespace tk {
 namespace layout {
 
-CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(MarginLayout)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(MarginLayout)
 {
 
 }
@@ -34,9 +34,9 @@ MarginLayout::~MarginLayout() noexcept
 
 }
 
-weak_ptr<Layout> MarginLayout::getChildAt(const size_t index) const
+weak_ptr<Element> MarginLayout::getChildAt(const size_t index) const
 {
-	return index == 0 ? this->child_ : weak_ptr<Layout>();
+	return index == 0 ? this->child_ : weak_ptr<Element>();
 }
 
 size_t MarginLayout::getChildCount() const
@@ -51,7 +51,7 @@ string MarginLayout::toString() const
 
 void MarginLayout::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
 {
-	if( shared_ptr<Layout> child = this->child_.lock() ){
+	if( shared_ptr<Element> child = this->child_.lock() ){
 		child->render(
 			canvas,
 			geom::Area(screenArea.point()+this->margin_.offset(), screenArea.box()-this->margin_.totalSpace()),
@@ -62,7 +62,7 @@ void MarginLayout::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, 
 
 geom::Box MarginLayout::onMeasure(const geom::Box& constraint)
 {
-	if( shared_ptr<Layout> child = this->child_.lock() ){
+	if( shared_ptr<Element> child = this->child_.lock() ){
 		return child->measure( constraint-this->margin_.totalSpace() ) + this->margin_.totalSpace();
 	}
 	return constraint;
@@ -70,7 +70,7 @@ geom::Box MarginLayout::onMeasure(const geom::Box& constraint)
 
 void MarginLayout::onLayout(const geom::Box& size)
 {
-	if( shared_ptr<Layout> child = this->child_.lock() ){
+	if( shared_ptr<Element> child = this->child_.lock() ){
 		child->layout( size-this->margin_.totalSpace() );
 	}
 }
@@ -82,12 +82,12 @@ void MarginLayout::loadXMLimpl(layout::LayoutFactory* const factory, tinyxml2::X
 	factory->parseTree(this->root(), this->self(), element->FirstChildElement());
 }
 
-weak_ptr<Layout> MarginLayout::getLayoutByIdImpl(const std::string& id)
+weak_ptr<Element> MarginLayout::getLayoutByIdImpl(const std::string& id)
 {
-	if( shared_ptr<Layout> child = this->child_.lock() ){
+	if( shared_ptr<Element> child = this->child_.lock() ){
 		return child->getLayoutById(id);
 	}
-	return weak_ptr<Layout>();
+	return weak_ptr<Element>();
 }
 
 }}}

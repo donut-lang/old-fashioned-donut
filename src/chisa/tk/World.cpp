@@ -17,9 +17,9 @@
  */
 
 #include "World.h"
-#include "Layout.h"
-#include "layout/LayoutFactory.h"
-#include "layout/WidgetWrapperLayout.h"
+#include "Element.h"
+#include "element/LayoutFactory.h"
+#include "element/WidgetWrapperLayout.h"
 #include "widget/WidgetFactory.h"
 #include "Universe.h"
 #include "Gesture.h"
@@ -90,20 +90,20 @@ void World::init(weak_ptr<World> _self)
 
 void World::render(gl::Canvas& canvas)
 {
-	if(shared_ptr<Layout> layout = this->layoutStack_.top()){
+	if(shared_ptr<Element> layout = this->layoutStack_.top()){
 		layout->render(canvas, this->area(), geom::Area(0,0,this->area().width(), this->area().height()));
 	}
 }
 void World::idle(const float delta_ms)
 {
-	if(shared_ptr<Layout> layout = this->layoutStack_.top()){
+	if(shared_ptr<Element> layout = this->layoutStack_.top()){
 		layout->idle(delta_ms);
 	}
 	this->taskHandler_.run(delta_ms);
 }
 void World::reshape(const geom::Area& area)
 {
-	if(shared_ptr<Layout> layout = this->layoutStack_.top()){
+	if(shared_ptr<Element> layout = this->layoutStack_.top()){
 		layout->measure(area.box());
 		layout->layout(area.box());
 	}
@@ -112,14 +112,14 @@ void World::reshape(const geom::Area& area)
 
 void World::pushLayout(const string& layoutname)
 {
-	shared_ptr<Layout> l = this->layoutFactory_->parseTree(layoutname);
+	shared_ptr<Element> l = this->layoutFactory_->parseTree(layoutname);
 	this->layoutStack_.push(l);
 }
 
 void World::popLayout()
 {
 	this->layoutStack_.pop();
-	if(shared_ptr<Layout> layout = this->layoutStack_.top()){
+	if(shared_ptr<Element> layout = this->layoutStack_.top()){
 		this->reshape(this->area());
 	}
 }
@@ -134,12 +134,12 @@ void World::unregisterTask(Task* task)
 	this->taskHandler_.unregisterTask(task);
 }
 
-weak_ptr<Layout> World::getLayoutByPoint(const geom::Point& screenPoint)
+weak_ptr<Element> World::getLayoutByPoint(const geom::Point& screenPoint)
 {
-	if(shared_ptr<Layout> layout = this->layoutStack_.top()){
+	if(shared_ptr<Element> layout = this->layoutStack_.top()){
 		return layout->getLayoutByPoint(screenPoint);
 	}
-	return weak_ptr<Layout>();
+	return weak_ptr<Element>();
 }
 
 layout::WidgetWrapperLayout* World::getWidgetById(const std::string& name)

@@ -41,20 +41,20 @@ using std::string;
 using std::weak_ptr;
 using std::size_t;
 
-class Layout : public GestureListener {
-	DISABLE_COPY_AND_ASSIGN(Layout);
+class Element : public GestureListener {
+	DISABLE_COPY_AND_ASSIGN(Element);
 private:
 	DEFINE_MEMBER_REF(protected, logging::Logger, log);
 	DEFINE_MEMBER(protected, private, weak_ptr<World>, world);
-	DEFINE_MEMBER(public, private, weak_ptr<Layout>, root);
-	DEFINE_MEMBER(public, private, weak_ptr<Layout>, parent);
-	DEFINE_MEMBER(protected, private, weak_ptr<Layout>, self);
+	DEFINE_MEMBER(public, private, weak_ptr<Element>, root);
+	DEFINE_MEMBER(public, private, weak_ptr<Element>, parent);
+	DEFINE_MEMBER(protected, private, weak_ptr<Element>, self);
 	DEFINE_MEMBER(public, private, geom::Box, size);
 	DEFINE_MEMBER(public, private, geom::Area, screenArea);
 	DEFINE_MEMBER(protected, private, geom::Area, drawnArea);
 	DEFINE_MEMBER(public, private, std::string, id);
 public:
-	virtual weak_ptr<Layout> getChildAt(const size_t index) const = 0;
+	virtual weak_ptr<Element> getChildAt(const size_t index) const = 0;
 	virtual size_t getChildCount() const = 0;
 public:
 	void render(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area);
@@ -62,28 +62,28 @@ public:
 	void layout(const geom::Box& size);
 	virtual string toString() const = 0;
 	void loadXML(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element);
-	weak_ptr<Layout> getLayoutById(const std::string& id);
-	weak_ptr<Layout> getLayoutByPoint(const geom::Vector& screenPoint);
+	weak_ptr<Element> getLayoutById(const std::string& id);
+	weak_ptr<Element> getLayoutByPoint(const geom::Vector& screenPoint);
 	virtual void idle(const float delta_ms);
 private:
 	virtual void renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area) = 0;
 	virtual geom::Box onMeasure(const geom::Box& constraint) = 0;
 	virtual void onLayout(const geom::Box& size) = 0;
 	virtual void loadXMLimpl(layout::LayoutFactory* const factory, tinyxml2::XMLElement* const element) = 0;
-	virtual weak_ptr<Layout> getLayoutByIdImpl(const std::string& id) = 0;
+	virtual weak_ptr<Element> getLayoutByIdImpl(const std::string& id) = 0;
 protected:
-	Layout(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent);
+	Element(logging::Logger& log, weak_ptr<World> world, weak_ptr<Element> root, weak_ptr<Element> parent);
 private:
-	void init(weak_ptr<Layout> _self);
+	void init(weak_ptr<Element> _self);
 public:
 	template <typename SubKlass>
-	static shared_ptr<SubKlass> create(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent)
+	static shared_ptr<SubKlass> create(logging::Logger& log, weak_ptr<World> world, weak_ptr<Element> root, weak_ptr<Element> parent)
 	{
 		shared_ptr<SubKlass> ptr(new SubKlass(log, world, root, parent));
 		ptr->init(ptr);
 		return ptr;
 	}
-	virtual ~Layout() noexcept = default;
+	virtual ~Element() noexcept = default;
 public:
 	inline static float updateMax(const float a, const float b)
 	{
@@ -96,28 +96,28 @@ public:
 };
 
 
-#define CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_LIST logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent
-#define CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_APPLY log, world, root, parent
+#define CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent
+#define CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_APPLY log, world, root, parent
 
-#define CHISA_LAYOUT_SUBKLASS_FINAL(Klass) \
-friend shared_ptr<Klass> Layout::create<Klass>(CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_LIST);\
+#define CHISA_ELEMENT_SUBKLASS_FINAL(Klass) \
+friend std::shared_ptr<Klass> Element::create<Klass>(CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST);\
 private:\
-	Klass(CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_LIST);\
+	Klass(CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST);\
 public:\
 	virtual ~Klass() noexcept;
 
-#define CHISA_LAYOUT_SUBKLASS(Klass) \
+#define CHISA_ELEMENT_SUBKLASS(Klass) \
 protected:\
-	Klass(CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_LIST);\
+	Klass(CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST);\
 public:\
 	virtual ~Klass() noexcept;
 
-#define CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_SETUP_BASE(Derived) Derived(CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_APPLY)
+#define CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_SETUP_BASE(Derived) Derived(CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_APPLY)
 
-#define CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(Klass, Derived) \
-Klass::Klass(CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_PARAM_LIST)\
-:CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_SETUP_BASE(Derived)
+#define CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(Klass, Derived) \
+Klass::Klass(CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST)\
+:CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_SETUP_BASE(Derived)
 
-#define CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF(Klass) CHISA_LAYOUT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(Klass, Layout)
+#define CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(Klass) CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(Klass, Element)
 
 }}

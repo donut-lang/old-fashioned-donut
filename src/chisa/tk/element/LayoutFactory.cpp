@@ -17,7 +17,7 @@
  */
 
 #include "LayoutFactory.h"
-#include "../Layout.h"
+#include "../Element.h"
 #include "../../logging/Exception.h"
 #include <memory>
 #include <tinyxml2.h>
@@ -111,29 +111,29 @@ LayoutFactory::~LayoutFactory()
 	this->doc_ = nullptr;
 }
 
-void LayoutFactory::registerLayout(const std::string& layoutName, std::function<shared_ptr<Layout>(logging::Logger& log, weak_ptr<World> world, weak_ptr<Layout> root, weak_ptr<Layout> parent)> constructor)
+void LayoutFactory::registerLayout(const std::string& layoutName, std::function<shared_ptr<Element>(logging::Logger& log, weak_ptr<World> world, weak_ptr<Element> root, weak_ptr<Element> parent)> constructor)
 {
 	this->layoutMap_.insert(std::make_pair(layoutName, constructor));
 }
 
-shared_ptr<Layout> LayoutFactory::parseTree(weak_ptr<Layout> root, weak_ptr<Layout> parent, XMLElement* top)
+shared_ptr<Element> LayoutFactory::parseTree(weak_ptr<Element> root, weak_ptr<Element> parent, XMLElement* top)
 {
 	const char* name = top->Name();
 	auto it = this->layoutMap_.find(name);
 	if(this->layoutMap_.end() == it){
 		throw logging::Exception(__FILE__,__LINE__, "Unknwon Layout: %s", name);
 	}
-	shared_ptr<Layout> layout(it->second(this->log(), this->world(), root, parent));
+	shared_ptr<Element> layout(it->second(this->log(), this->world(), root, parent));
 	layout->loadXML(this, top);
 	return layout;
 }
 
-shared_ptr<Layout> LayoutFactory::parseTree(const string& layoutname)
+shared_ptr<Element> LayoutFactory::parseTree(const string& layoutname)
 {
 	for(XMLElement* elem = this->root_->FirstChildElement(); elem; elem = elem->NextSiblingElement()){
 		const char* id = elem->Attribute(AttrName::Id.c_str(), nullptr);
 		if(id && layoutname == id){
-			return this->parseTree(weak_ptr<Layout>(), weak_ptr<Layout>(), elem);
+			return this->parseTree(weak_ptr<Element>(), weak_ptr<Element>(), elem);
 		}
 	}
 	throw logging::Exception(__FILE__, __LINE__, "Layout \"%s\" not found in %s", layoutname.c_str(), this->filename_.c_str());
