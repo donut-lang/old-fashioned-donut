@@ -16,47 +16,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Empty.h"
-#include "ElementFactory.h"
-#include "../../util/StringUtil.h"
+#include "LeafElement.h"
 
 namespace chisa {
 namespace tk {
 namespace element {
 
-CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(Empty, LeafElement)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(LeafElement)
 {
 
 }
 
-Empty::~Empty() noexcept
-{
-}
-
-
-void Empty::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElement* element)
+LeafElement::~LeafElement() noexcept
 {
 
 }
 
-string Empty::toString() const
+weak_ptr<Element> LeafElement::getChildAt(const size_t index) const
 {
-	return util::format("(Empty %p)",this);
+	return weak_ptr<Element>();
+}
+size_t LeafElement::getChildCount() const
+{
+	return 0;
+}
+weak_ptr<Element> LeafElement::getElementByIdImpl(const std::string& id)
+{
+	return weak_ptr<Element>();
 }
 
-void Empty::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
-{
-	//何も描画しない
-}
-
-geom::Box Empty::onMeasure(const geom::Box& constraint)
-{
-	return geom::Box(geom::Unspecified, geom::Unspecified);
-}
-
-void Empty::onLayout(const geom::Box& size)
-{
-	//何もしない
-}
 
 }}}

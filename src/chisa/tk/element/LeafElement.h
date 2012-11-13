@@ -17,25 +17,27 @@
  */
 
 #pragma once
-#include <memory>
-#include <tinyxml2.h>
+
 #include "../Element.h"
-#include "LeafElement.h"
 
 namespace chisa {
 namespace tk {
 namespace element {
-class ElementFactory;
 
-class Empty : public LeafElement {
-	CHISA_ELEMENT_SUBKLASS_FINAL(Empty);
+class LeafElement: public chisa::tk::Element {
+	CHISA_ELEMENT_SUBKLASS(LeafElement);
 public:
-	virtual std::string toString() const override;
+	virtual std::weak_ptr<Element> getChildAt(const std::size_t index) const override;
+	virtual std::size_t getChildCount() const override;
+	virtual std::weak_ptr<Element> getElementByIdImpl(const std::string& id) override;
+public:
+	virtual std::string toString() const override = 0;
 private:
-	virtual void renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area) override;
-	virtual geom::Box onMeasure(const geom::Box& constraint) override;
-	virtual void onLayout(const geom::Box& size) override;
-	virtual void loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
+	virtual void renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area) override = 0;
+	virtual geom::Box onMeasure(const geom::Box& constraint) override = 0;
+	virtual void onLayout(const geom::Box& size) override = 0;
+	virtual void loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override = 0;
 };
 
 }}}
+

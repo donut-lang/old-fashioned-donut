@@ -18,16 +18,17 @@
 
 #pragma once
 
-#include "../Element.h"
 #include <memory>
 #include <tinyxml2.h>
+#include "../Element.h"
+#include "LeafElement.h"
 
 namespace chisa {
 namespace tk {
 namespace element {
 class ElementFactory;
 
-class WidgetElement: public chisa::tk::Element {
+class WidgetElement: public LeafElement {
 	CHISA_ELEMENT_SUBKLASS_FINAL(WidgetElement);
 public:
 	enum FitMode {
