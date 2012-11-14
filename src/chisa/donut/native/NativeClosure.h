@@ -17,23 +17,25 @@
  */
 
 #pragma once
-#include "Bind.h"
-#include "../object/Object.h"
+#include "../object/ObjectBase.h"
+#include "../native/Bind.h"
 
 namespace chisa {
 namespace donut {
 
-class PureNativeClosure : public Object {
+class NativeClosure : public Object {
 private:
 	World* world_;
-	std::function<Handler<Object>(Handler<Object> self, Handler<BaseObject> arg)> func_;
+	std::string const objectProviderName_;
+	std::string const closureName_;
 public:
-	template <typename R, typename... Args>
-	PureNativeClosure(World* const world, std::function<R(Args... args)> func)
-	:world_(world), func_( native::createBind(func) ){};
-	virtual ~PureNativeClosure() noexcept {}
+	NativeClosure(World* const world, std::string objectProviderName, std::string closureName)
+	:world_(world), objectProviderName_(objectProviderName),closureName_(closureName) {};
+	virtual ~NativeClosure() noexcept = default;
+	std::string objectProviderName() const noexcept { return this->objectProviderName_; };
+	std::string closureName() const noexcept { return this->closureName_; };
+	World* world() { return world_; }
 public:
-	Handler<Object> apply(Handler<Object> self, Handler<BaseObject> arg){ return func_(self,arg); }
 	virtual std::string toStringImpl() const override;
 	virtual int toIntImpl() const override;
 	virtual float toFloatImpl() const override;
@@ -42,6 +44,18 @@ public:
 	virtual bool haveOwnImpl(const std::string& name) const override;
 	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) override;
 	virtual Handler<Object> loadImpl(const std::string& name) const override;
+};
+
+class PureNativeClosure : public Object {
+private:
+	std::function<Handler<Object>(Handler<Object> self, Handler<BaseObject> arg)> func_;
+public:
+	template <typename R, typename... Args>
+	PureNativeClosure(World* const world, std::string objectProviderName, std::string closureName, std::function<R(Args... args)> func)
+	:NativeClosure(world, objectProviderName, closureName),func_( native::createBind(func) ){};
+	virtual ~PureNativeClosure() noexcept {}
+public:
+	Handler<Object> apply(Handler<Object> self, Handler<BaseObject> arg){ return func_(self,arg); }
 };
 
 }}

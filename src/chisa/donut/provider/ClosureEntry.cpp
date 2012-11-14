@@ -16,11 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "NativeClosure.h"
+#include "ClosureEntry.h"
+#include "../native/NativeClosure.h"
 
 namespace chisa {
 namespace donut {
 
-const std::string TAG("PureNativeClosure");
+ClosureEntry::ClosureEntry()
+{
+}
+
+PureClosureEntry::PureClosureEntry(PureClosureEntry::Signature func)
+:func_(func)
+{
+}
+
+Handler<Object> PureClosureEntry::createObject( World* const world )
+{
+	return world->create<PureNativeClosure>(this->func_);
+}
 
 }}

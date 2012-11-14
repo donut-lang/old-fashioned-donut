@@ -158,6 +158,22 @@ Handler<Object> Object::load(World* const world, const std::string& name) const
 	}
 }
 
+std::string Object::providerName() const
+{
+	switch(this->tag()){
+	case Tag::Obj:
+		return "OBJECT"; //XXX
+	case Tag::Int:
+		return "__native_int__";
+	case Tag::Bool:
+		return "__native_bool__";
+	case Tag::Null:
+		return "__native_null__";
+	default:
+		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
+	}
+}
+
 
 Handler<Object> Object::store(World* const pool, const int& idx, Handler<Object> obj)
 {
