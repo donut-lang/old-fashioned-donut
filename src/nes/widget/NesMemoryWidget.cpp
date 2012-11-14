@@ -10,6 +10,7 @@
 #include "../NesGeist.h"
 #include "../../chisa/geom/Vector.h"
 #include "../../chisa/geom/Area.h"
+#include "../../chisa/gl/DrawableManager.h"
 
 namespace nes {
 namespace widget {
@@ -20,6 +21,9 @@ NesMemoryWidget::NesMemoryWidget(chisa::logging::Logger& log, std::weak_ptr<chis
 	std::shared_ptr<chisa::tk::World> world(_world.lock());
 	std::shared_ptr<nes::NesGeist> geist(std::dynamic_pointer_cast<nes::NesGeist>(world->geist()));
 	this->geist_ = geist;
+	chisa::Handler<chisa::gl::DrawableManager> mgr = world->drawableManager();
+	chisa::Handler<chisa::gl::Font> font = mgr->queryFont();
+	chisa::gl::Font::RawFaceSession s(font);
 }
 
 NesMemoryWidget::~NesMemoryWidget()
