@@ -62,7 +62,7 @@ public:
 	Handler<Sprite> queryRawSprite(const int width, const int height);
 	Handler<Sprite> queryImage(const std::string& filename);
 	Handler<Drawable> queryDrawable(const std::string& repl, const geom::Box& box=geom::Box());
-	Handler<Font> queryFont( const std::string& name );
+	Handler<Font> queryFont( const std::string& name = std::string() );
 	Handler<TextDrawable> queryText(
 			const std::string& str,
 			const float size=TextDrawable::DefaultFontSize,
