@@ -25,11 +25,11 @@ namespace donut {
 
 class ClosureEntry : public HandlerBody<ClosureEntry> {
 public:
-	ClosureEntry();
+	ClosureEntry() = default;
 	virtual ~ClosureEntry() noexcept = default;
 public:
 	void onFree() noexcept { delete this; }
-	virtual Handler<Object> createObject( World* const world ) = 0;
+	virtual Handler<Object> createObject( World* const world, const std::string& objectProviderName, const std::string& closureName ) = 0;
 };
 
 //-----------------------------------------------------------------------------
@@ -42,7 +42,7 @@ private:
 public:
 	PureClosureEntry(PureClosureEntry::Signature func);
 	virtual ~PureClosureEntry() noexcept {};
-	virtual Handler<Object> createObject( World* const world ) override;
+	virtual Handler<Object> createObject( World* const world, const std::string& objectProviderName, const std::string& closureName ) override;
 };
 
 }}

@@ -25,9 +25,9 @@ World::World(logging::Logger& log, Handler<Code> code)
 :log_(log)
 ,code_(code)
 ,generation_(0)
-,boolProxy_(this)
-,intProxy_(this)
-,nullProxy_(this)
+,boolProvider_()
+,intProvider_()
+,nullProvider_()
 ,floatProto_()
 ,stringProto_()
 {
@@ -60,15 +60,15 @@ Handler<FloatObject> World::create<FloatObject>(float const& val)
 
 Handler<Object> World::createInt(const int& val)
 {
-	return Handler<Object>(IntProxy::toPointer(val));
+	return Handler<Object>(IntProvider::toPointer(val));
 }
 Handler<Object> World::createBool(const bool& val)
 {
-	return Handler<Object>(BoolProxy::toPointer(val));
+	return Handler<Object>(BoolProvider::toPointer(val));
 }
 Handler<Object> World::createNull()
 {
-	return Handler<Object>(NullProxy::toPointer());
+	return Handler<Object>(NullProvider::toPointer());
 }
 
 }}

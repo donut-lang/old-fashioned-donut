@@ -22,7 +22,7 @@
 #include "../../Handler.h"
 #include "../code/Code.h"
 #include "Object.h"
-#include "proxy/Proxy.h"
+#include "../provider/PrimitiveProvider.h"
 
 namespace chisa {
 namespace donut {
@@ -34,9 +34,9 @@ private:
 private:
 	unsigned int generation_;
 private:
-	BoolProxy boolProxy_;
-	IntProxy intProxy_;
-	NullProxy nullProxy_;
+	BoolProvider boolProvider_;
+	IntProvider intProvider_;
+	NullProvider nullProvider_;
 private:
 	Handler<BaseObject> globalObject_;
 	Handler<BaseObject> objectProto_;
@@ -47,9 +47,9 @@ public:
 	virtual ~World() noexcept = default;
 public:
 	unsigned int nextGeneration();
-	BoolProxy& boolProxy() {return boolProxy_;};
-	IntProxy& intProxy() {return intProxy_;};
-	NullProxy& nullProxy() {return nullProxy_;};
+	BoolProvider& boolProvider() {return boolProvider_;};
+	IntProvider& intProvider() {return intProvider_;};
+	NullProvider& nullProvider() {return nullProvider_;};
 	Handler<Code> code() { return this->code_; }
 	Handler<BaseObject> global() { return this->globalObject_; }
 	Handler<BaseObject> objectPrototype() { return this->objectProto_; };

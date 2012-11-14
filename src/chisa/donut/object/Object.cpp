@@ -19,6 +19,7 @@
 #include "World.h"
 #include "ObjectBase.h"
 #include "../Exception.h"
+#include "../../util/StringUtil.h"
 
 namespace chisa {
 namespace donut {
@@ -36,11 +37,11 @@ std::string Object::toString(World* const world) const
 	case Tag::Obj:
 		return this->toStringImpl();
 	case Tag::Int:
-		return world->intProxy().toString(this);
+		return world->intProvider().toString(world, this);
 	case Tag::Bool:
-		return world->boolProxy().toString(this);
+		return world->boolProvider().toString(world, this);
 	case Tag::Null:
-		return world->nullProxy().toString(this);
+		return world->nullProvider().toString(world, this);
 	default:
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
@@ -52,11 +53,11 @@ int Object::toInt(World* const world) const
 	case Tag::Obj:
 		return this->toIntImpl();
 	case Tag::Int:
-		return world->intProxy().toInt(this);
+		return world->intProvider().toInt(world, this);
 	case Tag::Bool:
-		return world->boolProxy().toInt(this);
+		return world->boolProvider().toInt(world, this);
 	case Tag::Null:
-		return world->nullProxy().toInt(this);
+		return world->nullProvider().toInt(world, this);
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
@@ -68,11 +69,11 @@ float Object::toFloat(World* const world) const
 	case Tag::Obj:
 		return this->toFloatImpl();
 	case Tag::Int:
-		return world->intProxy().toFloat(this);
+		return world->intProvider().toFloat(world, this);
 	case Tag::Bool:
-		return world->boolProxy().toFloat(this);
+		return world->boolProvider().toFloat(world, this);
 	case Tag::Null:
-		return world->nullProxy().toFloat(this);
+		return world->nullProvider().toFloat(world, this);
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
@@ -84,11 +85,11 @@ bool Object::toBool(World* const world) const
 	case Tag::Obj:
 		return this->toBoolImpl();
 	case Tag::Int:
-		return world->intProxy().toBool(this);
+		return world->intProvider().toBool(world, this);
 	case Tag::Bool:
-		return world->boolProxy().toBool(this);
+		return world->boolProvider().toBool(world, this);
 	case Tag::Null:
-		return world->nullProxy().toBool(this);
+		return world->nullProvider().toBool(world, this);
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
@@ -100,11 +101,11 @@ bool Object::have(World* const world, const std::string& name) const
 	case Tag::Obj:
 		return this->haveImpl(name);
 	case Tag::Int:
-		return world->intProxy().have(this, name);
+		return world->intProvider().have(world, this, name);
 	case Tag::Bool:
-		return world->boolProxy().have(this, name);
+		return world->boolProvider().have(world, this, name);
 	case Tag::Null:
-		return world->nullProxy().have(this, name);
+		return world->nullProvider().have(world, this, name);
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
@@ -116,11 +117,11 @@ bool Object::haveOwn(World* const world, const std::string& name) const
 	case Tag::Obj:
 		return this->haveOwnImpl(name);
 	case Tag::Int:
-		return world->intProxy().haveOwn(this, name);
+		return world->intProvider().haveOwn(world, this, name);
 	case Tag::Bool:
-		return world->boolProxy().haveOwn(this, name);
+		return world->boolProvider().haveOwn(world, this, name);
 	case Tag::Null:
-		return world->nullProxy().haveOwn(this, name);
+		return world->nullProvider().haveOwn(world, this, name);
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
@@ -132,11 +133,11 @@ Handler<Object> Object::store(World* const world, const std::string& name, Handl
 	case Tag::Obj:
 		return this->storeImpl(name, obj);
 	case Tag::Int:
-		return world->intProxy().store(this, name, obj);
+		return world->intProvider().store(world, this, name, obj);
 	case Tag::Bool:
-		return world->boolProxy().store(this, name, obj);
+		return world->boolProvider().store(world, this, name, obj);
 	case Tag::Null:
-		return world->nullProxy().store(this, name, obj);
+		return world->nullProvider().store(world, this, name, obj);
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
@@ -148,27 +149,27 @@ Handler<Object> Object::load(World* const world, const std::string& name) const
 	case Tag::Obj:
 		return this->loadImpl(name);
 	case Tag::Int:
-		return world->intProxy().load(this, name);
+		return world->intProvider().load(world, this, name);
 	case Tag::Bool:
-		return world->boolProxy().load(this, name);
+		return world->boolProvider().load(world, this, name);
 	case Tag::Null:
-		return world->nullProxy().load(this, name);
+		return world->nullProvider().load(world, this, name);
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
 }
 
-std::string Object::providerName() const
+std::string Object::providerName(World* const world) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
 		return "OBJECT"; //XXX
 	case Tag::Int:
-		return "__native_int__";
+		return world->intProvider().name();
 	case Tag::Bool:
-		return "__native_bool__";
+		return world->boolProvider().name();
 	case Tag::Null:
-		return "__native_null__";
+		return world->nullProvider().name();
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}

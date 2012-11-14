@@ -19,6 +19,7 @@
 #include "Machine.h"
 #include "../Exception.h"
 #include "../../util/StringUtil.h"
+#include "../native/NativeClosure.h"
 
 namespace chisa {
 namespace donut {
