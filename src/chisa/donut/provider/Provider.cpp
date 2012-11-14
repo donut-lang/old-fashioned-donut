@@ -25,16 +25,16 @@
 namespace chisa {
 namespace donut {
 
-Provider::Provider( const std::string& name )
-:name_(name)
+Provider::Provider( World* const world, const std::string& name )
+:world_(world), name_(name)
 {
 
 }
 
 //-----------------------------------------------------------------------------
 
-ObjectProvider::ObjectProvider( const std::string& name )
-:Provider(name)
+ObjectProvider::ObjectProvider( World* const world, const std::string& name )
+:Provider(world, name)
 {
 
 }
@@ -60,9 +60,14 @@ bool ObjectProvider::haveClosure( const std::string& name )
 }
 
 
+Handler<BaseObject> ObjectProvider::createPrototype( Handler<Object> ptoro )
+{
+
+}
+
 //-----------------------------------------------------------------------------
 
-tinyxml2::XMLElement* ClosureProvider::serialize( World* world, tinyxml2::XMLDocument* doc, Handler<Object> obj_ )
+tinyxml2::XMLElement* ClosureProvider::serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj_ )
 {
 	Handler<NativeClosure> obj = obj_.cast<NativeClosure>();
 	tinyxml2::XMLElement* elm = doc->NewElement("clos");
@@ -70,7 +75,7 @@ tinyxml2::XMLElement* ClosureProvider::serialize( World* world, tinyxml2::XMLDoc
 	elm->SetAttribute("closureName", obj->closureName().c_str());
 	return elm;
 }
-Handler<Object> ClosureProvider::deserialize( World* world, tinyxml2::XMLElement* xml )
+Handler<Object> ClosureProvider::deserialize( tinyxml2::XMLElement* xml )
 {
 	if( std::string("clos") != xml->Name() ){
 		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. wrong element name: %s != \"clos\"", xml->Name());
@@ -94,7 +99,7 @@ Handler<Object> ClosureProvider::deserialize( World* world, tinyxml2::XMLElement
 	if( !objProvider->haveClosure(closureName) ){
 		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. %s does not have closure: %s", objectProviderName.c_str(), closureName.c_str());
 	}
-	return objProvider->getClosure(closureName)->createObject( world, objectProviderName, closureName );
+	return objProvider->getClosure(closureName)->createObject( world(), objectProviderName, closureName );
 }
 
 }}

@@ -26,8 +26,9 @@ namespace donut {
 
 static const std::string TAG("BaseObject");
 
-BaseObject::BaseObject(World* world)
+BaseObject::BaseObject(World* world, const std::string& providerName)
 :world_(world)
+,providerName_(providerName)
 {
 
 }
@@ -35,6 +36,11 @@ BaseObject::BaseObject(World* world)
 std::string BaseObject::toStringImpl() const
 {
 	return util::format("(BaseObject %p)", this);
+}
+
+std::string BaseObject::providerNameImpl() const
+{
+	return this->providerName_;
 }
 
 int BaseObject::toIntImpl() const

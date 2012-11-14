@@ -32,16 +32,18 @@ class ProviderManager;
 
 class Provider : public HandlerBody<Provider> {
 private:
+	World* const world_;
 	std::string const name_;
 public:
-	Provider( const std::string& name );
+	Provider( World* const world, const std::string& name );
 	virtual ~Provider() noexcept = default;
 public:
 	inline void onFree() noexcept { delete this; }
 	inline std::string name() const noexcept { return this->name_; };
+	inline World* world() const noexcept { return this->world_; };
 public:
-	virtual tinyxml2::XMLElement* serialize( World* world, tinyxml2::XMLDocument* doc, Handler<Object> obj ) = 0;
-	virtual Handler<Object> deserialize( World* world, tinyxml2::XMLElement* xml ) = 0;
+	virtual tinyxml2::XMLElement* serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj ) = 0;
+	virtual Handler<Object> deserialize( tinyxml2::XMLElement* xml ) = 0;
 };
 
 //-----------------------------------------------------------------------------
@@ -50,13 +52,14 @@ class ObjectProvider : public Provider {
 private:
 	std::map<std::string, Handler<ClosureEntry> > closureEntry_;
 public:
-	ObjectProvider( const std::string& name );
+	ObjectProvider( World* const world, const std::string& name );
 	virtual ~ObjectProvider() noexcept = default;
 protected:
 	void registerPureNativeClosure( const std::string& name, PureClosureEntry::Signature func );
 public:
 	Handler<ClosureEntry> getClosure( const std::string& name );
 	bool haveClosure( const std::string& name );
+	Handler<BaseObject> createPrototype( Handler<Object> ptoro );
 };
 
 //-----------------------------------------------------------------------------
@@ -65,11 +68,11 @@ class ClosureProvider : public Provider {
 private:
 	HandlerW<ProviderManager> manager_;
 public:
-	ClosureProvider(HandlerW<ProviderManager> mgr):Provider("__native_closure__"),manager_(mgr){};
+	ClosureProvider(World* const world, HandlerW<ProviderManager> mgr):Provider(world, "__native_closure__"),manager_(mgr){};
 	virtual ~ClosureProvider() noexcept = default;
 public:
-	virtual tinyxml2::XMLElement* serialize( World* world, tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
-	virtual Handler<Object> deserialize( World* world, tinyxml2::XMLElement* xml ) override;
+	virtual tinyxml2::XMLElement* serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
+	virtual Handler<Object> deserialize( tinyxml2::XMLElement* xml ) override;
 };
 
 }}

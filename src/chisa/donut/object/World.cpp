@@ -25,15 +25,18 @@ World::World(logging::Logger& log, Handler<Code> code)
 :log_(log)
 ,code_(code)
 ,generation_(0)
-,boolProvider_()
-,intProvider_()
-,nullProvider_()
-,floatProto_()
-,stringProto_()
+,boolProvider_(this)
+,intProvider_(this)
+,nullProvider_(this)
 {
+
 	this->globalObject_ = Handler<BaseObject>( new BaseObject(this) );
 	this->objectProto_ = Handler<BaseObject>( new BaseObject(this) );
-	this->globalObject_->store(this, "Object", objectProto_);
+
+	this->intProto_ = this->intProvider().createPrototype( this->objectProto_ );
+	this->boolProto_ = this->boolProvider().createPrototype( this->objectProto_ );
+	this->nullProto_ = this->nullProvider().createPrototype( this->objectProto_ );
+this->globalObject_->store(this, "Object", objectProto_);
 
 	this->floatProto_ = Handler<FloatObject>( new FloatObject(this) );
 	this->stringProto_ = Handler<StringObject>( new StringObject(this) );
@@ -44,31 +47,6 @@ World::World(logging::Logger& log, Handler<Code> code)
 unsigned int World::nextGeneration()
 {
 	return ++this->generation_;
-}
-
-template <>
-Handler<StringObject> World::create<StringObject>(std::string const& val)
-{
-
-}
-
-template <>
-Handler<FloatObject> World::create<FloatObject>(float const& val)
-{
-
-}
-
-Handler<Object> World::createInt(const int& val)
-{
-	return Handler<Object>(IntProvider::toPointer(val));
-}
-Handler<Object> World::createBool(const bool& val)
-{
-	return Handler<Object>(BoolProvider::toPointer(val));
-}
-Handler<Object> World::createNull()
-{
-	return Handler<Object>(NullProvider::toPointer());
 }
 
 }}

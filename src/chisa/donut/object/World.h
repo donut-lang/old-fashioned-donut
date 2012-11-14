@@ -40,6 +40,9 @@ private:
 private:
 	Handler<BaseObject> globalObject_;
 	Handler<BaseObject> objectProto_;
+	Handler<Object> boolProto_;
+	Handler<Object> intProto_;
+	Handler<Object> nullProto_;
 	Handler<FloatObject> floatProto_;
 	Handler<StringObject> stringProto_;
 public:
@@ -47,25 +50,18 @@ public:
 	virtual ~World() noexcept = default;
 public:
 	unsigned int nextGeneration();
+
 	BoolProvider& boolProvider() {return boolProvider_;};
 	IntProvider& intProvider() {return intProvider_;};
 	NullProvider& nullProvider() {return nullProvider_;};
+
+	Handler<Object> boolProto() {return boolProto_;};
+	Handler<Object> intProto() {return intProto_;};
+	Handler<Object> nullProto() {return nullProto_;};
+
 	Handler<Code> code() { return this->code_; }
 	Handler<BaseObject> global() { return this->globalObject_; }
-	Handler<BaseObject> objectPrototype() { return this->objectProto_; };
-public:
-	template <typename T, typename... Args>
-	Handler<T> create(Args... args)
-	{
-		Handler<T> obj(new T(this, args...));
-		return obj;
-	}
-	Handler<Object> createInt(const int& val);
-	Handler<Object> createBool(const bool& val);
-	Handler<Object> createNull();
+	Handler<BaseObject> objectProto() { return this->objectProto_; };
 };
-
-template <> Handler<StringObject> World::create<StringObject>(std::string const& val);
-template <> Handler<FloatObject> World::create<FloatObject>(float const& val);
 
 }}

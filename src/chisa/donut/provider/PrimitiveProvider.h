@@ -24,7 +24,7 @@ namespace donut {
 
 class IntProvider : public ObjectProvider {
 public:
-	IntProvider();
+	IntProvider(World* world);
 	virtual ~IntProvider() noexcept = default;
 public:
 	static inline int fromPointer(const Object* const ptr) noexcept {
@@ -34,21 +34,17 @@ public:
 		return reinterpret_cast<Object*>((val << 2) | Object::Tag::Int);
 	}
 public:
-	std::string toString(World* world, const Object* ptr) const;
-	int toInt(World* world, const Object* ptr) const;
-	float toFloat(World* world, const Object* ptr) const;
-	bool toBool(World* world, const Object* ptr) const;
-	Handler<Object> store(World* world, const Object* ptr, const std::string& name, Handler<Object> obj);
-	bool have(World* world, const Object* ptr, const std::string& name) const;
-	bool haveOwn(World* world, const Object* ptr, const std::string& name) const;
-	Handler<Object> load(World* world, const Object* ptr, const std::string& name);
-	virtual tinyxml2::XMLElement* serialize( World* world, tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
-	virtual Handler<Object> deserialize( World* world, tinyxml2::XMLElement* xml ) override;
+	std::string toString(const Object* ptr) const;
+	int toInt(const Object* ptr) const;
+	float toFloat(const Object* ptr) const;
+	bool toBool(const Object* ptr) const;
+	virtual tinyxml2::XMLElement* serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
+	virtual Handler<Object> deserialize( tinyxml2::XMLElement* xml ) override;
 };
 
 class BoolProvider : public ObjectProvider {
 public:
-	BoolProvider();
+	BoolProvider(World* world);
 	virtual ~BoolProvider() noexcept = default;
 public:
 	static inline int fromPointer(const Object* const ptr) noexcept {
@@ -58,37 +54,29 @@ public:
 		return reinterpret_cast<Object*>((val << 2) | Object::Tag::Int);
 	}
 public:
-	std::string toString(World* world, const Object* ptr) const;
-	int toInt(World* world, const Object* ptr) const;
-	float toFloat(World* world, const Object* ptr) const;
-	bool toBool(World* world, const Object* ptr) const;
-	Handler<Object> store(World* world, const Object* ptr, const std::string& name, Handler<Object> obj);
-	bool have(World* world, const Object* ptr, const std::string& name) const;
-	bool haveOwn(World* world, const Object* ptr, const std::string& name) const;
-	Handler<Object> load(World* world, const Object* ptr, const std::string& name);
-	virtual tinyxml2::XMLElement* serialize( World* world, tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
-	virtual Handler<Object> deserialize( World* world, tinyxml2::XMLElement* xml ) override;
+	std::string toString(const Object* ptr) const;
+	int toInt(const Object* ptr) const;
+	float toFloat(const Object* ptr) const;
+	bool toBool(const Object* ptr) const;
+	virtual tinyxml2::XMLElement* serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
+	virtual Handler<Object> deserialize( tinyxml2::XMLElement* xml ) override;
 };
 
 class NullProvider : public ObjectProvider {
 public:
-	NullProvider();
+	NullProvider(World* world);
 	virtual ~NullProvider() noexcept = default;
 public:
 	static inline Object* toPointer() noexcept {
 		return reinterpret_cast<Object*>(Object::Tag::Null);
 	}
 public:
-	std::string toString(World* world, const Object* ptr) const;
-	int toInt(World* world, const Object* ptr) const;
-	float toFloat(World* world, const Object* ptr) const;
-	bool toBool(World* world, const Object* ptr) const;
-	Handler<Object> store(World* world, const Object* ptr, const std::string& name, Handler<Object> obj);
-	bool have(World* world, const Object* ptr, const std::string& name) const;
-	bool haveOwn(World* world, const Object* ptr, const std::string& name) const;
-	Handler<Object> load(World* world, const Object* ptr, const std::string& name);
-	virtual tinyxml2::XMLElement* serialize( World* world, tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
-	virtual Handler<Object> deserialize( World* world, tinyxml2::XMLElement* xml ) override;
+	std::string toString(const Object* ptr) const;
+	int toInt(const Object* ptr) const;
+	float toFloat(const Object* ptr) const;
+	bool toBool(const Object* ptr) const;
+	virtual tinyxml2::XMLElement* serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
+	virtual Handler<Object> deserialize( tinyxml2::XMLElement* xml ) override;
 };
 
 

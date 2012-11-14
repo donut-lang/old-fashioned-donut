@@ -62,6 +62,7 @@ protected:
 	virtual bool haveOwnImpl(const std::string& name) const = 0;
 	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) = 0;
 	virtual Handler<Object> loadImpl(const std::string& name) const = 0;
+	virtual std::string providerNameImpl() const = 0;
 public:
 	inline bool isObject() const noexcept { return Tag::Obj==tag(); };
 	inline bool isNull() const noexcept { return Tag::Null==tag(); };
@@ -76,14 +77,16 @@ public:
 class BaseObject : public Object {
 private:
 	World* const world_;
+	std::string const providerName_;
 	std::map<std::string, Slot> slots_;
 public:
-	BaseObject(World* const world);
+	BaseObject(World* const world, const std::string& providerName);
 	virtual ~BaseObject() noexcept = default;
 public:
 	World* world() const noexcept { return this->world_; }
 protected:
 	virtual std::string toStringImpl() const override;
+	virtual std::string providerNameImpl() const override;
 	virtual int toIntImpl() const override;
 	virtual float toFloatImpl() const override;
 	virtual bool toBoolImpl() const override;

@@ -31,7 +31,6 @@ StringObject::StringObject(World* world)
 :BaseObject(world)
 ,str_("")
 {
-	this->store(world, "__proto__", world->objectPrototype());
 }
 
 StringObject::StringObject(World* world, const std::string& str)
