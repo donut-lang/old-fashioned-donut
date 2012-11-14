@@ -287,4 +287,41 @@ TEST(HandlerTest, UpCastTest)
 	ASSERT_EQ(2, d);
 }
 
+TEST(HandlerTest, VectorTest)
+{
+	int e = 0;
+	int d = 0;
+	{
+		std::vector<Handler<TestFix> > vec;
+		Handler<TestFix> h( new TestFix(&e, &d) );
+		vec.push_back(h);
+		vec.push_back(h);
+		vec.push_back(h);
+		vec[2] = h;
+		vec.at(2) = h;
+		h = vec[2];
+	}
+	ASSERT_EQ(1, e);
+	ASSERT_EQ(1, d);
+}
+
+TEST(HandlerTest, ReferenceTest)
+{
+	int e = 0;
+	int d = 0;
+	{
+		std::vector<Handler<TestFix> > vec;
+		Handler<TestFix> h( new TestFix(&e, &d) );
+		Handler<TestFix>& hr = h;
+		vec.push_back(hr);
+		vec.push_back(hr);
+		vec.push_back(hr);
+		vec[2] = hr;
+		vec.at(2) = hr;
+		hr = vec[2];
+	}
+	ASSERT_EQ(1, e);
+	ASSERT_EQ(1, d);
+}
+
 }
