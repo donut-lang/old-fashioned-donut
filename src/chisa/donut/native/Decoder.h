@@ -49,7 +49,7 @@ struct PointerDecoder<T, true> {
 
 //-----------------------------------------------------------------------------
 
-template <typename T, bool = IsBaseOf<T, Object>::result >
+template <typename T, bool = IsBaseOf<T, Object>::result, bool = IsBaseOf<Object, T>::result >
 struct HandlerDecoder {
 	static Handler<T> exec(World* world, Handler<chisa::donut::Object> obj)
 	{
@@ -58,14 +58,18 @@ struct HandlerDecoder {
 };
 
 template <typename T>
-struct HandlerDecoder<T, true> {
+struct HandlerDecoder<T, true, false> {
 	static Handler<T> exec(World* world, Handler<chisa::donut::Object> obj)
 	{
-		if( obj->isObject() ){
-			return obj.cast<T>();
-		}else{
-			return decode<Handler<T> >(world, obj);
-		}
+		return obj.cast<T>();
+	}
+};
+
+template <typename T>
+struct HandlerDecoder<T, true, true> {
+	static Handler<T> exec(World* world, Handler<chisa::donut::Object> obj)
+	{
+		return obj;
 	}
 };
 
