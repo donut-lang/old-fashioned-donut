@@ -17,23 +17,20 @@
  */
 
 #include "ClosureEntry.h"
+#include "../object/World.h"
 #include "../native/NativeClosure.h"
 
 namespace chisa {
 namespace donut {
-
-ClosureEntry::ClosureEntry()
-{
-}
 
 PureClosureEntry::PureClosureEntry(PureClosureEntry::Signature func)
 :func_(func)
 {
 }
 
-Handler<Object> PureClosureEntry::createObject( World* const world )
+Handler<Object> PureClosureEntry::createObject( World* const world, const std::string& objectProviderName, const std::string& closureName )
 {
-	return world->create<PureNativeClosure>(this->func_);
+	return world->create<PureNativeClosure>(objectProviderName, closureName, this->func_);
 }
 
 }}

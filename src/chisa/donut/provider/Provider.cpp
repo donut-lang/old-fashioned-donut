@@ -33,6 +33,12 @@ Provider::Provider( const std::string& name )
 
 //-----------------------------------------------------------------------------
 
+ObjectProvider::ObjectProvider( const std::string& name )
+:Provider(name)
+{
+
+}
+
 void ObjectProvider::registerPureNativeClosure( const std::string& name, PureClosureEntry::Signature func )
 {
 	this->closureEntry_.insert(
@@ -88,7 +94,7 @@ Handler<Object> ClosureProvider::deserialize( World* world, tinyxml2::XMLElement
 	if( !objProvider->haveClosure(closureName) ){
 		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. %s does not have closure: %s", objectProviderName.c_str(), closureName.c_str());
 	}
-	return objProvider->getClosure(closureName)->createObject( world );
+	return objProvider->getClosure(closureName)->createObject( world, objectProviderName, closureName );
 }
 
 }}

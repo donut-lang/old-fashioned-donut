@@ -51,7 +51,7 @@ bool ProviderManager::haveProvider( const std::string& name )
 
 tinyxml2::XMLElement* ProviderManager::serialize( World* world, tinyxml2::XMLDocument* doc, Handler<Object> obj )
 {
-	std::string providerName = obj->providerName();
+	std::string providerName = obj->providerName(world);
 	if( !haveProvider(providerName) ){
 		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. there is no provider for %s", providerName.c_str());
 	}

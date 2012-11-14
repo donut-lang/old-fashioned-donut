@@ -46,7 +46,7 @@ public:
 	virtual Handler<Object> loadImpl(const std::string& name) const override;
 };
 
-class PureNativeClosure : public Object {
+class PureNativeClosure : public NativeClosure {
 private:
 	std::function<Handler<Object>(Handler<Object> self, Handler<BaseObject> arg)> func_;
 public:
