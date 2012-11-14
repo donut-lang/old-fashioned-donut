@@ -20,63 +20,58 @@
 #include "../Exception.h"
 #include <tinyxml2.h>
 #include "../object/World.h"
+#include "../native/Bind.h"
 
 namespace chisa {
 namespace donut {
 static const std::string TAG("BoolProvider");
 
-BoolProvider::BoolProvider()
-:ObjectProvider("__native_bool__")
+BoolProvider::BoolProvider(World* world)
+:ObjectProvider(world, "__native_bool__")
 {
 	/*
-	this->registerClosure("opAnd", std::function<Object*(Object*, bool)>(
+	this->registerPureNativeClosure("opAnd", native::createBind( std::function<Object*(Object*, bool)>(
 			[&](Object* self, bool v)->Object*{
 		return BoolProvider::toPointer(BoolProvider::fromPointer(self) && v);
-	}));
-	this->registerClosure("opOr", std::function<Object*(Object*, bool)>(
+	})));
+	this->registerPureNativeClosure("opOr", native::createBind( std::function<Object*(Object*, bool)>(
 			[&](Object* self, bool v)->Object*{
 		return BoolProvider::toPointer(BoolProvider::fromPointer(self) || v);
-	}));
-	this->registerClosure("opNot", std::function<Object*(Object*)>(
+	})));
+	this->registerPureNativeClosure("opNot", native::createBind( std::function<Object*(Object*)>(
 			[&](Object* self)->Object*{
 		return BoolProvider::toPointer(!BoolProvider::fromPointer(self));
-	}));
+	})));
 	*/
 }
 
-std::string BoolProvider::toString(World* world, const Object* ptr) const
+std::string BoolProvider::toString(const Object* ptr) const
 {
 	return fromPointer(ptr) ? "true" : "false";
 }
 
-int BoolProvider::toInt(World* world, const Object* ptr) const
+int BoolProvider::toInt(const Object* ptr) const
 {
 	throw DonutException(__FILE__, __LINE__, "Ccannot convert from boolean to integer.");
 }
 
-float BoolProvider::toFloat(World* world, const Object* ptr) const
+float BoolProvider::toFloat(const Object* ptr) const
 {
 	throw DonutException(__FILE__, __LINE__, "Ccannot convert from boolean to float.");
 }
 
-bool BoolProvider::toBool(World* world, const Object* ptr) const
+bool BoolProvider::toBool(const Object* ptr) const
 {
 	return fromPointer(ptr);
 }
 
-Handler<Object> BoolProvider::store(World* world, const Object* ptr, const std::string& name, Handler<Object> obj)
-{
-	world->log().w(TAG, "Failed to store value to bool object.");
-	return obj;
-}
-
-tinyxml2::XMLElement* BoolProvider::serialize( World* world, tinyxml2::XMLDocument* doc, Handler<Object> obj )
+tinyxml2::XMLElement* BoolProvider::serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj )
 {
 	tinyxml2::XMLElement* elm = doc->NewElement("bool");
 	elm->SetAttribute("val", BoolProvider::fromPointer(obj.get()));
 	return elm;
 }
-Handler<Object> BoolProvider::deserialize( World* world, tinyxml2::XMLElement* xml )
+Handler<Object> BoolProvider::deserialize( tinyxml2::XMLElement* xml )
 {
 	if( std::string("bool") != xml->Name() ){
 		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. wrong element name: %s != \"bool\"", xml->Name());

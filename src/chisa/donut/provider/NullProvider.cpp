@@ -27,43 +27,37 @@ namespace donut {
 
 static const std::string TAG("NullProvider");
 
-NullProvider::NullProvider()
-:ObjectProvider("__native_null__")
+NullProvider::NullProvider(World* world)
+:ObjectProvider(world, "__native_null__")
 {
-
 }
 
-std::string NullProvider::toString(World* world, const Object* ptr) const
+std::string NullProvider::toString(const Object* ptr) const
 {
 	return "(null)";
 }
 
-int NullProvider::toInt(World* world, const Object* ptr) const
+int NullProvider::toInt(const Object* ptr) const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to convert null to int.");
 }
 
-float NullProvider::toFloat(World* world, const Object* ptr) const
+float NullProvider::toFloat(const Object* ptr) const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to convert null to float.");
 }
 
-bool NullProvider::toBool(World* world, const Object* ptr) const
+bool NullProvider::toBool(const Object* ptr) const
 {
 	return false;
 }
 
-Handler<Object> NullProvider::store(World* world, const Object* ptr, const std::string& name, Handler<Object> obj)
-{
-	throw DonutException(__FILE__, __LINE__, "Failed to store to null.");
-}
-
-tinyxml2::XMLElement* NullProvider::serialize( World* world, tinyxml2::XMLDocument* doc, Handler<Object> obj )
+tinyxml2::XMLElement* NullProvider::serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj )
 {
 	tinyxml2::XMLElement* elm = doc->NewElement("null");
 	return elm;
 }
-Handler<Object> NullProvider::deserialize( World* world, tinyxml2::XMLElement* xml )
+Handler<Object> NullProvider::deserialize( tinyxml2::XMLElement* xml )
 {
 	if( std::string("null") != xml->Name() ){
 		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. wrong element name: %s != \"bool\"", xml->Name());

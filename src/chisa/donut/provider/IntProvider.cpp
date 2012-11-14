@@ -27,46 +27,38 @@ namespace donut {
 
 static const std::string TAG("IntProvider");
 
-IntProvider::IntProvider()
-:ObjectProvider("__native_int__")
+IntProvider::IntProvider(World* world)
+:ObjectProvider(world, "__native_int__")
 {
-	// TODO Auto-generated constructor stub
-
 }
 
-std::string IntProvider::toString(World* world, const Object* ptr) const
+std::string IntProvider::toString(const Object* ptr) const
 {
 	return util::format("%d", fromPointer(ptr));
 }
 
-int IntProvider::toInt(World* world, const Object* ptr) const
+int IntProvider::toInt(const Object* ptr) const
 {
 	return fromPointer(ptr);
 }
 
-float IntProvider::toFloat(World* world, const Object* ptr) const
+float IntProvider::toFloat(const Object* ptr) const
 {
 	return fromPointer(ptr);
 }
 
-bool IntProvider::toBool(World* world, const Object* ptr) const
+bool IntProvider::toBool(const Object* ptr) const
 {
 	return fromPointer(ptr) != 0;
 }
 
-Handler<Object> IntProvider::store(World* world, const Object* ptr, const std::string& name, Handler<Object> obj)
-{
-	world->log().w(TAG, "Failed to store value to int object.");
-	return obj;
-}
-
-tinyxml2::XMLElement* IntProvider::serialize( World* world, tinyxml2::XMLDocument* doc, Handler<Object> obj )
+tinyxml2::XMLElement* IntProvider::serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj )
 {
 	tinyxml2::XMLElement* elm = doc->NewElement("int");
 	elm->SetAttribute("val", IntProvider::fromPointer(obj.get()));
 	return elm;
 }
-Handler<Object> IntProvider::deserialize( World* world, tinyxml2::XMLElement* xml )
+Handler<Object> IntProvider::deserialize( tinyxml2::XMLElement* xml )
 {
 	if( std::string("int") != xml->Name() ){
 		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. wrong element name: %s != \"bool\"", xml->Name());
