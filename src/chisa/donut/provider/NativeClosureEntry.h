@@ -19,6 +19,7 @@
 #pragma once
 #include "../../Handler.h"
 #include "../object/Object.h"
+#include "../native/Bind.h"
 
 namespace chisa {
 namespace donut {
@@ -40,7 +41,8 @@ public:
 private:
 	PureNativeClosureEntry::Signature func_;
 public:
-	PureNativeClosureEntry(PureNativeClosureEntry::Signature func);
+	template <typename T>
+	PureNativeClosureEntry(T f):NativeClosureEntry(), func_( native::createBind(f) ){}
 	virtual ~PureNativeClosureEntry() noexcept {};
 	virtual Handler<Object> createObject( World* const world, const std::string& objectProviderName, const std::string& closureName ) override;
 };

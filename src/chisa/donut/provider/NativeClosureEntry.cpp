@@ -23,11 +23,6 @@
 namespace chisa {
 namespace donut {
 
-PureNativeClosureEntry::PureNativeClosureEntry(PureNativeClosureEntry::Signature func)
-:func_(func)
-{
-}
-
 Handler<Object> PureNativeClosureEntry::createObject( World* const world, const std::string& objectProviderName, const std::string& closureName )
 {
 	return world->createPureNativeClosureObject(objectProviderName, closureName, this->func_);

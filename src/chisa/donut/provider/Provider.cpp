@@ -30,14 +30,6 @@ Provider::Provider( World* const world, const std::string& name )
 
 }
 
-
-void Provider::registerPureNativeClosure( const std::string& name, PureNativeClosureEntry::Signature func )
-{
-	this->nativeClosures_.insert(
-			std::pair<std::string,Handler<NativeClosureEntry> >(
-					name, Handler<NativeClosureEntry>(new PureNativeClosureEntry(func)) ) );
-}
-
 Handler<DonutObject> Provider::injectPrototype( Handler<DonutObject> obj )
 {
 	for(std::pair<std::string,Handler<NativeClosureEntry> > const& c : this->nativeClosures_){

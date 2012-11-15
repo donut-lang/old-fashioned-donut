@@ -71,13 +71,7 @@ public:
 	Handler<Object> createInt(const int& val);
 	Handler<Object> createBool(const bool& val);
 	Handler<Object> createNull();
-	template <typename R, typename... Args>
-	Handler<PureNativeClosureObject> createPureNativeClosureObject(std::string objectProviderName, std::string closureName, std::function<R(Args... args)> func)
-	{
-		Handler<PureNativeClosureObject> obj(new PureNativeClosureObject(this, objectProviderName, closureName, native::createBind(func) ));
-
-		return obj;
-	}
+	Handler<PureNativeClosureObject> createPureNativeClosureObject(std::string objectProviderName, std::string closureName, PureNativeClosureEntry::Signature sig);
 public:
 	void registerProvider( Handler<Provider> provider );
 public:
