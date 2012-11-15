@@ -84,7 +84,7 @@ operation returns [ std::string sym ]
 	| CEQ { sym = "opEq"; }
 	| CNE { sym = "opNe"; }
 	| BIT_OR {sym="opBitOr";}
-	| BIT_AND {sym="opBitOr";}
+	| BIT_AND {sym="opBitAnd";}
 	;
 
 unary_operation returns [ std::string sym ]

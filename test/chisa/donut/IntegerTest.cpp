@@ -177,6 +177,26 @@ TEST_F(DonutIntegerTest, PlusTest)
 	}
 }
 
+TEST_F(DonutIntegerTest, BitAndTest)
+{
+	{
+		SOURCE_TEST("1&4", 0);
+	}
+	{
+		SOURCE_TEST("1&1", 1);
+	}
+}
+
+TEST_F(DonutIntegerTest, BitOrTest)
+{
+	{
+		SOURCE_TEST("1|4", 5);
+	}
+	{
+		SOURCE_TEST("1|1", 1);
+	}
+}
+
 TEST_F(DonutIntegerTest, MinusTest)
 {
 	{
