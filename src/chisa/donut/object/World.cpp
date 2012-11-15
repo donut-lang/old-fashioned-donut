@@ -64,7 +64,7 @@ Handler<DonutObject> World::createEmptyDonutObject()
 
 }
 
-Handler<DonutClosureObject> World::createDonutClosureObject( Handler<Code> closure, Handler<Object> scope )
+Handler<DonutClosureObject> World::createDonutClosureObject( Handler<Closure> closure, Handler<Object> scope )
 {
 
 }

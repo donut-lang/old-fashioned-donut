@@ -24,7 +24,7 @@
 
 namespace chisa {
 namespace donut {
-static const std::string TAG("Donut\ObjectProvider");
+static const std::string TAG("DonutObjectProvider");
 
 
 DonutObjectProvider::DonutObjectProvider(World* const world)

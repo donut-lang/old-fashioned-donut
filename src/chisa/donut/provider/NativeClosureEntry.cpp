@@ -30,7 +30,7 @@ PureNativeClosureEntry::PureNativeClosureEntry(PureNativeClosureEntry::Signature
 
 Handler<Object> PureNativeClosureEntry::createObject( World* const world, const std::string& objectProviderName, const std::string& closureName )
 {
-	return world->create<PureNativeClosure>(objectProviderName, closureName, this->func_);
+	return world->createPureNativeClosureObject(objectProviderName, closureName, this->func_);
 }
 
 }}

@@ -31,9 +31,9 @@ struct Callchain {
 	pc_t pc_;
 	Handler<Object> self_;
 	Handler<DonutClosureObject> closure_;
-	Handler<Object> context_;
+	Handler<DonutObject> context_;
 public:
-	Callchain(pc_t pc, Handler<Object> self, Handler<DonutClosureObject> closure, Handler<Object> context)
+	Callchain(pc_t pc, Handler<Object> self, Handler<DonutClosureObject> closure, Handler<DonutObject> context)
 	:pc_(pc), self_(self), closure_(closure), context_(context){
 	}
 };

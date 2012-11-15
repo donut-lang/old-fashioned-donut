@@ -199,7 +199,7 @@ Handler<Object> Machine::run()
 			break;
 		}
 		case Inst::Apply: {
-			Handler<BaseObject> obj(world_->createEmptyDonutObject());
+			Handler<DonutObject> obj(world_->createEmptyDonutObject());
 			for(unsigned int i=constIndex;i>0;--i){
 				Handler<Object> val = this->stack_.back();
 				this->stack_.pop_back();
