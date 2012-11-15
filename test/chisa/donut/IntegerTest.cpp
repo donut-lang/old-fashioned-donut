@@ -17,234 +17,108 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../../src/chisa/donut/parser/Parser.h"
-#include "../../../src/chisa/donut/object/World.h"
-#include "../../../src/chisa/donut/vm/Machine.h"
+#include "DonutHelper.h"
 #include <math.h>
 
 namespace chisa {
 namespace donut {
 
-class DonutIntegerTest : public ::testing::Test
+TEST(DonutIntegerTest, LiteralTest)
 {
-protected:
-	Handler<Code> code;
-	World* world;
-public:
-	void SetUp(){
-		code = Handler<Code>(new Code());
-		world = new World(log_trace, code);
-	}
-	void TearDown(){
-		delete world;
-		code.reset();
-	}
-};
-
-TEST_F(DonutIntegerTest, LiteralTest)
-{
-	unsigned int idx = Parser::fromString("1;", "<MEM>", 0)->parseProgram(code);
-	World world(log_trace, code);
-	Machine machine(log_trace, &world);
-
-	Handler<Object> result = machine.start(idx);
-	ASSERT_TRUE(result->isInt());
-	ASSERT_EQ(1, result->toInt(&world));
+	SOURCE_TEST_INT(1, "1;");
 }
 
-#define SOURCE_TEST(expr, answer)\
-	unsigned int idx = Parser::fromString(expr ";", "<MEM>", 0)->parseProgram(code);\
-	World world(log_trace, code);\
-	Machine machine(log_trace, &world);\
-\
-	Handler<Object> result = machine.start(idx);\
-	ASSERT_FALSE(result->isNull());\
-	ASSERT_FALSE(result->isObject());\
-	ASSERT_TRUE(result->isInt());\
-	ASSERT_EQ(answer, result->toInt(&world));
-
-#define SOURCE_TEST_FLOAT(expr, answer)\
-	unsigned int idx = Parser::fromString(expr ";", "<MEM>", 0)->parseProgram(code);\
-	World world(log_trace, code);\
-	Machine machine(log_trace, &world);\
-\
-	Handler<Object> result = machine.start(idx);\
-	ASSERT_FALSE(result->isNull());\
-	ASSERT_TRUE(result->isObject());\
-	ASSERT_FALSE(result->isInt());\
-	ASSERT_FLOAT_EQ(answer, result->toFloat(&world));
-
-#define SOURCE_TEST_TRUE(expr)\
-	unsigned int idx = Parser::fromString(expr ";", "<MEM>", 0)->parseProgram(code);\
-	World world(log_trace, code);\
-	Machine machine(log_trace, &world);\
-\
-	Handler<Object> result = machine.start(idx);\
-	ASSERT_FALSE(result->isNull());\
-	ASSERT_FALSE(result->isObject());\
-	ASSERT_TRUE(result->isBool());\
-	ASSERT_TRUE(result->toBool(&world));
-
-
-#define SOURCE_TEST_THROW(expr)\
-	unsigned int idx = Parser::fromString(expr ";", "<MEM>", 0)->parseProgram(code);\
-	World world(log_trace, code);\
-	Machine machine(log_trace, &world);\
-\
-	ASSERT_ANY_THROW( machine.start(idx) );
-
-#define SOURCE_TEST_FALSE(expr)\
-	unsigned int idx = Parser::fromString(expr ";", "<MEM>", 0)->parseProgram(code);\
-	World world(log_trace, code);\
-	Machine machine(log_trace, &world);\
-\
-	Handler<Object> result = machine.start(idx);\
-	ASSERT_FALSE(result->isNull());\
-	ASSERT_FALSE(result->isObject());\
-	ASSERT_TRUE(result->isBool());\
-	ASSERT_FALSE(result->toBool(&world));
-
-TEST_F(DonutIntegerTest, SubTest)
+TEST(DonutIntegerTest, SubTest)
 {
-	SOURCE_TEST("1-2", -1);
+	SOURCE_TEST_INT(-1, "1-2;");
 }
 
-TEST_F(DonutIntegerTest, MulTest)
+TEST(DonutIntegerTest, MulTest)
 {
-	SOURCE_TEST("3*4", 12);
+	SOURCE_TEST_INT(12, "3*4;");
 }
 
-TEST_F(DonutIntegerTest, DivTest)
+TEST(DonutIntegerTest, DivTest)
 {
-	SOURCE_TEST("9/4", 2);
+	SOURCE_TEST_INT(2, "9/2;");
 }
 
-TEST_F(DonutIntegerTest, ModTest)
+TEST(DonutIntegerTest, ModTest)
 {
-	SOURCE_TEST("9%4", 1);
+	SOURCE_TEST_INT(1, "9%4;");
 }
 
-TEST_F(DonutIntegerTest, LtTest)
+TEST(DonutIntegerTest, LtTest)
 {
-	{
-		SOURCE_TEST_TRUE("4<9");
-	}
-	{
-		SOURCE_TEST_FALSE("9<4");
-	}
+	SOURCE_TEST_TRUE("4<9");
+	SOURCE_TEST_FALSE("9<4");
 }
-TEST_F(DonutIntegerTest, GtTest)
+TEST(DonutIntegerTest, GtTest)
 {
-	{
-		SOURCE_TEST_TRUE("9>4");
-	}
-	{
-		SOURCE_TEST_FALSE("4>9");
-	}
+	SOURCE_TEST_TRUE("9>4");
+	SOURCE_TEST_FALSE("4>9");
 }
 
-TEST_F(DonutIntegerTest, LeTest)
+TEST(DonutIntegerTest, LeTest)
 {
-	{
-		SOURCE_TEST_TRUE("4<=9");
-	}
-	{
-		SOURCE_TEST_FALSE("9<=4");
-	}
-	{
-		SOURCE_TEST_TRUE("4<=4");
-	}
+	SOURCE_TEST_TRUE("4<=9");
+	SOURCE_TEST_FALSE("9<=4");
+	SOURCE_TEST_TRUE("4<=4");
 }
-TEST_F(DonutIntegerTest, GeTest)
+TEST(DonutIntegerTest, GeTest)
 {
-	{
-		SOURCE_TEST_TRUE("9>=4");
-	}
-	{
-		SOURCE_TEST_FALSE("4>=9");
-	}
-	{
-		SOURCE_TEST_TRUE("4>=4");
-	}
+	SOURCE_TEST_TRUE("9>=4");
+	SOURCE_TEST_FALSE("4>=9");
+	SOURCE_TEST_TRUE("4>=4");
 }
-TEST_F(DonutIntegerTest, EqTest)
+TEST(DonutIntegerTest, EqTest)
 {
-	{
-		SOURCE_TEST_TRUE("4==4");
-	}
-	{
-		SOURCE_TEST_FALSE("5==4");
-	}
+	SOURCE_TEST_TRUE("4==4");
+	SOURCE_TEST_FALSE("5==4");
 }
-TEST_F(DonutIntegerTest, NeTest)
+TEST(DonutIntegerTest, NeTest)
 {
-	{
-		SOURCE_TEST_TRUE("5!=4");
-	}
-	{
-		SOURCE_TEST_FALSE("4!=4");
-	}
+	SOURCE_TEST_TRUE("5!=4");
+	SOURCE_TEST_FALSE("4!=4");
 }
 
-TEST_F(DonutIntegerTest, PlusTest)
+TEST(DonutIntegerTest, PlusTest)
 {
-	{
-		SOURCE_TEST("+4", 4);
-	}
-	{
-		SOURCE_TEST("+(-4)", -4);
-	}
+	SOURCE_TEST_INT(4, "+4");
+	SOURCE_TEST_INT(-4, "+(-4)");
 }
 
-TEST_F(DonutIntegerTest, BitAndTest)
+TEST(DonutIntegerTest, BitAndTest)
 {
-	{
-		SOURCE_TEST("1&4", 0);
-	}
-	{
-		SOURCE_TEST("1&1", 1);
-	}
+	SOURCE_TEST_INT(0, "1&4");
+	SOURCE_TEST_INT(1, "1&1");
 }
 
-TEST_F(DonutIntegerTest, BitOrTest)
+TEST(DonutIntegerTest, BitOrTest)
 {
-	{
-		SOURCE_TEST("1|4", 5);
-	}
-	{
-		SOURCE_TEST("1|1", 1);
-	}
+	SOURCE_TEST_INT(5, "1|4");
+	SOURCE_TEST_INT(1, "1|1");
 }
 
-TEST_F(DonutIntegerTest, MinusTest)
+TEST(DonutIntegerTest, MinusTest)
 {
-	{
-		SOURCE_TEST("-4", -4);
-	}
-	{
-		SOURCE_TEST("-(-4)", 4);
-	}
+	SOURCE_TEST_INT(-4, "-4");
+	SOURCE_TEST_INT(4, "-(-4)");
 }
 
-TEST_F(DonutIntegerTest, FloatCastTest)
+TEST(DonutIntegerTest, FloatCastTest)
 {
-	{
-		SOURCE_TEST_FLOAT("(-4).toFloat()", -4);
-	}
+	SOURCE_TEST_FLOAT(-4, "(-4).toFloat()");
 }
 
-TEST_F(DonutIntegerTest, FloatAddTest)
+TEST(DonutIntegerTest, FloatAddTest)
 {
-	{
-		SOURCE_TEST_THROW("1+1.1");
-	}
+	SOURCE_TEST_THROW("1+1.1");
 }
 
-TEST_F(DonutIntegerTest, FloatAddWithCastTest)
+TEST(DonutIntegerTest, FloatAddWithCastTest)
 {
-	{
-		SOURCE_TEST_FLOAT("(1).toFloat()+1.1", 2.1);
-	}
+	SOURCE_TEST_FLOAT(2.1, "(1).toFloat()+1.1");
 }
 
 }}

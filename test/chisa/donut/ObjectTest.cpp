@@ -17,34 +17,15 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../../src/chisa/donut/parser/Parser.h"
-#include "../../../src/chisa/donut/object/World.h"
-#include "../../../src/chisa/donut/vm/Machine.h"
+#include "DonutHelper.h"
 #include <math.h>
 
 namespace chisa {
 namespace donut {
 
-class DonutObjectTest : public ::testing::Test
+TEST(DonutObjectTest, EmptyObjectTest)
 {
-protected:
-	Handler<Code> code;
-	World* world;
-public:
-	void SetUp(){
-		code = Handler<Code>(new Code());
-		world = new World(log_trace, code);
-	}
-	void TearDown(){
-		delete world;
-		code.reset();
-	}
-};
-
-TEST_F(DonutObjectTest, IntCannotCastToBaseObjectTest)
-{
-	Handler<Object> obj = world->createInt(10);
-	ASSERT_EQ(10, obj->toInt(world));
+	EXECUTE_SRC("{};");
 
 	Handler<DonutObject> converted;
 //	ASSERT_NO_FATAL_FAILURE( obj.tryCast<BaseObject>() );

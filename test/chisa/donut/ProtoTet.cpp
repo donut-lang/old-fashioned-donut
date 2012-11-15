@@ -17,9 +17,7 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../../src/chisa/donut/parser/Parser.h"
-#include "../../../src/chisa/donut/object/World.h"
-#include "../../../src/chisa/donut/vm/Machine.h"
+#include "DonutHelper.h"
 #include <math.h>
 
 namespace chisa {
@@ -40,14 +38,7 @@ public:
 
 TEST_F(DonutProtoTest, NullTest)
 {
-	unsigned int idx = Parser::fromString("z={};x={__proto__=>z};z.x=1;x.x;", "<MEM>", 0)->parseProgram(code);
-	World world(log_trace, code);
-	Machine machine(log_trace, &world);
-
-	Handler<Object> result = machine.start(idx);
-	ASSERT_FALSE(result->isNull());
-	ASSERT_TRUE(result->isInt());
-	ASSERT_EQ(1, result->toInt(&world));
+	SOURCE_TEST_INT(1, "z={};x={__proto__=>z};z.x=1;x.x;");
 }
 
 }}

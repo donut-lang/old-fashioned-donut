@@ -21,9 +21,9 @@
 namespace chisa {
 namespace donut {
 
-World::World(logging::Logger& log, Handler<Code> code)
+World::World(logging::Logger& log)
 :log_(log)
-,code_(code)
+,code_(new Code)
 ,generation_(0)
 ,donutObjectProvider_(new DonutObjectProvider(this))
 ,boolProvider_(new BoolProvider(this))
