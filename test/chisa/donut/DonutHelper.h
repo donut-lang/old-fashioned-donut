@@ -35,6 +35,14 @@
 	ASSERT_ANY_THROW( machine.start(idx) );\
 }
 
+#define SOURCE_TEST_NO_THROW(src)\
+{\
+	World world(log_trace);\
+	unsigned int idx = Parser::fromString(src, "<MEM>", 0)->parseProgram(world.code());\
+	Machine machine(log_trace, &world);\
+	ASSERT_NO_THROW( machine.start(idx) );\
+}
+
 #define SOURCE_TEST_TRUE(expr)\
 {\
 	EXECUTE_SRC(expr);\

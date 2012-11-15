@@ -49,6 +49,11 @@ TEST(DonutFunctionTest, ScopeHideTest)
 	SOURCE_TEST_INT(1, "a = 1; f = func(a){ a=0; };f(1); a;");
 }
 
+TEST(DonutFunctionTest, RecursiveTest)
+{
+	SOURCE_TEST_INT(55, "f = func(a){ if(a>0){ a+f(a-1); }else{ 0; }; };f(10);");
+}
+
 }}
 
 

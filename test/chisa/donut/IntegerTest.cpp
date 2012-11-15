@@ -108,7 +108,7 @@ TEST(DonutIntegerTest, MinusTest)
 
 TEST(DonutIntegerTest, FloatCastTest)
 {
-	SOURCE_TEST_FLOAT(-4, "(-4).toFloat()");
+	SOURCE_TEST_FLOAT(-4.0f, "(-4).toFloat()");
 }
 
 TEST(DonutIntegerTest, FloatAddTest)
