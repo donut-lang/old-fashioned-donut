@@ -38,41 +38,48 @@ void Provider::registerPureNativeClosure( const std::string& name, PureNativeClo
 					name, Handler<NativeClosureEntry>(new PureNativeClosureEntry(func)) ) );
 }
 
-//---------------------------------------------------------------------------------------------------------------------
+Handler<DonutObject> Provider::injectPrototype( Handler<DonutObject> obj )
+{
+	for(std::pair<std::string,Handler<NativeClosureEntry> > const& c : this->nativeClosures_){
+		obj->store(world(), c.first, c.second->createObject(world(), name(), c.first));
+	}
+	return obj;
+}
+
 
 tinyxml2::XMLElement* Provider::serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj_ )
 {
-	Handler<NativeClosure> obj = obj_.cast<NativeClosure>();
-	tinyxml2::XMLElement* elm = doc->NewElement("clos");
-	elm->SetAttribute("objectProvider", obj->objectProviderName().c_str());
-	elm->SetAttribute("closureName", obj->closureName().c_str());
-	return elm;
+//			Handler<NativeClosure> obj = obj_.cast<NativeClosure>();
+//			tinyxml2::XMLElement* elm = doc->NewElement("clos");
+//			elm->SetAttribute("objectProvider", obj->objectProviderName().c_str());
+//			elm->SetAttribute("closureName", obj->closureName().c_str());
+//			return elm;
 }
 Handler<Object> Provider::deserialize( tinyxml2::XMLElement* xml )
 {
-	if( std::string("clos") != xml->Name() ){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. wrong element name: %s != \"clos\"", xml->Name());
-	}
-	std::string objectProviderName( xml->Attribute("objectProvider") );
-	std::string closureName( xml->Attribute("closureName") );
-	if(objectProviderName.empty() || closureName.empty()){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. save data is broken.");
-	}
-	Handler<ProviderManager> mgr = this->manager_.lock();
-	if(!mgr){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. ProviderManager is already dead.");
-	}
-	if( !mgr->haveProvider(objectProviderName) ){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. there is no provider for %s", objectProviderName.c_str());
-	}
-	Handler<ObjectProvider> objProvider = mgr->getProvider( objectProviderName ).tryCast<ObjectProvider>();
-	if( !objProvider ){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. %s is not object provider", objectProviderName.c_str());
-	}
-	if( !objProvider->haveClosure(closureName) ){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. %s does not have closure: %s", objectProviderName.c_str(), closureName.c_str());
-	}
-	return objProvider->getClosure(closureName)->createObject( world(), objectProviderName, closureName );
+//	if( std::string("clos") != xml->Name() ){
+//		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. wrong element name: %s != \"clos\"", xml->Name());
+//	}
+//	std::string objectProviderName( xml->Attribute("objectProvider") );
+//	std::string closureName( xml->Attribute("closureName") );
+//	if(objectProviderName.empty() || closureName.empty()){
+//		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. save data is broken.");
+//	}
+//	Handler<ProviderManager> mgr = this->manager_.lock();
+//	if(!mgr){
+//		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. ProviderManager is already dead.");
+//	}
+//	if( !mgr->haveProvider(objectProviderName) ){
+//		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. there is no provider for %s", objectProviderName.c_str());
+//	}
+//	Handler<ObjectProvider> objProvider = mgr->getProvider( objectProviderName ).tryCast<ObjectProvider>();
+//	if( !objProvider ){
+//		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. %s is not object provider", objectProviderName.c_str());
+//	}
+//	if( !objProvider->haveClosure(closureName) ){
+//		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. %s does not have closure: %s", objectProviderName.c_str(), closureName.c_str());
+//	}
+//	return objProvider->getClosure(closureName)->createObject( world(), objectProviderName, closureName );
 }
 
 }}

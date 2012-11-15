@@ -21,7 +21,9 @@
 #include "../../util/ClassUtil.h"
 #include "../../Handler.h"
 #include "../code/Code.h"
+#include "Object.h"
 #include "DonutObject.h"
+#include "NativeObject.h"
 #include "../provider/Provider.h"
 
 namespace chisa {
@@ -60,15 +62,22 @@ public:
 	Handler<Object> intProto() {return intProto_;};
 	Handler<Object> nullProto() {return nullProto_;};
 private:
-	Handler<Code> code() { return this->code_; }
 	Handler<DonutObject> global() { return this->globalObject_; }
 public:
+	Handler<Code> code() { return this->code_; }
 	Handler<DonutObject> createDonutObject();
 	Handler<DonutObject> createEmptyDonutObject();
-	Handler<DonutClosureObject> createDonutClosureObject( Handler<Code> closure, Handler<Object> scope );
+	Handler<DonutClosureObject> createDonutClosureObject( Handler<Closure> closure, Handler<Object> scope );
 	Handler<Object> createInt(const int& val);
 	Handler<Object> createBool(const bool& val);
 	Handler<Object> createNull();
+	template <typename R, typename... Args>
+	Handler<PureNativeClosureObject> createPureNativeClosureObject(std::string objectProviderName, std::string closureName, std::function<R(Args... args)> func)
+	{
+		Handler<PureNativeClosureObject> obj(new PureNativeClosureObject(this, objectProviderName, closureName, native::createBind(func) ));
+
+		return obj;
+	}
 public:
 	void registerProvider( Handler<Provider> provider );
 public:
