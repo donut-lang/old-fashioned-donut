@@ -113,7 +113,7 @@ Handler<Object> Machine::run()
 				break;
 			}
 			case Inst::ConstFloat: {
-				//this->stack_.push_back( world_->create<FloatObject>( code->getFloat(constIndex) ) );
+				this->stack_.push_back( world_->createFloatObject( code->getFloat(constIndex) ) );
 				break;
 			}
 			case Inst::ConstClosure: {

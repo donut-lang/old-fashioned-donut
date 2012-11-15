@@ -63,6 +63,17 @@ TEST_F(DonutIntegerTest, LiteralTest)
 	ASSERT_TRUE(result->isInt());\
 	ASSERT_EQ(answer, result->toInt(&world));
 
+#define SOURCE_TEST_FLOAT(expr, answer)\
+	unsigned int idx = Parser::fromString(expr ";", "<MEM>", 0)->parseProgram(code);\
+	World world(log_trace, code);\
+	Machine machine(log_trace, &world);\
+\
+	Handler<Object> result = machine.start(idx);\
+	ASSERT_FALSE(result->isNull());\
+	ASSERT_TRUE(result->isObject());\
+	ASSERT_FALSE(result->isInt());\
+	ASSERT_FLOAT_EQ(answer, result->toFloat(&world));
+
 #define SOURCE_TEST_TRUE(expr)\
 	unsigned int idx = Parser::fromString(expr ";", "<MEM>", 0)->parseProgram(code);\
 	World world(log_trace, code);\
@@ -73,6 +84,14 @@ TEST_F(DonutIntegerTest, LiteralTest)
 	ASSERT_FALSE(result->isObject());\
 	ASSERT_TRUE(result->isBool());\
 	ASSERT_TRUE(result->toBool(&world));
+
+
+#define SOURCE_TEST_THROW(expr)\
+	unsigned int idx = Parser::fromString(expr ";", "<MEM>", 0)->parseProgram(code);\
+	World world(log_trace, code);\
+	Machine machine(log_trace, &world);\
+\
+	ASSERT_ANY_THROW( machine.start(idx) );
 
 #define SOURCE_TEST_FALSE(expr)\
 	unsigned int idx = Parser::fromString(expr ";", "<MEM>", 0)->parseProgram(code);\
@@ -204,6 +223,27 @@ TEST_F(DonutIntegerTest, MinusTest)
 	}
 	{
 		SOURCE_TEST("-(-4)", 4);
+	}
+}
+
+TEST_F(DonutIntegerTest, FloatCastTest)
+{
+	{
+		SOURCE_TEST_FLOAT("(-4).toFloat()", -4);
+	}
+}
+
+TEST_F(DonutIntegerTest, FloatAddTest)
+{
+	{
+		SOURCE_TEST_THROW("1+1.1");
+	}
+}
+
+TEST_F(DonutIntegerTest, FloatAddWithCastTest)
+{
+	{
+		SOURCE_TEST_FLOAT("(1).toFloat()+1.1", 2.1);
 	}
 }
 
