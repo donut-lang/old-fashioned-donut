@@ -77,6 +77,33 @@ TEST_F(DonutFunctionTest, ArgumentTest)
 	ASSERT_EQ(3, result->toInt(&world));
 }
 
+TEST_F(DonutFunctionTest, ScopeTest)
+{
+	unsigned int idx = Parser::fromString("a = 1; f = func(){ a=0; };f(); a;", "<MEM>", 0)->parseProgram(code);
+	World world(log_trace, code);
+	Machine machine(log_trace, &world);
+
+	Handler<Object> result = machine.start(idx);
+	ASSERT_FALSE(result->isNull());
+	ASSERT_FALSE(result->isObject());
+	ASSERT_TRUE(result->isInt());
+	ASSERT_EQ(0, result->toInt(&world));
+}
+
+
+TEST_F(DonutFunctionTest, ScopeHideTest)
+{
+	unsigned int idx = Parser::fromString("a = 1; f = func(a){ a=0; };f(1); a;", "<MEM>", 0)->parseProgram(code);
+	World world(log_trace, code);
+	Machine machine(log_trace, &world);
+
+	Handler<Object> result = machine.start(idx);
+	ASSERT_FALSE(result->isNull());
+	ASSERT_FALSE(result->isObject());
+	ASSERT_TRUE(result->isInt());
+	ASSERT_EQ(1, result->toInt(&world));
+}
+
 }}
 
 
