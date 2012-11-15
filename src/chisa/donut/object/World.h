@@ -61,6 +61,8 @@ public:
 	Handler<Object> boolProto() {return boolProto_;};
 	Handler<Object> intProto() {return intProto_;};
 	Handler<Object> nullProto() {return nullProto_;};
+
+	Handler<Provider> getProvider( const std::string& name ) const;
 private:
 	Handler<DonutObject> global() { return this->globalObject_; }
 public:

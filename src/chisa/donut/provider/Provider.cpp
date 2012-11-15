@@ -18,6 +18,7 @@
 
 #include "Provider.h"
 #include "../object/NativeObject.h"
+#include "../object/World.h"
 #include "../Exception.h"
 #include <tinyxml2.h>
 
@@ -27,17 +28,13 @@ namespace donut {
 Provider::Provider( World* const world, const std::string& name )
 :world_(world), name_(name)
 {
-
+	this->prototype_ = world->createEmptyDonutObject();
 }
 
-Handler<DonutObject> Provider::injectPrototype( Handler<DonutObject> obj )
+void Provider::addPrototype( const std::string& name, Handler<NativeClosureEntry> clos )
 {
-	for(std::pair<std::string,Handler<NativeClosureEntry> > const& c : this->nativeClosures_){
-		obj->store(world(), c.first, c.second->createObject(world(), name(), c.first));
-	}
-	return obj;
+	this->prototype_->store(world(), name, clos->createObject(world(), this->name(), name));
 }
-
 
 tinyxml2::XMLElement* Provider::serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj_ )
 {

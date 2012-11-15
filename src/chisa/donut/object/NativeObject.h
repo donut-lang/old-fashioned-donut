@@ -48,17 +48,6 @@ public:
 	virtual bool toBoolImpl() const override;
 };
 
-class NativeClosureObject : public NativeObject {
-private:
-	std::string const closureName_;
-public:
-	NativeClosureObject(World* const world, std::string objectProviderName, std::string closureName)
-	:NativeObject(world,objectProviderName),closureName_(closureName) {};
-	virtual ~NativeClosureObject() noexcept = default;
-	std::string closureName() const noexcept { return this->closureName_; };
-public:
-	virtual std::string toStringImpl() const override;
-};
 
 class PureNativeClosureObject : public NativeClosureObject {
 private:

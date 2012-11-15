@@ -20,53 +20,49 @@
 #include "../../util/StringUtil.h"
 #include "../Exception.h"
 #include "../object/World.h"
+
 namespace chisa {
 namespace donut {
+static const std::string TAG("NativeClosureObject");
 
-NativeObject::NativeObject(World* const world, const std::string& providerName)
-:world_(world),providerName_(providerName)
+std::string NativeClosureObject::toStringImpl() const
 {
-	this->prototype_ = world->getProvider(providerName)->prototype();
+	return util::format("(NativeClosureObject %p)", this);
 }
 
-std::string NativeObject::toStringImpl() const
-{
-	return util::format("(NativeObject %p)", this);
-}
-
-int NativeObject::toIntImpl() const
+int NativeClosureObject::toIntImpl() const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to convert builtin native closure to int.");
 }
 
-float NativeObject::toFloatImpl() const
+float NativeClosureObject::toFloatImpl() const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to convert builtin native closure to float.");
 }
 
-bool NativeObject::toBoolImpl() const
+bool NativeClosureObject::toBoolImpl() const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to convert builtin native closure to bool.");
 }
 
-bool NativeObject::haveImpl(const std::string& name) const
-{
-	return this->prototype_->have(world(), name);
-}
-
-bool NativeObject::haveOwnImpl(const std::string& name) const
+bool NativeClosureObject::haveImpl(const std::string& name) const
 {
 	return false;
 }
 
-Handler<Object> NativeObject::storeImpl(const std::string& name, Handler<Object> obj)
+bool NativeClosureObject::haveOwnImpl(const std::string& name) const
+{
+	return false;
+}
+
+Handler<Object> NativeClosureObject::storeImpl(const std::string& name, Handler<Object> obj)
 {
 	return obj;
 }
 
-Handler<Object> NativeObject::loadImpl(const std::string& name) const
+Handler<Object> NativeClosureObject::loadImpl(const std::string& name) const
 {
-	return this->prototype_->load(world(), name);
+	throw DonutException(__FILE__, __LINE__, "Native Closure does not have any properety.");
 }
 
 

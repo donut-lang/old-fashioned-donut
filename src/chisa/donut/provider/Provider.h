@@ -35,22 +35,27 @@ class Provider : public HandlerBody<Provider> {
 private:
 	std::map<std::string, Handler<NativeClosureEntry> > nativeClosures_;
 	World* const world_;
+	Handler<DonutObject> prototype_;
 	std::string const name_;
 protected:
 	Provider( World* const world, const std::string& name );
 	template <typename T>
 	void registerPureNativeClosure( const std::string& name, T f)
 	{
+		Handler<NativeClosureEntry> ent(new PureNativeClosureEntry(f) );
 		this->nativeClosures_.insert(
 				std::pair<std::string,Handler<NativeClosureEntry> >(
-						name, Handler<NativeClosureEntry>(new PureNativeClosureEntry(f) ) ) );
+						name, ent ) );
+		this->addPrototype(name, ent);
 	}
+private:
+	void addPrototype( const std::string& name, Handler<NativeClosureEntry> clos );
 public:
 	virtual ~Provider() noexcept = default;
 	inline void onFree() noexcept { delete this; }
 	inline std::string name() const noexcept { return this->name_; };
 	inline World* world() const noexcept { return this->world_; };
-	Handler<DonutObject> injectPrototype( Handler<DonutObject> obj );
+	inline Handler<DonutObject> prototype() const noexcept { return this->prototype_; };
 public:
 	tinyxml2::XMLElement* serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj );
 	Handler<Object> deserialize( tinyxml2::XMLElement* xml );
