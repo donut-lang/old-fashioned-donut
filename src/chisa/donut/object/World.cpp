@@ -56,17 +56,30 @@ unsigned int World::nextGeneration()
 
 Handler<DonutObject> World::createDonutObject()
 {
+	Handler<DonutObject> obj(new DonutObject(this));
+	obj->store(this, "__proto__", this->objectProto());
 
+	return obj;
 }
 
 Handler<DonutObject> World::createEmptyDonutObject()
 {
+	Handler<DonutObject> obj(new DonutObject(this));
 
+	return obj;
 }
 
 Handler<DonutClosureObject> World::createDonutClosureObject( Handler<Closure> closure, Handler<Object> scope )
 {
+	Handler<DonutClosureObject> obj(new DonutClosureObject(this, closure, scope));
 
+	return obj;
+}
+
+Handler<PureNativeClosureObject> World::createPureNativeClosureObject(std::string objectProviderName, std::string closureName, PureNativeClosureEntry::Signature f)
+{
+	Handler<PureNativeClosureObject> obj(new PureNativeClosureObject(this, objectProviderName, closureName, f));
+	return obj;
 }
 
 Handler<Object> World::createInt(const int& val)

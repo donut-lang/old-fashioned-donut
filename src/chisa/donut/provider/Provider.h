@@ -38,7 +38,13 @@ private:
 	std::string const name_;
 protected:
 	Provider( World* const world, const std::string& name );
-	void registerPureNativeClosure( const std::string& name, PureNativeClosureEntry::Signature func );
+	template <typename T>
+	void registerPureNativeClosure( const std::string& name, T f)
+	{
+		this->nativeClosures_.insert(
+				std::pair<std::string,Handler<NativeClosureEntry> >(
+						name, Handler<NativeClosureEntry>(new PureNativeClosureEntry(f) ) ) );
+	}
 public:
 	virtual ~Provider() noexcept = default;
 	inline void onFree() noexcept { delete this; }
@@ -87,7 +93,7 @@ class BoolProvider : public NativeObjectProvider {
 public:
 	BoolProvider(World* world);
 	virtual ~BoolProvider() noexcept = default;
-private:
+public:
 	static constexpr inline int fromPointer(const Object* const ptr) noexcept {
 		return reinterpret_cast<std::intptr_t>(ptr) >> 2;
 	}

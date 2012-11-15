@@ -47,9 +47,8 @@ class PureNativeClosureObject : public NativeClosureObject {
 private:
 	std::function<Handler<Object>(Handler<Object> self, Handler<DonutObject> arg)> func_;
 public:
-	template <typename R, typename... Args>
-	PureNativeClosureObject(World* const world, std::string objectProviderName, std::string closureName, std::function<R(Args... args)> func)
-	:NativeClosureObject(world, objectProviderName, closureName),func_( native::createBind(func) ){};
+	PureNativeClosureObject(World* const world, std::string objectProviderName, std::string closureName, std::function<Handler<Object>(Handler<Object> self, Handler<DonutObject> arg)> f)
+	:NativeClosureObject(world, objectProviderName, closureName), func_(f){}
 	virtual ~PureNativeClosureObject() noexcept {}
 public:
 	Handler<Object> apply(Handler<Object> self, Handler<DonutObject> arg){ return func_(self,arg); }
