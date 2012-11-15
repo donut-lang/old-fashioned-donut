@@ -24,7 +24,7 @@ namespace chisa {
 namespace donut {
 
 NativeObject::NativeObject(World* const world, const std::string& providerName)
-:world_(world),providerName_(providerName)
+:HeapObject(world, providerName)
 {
 	this->prototype_ = world->getProvider(providerName)->prototype();
 }

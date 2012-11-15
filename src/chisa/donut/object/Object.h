@@ -79,6 +79,24 @@ protected: /* 実装すべきもの */
 };
 
 }}
+//---------------------------------------------------------------------------------------------------------------------
+
+namespace chisa {
+namespace donut {
+
+class HeapObject : public Object {
+private:
+	World* const world_;
+	std::string const providerName_;
+public:
+	HeapObject(World* const world, const std::string& providerName):world_(world), providerName_(providerName){};
+	virtual ~HeapObject() noexcept = default;
+public:
+	inline World* world() const noexcept { return this->world_; }
+	inline std::string providerName() const noexcept { return this->providerName_; }
+};
+
+}}
 
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -87,19 +105,14 @@ namespace donut {
 /**
  * ドーナツ言語内でのクロージャやオブジェクトなどのクラス
  */
-class DonutObject : public Object {
+class DonutObject : public HeapObject {
 private:
-	World* const world_;
-	std::string const providerName_;
 	std::map<std::string, Slot> slots_;
 public:
 	DonutObject(World* const world);
 	virtual ~DonutObject() noexcept = default;
 protected: /* 継承用 */
 	DonutObject(World* const world, const std::string& providerName);
-public:
-	World* world() const noexcept { return this->world_; }
-	std::string providerName() const noexcept { return this->providerName_; }
 protected:
 	virtual std::string toStringImpl() const override;
 	virtual std::string providerNameImpl() const override;
@@ -123,18 +136,13 @@ namespace donut {
  * StringやDoubleなどの組み込みオブジェクトと、
  * ユーザーの定義するネイティブクラスの元になるクラス
  */
-class NativeObject : public Object {
+class NativeObject : public HeapObject {
 private:
-	World* const world_;
-	std::string const providerName_;
 	Handler<DonutObject> prototype_;
 protected:
 	NativeObject(World* const world, const std::string& providerName);
 public:
 	virtual ~NativeObject() noexcept = default;
-protected:
-	World* world() const noexcept { return this->world_; }
-	std::string providerName() const noexcept { return this->providerName_; }
 protected:
 	virtual std::string toStringImpl() const override;
 	virtual std::string providerNameImpl() const override { return this->providerName(); }
@@ -155,19 +163,14 @@ protected:
 namespace chisa {
 namespace donut {
 
-class NativeClosureObject : public Object {
+class NativeClosureObject : public HeapObject {
 private:
-	World* const world_;
-	std::string const providerName_;
 	std::string const closureName_;
 public:
 	NativeClosureObject(World* const world, std::string objectProviderName, std::string closureName)
-	:world_(world), providerName_(objectProviderName),closureName_(closureName) {};
+	:HeapObject(world, objectProviderName),closureName_(closureName) {};
 	virtual ~NativeClosureObject() noexcept = default;
 	std::string closureName() const noexcept { return this->closureName_; };
-protected:
-	World* world() const noexcept { return this->world_; }
-	std::string providerName() const noexcept { return this->providerName_; }
 protected:
 	virtual std::string toStringImpl() const override;
 	virtual std::string providerNameImpl() const override { return this->providerName(); }

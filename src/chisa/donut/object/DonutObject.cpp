@@ -28,15 +28,13 @@ namespace donut {
 static const std::string TAG("DonutObject");
 
 DonutObject::DonutObject(World* world, const std::string& providerName)
-:world_(world)
-,providerName_(providerName)
+:HeapObject(world, providerName)
 {
 
 }
 
 DonutObject::DonutObject(World* world)
-:world_(world)
-,providerName_("chisa::donut::DonutObject")
+:HeapObject(world, "chisa::donut::DonutObject")
 {
 
 }
@@ -48,7 +46,7 @@ std::string DonutObject::toStringImpl() const
 
 std::string DonutObject::providerNameImpl() const
 {
-	return this->providerName_;
+	return this->providerName();
 }
 
 int DonutObject::toIntImpl() const
