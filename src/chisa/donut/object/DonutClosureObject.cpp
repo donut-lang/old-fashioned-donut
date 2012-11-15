@@ -23,11 +23,11 @@
 namespace chisa {
 namespace donut {
 
-const std::string TAG("ClosureObject");
+const std::string TAG("DonutClosureObject");
 
-ClosureObject::ClosureObject(World* const world, Handler<Closure> clos, Handler<Object> scope)
-:BaseObject(world)
-,closure_(clos)
+DonutClosureObject::DonutClosureObject(World* const world, Handler<Closure> clos, Handler<Object> scope)
+:DonutObject(world, "chisa::donut::DonutClosureObject")
+,asm_(clos)
 {
 	if(scope){
 		this->store(world, "__scope__", scope);

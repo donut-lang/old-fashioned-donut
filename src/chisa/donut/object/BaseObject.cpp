@@ -24,52 +24,59 @@
 namespace chisa {
 namespace donut {
 
-static const std::string TAG("BaseObject");
+static const std::string TAG("DonutObject");
 
-BaseObject::BaseObject(World* world, const std::string& providerName)
+DonutObject::DonutObject(World* world, const std::string& providerName)
 :world_(world)
 ,providerName_(providerName)
 {
 
 }
 
-std::string BaseObject::toStringImpl() const
+DonutObject::DonutObject(World* world)
+:world_(world)
+,providerName_("chisa::donut::DonutObject")
 {
-	return util::format("(BaseObject %p)", this);
+
 }
 
-std::string BaseObject::providerNameImpl() const
+std::string DonutObject::toStringImpl() const
+{
+	return util::format("(DonutObject %p)", this);
+}
+
+std::string DonutObject::providerNameImpl() const
 {
 	return this->providerName_;
 }
 
-int BaseObject::toIntImpl() const
+int DonutObject::toIntImpl() const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to convert object to int.");
 }
 
-float BaseObject::toFloatImpl() const
+float DonutObject::toFloatImpl() const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to convert to float.");
 }
 
-bool BaseObject::toBoolImpl() const
+bool DonutObject::toBoolImpl() const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to convert to bool.");
 }
 
-bool BaseObject::haveImpl(const std::string& name) const
+bool DonutObject::haveImpl(const std::string& name) const
 {
 	return haveOwnImpl(name) || (haveOwnImpl("__proto__") && loadImpl("__proto__")->have(world(), name));
 }
 
-bool BaseObject::haveOwnImpl(const std::string& name) const
+bool DonutObject::haveOwnImpl(const std::string& name) const
 {
 	auto it = this->slots_.find(name);
 	return it != this->slots_.end() && it->second.have();
 }
 
-Handler<Object> BaseObject::storeImpl(const std::string& name, Handler<Object> obj)
+Handler<Object> DonutObject::storeImpl(const std::string& name, Handler<Object> obj)
 {
 	auto it = this->slots_.find(name);
 	if(it == this->slots_.end()){
@@ -80,7 +87,7 @@ Handler<Object> BaseObject::storeImpl(const std::string& name, Handler<Object> o
 	return obj;
 }
 
-Handler<Object> BaseObject::loadImpl(const std::string& name) const
+Handler<Object> DonutObject::loadImpl(const std::string& name) const
 {
 	auto it = this->slots_.find(name);
 	if(it != this->slots_.end()){

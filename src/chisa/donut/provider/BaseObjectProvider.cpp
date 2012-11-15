@@ -16,43 +16,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "World.h"
-#include "Object.h"
+#include <tinyxml2.h>
+#include "Provider.h"
 #include "../Exception.h"
-#include "../../util/StringUtil.h"
-#include <cstdlib>
-#include <algorithm>
-#include <cstring>
+#include "../object/World.h"
+#include "../native/Bind.h"
 
 namespace chisa {
 namespace donut {
+static const std::string TAG("BaseObjectProvider");
 
-const std::string TAG("FloatObject");
 
-FloatObject::FloatObject(World* const world, const float val)
-:BaseObject(world), val_(val)
+DonutObjectProvider::DonutObjectProvider(World* const world)
+:ObjectProvider(world, "__native_base_object__")
 {
 }
 
-FloatObject::FloatObject(World* const world)
-:BaseObject(world), val_(NAN)
+tinyxml2::XMLElement* DonutObjectProvider::serialize(tinyxml2::XMLDocument* doc, Handler<Object> obj)
 {
-	this->store(world, "__proto__", world->objectPrototype());
 }
 
-std::string FloatObject::toStringImpl() const
+Handler<Object> DonutObjectProvider::deserialize(tinyxml2::XMLElement* xml)
 {
-	return util::format("%f", this->val_);
-}
-
-int FloatObject::toIntImpl() const
-{
-	return static_cast<int>(this->val_);
-}
-
-float FloatObject::toFloatImpl() const
-{
-	return this->val_;
 }
 
 }}

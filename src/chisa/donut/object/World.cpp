@@ -25,28 +25,67 @@ World::World(logging::Logger& log, Handler<Code> code)
 :log_(log)
 ,code_(code)
 ,generation_(0)
-,boolProvider_(this)
-,intProvider_(this)
-,nullProvider_(this)
+,donutObjectProvider_(new DonutObjectProvider(this))
+,boolProvider_(new BoolProvider(this))
+,intProvider_(new IntProvider(this))
+,nullProvider_(new NullProvider(this))
 {
+	this->registerProvider( this->donutObjectProvider() );
+	this->registerProvider( this->boolProvider() );
+	this->registerProvider( this->intProvider() );
+	this->registerProvider( this->nullProvider() );
 
-	this->globalObject_ = Handler<BaseObject>( new BaseObject(this) );
-	this->objectProto_ = Handler<BaseObject>( new BaseObject(this) );
+	this->globalObject_ = this->createEmptyDonutObject();
+	this->objectProto_ = this->baseObjectProvider()->injectPrototype( this->createEmptyDonutObject() );
 
-	this->intProto_ = this->intProvider().createPrototype( this->objectProto_ );
-	this->boolProto_ = this->boolProvider().createPrototype( this->objectProto_ );
-	this->nullProto_ = this->nullProvider().createPrototype( this->objectProto_ );
-this->globalObject_->store(this, "Object", objectProto_);
+	this->intProto_ = this->intProvider()->injectPrototype( this->createEmptyDonutObject() );
+	this->boolProto_ = this->boolProvider()->injectPrototype( this->createEmptyDonutObject() );
+	this->nullProto_ = this->nullProvider()->injectPrototype( this->createEmptyDonutObject() );
+	this->globalObject_->store(this, "Object", objectProto_);
+	this->globalObject_->store(this, "Int", intProto_);
+	this->globalObject_->store(this, "Boolean", boolProto_);
+	this->globalObject_->store(this, "Null", nullProto_);
 
-	this->floatProto_ = Handler<FloatObject>( new FloatObject(this) );
-	this->stringProto_ = Handler<StringObject>( new StringObject(this) );
-	this->globalObject_->store(this, "Float", floatProto_);
-	this->globalObject_->store(this, "String", stringProto_);
 }
 
 unsigned int World::nextGeneration()
 {
 	return ++this->generation_;
 }
+
+
+Handler<DonutObject> World::createDonutObject()
+{
+
+}
+
+Handler<DonutObject> World::createEmptyDonutObject()
+{
+
+}
+
+Handler<Object> World::createInt(const int& val)
+{
+	return this->intProvider()->create(val);
+}
+
+Handler<Object> World::createBool(const bool& val)
+{
+	return this->boolProvider()->create(val);
+}
+
+Handler<Object> World::createNull()
+{
+	return this->nullProvider()->create();
+}
+
+void World::registerProvider( Handler<Provider> provider )
+{
+	this->providers_.insert(
+			std::pair<std::string, Handler<Provider> >(provider->name(), provider)
+			);
+}
+
+
 
 }}

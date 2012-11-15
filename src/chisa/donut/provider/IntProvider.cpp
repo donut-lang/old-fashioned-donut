@@ -28,7 +28,7 @@ namespace donut {
 static const std::string TAG("IntProvider");
 
 IntProvider::IntProvider(World* world)
-:ObjectProvider(world, "__native_int__")
+:NativeObjectProvider(world, "Integer")
 {
 }
 
@@ -50,6 +50,11 @@ float IntProvider::toFloat(const Object* ptr) const
 bool IntProvider::toBool(const Object* ptr) const
 {
 	return fromPointer(ptr) != 0;
+}
+
+Handler<Object> IntProvider::create( const int& val )
+{
+	return Handler<Object>::__internal__fromRawPointerWithoutCheck( IntProvider::toPointer(val) );
 }
 
 tinyxml2::XMLElement* IntProvider::serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj )

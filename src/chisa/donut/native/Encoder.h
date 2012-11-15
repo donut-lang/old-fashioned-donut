@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include "../object/ObjectBase.h"
+#include "../object/Object.h"
 
 
 namespace chisa {

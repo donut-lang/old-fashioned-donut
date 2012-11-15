@@ -16,27 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-#include "../../Handler.h"
 #include "Provider.h"
+#include "ProviderManager.h"
+#include "../native/NativeClosure.h"
+#include "../Exception.h"
+#include <tinyxml2.h>
 
 namespace chisa {
 namespace donut {
 
-class ProviderManager : public HandlerBody<ProviderManager> {
-private:
-	std::map<std::string, Handler<Provider> > providerMap_;
-public:
-	ProviderManager();
-	virtual ~ProviderManager() noexcept = default;
-public:
-	void registerProvider( Handler<Provider> provider );
-	Handler<Provider> getProvider( const std::string& name );
-	bool haveProvider( const std::string& name );
-public:
-	void onFree() noexcept {delete this;}
-	tinyxml2::XMLElement* serialize( World* world, tinyxml2::XMLDocument* doc, Handler<Object> obj );
-	Handler<Object> deserialize( World* world, tinyxml2::XMLElement* xml );
-};
+Provider::Provider( World* const world, const std::string& name )
+:world_(world), name_(name)
+{
+
+}
 
 }}

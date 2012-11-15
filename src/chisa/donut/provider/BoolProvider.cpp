@@ -27,7 +27,7 @@ namespace donut {
 static const std::string TAG("BoolProvider");
 
 BoolProvider::BoolProvider(World* world)
-:ObjectProvider(world, "__native_bool__")
+:NativeObjectProvider(world, "Boolean")
 {
 	/*
 	this->registerPureNativeClosure("opAnd", native::createBind( std::function<Object*(Object*, bool)>(
@@ -80,6 +80,11 @@ Handler<Object> BoolProvider::deserialize( tinyxml2::XMLElement* xml )
 	if(xml->QueryBoolAttribute("val", &val) != tinyxml2::XML_SUCCESS){
 		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. failed to read xml");
 	}
+	return Handler<Object>::__internal__fromRawPointerWithoutCheck( BoolProvider::toPointer(val) );
+}
+
+Handler<Object> BoolProvider::create( const bool& val )
+{
 	return Handler<Object>::__internal__fromRawPointerWithoutCheck( BoolProvider::toPointer(val) );
 }
 

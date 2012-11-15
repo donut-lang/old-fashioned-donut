@@ -17,7 +17,7 @@
  */
 
 #include "World.h"
-#include "ObjectBase.h"
+#include "Object.h"
 #include "../Exception.h"
 #include "../../util/StringUtil.h"
 
@@ -168,11 +168,11 @@ std::string Object::providerName(World* const world) const
 	case Tag::Obj:
 		return this->providerNameImpl();
 	case Tag::Int:
-		return world->intProto()->providerNameImpl();
+		return world->intProvider().name();
 	case Tag::Bool:
-		return world->boolProto()->providerNameImpl();
+		return world->boolProvider().name();
 	case Tag::Null:
-		return world->nullProto()->providerNameImpl();
+		return world->nullProvider().name();
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
@@ -189,6 +189,11 @@ Handler<Object> Object::load(World* const pool, const int& idx) const
 }
 
 bool Object::have(World* const pool, const int& idx) const
+{
+	return this->have(pool, toName(idx));
+}
+
+bool Object::haveOwn(World* const pool, const int& idx) const
 {
 	return this->have(pool, toName(idx));
 }

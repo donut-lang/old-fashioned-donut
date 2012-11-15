@@ -23,6 +23,7 @@
 #include "../code/Code.h"
 #include "Object.h"
 #include "../provider/PrimitiveProvider.h"
+#include "../provider/BaseObjectProvider.h"
 
 namespace chisa {
 namespace donut {
@@ -34,34 +35,42 @@ private:
 private:
 	unsigned int generation_;
 private:
-	BoolProvider boolProvider_;
-	IntProvider intProvider_;
-	NullProvider nullProvider_;
+	std::map<std::string, Handler<Provider> > providers_;
+	Handler<DonutObjectProvider> donutObjectProvider_;
+	Handler<BoolProvider> boolProvider_;
+	Handler<IntProvider> intProvider_;
+	Handler<NullProvider> nullProvider_;
 private:
-	Handler<BaseObject> globalObject_;
-	Handler<BaseObject> objectProto_;
-	Handler<Object> boolProto_;
-	Handler<Object> intProto_;
-	Handler<Object> nullProto_;
-	Handler<FloatObject> floatProto_;
-	Handler<StringObject> stringProto_;
+	Handler<DonutObject> globalObject_;
+	Handler<DonutObject> objectProto_;
+	Handler<DonutObject> boolProto_;
+	Handler<DonutObject> intProto_;
+	Handler<DonutObject> nullProto_;
 public:
 	World(logging::Logger& log, Handler<Code> code);
 	virtual ~World() noexcept = default;
 public:
 	unsigned int nextGeneration();
+	Handler<DonutObjectProvider>& donutObjectProvider() { return donutObjectProvider_; };
+	Handler<BoolProvider>& boolProvider() {return boolProvider_;};
+	Handler<IntProvider>& intProvider() {return intProvider_;};
+	Handler<NullProvider>& nullProvider() {return nullProvider_;};
 
-	BoolProvider& boolProvider() {return boolProvider_;};
-	IntProvider& intProvider() {return intProvider_;};
-	NullProvider& nullProvider() {return nullProvider_;};
-
-	Handler<Object> boolProto() {return boolProto_;};
-	Handler<Object> intProto() {return intProto_;};
-	Handler<Object> nullProto() {return nullProto_;};
-
+	Handler<DonutObject> objectProto() { return this->objectProto_; };
+	Handler<DonutObject> boolProto() {return boolProto_;};
+	Handler<DonutObject> intProto() {return intProto_;};
+	Handler<DonutObject> nullProto() {return nullProto_;};
+private:
 	Handler<Code> code() { return this->code_; }
-	Handler<BaseObject> global() { return this->globalObject_; }
-	Handler<BaseObject> objectProto() { return this->objectProto_; };
+	Handler<DonutObject> global() { return this->globalObject_; }
+public:
+	Handler<DonutObject> createDonutObject();
+	Handler<DonutObject> createEmptyDonutObject();
+	Handler<Object> createInt(const int& val);
+	Handler<Object> createBool(const bool& val);
+	Handler<Object> createNull();
+public:
+	void registerProvider( Handler<Provider> provider );
 };
 
 }}

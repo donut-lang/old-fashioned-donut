@@ -52,6 +52,11 @@ bool NullProvider::toBool(const Object* ptr) const
 	return false;
 }
 
+Handler<Object> NullProvider::create()
+{
+	return Handler<Object>::__internal__fromRawPointerWithoutCheck( NullProvider::toPointer() );
+}
+
 tinyxml2::XMLElement* NullProvider::serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj )
 {
 	tinyxml2::XMLElement* elm = doc->NewElement("null");
