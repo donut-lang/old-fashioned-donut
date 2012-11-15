@@ -28,10 +28,12 @@
 	Handler<Object> result = machine.start(idx);
 
 #define SOURCE_TEST_THROW(src)\
+{\
 	World world(log_trace);\
 	unsigned int idx = Parser::fromString(src, "<MEM>", 0)->parseProgram(world.code());\
 	Machine machine(log_trace, &world);\
-	ASSERT_ANY_THROW( machine.start(idx) );
+	ASSERT_ANY_THROW( machine.start(idx) );\
+}
 
 #define SOURCE_TEST_TRUE(expr)\
 {\
@@ -49,7 +51,7 @@
 	ASSERT_FALSE(result->isObject());\
 	ASSERT_FALSE(result->isInt());\
 	ASSERT_TRUE(result->isBool());\
-	ASSERT_TRUE(result->toBool(&world));\
+	ASSERT_FALSE(result->toBool(&world));\
 }
 
 #define SOURCE_TEST_INT(num, expr)\

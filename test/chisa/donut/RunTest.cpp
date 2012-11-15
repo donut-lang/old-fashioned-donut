@@ -42,7 +42,7 @@ TEST(DonutRunTest, AssignTest)
 
 TEST(DonutRunTest, ObjectTest)
 {
-	EXECUTE_SRC("test=1;");
+	EXECUTE_SRC("{a=>1};");
 	ASSERT_TRUE(result->have(&world, "a"));
 	ASSERT_TRUE(result->isObject());
 	ASSERT_EQ(1, result->load(&world, "a")->toInt(&world));

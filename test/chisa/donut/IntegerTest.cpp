@@ -40,7 +40,7 @@ TEST(DonutIntegerTest, MulTest)
 
 TEST(DonutIntegerTest, DivTest)
 {
-	SOURCE_TEST_INT(2, "9/2;");
+	SOURCE_TEST_INT(4, "9/2;");
 }
 
 TEST(DonutIntegerTest, ModTest)
