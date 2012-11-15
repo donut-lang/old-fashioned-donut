@@ -17,45 +17,131 @@
  */
 
 #pragma once
-#include "ObjectBase.h"
+#include <cstdint>
+#include <map>
+#include "../../Handler.h"
+#include "../../util/ClassUtil.h"
+#include "Slot.h"
+
+namespace chisa {
+namespace donut {
+class World;
+
+/**
+ * すべての窓口となるクラス。
+ */
+class Object : public HandlerBody<Object> {
+	DISABLE_COPY_AND_ASSIGN(Object);
+public:
+	enum Tag{
+		Mask=3U,
+		Obj=0U,
+		Int=1U,
+		Bool=2U,
+		Null=3U
+	};
+public:
+	Object() = default;
+	virtual ~Object() noexcept = default;
+public: //すべてのオブジェクトに出来なければならないこと
+	std::string toString(World* const pool) const;
+	int toInt(World* const pool) const;
+	float toFloat(World* const pool) const;
+	bool toBool(World* const pool) const;
+	bool have(World* const pool, const std::string& name) const;
+	bool have(World* const pool, const int& idx) const;
+	bool haveOwn(World* const pool, const std::string& name) const;
+	bool haveOwn(World* const pool, const int& idx) const;
+	Handler<Object> store(World* const pool, const std::string& name, Handler<Object> obj);
+	Handler<Object> store(World* const pool, const int& idx, Handler<Object> obj);
+	Handler<Object> load(World* const pool, const std::string& name) const;
+	Handler<Object> load(World* const pool, const int& idx) const;
+	std::string providerName(World* const world) const;
+public:
+	inline bool isObject() const noexcept { return Tag::Obj==tag(); };
+	inline bool isNull() const noexcept { return Tag::Null==tag(); };
+	inline bool isBool() const noexcept { return Tag::Bool==tag(); };
+	inline bool isInt() const noexcept { return Tag::Int==tag(); };
+	inline intptr_t tag() const noexcept { return reinterpret_cast<std::uintptr_t>(this) & Tag::Mask; };
+	inline void onFree() {};//参照カウント、どうしましょう？？
+	inline void incref( bool check ) { if(isObject()) { this->HandlerBody<Object>::incref(check); } };
+	inline void decref() { if(isObject()) { this->HandlerBody<Object>::decref(); } };
+protected: /* 実装すべきもの */
+	virtual std::string toStringImpl() const = 0;
+	virtual std::string providerNameImpl() const = 0;
+	virtual int toIntImpl() const = 0;
+	virtual float toFloatImpl() const = 0;
+	virtual bool toBoolImpl() const = 0;
+	virtual bool haveImpl(const std::string& name) const = 0;
+	virtual bool haveOwnImpl(const std::string& name) const = 0;
+	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) = 0;
+	virtual Handler<Object> loadImpl(const std::string& name) const = 0;
+};
+
+/**
+ * StringやDoubleなどの組み込みオブジェクトと、
+ * ユーザーの定義するネイティブクラスの元になるクラス
+ */
+class NativeObject : public Object {
+private:
+	World* const world_;
+	std::string const providerName_;
+protected:
+	NativeObject(World* const world, const std::string& providerName)
+	:world_(world),providerName_(providerName){};
+public:
+	virtual ~NativeObject() noexcept = default;
+protected:
+	World* world() const noexcept { return this->world_; }
+	std::string providerName() const noexcept { return this->providerName_; }
+	virtual std::string providerNameImpl() const override { return this->providerName(); }
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * ドーナツ言語内でのクロージャやオブジェクトなどのクラス
+ */
+class DonutObject : public Object {
+private:
+	World* const world_;
+	std::string const providerName_;
+	std::map<std::string, Slot> slots_;
+public:
+	DonutObject(World* const world);
+	virtual ~DonutObject() noexcept = default;
+protected: /* 継承用 */
+	DonutObject(World* const world, const std::string& providerName);
+public:
+	World* world() const noexcept { return this->world_; }
+	std::string providerName() const noexcept { return this->providerName_; }
+protected:
+	virtual std::string toStringImpl() const override;
+	virtual std::string providerNameImpl() const override;
+	virtual int toIntImpl() const override;
+	virtual float toFloatImpl() const override;
+	virtual bool toBoolImpl() const override;
+	virtual bool haveImpl(const std::string& name) const override;
+	virtual bool haveOwnImpl(const std::string& name) const override;
+	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) override;
+	virtual Handler<Object> loadImpl(const std::string& name) const override;
+};
+
+}}
+//---------------------------------------------------------------------------------------------------------------------
+
 #include "../code/Closure.h"
 
 namespace chisa {
 namespace donut {
-
-class StringObject : public BaseObject {
+class DonutClosureObject : public DonutObject {
 private:
-	const std::string str_;
+	Handler<Closure> asm_;
 public:
-	StringObject(World* const world);
-	StringObject(World* const world, const std::string& str);
-	virtual ~StringObject() noexcept = default;
-	virtual std::string toStringImpl() const override;
-	virtual int toIntImpl() const override;
-	virtual float toFloatImpl() const override;
-	virtual bool toBoolImpl() const override;
-};
-
-class FloatObject : public BaseObject {
-private:
-	const float val_;
+	DonutClosureObject(World* const world, Handler<Closure> clos, Handler<Object> scope);
+	virtual ~DonutClosureObject() noexcept = default;
 public:
-	FloatObject(World* const world);
-	FloatObject(World* const world, const float val);
-	virtual ~FloatObject() noexcept = default;
-	virtual std::string toStringImpl() const override;
-	virtual int toIntImpl() const override;
-	virtual float toFloatImpl() const override;
-};
-
-class ClosureObject : public BaseObject {
-private:
-	Handler<Closure> closure_;
-public:
-	ClosureObject(World* const world, Handler<Closure> clos, Handler<Object> scope=Handler<Object>());
-	virtual ~ClosureObject() noexcept = default;
-public:
-	Handler<Closure> closure() const { return this->closure_; };
+	Handler<Closure> getClosureCode() const { return this->asm_; };
 };
 
 }}

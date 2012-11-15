@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include "../object/ObjectBase.h"
+#include "../object/Object.h"
 #include "../native/Bind.h"
 
 namespace chisa {
@@ -48,14 +48,14 @@ public:
 
 class PureNativeClosure : public NativeClosure {
 private:
-	std::function<Handler<Object>(Handler<Object> self, Handler<BaseObject> arg)> func_;
+	std::function<Handler<Object>(Handler<Object> self, Handler<DonutObject> arg)> func_;
 public:
 	template <typename R, typename... Args>
 	PureNativeClosure(World* const world, std::string objectProviderName, std::string closureName, std::function<R(Args... args)> func)
 	:NativeClosure(world, objectProviderName, closureName),func_( native::createBind(func) ){};
 	virtual ~PureNativeClosure() noexcept {}
 public:
-	Handler<Object> apply(Handler<Object> self, Handler<BaseObject> arg){ return func_(self,arg); }
+	Handler<Object> apply(Handler<Object> self, Handler<DonutObject> arg){ return func_(self,arg); }
 };
 
 }}

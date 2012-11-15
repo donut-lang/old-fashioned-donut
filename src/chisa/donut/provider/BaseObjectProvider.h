@@ -16,21 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ClosureEntry.h"
-#include "../object/World.h"
-#include "../native/NativeClosure.h"
+#pragma once
+#include "Provider.h"
 
 namespace chisa {
 namespace donut {
 
-PureClosureEntry::PureClosureEntry(PureClosureEntry::Signature func)
-:func_(func)
-{
-}
-
-Handler<Object> PureClosureEntry::createObject( World* const world, const std::string& objectProviderName, const std::string& closureName )
-{
-	return world->create<PureNativeClosure>(objectProviderName, closureName, this->func_);
-}
+class DonutObjectProvider : public ObjectProvider {
+private:
+	std::map<std::string, Handler<ClosureEntry> > closureEntry_;
+public:
+	DonutObjectProvider( World* const world );
+	virtual ~DonutObjectProvider() noexcept = default;
+public:
+	virtual tinyxml2::XMLElement* serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
+	virtual Handler<Object> deserialize( tinyxml2::XMLElement* xml ) override;
+public:
+	Handler<DonutObject> create();
+};
 
 }}

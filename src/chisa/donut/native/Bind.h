@@ -20,7 +20,7 @@
 #include <functional>
 #include "../../util/StringUtil.h"
 #include "../Exception.h"
-#include "../object/ObjectBase.h"
+#include "../object/Object.h"
 #include "Decoder.h"
 #include "Encoder.h"
 
@@ -29,7 +29,7 @@ namespace donut {
 namespace native {
 
 template <size_t idx, typename R, typename T>
-Handler<Object> callWithBind(Handler<Object> self, Handler<BaseObject> args, std::function<R(T)> const& funct)
+Handler<Object> callWithBind(Handler<Object> self, Handler<DonutObject> args, std::function<R(T)> const& funct)
 {
 	T s = native::Decoder<T>::exec( args->world(), self );
 	if(!s){
@@ -39,7 +39,7 @@ Handler<Object> callWithBind(Handler<Object> self, Handler<BaseObject> args, std
 }
 
 template <size_t idx, typename R, typename T, typename U, typename... Args>
-Handler<Object> callWithBind(Handler<Object> self, Handler<BaseObject> args, std::function<R(T self, U val, Args... args)> const& funct)
+Handler<Object> callWithBind(Handler<Object> self, Handler<DonutObject> args, std::function<R(T self, U val, Args... args)> const& funct)
 {
 	if( !args->have(args->world(), idx) ) {
 		constexpr int _idx = idx+1;
@@ -53,9 +53,9 @@ Handler<Object> callWithBind(Handler<Object> self, Handler<BaseObject> args, std
 }
 
 template <typename R, typename... Args>
-std::function<Handler<Object>(Handler<Object> self, Handler<BaseObject> args)> createBind(std::function<R(Args... args)> f)
+std::function<Handler<Object>(Handler<Object> self, Handler<DonutObject> args)> createBind(std::function<R(Args... args)> f)
 {
-	return [f](Handler<Object> self, Handler<BaseObject> args){
+	return [f](Handler<Object> self, Handler<DonutObject> args){
 		return callWithBind<0>(self, args, f);
 	};
 }

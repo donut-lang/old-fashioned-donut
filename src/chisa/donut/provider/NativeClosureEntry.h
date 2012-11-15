@@ -18,15 +18,15 @@
 
 #pragma once
 #include "../../Handler.h"
-#include "../object/ObjectBase.h"
+#include "../object/Object.h"
 
 namespace chisa {
 namespace donut {
 
-class ClosureEntry : public HandlerBody<ClosureEntry> {
+class NativeClosureEntry : public HandlerBody<NativeClosureEntry> {
 public:
-	ClosureEntry() = default;
-	virtual ~ClosureEntry() noexcept = default;
+	NativeClosureEntry() = default;
+	virtual ~NativeClosureEntry() noexcept = default;
 public:
 	void onFree() noexcept { delete this; }
 	virtual Handler<Object> createObject( World* const world, const std::string& objectProviderName, const std::string& closureName ) = 0;
@@ -34,14 +34,14 @@ public:
 
 //-----------------------------------------------------------------------------
 
-class PureClosureEntry : public ClosureEntry {
+class PureNativeClosureEntry : public NativeClosureEntry {
 public:
-	typedef std::function<Handler<Object>(Handler<Object> self, Handler<BaseObject> arg)> Signature;
+	typedef std::function<Handler<Object>(Handler<Object> self, Handler<DonutObject> arg)> Signature;
 private:
-	PureClosureEntry::Signature func_;
+	PureNativeClosureEntry::Signature func_;
 public:
-	PureClosureEntry(PureClosureEntry::Signature func);
-	virtual ~PureClosureEntry() noexcept {};
+	PureNativeClosureEntry(PureNativeClosureEntry::Signature func);
+	virtual ~PureNativeClosureEntry() noexcept {};
 	virtual Handler<Object> createObject( World* const world, const std::string& objectProviderName, const std::string& closureName ) override;
 };
 

@@ -60,9 +60,12 @@ bool ObjectProvider::haveClosure( const std::string& name )
 }
 
 
-Handler<BaseObject> ObjectProvider::createPrototype( Handler<Object> ptoro )
+Handler<BaseObject> ObjectProvider::createPrototype( Handler<BaseObject> material )
 {
-
+	for(std::pair<std::string, Handler<ClosureEntry> > item : this->closureEntry_){
+		material->store(world(), item.first, item.second->createObject(world(), item.first));
+	}
+	return material;
 }
 
 //-----------------------------------------------------------------------------

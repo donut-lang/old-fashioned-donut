@@ -17,9 +17,11 @@
  */
 
 #pragma once
+#include <map>
+#include <string>
 #include "../../Handler.h"
 #include "../object/Object.h"
-#include "ClosureEntry.h"
+#include "NativeClosureEntry.h"
 
 namespace tinyxml2{
 class XMLDocument;
@@ -35,7 +37,7 @@ private:
 	World* const world_;
 	std::string const name_;
 public:
-	Provider( World* const world, const std::string& name );
+	Provider( World* const world, const std::string& name ):world_(world), name_(name){};
 	virtual ~Provider() noexcept = default;
 public:
 	inline void onFree() noexcept { delete this; }
@@ -46,33 +48,83 @@ public:
 	virtual Handler<Object> deserialize( tinyxml2::XMLElement* xml ) = 0;
 };
 
-//-----------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------
 
-class ObjectProvider : public Provider {
+class NativeObjectProvider : public Provider {
 private:
-	std::map<std::string, Handler<ClosureEntry> > closureEntry_;
-public:
-	ObjectProvider( World* const world, const std::string& name );
-	virtual ~ObjectProvider() noexcept = default;
+	std::map<std::string, Handler<NativeClosureEntry> > nativeClosures_;
 protected:
-	void registerPureNativeClosure( const std::string& name, PureClosureEntry::Signature func );
+	NativeObjectProvider( World* const world, const std::string& name ):Provider(world, name){};
+	void registerPureNativeClosure( PureNativeClosureEntry::Signature func );
+	virtual tinyxml2::XMLElement* serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj ) = 0;
+	virtual Handler<Object> deserializeImpl( tinyxml2::XMLElement* xml ) = 0;
 public:
-	Handler<ClosureEntry> getClosure( const std::string& name );
-	bool haveClosure( const std::string& name );
-	Handler<BaseObject> createPrototype( Handler<Object> ptoro );
-};
-
-//-----------------------------------------------------------------------------
-
-class ClosureProvider : public Provider {
-private:
-	HandlerW<ProviderManager> manager_;
-public:
-	ClosureProvider(World* const world, HandlerW<ProviderManager> mgr):Provider(world, "__native_closure__"),manager_(mgr){};
-	virtual ~ClosureProvider() noexcept = default;
+	virtual ~NativeObjectProvider() noexcept = default;
+	void injectPrototype( Handler<DonutObject> obj );
 public:
 	virtual tinyxml2::XMLElement* serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
 	virtual Handler<Object> deserialize( tinyxml2::XMLElement* xml ) override;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+class IntProvider : public NativeObjectProvider {
+public:
+	IntProvider(World* world);
+	virtual ~IntProvider() noexcept = default;
+private:
+	static constexpr inline int fromPointer(const Object* const ptr) noexcept {
+		return reinterpret_cast<std::intptr_t>(ptr) >> 2;
+	}
+	static constexpr inline Object* toPointer(int const& val) noexcept {
+		return reinterpret_cast<Object*>((val << 2) | Object::Tag::Int);
+	}
+public:
+	std::string toString(const Object* ptr) const;
+	int toInt(const Object* ptr) const;
+	float toFloat(const Object* ptr) const;
+	bool toBool(const Object* ptr) const;
+	virtual tinyxml2::XMLElement* serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
+	virtual Handler<Object> deserialize( tinyxml2::XMLElement* xml ) override;
+	Handler<Object> create( const int& val );
+};
+
+class BoolProvider : public NativeObjectProvider {
+public:
+	BoolProvider(World* world);
+	virtual ~BoolProvider() noexcept = default;
+private:
+	static constexpr inline int fromPointer(const Object* const ptr) noexcept {
+		return reinterpret_cast<std::intptr_t>(ptr) >> 2;
+	}
+	static constexpr inline Object* toPointer(int const& val) noexcept {
+		return reinterpret_cast<Object*>((val << 2) | Object::Tag::Int);
+	}
+public:
+	std::string toString(const Object* ptr) const;
+	int toInt(const Object* ptr) const;
+	float toFloat(const Object* ptr) const;
+	bool toBool(const Object* ptr) const;
+	virtual tinyxml2::XMLElement* serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
+	virtual Handler<Object> deserialize( tinyxml2::XMLElement* xml ) override;
+	Handler<Object> create( const bool& val );
+};
+
+class NullProvider : public NativeObjectProvider {
+public:
+	NullProvider(World* world);
+	virtual ~NullProvider() noexcept = default;
+private:
+	static constexpr inline Object* toPointer() noexcept {
+		return reinterpret_cast<Object*>(Object::Tag::Null);
+	}
+public:
+	std::string toString(const Object* ptr) const;
+	int toInt(const Object* ptr) const;
+	float toFloat(const Object* ptr) const;
+	bool toBool(const Object* ptr) const;
+	virtual tinyxml2::XMLElement* serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
+	virtual Handler<Object> deserialize( tinyxml2::XMLElement* xml ) override;
+	Handler<Object> create();
 };
 
 }}
