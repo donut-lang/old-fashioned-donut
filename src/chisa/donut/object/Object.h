@@ -78,35 +78,6 @@ protected: /* 実装すべきもの */
 	virtual Handler<Object> loadImpl(const std::string& name) const = 0;
 };
 
-/**
- * StringやDoubleなどの組み込みオブジェクトと、
- * ユーザーの定義するネイティブクラスの元になるクラス
- */
-class NativeObject : public Object {
-private:
-	World* const world_;
-	std::string const providerName_;
-protected:
-	NativeObject(World* const world, const std::string& providerName)
-	:world_(world),providerName_(providerName){};
-public:
-	virtual ~NativeObject() noexcept = default;
-protected:
-	World* world() const noexcept { return this->world_; }
-	std::string providerName() const noexcept { return this->providerName_; }
-protected:
-	virtual std::string toStringImpl() const override;
-	virtual std::string providerNameImpl() const override { return this->providerName(); }
-
-	virtual int toIntImpl() const override;
-	virtual float toFloatImpl() const override;
-	virtual bool toBoolImpl() const override;
-	virtual bool haveImpl(const std::string& name) const override;
-	virtual bool haveOwnImpl(const std::string& name) const override;
-	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) override;
-	virtual Handler<Object> loadImpl(const std::string& name) const override;
-};
-
 }}
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -132,6 +103,75 @@ public:
 protected:
 	virtual std::string toStringImpl() const override;
 	virtual std::string providerNameImpl() const override;
+	virtual int toIntImpl() const override;
+	virtual float toFloatImpl() const override;
+	virtual bool toBoolImpl() const override;
+	virtual bool haveImpl(const std::string& name) const override;
+	virtual bool haveOwnImpl(const std::string& name) const override;
+	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) override;
+	virtual Handler<Object> loadImpl(const std::string& name) const override;
+};
+
+}}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+namespace chisa {
+namespace donut {
+
+/**
+ * StringやDoubleなどの組み込みオブジェクトと、
+ * ユーザーの定義するネイティブクラスの元になるクラス
+ */
+class NativeObject : public Object {
+private:
+	World* const world_;
+	std::string const providerName_;
+	Handler<DonutObject> prototype_;
+protected:
+	NativeObject(World* const world, const std::string& providerName);
+public:
+	virtual ~NativeObject() noexcept = default;
+protected:
+	World* world() const noexcept { return this->world_; }
+	std::string providerName() const noexcept { return this->providerName_; }
+protected:
+	virtual std::string toStringImpl() const override;
+	virtual std::string providerNameImpl() const override { return this->providerName(); }
+
+	virtual int toIntImpl() const override;
+	virtual float toFloatImpl() const override;
+	virtual bool toBoolImpl() const override;
+	virtual bool haveImpl(const std::string& name) const override;
+	virtual bool haveOwnImpl(const std::string& name) const override;
+	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) override;
+	virtual Handler<Object> loadImpl(const std::string& name) const override;
+};
+
+}}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+namespace chisa {
+namespace donut {
+
+class NativeClosureObject : public Object {
+private:
+	World* const world_;
+	std::string const providerName_;
+	std::string const closureName_;
+public:
+	NativeClosureObject(World* const world, std::string objectProviderName, std::string closureName)
+	:world_(world), providerName_(objectProviderName),closureName_(closureName) {};
+	virtual ~NativeClosureObject() noexcept = default;
+	std::string closureName() const noexcept { return this->closureName_; };
+protected:
+	World* world() const noexcept { return this->world_; }
+	std::string providerName() const noexcept { return this->providerName_; }
+protected:
+	virtual std::string toStringImpl() const override;
+	virtual std::string providerNameImpl() const override { return this->providerName(); }
+
 	virtual int toIntImpl() const override;
 	virtual float toFloatImpl() const override;
 	virtual bool toBoolImpl() const override;

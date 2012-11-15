@@ -34,13 +34,15 @@ World::World(logging::Logger& log, Handler<Code> code)
 	this->registerProvider( this->boolProvider() );
 	this->registerProvider( this->intProvider() );
 	this->registerProvider( this->nullProvider() );
+	this->registerProvider(Handler<Provider>( new FloatProvider(this) ));
+	this->registerProvider(Handler<Provider>( new StringProvider(this) ));
 
+	this->objectProto_ = this->donutObjectProvider()->prototype();
 	this->globalObject_ = this->createEmptyDonutObject();
-	this->objectProto_ = this->donutObjectProvider()->injectPrototype( this->createEmptyDonutObject() );
 
-	this->intProto_ = this->intProvider()->injectPrototype( this->createEmptyDonutObject() );
-	this->boolProto_ = this->boolProvider()->injectPrototype( this->createEmptyDonutObject() );
-	this->nullProto_ = this->nullProvider()->injectPrototype( this->createEmptyDonutObject() );
+	this->intProto_ = this->intProvider()->prototype();
+	this->boolProto_ = this->boolProvider()->prototype();
+	this->nullProto_ = this->nullProvider()->prototype();
 	this->globalObject_->store(this, "Object", objectProto_);
 	this->globalObject_->store(this, "Int", intProto_);
 	this->globalObject_->store(this, "Boolean", boolProto_);
@@ -53,6 +55,15 @@ unsigned int World::nextGeneration()
 	return ++this->generation_;
 }
 
+
+Handler<Provider> World::getProvider( const std::string& name ) const
+{
+	auto it = this->providers_.find(name);
+	if(it != this->providers_.end()){
+		return it->second;
+	}
+	return Handler<Provider>();
+}
 
 Handler<DonutObject> World::createDonutObject()
 {
