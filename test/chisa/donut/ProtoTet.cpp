@@ -23,20 +23,7 @@
 namespace chisa {
 namespace donut {
 
-class DonutProtoTest : public ::testing::Test
-{
-protected:
-	Handler<Code> code;
-public:
-	void SetUp(){
-		code = Handler<Code>(new Code());
-	}
-	void TearDown(){
-		code.reset();
-	}
-};
-
-TEST_F(DonutProtoTest, NullTest)
+TEST(DonutProtoTest, NullTest)
 {
 	SOURCE_TEST_INT(1, "z={};x={__proto__=>z};z.x=1;x.x;");
 }

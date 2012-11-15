@@ -30,11 +30,6 @@ TEST(DonutRunTest, NullTest)
 	ASSERT_FALSE(result->isObject());
 }
 
-TEST(DonutRunTest, StringTest)
-{
-	SOURCE_TEST_STR("abc", "'abc';");
-}
-
 TEST(DonutRunTest, AssignTest)
 {
 	SOURCE_TEST_INT(1, "test=1;");

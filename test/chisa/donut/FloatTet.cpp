@@ -38,6 +38,8 @@ TEST(FloatTest, LeTest) { SOURCE_TEST_TRUE("12.34<=123.45;"); SOURCE_TEST_TRUE("
 TEST(FloatTest, GeTest) { SOURCE_TEST_FALSE("12.34>=123.45;"); SOURCE_TEST_TRUE("12.34>=12.34;");}
 TEST(FloatTest, EqTest) { SOURCE_TEST_TRUE("12.34==12.34;"); }
 TEST(FloatTest, NeTest) { SOURCE_TEST_TRUE("12.34!=123.45;"); }
+TEST(FloatTest, PlusTest) { SOURCE_TEST_FLOAT(12.34, "+12.34;");SOURCE_TEST_FLOAT(-12.34, "+(-12.34);"); }
+TEST(FloatTest, MinusTest) { SOURCE_TEST_FLOAT(-12.34, "-12.34;");SOURCE_TEST_FLOAT(12.34, "-(-12.34);"); }
 
 TEST(FloatTest, IntCastTest)
 {
