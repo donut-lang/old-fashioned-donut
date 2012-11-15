@@ -38,7 +38,7 @@ std::string Code::disasm( Instruction inst )
 	int constIndex;
 	this->disasm(inst, opcode, constKind, constIndex);
 
-	std::string repl=util::format("#%02x ", inst);
+	std::string repl=util::format("#%08x ", inst);
 
 	switch(opcode) {
 	case Nop:
@@ -87,7 +87,8 @@ std::string Code::disasm( Instruction inst )
 		repl += "BranchFalse";
 		break;
 	default:
-		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon opcode: %d in %08x", (opcode >> Inst::OpcodeShift), opcode);
+		repl += "????????";
+		break;
 	}
 
 	while(repl.size() < 22){
@@ -117,7 +118,8 @@ std::string Code::disasm( Instruction inst )
 		repl += util::format("null");
 		break;
 	default:
-		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon const kind: %d in %08x", (constKind >> Inst::ConstKindShift), opcode);
+		repl += "????????";
+		break;
 	}
 	return repl;
 }

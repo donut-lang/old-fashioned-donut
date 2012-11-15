@@ -280,7 +280,7 @@ expr [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	;
 
 index [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
-	: ^(IDX obj=expr[$code] ^(ARGS ex=exprlist[$code]))
+	: ^(IDX obj=expr[$code] ex=arglist[$code])
 	{
 		$asmlist.insert($asmlist.end(), $obj.asmlist.begin(), $obj.asmlist.end());
 		$asmlist.push_back(Inst::PushCopy);
@@ -292,7 +292,7 @@ index [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	;
 
 apply [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
-	: ^(APPLY ^(DOT SCOPE IDENT) ^(ARGS ex=exprlist[$code]))
+	: ^(APPLY ^(DOT SCOPE IDENT) ex=arglist[$code])
 	{
 		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
 		$asmlist.push_back(Inst::SearchScope);
@@ -302,7 +302,7 @@ apply [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 		$asmlist.insert($asmlist.end(), $ex.asmlist.begin(), $ex.asmlist.end());
 		$asmlist.push_back(Inst::Apply | $ex.count);
 	}
-	| ^(APPLY ^(DOT obj=expr[$code] IDENT) ^(ARGS exprlist[$code]))
+	| ^(APPLY ^(DOT obj=expr[$code] IDENT) ex=arglist[$code])
 	{
 		$asmlist.insert($asmlist.end(), $obj.asmlist.begin(), $obj.asmlist.end());
 		$asmlist.push_back(Inst::PushCopy);
@@ -411,18 +411,22 @@ array [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 @init {
 	int array_count=0;
 }
-	: ^(ARRAY exprlist[$code]) {
-		$asmlist.swap($exprlist.asmlist);
-		$asmlist.push_back(Inst::ConstructArray | $exprlist.count);
+	: ^(ARRAY  (v=expr[$code] {
+			$asmlist.insert($asmlist.end(), $v.asmlist.begin(), $v.asmlist.end());
+			array_count+=1;
+		}
+		)*) {
+		$asmlist.push_back(Inst::ConstructArray | array_count);
 	}
 	;
 
-exprlist [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist, int count ]
+arglist [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist, int count ]
 @init {
-	$count = 0;
+	$count=0;
 }
-	: (v=expr[$code] {
+	: ^(ARGS (v=expr[$code] {
 		$asmlist.insert($asmlist.end(), $v.asmlist.begin(), $v.asmlist.end());
 		$count+=1;
-	}
-	)*;
+	})*)
+	;
+
