@@ -21,6 +21,7 @@
 #include "../object/World.h"
 #include "../Exception.h"
 #include <tinyxml2.h>
+#include <sstream>
 
 namespace chisa {
 namespace donut {
@@ -34,7 +35,7 @@ StringProvider::StringProvider(World* world)
 		char* c;
 		std::string const str = self->toString(this->world());
 		int v = std::strtol(str.c_str(), &c, 0);
-		if (c || *c) {
+		if (*c) {
 			throw DonutException(__FILE__, __LINE__, "Cannot convert \"%s\" to int.", str.c_str());
 		}
 		return v;
@@ -43,7 +44,7 @@ StringProvider::StringProvider(World* world)
 		char* c;
 		std::string const str = self->toString(this->world());
 		float v = std::strtof(str.c_str(), &c);
-		if (c || *c) {
+		if (*c) {
 			throw DonutException(__FILE__, __LINE__, "Cannot convert \"%s\" to float.", str.c_str());
 		}
 		return v;
@@ -59,6 +60,19 @@ StringProvider::StringProvider(World* world)
 			return false;
 		}
 		throw DonutException(__FILE__, __LINE__, "Cannot convert \"%s\" to bool.", str.c_str());
+	}));
+	this->registerPureNativeClosure("opAdd", std::function<std::string(StringObject*,StringObject*)>([&](StringObject* self, StringObject* other) {
+		std::string const str = self->toString(this->world());
+		std::string const ostr = other->toString(this->world());
+		return str + ostr;
+	}));
+	this->registerPureNativeClosure("opMul", std::function<std::string(StringObject*, int)>([&](StringObject* self, int times) {
+		std::string const str = self->toString(this->world());
+		std::stringstream ss;
+		for(int i=0;i<times;++i){
+			ss << str;
+		}
+		return ss.str();
 	}));
 }
 
