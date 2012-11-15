@@ -89,7 +89,7 @@ private:
 	World* const world_;
 	std::string const providerName_;
 public:
-	HeapObject(World* const world, const std::string& providerName):world_(world), providerName_(providerName){};
+	HeapObject(World* const world, const std::string& providerName);
 	virtual ~HeapObject() noexcept = default;
 public:
 	inline World* world() const noexcept { return this->world_; }
