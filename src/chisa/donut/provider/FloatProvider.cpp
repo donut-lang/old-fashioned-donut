@@ -48,25 +48,25 @@ FloatProvider::FloatProvider(World* world)
 	this->registerPureNativeClosure("opMinus", std::function<float(float)>([&](float self) {
 		return -self;
 	}));
-	this->registerPureNativeClosure("opLt", std::function<float(float, float)>([&](float self, float v) {
+	this->registerPureNativeClosure("opLt", std::function<bool(float, float)>([&](float self, float v) {
 		return self < v;
 	}));
-	this->registerPureNativeClosure("opLe", std::function<float(float, float)>([&](float self, float v) {
+	this->registerPureNativeClosure("opLe", std::function<bool(float, float)>([&](float self, float v) {
 		return self <= v;
 	}));
-	this->registerPureNativeClosure("opGt", std::function<float(float, float)>([&](float self, float v) {
+	this->registerPureNativeClosure("opGt", std::function<bool(float, float)>([&](float self, float v) {
 		return self > v;
 	}));
-	this->registerPureNativeClosure("opGe", std::function<float(float, float)>([&](float self, float v) {
+	this->registerPureNativeClosure("opGe", std::function<bool(float, float)>([&](float self, float v) {
 		return self >= v;
 	}));
-	this->registerPureNativeClosure("opEq", std::function<float(float, float)>([&](float self, float v) {
+	this->registerPureNativeClosure("opEq", std::function<bool(float, float)>([&](float self, float v) {
 		return self == v;
 	}));
-	this->registerPureNativeClosure("opNe", std::function<float(float, float)>([&](float self, float v) {
+	this->registerPureNativeClosure("opNe", std::function<bool(float, float)>([&](float self, float v) {
 		return self != v;
 	}));
-	this->registerPureNativeClosure("opNe", std::function<int(float)>([&](float self) {
+	this->registerPureNativeClosure("toInteger", std::function<int(float)>([&](float self) {
 		return static_cast<int>(self);
 	}));
 }
