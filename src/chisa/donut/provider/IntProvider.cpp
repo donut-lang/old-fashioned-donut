@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "PrimitiveProvider.h"
+#include "Provider.h"
 #include "../../util/StringUtil.h"
 #include "../object/World.h"
 #include "../Exception.h"
@@ -57,13 +57,13 @@ Handler<Object> IntProvider::create( const int& val )
 	return Handler<Object>::__internal__fromRawPointerWithoutCheck( IntProvider::toPointer(val) );
 }
 
-tinyxml2::XMLElement* IntProvider::serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj )
+tinyxml2::XMLElement* IntProvider::serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj )
 {
 	tinyxml2::XMLElement* elm = doc->NewElement("int");
 	elm->SetAttribute("val", IntProvider::fromPointer(obj.get()));
 	return elm;
 }
-Handler<Object> IntProvider::deserialize( tinyxml2::XMLElement* xml )
+Handler<Object> IntProvider::deserializeImpl( tinyxml2::XMLElement* xml )
 {
 	if( std::string("int") != xml->Name() ){
 		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. wrong element name: %s != \"bool\"", xml->Name());

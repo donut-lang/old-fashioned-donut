@@ -17,8 +17,7 @@
  */
 
 #include "Provider.h"
-#include "ProviderManager.h"
-#include "../native/NativeClosure.h"
+#include "../object/NativeObject.h"
 #include "../Exception.h"
 #include <tinyxml2.h>
 
@@ -31,46 +30,17 @@ Provider::Provider( World* const world, const std::string& name )
 
 }
 
-//-----------------------------------------------------------------------------
 
-ObjectProvider::ObjectProvider( World* const world, const std::string& name )
-:Provider(world, name)
+void Provider::registerPureNativeClosure( const std::string& name, PureNativeClosureEntry::Signature func )
 {
-
+	this->nativeClosures_.insert(
+			std::pair<std::string,Handler<NativeClosureEntry> >(
+					name, Handler<NativeClosureEntry>(new PureNativeClosureEntry(func)) ) );
 }
 
-void ObjectProvider::registerPureNativeClosure( const std::string& name, PureClosureEntry::Signature func )
-{
-	this->closureEntry_.insert(
-			std::pair<std::string,Handler<ClosureEntry> >(
-					name, Handler<ClosureEntry>(new PureClosureEntry(func)) ) );
-}
+//---------------------------------------------------------------------------------------------------------------------
 
-Handler<ClosureEntry> ObjectProvider::getClosure( const std::string& name )
-{
-	if(haveClosure(name)){
-		return this->closureEntry_.find(name)->second;
-	}
-	return Handler<ClosureEntry>();
-}
-
-bool ObjectProvider::haveClosure( const std::string& name )
-{
-	return this->closureEntry_.find(name) != this->closureEntry_.end();
-}
-
-
-Handler<BaseObject> ObjectProvider::createPrototype( Handler<BaseObject> material )
-{
-	for(std::pair<std::string, Handler<ClosureEntry> > item : this->closureEntry_){
-		material->store(world(), item.first, item.second->createObject(world(), item.first));
-	}
-	return material;
-}
-
-//-----------------------------------------------------------------------------
-
-tinyxml2::XMLElement* ClosureProvider::serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj_ )
+tinyxml2::XMLElement* Provider::serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj_ )
 {
 	Handler<NativeClosure> obj = obj_.cast<NativeClosure>();
 	tinyxml2::XMLElement* elm = doc->NewElement("clos");
@@ -78,7 +48,7 @@ tinyxml2::XMLElement* ClosureProvider::serialize( tinyxml2::XMLDocument* doc, Ha
 	elm->SetAttribute("closureName", obj->closureName().c_str());
 	return elm;
 }
-Handler<Object> ClosureProvider::deserialize( tinyxml2::XMLElement* xml )
+Handler<Object> Provider::deserialize( tinyxml2::XMLElement* xml )
 {
 	if( std::string("clos") != xml->Name() ){
 		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. wrong element name: %s != \"clos\"", xml->Name());

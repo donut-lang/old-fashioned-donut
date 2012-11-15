@@ -19,7 +19,8 @@
 #include "Machine.h"
 #include "../Exception.h"
 #include "../../util/StringUtil.h"
-#include "../native/NativeClosure.h"
+#include "../object/NativeObject.h"
+#include "../object/DonutObject.h"
 
 namespace chisa {
 namespace donut {
@@ -41,28 +42,28 @@ Handler<Object> Machine::start( const std::size_t closureIndex )
 	return this->run();
 }
 
-Handler<ClosureObject> Machine::createClosure(Handler<Closure> closureCode)
+Handler<DonutClosureObject> Machine::createClosure(Handler<Closure> closureCode)
 {
 	if( this->context_ ){
-		return world_->create<ClosureObject>(closureCode, this->context_);
+		return world_->createDonutClosureObject(closureCode, this->context_);
 	}else{
-		return world_->create<ClosureObject>(closureCode, world_->createNull());
+		return world_->createDonutClosureObject(closureCode, world_->createNull());
 	}
 }
 
-void Machine::enterClosure(Handler<Object> self, Handler<ClosureObject> clos, Handler<Object> args)
+void Machine::enterClosure(Handler<Object> self, Handler<DonutClosureObject> clos, Handler<Object> args)
 {
 	if(this->closure_){
 		this->callStack_.push_back( Callchain(this->pc_, this->self_, this->closure_, this->context_) );
 	}
-	this->context_ = world_->create<BaseObject>();
+	this->context_ = world_->createEmptyDonutObject();
 	this->context_->store(world_, "__scope__", clos);
 	this->self_ = self;
 	this->closure_ = clos;
 	this->pc_ = 0;
-	this->asmlist_ = &(clos->closure()->instlist());
+	this->asmlist_ = &(clos->closureCode()->instlist());
 	{
-		Handler<Closure> c = clos->closure();
+		Handler<Closure> c = clos->closureCode();
 		const std::size_t max = c->arglist().size();
 		for(std::size_t i=0;i<max;++i){
 			const std::string arg = c->arglist().at(i);
@@ -83,7 +84,7 @@ bool Machine::returnClosure()
 	this->context_ = chain.context_;
 	this->callStack_.pop_back();
 
-	this->asmlist_ = &(closure_->closure()->instlist());
+	this->asmlist_ = &( closure_->closureCode()->instlist() );
 	return true;
 }
 Handler<Object> Machine::run()
@@ -112,7 +113,7 @@ Handler<Object> Machine::run()
 				break;
 			}
 			case Inst::ConstFloat: {
-				this->stack_.push_back( world_->create<FloatObject>( code->getFloat(constIndex) ) );
+				//this->stack_.push_back( world_->create<FloatObject>( code->getFloat(constIndex) ) );
 				break;
 			}
 			case Inst::ConstClosure: {
@@ -124,7 +125,7 @@ Handler<Object> Machine::run()
 				break;
 			}
 			case Inst::ConstString: {
-				this->stack_.push_back( world_->create<StringObject>( code->getString(constIndex) ) );
+				//this->stack_.push_back( world_->create<StringObject>( code->getString(constIndex) ) );
 				break;
 			}
 			case Inst::ConstNull: {
@@ -198,7 +199,7 @@ Handler<Object> Machine::run()
 			break;
 		}
 		case Inst::Apply: {
-			Handler<BaseObject> obj(world_->create<BaseObject>());
+			Handler<BaseObject> obj(world_->createEmptyDonutObject());
 			for(unsigned int i=constIndex;i>0;--i){
 				Handler<Object> val = this->stack_.back();
 				this->stack_.pop_back();
@@ -214,17 +215,17 @@ Handler<Object> Machine::run()
 			//XXX: ちゃんと型を使う
 			if(!closureObj->isObject()){
 				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. \"%s\" is not callable.", closureObj->toString(world_).c_str());
-			} else if ( Handler<ClosureObject> closObj = closureObj.tryCast<ClosureObject>() ) {
+			} else if ( Handler<DonutClosureObject> closObj = closureObj.tryCast<DonutClosureObject>() ) {
 				this->enterClosure(destObj, closObj, obj);
-			} else if ( Handler<PureNativeClosure> builtin = closureObj.tryCast<PureNativeClosure>() ) {
-				this->stack_.push_back( builtin->apply(destObj, obj) );
+			} else if ( Handler<PureNativeClosureObject> clos = closureObj.tryCast<PureNativeClosureObject>() ) {
+				this->stack_.push_back( clos->apply(destObj, obj) );
 			}else{
 				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. \"%s\" is not callable.", closureObj->toString(world_).c_str());
 			}
 			break;
 		}
 		case Inst::ConstructArray: {
-			Handler<Object> obj(world_->create<BaseObject>());
+			Handler<Object> obj(world_->createEmptyDonutObject() );
 			for(unsigned int i=constIndex;i>0;--i){
 				Handler<Object> val = this->stack_.back();
 				this->stack_.pop_back();
@@ -234,8 +235,8 @@ Handler<Object> Machine::run()
 			break;
 		}
 		case Inst::ConstructObject: {
-			Handler<Object> obj(world_->create<BaseObject>());
-			for(unsigned int i=0;i<constIndex;++i){
+			Handler<Object> obj(world_->createEmptyDonutObject() );
+			for(int i=0;i<constIndex;++i){
 				Handler<Object> val = this->stack_.back();
 				this->stack_.pop_back();
 				Handler<Object> name = this->stack_.back();

@@ -97,8 +97,12 @@ protected:
 	virtual std::string providerNameImpl() const override { return this->providerName(); }
 };
 
+}}
+
 //---------------------------------------------------------------------------------------------------------------------
 
+namespace chisa {
+namespace donut {
 /**
  * ドーナツ言語内でのクロージャやオブジェクトなどのクラス
  */
@@ -125,23 +129,6 @@ protected:
 	virtual bool haveOwnImpl(const std::string& name) const override;
 	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) override;
 	virtual Handler<Object> loadImpl(const std::string& name) const override;
-};
-
-}}
-//---------------------------------------------------------------------------------------------------------------------
-
-#include "../code/Closure.h"
-
-namespace chisa {
-namespace donut {
-class DonutClosureObject : public DonutObject {
-private:
-	Handler<Closure> asm_;
-public:
-	DonutClosureObject(World* const world, Handler<Closure> clos, Handler<Object> scope);
-	virtual ~DonutClosureObject() noexcept = default;
-public:
-	Handler<Closure> getClosureCode() const { return this->asm_; };
 };
 
 }}

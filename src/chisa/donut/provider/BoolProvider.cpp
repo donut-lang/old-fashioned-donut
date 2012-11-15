@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "PrimitiveProvider.h"
+#include "Provider.h"
 #include "../Exception.h"
 #include <tinyxml2.h>
 #include "../object/World.h"
@@ -65,13 +65,13 @@ bool BoolProvider::toBool(const Object* ptr) const
 	return fromPointer(ptr);
 }
 
-tinyxml2::XMLElement* BoolProvider::serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj )
+tinyxml2::XMLElement* BoolProvider::serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj )
 {
 	tinyxml2::XMLElement* elm = doc->NewElement("bool");
 	elm->SetAttribute("val", BoolProvider::fromPointer(obj.get()));
 	return elm;
 }
-Handler<Object> BoolProvider::deserialize( tinyxml2::XMLElement* xml )
+Handler<Object> BoolProvider::deserializeImpl( tinyxml2::XMLElement* xml )
 {
 	if( std::string("bool") != xml->Name() ){
 		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. wrong element name: %s != \"bool\"", xml->Name());

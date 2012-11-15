@@ -36,7 +36,7 @@ World::World(logging::Logger& log, Handler<Code> code)
 	this->registerProvider( this->nullProvider() );
 
 	this->globalObject_ = this->createEmptyDonutObject();
-	this->objectProto_ = this->baseObjectProvider()->injectPrototype( this->createEmptyDonutObject() );
+	this->objectProto_ = this->donutObjectProvider()->injectPrototype( this->createEmptyDonutObject() );
 
 	this->intProto_ = this->intProvider()->injectPrototype( this->createEmptyDonutObject() );
 	this->boolProto_ = this->boolProvider()->injectPrototype( this->createEmptyDonutObject() );
@@ -60,6 +60,11 @@ Handler<DonutObject> World::createDonutObject()
 }
 
 Handler<DonutObject> World::createEmptyDonutObject()
+{
+
+}
+
+Handler<DonutClosureObject> World::createDonutClosureObject( Handler<Code> closure, Handler<Object> scope )
 {
 
 }
