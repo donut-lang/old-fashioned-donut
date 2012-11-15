@@ -18,9 +18,34 @@
 
 #include "Encoder.h"
 
+#include "../object/World.h"
 namespace chisa {
 namespace donut {
 namespace native {
+
+template <>
+Handler<Object> encode<int>(World* const world, int val)
+{
+	return world->createInt(val);
+}
+
+template <>
+Handler<Object> encode<float>(World* const world, float val)
+{
+	return world->createFloatObject(val);
+}
+
+template <>
+Handler<Object> encode<bool>(World* const world, bool val)
+{
+	return world->createBool(val);
+}
+
+template <>
+Handler<Object> encode<std::string>(World* const world, std::string val)
+{
+	return world->createStringObject(val);
+}
 
 }}}
 

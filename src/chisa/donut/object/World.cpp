@@ -76,6 +76,13 @@ Handler<StringObject> World::createStringObject(const std::string& val)
 	return obj;
 }
 
+Handler<FloatObject> World::createFloatObject(const float& val)
+{
+	Handler<FloatObject> obj(new FloatObject(this, val));
+
+	return obj;
+}
+
 Handler<DonutClosureObject> World::createDonutClosureObject( Handler<Closure> closure, Handler<Object> scope )
 {
 	Handler<DonutClosureObject> obj(new DonutClosureObject(this, closure, scope));

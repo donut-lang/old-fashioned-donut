@@ -34,6 +34,9 @@ tokens {
 	
 	AND;
 	OR;
+
+	BIT_AND;
+	BIT_OR;
 	
 	CLT;
 	CGT;
@@ -65,18 +68,20 @@ expr
 	| 'if' '(' expr ')' '{' a=exprlist '}' 'else' '{' b=exprlist '}' -> ^(IF expr $a $b)
 	| 'for' '(' fa=expr? ';' fb=expr? ';' fc=expr? ')' '{' fd=exprlist '}' -> ^(FOR ^(CONT $fa?) ^(CONT $fb?) ^(CONT $fc?) $fd)
 	| 'while' '(' fb=expr? ')' '{' fd=exprlist '}' -> ^(FOR ^(CONT) ^(CONT $fb) ^(CONT) $fd)
-	| expr6;
+	| expr8;
 
-expr6 : (a=expr5->$a)
-	( '='  b=expr -> ^(ASSIGN $expr6 $b)
-	| '+=' b=expr -> ^(ASSIGN_OP ADD $expr6 $b)
-	| '-=' b=expr -> ^(ASSIGN_OP SUB $expr6 $b)
-	| '*=' b=expr -> ^(ASSIGN_OP MUL $expr6 $b)
-	| '/=' b=expr -> ^(ASSIGN_OP DIV $expr6 $b)
-	| '%=' b=expr -> ^(ASSIGN_OP MOD $expr6 $b)
+expr8 : (a=expr7->$a)
+	( '='  b=expr -> ^(ASSIGN $expr8 $b)
+	| '+=' b=expr -> ^(ASSIGN_OP ADD $expr8 $b)
+	| '-=' b=expr -> ^(ASSIGN_OP SUB $expr8 $b)
+	| '*=' b=expr -> ^(ASSIGN_OP MUL $expr8 $b)
+	| '/=' b=expr -> ^(ASSIGN_OP DIV $expr8 $b)
+	| '%=' b=expr -> ^(ASSIGN_OP MOD $expr8 $b)
 	)?;
 
 
+expr7 : (a=expr6->$a) ('|' b=expr6 -> ^(BIT_OR $expr7 $b))*;
+expr6 : (a=expr5->$a) ('&' b=expr5 -> ^(BIT_AND $expr6 $b))*;
 expr5 : (a=expr4->$a) ('||' b=expr4 -> ^(OR $expr5 $b))*;
 expr4 : (a=expr3->$a) ('&&' b=expr3 -> ^(AND $expr4 $b))*;
 

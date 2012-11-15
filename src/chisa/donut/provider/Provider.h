@@ -128,6 +128,23 @@ public:
 	Handler<Object> create();
 };
 
+class StringProvider : public NativeObjectProvider {
+public:
+	StringProvider(World* world);
+	virtual ~StringProvider() noexcept = default;
+public:
+	virtual tinyxml2::XMLElement* serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
+	virtual Handler<Object> deserializeImpl( tinyxml2::XMLElement* xml ) override;
+};
+
+class FloatProvider : public NativeObjectProvider {
+public:
+	FloatProvider(World* world);
+	virtual ~FloatProvider() noexcept = default;
+public:
+	virtual tinyxml2::XMLElement* serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
+	virtual Handler<Object> deserializeImpl( tinyxml2::XMLElement* xml ) override;
+};
 //---------------------------------------------------------------------------------------------------------------------
 
 class DonutObjectProvider : public Provider {

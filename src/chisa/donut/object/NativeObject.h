@@ -36,6 +36,18 @@ public:
 	virtual bool toBoolImpl() const override;
 };
 
+class FloatObject: public NativeObject {
+private:
+	const float value_;
+public:
+	FloatObject(World* const world, const float& str);
+	virtual ~FloatObject() noexcept = default;
+	virtual std::string toStringImpl() const override;
+	virtual int toIntImpl() const override;
+	virtual float toFloatImpl() const override;
+	virtual bool toBoolImpl() const override;
+};
+
 class NativeClosureObject : public NativeObject {
 private:
 	std::string const closureName_;
