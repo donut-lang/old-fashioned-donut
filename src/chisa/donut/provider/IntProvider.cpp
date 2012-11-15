@@ -30,56 +30,62 @@ static const std::string TAG("IntProvider");
 IntProvider::IntProvider(World* world)
 :NativeObjectProvider(world, "Integer")
 {
-	this->registerPureNativeClosure("opAdd", std::function<Object*(Object*, int)>([&](Object* self, int v)->Object* {
-		return IntProvider::toPointer(IntProvider::fromPointer(self) + v);
+	this->registerPureNativeClosure("opAdd", std::function<int(int, int)>([&](int self, int v) {
+		return self + v;
 	}));
-	this->registerPureNativeClosure("opAnd", std::function<Object*(Object*, int)>([&](Object* self, int v)->Object* {
-		return IntProvider::toPointer(IntProvider::fromPointer(self) & v);
+	this->registerPureNativeClosure("opBitAnd", std::function<int(int, int)>([&](int self, int v) {
+		return self & v;
 	}));
-	this->registerPureNativeClosure("opOr", std::function<Object*(Object*, int)>([&](Object* self, int v)->Object* {
-		return IntProvider::toPointer(IntProvider::fromPointer(self) | v);
+	this->registerPureNativeClosure("opBitOr", std::function<int(int, int)>([&](int self, int v) {
+		return self | v;
 	}));
-	this->registerPureNativeClosure("opSub", std::function<Object*(Object*, int)>([&](Object* self, int v)->Object* {
-		return IntProvider::toPointer(IntProvider::fromPointer(self) - v);
+	this->registerPureNativeClosure("opSub", std::function<int(int, int)>([&](int self, int v) {
+		return self-v;
 	}));
-	this->registerPureNativeClosure("opMul", std::function<Object*(Object*, int)>([&](Object* self, int v)->Object* {
-		return IntProvider::toPointer(IntProvider::fromPointer(self) * v);
+	this->registerPureNativeClosure("opMul", std::function<int(int, int)>([&](int self, int v) {
+		return self*v;
 	}));
-	this->registerPureNativeClosure("opDiv", std::function<Object*(Object*, int)>([&](Object* self, int v)->Object* {
-		return IntProvider::toPointer(IntProvider::fromPointer(self) / v);
+	this->registerPureNativeClosure("opDiv", std::function<int(int, int)>([&](int self, int v) {
+		return self/v;
 	}));
-	this->registerPureNativeClosure("opPlus", std::function<Object*(Object*)>([&](Object* self)->Object* {
-		return IntProvider::toPointer(+IntProvider::fromPointer(self));
+	this->registerPureNativeClosure("opPlus", std::function<int(int)>([&](int self) {
+		return +self;
 	}));
-	this->registerPureNativeClosure("opMinus", std::function<Object*(Object*)>([&](Object* self)->Object* {
-		return IntProvider::toPointer(-IntProvider::fromPointer(self));
+	this->registerPureNativeClosure("opMinus", std::function<int(int)>([&](int self) {
+		return -self;
 	}));
-	this->registerPureNativeClosure("opMod", std::function<Object*(Object*, int)>([&](Object* self, int v)->Object* {
-		return IntProvider::toPointer(IntProvider::fromPointer(self) % v);
+	this->registerPureNativeClosure("toFloat", std::function<float(int)>([&](int self) {
+		return static_cast<float>(self);
 	}));
-	this->registerPureNativeClosure("opLt", std::function<Object*(Object*, int)>([&](Object* self, int v)->Object* {
-		return BoolProvider::toPointer(IntProvider::fromPointer(self) < v);
+	this->registerPureNativeClosure("opMod", std::function<int(int, int)>([&](int self, int v) {
+		return self % v;
 	}));
-	this->registerPureNativeClosure("opLe", std::function<Object*(Object*, int)>([&](Object* self, int v)->Object* {
-		return BoolProvider::toPointer(IntProvider::fromPointer(self) <= v);
+	this->registerPureNativeClosure("opLt", std::function<bool(int, int)>([&](int self, int v) {
+		return self < v;
 	}));
-	this->registerPureNativeClosure("opGt", std::function<Object*(Object*, int)>([&](Object* self, int v)->Object* {
-		return BoolProvider::toPointer(IntProvider::fromPointer(self) > v);
+	this->registerPureNativeClosure("opLe", std::function<bool(int, int)>([&](int self, int v) {
+		return self <= v;
 	}));
-	this->registerPureNativeClosure("opGe", std::function<Object*(Object*, int)>([&](Object* self, int v)->Object* {
-		return BoolProvider::toPointer(IntProvider::fromPointer(self) >= v);
+	this->registerPureNativeClosure("opGt", std::function<bool(int, int)>([&](int self, int v) {
+		return self > v;
 	}));
-	this->registerPureNativeClosure("opEq", std::function<Object*(Object*, int)>([&](Object* self, int v)->Object* {
-		return BoolProvider::toPointer(IntProvider::fromPointer(self) == v);
+	this->registerPureNativeClosure("opGe", std::function<bool(int, int)>([&](int self, int v) {
+		return self >= v;
 	}));
-	this->registerPureNativeClosure("opNe", std::function<Object*(Object*, int)>([&](Object* self, int v)->Object* {
-		return BoolProvider::toPointer(IntProvider::fromPointer(self) != v);
+	this->registerPureNativeClosure("opEq", std::function<bool(int, int)>([&](int self, int v) {
+		return self == v;
+	}));
+	this->registerPureNativeClosure("opNe", std::function<bool(int, int)>([&](int self, int v) {
+		return self != v;
+	}));
+	this->registerPureNativeClosure("toString", std::function<std::string(int)>([&](int self) {
+		return util::toString(self);
 	}));
 }
 
 std::string IntProvider::toString(const Object* ptr) const
 {
-	return util::format("%d", fromPointer(ptr));
+	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast Integer to String implicitly. Use toString()");
 }
 
 int IntProvider::toInt(const Object* ptr) const
@@ -89,12 +95,13 @@ int IntProvider::toInt(const Object* ptr) const
 
 float IntProvider::toFloat(const Object* ptr) const
 {
-	return fromPointer(ptr);
+	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast Integer to Float implicitly. Use toFloat()");
 }
 
 bool IntProvider::toBool(const Object* ptr) const
 {
-	return fromPointer(ptr) != 0;
+
+	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast Integer to Boolean.");
 }
 
 Handler<Object> IntProvider::create( const int& val )

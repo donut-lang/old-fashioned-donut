@@ -32,9 +32,6 @@ template <size_t idx, typename R, typename T>
 Handler<Object> callWithBind(Handler<Object> self, Handler<DonutObject> args, std::function<R(T)> const& funct)
 {
 	T s = native::Decoder<T>::exec( args->world(), self );
-	if(!s){
-		throw DonutException(__FILE__, __LINE__, "oops. type mismatched. %s <-> %s", typeid(T).name(), typeid(self).name());
-	}
 	return native::Encoder<R>::exec( args->world(), funct(s) );
 }
 

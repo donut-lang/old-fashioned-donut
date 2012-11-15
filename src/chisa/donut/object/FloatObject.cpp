@@ -22,30 +22,30 @@
 namespace chisa {
 namespace donut {
 
-const std::string TAG("StringObject");
-StringObject::StringObject(World* world, const std::string& str)
-		: NativeObject(world, "String"), str_(str)
+const std::string TAG("FloatObject");
+FloatObject::FloatObject(World* world, const float& val)
+		: NativeObject(world, "Float"), value_(val)
 {
 }
 
-std::string StringObject::toStringImpl() const
+std::string FloatObject::toStringImpl() const
 {
-	return this->str_;
+	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast Float to String implicitly. Use toString()");
 }
 
-int StringObject::toIntImpl() const
+int FloatObject::toIntImpl() const
 {
-	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast String to Integer implicitly. Use toInteger()");
+	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast Float to Integer implicitly. Use toInteger()");
 }
 
-float StringObject::toFloatImpl() const
+float FloatObject::toFloatImpl() const
 {
-	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast String to Float implicitly. Use toFloat()");
+	return this->value_;
 }
 
-bool StringObject::toBoolImpl() const
+bool FloatObject::toBoolImpl() const
 {
-	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast String to Float implicitly. Use toBoolean()");
+	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast Float to Float implicitly. Use toBoolean()");
 }
 
 }}
