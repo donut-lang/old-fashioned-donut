@@ -17,6 +17,7 @@
  */
 
 #include "NativeObject.h"
+#include <algorithm>
 
 namespace chisa {
 namespace donut {
