@@ -48,7 +48,7 @@ private:
 	Handler<DonutObject> intProto_;
 	Handler<DonutObject> nullProto_;
 public:
-	World(logging::Logger& log, Handler<Code> code);
+	World(logging::Logger& log);
 	virtual ~World() noexcept = default;
 public:
 	unsigned int nextGeneration();

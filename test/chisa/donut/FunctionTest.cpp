@@ -17,91 +17,36 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../../src/chisa/donut/parser/Parser.h"
-#include "../../../src/chisa/donut/object/World.h"
-#include "../../../src/chisa/donut/vm/Machine.h"
+#include "DonutHelper.h"
 #include <math.h>
 
 namespace chisa {
 namespace donut {
 
-class DonutFunctionTest : public ::testing::Test
+TEST(DonutFunctionTest, ReturnTest)
 {
-protected:
-	Handler<Code> code;
-public:
-	void SetUp(){
-		code = Handler<Code>(new Code());
-	}
-	void TearDown(){
-		code.reset();
-	}
-};
-
-TEST_F(DonutFunctionTest, ReturnTest)
-{
-	unsigned int idx = Parser::fromString("z = func(a,b){a+b;};z(1,2);", "<MEM>", 0)->parseProgram(code);
-	World world(log_trace, code);
-	Machine machine(log_trace, &world);
-
-	Handler<Object> result = machine.start(idx);
-	ASSERT_FALSE(result->isNull());
-	ASSERT_FALSE(result->isObject());
-	ASSERT_TRUE(result->isInt());
-	ASSERT_EQ(3, result->toInt(&world));
+	SOURCE_TEST_INT(3, "z = func(a,b){a+b;};z(1,2);");
 }
 
-TEST_F(DonutFunctionTest, ReturnWithContTest)
+TEST(DonutFunctionTest, ReturnWithContTest)
 {
-	unsigned int idx = Parser::fromString("z = func(a,b){a+b;};z(1,2);12", "<MEM>", 0)->parseProgram(code);
-	World world(log_trace, code);
-	Machine machine(log_trace, &world);
-
-	Handler<Object> result = machine.start(idx);
-	ASSERT_FALSE(result->isNull());
-	ASSERT_FALSE(result->isObject());
-	ASSERT_TRUE(result->isInt());
-	ASSERT_EQ(12, result->toInt(&world));
+	SOURCE_TEST_INT(12, "z = func(a,b){a+b;};z(1,2);12");
 }
 
-TEST_F(DonutFunctionTest, ArgumentTest)
+TEST(DonutFunctionTest, ArgumentTest)
 {
-	unsigned int idx = Parser::fromString("z = func(a,b,c,d){c;};z(1,2,3,4);", "<MEM>", 0)->parseProgram(code);
-	World world(log_trace, code);
-	Machine machine(log_trace, &world);
-
-	Handler<Object> result = machine.start(idx);
-	ASSERT_FALSE(result->isNull());
-	ASSERT_FALSE(result->isObject());
-	ASSERT_TRUE(result->isInt());
-	ASSERT_EQ(3, result->toInt(&world));
+	SOURCE_TEST_INT(3, "z = func(a,b,c,d){c;};z(1,2,3,4);");
 }
 
-TEST_F(DonutFunctionTest, ScopeTest)
+TEST(DonutFunctionTest, ScopeTest)
 {
-	unsigned int idx = Parser::fromString("a = 1; f = func(){ a=0; };f(); a;", "<MEM>", 0)->parseProgram(code);
-	World world(log_trace, code);
-	Machine machine(log_trace, &world);
-
-	Handler<Object> result = machine.start(idx);
-	ASSERT_FALSE(result->isNull());
-	ASSERT_FALSE(result->isObject());
-	ASSERT_TRUE(result->isInt());
-	ASSERT_EQ(0, result->toInt(&world));
+	SOURCE_TEST_INT(0, "a = 1; f = func(){ a=0; };f(); a;");
 }
 
 
-TEST_F(DonutFunctionTest, ScopeHideTest)
+TEST(DonutFunctionTest, ScopeHideTest)
 {
-	unsigned int idx = Parser::fromString("a = 1; f = func(a){ a=0; };f(1); a;", "<MEM>", 0)->parseProgram(code);
-	World world(log_trace, code);
-	Machine machine(log_trace, &world);
-
-	Handler<Object> result = machine.start(idx);
-	ASSERT_FALSE(result->isNull());
-	ASSERT_FALSE(result->isObject());
-	ASSERT_TRUE(result->isInt());
-	ASSERT_EQ(1, result->toInt(&world));
+	SOURCE_TEST_INT(1, "a = 1; f = func(a){ a=0; };f(1); a;");
 }
 
 }}

@@ -17,51 +17,20 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../../src/chisa/donut/parser/Parser.h"
-#include "../../../src/chisa/donut/object/World.h"
-#include "../../../src/chisa/donut/vm/Machine.h"
+#include "DonutHelper.h"
 #include <math.h>
 
 namespace chisa {
 namespace donut {
 
-class DonutIfTest : public ::testing::Test
+TEST(DonutIfTest, TrueTest)
 {
-protected:
-	Handler<Code> code;
-public:
-	void SetUp(){
-		code = Handler<Code>(new Code());
-	}
-	void TearDown(){
-		code.reset();
-	}
-};
-
-TEST_F(DonutIfTest, TrueTest)
-{
-	unsigned int idx = Parser::fromString("if(1==1){1;}else{2;};", "<MEM>", 0)->parseProgram(code);
-	World world(log_trace, code);
-	Machine machine(log_trace, &world);
-
-	Handler<Object> result = machine.start(idx);
-	ASSERT_FALSE(result->isNull());
-	ASSERT_FALSE(result->isObject());
-	ASSERT_TRUE(result->isInt());
-	ASSERT_EQ(1, result->toInt(&world));
+	SOURCE_TEST_INT(1, "if(1==1){1;}else{2;};");
 }
 
-TEST_F(DonutIfTest, FalseTest)
+TEST(DonutIfTest, FalseTest)
 {
-	unsigned int idx = Parser::fromString("if(1!=1){1;}else{2;};", "<MEM>", 0)->parseProgram(code);
-	World world(log_trace, code);
-	Machine machine(log_trace, &world);
-
-	Handler<Object> result = machine.start(idx);
-	ASSERT_FALSE(result->isNull());
-	ASSERT_FALSE(result->isObject());
-	ASSERT_TRUE(result->isInt());
-	ASSERT_EQ(2, result->toInt(&world));
+	SOURCE_TEST_INT(2, "if(1!=1){1;}else{2;};");
 }
 
 

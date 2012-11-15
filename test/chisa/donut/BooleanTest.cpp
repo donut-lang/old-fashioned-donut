@@ -17,77 +17,32 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../../src/chisa/donut/parser/Parser.h"
-#include "../../../src/chisa/donut/object/World.h"
-#include "../../../src/chisa/donut/vm/Machine.h"
+#include "DonutHelper.h"
 #include <math.h>
 
 namespace chisa {
 namespace donut {
 
-class DonutBooleanTest : public ::testing::Test
-{
-protected:
-	Handler<Code> code;
-	World* world;
-public:
-	void SetUp(){
-		code = Handler<Code>(new Code());
-		world = new World(log_trace, code);
-	}
-	void TearDown(){
-		delete world;
-		code.reset();
-	}
-};
-
-
-#define SOURCE_TEST_TRUE(expr)\
-{\
-	unsigned int idx = Parser::fromString(expr ";", "<MEM>", 0)->parseProgram(code);\
-	World world(log_trace, code);\
-	Machine machine(log_trace, &world);\
-\
-	Handler<Object> result = machine.start(idx);\
-	ASSERT_FALSE(result->isNull());\
-	ASSERT_FALSE(result->isObject());\
-	ASSERT_TRUE(result->isBool());\
-	ASSERT_TRUE(result->toBool(&world));\
-}
-
-#define SOURCE_TEST_FALSE(expr)\
-{\
-	unsigned int idx = Parser::fromString(expr ";", "<MEM>", 0)->parseProgram(code);\
-	World world(log_trace, code);\
-	Machine machine(log_trace, &world);\
-\
-	Handler<Object> result = machine.start(idx);\
-	ASSERT_FALSE(result->isNull());\
-	ASSERT_FALSE(result->isObject());\
-	ASSERT_TRUE(result->isBool());\
-	ASSERT_FALSE(result->toBool(&world));\
-}
-
-TEST_F(DonutBooleanTest, LiteralTest)
+TEST(DonutBooleanTest, LiteralTest)
 {
 	SOURCE_TEST_TRUE("true");
 	SOURCE_TEST_FALSE("false");
 }
-TEST_F(DonutBooleanTest, AndTest)
+TEST(DonutBooleanTest, AndTest)
 {
 	SOURCE_TEST_FALSE("false && false");
 	SOURCE_TEST_FALSE("false && true");
 	SOURCE_TEST_FALSE("true && false");
 	SOURCE_TEST_TRUE("true && true");
 }
-TEST_F(DonutBooleanTest, OrTest)
+TEST(DonutBooleanTest, OrTest)
 {
 	SOURCE_TEST_TRUE("true || true");
 	SOURCE_TEST_TRUE("true || false");
 	SOURCE_TEST_TRUE("false || true");
 	SOURCE_TEST_FALSE("false || false");
 }
-TEST_F(DonutBooleanTest, NotTest)
+TEST(DonutBooleanTest, NotTest)
 {
 	SOURCE_TEST_FALSE("!true");
 	SOURCE_TEST_TRUE("!false");

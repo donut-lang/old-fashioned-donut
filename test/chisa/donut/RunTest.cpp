@@ -17,157 +17,77 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../../src/chisa/donut/parser/Parser.h"
-#include "../../../src/chisa/donut/object/World.h"
-#include "../../../src/chisa/donut/vm/Machine.h"
+#include "DonutHelper.h"
 #include <math.h>
 
 namespace chisa {
 namespace donut {
 
-class DonutRunTest : public ::testing::Test
+TEST(DonutRunTest, NullTest)
 {
-protected:
-	Handler<Code> code;
-public:
-	void SetUp(){
-		code = Handler<Code>(new Code());
-	}
-	void TearDown(){
-		code.reset();
-	}
-};
-
-TEST_F(DonutRunTest, NullTest)
-{
-	unsigned int idx = Parser::fromString("", "<MEM>", 0)->parseProgram(code);
-	World world(log_trace, code);
-	Machine machine(log_trace, &world);
-
-	Handler<Object> result = machine.start(idx);
+	EXECUTE_SRC("");
 	ASSERT_TRUE(result->isNull());
 	ASSERT_FALSE(result->isObject());
 }
 
-TEST_F(DonutRunTest, StringTest)
+TEST(DonutRunTest, StringTest)
 {
-	unsigned int idx = Parser::fromString("'abc';", "<MEM>", 0)->parseProgram(code);
-	World world(log_trace, code);
-	Machine machine(log_trace, &world);
-
-	Handler<Object> result = machine.start(idx);
-	ASSERT_TRUE(result->isObject());
-	ASSERT_EQ("abc", result->toString(&world));
+	SOURCE_TEST_STR("abc", "'abc';");
 }
 
-TEST_F(DonutRunTest, AssignTest)
+TEST(DonutRunTest, AssignTest)
 {
-	unsigned int idx = Parser::fromString("test=1;", "<MEM>", 0)->parseProgram(code);
-	World world(log_trace, code);
-	Machine machine(log_trace, &world);
-
-	Handler<Object> result = machine.start(idx);
-	ASSERT_TRUE(result->isInt());
-	ASSERT_EQ(1, result->toInt(&world));
+	SOURCE_TEST_INT(1, "test=1;");
 }
 
-TEST_F(DonutRunTest, ObjectTest)
+TEST(DonutRunTest, ObjectTest)
 {
-	unsigned int idx = Parser::fromString("{a=>1};", "<MEM>", 0)->parseProgram(code);
-	World world(log_trace, code);
-	Machine machine(log_trace, &world);
-
-	Handler<Object> result = machine.start(idx);
+	EXECUTE_SRC("test=1;");
 	ASSERT_TRUE(result->have(&world, "a"));
 	ASSERT_TRUE(result->isObject());
 	ASSERT_EQ(1, result->load(&world, "a")->toInt(&world));
 }
 
-TEST_F(DonutRunTest, ArrayTest)
+TEST(DonutRunTest, ArrayTest)
 {
-	unsigned int idx = Parser::fromString("[2,3,1];", "<MEM>", 0)->parseProgram(code);
-	World world(log_trace, code);
-	Machine machine(log_trace, &world);
-
-	Handler<Object> result = machine.start(idx);
+	EXECUTE_SRC("[2,3,1];");
 	ASSERT_TRUE(result->have(&world, "0"));
 	ASSERT_EQ(2, result->load(&world, "0")->toInt(&world));
+	ASSERT_EQ(2, result->load(&world, 0)->toInt(&world));
 
 	ASSERT_TRUE(result->have(&world, "1"));
 	ASSERT_EQ(3, result->load(&world, "1")->toInt(&world));
+	ASSERT_EQ(3, result->load(&world, 1)->toInt(&world));
 
 	ASSERT_TRUE(result->have(&world, "2"));
-	ASSERT_EQ(1, result->load(&world, "2")->toInt(&world));
+	ASSERT_EQ(1, result->load(&world, 2)->toInt(&world));
 }
 
-TEST_F(DonutRunTest, AddTest)
+TEST(DonutRunTest, AddTest)
 {
-	unsigned int idx = Parser::fromString("1+2;", "<MEM>", 0)->parseProgram(code);
-	World world(log_trace, code);
-	Machine machine(log_trace, &world);
-
-	Handler<Object> result = machine.start(idx);
-	ASSERT_EQ(3, result->toInt(&world));
+	SOURCE_TEST_INT(3, "1+2;")
 }
 
-TEST_F(DonutRunTest, AddTripleTest)
+TEST(DonutRunTest, AddTripleTest)
 {
-	unsigned int idx = Parser::fromString("2+1+1;", "<MEM>", 0)->parseProgram(code);
-	World world(log_trace, code);
-	Machine machine(log_trace, &world);
-
-	Handler<Object> result = machine.start(idx);
-	ASSERT_EQ(4, result->toInt(&world));
+	SOURCE_TEST_INT(4, "2+1+1;")
 }
 
-TEST_F(DonutRunTest, AssignOpTest)
+TEST(DonutRunTest, AssignOpTest)
 {
-	unsigned int idx = Parser::fromString("test=0; test+=1;", "<MEM>", 0)->parseProgram(code);
-	World world(log_trace, code);
-	Machine machine(log_trace, &world);
-
-	Handler<Object> result = machine.start(idx);
-	ASSERT_EQ(1, result->toInt(&world));
+	SOURCE_TEST_INT(1, "test=0; test+=1;")
 }
 
-TEST_F(DonutRunTest, PostOpTest)
+TEST(DonutRunTest, PostOpTest)
 {
-	{
-		unsigned int idx = Parser::fromString("test=0; test++;", "<MEM>", 0)->parseProgram(code);
-		World world(log_trace, code);
-		Machine machine(log_trace, &world);
-
-		Handler<Object> result = machine.start(idx);
-		ASSERT_EQ(0, result->toInt(&world));
-	}
-	{
-		unsigned int idx = Parser::fromString("test=0; test++; test;", "<MEM>", 0)->parseProgram(code);
-		World world(log_trace, code);
-		Machine machine(log_trace, &world);
-
-		Handler<Object> result = machine.start(idx);
-		ASSERT_EQ(1, result->toInt(&world));
-	}
+	SOURCE_TEST_INT(0, "test=0; test++;");
+	SOURCE_TEST_INT(1, "test=0; test++; test;");
 }
 
-TEST_F(DonutRunTest, PreOpTest)
+TEST(DonutRunTest, PreOpTest)
 {
-	{
-		unsigned int idx = Parser::fromString("test=0; ++test;", "<MEM>", 0)->parseProgram(code);
-		World world(log_trace, code);
-		Machine machine(log_trace, &world);
-
-		Handler<Object> result = machine.start(idx);
-		ASSERT_EQ(1, result->toInt(&world));
-	}
-	{
-		unsigned int idx = Parser::fromString("test=0; ++test; test;", "<MEM>", 0)->parseProgram(code);
-		World world(log_trace, code);
-		Machine machine(log_trace, &world);
-
-		Handler<Object> result = machine.start(idx);
-		ASSERT_EQ(1, result->toInt(&world));
-	}
+	SOURCE_TEST_INT(1, "test=0; ++test;");
+	SOURCE_TEST_INT(1, "test=0; ++test; test;");
 }
 
 }}
