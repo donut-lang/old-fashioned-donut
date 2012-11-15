@@ -32,17 +32,17 @@ std::string NativeClosureObject::toStringImpl() const
 
 int NativeClosureObject::toIntImpl() const
 {
-	throw DonutException(__FILE__, __LINE__, "Failed to convert builtin native closure to int.");
+	throw DonutException(__FILE__, __LINE__, "Failed to convert NativeClosureObject to int.");
 }
 
 float NativeClosureObject::toFloatImpl() const
 {
-	throw DonutException(__FILE__, __LINE__, "Failed to convert builtin native closure to float.");
+	throw DonutException(__FILE__, __LINE__, "Failed to convert NativeClosureObject to float.");
 }
 
 bool NativeClosureObject::toBoolImpl() const
 {
-	throw DonutException(__FILE__, __LINE__, "Failed to convert builtin native closure to bool.");
+	throw DonutException(__FILE__, __LINE__, "Failed to convert NativeClosureObject to bool.");
 }
 
 bool NativeClosureObject::haveImpl(const std::string& name) const
@@ -57,6 +57,7 @@ bool NativeClosureObject::haveOwnImpl(const std::string& name) const
 
 Handler<Object> NativeClosureObject::storeImpl(const std::string& name, Handler<Object> obj)
 {
+	world()->log().w(TAG, "NativeClosureObject cannot have any property.");
 	return obj;
 }
 

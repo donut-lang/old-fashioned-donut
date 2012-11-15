@@ -36,17 +36,17 @@ std::string NativeObject::toStringImpl() const
 
 int NativeObject::toIntImpl() const
 {
-	throw DonutException(__FILE__, __LINE__, "Failed to convert builtin native closure to int.");
+	throw DonutException(__FILE__, __LINE__, "Failed to NativeObject to int.");
 }
 
 float NativeObject::toFloatImpl() const
 {
-	throw DonutException(__FILE__, __LINE__, "Failed to convert builtin native closure to float.");
+	throw DonutException(__FILE__, __LINE__, "Failed to NativeObject to float.");
 }
 
 bool NativeObject::toBoolImpl() const
 {
-	throw DonutException(__FILE__, __LINE__, "Failed to convert builtin native closure to bool.");
+	throw DonutException(__FILE__, __LINE__, "Failed to NativeObject to bool.");
 }
 
 bool NativeObject::haveImpl(const std::string& name) const
