@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "NativeClosure.h"
+#include "NativeObject.h"
 #include "../object/World.h"
 #include "../Exception.h"
 #include "../../util/StringUtil.h"
@@ -24,46 +24,46 @@
 namespace chisa {
 namespace donut {
 
-const std::string TAG("NativeClosure");
+const std::string TAG("NativeClosureObject");
 
-std::string NativeClosure::toStringImpl() const
+std::string NativeClosureObject::toStringImpl() const
 {
-	return util::format("(NativeClosure %p)", this);
+	return util::format("(NativeClosureObject %p)", this);
 }
 
-int NativeClosure::toIntImpl() const
+int NativeClosureObject::toIntImpl() const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to convert builtin native closure to int.");
 }
 
-float NativeClosure::toFloatImpl() const
+float NativeClosureObject::toFloatImpl() const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to convert builtin native closure to float.");
 }
 
-bool NativeClosure::toBoolImpl() const
+bool NativeClosureObject::toBoolImpl() const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to convert builtin native closure to bool.");
 }
 
-bool NativeClosure::haveImpl(const std::string& name) const
+bool NativeClosureObject::haveImpl(const std::string& name) const
 {
-	return this->world_->objectPrototype()->have(world_, name);
+	return this->world()->objectProto()->have(world(), name);
 }
 
-bool NativeClosure::haveOwnImpl(const std::string& name) const
+bool NativeClosureObject::haveOwnImpl(const std::string& name) const
 {
 	return false;
 }
 
-Handler<Object> NativeClosure::storeImpl(const std::string& name, Handler<Object> obj)
+Handler<Object> NativeClosureObject::storeImpl(const std::string& name, Handler<Object> obj)
 {
 	return obj;
 }
 
-Handler<Object> NativeClosure::loadImpl(const std::string& name) const
+Handler<Object> NativeClosureObject::loadImpl(const std::string& name) const
 {
-	return this->world_->objectPrototype()->load(world_, name);
+	return this->world()->objectProto()->load(world(), name);
 }
 
 }}

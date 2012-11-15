@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "PrimitiveProvider.h"
+#include "Provider.h"
 #include "../../util/StringUtil.h"
 #include "../Exception.h"
 #include "../object/World.h"
@@ -28,7 +28,7 @@ namespace donut {
 static const std::string TAG("NullProvider");
 
 NullProvider::NullProvider(World* world)
-:ObjectProvider(world, "__native_null__")
+:NativeObjectProvider(world, "Null")
 {
 }
 
@@ -57,12 +57,12 @@ Handler<Object> NullProvider::create()
 	return Handler<Object>::__internal__fromRawPointerWithoutCheck( NullProvider::toPointer() );
 }
 
-tinyxml2::XMLElement* NullProvider::serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj )
+tinyxml2::XMLElement* NullProvider::serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj )
 {
 	tinyxml2::XMLElement* elm = doc->NewElement("null");
 	return elm;
 }
-Handler<Object> NullProvider::deserialize( tinyxml2::XMLElement* xml )
+Handler<Object> NullProvider::deserializeImpl( tinyxml2::XMLElement* xml )
 {
 	if( std::string("null") != xml->Name() ){
 		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. wrong element name: %s != \"bool\"", xml->Name());

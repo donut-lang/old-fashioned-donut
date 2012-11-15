@@ -17,24 +17,21 @@
  */
 
 #pragma once
-#include "../object/Object.h"
+#include "Object.h"
+#include <functional>
 #include "../native/Bind.h"
 
 namespace chisa {
 namespace donut {
 
-class NativeClosure : public Object {
+class NativeClosureObject : public NativeObject {
 private:
-	World* world_;
-	std::string const objectProviderName_;
 	std::string const closureName_;
 public:
-	NativeClosure(World* const world, std::string objectProviderName, std::string closureName)
-	:world_(world), objectProviderName_(objectProviderName),closureName_(closureName) {};
-	virtual ~NativeClosure() noexcept = default;
-	std::string objectProviderName() const noexcept { return this->objectProviderName_; };
+	NativeClosureObject(World* const world, std::string objectProviderName, std::string closureName)
+	:NativeObject(world,objectProviderName),closureName_(closureName) {};
+	virtual ~NativeClosureObject() noexcept = default;
 	std::string closureName() const noexcept { return this->closureName_; };
-	World* world() { return world_; }
 public:
 	virtual std::string toStringImpl() const override;
 	virtual int toIntImpl() const override;
@@ -46,14 +43,14 @@ public:
 	virtual Handler<Object> loadImpl(const std::string& name) const override;
 };
 
-class PureNativeClosure : public NativeClosure {
+class PureNativeClosureObject : public NativeClosureObject {
 private:
 	std::function<Handler<Object>(Handler<Object> self, Handler<DonutObject> arg)> func_;
 public:
 	template <typename R, typename... Args>
-	PureNativeClosure(World* const world, std::string objectProviderName, std::string closureName, std::function<R(Args... args)> func)
-	:NativeClosure(world, objectProviderName, closureName),func_( native::createBind(func) ){};
-	virtual ~PureNativeClosure() noexcept {}
+	PureNativeClosureObject(World* const world, std::string objectProviderName, std::string closureName, std::function<R(Args... args)> func)
+	:NativeClosureObject(world, objectProviderName, closureName),func_( native::createBind(func) ){};
+	virtual ~PureNativeClosureObject() noexcept {}
 public:
 	Handler<Object> apply(Handler<Object> self, Handler<DonutObject> arg){ return func_(self,arg); }
 };

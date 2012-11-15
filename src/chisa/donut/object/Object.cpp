@@ -37,11 +37,11 @@ std::string Object::toString(World* const world) const
 	case Tag::Obj:
 		return this->toStringImpl();
 	case Tag::Int:
-		return world->intProvider().toString(this);
+		return world->intProvider()->toString(this);
 	case Tag::Bool:
-		return world->boolProvider().toString(this);
+		return world->boolProvider()->toString(this);
 	case Tag::Null:
-		return world->nullProvider().toString(this);
+		return world->nullProvider()->toString(this);
 	default:
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
@@ -53,11 +53,11 @@ int Object::toInt(World* const world) const
 	case Tag::Obj:
 		return this->toIntImpl();
 	case Tag::Int:
-		return world->intProvider().toInt(this);
+		return world->intProvider()->toInt(this);
 	case Tag::Bool:
-		return world->boolProvider().toInt(this);
+		return world->boolProvider()->toInt(this);
 	case Tag::Null:
-		return world->nullProvider().toInt(this);
+		return world->nullProvider()->toInt(this);
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
@@ -69,11 +69,11 @@ float Object::toFloat(World* const world) const
 	case Tag::Obj:
 		return this->toFloatImpl();
 	case Tag::Int:
-		return world->intProvider().toFloat(this);
+		return world->intProvider()->toFloat(this);
 	case Tag::Bool:
-		return world->boolProvider().toFloat(this);
+		return world->boolProvider()->toFloat(this);
 	case Tag::Null:
-		return world->nullProvider().toFloat(this);
+		return world->nullProvider()->toFloat(this);
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
@@ -85,11 +85,11 @@ bool Object::toBool(World* const world) const
 	case Tag::Obj:
 		return this->toBoolImpl();
 	case Tag::Int:
-		return world->intProvider().toBool(this);
+		return world->intProvider()->toBool(this);
 	case Tag::Bool:
-		return world->boolProvider().toBool(this);
+		return world->boolProvider()->toBool(this);
 	case Tag::Null:
-		return world->nullProvider().toBool(this);
+		return world->nullProvider()->toBool(this);
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
@@ -168,11 +168,11 @@ std::string Object::providerName(World* const world) const
 	case Tag::Obj:
 		return this->providerNameImpl();
 	case Tag::Int:
-		return world->intProvider().name();
+		return world->intProvider()->name();
 	case Tag::Bool:
-		return world->boolProvider().name();
+		return world->boolProvider()->name();
 	case Tag::Null:
-		return world->nullProvider().name();
+		return world->nullProvider()->name();
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}

@@ -30,40 +30,35 @@ class XMLElement;
 
 namespace chisa {
 namespace donut {
-class ProviderManager;
 
 class Provider : public HandlerBody<Provider> {
 private:
+	std::map<std::string, Handler<NativeClosureEntry> > nativeClosures_;
 	World* const world_;
 	std::string const name_;
+protected:
+	Provider( World* const world, const std::string& name );
+	void registerPureNativeClosure( const std::string& name, PureNativeClosureEntry::Signature func );
 public:
-	Provider( World* const world, const std::string& name ):world_(world), name_(name){};
 	virtual ~Provider() noexcept = default;
-public:
 	inline void onFree() noexcept { delete this; }
 	inline std::string name() const noexcept { return this->name_; };
 	inline World* world() const noexcept { return this->world_; };
+	Handler<DonutObject> injectPrototype( Handler<DonutObject> obj );
 public:
-	virtual tinyxml2::XMLElement* serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj ) = 0;
-	virtual Handler<Object> deserialize( tinyxml2::XMLElement* xml ) = 0;
+	tinyxml2::XMLElement* serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj );
+	Handler<Object> deserialize( tinyxml2::XMLElement* xml );
+	virtual tinyxml2::XMLElement* serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj ) = 0;
+	virtual Handler<Object> deserializeImpl( tinyxml2::XMLElement* xml ) = 0;
 };
 
 //---------------------------------------------------------------------------------------------------------------------
 
 class NativeObjectProvider : public Provider {
-private:
-	std::map<std::string, Handler<NativeClosureEntry> > nativeClosures_;
 protected:
 	NativeObjectProvider( World* const world, const std::string& name ):Provider(world, name){};
-	void registerPureNativeClosure( PureNativeClosureEntry::Signature func );
-	virtual tinyxml2::XMLElement* serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj ) = 0;
-	virtual Handler<Object> deserializeImpl( tinyxml2::XMLElement* xml ) = 0;
 public:
 	virtual ~NativeObjectProvider() noexcept = default;
-	void injectPrototype( Handler<DonutObject> obj );
-public:
-	virtual tinyxml2::XMLElement* serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
-	virtual Handler<Object> deserialize( tinyxml2::XMLElement* xml ) override;
 };
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -83,8 +78,8 @@ public:
 	int toInt(const Object* ptr) const;
 	float toFloat(const Object* ptr) const;
 	bool toBool(const Object* ptr) const;
-	virtual tinyxml2::XMLElement* serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
-	virtual Handler<Object> deserialize( tinyxml2::XMLElement* xml ) override;
+	virtual tinyxml2::XMLElement* serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
+	virtual Handler<Object> deserializeImpl( tinyxml2::XMLElement* xml ) override;
 	Handler<Object> create( const int& val );
 };
 
@@ -104,8 +99,8 @@ public:
 	int toInt(const Object* ptr) const;
 	float toFloat(const Object* ptr) const;
 	bool toBool(const Object* ptr) const;
-	virtual tinyxml2::XMLElement* serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
-	virtual Handler<Object> deserialize( tinyxml2::XMLElement* xml ) override;
+	virtual tinyxml2::XMLElement* serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
+	virtual Handler<Object> deserializeImpl( tinyxml2::XMLElement* xml ) override;
 	Handler<Object> create( const bool& val );
 };
 
@@ -122,9 +117,22 @@ public:
 	int toInt(const Object* ptr) const;
 	float toFloat(const Object* ptr) const;
 	bool toBool(const Object* ptr) const;
-	virtual tinyxml2::XMLElement* serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
-	virtual Handler<Object> deserialize( tinyxml2::XMLElement* xml ) override;
+	virtual tinyxml2::XMLElement* serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
+	virtual Handler<Object> deserializeImpl( tinyxml2::XMLElement* xml ) override;
 	Handler<Object> create();
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+
+class DonutObjectProvider : public Provider {
+public:
+	DonutObjectProvider( World* const world );
+	virtual ~DonutObjectProvider() noexcept = default;
+public:
+	virtual tinyxml2::XMLElement* serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
+	virtual Handler<Object> deserializeImpl( tinyxml2::XMLElement* xml ) override;
+public:
+	Handler<DonutObject> create();
 };
 
 }}

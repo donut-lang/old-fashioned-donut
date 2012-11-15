@@ -30,10 +30,10 @@ typedef unsigned int pc_t;
 struct Callchain {
 	pc_t pc_;
 	Handler<Object> self_;
-	Handler<ClosureObject> closure_;
+	Handler<DonutClosureObject> closure_;
 	Handler<Object> context_;
 public:
-	Callchain(pc_t pc, Handler<Object> self, Handler<ClosureObject> closure, Handler<Object> context)
+	Callchain(pc_t pc, Handler<Object> self, Handler<DonutClosureObject> closure, Handler<Object> context)
 	:pc_(pc), self_(self), closure_(closure), context_(context){
 	}
 };
@@ -44,8 +44,8 @@ private:
 	World* const world_;
 	pc_t pc_;
 	Handler<Object> self_;
-	Handler<ClosureObject> closure_;
-	Handler<Object> context_;
+	Handler<DonutClosureObject> closure_;
+	Handler<DonutObject> context_;
 	std::vector<Instruction> const* asmlist_;
 	std::vector<Handler<Object> > stack_;
 	std::vector<Handler<Object> > local_;
@@ -56,9 +56,9 @@ public:
 public:
 	Handler<Object> start( const std::size_t closureIndex );
 private:
-	void enterClosure(Handler<Object> self, Handler<ClosureObject> clos, Handler<Object> args);
+	void enterClosure(Handler<Object> self, Handler<DonutClosureObject> clos, Handler<Object> args);
 	bool returnClosure();
-	Handler<ClosureObject> createClosure(Handler<Closure> closureCode);
+	Handler<DonutClosureObject> createClosure(Handler<Closure> closureCode);
 private:
 	Handler<Object> run();
 };

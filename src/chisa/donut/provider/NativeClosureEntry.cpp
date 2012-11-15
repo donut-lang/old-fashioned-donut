@@ -18,7 +18,7 @@
 
 #include "NativeClosureEntry.h"
 #include "../object/World.h"
-#include "../native/NativeClosure.h"
+#include "../object/NativeObject.h"
 
 namespace chisa {
 namespace donut {

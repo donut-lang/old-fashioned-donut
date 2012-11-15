@@ -16,11 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "NativeClosure.h"
+#pragma once
+
+#include "Object.h"
+#include "../code/Closure.h"
 
 namespace chisa {
 namespace donut {
-
-const std::string TAG("PureNativeClosure");
+class DonutClosureObject : public DonutObject {
+private:
+	Handler<Closure> asm_;
+public:
+	DonutClosureObject(World* const world, Handler<Closure> clos, Handler<Object> scope);
+	virtual ~DonutClosureObject() noexcept = default;
+public:
+	Handler<Closure> closureCode() const { return this->asm_; };
+};
 
 }}

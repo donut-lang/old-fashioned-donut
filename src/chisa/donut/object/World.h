@@ -21,9 +21,8 @@
 #include "../../util/ClassUtil.h"
 #include "../../Handler.h"
 #include "../code/Code.h"
-#include "Object.h"
-#include "../provider/PrimitiveProvider.h"
-#include "../provider/BaseObjectProvider.h"
+#include "DonutObject.h"
+#include "../provider/Provider.h"
 
 namespace chisa {
 namespace donut {
@@ -57,20 +56,24 @@ public:
 	Handler<NullProvider>& nullProvider() {return nullProvider_;};
 
 	Handler<DonutObject> objectProto() { return this->objectProto_; };
-	Handler<DonutObject> boolProto() {return boolProto_;};
-	Handler<DonutObject> intProto() {return intProto_;};
-	Handler<DonutObject> nullProto() {return nullProto_;};
+	Handler<Object> boolProto() {return boolProto_;};
+	Handler<Object> intProto() {return intProto_;};
+	Handler<Object> nullProto() {return nullProto_;};
 private:
 	Handler<Code> code() { return this->code_; }
 	Handler<DonutObject> global() { return this->globalObject_; }
 public:
 	Handler<DonutObject> createDonutObject();
 	Handler<DonutObject> createEmptyDonutObject();
+	Handler<DonutClosureObject> createDonutClosureObject( Handler<Code> closure, Handler<Object> scope );
 	Handler<Object> createInt(const int& val);
 	Handler<Object> createBool(const bool& val);
 	Handler<Object> createNull();
 public:
 	void registerProvider( Handler<Provider> provider );
+public:
+	//tinyxml2::XMLElement* serialize(tinyxml2::XMLDocument* doc);
+	//void deserialize(tinyxml2::XMLElement* xml);
 };
 
 }}
