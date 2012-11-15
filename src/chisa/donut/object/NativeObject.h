@@ -24,6 +24,18 @@
 namespace chisa {
 namespace donut {
 
+class StringObject: public NativeObject {
+private:
+	const std::string str_;
+public:
+	StringObject(World* const world, const std::string& str);
+	virtual ~StringObject() noexcept = default;
+	virtual std::string toStringImpl() const override;
+	virtual int toIntImpl() const override;
+	virtual float toFloatImpl() const override;
+	virtual bool toBoolImpl() const override;
+};
+
 class NativeClosureObject : public NativeObject {
 private:
 	std::string const closureName_;
@@ -34,13 +46,6 @@ public:
 	std::string closureName() const noexcept { return this->closureName_; };
 public:
 	virtual std::string toStringImpl() const override;
-	virtual int toIntImpl() const override;
-	virtual float toFloatImpl() const override;
-	virtual bool toBoolImpl() const override;
-	virtual bool haveImpl(const std::string& name) const override;
-	virtual bool haveOwnImpl(const std::string& name) const override;
-	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) override;
-	virtual Handler<Object> loadImpl(const std::string& name) const override;
 };
 
 class PureNativeClosureObject : public NativeClosureObject {

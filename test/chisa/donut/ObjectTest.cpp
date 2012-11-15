@@ -46,7 +46,7 @@ TEST_F(DonutObjectTest, IntCannotCastToBaseObjectTest)
 	Handler<Object> obj = world->createInt(10);
 	ASSERT_EQ(10, obj->toInt(world));
 
-	Handler<BaseObject> converted;
+	Handler<DonutObject> converted;
 //	ASSERT_NO_FATAL_FAILURE( obj.tryCast<BaseObject>() );
 }
 

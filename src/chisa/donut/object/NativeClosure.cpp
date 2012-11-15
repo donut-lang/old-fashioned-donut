@@ -31,39 +31,4 @@ std::string NativeClosureObject::toStringImpl() const
 	return util::format("(NativeClosureObject %p)", this);
 }
 
-int NativeClosureObject::toIntImpl() const
-{
-	throw DonutException(__FILE__, __LINE__, "Failed to convert builtin native closure to int.");
-}
-
-float NativeClosureObject::toFloatImpl() const
-{
-	throw DonutException(__FILE__, __LINE__, "Failed to convert builtin native closure to float.");
-}
-
-bool NativeClosureObject::toBoolImpl() const
-{
-	throw DonutException(__FILE__, __LINE__, "Failed to convert builtin native closure to bool.");
-}
-
-bool NativeClosureObject::haveImpl(const std::string& name) const
-{
-	return this->world()->objectProto()->have(world(), name);
-}
-
-bool NativeClosureObject::haveOwnImpl(const std::string& name) const
-{
-	return false;
-}
-
-Handler<Object> NativeClosureObject::storeImpl(const std::string& name, Handler<Object> obj)
-{
-	return obj;
-}
-
-Handler<Object> NativeClosureObject::loadImpl(const std::string& name) const
-{
-	return this->world()->objectProto()->load(world(), name);
-}
-
 }}
