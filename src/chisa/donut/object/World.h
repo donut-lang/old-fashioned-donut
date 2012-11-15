@@ -68,6 +68,7 @@ public:
 	Handler<DonutObject> createDonutObject();
 	Handler<DonutObject> createEmptyDonutObject();
 	Handler<DonutClosureObject> createDonutClosureObject( Handler<Closure> closure, Handler<Object> scope );
+	Handler<StringObject> createStringObject(const std::string& val);
 	Handler<Object> createInt(const int& val);
 	Handler<Object> createBool(const bool& val);
 	Handler<Object> createNull();

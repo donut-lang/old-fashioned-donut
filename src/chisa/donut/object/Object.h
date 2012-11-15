@@ -94,7 +94,17 @@ public:
 protected:
 	World* world() const noexcept { return this->world_; }
 	std::string providerName() const noexcept { return this->providerName_; }
+protected:
+	virtual std::string toStringImpl() const override;
 	virtual std::string providerNameImpl() const override { return this->providerName(); }
+
+	virtual int toIntImpl() const override;
+	virtual float toFloatImpl() const override;
+	virtual bool toBoolImpl() const override;
+	virtual bool haveImpl(const std::string& name) const override;
+	virtual bool haveOwnImpl(const std::string& name) const override;
+	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) override;
+	virtual Handler<Object> loadImpl(const std::string& name) const override;
 };
 
 }}

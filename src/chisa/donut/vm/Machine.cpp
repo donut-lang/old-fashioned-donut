@@ -125,7 +125,7 @@ Handler<Object> Machine::run()
 				break;
 			}
 			case Inst::ConstString: {
-				//this->stack_.push_back( world_->create<StringObject>( code->getString(constIndex) ) );
+				this->stack_.push_back( world_->createStringObject( code->getString(constIndex) ) );
 				break;
 			}
 			case Inst::ConstNull: {
