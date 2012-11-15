@@ -29,20 +29,18 @@ static const std::string TAG("BoolProvider");
 BoolProvider::BoolProvider(World* world)
 :NativeObjectProvider(world, "Boolean")
 {
-	/*
-	this->registerPureNativeClosure("opAnd", native::createBind( std::function<Object*(Object*, bool)>(
+	this->registerPureNativeClosure("opAnd", std::function<Object*(Object*, bool)>(
 			[&](Object* self, bool v)->Object*{
 		return BoolProvider::toPointer(BoolProvider::fromPointer(self) && v);
-	})));
-	this->registerPureNativeClosure("opOr", native::createBind( std::function<Object*(Object*, bool)>(
+	}));
+	this->registerPureNativeClosure("opOr", std::function<Object*(Object*, bool)>(
 			[&](Object* self, bool v)->Object*{
 		return BoolProvider::toPointer(BoolProvider::fromPointer(self) || v);
-	})));
-	this->registerPureNativeClosure("opNot", native::createBind( std::function<Object*(Object*)>(
+	}));
+	this->registerPureNativeClosure("opNot", std::function<Object*(Object*)>(
 			[&](Object* self)->Object*{
 		return BoolProvider::toPointer(!BoolProvider::fromPointer(self));
-	})));
-	*/
+	}));
 }
 
 std::string BoolProvider::toString(const Object* ptr) const
@@ -62,7 +60,7 @@ float BoolProvider::toFloat(const Object* ptr) const
 
 bool BoolProvider::toBool(const Object* ptr) const
 {
-	return fromPointer(ptr);
+	return BoolProvider::fromPointer(ptr);
 }
 
 tinyxml2::XMLElement* BoolProvider::serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj )

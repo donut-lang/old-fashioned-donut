@@ -98,7 +98,7 @@ public:
 		return reinterpret_cast<std::intptr_t>(ptr) >> 2;
 	}
 	static constexpr inline Object* toPointer(int const& val) noexcept {
-		return reinterpret_cast<Object*>((val << 2) | Object::Tag::Int);
+		return reinterpret_cast<Object*>((val << 2) | Object::Tag::Bool);
 	}
 public:
 	std::string toString(const Object* ptr) const;

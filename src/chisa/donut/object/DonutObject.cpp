@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <sstream>
 #include "World.h"
 #include "Object.h"
 #include "../Exception.h"
@@ -96,7 +97,15 @@ Handler<Object> DonutObject::loadImpl(const std::string& name) const
 	if(this->haveOwnImpl("__proto__")){
 		return loadImpl("__proto__")->load(world(), name);
 	}
-	throw DonutException(__FILE__, __LINE__, "%s not found.", name.c_str());
+	{
+		std::stringstream ss;
+		ss << "\"" << name << "\" not found." << std::endl;
+		ss << "available: " << std::endl;
+		for(auto i : this->slots_){
+			ss << "  -> " << i.first << std::endl;
+		}
+		throw DonutException(__FILE__, __LINE__, ss.str());
+	}
 }
 
 }}

@@ -33,6 +33,12 @@ IntProvider::IntProvider(World* world)
 	this->registerPureNativeClosure("opAdd", std::function<Object*(Object*, int)>([&](Object* self, int v)->Object* {
 		return IntProvider::toPointer(IntProvider::fromPointer(self) + v);
 	}));
+	this->registerPureNativeClosure("opAnd", std::function<Object*(Object*, int)>([&](Object* self, int v)->Object* {
+		return IntProvider::toPointer(IntProvider::fromPointer(self) & v);
+	}));
+	this->registerPureNativeClosure("opOr", std::function<Object*(Object*, int)>([&](Object* self, int v)->Object* {
+		return IntProvider::toPointer(IntProvider::fromPointer(self) | v);
+	}));
 	this->registerPureNativeClosure("opSub", std::function<Object*(Object*, int)>([&](Object* self, int v)->Object* {
 		return IntProvider::toPointer(IntProvider::fromPointer(self) - v);
 	}));
