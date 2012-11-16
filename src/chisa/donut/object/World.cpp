@@ -77,6 +77,7 @@ Handler<DonutObject> World::createDonutObject()
 	Handler<DonutObject> obj(new DonutObject(this));
 	obj->store(this, "__proto__", this->objectProto());
 	obj->id(nextObjectId());
+	this->objectPool_.push_back(obj.get());
 
 	return obj;
 }
@@ -85,6 +86,7 @@ Handler<DonutObject> World::createEmptyDonutObject()
 {
 	Handler<DonutObject> obj(new DonutObject(this));
 	obj->id(nextObjectId());
+	this->objectPool_.push_back(obj.get());
 
 	return obj;
 }
@@ -93,6 +95,7 @@ Handler<StringObject> World::createStringObject(const std::string& val)
 {
 	Handler<StringObject> obj(new StringObject(this, val));
 	obj->id(nextObjectId());
+	this->objectPool_.push_back(obj.get());
 
 	return obj;
 }
@@ -101,6 +104,7 @@ Handler<FloatObject> World::createFloatObject(const float& val)
 {
 	Handler<FloatObject> obj(new FloatObject(this, val));
 	obj->id(nextObjectId());
+	this->objectPool_.push_back(obj.get());
 
 	return obj;
 }
@@ -109,6 +113,7 @@ Handler<DonutClosureObject> World::createDonutClosureObject( Handler<Closure> cl
 {
 	Handler<DonutClosureObject> obj(new DonutClosureObject(this, closure, scope));
 	obj->id(nextObjectId());
+	this->objectPool_.push_back(obj.get());
 
 	return obj;
 }
@@ -117,6 +122,7 @@ Handler<PureNativeClosureObject> World::createPureNativeClosureObject(std::strin
 {
 	Handler<PureNativeClosureObject> obj(new PureNativeClosureObject(this, objectProviderName, closureName, f));
 	obj->id(nextObjectId());
+	this->objectPool_.push_back(obj.get());
 
 	return obj;
 }

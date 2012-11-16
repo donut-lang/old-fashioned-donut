@@ -39,6 +39,7 @@ private:
 	uintptr_t objectId_;
 private:
 	std::map<std::string, Handler<Provider> > providers_;
+	std::vector<HeapObject*> objectPool_;
 	Handler<DonutObjectProvider> donutObjectProvider_;
 	Handler<BoolProvider> boolProvider_;
 	Handler<IntProvider> intProvider_;
