@@ -46,6 +46,8 @@ public:
 	DrawableSetting( const std::string& fontdir ):fontdir_(fontdir){};
 };
 
+//---------------------------------------------------------------------------------------------------------------------
+
 class DrawableManager : public HandlerBody<DrawableManager> {
 	DEFINE_MEMBER_REF(private, logging::Logger, log);
 private:

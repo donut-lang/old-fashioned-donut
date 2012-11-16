@@ -145,7 +145,6 @@ private:
 private:
 	TextDrawable( HandlerW<DrawableManager> manager, const std::string& str, bool vertical, const float size, Handler<Font> font, TextDrawable::Style style, TextDrawable::Decoration deco, const gl::Color& color, const gl::Color& backColor);
 	void revalidate();
-	Handler<gl::Sprite> sprite();
 public:
 	virtual ~TextDrawable() noexcept = default;
 	static void setupCairo(cairo_t* cairo, cairo_font_face_t* face, cairo_font_options_t* opt, float size, Style style);
@@ -153,6 +152,7 @@ public:
 	virtual geom::Box size() override;
 	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) override;
 	virtual std::string toString() const override;
+	Handler<gl::Sprite> sprite();
 };
 
 }}
