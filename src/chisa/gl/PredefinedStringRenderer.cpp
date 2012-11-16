@@ -17,14 +17,48 @@
  */
 
 #include "PredefinedStringRenderer.h"
+#include "../logging/Logger.h"
+#include "Canvas.h"
 
 namespace chisa {
 namespace gl {
 
-PredefinedStringRenderer::PredefinedStringRenderer(Handler<DrawableManager> drawableManager)
-:drawableManager_(drawableManager)
+static const std::string TAG("PredefinedStringRenderer");
+
+PredefinedStringRenderer::PredefinedStringRenderer(logging::Logger& log, Handler<DrawableManager> drawableManager)
+:log_(log),drawableManager_(drawableManager)
 {
 
 }
+
+void PredefinedStringRenderer::registerCharacter( unsigned int symbol, const std::string& str )
+{
+	auto it = this->spriteTable_.find(symbol);
+	if(it != this->spriteTable_.end()){
+		this->log().w(TAG, "Symbol: %d is already defined, and replaced with: %s", symbol, str.c_str());
+		this->spriteTable_.erase(it);
+	}
+	this->spriteTable_.insert( std::pair<unsigned int, Handler<Sprite> >( symbol, drawableManager_->queryText(str)->sprite() ) );
+}
+
+geom::Area PredefinedStringRenderer::renderString( Canvas& cv, const geom::Point& point, const String& str, float depth)
+{
+	float x=0.0f;
+	float y=0.0f;
+	for(unsigned int symbol : str){
+		auto it = this->spriteTable_.find(symbol);
+		if(it == this->spriteTable_.end()){
+			this->log().w(TAG, "Unknown symbol: %d", symbol);
+			continue;
+		}
+		Handler<Sprite> spr( it->second );
+		geom::Point rendered( point.x()+x, point.y() );
+		cv.drawSprite(spr, rendered, depth);
+		x += spr->width();
+		y = geom::max(y, spr->height());
+	}
+	return geom::Area(point, geom::Box(x,y));
+}
+
 
 }}
