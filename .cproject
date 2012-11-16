@@ -102,24 +102,6 @@
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.mingw.base.2130400050" name="MinGW C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.base"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.base.1312585289" name="MinGW C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.base">
 								<option id="gnu.cpp.link.option.paths.1315079559" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
-									<listOptionValue builtIn="false" value="../."/>
-									<listOptionValue builtIn="false" value="D:/software/dev/msys/mingw/lib"/>
-									<listOptionValue builtIn="false" value="D:/software/dev/applib/boost/lib"/>
-									<listOptionValue builtIn="false" value="D:/software/dev/applib/cairo/lib"/>
-									<listOptionValue builtIn="false" value="D:/software/dev/applib/ff/lib"/>
-									<listOptionValue builtIn="false" value="D:/software/dev/applib/pcre/lib"/>
-									<listOptionValue builtIn="false" value="D:/software/dev/applib/xml/lib"/>
-									<listOptionValue builtIn="false" value="D:/software/dev/lib/antlr/lib"/>
-									<listOptionValue builtIn="false" value="D:/software/dev/lib/curl-7.27.0-devel-mingw32/lib"/>
-									<listOptionValue builtIn="false" value="D:/software/dev/lib/glfw-2.7.6.bin.WIN32/lib"/>
-									<listOptionValue builtIn="false" value="D:/software/dev/lib/glib/lib"/>
-									<listOptionValue builtIn="false" value="D:/software/dev/lib/glut/lib"/>
-									<listOptionValue builtIn="false" value="D:/software/dev/lib/gtest/lib"/>
-									<listOptionValue builtIn="false" value="D:/software/dev/lib/icu/lib"/>
-									<listOptionValue builtIn="false" value="D:/software/dev/lib/intl/lib"/>
-									<listOptionValue builtIn="false" value="D:/software/dev/lib/perftools/lib"/>
-									<listOptionValue builtIn="false" value="D:/software/dev/lib/readline/lib"/>
-									<listOptionValue builtIn="false" value="D:/software/dev/lib/sdl/lib"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.212670840" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
