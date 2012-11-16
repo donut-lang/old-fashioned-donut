@@ -63,8 +63,7 @@ public:
 	inline bool isBool() const noexcept { return Tag::Bool==tag(); };
 	inline bool isInt() const noexcept { return Tag::Int==tag(); };
 	inline intptr_t tag() const noexcept { return reinterpret_cast<std::uintptr_t>(this) & Tag::Mask; };
-	inline void onFree() {};//参照カウント、どうしましょう？？
-	inline void incref( bool check ) { if(isObject()) { this->HandlerBody<Object>::incref(check); } };
+	inline void incref( bool check ) { if(isObject()) { this->HandlerBody<Object>::incref(check); } }
 	inline void decref() { if(isObject()) { this->HandlerBody<Object>::decref(); } };
 protected: /* 実装すべきもの */
 	virtual std::string toStringImpl() const = 0;
@@ -76,6 +75,8 @@ protected: /* 実装すべきもの */
 	virtual bool haveOwnImpl(const std::string& name) const = 0;
 	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) = 0;
 	virtual Handler<Object> loadImpl(const std::string& name) const = 0;
+public:
+	virtual void onFree() noexcept = 0;
 };
 
 }}
@@ -94,6 +95,20 @@ public:
 public:
 	inline World* world() const noexcept { return this->world_; }
 	inline std::string providerName() const noexcept { return this->providerName_; }
+public:
+	virtual void onFree() noexcept {};
+};
+
+class ProxyObject : public Object {
+private:
+	World* const world_;
+	Handler<HeapObject> obj_;
+	uintptr_t num_;
+public:
+	ProxyObject(World* const world, uintptr_t num);
+	virtual ~ProxyObject() noexcept = default;
+public:
+	virtual void onFree() noexcept { delete this; };
 };
 
 }}

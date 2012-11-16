@@ -17,6 +17,7 @@
  */
 
 #pragma once
+#include <set>
 #include "../../logging/Logger.h"
 #include "../../util/ClassUtil.h"
 #include "../../Handler.h"
@@ -79,8 +80,8 @@ public:
 public:
 	void registerProvider( Handler<Provider> provider );
 public:
-	//tinyxml2::XMLElement* serialize(tinyxml2::XMLDocument* doc);
-	//void deserialize(tinyxml2::XMLElement* xml);
+	tinyxml2::XMLElement* serialize(tinyxml2::XMLDocument* doc);
+	void deserialize(tinyxml2::XMLElement* xml);
 };
 
 }}

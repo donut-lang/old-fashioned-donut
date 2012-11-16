@@ -29,5 +29,4 @@ HeapObject::HeapObject(World* const world, const std::string& providerName)
 {
 }
 
-
 }}
