@@ -26,6 +26,8 @@ namespace donut {
 HeapObject::HeapObject(World* const world, const std::string& providerName)
 :world_(world)
 ,providerName_(providerName)
+,id_(0)
+,erased_(0)
 {
 }
 

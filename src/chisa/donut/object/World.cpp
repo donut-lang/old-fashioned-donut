@@ -27,6 +27,7 @@ World::World(logging::Logger& log)
 :log_(log)
 ,code_(new Code)
 ,generation_(0)
+,objectId_(0)
 ,donutObjectProvider_(new DonutObjectProvider(this))
 ,boolProvider_(new BoolProvider(this))
 ,intProvider_(new IntProvider(this))
@@ -57,6 +58,10 @@ unsigned int World::nextGeneration()
 	return ++this->generation_;
 }
 
+uintptr_t World::nextObjectId()
+{
+	return ++this->objectId_;
+}
 
 Handler<Provider> World::getProvider( const std::string& name ) const
 {
@@ -71,6 +76,7 @@ Handler<DonutObject> World::createDonutObject()
 {
 	Handler<DonutObject> obj(new DonutObject(this));
 	obj->store(this, "__proto__", this->objectProto());
+	obj->id(nextObjectId());
 
 	return obj;
 }
@@ -78,6 +84,7 @@ Handler<DonutObject> World::createDonutObject()
 Handler<DonutObject> World::createEmptyDonutObject()
 {
 	Handler<DonutObject> obj(new DonutObject(this));
+	obj->id(nextObjectId());
 
 	return obj;
 }
@@ -85,6 +92,7 @@ Handler<DonutObject> World::createEmptyDonutObject()
 Handler<StringObject> World::createStringObject(const std::string& val)
 {
 	Handler<StringObject> obj(new StringObject(this, val));
+	obj->id(nextObjectId());
 
 	return obj;
 }
@@ -92,6 +100,7 @@ Handler<StringObject> World::createStringObject(const std::string& val)
 Handler<FloatObject> World::createFloatObject(const float& val)
 {
 	Handler<FloatObject> obj(new FloatObject(this, val));
+	obj->id(nextObjectId());
 
 	return obj;
 }
@@ -99,6 +108,7 @@ Handler<FloatObject> World::createFloatObject(const float& val)
 Handler<DonutClosureObject> World::createDonutClosureObject( Handler<Closure> closure, Handler<Object> scope )
 {
 	Handler<DonutClosureObject> obj(new DonutClosureObject(this, closure, scope));
+	obj->id(nextObjectId());
 
 	return obj;
 }
@@ -106,6 +116,8 @@ Handler<DonutClosureObject> World::createDonutClosureObject( Handler<Closure> cl
 Handler<PureNativeClosureObject> World::createPureNativeClosureObject(std::string objectProviderName, std::string closureName, PureNativeClosureEntry::Signature f)
 {
 	Handler<PureNativeClosureObject> obj(new PureNativeClosureObject(this, objectProviderName, closureName, f));
+	obj->id(nextObjectId());
+
 	return obj;
 }
 

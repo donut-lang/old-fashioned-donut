@@ -89,14 +89,19 @@ class HeapObject : public Object {
 private:
 	World* const world_;
 	std::string const providerName_;
+	uintptr_t id_;
+	bool erased_;
 public:
 	HeapObject(World* const world, const std::string& providerName);
 	virtual ~HeapObject() noexcept = default;
 public:
 	inline World* world() const noexcept { return this->world_; }
 	inline std::string providerName() const noexcept { return this->providerName_; }
+	inline uintptr_t id() const noexcept { return this->id_; }
+	inline void id(uintptr_t nid) noexcept { this->id_ = nid; }
+	inline void erase() noexcept { this->erased_ = true; if(refcount() == 0){ delete this; } };
 public:
-	virtual void onFree() noexcept {};
+	virtual void onFree() noexcept { if(this->erased_){ delete this; } };
 };
 
 class ProxyObject : public Object {

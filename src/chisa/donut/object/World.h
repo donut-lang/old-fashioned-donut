@@ -36,6 +36,7 @@ private:
 	Handler<Code> code_;
 private:
 	unsigned int generation_;
+	uintptr_t objectId_;
 private:
 	std::map<std::string, Handler<Provider> > providers_;
 	Handler<DonutObjectProvider> donutObjectProvider_;
@@ -65,6 +66,7 @@ public:
 
 	Handler<Provider> getProvider( const std::string& name ) const;
 private:
+	uintptr_t nextObjectId();
 	Handler<DonutObject> global() { return this->globalObject_; }
 public:
 	Handler<Code> code() { return this->code_; }
