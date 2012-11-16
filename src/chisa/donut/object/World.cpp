@@ -21,6 +21,8 @@
 namespace chisa {
 namespace donut {
 
+const static std::string TAG("World");
+
 World::World(logging::Logger& log)
 :log_(log)
 ,code_(new Code)
@@ -129,6 +131,14 @@ void World::registerProvider( Handler<Provider> provider )
 			);
 }
 
+tinyxml2::XMLElement* World::serialize(tinyxml2::XMLDocument* doc)
+{
 
+}
+
+void World::deserialize(tinyxml2::XMLElement* xml)
+{
+
+}
 
 }}
