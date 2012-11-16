@@ -442,6 +442,13 @@ class Processor
 		inline void JMP(uint16_t addr);
 		inline void RTI();
 		inline void RTS();
+	public:
+		inline uint8_t getA() const noexcept { return A; };
+		inline uint8_t getX() const noexcept { return X; };
+		inline uint8_t getY() const noexcept { return Y; };
+		inline uint16_t getPC() const noexcept { return PC; };
+		inline uint8_t getSP() const noexcept { return SP; };
+		inline uint8_t getP() const noexcept { return P; };
 };
 
 class VirtualMachine
@@ -557,7 +564,8 @@ class VirtualMachine
 		bool hardResetFlag;
 
 		uint8_t irqLine;
-
+	public:
+		inline Processor const* getProcessor() const noexcept { return &processor; };
 };
 
 }
