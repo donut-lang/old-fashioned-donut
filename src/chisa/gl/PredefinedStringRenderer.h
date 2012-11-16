@@ -27,17 +27,18 @@ class Canvas;
 
 class PredefinedStringRenderer {
 	DISABLE_COPY_AND_ASSIGN(PredefinedStringRenderer);
+	DEFINE_MEMBER_REF(private, logging::Logger, log);
 private:
 	Handler<DrawableManager> drawableManager_;
 	std::map<unsigned int, Handler<Sprite> > spriteTable_;
 public:
 	typedef std::basic_string<unsigned int> String;
 	static const constexpr unsigned int EOS = 0U;
-	PredefinedStringRenderer(Handler<DrawableManager> drawableManager);
+	PredefinedStringRenderer(logging::Logger& log, Handler<DrawableManager> drawableManager);
 	virtual ~PredefinedStringRenderer() noexcept = default;
 public:
 	void registerCharacter( unsigned int symbol, const std::string& str );
-	void renderString( Canvas& cv, const geom::Point& point, const String& str );
+	geom::Area renderString( Canvas& cv, const geom::Point& point, const String& str, float depth );
 };
 
 }}
