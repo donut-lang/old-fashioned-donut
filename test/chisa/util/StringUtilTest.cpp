@@ -125,19 +125,12 @@ TEST(StringUtilTest, Base64EecodeTest)
 	ASSERT_EQ("dGVzdA==", encodeBase64("test"));
 	ASSERT_EQ("dGVzdA==", encodeBase64("test", 4));
 
-	ASSERT_EQ("44GC44GE44GG44GI44GK", encodeBase64("あいうえお"));
-}
+	ASSERT_EQ("dA==", encodeBase64("t"));
+	ASSERT_EQ("dGU=", encodeBase64("te"));
+	ASSERT_EQ("dGVz", encodeBase64("tes"));
+	ASSERT_EQ("dGVzdA==", encodeBase64("test"));
 
-TEST(StringUtilTest, Base64DecodeTest)
-{
-	{
-		std::vector<char> d;
-		d.push_back('t');
-		d.push_back('e');
-		d.push_back('s');
-		d.push_back('t');
-		ASSERT_EQ(d, decodeBase64("dGVzdA=="));
-	}
+	ASSERT_EQ("44GC44GE44GG44GI44GK", encodeBase64("あいうえお"));
 	{
 		std::vector<char> d;
 		d.push_back('t');
@@ -150,6 +143,34 @@ TEST(StringUtilTest, Base64DecodeTest)
 		d.push_back(0);
 		d.push_back(255);
 		d.push_back(42);
+		ASSERT_EQ(d, decodeBase64("dABzdAB0FQD/Kg=="));
+	}
+}
+
+TEST(StringUtilTest, Base64DecodeTest)
+{
+	std::vector<char> d;
+	d.push_back('t');
+	d.push_back('e');
+	d.push_back('s');
+	d.push_back('t');
+	ASSERT_EQ(std::vector<char>(d.begin(), d.begin()+1), decodeBase64("dA=="));
+	ASSERT_EQ(std::vector<char>(d.begin(), d.begin()+2), decodeBase64("dGU="));
+	ASSERT_EQ(std::vector<char>(d.begin(), d.begin()+3), decodeBase64("dGVz"));
+	ASSERT_EQ(d, decodeBase64("dGVzdA=="));
+	{
+		std::vector<char> d;
+		d.push_back('t');
+		d.push_back(0);
+		d.push_back('s');
+		d.push_back('t');
+		d.push_back(0);
+		d.push_back('t');
+		d.push_back(21);
+		d.push_back(0);
+		d.push_back(255);
+		d.push_back(42);
+		ASSERT_EQ("dABzdAB0FQD/Kg==", encodeBase64(d));
 		ASSERT_EQ(d, decodeBase64(encodeBase64(d)));
 	}
 	ASSERT_EQ("test", decodeBase64AsString("dGVzdA=="));
