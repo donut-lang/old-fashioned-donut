@@ -19,6 +19,7 @@
 #include "Param.h"
 #include <cstdlib>
 #include <algorithm>
+#include "../util/StringUtil.h"
 #include "../logging/Exception.h"
 
 namespace chisa {
@@ -45,81 +46,108 @@ public:
 		*val = value_;
 		return true;
 	}
+	virtual tinyxml2::XMLElement* synthTree(tinyxml2::XMLDocument* doc) override
+	{
+		tinyxml2::XMLElement* elm = doc->NewElement(Param::ElemName);
+		elm->SetAttribute(AttrName::Name, this->name().c_str());
+		elm->SetAttribute(AttrName::Type, TypeName::String);
+		elm->InsertFirstChild(doc->NewText(this->value_.c_str()));
+		return elm;
+	}
 };
 
 class IntegerParam : public Param {
 private:
 	int value_;
-	bool failed_;
+	bool succeed_;
 public:
 	IntegerParam(const std::string& name, const std::string& value)
 	:Param(name)
 	{
-		char* end;
-		value_ = strtol(value.c_str(), &end, 0);
-		failed_ = *end != 0;
+		this->value_ = parseInt(value, 0, &this->succeed_);
 	}
 	virtual bool queryInt(int* val) override
 	{
-		if(failed_){
+		if(!succeed_){
 			return false;
 		}
 		*val = value_;
 		return true;
+	}
+	virtual tinyxml2::XMLElement* synthTree(tinyxml2::XMLDocument* doc) override
+	{
+		if(!succeed_){
+			return nullptr;
+		}
+		tinyxml2::XMLElement* elm = doc->NewElement(Param::ElemName);
+		elm->SetAttribute(AttrName::Name, this->name().c_str());
+		elm->SetAttribute(AttrName::Type, TypeName::String);
+		elm->InsertFirstChild( doc->NewText(util::toString(this->value_).c_str()) );
+		return elm;
 	}
 };
 
 class FloatParam : public Param {
 private:
 	float value_;
-	bool failed_;
+	bool succeed_;
 public:
 	FloatParam(const std::string& name, const std::string& value)
 	:Param(name)
 	{
-		char* end;
-		this->value_ = strtof(value.c_str(), &end);
-		failed_ = *end != 0;
+		this->value_ = parseFloat(value, &this->succeed_);
 	}
 	virtual ~FloatParam(){}
 	virtual bool queryFloat(float* val) override
 	{
-		if(failed_){
+		if(!succeed_){
 			return false;
 		}
 		*val = this->value_;
 		return true;
+	}
+	virtual tinyxml2::XMLElement* synthTree(tinyxml2::XMLDocument* doc) override
+	{
+		if(!succeed_){
+			return nullptr;
+		}
+		tinyxml2::XMLElement* elm = doc->NewElement(Param::ElemName);
+		elm->SetAttribute(AttrName::Name, this->name().c_str());
+		elm->SetAttribute(AttrName::Type, TypeName::String);
+		elm->InsertFirstChild( doc->NewText(util::toString(this->value_).c_str()) );
+		return elm;
 	}
 };
 
 class BoolParam : public Param {
 private:
 	bool value_;
-	bool failed_;
+	bool succeed_;
 public:
 	BoolParam(const std::string& name, const std::string& value)
 	:Param(name)
 	{
-		std::string copy(value);
-		std::transform(copy.begin(), copy.end(), copy.end(), ::tolower);
-		if(copy == "true" || copy=="yes"){
-			value_ = true;
-			failed_ = false;
-		}else if(copy == "false" || copy=="no"){
-			value_ = false;
-			failed_ = false;
-		}else{
-			failed_ = true;
-		}
+		this->value_ = parseBool(value, &this->succeed_);
 	}
 	virtual ~BoolParam(){}
 	virtual bool queryBool(bool* val) override
 	{
-		if(failed_){
+		if(!succeed_){
 			return false;
 		}
 		*val = this->value_;
 		return true;
+	}
+	virtual tinyxml2::XMLElement* synthTree(tinyxml2::XMLDocument* doc) override
+	{
+		if(!succeed_){
+			return nullptr;
+		}
+		tinyxml2::XMLElement* elm = doc->NewElement(Param::ElemName);
+		elm->SetAttribute(AttrName::Name, this->name().c_str());
+		elm->SetAttribute(AttrName::Type, TypeName::String);
+		elm->InsertFirstChild( doc->NewText(util::toString(this->value_).c_str()) );
+		return elm;
 	}
 };
 std::shared_ptr<Param> Param::createParam(const std::string& name, const std::string& type, const std::string& value)
@@ -175,6 +203,7 @@ std::shared_ptr<Param> Param::parseTree(tinyxml2::XMLElement* elem)
 	elem->FirstChildElement();
 	return Param::createParam(name, type, value);
 }
+
 void ParamSet::parseTree(tinyxml2::XMLElement* elem)
 {
 	for(XMLNode* it=elem->FirstChild(); it; it=it->NextSibling()){
@@ -185,6 +214,18 @@ void ParamSet::parseTree(tinyxml2::XMLElement* elem)
 			}
 		}
 	}
+}
+
+tinyxml2::XMLElement* ParamSet::synthTree(tinyxml2::XMLDocument* doc)
+{
+	tinyxml2::XMLElement* elm = doc->NewElement(Param::ElemName);
+	for(auto it : this->params_){
+		auto param = it.second;
+		if(auto child = param->synthTree(doc)){
+			elm->InsertEndChild(child);
+		}
+	}
+	return elm;
 }
 
 bool ParamSet::queryInt(const std::string& name, int* val)
