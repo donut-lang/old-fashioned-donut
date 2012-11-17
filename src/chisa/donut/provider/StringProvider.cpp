@@ -32,34 +32,13 @@ StringProvider::StringProvider(World* world)
 :NativeObjectProvider(world, "String")
 {
 	this->registerPureNativeClosure("toInteger", std::function<int(StringObject*)>([&](StringObject* self) {
-		char* c;
-		std::string const str = self->toString(this->world());
-		int v = std::strtol(str.c_str(), &c, 0);
-		if (*c) {
-			throw DonutException(__FILE__, __LINE__, "Cannot convert \"%s\" to int.", str.c_str());
-		}
-		return v;
+		return util::parseInt(self->toString(this->world()), 0);
 	}));
 	this->registerPureNativeClosure("toFloat", std::function<float(StringObject*)>([&](StringObject* self) {
-		char* c;
-		std::string const str = self->toString(this->world());
-		float v = std::strtof(str.c_str(), &c);
-		if (*c) {
-			throw DonutException(__FILE__, __LINE__, "Cannot convert \"%s\" to float.", str.c_str());
-		}
-		return v;
+		return util::parseFloat(self->toString(this->world()));
 	}));
 	this->registerPureNativeClosure("toBoolean", std::function<bool(StringObject*)>([&](StringObject* self) {
-		std::string const str = self->toString(this->world());
-		std::string copy(str);
-		std::transform(copy.begin(), copy.end(), copy.begin(), (int (*)(int))std::tolower);
-		if( copy == "true" || copy == "yes") {
-			return true;
-		}
-		else if(copy == "false" || copy=="no") {
-			return false;
-		}
-		throw DonutException(__FILE__, __LINE__, "Cannot convert \"%s\" to bool.", str.c_str());
+		return util::parseBool(self->toString(this->world()));
 	}));
 	this->registerPureNativeClosure("opAdd", std::function<std::string(StringObject*,StringObject*)>([&](StringObject* self, StringObject* other) {
 		std::string const str = self->toString(this->world());
