@@ -39,6 +39,12 @@ int parseInt(const std::string& str, int radix=0, bool* succeed=nullptr);
 float parseFloat(const std::string& str, bool* succeed=nullptr);
 bool parseBool(const std::string& val, bool* succeed=nullptr);
 
+std::string encodeBase64( const std::vector<char>& data );
+std::string encodeBase64( const std::string& data );
+std::string encodeBase64( const char* data, const std::size_t length);
+std::vector<char> decodeBase64( const std::string& str );
+std::string decodeBase64AsString( const std::string& str );
+
 std::string decodePercent(const std::string& str);
 void split(const std::string& str, const std::string& sep, std::vector<std::string>& list);
 void split(const std::string& str, const std::string* sep, size_t n, std::vector<std::string>& list);
