@@ -170,4 +170,42 @@ TEST(ParamTest, TreeFloatTest)
 	ASSERT_EQ(str, "strvalue");
 }
 
+TEST(ParamTest, GetSetTest)
+{
+	ParamSet p;
+	p.addInt("int", 1);
+	p.addFloat("float", 1.2f);
+	p.addString("str", "text");
+	p.addBool("bool", true);
+
+	ASSERT_EQ(1, p.getInt("int"));
+	ASSERT_FLOAT_EQ(1.2f, p.getFloat("float"));
+	ASSERT_EQ("text", p.getString("str"));
+	ASSERT_EQ(true, p.getBool("bool"));
+}
+
+TEST(ParamTest, SerializeDeserializeTest)
+{
+	tinyxml2::XMLDocument doc;
+	tinyxml2::XMLElement* elm;
+	{
+		ParamSet p;
+		p.addInt("int", 1);
+		p.addFloat("float", 1.2f);
+		p.addString("str", "text");
+		p.addBool("bool", true);
+		elm = p.synthTree(&doc);
+	}
+
+	{
+		ParamSet p;
+		p.parseTree(elm);
+		ASSERT_EQ(1, p.getInt("int"));
+		ASSERT_FLOAT_EQ(1.2f, p.getFloat("float"));
+		ASSERT_EQ("text", p.getString("str"));
+		ASSERT_EQ(true, p.getBool("bool"));
+	}
+}
+
+
 }}

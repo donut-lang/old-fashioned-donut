@@ -66,6 +66,12 @@ public:
 	{
 		this->value_ = parseInt(value, 0, &this->succeed_);
 	}
+	IntegerParam(const std::string& name, const int value)
+	:Param(name)
+	,value_(value)
+	,succeed_(true)
+	{
+	}
 	virtual bool queryInt(int* val) override
 	{
 		if(!succeed_){
@@ -81,7 +87,7 @@ public:
 		}
 		tinyxml2::XMLElement* elm = doc->NewElement(Param::ElemName);
 		elm->SetAttribute(AttrName::Name, this->name().c_str());
-		elm->SetAttribute(AttrName::Type, TypeName::String);
+		elm->SetAttribute(AttrName::Type, TypeName::Integer);
 		elm->InsertFirstChild( doc->NewText(util::toString(this->value_).c_str()) );
 		return elm;
 	}
@@ -96,6 +102,12 @@ public:
 	:Param(name)
 	{
 		this->value_ = parseFloat(value, &this->succeed_);
+	}
+	FloatParam(const std::string& name, const float value)
+	:Param(name)
+	,value_(value)
+	,succeed_(true)
+	{
 	}
 	virtual ~FloatParam(){}
 	virtual bool queryFloat(float* val) override
@@ -113,7 +125,7 @@ public:
 		}
 		tinyxml2::XMLElement* elm = doc->NewElement(Param::ElemName);
 		elm->SetAttribute(AttrName::Name, this->name().c_str());
-		elm->SetAttribute(AttrName::Type, TypeName::String);
+		elm->SetAttribute(AttrName::Type, TypeName::Float);
 		elm->InsertFirstChild( doc->NewText(util::toString(this->value_).c_str()) );
 		return elm;
 	}
@@ -128,6 +140,12 @@ public:
 	:Param(name)
 	{
 		this->value_ = parseBool(value, &this->succeed_);
+	}
+	BoolParam(const std::string& name, const bool value)
+	:Param(name)
+	,value_(value)
+	,succeed_(true)
+	{
 	}
 	virtual ~BoolParam(){}
 	virtual bool queryBool(bool* val) override
@@ -145,7 +163,7 @@ public:
 		}
 		tinyxml2::XMLElement* elm = doc->NewElement(Param::ElemName);
 		elm->SetAttribute(AttrName::Name, this->name().c_str());
-		elm->SetAttribute(AttrName::Type, TypeName::String);
+		elm->SetAttribute(AttrName::Type, TypeName::Boolean);
 		elm->InsertFirstChild( doc->NewText(util::toString(this->value_).c_str()) );
 		return elm;
 	}
@@ -216,6 +234,25 @@ void ParamSet::parseTree(tinyxml2::XMLElement* elem)
 	}
 }
 
+void ParamSet::addInt(const std::string& name, int value)
+{
+	this->params_.insert( std::pair<std::string, std::shared_ptr<Param> >(name, std::shared_ptr<Param>( new IntegerParam(name, value)) ) );
+}
+
+void ParamSet::addString(const std::string& name, const std::string value)
+{
+	this->params_.insert( std::pair<std::string, std::shared_ptr<Param> >(name, std::shared_ptr<Param>( new StringParam(name, value)) ) );
+}
+void ParamSet::addFloat(const std::string& name, float value)
+{
+	this->params_.insert( std::pair<std::string, std::shared_ptr<Param> >(name, std::shared_ptr<Param>( new FloatParam(name, value)) ) );
+}
+void ParamSet::addBool(const std::string& name, bool value)
+{
+	this->params_.insert( std::pair<std::string, std::shared_ptr<Param> >(name, std::shared_ptr<Param>( new BoolParam(name, value)) ) );
+}
+
+
 tinyxml2::XMLElement* ParamSet::synthTree(tinyxml2::XMLDocument* doc)
 {
 	tinyxml2::XMLElement* elm = doc->NewElement(Param::ElemName);
@@ -265,7 +302,7 @@ int ParamSet::getInt(const std::string& name)
 		throw logging::Exception(__FILE__, __LINE__, "Does not have parameter: %s", name.c_str());
 	}
 	if(! this->queryInt(name, &val) ){
-		throw logging::Exception(__FILE__, __LINE__, "Failed to query float: \"%s\"", name.c_str());
+		throw logging::Exception(__FILE__, __LINE__, "Failed to query int: \"%s\"", name.c_str());
 	}
 	return val;
 }
@@ -276,7 +313,7 @@ std::string ParamSet::getString(const std::string& name)
 		throw logging::Exception(__FILE__, __LINE__, "Does not have parameter: %s", name.c_str());
 	}
 	if(! this->queryString(name, &val) ){
-		throw logging::Exception(__FILE__, __LINE__, "Failed to query float: \"%s\"", name.c_str());
+		throw logging::Exception(__FILE__, __LINE__, "Failed to query string: \"%s\"", name.c_str());
 	}
 	return val;
 }
@@ -299,7 +336,7 @@ bool ParamSet::getBool(const std::string& name)
 		throw logging::Exception(__FILE__, __LINE__, "Does not have parameter: %s", name.c_str());
 	}
 	if(! this->queryBool(name, &val) ){
-		throw logging::Exception(__FILE__, __LINE__, "Failed to query float: \"%s\"", name.c_str());
+		throw logging::Exception(__FILE__, __LINE__, "Failed to query bool: \"%s\"", name.c_str());
 	}
 	return val;
 }
