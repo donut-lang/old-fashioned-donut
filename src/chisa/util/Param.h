@@ -77,6 +77,12 @@ public:
 	bool queryString(const std::string& name, std::string* val);
 	bool queryFloat(const std::string& name, float* val);
 	bool queryBool(const std::string& name, bool* val);
+
+	void addInt(const std::string& name, int value);
+	void addString(const std::string& name, const std::string value);
+	void addFloat(const std::string& name, float value);
+	void addBool(const std::string& name, bool value);
+
 	int getInt(const std::string& name);
 	std::string getString(const std::string& name);
 	float getFloat(const std::string& name);
