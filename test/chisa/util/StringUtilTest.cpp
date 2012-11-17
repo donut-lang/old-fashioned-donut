@@ -111,6 +111,52 @@ TEST(StringUtilTest, NumericTest)
 	ASSERT_EQ("12.3", format("%.1f", 12.3));
 }
 
+
+TEST(StringUtilTest, Base64EecodeTest)
+{
+	{
+		std::vector<char> d;
+		d.push_back('t');
+		d.push_back('e');
+		d.push_back('s');
+		d.push_back('t');
+		ASSERT_EQ("dGVzdA==", encodeBase64(d));
+	}
+	ASSERT_EQ("dGVzdA==", encodeBase64("test"));
+	ASSERT_EQ("dGVzdA==", encodeBase64("test", 4));
+
+	ASSERT_EQ("44GC44GE44GG44GI44GK", encodeBase64("あいうえお"));
+}
+
+TEST(StringUtilTest, Base64DecodeTest)
+{
+	{
+		std::vector<char> d;
+		d.push_back('t');
+		d.push_back('e');
+		d.push_back('s');
+		d.push_back('t');
+		ASSERT_EQ(d, decodeBase64("dGVzdA=="));
+	}
+	{
+		std::vector<char> d;
+		d.push_back('t');
+		d.push_back(0);
+		d.push_back('s');
+		d.push_back('t');
+		d.push_back(0);
+		d.push_back('t');
+		d.push_back(21);
+		d.push_back(0);
+		d.push_back(255);
+		d.push_back(42);
+		ASSERT_EQ(d, decodeBase64(encodeBase64(d)));
+	}
+	ASSERT_EQ("test", decodeBase64AsString("dGVzdA=="));
+
+	ASSERT_EQ("あいうえお", decodeBase64AsString("44GC44GE44GG44GI44GK"));
+}
+
 TEST(StringUtilTest, PercentDecodeTest)
 {
 	ASSERT_EQ("NOT_ENCODED", decodePercent("NOT_ENCODED"));
