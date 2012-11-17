@@ -32,8 +32,10 @@ std::string toString(const int val, int radix=10);
 std::string toString(const unsigned int val, int radix=10);
 std::string toString(const float val);
 std::string toString(const bool val);
+std::string toLower(const std::string& str);
+std::string toUpper(const std::string& str);
 
-int parseInt(const std::string& str, int radix, bool* succeed=nullptr);
+int parseInt(const std::string& str, int radix=0, bool* succeed=nullptr);
 float parseFloat(const std::string& str, bool* succeed=nullptr);
 bool parseBool(const std::string& val, bool* succeed=nullptr);
 
