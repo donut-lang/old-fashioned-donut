@@ -23,6 +23,7 @@
 #include "../logging/Exception.h"
 #include "StringUtil.h"
 #include <cmath>
+#include <algorithm>
 
 namespace chisa {
 namespace util {
@@ -59,6 +60,83 @@ std::string toString(const int val, int radix)
 	default:
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon radix: %d", radix);
 	}
+}
+
+std::string toString(const unsigned int val, int radix)
+{
+	switch(radix){
+	case 0:
+		return util::format("%d", val);
+	case 8:
+		return util::format("0%o", val);
+	case 10:
+		return util::format("%d", val);
+	case 16:
+		return util::format("0x%x", val);
+	default:
+		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon radix: %d", radix);
+	}
+}
+
+std::string toString(const float val)
+{
+	return util::format("%f", val);
+}
+
+std::string toString(const bool val)
+{
+	return val ? "true" : "false";
+}
+
+
+int parseInt(const std::string& str, int radix, bool* succeed)
+{
+	char* end;
+	int const result = std::strtol(str.c_str(), &end, radix);
+	if((*end) != '\0'){
+		if(succeed != nullptr){
+			*succeed = false;
+		}else{
+			throw logging::Exception(__FILE__, __LINE__, "Invalid number: %s", str.c_str());
+		}
+	} else {
+		if(succeed) *succeed = true;
+	}
+	return result;
+}
+
+float parseFloat(const std::string& str, bool* succeed)
+{
+	char* end;
+	float const result = std::strtod(str.c_str(), &end);
+	if((*end) != '\0'){
+		if(succeed != nullptr){
+			*succeed = false;
+		}else{
+			throw logging::Exception(__FILE__, __LINE__, "Invalid number: %s", str.c_str());
+		}
+	} else {
+		if(succeed) *succeed = true;
+	}
+	return result;
+}
+
+bool parseBool(const std::string& str, bool* succeed)
+{
+	std::string copy(str);
+	std::transform(copy.begin(), copy.end(), copy.begin(), (int (*)(int))std::tolower);
+	if( copy == "true" || copy == "yes") {
+		if(succeed) *succeed = true;
+		return true;
+	} else if(copy == "false" || copy=="no") {
+		if(succeed) *succeed = true;
+		return false;
+	} else if(succeed){
+		*succeed = false;
+	} else {
+		throw logging::Exception(__FILE__, __LINE__, "Invalid boolean: %s", str.c_str());
+	}
+	return false;
 }
 
 std::string decodePercent(const std::string& str)

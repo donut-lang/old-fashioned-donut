@@ -37,27 +37,6 @@ const std::string createStringFromToken(pANTLR3_COMMON_TOKEN tok){
 	return createStringFromString(tok->getText(tok));
 }
 
-
-int parseInt(const std::string& str, int radix)
-{
-	char* end;
-	int const result = std::strtol(str.c_str(), &end, radix);
-	if(!end || (*end) != '\0'){
-		throw logging::Exception(__FILE__, __LINE__, "Invalid number: %d", str.c_str());
-	}
-	return result;
-}
-
-float parseFloat(const std::string& str)
-{
-	char* end;
-	float const result = std::strtod(str.c_str(), &end);
-	if(!end || (*end) != '\0'){
-		throw logging::Exception(__FILE__, __LINE__, "Invalid number: %d", str.c_str());
-	}
-	return result;
-}
-
 const std::string unescapeString(const std::string& str){
 	std::stringstream ss;
 	size_t last = 0;

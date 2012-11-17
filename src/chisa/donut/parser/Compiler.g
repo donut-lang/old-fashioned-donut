@@ -17,12 +17,13 @@ options {
 #include "../../code/Code.h"
 #include "../../code/Closure.h"
 #include "../ParseUtil.h"
+#include "../../../util/StringUtil.h"
 using namespace chisa;
 using namespace chisa::donut;
 using std::string;
 using chisa::donut::unescapeString;
-using chisa::donut::parseInt;
-using chisa::donut::parseFloat;
+using chisa::util::parseInt;
+using chisa::util::parseFloat;
 
 typedef pANTLR3_COMMON_TOKEN Token;
 }

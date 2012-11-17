@@ -25,8 +25,6 @@ namespace donut{
 
 const std::string createStringFromString(pANTLR3_STRING string);
 const std::string createStringFromToken(pANTLR3_COMMON_TOKEN tok);
-int parseInt(const std::string& str, int radix);
-float parseFloat(const std::string& str);
 const std::string unescapeString(const std::string& str);
 
 }}

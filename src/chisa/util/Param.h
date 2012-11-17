@@ -55,6 +55,7 @@ public:
 	virtual bool queryString(std::string* val) { return false; };
 	virtual bool queryFloat(float* val) { return false; };
 	virtual bool queryBool(bool* val) { return false; };
+	virtual tinyxml2::XMLElement* synthTree(tinyxml2::XMLDocument* doc) = 0;
 public:
 	static std::shared_ptr<Param> createParam(const std::string& name, const std::string& type, const std::string& value);
 public:
@@ -82,6 +83,7 @@ public:
 	bool getBool(const std::string& name);
 public:
 	void parseTree(tinyxml2::XMLElement* elem);
+	tinyxml2::XMLElement* synthTree(tinyxml2::XMLDocument* doc);
 };
 
 }}
