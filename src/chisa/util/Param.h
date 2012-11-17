@@ -40,6 +40,8 @@ public:
 		static constexpr const char* Integer = "int";
 		static constexpr const char* String = "string";
 		static constexpr const char* Float = "float";
+		static constexpr const char* Boolean = "boolean";
+		static constexpr const char* Bool = "bool";
 	};
 private:
 	const std::string name_;
@@ -52,6 +54,7 @@ public:
 	virtual bool queryInt(int* val) { return false; };
 	virtual bool queryString(std::string* val) { return false; };
 	virtual bool queryFloat(float* val) { return false; };
+	virtual bool queryBool(bool* val) { return false; };
 public:
 	static std::shared_ptr<Param> createParam(const std::string& name, const std::string& type, const std::string& value);
 public:
@@ -62,7 +65,7 @@ class ParamSet {
 	std::map<std::string, std::shared_ptr<Param> > params_;
 public:
 	ParamSet(){};
-	virtual ~ParamSet(){};
+	virtual ~ParamSet() noexcept = default;
 public:
 	void add(const std::string& name, const std::string& type, const std::string& value);
 	void add(std::shared_ptr<Param> p);
@@ -72,6 +75,11 @@ public:
 	bool queryInt(const std::string& name, int* val);
 	bool queryString(const std::string& name, std::string* val);
 	bool queryFloat(const std::string& name, float* val);
+	bool queryBool(const std::string& name, bool* val);
+	int getInt(const std::string& name);
+	std::string getString(const std::string& name);
+	float getFloat(const std::string& name);
+	bool getBool(const std::string& name);
 public:
 	void parseTree(tinyxml2::XMLElement* elem);
 };

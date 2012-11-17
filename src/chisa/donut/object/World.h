@@ -53,6 +53,9 @@ private:
 public:
 	World(logging::Logger& log);
 	virtual ~World() noexcept = default;
+	void bootstrap();
+	tinyxml2::XMLElement* serialize(tinyxml2::XMLDocument* doc);
+	void deserialize(tinyxml2::XMLElement* xml);
 public:
 	unsigned int nextGeneration();
 	Handler<DonutObjectProvider>& donutObjectProvider() { return donutObjectProvider_; };
@@ -69,6 +72,7 @@ public:
 private:
 	uintptr_t nextObjectId();
 	Handler<DonutObject> global() { return this->globalObject_; }
+	void registerObject( Handler<HeapObject> obj );
 public:
 	Handler<Code> code() { return this->code_; }
 	Handler<DonutObject> createDonutObject();
@@ -82,9 +86,6 @@ public:
 	Handler<PureNativeClosureObject> createPureNativeClosureObject(std::string objectProviderName, std::string closureName, PureNativeClosureEntry::Signature sig);
 public:
 	void registerProvider( Handler<Provider> provider );
-public:
-	tinyxml2::XMLElement* serialize(tinyxml2::XMLDocument* doc);
-	void deserialize(tinyxml2::XMLElement* xml);
 };
 
 }}
