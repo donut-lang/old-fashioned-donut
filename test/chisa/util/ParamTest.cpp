@@ -196,7 +196,8 @@ TEST(ParamTest, SerializeDeserializeTest)
 		p.addBool("bool", true);
 		elm = p.synthTree(&doc);
 		//こうしないとリークする
-		doc.InsertFirstChild(elm);
+		doc.DeleteChild(elm);
+//		doc.InsertFirstChild(elm);
 	}
 
 	{
