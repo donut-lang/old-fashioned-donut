@@ -45,7 +45,7 @@ BoolProvider::BoolProvider(World* world)
 
 std::string BoolProvider::toString(const Object* ptr) const
 {
-	return fromPointer(ptr) ? "true" : "false";
+	return util::toString(fromPointer(ptr));
 }
 
 int BoolProvider::toInt(const Object* ptr) const
