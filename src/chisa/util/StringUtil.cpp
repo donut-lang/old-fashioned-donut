@@ -123,8 +123,7 @@ float parseFloat(const std::string& str, bool* succeed)
 
 bool parseBool(const std::string& str, bool* succeed)
 {
-	std::string copy(str);
-	std::transform(copy.begin(), copy.end(), copy.begin(), (int (*)(int))std::tolower);
+	std::string copy = toLower(str);
 	if( copy == "true" || copy == "yes") {
 		if(succeed) *succeed = true;
 		return true;
@@ -167,6 +166,20 @@ std::string decodePercent(const std::string& str)
 	to[j]='\0';
 
 	return std::string(to);
+}
+
+std::string toLower(const std::string& str)
+{
+	std::string copy(str);
+	std::transform(copy.begin(), copy.end(), copy.begin(), (int (*)(int))std::tolower);
+	return copy;
+}
+
+std::string toUpper(const std::string& str)
+{
+	std::string copy(str);
+	std::transform(copy.begin(), copy.end(), copy.begin(), (int (*)(int))std::toupper);
+	return copy;
 }
 
 bool startsWith(const std::string& target, const std::string& prefix)

@@ -20,6 +20,8 @@
 #include "../../../src/chisa/util/StringUtil.h"
 using namespace chisa::util;
 
+#include <cmath>
+
 namespace chisa {
 namespace util {
 
@@ -37,7 +39,7 @@ TEST(StringUtilTest, FormatTest)
 	ASSERT_EQ("test  test", format("test %s test", ""));
 }
 
-TEST(StringUtilTest, ToStringTest)
+TEST(StringUtilTest, ToStringIntegerTest)
 {
 	ASSERT_EQ("12", toString(12));
 	ASSERT_EQ("12", toString(12, 0));
@@ -46,6 +48,59 @@ TEST(StringUtilTest, ToStringTest)
 	ASSERT_EQ("014", toString(12, 8));
 	ASSERT_EQ("0xc", toString(12, 16));
 }
+
+TEST(StringUtilTest, ToStringFloatTest)
+{
+	ASSERT_TRUE(startsWith(toString(12.3f), "12.3"));
+	ASSERT_EQ(toLower(toString(NAN)), "nan");
+}
+
+TEST(StringUtilTest, ToStringBoolTest)
+{
+	ASSERT_EQ("true", toString(true));
+	ASSERT_EQ("false", toString(false));
+}
+
+TEST(StringUtilTest, ToLowerTest)
+{
+	ASSERT_EQ("l o w e r ", toLower("L O w e R "));
+}
+
+TEST(StringUtilTest, ToUpperTest)
+{
+	ASSERT_EQ(" UPPER ", toUpper(" upper "));
+}
+
+TEST(StringUtilTest, ParseIntTest)
+{
+	ASSERT_EQ(10, parseInt("10"));
+	ASSERT_EQ(10, parseInt("10",0));
+	ASSERT_EQ(16, parseInt("0x10"));
+	ASSERT_EQ(8, parseInt("010"));
+	ASSERT_EQ(10, parseInt("10",10));
+	ASSERT_EQ(8, parseInt("10",8));
+	ASSERT_EQ(16, parseInt("10",16));
+}
+
+TEST(StringUtilTest, ParseFloatTest)
+{
+	ASSERT_FLOAT_EQ(10.0f, parseFloat("10"));
+	ASSERT_FLOAT_EQ(10.12f, parseFloat("10.12"));
+}
+
+TEST(StringUtilTest, ParseBoolTest)
+{
+	ASSERT_TRUE(parseBool("true"));
+	ASSERT_TRUE(parseBool("True"));
+	ASSERT_TRUE(parseBool("yes"));
+	ASSERT_TRUE(parseBool("Yes"));
+
+	ASSERT_FALSE(parseBool("false"));
+	ASSERT_FALSE(parseBool("False"));
+	ASSERT_FALSE(parseBool("no"));
+	ASSERT_FALSE(parseBool("No"));
+}
+
 
 TEST(StringUtilTest, NumericTest)
 {
