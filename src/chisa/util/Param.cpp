@@ -18,6 +18,8 @@
 
 #include "Param.h"
 #include <cstdlib>
+#include <algorithm>
+#include "../logging/Exception.h"
 
 namespace chisa {
 namespace util {
@@ -38,7 +40,7 @@ public:
 	,value_(value)
 	{}
 	virtual ~StringParam(){}
-	bool queryString(std::string* val) override
+	virtual bool queryString(std::string* val) override
 	{
 		*val = value_;
 		return true;
@@ -57,7 +59,7 @@ public:
 		value_ = strtol(value.c_str(), &end, 0);
 		failed_ = *end != 0;
 	}
-	bool queryInt(int* val) override
+	virtual bool queryInt(int* val) override
 	{
 		if(failed_){
 			return false;
@@ -80,7 +82,7 @@ public:
 		failed_ = *end != 0;
 	}
 	virtual ~FloatParam(){}
-	bool queryFloat(float* val) override
+	virtual bool queryFloat(float* val) override
 	{
 		if(failed_){
 			return false;
@@ -90,7 +92,36 @@ public:
 	}
 };
 
-
+class BoolParam : public Param {
+private:
+	bool value_;
+	bool failed_;
+public:
+	BoolParam(const std::string& name, const std::string& value)
+	:Param(name)
+	{
+		std::string copy(value);
+		std::transform(copy.begin(), copy.end(), copy.end(), ::tolower);
+		if(copy == "true" || copy=="yes"){
+			value_ = true;
+			failed_ = false;
+		}else if(copy == "false" || copy=="no"){
+			value_ = false;
+			failed_ = false;
+		}else{
+			failed_ = true;
+		}
+	}
+	virtual ~BoolParam(){}
+	virtual bool queryBool(bool* val) override
+	{
+		if(failed_){
+			return false;
+		}
+		*val = this->value_;
+		return true;
+	}
+};
 std::shared_ptr<Param> Param::createParam(const std::string& name, const std::string& type, const std::string& value)
 {
 	if(type==TypeName::String){
@@ -99,6 +130,8 @@ std::shared_ptr<Param> Param::createParam(const std::string& name, const std::st
 		return std::shared_ptr<Param>(new IntegerParam(name, value));
 	}else if(type==TypeName::Float){
 		return std::shared_ptr<Param>(new FloatParam(name, value));
+	}else if(type==TypeName::Boolean || type==TypeName::Bool){
+		return std::shared_ptr<Param>(new BoolParam(name, value));
 	}else{
 		return std::shared_ptr<Param>(new StringParam(name, value));
 	}
@@ -157,26 +190,77 @@ void ParamSet::parseTree(tinyxml2::XMLElement* elem)
 bool ParamSet::queryInt(const std::string& name, int* val)
 {
 	if(std::shared_ptr<Param> p = this->get(name)){
-		p->queryInt(val);
-		return true;
+		return p->queryInt(val);
 	}
 	return false;
 }
 bool ParamSet::queryString(const std::string& name, std::string* val)
 {
 	if(std::shared_ptr<Param> p = this->get(name)){
-		p->queryString(val);
-		return true;
+		return p->queryString(val);
 	}
 	return false;
 }
 bool ParamSet::queryFloat(const std::string& name, float* val)
 {
 	if(std::shared_ptr<Param> p = this->get(name)){
-		p->queryFloat(val);
-		return true;
+		return p->queryFloat(val);
 	}
 	return false;
+}
+
+bool ParamSet::queryBool(const std::string& name, bool* val)
+{
+	if(std::shared_ptr<Param> p = this->get(name)){
+		return p->queryBool(val);
+	}
+	return false;
+}
+
+int ParamSet::getInt(const std::string& name)
+{
+	int val;
+	if(!this->has(name)){
+		throw logging::Exception(__FILE__, __LINE__, "Does not have parameter: %s", name.c_str());
+	}
+	if(! this->queryInt(name, &val) ){
+		throw logging::Exception(__FILE__, __LINE__, "Failed to query float: \"%s\"", name.c_str());
+	}
+	return val;
+}
+std::string ParamSet::getString(const std::string& name)
+{
+	std::string val;
+	if(!this->has(name)){
+		throw logging::Exception(__FILE__, __LINE__, "Does not have parameter: %s", name.c_str());
+	}
+	if(! this->queryString(name, &val) ){
+		throw logging::Exception(__FILE__, __LINE__, "Failed to query float: \"%s\"", name.c_str());
+	}
+	return val;
+}
+float ParamSet::getFloat(const std::string& name)
+{
+	float val;
+	if(!this->has(name)){
+		throw logging::Exception(__FILE__, __LINE__, "Does not have parameter: %s", name.c_str());
+	}
+	if(! this->queryFloat(name, &val) ){
+		throw logging::Exception(__FILE__, __LINE__, "Failed to query float: \"%s\"", name.c_str());
+	}
+	return val;
+}
+
+bool ParamSet::getBool(const std::string& name)
+{
+	bool val;
+	if(!this->has(name)){
+		throw logging::Exception(__FILE__, __LINE__, "Does not have parameter: %s", name.c_str());
+	}
+	if(! this->queryBool(name, &val) ){
+		throw logging::Exception(__FILE__, __LINE__, "Failed to query float: \"%s\"", name.c_str());
+	}
+	return val;
 }
 
 }}

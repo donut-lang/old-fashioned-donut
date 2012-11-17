@@ -28,11 +28,21 @@ World::World(logging::Logger& log)
 ,code_(new Code)
 ,generation_(0)
 ,objectId_(0)
-,donutObjectProvider_(new DonutObjectProvider(this))
-,boolProvider_(new BoolProvider(this))
+,donutObjectProvider_()
+,boolProvider_()
 ,intProvider_(new IntProvider(this))
 ,nullProvider_(new NullProvider(this))
 {
+	this->bootstrap();
+}
+
+void World::bootstrap()
+{
+	this->donutObjectProvider_ = Handler<DonutObjectProvider>( new DonutObjectProvider(this) );
+	this->boolProvider_ = Handler<BoolProvider>(new BoolProvider(this));
+	this->intProvider_ = Handler<IntProvider>(new IntProvider(this));
+	this->nullProvider_ = Handler<NullProvider>(new NullProvider(this));
+
 	this->registerProvider( this->donutObjectProvider() );
 	this->registerProvider( this->boolProvider() );
 	this->registerProvider( this->intProvider() );
@@ -41,15 +51,24 @@ World::World(logging::Logger& log)
 	this->registerProvider(Handler<Provider>( new StringProvider(this) ));
 
 	this->objectProto_ = this->donutObjectProvider()->prototype();
-	this->globalObject_ = this->createEmptyDonutObject();
-
 	this->intProto_ = this->intProvider()->prototype();
 	this->boolProto_ = this->boolProvider()->prototype();
 	this->nullProto_ = this->nullProvider()->prototype();
-	this->globalObject_->store(this, "Object", objectProto_);
-	this->globalObject_->store(this, "Int", intProto_);
-	this->globalObject_->store(this, "Boolean", boolProto_);
-	this->globalObject_->store(this, "Null", nullProto_);
+
+	this->globalObject_ = this->createEmptyDonutObject();
+	this->globalObject_->store(this, "Object", this->objectProto());
+	this->globalObject_->store(this, "Int", this->intProto());
+	this->globalObject_->store(this, "Boolean", this->boolProto());
+	this->globalObject_->store(this, "Null", this->nullProto());
+}
+
+tinyxml2::XMLElement* World::serialize(tinyxml2::XMLDocument* doc)
+{
+
+}
+
+void World::deserialize(tinyxml2::XMLElement* xml)
+{
 
 }
 
@@ -72,12 +91,16 @@ Handler<Provider> World::getProvider( const std::string& name ) const
 	return Handler<Provider>();
 }
 
+void World::registerObject( Handler<HeapObject> obj )
+{
+	obj->id(nextObjectId());
+	this->objectPool_.push_back(obj.get());
+}
 Handler<DonutObject> World::createDonutObject()
 {
 	Handler<DonutObject> obj(new DonutObject(this));
 	obj->store(this, "__proto__", this->objectProto());
-	obj->id(nextObjectId());
-	this->objectPool_.push_back(obj.get());
+	this->registerObject(obj);
 
 	return obj;
 }
@@ -85,8 +108,7 @@ Handler<DonutObject> World::createDonutObject()
 Handler<DonutObject> World::createEmptyDonutObject()
 {
 	Handler<DonutObject> obj(new DonutObject(this));
-	obj->id(nextObjectId());
-	this->objectPool_.push_back(obj.get());
+	this->registerObject(obj);
 
 	return obj;
 }
@@ -94,8 +116,7 @@ Handler<DonutObject> World::createEmptyDonutObject()
 Handler<StringObject> World::createStringObject(const std::string& val)
 {
 	Handler<StringObject> obj(new StringObject(this, val));
-	obj->id(nextObjectId());
-	this->objectPool_.push_back(obj.get());
+	this->registerObject(obj);
 
 	return obj;
 }
@@ -103,8 +124,7 @@ Handler<StringObject> World::createStringObject(const std::string& val)
 Handler<FloatObject> World::createFloatObject(const float& val)
 {
 	Handler<FloatObject> obj(new FloatObject(this, val));
-	obj->id(nextObjectId());
-	this->objectPool_.push_back(obj.get());
+	this->registerObject(obj);
 
 	return obj;
 }
@@ -112,8 +132,7 @@ Handler<FloatObject> World::createFloatObject(const float& val)
 Handler<DonutClosureObject> World::createDonutClosureObject( Handler<Closure> closure, Handler<Object> scope )
 {
 	Handler<DonutClosureObject> obj(new DonutClosureObject(this, closure, scope));
-	obj->id(nextObjectId());
-	this->objectPool_.push_back(obj.get());
+	this->registerObject(obj);
 
 	return obj;
 }
@@ -121,8 +140,7 @@ Handler<DonutClosureObject> World::createDonutClosureObject( Handler<Closure> cl
 Handler<PureNativeClosureObject> World::createPureNativeClosureObject(std::string objectProviderName, std::string closureName, PureNativeClosureEntry::Signature f)
 {
 	Handler<PureNativeClosureObject> obj(new PureNativeClosureObject(this, objectProviderName, closureName, f));
-	obj->id(nextObjectId());
-	this->objectPool_.push_back(obj.get());
+	this->registerObject(obj);
 
 	return obj;
 }
@@ -147,16 +165,6 @@ void World::registerProvider( Handler<Provider> provider )
 	this->providers_.insert(
 			std::pair<std::string, Handler<Provider> >(provider->name(), provider)
 			);
-}
-
-tinyxml2::XMLElement* World::serialize(tinyxml2::XMLDocument* doc)
-{
-
-}
-
-void World::deserialize(tinyxml2::XMLElement* xml)
-{
-
 }
 
 }}

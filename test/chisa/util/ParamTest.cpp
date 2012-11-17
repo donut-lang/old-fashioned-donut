@@ -85,6 +85,57 @@ TEST(ParamTest, FloatTest)
 	ASSERT_TRUE(isnan(val));
 }
 
+TEST(ParamTest, BooleanTest)
+{
+	std::shared_ptr<Param> p;
+
+	{
+		bool v=true;
+		p = Param::createParam("name", "bool", "float");
+		ASSERT_FALSE(p->queryFloat(0));
+		ASSERT_FALSE(p->queryInt(0));
+		ASSERT_FALSE(p->queryString(0));
+		ASSERT_FALSE(p->queryBool(&v));
+		ASSERT_TRUE(v);
+	}
+	{
+		bool v=true;
+		p = Param::createParam("name", "bool", "false");
+		ASSERT_FALSE(p->queryFloat(0));
+		ASSERT_FALSE(p->queryInt(0));
+		ASSERT_FALSE(p->queryString(0));
+		ASSERT_TRUE(p->queryBool(&v));
+		ASSERT_FALSE(v);
+	}
+	{
+		bool v=true;
+		p = Param::createParam("name", "bool", "no");
+		ASSERT_FALSE(p->queryFloat(0));
+		ASSERT_FALSE(p->queryInt(0));
+		ASSERT_FALSE(p->queryString(0));
+		ASSERT_TRUE(p->queryBool(&v));
+		ASSERT_FALSE(v);
+	}
+	{
+		bool v=false;
+		p = Param::createParam("name", "bool", "true");
+		ASSERT_FALSE(p->queryFloat(0));
+		ASSERT_FALSE(p->queryInt(0));
+		ASSERT_FALSE(p->queryString(0));
+		ASSERT_TRUE(p->queryBool(&v));
+		ASSERT_TRUE(v);
+	}
+	{
+		bool v=false;
+		p = Param::createParam("name", "bool", "yes");
+		ASSERT_FALSE(p->queryFloat(0));
+		ASSERT_FALSE(p->queryInt(0));
+		ASSERT_FALSE(p->queryString(0));
+		ASSERT_TRUE(p->queryBool(&v));
+		ASSERT_TRUE(v);
+	}
+}
+
 TEST(ParamTest, TreeFloatTest)
 {
 	std::shared_ptr<ParamSet> pset(new ParamSet());
