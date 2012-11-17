@@ -38,7 +38,7 @@ protected:
 	HandlerW<DrawableManager>& manager() { return this->manager_; };
 public:
 	virtual ~Drawable() noexcept = default;
-	inline void onFree() { delete this; }
+	inline bool onFree() noexcept { return false; };
 	float width();
 	float height();
 	virtual geom::Box size() = 0;

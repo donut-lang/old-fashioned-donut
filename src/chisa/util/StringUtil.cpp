@@ -139,8 +139,6 @@ std::string encodeBase64( const std::vector<char>& data )
 std::vector<char> decodeBase64(const std::string& str)
 {
 	std::vector<char> dat;
-	const char* buf = str.c_str();
-	const unsigned int len = str.size();
 
 	char now = 0;
 	int nowbit = 0;
@@ -254,7 +252,12 @@ std::string decodePercent(const std::string& str)
 	}
 	to[j]='\0';
 
-	return std::string(to);
+	std::string res(to);
+
+	delete [] from;
+	delete [] to;
+
+	return res;
 }
 
 std::string toLower(const std::string& str)

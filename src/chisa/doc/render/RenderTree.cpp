@@ -69,10 +69,10 @@ void RenderTree::reset() noexcept
 	(decltype(this->objects_)()).swap(this->objects_);
 }
 
-void RenderTree::onFree()
+bool RenderTree::onFree()
 {
 	this->reset();
-	delete this;
+	return false;
 }
 
 void RenderTree::addObject(Handler<RenderObject> obj)

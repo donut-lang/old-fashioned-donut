@@ -52,7 +52,7 @@ private:
 	void addPrototype( const std::string& name, Handler<NativeClosureEntry> clos );
 public:
 	virtual ~Provider() noexcept = default;
-	inline void onFree() noexcept { delete this; }
+	inline bool onFree() noexcept { return false; };
 	inline std::string name() const noexcept { return this->name_; };
 	inline World* world() const noexcept { return this->world_; };
 	inline Handler<DonutObject> prototype() const noexcept { return this->prototype_; };

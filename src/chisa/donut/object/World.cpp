@@ -36,6 +36,14 @@ World::World(logging::Logger& log)
 	this->bootstrap();
 }
 
+World::~World() noexcept
+{
+	for(HeapObject* obj : this->objectPool_){
+		obj->erase();
+	}
+	(decltype(this->objectPool_)()).swap(this->objectPool_);
+}
+
 void World::bootstrap()
 {
 	this->donutObjectProvider_ = Handler<DonutObjectProvider>( new DonutObjectProvider(this) );

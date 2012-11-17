@@ -40,7 +40,7 @@ public:
 	virtual ~ImageManager() noexcept = default;
 	Handler<Sprite> queryImage(const std::string& filename);
 public:
-	void onFree() noexcept { delete this; };
+	inline bool onFree() noexcept { return false; };
 };
 
 }}}

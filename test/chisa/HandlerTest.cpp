@@ -39,9 +39,9 @@ public:
 		(*this->deleted_)++;
 		this->onDelete();
 	}
-	void onFree() {
+	bool onFree() {
 		(*this->expired_)++;
-		delete this;
+		return false;
 	}
 	void setDestroyCallback(std::function<void(void)> f){
 		this->onDelete = f;

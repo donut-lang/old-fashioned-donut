@@ -39,7 +39,7 @@ public:
 	~FreeType() noexcept;
 public:
 	FT_Library raw() const noexcept { return this->library_; };
-	void onFree() noexcept;
+	inline bool onFree() noexcept { return false; };
 };
 
 class FontManager : public HandlerBody<FontManager> {
@@ -59,7 +59,7 @@ private:
 	Font* searchFont( const std::string& name );
 	Font* seachDefaultFont();
 public:
-	void onFree() noexcept;
+	inline bool onFree() noexcept { return false; };
 	void backFont(Font* font);
 };
 

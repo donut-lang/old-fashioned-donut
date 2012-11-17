@@ -65,7 +65,7 @@ public:
 		FT_Face face() const noexcept { return parent_->face_; };
 	};
 public:
-	void onFree();
+	bool onFree();
 };
 
 }}

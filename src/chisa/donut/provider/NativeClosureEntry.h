@@ -29,7 +29,7 @@ public:
 	NativeClosureEntry() = default;
 	virtual ~NativeClosureEntry() noexcept = default;
 public:
-	void onFree() noexcept { delete this; }
+	inline bool onFree() noexcept { return false; };
 	virtual Handler<Object> createObject( World* const world, const std::string& objectProviderName, const std::string& closureName ) = 0;
 };
 

@@ -45,7 +45,7 @@ private:
 public:
 	SpriteManager(logging::Logger& log);
 	virtual ~SpriteManager() noexcept;
-	void onFree() noexcept;
+	inline bool onFree() noexcept { return false; };
 	Handler<Sprite> queryRawSprite(const int width, const int height);
 public:
 	void backSprite(Sprite* spr);

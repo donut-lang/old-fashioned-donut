@@ -38,12 +38,13 @@ Font::~Font() noexcept
 	this->face_ = nullptr;
 }
 
-void Font::onFree()
+bool Font::onFree()
 {
 	if(Handler<internal::FontManager> p = this->parent_.lock()){
 		p->backFont(this);
+		return true;
 	}else{
-		delete this;
+		return false;
 	}
 }
 

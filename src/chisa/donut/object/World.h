@@ -52,7 +52,7 @@ private:
 	Handler<DonutObject> nullProto_;
 public:
 	World(logging::Logger& log);
-	virtual ~World() noexcept = default;
+	virtual ~World() noexcept;
 	void bootstrap();
 	tinyxml2::XMLElement* serialize(tinyxml2::XMLDocument* doc);
 	void deserialize(tinyxml2::XMLElement* xml);
