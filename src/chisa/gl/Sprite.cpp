@@ -118,13 +118,14 @@ void Sprite::backBuffer()
 	}
 }
 
-void Sprite::onFree() noexcept {
+bool Sprite::onFree() noexcept {
 	this->size(this->origSize());
 	this->backBuffer();
 	if( Handler<internal::SpriteManager> mgr = this->mgr_.lock() ){
 		mgr->backSprite(this);
+		return true;
 	}else{
-		delete this;
+		return false;
 	}
 }
 

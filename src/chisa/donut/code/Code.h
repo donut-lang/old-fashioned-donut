@@ -63,7 +63,7 @@ private:
 public:
 	Code();
 	virtual ~Code() noexcept = default;
-	void onFree() noexcept { delete this; }
+	bool onFree() noexcept { return false; }
 	template <typename T> Instruction constCode(T const& val);
 public:
 public:

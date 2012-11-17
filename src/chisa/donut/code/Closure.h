@@ -33,7 +33,7 @@ public:
 	virtual ~Closure() noexcept = default;
 	void constCode(unsigned int code);
 public:
-	void onFree() noexcept { delete this; };
+	bool onFree() noexcept { return false; };
 public:
 	std::vector<std::string> const& arglist() const noexcept { return this->arglist_; };
 	std::vector<donut::Instruction> const& instlist() const noexcept { return this->instlist_; };

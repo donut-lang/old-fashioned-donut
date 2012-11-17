@@ -84,7 +84,7 @@ public:
 			const gl::Color& backColor=gl::Transparent
 		);
 public:
-	void onFree() noexcept { delete this; };
+	bool onFree() noexcept { return false; };
 };
 
 }}

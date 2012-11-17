@@ -341,7 +341,12 @@ protected:
 				this->weakEntity_->notifyDead();
 				this->weakEntity_ = nullptr;
 			}
-			static_cast<Derived*>(this)->onFree();
+			if(static_cast<Derived*>(this)->onFree()) {
+				//recycle
+				this->deleted = false;
+			}else{
+				delete this;
+			}
 		}
 	}
 };
@@ -384,11 +389,16 @@ private:
 				return;
 			}
 			this->onDestroy_ = true;
-			if(this->weakEntity_) {
+			if(this->weakEntity_){
 				this->weakEntity_->notifyDead();
 				this->weakEntity_ = nullptr;
 			}
-			static_cast<Derived*>(this)->onFree();
+			if(static_cast<Derived*>(this)->onFree()) {
+				//recycle
+				this->onDestroy_ = false;
+			}else{
+				delete this;
+			}
 		}
 	}
 

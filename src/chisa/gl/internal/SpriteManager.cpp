@@ -42,11 +42,6 @@ SpriteManager::~SpriteManager() noexcept
 	decltype(this->unusedSprite_)().swap(this->unusedSprite_);
 }
 
-void SpriteManager::onFree() noexcept
-{
-	delete this;
-}
-
 void SpriteManager::backSprite(Sprite* spr)
 {
 	typedef chisa::gl::internal::WidthOrder<Sprite> SpriteOrder;

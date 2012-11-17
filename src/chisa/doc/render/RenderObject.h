@@ -46,7 +46,7 @@ public:
 	RenderObject(HandlerW<RenderTree> parentTree, Node* parentNode, const float relDepth);
 	virtual ~RenderObject() noexcept = default;
 public:
-	void onFree() noexcept { delete this; };
+	bool onFree() noexcept { return false; };
 	void render(gl::Canvas& canvas, const geom::Point& offset, const float depth);
 	void onHidden();
 	HandlerW<RenderTree> parentTree();

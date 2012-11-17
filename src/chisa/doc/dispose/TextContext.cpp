@@ -56,6 +56,19 @@ TextContext::TextContext(logging::Logger& log, Handler<RenderTree> renderTree)
 	}
 }
 
+TextContext::~TextContext() noexcept
+{
+	if(this->face_){
+		cairo_font_face_destroy(this->face_);
+		this->face_ = nullptr;
+	}
+	cairo_font_options_destroy(this->nullOption_);
+	cairo_destroy(this->cairo_);
+	cairo_surface_destroy(this->nullSurface_);
+	this->font_.reset();
+	this->renderTree_.reset();
+}
+
 void TextContext::pushStyle(gl::TextDrawable::Style style)
 {
 	this->styleStack_.push_back(style);
@@ -132,6 +145,7 @@ void TextContext::pushFont( const std::string& name )
 	this->font_ = this->renderTree_->drawableManager()->queryFont(name);
 	if(this->face_){
 		cairo_font_face_destroy(this->face_);
+		this->face_ = nullptr;
 	}
 	gl::Font::RawFaceSession rfs(this->font_);
 	this->face_ = cairo_ft_font_face_create_for_ft_face(rfs.face(),0);
@@ -149,18 +163,13 @@ void TextContext::popFont()
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Oops. you call \"popFont\" before pushing!");
 	}
 	cairo_font_face_destroy(this->face_);
+	this->face_ = nullptr;
+
 	this->fontStack_.pop_back();
 	const std::string name = this->fontStack_.back();
 	this->font_ = this->renderTree_->drawableManager()->queryFont(name);
 	gl::Font::RawFaceSession rfs(this->font_);
 	this->face_ = cairo_ft_font_face_create_for_ft_face(rfs.face(),0);
-}
-
-TextContext::~TextContext() noexcept
-{
-	cairo_font_options_destroy(this->nullOption_);
-	cairo_destroy(this->cairo_);
-	cairo_surface_destroy(this->nullSurface_);
 }
 
 geom::Box TextContext::measure(const std::string& strUtf8)

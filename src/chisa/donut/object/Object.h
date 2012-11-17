@@ -76,7 +76,7 @@ protected: /* 実装すべきもの */
 	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) = 0;
 	virtual Handler<Object> loadImpl(const std::string& name) const = 0;
 public:
-	virtual void onFree() noexcept = 0;
+	virtual bool onFree() noexcept = 0;
 };
 
 }}
@@ -101,7 +101,7 @@ public:
 	inline void id(uintptr_t nid) noexcept { this->id_ = nid; }
 	inline void erase() noexcept { this->erased_ = true; if(refcount() == 0){ delete this; } };
 public:
-	virtual void onFree() noexcept { if(this->erased_){ delete this; } };
+	virtual bool onFree() noexcept { if(this->erased_){ return false; }else{ return true; } };
 };
 
 class ProxyObject : public Object {
@@ -113,7 +113,7 @@ public:
 	ProxyObject(World* const world, uintptr_t num);
 	virtual ~ProxyObject() noexcept = default;
 public:
-	virtual void onFree() noexcept { delete this; };
+	virtual bool onFree() noexcept { return true; };
 };
 
 }}

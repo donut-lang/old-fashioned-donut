@@ -119,6 +119,9 @@ TEST(ColorTest, StringParsingTest)
 	elm->SetAttribute("color", "#yyyyyyyy");
 	parseAttr<Color>("color", c, InvalidColor, elm);
 	ASSERT_TRUE(c.isInvalid());
+
+	//こうしないと、リークする
+	doc.InsertEndChild(elm);
 }
 
 TEST(ColorTest, StringNameParsingTest)
@@ -136,6 +139,9 @@ TEST(ColorTest, StringNameParsingTest)
 	ASSERT_FLOAT_EQ(1.0f, c.red());
 	ASSERT_FLOAT_EQ(0.0f, c.green());
 	ASSERT_FLOAT_EQ(0.0f, c.blue());
+
+	//こうしないと、リークする
+	doc.InsertEndChild(elm);
 }
 
 }}

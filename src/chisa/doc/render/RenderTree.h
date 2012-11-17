@@ -51,7 +51,7 @@ public:
 public:
 	void registerDrawable(Handler<gl::Drawable> d) noexcept;
 	void reset() noexcept;
-	void onFree();
+	bool onFree();
 public:
 	void addObject(Handler<RenderObject> obj);
 };

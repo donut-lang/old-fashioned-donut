@@ -71,7 +71,7 @@ public:
 	inline int height() const noexcept { return this->size().height(); };
 	std::string toString() const noexcept;
 public: /* from Handler */
-	void onFree() noexcept;
+	bool onFree() noexcept;
 public: /* from Canvas */
 	void drawImpl(Canvas* const canvas, const geom::Point& pt, const geom::Area& renderArea, const float depth);
 	void drawImpl(Canvas* const canvas, const geom::Point& pt, const float depth);

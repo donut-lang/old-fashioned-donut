@@ -37,17 +37,12 @@ FreeType::~FreeType() noexcept
 	this->library_ = nullptr;
 }
 
-void FreeType::onFree() noexcept
-{
-	delete this;
-}
-
 static std::string TAG("Font");
 
 FontManager::FontManager(logging::Logger& log, const std::string& fontdir)
 :log_(log)
 ,fontdir_(fontdir)
-,freetype_( new FreeType() )
+,freetype_( new FreeType )
 {
 	this->defaultFont_ = Handler<Font>( this->seachDefaultFont() );
 }
@@ -56,11 +51,6 @@ FontManager::~FontManager() noexcept
 {
 	decltype(this->unusedFonts_)().swap(this->unusedFonts_);
 	this->defaultFont_.reset();
-}
-
-void FontManager::onFree() noexcept
-{
-	delete this;
 }
 
 Handler<Font> FontManager::queryFont(const std::string& name)
@@ -97,10 +87,8 @@ Font* FontManager::searchFont( const std::string& name )
 	Font::analyzeFontName(name, family, style);
 	std::vector<std::string> files(util::file::enumFiles(this->fontdir_));
 	for(const std::string& fname : files){
-		unsigned int face_idx=0;
-		unsigned int face_max = 2;
-		while(FT_New_Face(this->freetype_->raw(), fname.c_str(), (face_idx++), &face) == 0 && face_idx < face_max){
-			face_max = face->num_faces;
+		int face_idx=0;
+		while(FT_New_Face(this->freetype_->raw(), fname.c_str(), (face_idx++), &face) == 0){
 			if(face->family_name && family == std::string(face->family_name) &&
 					(!style.empty() && face->style_name) && style==std::string(face->style_name) ){
 				return new Font(this, this->freetype_, face);
