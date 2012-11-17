@@ -85,7 +85,7 @@ public:
 	}
 	~Matrix() noexcept {
 		if(this->mat_){
-			delete this->mat_;
+			delete [] this->mat_;
 			this->mat_ = nullptr;
 		}
 	}
@@ -97,7 +97,7 @@ public:
 	Matrix& operator=(Matrix&& o) noexcept
 	{
 		if(this->mat_){
-			delete this->mat_;
+			delete [] this->mat_;
 		}
 		this->mat_ = o.mat_;
 		o.mat_=nullptr;
