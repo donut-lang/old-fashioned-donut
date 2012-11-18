@@ -56,9 +56,9 @@ public:
 public:
 	Handler<Object> start( const std::size_t closureIndex );
 private:
-	void enterClosure(Handler<Object> self, Handler<DonutClosureObject> clos, Handler<Object> args);
+	void enterClosure(const Handler<Object>& self, const Handler<DonutClosureObject>& clos, const Handler<Object>& args);
 	bool returnClosure();
-	Handler<DonutClosureObject> createClosure(Handler<Closure> closureCode);
+	Handler<DonutClosureObject> createClosure(const Handler<Closure>& closureCode);
 private:
 	Handler<Object> run();
 };

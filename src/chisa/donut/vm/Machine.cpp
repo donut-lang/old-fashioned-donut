@@ -42,16 +42,16 @@ Handler<Object> Machine::start( const std::size_t closureIndex )
 	return this->run();
 }
 
-Handler<DonutClosureObject> Machine::createClosure(Handler<Closure> closureCode)
+Handler<DonutClosureObject> Machine::createClosure(const Handler<Closure>& closureCode)
 {
 	if( this->context_ ){
 		return world_->createDonutClosureObject(closureCode, this->context_);
 	}else{
-		return world_->createDonutClosureObject(closureCode, world_->createNull());
+		return world_->createDonutClosureObject(closureCode, world_->global());
 	}
 }
 
-void Machine::enterClosure(Handler<Object> self, Handler<DonutClosureObject> clos, Handler<Object> args)
+void Machine::enterClosure(const Handler<Object>& self, const Handler<DonutClosureObject>& clos, const Handler<Object>& args)
 {
 	if(this->closure_){
 		this->callStack_.push_back( Callchain(this->pc_, this->self_, this->closure_, this->context_) );

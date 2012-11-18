@@ -73,8 +73,8 @@ public:
 	Handler<Object> nullProto() {return nullProto_;};
 
 	Handler<Provider> getProvider( const std::string& name ) const;
-private:
 	Handler<DonutObject> global() { return this->globalObject_; }
+private:
 	void registerObject( const Handler<HeapObject>& obj );
 
 	int nextWalkColor();
