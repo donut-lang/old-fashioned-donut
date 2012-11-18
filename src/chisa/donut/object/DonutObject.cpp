@@ -106,4 +106,11 @@ Handler<Object> DonutObject::loadImpl(const std::string& name) const
 	}
 }
 
+void DonutObject::seekImpl(timestamp_t time)
+{
+	for(std::pair<const std::string, Slot>& it : this->slots_){
+		it.second.seek(time);
+	}
+}
+
 }}

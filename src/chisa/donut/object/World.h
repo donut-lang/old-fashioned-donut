@@ -35,7 +35,8 @@ class World {
 private:
 	Handler<Code> code_;
 private:
-	unsigned int generation_;
+	unsigned int timestamp_;
+	unsigned int nowTime_;
 	uintptr_t objectId_;
 	int walkColor_;
 private:
@@ -59,7 +60,8 @@ public:
 	tinyxml2::XMLElement* serialize(tinyxml2::XMLDocument* doc);
 	void deserialize(tinyxml2::XMLElement* xml);
 public:
-	unsigned int nextGeneration();
+	unsigned int nextTimestamp();
+	unsigned int time() const noexcept { return this->nowTime_; };
 	Handler<DonutObjectProvider>& donutObjectProvider() { return donutObjectProvider_; };
 	Handler<BoolProvider>& boolProvider() {return boolProvider_;};
 	Handler<IntProvider>& intProvider() {return intProvider_;};
@@ -76,6 +78,7 @@ private:
 	int nextWalkColor();
 	Handler<DonutObject> global() { return this->globalObject_; }
 	void registerObject( Handler<HeapObject> obj );
+	void walkAndGC( ObjectWalker& walker );
 public:
 	Handler<Code> code() { return this->code_; }
 	Handler<DonutObject> createDonutObject();

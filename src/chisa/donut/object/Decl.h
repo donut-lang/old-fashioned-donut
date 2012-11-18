@@ -21,6 +21,6 @@
 namespace chisa {
 namespace donut {
 
-typedef unsigned int gen_t;
+typedef unsigned int timestamp_t;
 
 }}
