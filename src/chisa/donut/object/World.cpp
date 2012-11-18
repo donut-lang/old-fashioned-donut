@@ -26,7 +26,7 @@ const static std::string TAG("World");
 World::World(logging::Logger& log)
 :log_(log)
 ,code_(new Code)
-,generation_(0)
+,timestamp_(0)
 ,objectId_(0)
 ,walkColor_(0)
 ,donutObjectProvider_()
@@ -81,9 +81,9 @@ void World::deserialize(tinyxml2::XMLElement* xml)
 
 }
 
-unsigned int World::nextGeneration()
+unsigned int World::nextTimestamp()
 {
-	return ++this->generation_;
+	return ++this->timestamp_;
 }
 
 uintptr_t World::nextObjectId()

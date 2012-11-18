@@ -66,6 +66,11 @@ Handler<Object> NativeClosureObject::loadImpl(const std::string& name) const
 	throw DonutException(__FILE__, __LINE__, "Native Closure does not have any properety.");
 }
 
+void NativeClosureObject::seekImpl(timestamp_t time)
+{
+
+}
+
 }}
 
 

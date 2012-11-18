@@ -44,14 +44,14 @@ Slot::Slot(World* const pool, Object* const obj)
 ,rev_()
 ,index_()
 {
-	this->rev_.push_back( std::pair<gen_t, Object*>(0, nullptr) );
-	this->rev_.push_back( std::pair<gen_t, Object*>(pool->nextGeneration(), obj) );
+	this->rev_.push_back( std::pair<timestamp_t, Object*>(0, nullptr) );
+	this->rev_.push_back( std::pair<timestamp_t, Object*>(pool->nextTimestamp(), obj) );
 	this->index_ = this->rev_.begin()+1;
 }
 
-void Slot::seek(unsigned int gen)
+void Slot::seek(timestamp_t timestamp)
 {
-	this->index_ = std::lower_bound(rev_.begin(), rev_.end(), gen, Order());
+	this->index_ = std::lower_bound(rev_.begin(), rev_.end(), timestamp, Order());
 }
 
 void Slot::discardHistory()
@@ -73,12 +73,12 @@ Object* Slot::load() const
 	return this->index_->second;
 }
 
-gen_t Slot::firstGen() const noexcept
+timestamp_t Slot::firstGen() const noexcept
 {
 	return this->size() == 0 ? 0 : (this->rev_.begin()+1)->first;
 }
 
-gen_t Slot::lastGen() const noexcept
+timestamp_t Slot::lastGen() const noexcept
 {
 	return (this->rev_.end()-1)->first;
 }
@@ -86,7 +86,7 @@ gen_t Slot::lastGen() const noexcept
 Object* Slot::store(Object* obj)
 {
 	this->discardFuture();
-	this->rev_.push_back( std::pair<gen_t, Object*>(this->world_->nextGeneration(), obj) );
+	this->rev_.push_back( std::pair<timestamp_t, Object*>(this->world_->nextTimestamp(), obj) );
 	this->index_ = this->rev_.end()-1;
 	return obj;
 }

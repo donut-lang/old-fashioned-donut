@@ -32,8 +32,8 @@ class Slot {
 	STACK_OBJECT(Slot);
 private:
 	World* world_;
-	std::vector<std::pair<gen_t, Object*> > rev_;
-	std::vector<std::pair<gen_t, Object*> >::iterator index_;
+	std::vector<std::pair<timestamp_t, Object*> > rev_;
+	std::vector<std::pair<timestamp_t, Object*> >::iterator index_;
 public:
 	Slot(World* const world, Object* const obj);
 	~Slot() noexcept = default;
@@ -43,13 +43,13 @@ public:
 	Slot& operator=(const Slot& other) { world_=other.world_;rev_=other.rev_;index_=other.index_;return *this; }
 	Slot& operator=(Slot&& other) { world_=other.world_;rev_.swap(other.rev_);index_=other.index_;return *this; }
 public:
-	void seek( gen_t gen );
+	void seek( timestamp_t timestamp );
 	void discardHistory();
 	void discardFuture();
 	Object* load() const;
 	Object* store( Object* obj );
-	gen_t firstGen() const noexcept;
-	gen_t lastGen() const noexcept;
+	timestamp_t firstGen() const noexcept;
+	timestamp_t lastGen() const noexcept;
 	bool have() const;
 	inline std::size_t size() const noexcept { return this->rev_.size()-1; };
 	void walk(ObjectWalker* walker);

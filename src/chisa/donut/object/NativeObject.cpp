@@ -69,6 +69,11 @@ Handler<Object> NativeObject::loadImpl(const std::string& name) const
 	return this->prototype_->load(world(), name);
 }
 
+void NativeObject::seekImpl(timestamp_t time)
+{
+
+}
+
 }}
 
 

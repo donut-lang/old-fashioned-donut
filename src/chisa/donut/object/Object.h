@@ -67,6 +67,7 @@ public:
 	inline void incref( bool check ) { if(isObject()) { this->HandlerBody<Object>::incref(check); } }
 	inline void decref() { if(isObject()) { this->HandlerBody<Object>::decref(); } };
 	inline void walk(ObjectWalker* walker) { if(isObject()){ this->walkImpl(walker); } }
+	inline void seek(timestamp_t time){ if(isObject()){ this->seekImpl(time); } };
 protected: /* 実装すべきもの */
 	virtual std::string toStringImpl() const = 0;
 	virtual std::string providerNameImpl() const = 0;
@@ -78,6 +79,7 @@ protected: /* 実装すべきもの */
 	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) = 0;
 	virtual Handler<Object> loadImpl(const std::string& name) const = 0;
 	virtual void walkImpl(ObjectWalker* walker) = 0;
+	virtual void seekImpl(timestamp_t time) = 0;
 public:
 	virtual bool onFree() noexcept = 0;
 };
@@ -139,6 +141,7 @@ protected:
 	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) override;
 	virtual Handler<Object> loadImpl(const std::string& name) const override;
 	virtual void walkImpl(ObjectWalker* walker) override;
+	virtual void seekImpl(timestamp_t time) override;
 };
 
 }}
@@ -171,6 +174,7 @@ protected:
 	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) override;
 	virtual Handler<Object> loadImpl(const std::string& name) const override;
 	virtual void walkImpl(ObjectWalker* walker) override;
+	virtual void seekImpl(timestamp_t time) override;
 };
 
 }}
@@ -200,6 +204,7 @@ protected:
 	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) override;
 	virtual Handler<Object> loadImpl(const std::string& name) const override;
 	virtual void walkImpl(ObjectWalker* walker) override;
+	virtual void seekImpl(timestamp_t time) override;
 };
 
 }}
