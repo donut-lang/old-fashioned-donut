@@ -86,8 +86,13 @@ timestamp_t Slot::lastGen() const noexcept
 Object* Slot::store(Object* obj)
 {
 	this->discardFuture();
-	this->rev_.push_back( std::pair<timestamp_t, Object*>(this->world_->nextTimestamp(), obj) );
-	this->index_ = this->rev_.end()-1;
+	if(lastGen() < this->world_->time()){
+		this->rev_.push_back( std::pair<timestamp_t, Object*>(this->world_->nextTimestamp(), obj) );
+		this->index_ = this->rev_.end()-1;
+	}else{
+		std::vector<std::pair<timestamp_t, Object*> >::iterator last = this->rev_.end()-1;
+		*last = std::pair<timestamp_t, Object*>(this->world_->nextTimestamp(), obj);
+	}
 	return obj;
 }
 
