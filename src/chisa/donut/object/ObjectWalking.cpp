@@ -38,8 +38,10 @@ void DonutObject::walkImpl(ObjectWalker* walker)
 void Slot::walk(ObjectWalker* walker)
 {
 	typedef decltype(this->rev_) ListType;
-	for(ListType::reference rev : this->rev_){
-		rev.second->walk(walker);
+	for(const std::pair<unsigned int, Object*>& rev : this->rev_){
+		if( rev.second ) {
+			rev.second->walk(walker);
+		}
 	}
 }
 

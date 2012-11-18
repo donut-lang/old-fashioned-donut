@@ -106,9 +106,10 @@ public:
 	inline void erase() noexcept { this->erased_ = true; if(refcount() == 0){ delete this; } };
 public:
 	virtual bool onFree() noexcept { if(this->erased_){ return false; }else{ return true; } };
+	int walkColor() noexcept { return this->walkColor_; };
+	inline bool used() { return this->refcount() > 0; };
 protected:
 	void walkColor(const int color) noexcept { this->walkColor_=color; };
-	int walkColor() noexcept { return this->walkColor_; };
 };
 
 }}

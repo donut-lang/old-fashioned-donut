@@ -37,9 +37,11 @@ private:
 private:
 	unsigned int generation_;
 	uintptr_t objectId_;
+	int walkColor_;
 private:
 	std::map<std::string, Handler<Provider> > providers_;
 	std::vector<HeapObject*> objectPool_;
+	std::vector<HeapObject*> objectPoolMarked_;
 	Handler<DonutObjectProvider> donutObjectProvider_;
 	Handler<BoolProvider> boolProvider_;
 	Handler<IntProvider> intProvider_;
@@ -71,6 +73,7 @@ public:
 	Handler<Provider> getProvider( const std::string& name ) const;
 private:
 	uintptr_t nextObjectId();
+	int nextWalkColor();
 	Handler<DonutObject> global() { return this->globalObject_; }
 	void registerObject( Handler<HeapObject> obj );
 public:
@@ -86,6 +89,7 @@ public:
 	Handler<PureNativeClosureObject> createPureNativeClosureObject(std::string objectProviderName, std::string closureName, PureNativeClosureEntry::Signature sig);
 public:
 	void registerProvider( Handler<Provider> provider );
+	void gc();
 };
 
 }}
