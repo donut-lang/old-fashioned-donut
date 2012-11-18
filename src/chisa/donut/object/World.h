@@ -74,22 +74,22 @@ public:
 
 	Handler<Provider> getProvider( const std::string& name ) const;
 private:
-	uintptr_t nextObjectId();
-	int nextWalkColor();
 	Handler<DonutObject> global() { return this->globalObject_; }
-	void registerObject( Handler<HeapObject> obj );
+	void registerObject( const Handler<HeapObject>& obj );
+
+	int nextWalkColor();
 	void walkAndGC( ObjectWalker& walker );
 public:
 	Handler<Code> code() { return this->code_; }
 	Handler<DonutObject> createDonutObject();
 	Handler<DonutObject> createEmptyDonutObject();
-	Handler<DonutClosureObject> createDonutClosureObject( Handler<Closure> closure, Handler<Object> scope );
+	Handler<DonutClosureObject> createDonutClosureObject( const Handler<Closure>& closure, const Handler<Object>& scope );
 	Handler<StringObject> createStringObject(const std::string& val);
 	Handler<FloatObject> createFloatObject(const float& val);
 	Handler<Object> createInt(const int& val);
 	Handler<Object> createBool(const bool& val);
 	Handler<Object> createNull();
-	Handler<PureNativeClosureObject> createPureNativeClosureObject(std::string objectProviderName, std::string closureName, PureNativeClosureEntry::Signature sig);
+	Handler<PureNativeClosureObject> createPureNativeClosureObject(const std::string& objectProviderName, const std::string& closureName, PureNativeClosureEntry::Signature sig);
 public:
 	void registerProvider( Handler<Provider> provider );
 	void gc();

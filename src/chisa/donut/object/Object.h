@@ -188,7 +188,7 @@ class NativeClosureObject : public HeapObject {
 private:
 	std::string const closureName_;
 public:
-	NativeClosureObject(World* const world, std::string objectProviderName, std::string closureName)
+	NativeClosureObject(World* const world, const std::string& objectProviderName, const std::string& closureName)
 	:HeapObject(world, objectProviderName),closureName_(closureName) {};
 	virtual ~NativeClosureObject() noexcept = default;
 	std::string closureName() const noexcept { return this->closureName_; };
