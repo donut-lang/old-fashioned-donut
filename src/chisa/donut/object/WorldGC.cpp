@@ -24,64 +24,6 @@ namespace donut {
 
 const static std::string TAG("WorldGC");
 
-class Collector : public ObjectWalker {
-private:
-	std::vector<HeapObject*>& heap_;
-public:
-	Collector(int color, std::vector<HeapObject*>& heap)
-	:ObjectWalker(color)
-	,heap_(heap)
-	{
-
-	}
-	virtual ~Collector() noexcept = default;
-public:
-	virtual void onWalk(NativeObject* obj) override
-	{
-		heap_.push_back(obj);
-	}
-	virtual void onWalk(NativeClosureObject* obj) override
-	{
-		heap_.push_back(obj);
-	}
-	virtual void onWalk(DonutObject* obj) override
-	{
-		heap_.push_back(obj);
-	}
-};
-
-class SeekWalker : public ObjectWalker {
-private:
-	World* const world_;
-	std::vector<HeapObject*>& heap_;
-public:
-	SeekWalker(int color, World* world, std::vector<HeapObject*>& heap)
-	:ObjectWalker(color)
-	,world_(world)
-	,heap_(heap)
-	{
-
-	}
-	virtual ~SeekWalker() noexcept = default;
-public:
-	virtual void onWalk(NativeObject* obj) override
-	{
-		obj->seek(world_->time());
-		heap_.push_back(obj);
-	}
-	virtual void onWalk(NativeClosureObject* obj) override
-	{
-		obj->seek(world_->time());
-		heap_.push_back(obj);
-	}
-	virtual void onWalk(DonutObject* obj) override
-	{
-		obj->seek(world_->time());
-		heap_.push_back(obj);
-	}
-
-};
-
 void World::walkAndGC( ObjectWalker& walker )
 {
 	this->objectPoolMarked_.clear();
@@ -112,8 +54,69 @@ void World::walkAndGC( ObjectWalker& walker )
 
 void World::gc()
 {
+	class Collector : public ObjectWalker {
+	private:
+		std::vector<HeapObject*>& heap_;
+	public:
+		Collector(int color, std::vector<HeapObject*>& heap)
+		:ObjectWalker(color)
+		,heap_(heap)
+		{
+
+		}
+		virtual ~Collector() noexcept = default;
+	public:
+		virtual void onWalk(NativeObject* obj) override
+		{
+			heap_.push_back(obj);
+		}
+		virtual void onWalk(NativeClosureObject* obj) override
+		{
+			heap_.push_back(obj);
+		}
+		virtual void onWalk(DonutObject* obj) override
+		{
+			heap_.push_back(obj);
+		}
+	};
 	Collector c(this->nextWalkColor(), this->objectPoolMarked_);
 	this->walkAndGC(c);
+}
+
+void World::seek(timestamp_t time) {
+	class SeekWalker : public ObjectWalker {
+	private:
+		World* const world_;
+		std::vector<HeapObject*>& heap_;
+	public:
+		SeekWalker(int color, World* world, std::vector<HeapObject*>& heap)
+		:ObjectWalker(color)
+		,world_(world)
+		,heap_(heap)
+		{
+
+		}
+		virtual ~SeekWalker() noexcept = default;
+	public:
+		virtual void onWalk(NativeObject* obj) override
+		{
+			obj->seek(world_->time());
+			heap_.push_back(obj);
+		}
+		virtual void onWalk(NativeClosureObject* obj) override
+		{
+			obj->seek(world_->time());
+			heap_.push_back(obj);
+		}
+		virtual void onWalk(DonutObject* obj) override
+		{
+			obj->seek(world_->time());
+			heap_.push_back(obj);
+		}
+
+	};
+	SeekWalker w(this->nextWalkColor(),this, this->objectPoolMarked_);
+	this->walkAndGC(w);
 }
 
 }}

@@ -80,6 +80,7 @@ private:
 
 	int nextWalkColor();
 	void walkAndGC( ObjectWalker& walker );
+	void seek(timestamp_t time);
 public:
 	Handler<Code> code() { return this->code_; }
 	Handler<DonutObject> createDonutObject();
