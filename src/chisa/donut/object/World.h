@@ -44,12 +44,13 @@ private:
 	std::vector<HeapObject*> objectPool_;
 	std::vector<HeapObject*> objectPoolMarked_;
 	Handler<DonutObjectProvider> donutObjectProvider_;
-	Handler<BoolProvider> boolProvider_;
-	Handler<IntProvider> intProvider_;
-	Handler<NullProvider> nullProvider_;
 private:
 	Handler<DonutObject> globalObject_;
 	Handler<DonutObject> objectProto_;
+
+	Handler<BoolProvider> boolProvider_;
+	Handler<IntProvider> intProvider_;
+	Handler<NullProvider> nullProvider_;
 	Handler<DonutObject> boolProto_;
 	Handler<DonutObject> intProto_;
 	Handler<DonutObject> nullProto_;
