@@ -26,6 +26,7 @@
 namespace chisa {
 namespace donut {
 class World;
+class ObjectWalker;
 
 /**
  * すべての窓口となるクラス。
@@ -65,6 +66,7 @@ public:
 	inline intptr_t tag() const noexcept { return reinterpret_cast<std::uintptr_t>(this) & Tag::Mask; };
 	inline void incref( bool check ) { if(isObject()) { this->HandlerBody<Object>::incref(check); } }
 	inline void decref() { if(isObject()) { this->HandlerBody<Object>::decref(); } };
+	inline void walk(ObjectWalker* walker) { if(isObject()){ this->walkImpl(walker); } }
 protected: /* 実装すべきもの */
 	virtual std::string toStringImpl() const = 0;
 	virtual std::string providerNameImpl() const = 0;
@@ -75,6 +77,7 @@ protected: /* 実装すべきもの */
 	virtual bool haveOwnImpl(const std::string& name) const = 0;
 	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) = 0;
 	virtual Handler<Object> loadImpl(const std::string& name) const = 0;
+	virtual void walkImpl(ObjectWalker* walker) = 0;
 public:
 	virtual bool onFree() noexcept = 0;
 };
@@ -91,6 +94,7 @@ private:
 	std::string const providerName_;
 	uintptr_t id_;
 	bool erased_;
+	int walkColor_;
 public:
 	HeapObject(World* const world, const std::string& providerName);
 	virtual ~HeapObject() noexcept = default;
@@ -102,22 +106,12 @@ public:
 	inline void erase() noexcept { this->erased_ = true; if(refcount() == 0){ delete this; } };
 public:
 	virtual bool onFree() noexcept { if(this->erased_){ return false; }else{ return true; } };
-};
-
-class ProxyObject : public Object {
-private:
-	World* const world_;
-	Handler<HeapObject> obj_;
-	uintptr_t num_;
-public:
-	ProxyObject(World* const world, uintptr_t num);
-	virtual ~ProxyObject() noexcept = default;
-public:
-	virtual bool onFree() noexcept { return true; };
+protected:
+	void walkColor(const int color) noexcept { this->walkColor_=color; };
+	int walkColor() noexcept { return this->walkColor_; };
 };
 
 }}
-
 //---------------------------------------------------------------------------------------------------------------------
 
 namespace chisa {
@@ -143,6 +137,7 @@ protected:
 	virtual bool haveOwnImpl(const std::string& name) const override;
 	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) override;
 	virtual Handler<Object> loadImpl(const std::string& name) const override;
+	virtual void walkImpl(ObjectWalker* walker) override;
 };
 
 }}
@@ -158,7 +153,7 @@ namespace donut {
  */
 class NativeObject : public HeapObject {
 private:
-	Handler<DonutObject> prototype_;
+	DonutObject* prototype_;
 protected:
 	NativeObject(World* const world, const std::string& providerName);
 public:
@@ -174,6 +169,7 @@ protected:
 	virtual bool haveOwnImpl(const std::string& name) const override;
 	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) override;
 	virtual Handler<Object> loadImpl(const std::string& name) const override;
+	virtual void walkImpl(ObjectWalker* walker) override;
 };
 
 }}
@@ -202,6 +198,7 @@ protected:
 	virtual bool haveOwnImpl(const std::string& name) const override;
 	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) override;
 	virtual Handler<Object> loadImpl(const std::string& name) const override;
+	virtual void walkImpl(ObjectWalker* walker) override;
 };
 
 }}

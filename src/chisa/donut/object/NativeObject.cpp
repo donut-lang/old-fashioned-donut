@@ -26,7 +26,7 @@ namespace donut {
 NativeObject::NativeObject(World* const world, const std::string& providerName)
 :HeapObject(world, providerName)
 {
-	this->prototype_ = world->getProvider(providerName)->prototype();
+	this->prototype_ = world->getProvider(providerName)->prototype().get();
 }
 
 std::string NativeObject::toStringImpl() const
@@ -68,7 +68,6 @@ Handler<Object> NativeObject::loadImpl(const std::string& name) const
 {
 	return this->prototype_->load(world(), name);
 }
-
 
 }}
 
