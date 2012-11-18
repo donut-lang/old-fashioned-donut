@@ -44,8 +44,8 @@ Handler<Object> Machine::start( const std::size_t closureIndex )
 
 Handler<DonutClosureObject> Machine::createClosure(const Handler<Closure>& closureCode)
 {
-	if( this->context_ ){
-		return world_->createDonutClosureObject(closureCode, this->context_);
+	if( this->scope_ ){
+		return world_->createDonutClosureObject(closureCode, this->scope_);
 	}else{
 		return world_->createDonutClosureObject(closureCode, world_->global());
 	}
@@ -54,10 +54,10 @@ Handler<DonutClosureObject> Machine::createClosure(const Handler<Closure>& closu
 void Machine::enterClosure(const Handler<Object>& self, const Handler<DonutClosureObject>& clos, const Handler<Object>& args)
 {
 	if(this->closure_){
-		this->callStack_.push_back( Callchain(this->pc_, this->self_, this->closure_, this->context_) );
+		this->callStack_.push_back( Callchain(this->pc_, this->self_, this->closure_, this->scope_) );
 	}
-	this->context_ = world_->createEmptyDonutObject();
-	this->context_->store(world_, "__scope__", clos);
+	this->scope_ = world_->createEmptyDonutObject();
+	this->scope_->store(world_, "__scope__", clos);
 	this->self_ = self;
 	this->closure_ = clos;
 	this->pc_ = 0;
@@ -67,7 +67,7 @@ void Machine::enterClosure(const Handler<Object>& self, const Handler<DonutClosu
 		const std::size_t max = c->arglist().size();
 		for(std::size_t i=0;i<max;++i){
 			const std::string arg = c->arglist().at(i);
-			this->context_->store( world_, arg, args->load(world_, i) );
+			this->scope_->store( world_, arg, args->load(world_, i) );
 		}
 	}
 }
@@ -81,7 +81,7 @@ bool Machine::returnClosure()
 	this->closure_ = chain.closure_;
 	this->pc_ = chain.pc_;
 	this->self_ = chain.self_;
-	this->context_ = chain.context_;
+	this->scope_ = chain.scope_;
 	this->callStack_.pop_back();
 
 	this->asmlist_ = &( closure_->closureCode()->instlist() );
@@ -151,7 +151,7 @@ Handler<Object> Machine::run()
 			this->stack_.pop_back();
 
 			bool found = false;
-			Handler<Object> obj = this->context_;
+			Handler<Object> obj = this->scope_;
 			while(!found){
 				if(obj->have(world_, name)){
 					this->stack_.push_back( obj );
@@ -164,7 +164,7 @@ Handler<Object> Machine::run()
 				}
 			}
 			if(!found){
-				this->stack_.push_back( this->context_ );
+				this->stack_.push_back( this->scope_ );
 			}
 			break;
 		}

@@ -58,8 +58,8 @@ void World::gc()
 	private:
 		std::vector<HeapObject*>& heap_;
 	public:
-		Collector(int color, std::vector<HeapObject*>& heap)
-		:ObjectWalker(color)
+		Collector(World* world, std::vector<HeapObject*>& heap)
+		:ObjectWalker(world->nextWalkColor())
 		,heap_(heap)
 		{
 
@@ -79,7 +79,7 @@ void World::gc()
 			heap_.push_back(obj);
 		}
 	};
-	Collector c(this->nextWalkColor(), this->objectPoolMarked_);
+	Collector c(this, this->objectPoolMarked_);
 	this->walkAndGC(c);
 }
 
@@ -89,8 +89,8 @@ void World::seek(timestamp_t time) {
 		World* const world_;
 		std::vector<HeapObject*>& heap_;
 	public:
-		SeekWalker(int color, World* world, std::vector<HeapObject*>& heap)
-		:ObjectWalker(color)
+		SeekWalker(World* world, std::vector<HeapObject*>& heap)
+		:ObjectWalker(world->nextWalkColor())
 		,world_(world)
 		,heap_(heap)
 		{
@@ -115,7 +115,7 @@ void World::seek(timestamp_t time) {
 		}
 
 	};
-	SeekWalker w(this->nextWalkColor(),this, this->objectPoolMarked_);
+	SeekWalker w(this, this->objectPoolMarked_);
 	this->walkAndGC(w);
 }
 

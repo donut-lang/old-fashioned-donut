@@ -39,6 +39,7 @@ private:
 	unsigned int nowTime_;
 	uintptr_t objectId_;
 	int walkColor_;
+	std::size_t gcLimit_;
 private:
 	std::map<std::string, Handler<Provider> > providers_;
 	std::vector<HeapObject*> objectPool_;
