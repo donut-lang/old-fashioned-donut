@@ -26,6 +26,7 @@ namespace chisa {
 namespace donut {
 class World;
 class Object;
+class ObjectWalker;
 
 class Slot {
 	STACK_OBJECT(Slot);
@@ -51,6 +52,7 @@ public:
 	gen_t lastGen() const noexcept;
 	bool have() const;
 	inline std::size_t size() const noexcept { return this->rev_.size()-1; };
+	void walk(ObjectWalker* walker);
 };
 
 }}
