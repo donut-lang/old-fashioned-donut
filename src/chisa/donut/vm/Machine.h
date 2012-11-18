@@ -31,11 +31,15 @@ struct Callchain {
 	pc_t pc_;
 	Handler<Object> self_;
 	Handler<DonutClosureObject> closure_;
-	Handler<DonutObject> context_;
+	Handler<DonutObject> scope_;
 public:
-	Callchain(pc_t pc, Handler<Object> self, Handler<DonutClosureObject> closure, Handler<DonutObject> context)
-	:pc_(pc), self_(self), closure_(closure), context_(context){
+	Callchain(pc_t pc, const Handler<Object>& self, const Handler<DonutClosureObject>& closure, const Handler<DonutObject>& scope)
+	:pc_(pc), self_(self), closure_(closure), scope_(scope){
 	}
+};
+
+struct Context {
+
 };
 
 class Machine {
@@ -45,7 +49,7 @@ private:
 	pc_t pc_;
 	Handler<Object> self_;
 	Handler<DonutClosureObject> closure_;
-	Handler<DonutObject> context_;
+	Handler<DonutObject> scope_;
 	std::vector<Instruction> const* asmlist_;
 	std::vector<Handler<Object> > stack_;
 	std::vector<Handler<Object> > local_;
