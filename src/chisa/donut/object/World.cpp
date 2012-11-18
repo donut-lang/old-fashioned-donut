@@ -28,6 +28,7 @@ World::World(logging::Logger& log)
 ,code_(new Code)
 ,generation_(0)
 ,objectId_(0)
+,walkColor_(0)
 ,donutObjectProvider_()
 ,boolProvider_()
 ,intProvider_(new IntProvider(this))
@@ -90,6 +91,11 @@ uintptr_t World::nextObjectId()
 	return ++this->objectId_;
 }
 
+int World::nextWalkColor()
+{
+	return ++this->walkColor_;
+}
+
 Handler<Provider> World::getProvider( const std::string& name ) const
 {
 	auto it = this->providers_.find(name);
@@ -103,6 +109,9 @@ void World::registerObject( Handler<HeapObject> obj )
 {
 	obj->id(nextObjectId());
 	this->objectPool_.push_back(obj.get());
+	if( this->objectPool_.size() > 10 ) {
+		this->gc();
+	}
 }
 Handler<DonutObject> World::createDonutObject()
 {
