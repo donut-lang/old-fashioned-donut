@@ -32,8 +32,8 @@ World::World(logging::Logger& log)
 ,walkColor_(0)
 ,donutObjectProvider_()
 ,boolProvider_()
-,intProvider_(new IntProvider(this))
-,nullProvider_(new NullProvider(this))
+,intProvider_()
+,nullProvider_()
 {
 	this->bootstrap();
 }
