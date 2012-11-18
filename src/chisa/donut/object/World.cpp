@@ -86,11 +86,6 @@ unsigned int World::nextTimestamp()
 	return ++this->timestamp_;
 }
 
-uintptr_t World::nextObjectId()
-{
-	return ++this->objectId_;
-}
-
 int World::nextWalkColor()
 {
 	return ++this->walkColor_;
@@ -105,9 +100,9 @@ Handler<Provider> World::getProvider( const std::string& name ) const
 	return Handler<Provider>();
 }
 
-void World::registerObject( Handler<HeapObject> obj )
+void World::registerObject( const Handler<HeapObject>& obj )
 {
-	obj->id(nextObjectId());
+	obj->id(++this->objectId_);
 	this->objectPool_.push_back(obj.get());
 	if( this->objectPool_.size() > 10 ) {
 		this->gc();
@@ -146,7 +141,7 @@ Handler<FloatObject> World::createFloatObject(const float& val)
 	return obj;
 }
 
-Handler<DonutClosureObject> World::createDonutClosureObject( Handler<Closure> closure, Handler<Object> scope )
+Handler<DonutClosureObject> World::createDonutClosureObject( const Handler<Closure>& closure, const Handler<Object>& scope )
 {
 	Handler<DonutClosureObject> obj(new DonutClosureObject(this, closure, scope));
 	this->registerObject(obj);
@@ -154,7 +149,7 @@ Handler<DonutClosureObject> World::createDonutClosureObject( Handler<Closure> cl
 	return obj;
 }
 
-Handler<PureNativeClosureObject> World::createPureNativeClosureObject(std::string objectProviderName, std::string closureName, PureNativeClosureEntry::Signature f)
+Handler<PureNativeClosureObject> World::createPureNativeClosureObject(const std::string& objectProviderName, const std::string& closureName, PureNativeClosureEntry::Signature f)
 {
 	Handler<PureNativeClosureObject> obj(new PureNativeClosureObject(this, objectProviderName, closureName, f));
 	this->registerObject(obj);

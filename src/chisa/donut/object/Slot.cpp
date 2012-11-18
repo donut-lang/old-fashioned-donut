@@ -56,9 +56,7 @@ void Slot::seek(timestamp_t timestamp)
 
 void Slot::discardHistory()
 {
-	std::size_t const idx = this->index_ - this->rev_.begin();
-	this->rev_.erase(this->rev_.begin()+1, this->index_ );
-	this->index_=this->rev_.begin()+idx;
+	this->rev_.erase(this->rev_.begin()+1, this->index_-1 );
 }
 
 void Slot::discardFuture()
