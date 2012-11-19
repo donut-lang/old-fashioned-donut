@@ -57,7 +57,7 @@ public: //すべてのオブジェクトに出来なければならないこと
 	Handler<Object> store(Heap* const heep, const int& idx, Handler<Object> obj);
 	Handler<Object> load(Heap* const heep, const std::string& name) const;
 	Handler<Object> load(Heap* const heep, const int& idx) const;
-	std::string providerName(Heap* const world) const;
+	std::string providerName(Heap* const heap) const;
 public:
 	inline bool isObject() const noexcept { return Tag::Obj==tag(); };
 	inline bool isNull() const noexcept { return Tag::Null==tag(); };
@@ -98,7 +98,7 @@ private:
 	bool erased_;
 	int walkColor_;
 public:
-	HeapObject(Heap* const world, const std::string& providerName);
+	HeapObject(Heap* const heap, const std::string& providerName);
 	virtual ~HeapObject() noexcept = default;
 public:
 	inline Heap* heap() const noexcept { return this->heap_; }
@@ -129,7 +129,7 @@ public:
 	DonutObject(Heap* const heap);
 	virtual ~DonutObject() noexcept = default;
 protected: /* 継承用 */
-	DonutObject(Heap* const world, const std::string& providerName);
+	DonutObject(Heap* const heap, const std::string& providerName);
 protected:
 	virtual std::string toStringImpl() const override;
 	virtual std::string providerNameImpl() const override;
