@@ -17,10 +17,11 @@
  */
 
 #pragma once
-#include "../../../src/chisa/donut/parser/Parser.h"
-#include "../../../src/chisa/donut/object/Heap.h"
-#include "../../../src/chisa/donut/Clock.h"
-#include "../../../src/chisa/donut/vm/Machine.h"
+#include "../../../TestCommon.h"
+#include "../../../../src/chisa/donut/parser/Parser.h"
+#include "../../../../src/chisa/donut/object/Heap.h"
+#include "../../../../src/chisa/donut/Clock.h"
+#include "../../../../src/chisa/donut/vm/Machine.h"
 
 #define INIT_DONUT\
 	Handler<Source> source( new Source() );\

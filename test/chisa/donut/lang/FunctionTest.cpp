@@ -16,38 +16,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../TestCommon.h"
 #include "DonutHelper.h"
 #include <math.h>
 
 namespace chisa {
 namespace donut {
 
-TEST(DonutBooleanTest, LiteralTest)
+TEST(DonutFunctionTest, ReturnTest)
 {
-	SOURCE_TEST_TRUE("true");
-	SOURCE_TEST_FALSE("false");
-}
-TEST(DonutBooleanTest, AndTest)
-{
-	SOURCE_TEST_FALSE("false && false");
-	SOURCE_TEST_FALSE("false && true");
-	SOURCE_TEST_FALSE("true && false");
-	SOURCE_TEST_TRUE("true && true");
-}
-TEST(DonutBooleanTest, OrTest)
-{
-	SOURCE_TEST_TRUE("true || true");
-	SOURCE_TEST_TRUE("true || false");
-	SOURCE_TEST_TRUE("false || true");
-	SOURCE_TEST_FALSE("false || false");
-}
-TEST(DonutBooleanTest, NotTest)
-{
-	SOURCE_TEST_FALSE("!true");
-	SOURCE_TEST_TRUE("!false");
+	SOURCE_TEST_INT(3, "z = func(a,b){a+b;};z(1,2);");
 }
 
+TEST(DonutFunctionTest, ReturnWithContTest)
+{
+	SOURCE_TEST_INT(12, "z = func(a,b){a+b;};z(1,2);12");
+}
+
+TEST(DonutFunctionTest, ArgumentTest)
+{
+	SOURCE_TEST_INT(3, "z = func(a,b,c,d){c;};z(1,2,3,4);");
+}
+
+TEST(DonutFunctionTest, ScopeTest)
+{
+	SOURCE_TEST_INT(0, "a = 1; f = func(){ a=0; };f(); a;");
+}
+
+
+TEST(DonutFunctionTest, ScopeHideTest)
+{
+	SOURCE_TEST_INT(1, "a = 1; f = func(a){ a=0; };f(1); a;");
+}
+
+TEST(DonutFunctionTest, RecursiveTest)
+{
+	SOURCE_TEST_INT(55, "f = func(a){ if(a>0){ a+f(a-1); }else{ 0; }; };f(10);");
+}
 
 }}
 

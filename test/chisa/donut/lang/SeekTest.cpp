@@ -16,19 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../TestCommon.h"
 #include "DonutHelper.h"
 #include <math.h>
 
 namespace chisa {
 namespace donut {
 
-TEST(DonutObjectTest, EmptyObjectTest)
+TEST(SeekTest, SeekTest)
 {
-	EXECUTE_SRC("{};");
+	INIT_DONUT
+	unsigned int idx = Parser::fromString("test = 1;", "<MEM>", 0)->parseProgram( source );
+	Handler<Object> result = machine.start(idx);
 
-	Handler<DonutObject> converted;
-//	ASSERT_NO_FATAL_FAILURE( obj.tryCast<BaseObject>() );
+	unsigned int idx2 = Parser::fromString("test = 2;", "<MEM>", 0)->parseProgram( source );
+	result = machine.start(idx2);
 }
 
 }}
