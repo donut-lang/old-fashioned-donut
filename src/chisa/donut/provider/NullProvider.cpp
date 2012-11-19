@@ -19,7 +19,6 @@
 #include "Provider.h"
 #include "../../util/StringUtil.h"
 #include "../Exception.h"
-#include "../object/World.h"
 #include <tinyxml2.h>
 
 namespace chisa {
@@ -27,8 +26,8 @@ namespace donut {
 
 static const std::string TAG("NullProvider");
 
-NullProvider::NullProvider(World* world)
-:NativeObjectProvider(world, "Null")
+NullProvider::NullProvider(Heap* heap)
+:NativeObjectProvider(heap, "Null")
 {
 }
 

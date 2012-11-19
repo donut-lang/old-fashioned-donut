@@ -17,7 +17,7 @@
  */
 
 #include "Slot.h"
-#include "World.h"
+#include "Heap.h"
 #include "Object.h"
 #include <algorithm>
 
@@ -39,13 +39,13 @@ struct Order {
 	}
 };
 
-Slot::Slot(World* const pool, Object* const obj)
-:world_(pool)
+Slot::Slot(Heap* const heap, Object* const obj)
+:heap_(heap)
 ,rev_()
 ,index_()
 {
 	this->rev_.push_back( std::pair<timestamp_t, Object*>(0, nullptr) );
-	this->rev_.push_back( std::pair<timestamp_t, Object*>(pool->nextTimestamp(), obj) );
+	this->rev_.push_back( std::pair<timestamp_t, Object*>(heap->nextTimestamp(), obj) );
 	this->index_ = this->rev_.begin()+1;
 }
 
@@ -84,12 +84,12 @@ timestamp_t Slot::lastGen() const noexcept
 Object* Slot::store(Object* obj)
 {
 	this->discardFuture();
-	if(lastGen() < this->world_->time()){
-		this->rev_.push_back( std::pair<timestamp_t, Object*>(this->world_->nextTimestamp(), obj) );
+	if(lastGen() < this->heap_->time()){
+		this->rev_.push_back( std::pair<timestamp_t, Object*>(this->heap_->nextTimestamp(), obj) );
 		this->index_ = this->rev_.end()-1;
 	}else{
 		std::vector<std::pair<timestamp_t, Object*> >::iterator last = this->rev_.end()-1;
-		*last = std::pair<timestamp_t, Object*>(this->world_->nextTimestamp(), obj);
+		*last = std::pair<timestamp_t, Object*>(this->heap_->nextTimestamp(), obj);
 	}
 	return obj;
 }

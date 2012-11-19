@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "World.h"
+#include "Heap.h"
 #include "Object.h"
 #include "../Exception.h"
 #include "../../util/StringUtil.h"
@@ -31,171 +31,171 @@ static std::string toName( const int& id){
 }
 
 
-std::string Object::toString(World* const world) const
+std::string Object::toString(Heap* const heap) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
 		return this->toStringImpl();
 	case Tag::Int:
-		return world->intProvider()->toString(this);
+		return heap->intProvider()->toString(this);
 	case Tag::Bool:
-		return world->boolProvider()->toString(this);
+		return heap->boolProvider()->toString(this);
 	case Tag::Null:
-		return world->nullProvider()->toString(this);
+		return heap->nullProvider()->toString(this);
 	default:
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
 }
 
-int Object::toInt(World* const world) const
+int Object::toInt(Heap* const heap) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
 		return this->toIntImpl();
 	case Tag::Int:
-		return world->intProvider()->toInt(this);
+		return heap->intProvider()->toInt(this);
 	case Tag::Bool:
-		return world->boolProvider()->toInt(this);
+		return heap->boolProvider()->toInt(this);
 	case Tag::Null:
-		return world->nullProvider()->toInt(this);
+		return heap->nullProvider()->toInt(this);
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
 }
 
-float Object::toFloat(World* const world) const
+float Object::toFloat(Heap* const heap) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
 		return this->toFloatImpl();
 	case Tag::Int:
-		return world->intProvider()->toFloat(this);
+		return heap->intProvider()->toFloat(this);
 	case Tag::Bool:
-		return world->boolProvider()->toFloat(this);
+		return heap->boolProvider()->toFloat(this);
 	case Tag::Null:
-		return world->nullProvider()->toFloat(this);
+		return heap->nullProvider()->toFloat(this);
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
 }
 
-bool Object::toBool(World* const world) const
+bool Object::toBool(Heap* const heap) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
 		return this->toBoolImpl();
 	case Tag::Int:
-		return world->intProvider()->toBool(this);
+		return heap->intProvider()->toBool(this);
 	case Tag::Bool:
-		return world->boolProvider()->toBool(this);
+		return heap->boolProvider()->toBool(this);
 	case Tag::Null:
-		return world->nullProvider()->toBool(this);
+		return heap->nullProvider()->toBool(this);
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
 }
 
-bool Object::have(World* const world, const std::string& name) const
+bool Object::have(Heap* const heap, const std::string& name) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
 		return this->haveImpl(name);
 	case Tag::Int:
-		return world->intProto()->haveImpl(name);
+		return heap->intProto()->haveImpl(name);
 	case Tag::Bool:
-		return world->boolProto()->haveImpl(name);
+		return heap->boolProto()->haveImpl(name);
 	case Tag::Null:
-		return world->nullProto()->haveImpl(name);
+		return heap->nullProto()->haveImpl(name);
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
 }
 
-bool Object::haveOwn(World* const world, const std::string& name) const
+bool Object::haveOwn(Heap* const heap, const std::string& name) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
 		return this->haveOwnImpl(name);
 	case Tag::Int:
-		return world->intProto()->haveOwnImpl(name);
+		return heap->intProto()->haveOwnImpl(name);
 	case Tag::Bool:
-		return world->boolProto()->haveOwnImpl(name);
+		return heap->boolProto()->haveOwnImpl(name);
 	case Tag::Null:
-		return world->nullProto()->haveOwnImpl(name);
+		return heap->nullProto()->haveOwnImpl(name);
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
 }
 
-Handler<Object> Object::store(World* const world, const std::string& name, Handler<Object> obj)
+Handler<Object> Object::store(Heap* const heap, const std::string& name, Handler<Object> obj)
 {
 	switch(this->tag()){
 	case Tag::Obj:
 		return this->storeImpl(name, obj);
 	case Tag::Int:
-		world->log().w(TAG, "Failed to store value to int object.");
+		heap->log().w(TAG, "Failed to store value to int object.");
 		return obj;
 	case Tag::Bool:
-		world->log().w(TAG, "Failed to store value to bool object.");
+		heap->log().w(TAG, "Failed to store value to bool object.");
 		return obj;
 	case Tag::Null:
-		world->log().w(TAG, "Failed to store value to null object.");
+		heap->log().w(TAG, "Failed to store value to null object.");
 		return obj;
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
 }
 
-Handler<Object> Object::load(World* const world, const std::string& name) const
+Handler<Object> Object::load(Heap* const heap, const std::string& name) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
 		return this->loadImpl(name);
 	case Tag::Int:
-		return world->intProto()->loadImpl(name);
+		return heap->intProto()->loadImpl(name);
 	case Tag::Bool:
-		return world->boolProto()->loadImpl(name);
+		return heap->boolProto()->loadImpl(name);
 	case Tag::Null:
-		return world->nullProto()->loadImpl(name);
+		return heap->nullProto()->loadImpl(name);
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
 }
 
-std::string Object::providerName(World* const world) const
+std::string Object::providerName(Heap* const heap) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
 		return this->providerNameImpl();
 	case Tag::Int:
-		return world->intProvider()->name();
+		return heap->intProvider()->name();
 	case Tag::Bool:
-		return world->boolProvider()->name();
+		return heap->boolProvider()->name();
 	case Tag::Null:
-		return world->nullProvider()->name();
+		return heap->nullProvider()->name();
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
 }
 
 
-Handler<Object> Object::store(World* const pool, const int& idx, Handler<Object> obj)
+Handler<Object> Object::store(Heap* const heap, const int& idx, Handler<Object> obj)
 {
-	return this->store(pool, toName(idx), obj);
+	return this->store(heap, toName(idx), obj);
 }
-Handler<Object> Object::load(World* const pool, const int& idx) const
+Handler<Object> Object::load(Heap* const heap, const int& idx) const
 {
-	return this->load(pool, toName(idx));
-}
-
-bool Object::have(World* const pool, const int& idx) const
-{
-	return this->have(pool, toName(idx));
+	return this->load(heap, toName(idx));
 }
 
-bool Object::haveOwn(World* const pool, const int& idx) const
+bool Object::have(Heap* const heap, const int& idx) const
 {
-	return this->have(pool, toName(idx));
+	return this->have(heap, toName(idx));
+}
+
+bool Object::haveOwn(Heap* const heap, const int& idx) const
+{
+	return this->have(heap, toName(idx));
 }
 
 }}

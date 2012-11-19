@@ -19,14 +19,14 @@
 #include "NativeObject.h"
 #include "../../util/StringUtil.h"
 #include "../Exception.h"
-#include "../object/World.h"
+#include "Heap.h"
 namespace chisa {
 namespace donut {
 
-NativeObject::NativeObject(World* const world, const std::string& providerName)
-:HeapObject(world, providerName)
+NativeObject::NativeObject(Heap* const heap, const std::string& providerName)
+:HeapObject(heap, providerName)
 {
-	this->prototype_ = world->getProvider(providerName)->prototype().get();
+	this->prototype_ = heap->getProvider(providerName)->prototype().get();
 }
 
 std::string NativeObject::toStringImpl() const
@@ -51,7 +51,7 @@ bool NativeObject::toBoolImpl() const
 
 bool NativeObject::haveImpl(const std::string& name) const
 {
-	return this->prototype_->have(world(), name);
+	return this->prototype_->have(heap(), name);
 }
 
 bool NativeObject::haveOwnImpl(const std::string& name) const
@@ -66,7 +66,7 @@ Handler<Object> NativeObject::storeImpl(const std::string& name, Handler<Object>
 
 Handler<Object> NativeObject::loadImpl(const std::string& name) const
 {
-	return this->prototype_->load(world(), name);
+	return this->prototype_->load(heap(), name);
 }
 
 void NativeObject::seekImpl(timestamp_t time)

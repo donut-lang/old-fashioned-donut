@@ -23,8 +23,8 @@ namespace chisa {
 namespace donut {
 
 const std::string TAG("FloatObject");
-FloatObject::FloatObject(World* world, const float& val)
-		: NativeObject(world, "Float"), value_(val)
+FloatObject::FloatObject(Heap* heap, const float& val)
+		: NativeObject(heap, "Float"), value_(val)
 {
 }
 

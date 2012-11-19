@@ -22,25 +22,25 @@
 
 namespace chisa {
 namespace donut {
-class World;
+class Heap;
 
 namespace native {
 
 template <typename T>
-Handler<Object> encode(World* world, T obj);
+Handler<Object> encode(Heap* heap, T obj);
 
 //-----------------------------------------------------------------------------
 
 template <typename T, bool = IsBaseOf<T, Object>::result >
 struct PointerEncoder {
-	static Handler<Object> exec(World* world, T* obj) {
-		return encode<T*>( world, obj );
+	static Handler<Object> exec(Heap* heap, T* obj) {
+		return encode<T*>( heap, obj );
 	}
 };
 
 template <typename T>
 struct PointerEncoder<T, true> {
-	static Handler<Object> exec(World* world, T* obj)
+	static Handler<Object> exec(Heap* heap, T* obj)
 	{
 		return Handler<Object>::__internal__fromRawPointerWithoutCheck( obj );
 	}
@@ -50,15 +50,15 @@ struct PointerEncoder<T, true> {
 
 template <typename T, bool = IsBaseOf<T, Object>::result >
 struct HandlerEncoder {
-	static Handler<Object> exec(World* world, Handler<T> obj)
+	static Handler<Object> exec(Heap* heap, Handler<T> obj)
 	{
-		return encode<Handler<T> >( world, obj );
+		return encode<Handler<T> >( heap, obj );
 	}
 };
 
 template <typename T>
 struct HandlerEncoder<T, true> {
-	static Handler<Object> exec(World* world, Handler<T> obj)
+	static Handler<Object> exec(Heap* heap, Handler<T> obj)
 	{
 		return obj;
 	}
@@ -68,24 +68,24 @@ struct HandlerEncoder<T, true> {
 
 template <typename T>
 struct Encoder{
-	static Handler<Object> exec(World* world, T obj) {
-		return encode<T>(world, obj);
+	static Handler<Object> exec(Heap* heap, T obj) {
+		return encode<T>(heap, obj);
 	}
 };
 
 template <typename T>
 struct Encoder<T*> {
-	static Handler<Object> exec(World* world, T* obj)
+	static Handler<Object> exec(Heap* heap, T* obj)
 	{
-		return PointerEncoder<T>::exec(world, obj);
+		return PointerEncoder<T>::exec(heap, obj);
 	}
 };
 
 template <typename T>
 struct Encoder< Handler<T> > {
-	static Handler<Object> exec(World* world, Handler<T> obj)
+	static Handler<Object> exec(Heap* heap, Handler<T> obj)
 	{
-		return HandlerEncoder<T>::exec( world, obj );
+		return HandlerEncoder<T>::exec( heap, obj );
 	}
 };
 }}}

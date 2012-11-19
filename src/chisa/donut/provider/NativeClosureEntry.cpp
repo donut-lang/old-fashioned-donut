@@ -17,15 +17,15 @@
  */
 
 #include "NativeClosureEntry.h"
-#include "../object/World.h"
+#include "../object/Heap.h"
 #include "../object/NativeObject.h"
 
 namespace chisa {
 namespace donut {
 
-Handler<Object> PureNativeClosureEntry::createObject( World* const world, const std::string& objectProviderName, const std::string& closureName )
+Handler<Object> PureNativeClosureEntry::createObject( Heap* const heap, const std::string& objectProviderName, const std::string& closureName )
 {
-	return world->createPureNativeClosureObject(objectProviderName, closureName, this->func_);
+	return heap->createPureNativeClosureObject(objectProviderName, closureName, this->func_);
 }
 
 }}

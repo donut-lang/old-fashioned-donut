@@ -17,7 +17,7 @@
  */
 
 #include <sstream>
-#include "World.h"
+#include "Heap.h"
 #include "Object.h"
 #include "../Exception.h"
 #include "../../util/StringUtil.h"
@@ -27,14 +27,14 @@ namespace donut {
 
 static const std::string TAG("DonutObject");
 
-DonutObject::DonutObject(World* world, const std::string& providerName)
-:HeapObject(world, providerName)
+DonutObject::DonutObject(Heap* heap, const std::string& providerName)
+:HeapObject(heap, providerName)
 {
 
 }
 
-DonutObject::DonutObject(World* world)
-:HeapObject(world, "chisa::donut::DonutObject")
+DonutObject::DonutObject(Heap* heap)
+:HeapObject(heap, "chisa::donut::DonutObject")
 {
 
 }
@@ -66,7 +66,7 @@ bool DonutObject::toBoolImpl() const
 
 bool DonutObject::haveImpl(const std::string& name) const
 {
-	return haveOwnImpl(name) || (haveOwnImpl("__proto__") && loadImpl("__proto__")->have(world(), name));
+	return haveOwnImpl(name) || (haveOwnImpl("__proto__") && loadImpl("__proto__")->have(heap(), name));
 }
 
 bool DonutObject::haveOwnImpl(const std::string& name) const
@@ -79,7 +79,7 @@ Handler<Object> DonutObject::storeImpl(const std::string& name, Handler<Object> 
 {
 	auto it = this->slots_.find(name);
 	if(it == this->slots_.end()){
-		this->slots_.insert( std::pair<std::string, Slot>(name, Slot(this->world(), obj.get())) );
+		this->slots_.insert( std::pair<std::string, Slot>(name, Slot(this->heap(), obj.get())) );
 	}else{
 		it->second.store(obj.get());
 	}
@@ -93,7 +93,7 @@ Handler<Object> DonutObject::loadImpl(const std::string& name) const
 		return Handler<Object>::__internal__fromRawPointerWithoutCheck(it->second.load());
 	}
 	if(this->haveOwnImpl("__proto__")){
-		return loadImpl("__proto__")->load(world(), name);
+		return loadImpl("__proto__")->load(heap(), name);
 	}
 	{
 		std::stringstream ss;

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "World.h"
+#include "Heap.h"
 #include "Object.h"
 #include "../Exception.h"
 
@@ -25,12 +25,12 @@ namespace donut {
 
 const std::string TAG("DonutClosureObject");
 
-DonutClosureObject::DonutClosureObject(World* const world, const Handler<Closure>& clos, const Handler<Object>& scope)
-:DonutObject(world, "chisa::donut::DonutClosureObject")
+DonutClosureObject::DonutClosureObject(Heap* const heap, const Handler<Closure>& clos, const Handler<Object>& scope)
+:DonutObject(heap, "chisa::donut::DonutClosureObject")
 ,asm_(clos)
 {
 	if(scope){
-		this->store(world, "__scope__", scope);
+		this->store(heap, "__scope__", scope);
 	}
 }
 

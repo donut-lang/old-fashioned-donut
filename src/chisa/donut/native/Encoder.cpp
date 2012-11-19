@@ -18,33 +18,33 @@
 
 #include "Encoder.h"
 
-#include "../object/World.h"
+#include "../object/Heap.h"
 namespace chisa {
 namespace donut {
 namespace native {
 
 template <>
-Handler<Object> encode<int>(World* const world, int val)
+Handler<Object> encode<int>(Heap* const heap, int val)
 {
-	return world->createInt(val);
+	return heap->createInt(val);
 }
 
 template <>
-Handler<Object> encode<float>(World* const world, float val)
+Handler<Object> encode<float>(Heap* const heap, float val)
 {
-	return world->createFloatObject(val);
+	return heap->createFloatObject(val);
 }
 
 template <>
-Handler<Object> encode<bool>(World* const world, bool val)
+Handler<Object> encode<bool>(Heap* const heap, bool val)
 {
-	return world->createBool(val);
+	return heap->createBool(val);
 }
 
 template <>
-Handler<Object> encode<std::string>(World* const world, std::string val)
+Handler<Object> encode<std::string>(Heap* const heap, std::string val)
 {
-	return world->createStringObject(val);
+	return heap->createStringObject(val);
 }
 
 }}}

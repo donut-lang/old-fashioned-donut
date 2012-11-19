@@ -18,28 +18,28 @@
 
 #pragma once
 #include "../../../src/chisa/donut/parser/Parser.h"
-#include "../../../src/chisa/donut/object/World.h"
+#include "../../../src/chisa/donut/object/Heap.h"
 #include "../../../src/chisa/donut/vm/Machine.h"
 
 #define EXECUTE_SRC(src)\
-	World world(log_trace);\
-	unsigned int idx = Parser::fromString(src, "<MEM>", 0)->parseProgram(world.code());\
-	Machine machine(log_trace, &world);\
+	Heap heap(log_trace);\
+	unsigned int idx = Parser::fromString(src, "<MEM>", 0)->parseProgram(heap.code());\
+	Machine machine(log_trace, &heap);\
 	Handler<Object> result = machine.start(idx);
 
 #define SOURCE_TEST_THROW(src)\
 {\
-	World world(log_trace);\
-	unsigned int idx = Parser::fromString(src, "<MEM>", 0)->parseProgram(world.code());\
-	Machine machine(log_trace, &world);\
+	Heap heap(log_trace);\
+	unsigned int idx = Parser::fromString(src, "<MEM>", 0)->parseProgram(heap.code());\
+	Machine machine(log_trace, &heap);\
 	ASSERT_ANY_THROW( machine.start(idx) );\
 }
 
 #define SOURCE_TEST_NO_THROW(src)\
 {\
-	World world(log_trace);\
-	unsigned int idx = Parser::fromString(src, "<MEM>", 0)->parseProgram(world.code());\
-	Machine machine(log_trace, &world);\
+	Heap heap(log_trace);\
+	unsigned int idx = Parser::fromString(src, "<MEM>", 0)->parseProgram(heap.code());\
+	Machine machine(log_trace, &heap);\
 	ASSERT_NO_THROW( machine.start(idx) );\
 }
 
@@ -49,7 +49,7 @@
 	ASSERT_FALSE(result->isNull());\
 	ASSERT_FALSE(result->isObject());\
 	ASSERT_TRUE(result->isBool());\
-	ASSERT_TRUE(result->toBool(&world));\
+	ASSERT_TRUE(result->toBool(&heap));\
 }
 
 #define SOURCE_TEST_FALSE(expr)\
@@ -59,7 +59,7 @@
 	ASSERT_FALSE(result->isObject());\
 	ASSERT_FALSE(result->isInt());\
 	ASSERT_TRUE(result->isBool());\
-	ASSERT_FALSE(result->toBool(&world));\
+	ASSERT_FALSE(result->toBool(&heap));\
 }
 
 #define SOURCE_TEST_INT(num, expr)\
@@ -69,7 +69,7 @@
 	ASSERT_FALSE(result->isBool());\
 	ASSERT_FALSE(result->isObject());\
 	ASSERT_TRUE(result->isInt());\
-	ASSERT_EQ(num, result->toInt(&world));\
+	ASSERT_EQ(num, result->toInt(&heap));\
 }
 
 #define SOURCE_TEST_FLOAT(num, expr)\
@@ -79,7 +79,7 @@
 	ASSERT_FALSE(result->isBool());\
 	ASSERT_TRUE(result->isObject());\
 	ASSERT_FALSE(result->isInt());\
-	ASSERT_FLOAT_EQ(num, result->toFloat(&world));\
+	ASSERT_FLOAT_EQ(num, result->toFloat(&heap));\
 }
 
 #define SOURCE_TEST_STR(str, expr)\
@@ -89,5 +89,5 @@
 	ASSERT_FALSE(result->isBool());\
 	ASSERT_TRUE(result->isObject());\
 	ASSERT_FALSE(result->isInt());\
-	ASSERT_EQ(std::string(str), result->toString(&world));\
+	ASSERT_EQ(std::string(str), result->toString(&heap));\
 }

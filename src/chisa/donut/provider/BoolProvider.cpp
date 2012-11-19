@@ -19,15 +19,15 @@
 #include "Provider.h"
 #include "../Exception.h"
 #include <tinyxml2.h>
-#include "../object/World.h"
+#include "../object/Heap.h"
 #include "../native/Bind.h"
 
 namespace chisa {
 namespace donut {
 static const std::string TAG("BoolProvider");
 
-BoolProvider::BoolProvider(World* world)
-:NativeObjectProvider(world, "Boolean")
+BoolProvider::BoolProvider(Heap* heap)
+:NativeObjectProvider(heap, "Boolean")
 {
 	this->registerPureNativeClosure("opAnd", std::function<Object*(Object*, bool)>(
 			[&](Object* self, bool v)->Object*{

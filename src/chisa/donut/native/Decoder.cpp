@@ -23,21 +23,21 @@ namespace donut {
 namespace native {
 
 template <>
-int decode<int>(World* world, Handler<Object> obj)
+int decode<int>(Heap* heap, Handler<Object> obj)
 {
-	return obj->toInt(world);
+	return obj->toInt(heap);
 }
 
 template <>
-float decode<float>(World* world, Handler<Object> obj)
+float decode<float>(Heap* heap, Handler<Object> obj)
 {
-	return obj->toFloat(world);
+	return obj->toFloat(heap);
 }
 
 template <>
-bool decode<bool>(World* world, Handler<Object> obj)
+bool decode<bool>(Heap* heap, Handler<Object> obj)
 {
-	return obj->toBool(world);
+	return obj->toBool(heap);
 }
 
 }}}

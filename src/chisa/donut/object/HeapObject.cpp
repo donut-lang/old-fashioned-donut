@@ -19,15 +19,16 @@
 #include "Object.h"
 #include "../../util/StringUtil.h"
 #include "../Exception.h"
-#include "../object/World.h"
+#include "Heap.h"
 namespace chisa {
 namespace donut {
 
-HeapObject::HeapObject(World* const world, const std::string& providerName)
-:world_(world)
+HeapObject::HeapObject(Heap* const heap, const std::string& providerName)
+:heap_(heap)
 ,providerName_(providerName)
 ,id_(0)
 ,erased_(0)
+,walkColor_(0)
 {
 }
 

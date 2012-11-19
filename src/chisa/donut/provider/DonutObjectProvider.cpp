@@ -19,7 +19,7 @@
 #include <tinyxml2.h>
 #include "Provider.h"
 #include "../Exception.h"
-#include "../object/World.h"
+#include "../object/Heap.h"
 #include "../native/Bind.h"
 
 namespace chisa {
@@ -27,8 +27,8 @@ namespace donut {
 static const std::string TAG("DonutObjectProvider");
 
 
-DonutObjectProvider::DonutObjectProvider(World* const world)
-:Provider(world, "DonutObject")
+DonutObjectProvider::DonutObjectProvider(Heap* const heap)
+:Provider(heap, "DonutObject")
 {
 }
 

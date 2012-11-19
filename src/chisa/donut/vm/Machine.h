@@ -19,12 +19,12 @@
 #pragma once
 #include <vector>
 #include "../object/Object.h"
-#include "../object/World.h"
+#include "../object/Heap.h"
 #include "../code/Code.h"
 
 namespace chisa {
 namespace donut {
-class World;
+class Heap;
 typedef unsigned int pc_t;
 
 struct Callchain {
@@ -41,7 +41,7 @@ public:
 class Machine {
 	DEFINE_MEMBER_REF(private, logging::Logger, log)
 private:
-	World* const world_;
+	Heap* const heap_;
 	pc_t pc_;
 	Handler<Object> self_;
 	Handler<DonutClosureObject> closure_;
@@ -51,7 +51,7 @@ private:
 	std::vector<Handler<Object> > local_;
 	std::vector<Callchain> callStack_;
 public:
-	Machine(logging::Logger& log, World* world);
+	Machine(logging::Logger& log, Heap* heap);
 	virtual ~Machine() noexcept = default;
 public:
 	Handler<Object> start( const std::size_t closureIndex );

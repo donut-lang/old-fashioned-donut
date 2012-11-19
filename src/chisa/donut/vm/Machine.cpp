@@ -27,9 +27,9 @@ namespace donut {
 
 const static std::string TAG("Machine");
 
-Machine::Machine(logging::Logger& log, World* world)
+Machine::Machine(logging::Logger& log, Heap* heap)
 :log_(log)
-,world_(world)
+,heap_(heap)
 ,pc_(0)
 ,asmlist_(nullptr)
 ,local_(32)
@@ -38,16 +38,16 @@ Machine::Machine(logging::Logger& log, World* world)
 
 Handler<Object> Machine::start( const std::size_t closureIndex )
 {
-	this->enterClosure(world_->createNull(), createClosure( world_->code()->getClosure( closureIndex ) ), world_->createNull());
+	this->enterClosure(heap_->createNull(), createClosure( heap_->code()->getClosure( closureIndex ) ), heap_->createNull());
 	return this->run();
 }
 
 Handler<DonutClosureObject> Machine::createClosure(const Handler<Closure>& closureCode)
 {
 	if( this->scope_ ){
-		return world_->createDonutClosureObject(closureCode, this->scope_);
+		return heap_->createDonutClosureObject(closureCode, this->scope_);
 	}else{
-		return world_->createDonutClosureObject(closureCode, world_->global());
+		return heap_->createDonutClosureObject(closureCode, heap_->global());
 	}
 }
 
@@ -56,8 +56,8 @@ void Machine::enterClosure(const Handler<Object>& self, const Handler<DonutClosu
 	if(this->closure_){
 		this->callStack_.push_back( Callchain(this->pc_, this->self_, this->closure_, this->scope_) );
 	}
-	this->scope_ = world_->createEmptyDonutObject();
-	this->scope_->store(world_, "__scope__", clos);
+	this->scope_ = heap_->createEmptyDonutObject();
+	this->scope_->store(heap_, "__scope__", clos);
 	this->self_ = self;
 	this->closure_ = clos;
 	this->pc_ = 0;
@@ -67,7 +67,7 @@ void Machine::enterClosure(const Handler<Object>& self, const Handler<DonutClosu
 		const std::size_t max = c->arglist().size();
 		for(std::size_t i=0;i<max;++i){
 			const std::string arg = c->arglist().at(i);
-			this->scope_->store( world_, arg, args->load(world_, i) );
+			this->scope_->store( heap_, arg, args->load(heap_, i) );
 		}
 	}
 }
@@ -89,7 +89,7 @@ bool Machine::returnClosure()
 }
 Handler<Object> Machine::run()
 {
-	Handler<Code> const code = this->world_->code();
+	Handler<Code> const code = this->heap_->code();
 	bool running = true;
 	while( running ){
 		if( this->pc_ >= asmlist_->size() ){
@@ -109,11 +109,11 @@ Handler<Object> Machine::run()
 		case Inst::Push: {
 			switch(constKind){
 			case Inst::ConstBool: {
-				this->stack_.push_back( world_->createBool( code->getBool(constIndex) ) );
+				this->stack_.push_back( heap_->createBool( code->getBool(constIndex) ) );
 				break;
 			}
 			case Inst::ConstFloat: {
-				this->stack_.push_back( world_->createFloatObject( code->getFloat(constIndex) ) );
+				this->stack_.push_back( heap_->createFloatObject( code->getFloat(constIndex) ) );
 				break;
 			}
 			case Inst::ConstClosure: {
@@ -121,15 +121,15 @@ Handler<Object> Machine::run()
 				break;
 			}
 			case Inst::ConstInt: {
-				this->stack_.push_back( world_->createInt( code->getInt(constIndex) ) );
+				this->stack_.push_back( heap_->createInt( code->getInt(constIndex) ) );
 				break;
 			}
 			case Inst::ConstString: {
-				this->stack_.push_back( world_->createStringObject( code->getString(constIndex) ) );
+				this->stack_.push_back( heap_->createStringObject( code->getString(constIndex) ) );
 				break;
 			}
 			case Inst::ConstNull: {
-				this->stack_.push_back( world_->createNull() );
+				this->stack_.push_back( heap_->createNull() );
 				break;
 			}
 			default:
@@ -147,18 +147,18 @@ Handler<Object> Machine::run()
 			break;
 		case Inst::SearchScope: {
 			Handler<Object> nameObj = this->stack_.back();
-			const std::string name = nameObj->toString(world_);
+			const std::string name = nameObj->toString(heap_);
 			this->stack_.pop_back();
 
 			bool found = false;
 			Handler<Object> obj = this->scope_;
 			while(!found){
-				if(obj->have(world_, name)){
+				if(obj->have(heap_, name)){
 					this->stack_.push_back( obj );
 					found = true;
 					break;
-				}else if( obj->have(world_, "__scope__") ){
-					obj = obj->load(world_, "__scope__");
+				}else if( obj->have(heap_, "__scope__") ){
+					obj = obj->load(heap_, "__scope__");
 				}else{
 					break;
 				}
@@ -175,7 +175,7 @@ Handler<Object> Machine::run()
 			this->stack_.pop_back();
 			Handler<Object> destObj = this->stack_.back();
 			this->stack_.pop_back();
-			this->stack_.push_back( destObj->store(world_, nameObj->toString(world_), storeObj) );
+			this->stack_.push_back( destObj->store(heap_, nameObj->toString(heap_), storeObj) );
 			break;
 		}
 		case Inst::LoadObj: {
@@ -185,7 +185,7 @@ Handler<Object> Machine::run()
 			Handler<Object> destObj = this->stack_.back();
 			this->stack_.pop_back();
 
-			this->stack_.push_back( destObj->load(world_, nameObj->toString(world_)) );
+			this->stack_.push_back( destObj->load(heap_, nameObj->toString(heap_)) );
 			break;
 		}
 		case Inst::LoadLocal: {
@@ -199,11 +199,11 @@ Handler<Object> Machine::run()
 			break;
 		}
 		case Inst::Apply: {
-			Handler<DonutObject> obj(world_->createEmptyDonutObject());
+			Handler<DonutObject> obj(heap_->createEmptyDonutObject());
 			for(unsigned int i=constIndex;i>0;--i){
 				Handler<Object> val = this->stack_.back();
 				this->stack_.pop_back();
-				obj->store(world_, i-1, val);
+				obj->store(heap_, i-1, val);
 			}
 
 			Handler<Object> closureObj = this->stack_.back();
@@ -214,34 +214,34 @@ Handler<Object> Machine::run()
 
 			//XXX: ちゃんと型を使う
 			if(!closureObj->isObject()){
-				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. \"%s\" is not callable.", closureObj->toString(world_).c_str());
+				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. \"%s\" is not callable.", closureObj->toString(heap_).c_str());
 			} else if ( Handler<DonutClosureObject> closObj = closureObj.tryCast<DonutClosureObject>() ) {
 				this->enterClosure(destObj, closObj, obj);
 			} else if ( Handler<PureNativeClosureObject> clos = closureObj.tryCast<PureNativeClosureObject>() ) {
 				this->stack_.push_back( clos->apply(destObj, obj) );
 			}else{
-				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. \"%s\" is not callable.", closureObj->toString(world_).c_str());
+				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. \"%s\" is not callable.", closureObj->toString(heap_).c_str());
 			}
 			break;
 		}
 		case Inst::ConstructArray: {
-			Handler<Object> obj(world_->createEmptyDonutObject() );
+			Handler<Object> obj(heap_->createEmptyDonutObject() );
 			for(unsigned int i=constIndex;i>0;--i){
 				Handler<Object> val = this->stack_.back();
 				this->stack_.pop_back();
-				obj->store(world_, util::toString(i-1), val);
+				obj->store(heap_, util::toString(i-1), val);
 			}
 			this->stack_.push_back(obj);
 			break;
 		}
 		case Inst::ConstructObject: {
-			Handler<Object> obj(world_->createEmptyDonutObject() );
+			Handler<Object> obj(heap_->createEmptyDonutObject() );
 			for(int i=0;i<constIndex;++i){
 				Handler<Object> val = this->stack_.back();
 				this->stack_.pop_back();
 				Handler<Object> name = this->stack_.back();
 				this->stack_.pop_back();
-				obj->store(world_, name->toString(world_), val);
+				obj->store(heap_, name->toString(heap_), val);
 			}
 			this->stack_.push_back(obj);
 			break;
@@ -253,7 +253,7 @@ Handler<Object> Machine::run()
 		case Inst::BranchTrue: {
 			Handler<Object> val = this->stack_.back();
 			this->stack_.pop_back();
-			if(val->toBool(world_)){
+			if(val->toBool(heap_)){
 				this->pc_ += constIndex;
 			}
 			break;
@@ -261,13 +261,13 @@ Handler<Object> Machine::run()
 		case Inst::BranchFalse: {
 			Handler<Object> val = this->stack_.back();
 			this->stack_.pop_back();
-			if(!val->toBool(world_)){
+			if(!val->toBool(heap_)){
 				this->pc_ += constIndex;
 			}
 			break;
 		}
 		default:
-			throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Unknwon opcode: closure<%s>:%08x", closure_->toString(world_).c_str(), this->pc_-1);
+			throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Unknwon opcode: closure<%s>:%08x", closure_->toString(heap_).c_str(), this->pc_-1);
 		}
 	}
 	Handler<Object> result(this->stack_.back());

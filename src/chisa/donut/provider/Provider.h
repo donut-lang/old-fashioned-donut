@@ -34,11 +34,11 @@ namespace donut {
 class Provider : public HandlerBody<Provider> {
 private:
 	std::map<std::string, Handler<NativeClosureEntry> > nativeClosures_;
-	World* const world_;
+	Heap* const heap_;
 	Handler<DonutObject> prototype_;
 	std::string const name_;
 protected:
-	Provider( World* const world, const std::string& name );
+	Provider( Heap* const heap, const std::string& name );
 	template <typename T>
 	void registerPureNativeClosure( const std::string& name, T f)
 	{
@@ -54,7 +54,7 @@ public:
 	virtual ~Provider() noexcept = default;
 	inline bool onFree() noexcept { return false; };
 	inline std::string name() const noexcept { return this->name_; };
-	inline World* world() const noexcept { return this->world_; };
+	inline Heap* heap() const noexcept { return this->heap_; };
 	inline Handler<DonutObject> prototype() const noexcept { return this->prototype_; };
 public:
 	tinyxml2::XMLElement* serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj );
@@ -67,7 +67,7 @@ public:
 
 class NativeObjectProvider : public Provider {
 protected:
-	NativeObjectProvider( World* const world, const std::string& name ):Provider(world, name){};
+	NativeObjectProvider( Heap* const heap, const std::string& name ):Provider(heap, name){};
 public:
 	virtual ~NativeObjectProvider() noexcept = default;
 };
@@ -75,7 +75,7 @@ public:
 //---------------------------------------------------------------------------------------------------------------------
 class IntProvider : public NativeObjectProvider {
 public:
-	IntProvider(World* world);
+	IntProvider(Heap* heap);
 	virtual ~IntProvider() noexcept = default;
 private:
 	static constexpr inline int fromPointer(const Object* const ptr) noexcept {
@@ -96,7 +96,7 @@ public:
 
 class BoolProvider : public NativeObjectProvider {
 public:
-	BoolProvider(World* world);
+	BoolProvider(Heap* heap);
 	virtual ~BoolProvider() noexcept = default;
 public:
 	static constexpr inline int fromPointer(const Object* const ptr) noexcept {
@@ -117,7 +117,7 @@ public:
 
 class NullProvider : public NativeObjectProvider {
 public:
-	NullProvider(World* world);
+	NullProvider(Heap* heap);
 	virtual ~NullProvider() noexcept = default;
 private:
 	static constexpr inline Object* toPointer() noexcept {
@@ -135,7 +135,7 @@ public:
 
 class StringProvider : public NativeObjectProvider {
 public:
-	StringProvider(World* world);
+	StringProvider(Heap* heap);
 	virtual ~StringProvider() noexcept = default;
 public:
 	virtual tinyxml2::XMLElement* serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
@@ -144,7 +144,7 @@ public:
 
 class FloatProvider : public NativeObjectProvider {
 public:
-	FloatProvider(World* world);
+	FloatProvider(Heap* heap);
 	virtual ~FloatProvider() noexcept = default;
 public:
 	virtual tinyxml2::XMLElement* serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
@@ -154,7 +154,7 @@ public:
 
 class DonutObjectProvider : public Provider {
 public:
-	DonutObjectProvider( World* const world );
+	DonutObjectProvider( Heap* const heap );
 	virtual ~DonutObjectProvider() noexcept = default;
 public:
 	virtual tinyxml2::XMLElement* serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;

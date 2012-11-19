@@ -18,7 +18,7 @@
 
 #include "Provider.h"
 #include "../../util/StringUtil.h"
-#include "../object/World.h"
+#include "../object/Heap.h"
 #include "../Exception.h"
 #include <tinyxml2.h>
 
@@ -27,8 +27,8 @@ namespace donut {
 
 static const std::string TAG("IntProvider");
 
-IntProvider::IntProvider(World* world)
-:NativeObjectProvider(world, "Integer")
+IntProvider::IntProvider(Heap* heap)
+:NativeObjectProvider(heap, "Integer")
 {
 	this->registerPureNativeClosure("opAdd", std::function<int(int, int)>([&](int self, int v) {
 		return self + v;
