@@ -111,7 +111,7 @@ Handler<Object> Machine::run()
 		case Inst::Push: {
 			switch(constKind){
 			case Inst::ConstBool: {
-				this->stack_.push_back( this->constPool_->getBool( constIndex ) );
+				this->stack_.push_back( this->heap_->createBool( this->src_->getBool( constIndex ) ) );
 				break;
 			}
 			case Inst::ConstFloat: {
@@ -123,7 +123,7 @@ Handler<Object> Machine::run()
 				break;
 			}
 			case Inst::ConstInt: {
-				this->stack_.push_back( this->constPool_->getInt(constIndex) );
+				this->stack_.push_back( this->heap_->createInt( this->src_->getInt( constIndex ) ) );
 				break;
 			}
 			case Inst::ConstString: {

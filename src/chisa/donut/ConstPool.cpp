@@ -27,16 +27,6 @@ ConstPool::ConstPool(const Handler<Heap>& heap, const Handler<Source>& source)
 {
 }
 
-Handler<Object> ConstPool::getBool(const unsigned int& idx)
-{
-	return heap_->createBool( source_->getBool( idx ) );
-}
-
-Handler<Object> ConstPool::getInt(const unsigned int& idx)
-{
-	return heap_->createInt( source_->getInt( idx ) );
-}
-
 Handler<FloatObject> ConstPool::getFloat(const unsigned int& idx)
 {
 	if(idx >= floatPool_.size()){
