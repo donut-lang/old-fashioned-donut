@@ -49,7 +49,7 @@ public:
 	timestamp_t firstGen() const noexcept;
 	timestamp_t lastGen() const noexcept;
 	bool have() const;
-	inline std::size_t size() const noexcept { return this->rev_.size()-1; };
+	inline std::size_t size() const noexcept { return this->rev_.size(); };
 	void mark(const Handler<Heap>& heap, int color);
 };
 

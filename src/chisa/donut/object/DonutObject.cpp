@@ -79,9 +79,9 @@ Handler<Object> DonutObject::storeImpl(const Handler<Heap>& heap, const std::str
 {
 	auto it = this->slots_.find(name);
 	if(it == this->slots_.end()){
-		Slot slot;
-		slot.store(heap, obj.get());
-		this->slots_.insert( std::pair<std::string, Slot>(name, slot) );
+		std::pair<std::string, Slot> p(name, Slot());
+		p.second.store(heap, obj.get());
+		this->slots_.insert( p );
 	}else{
 		it->second.store(heap, obj.get());
 	}

@@ -34,7 +34,6 @@ Heap::Heap(logging::Logger& log, const Handler<Clock>& clock)
 ,intProvider_()
 ,nullProvider_()
 {
-	this->bootstrap();
 }
 
 bool Heap::onFree() noexcept
