@@ -40,17 +40,17 @@ public:
 	Slot(Slot&& other):index_(other.index_){ other.rev_.swap(rev_); }
 	Slot& operator=(const Slot& other) { rev_=other.rev_;index_=other.index_;return *this; }
 	Slot& operator=(Slot&& other) { rev_.swap(other.rev_);index_=other.index_;return *this; }
-public:
-	void seek( const Handler<Heap>& heap, timestamp_t timestamp );
+private:
 	void discardHistory();
 	void discardFuture();
-	Object* load() const;
-	Object* store( const Handler<Heap>& heap, Object* obj );
 	timestamp_t firstGen() const noexcept;
 	timestamp_t lastGen() const noexcept;
-	bool have() const;
-	inline std::size_t size() const noexcept { return this->rev_.size(); };
+public:
 	void mark(const Handler<Heap>& heap, int color);
+	void seek( const Handler<Heap>& heap, timestamp_t timestamp );
+	Object* load() const;
+	Object* store( const Handler<Heap>& heap, Object* obj );
+	bool have() const;
 };
 
 }}

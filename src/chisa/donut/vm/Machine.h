@@ -20,7 +20,8 @@
 #include <vector>
 #include "../object/Object.h"
 #include "../object/Heap.h"
-#include "../code/Code.h"
+#include "../source/Source.h"
+#include "../ConstPool.h"
 
 namespace chisa {
 namespace donut {
@@ -42,7 +43,8 @@ class Machine : public HandlerBody<Machine> {
 	DEFINE_MEMBER_REF(private, logging::Logger, log);
 private:
 	Handler<Source> const src_;
-	Handler<Heap> heap_;
+	Handler<Heap> const heap_;
+	Handler<ConstPool> const constPool_;
 	pc_t pc_;
 	Handler<Object> self_;
 	Handler<DonutClosureObject> closure_;
@@ -52,7 +54,7 @@ private:
 	std::vector<Handler<Object> > local_;
 	std::vector<Callchain> callStack_;
 public:
-	Machine(logging::Logger& log, const Handler<Source>& code, const Handler<Heap>& heap);
+	Machine(logging::Logger& log, const Handler<Source>& src, const Handler<Heap>& heap, const Handler<ConstPool>& constPool);
 	virtual ~Machine() noexcept = default;
 	bool onFree() noexcept { return false; };
 public:

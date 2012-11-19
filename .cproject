@@ -101,8 +101,7 @@
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.mingw.base.2130400050" name="MinGW C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.base"/>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.base.1312585289" name="MinGW C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.base">
-								<option id="gnu.cpp.link.option.paths.1315079559" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
-								</option>
+								<option id="gnu.cpp.link.option.paths.1315079559" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.212670840" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
