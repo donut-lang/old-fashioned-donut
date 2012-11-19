@@ -26,7 +26,7 @@ namespace chisa {
 namespace donut {
 static const std::string TAG("BoolProvider");
 
-BoolProvider::BoolProvider(Heap* heap)
+BoolProvider::BoolProvider(const Handler<Heap>& heap)
 :NativeObjectProvider(heap, "Boolean")
 {
 	this->registerPureNativeClosure("opAnd", std::function<Object*(Object*, bool)>(

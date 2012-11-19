@@ -76,14 +76,14 @@ public:
 	Handler<Provider> getProvider( const std::string& name ) const;
 	Handler<DonutObject> global() { return this->globalObject_; }
 private:
-	void registerObject( const Handler<HeapObject>& obj );
+	void registerObject( Handler<HeapObject> obj );
 
 	int nextWalkColor();
 	void seek(timestamp_t time);
 public:
 	Handler<DonutObject> createDonutObject();
 	Handler<DonutObject> createEmptyDonutObject();
-	Handler<DonutClosureObject> createDonutClosureObject( const Handler<Closure>& closure, const Handler<Object>& scope );
+	Handler<DonutClosureObject> createDonutClosureObject( Handler<Closure> closure, Handler<Object> scope );
 	Handler<StringObject> createStringObject(const std::string& val);
 	Handler<FloatObject> createFloatObject(const float& val);
 	Handler<Object> createInt(const int& val);

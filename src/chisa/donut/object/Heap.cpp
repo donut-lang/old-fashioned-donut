@@ -48,17 +48,18 @@ bool Heap::onFree() noexcept
 
 void Heap::bootstrap()
 {
-	this->donutObjectProvider_ = Handler<DonutObjectProvider>( new DonutObjectProvider(this) );
-	this->boolProvider_ = Handler<BoolProvider>(new BoolProvider(this));
-	this->intProvider_ = Handler<IntProvider>(new IntProvider(this));
-	this->nullProvider_ = Handler<NullProvider>(new NullProvider(this));
+	Handler<Heap> self = this->self();
+	this->donutObjectProvider_ = Handler<DonutObjectProvider>( new DonutObjectProvider(self) );
+	this->boolProvider_ = Handler<BoolProvider>(new BoolProvider(self));
+	this->intProvider_ = Handler<IntProvider>(new IntProvider(self));
+	this->nullProvider_ = Handler<NullProvider>(new NullProvider(self));
 
 	this->registerProvider( this->donutObjectProvider() );
 	this->registerProvider( this->boolProvider() );
 	this->registerProvider( this->intProvider() );
 	this->registerProvider( this->nullProvider() );
-	this->registerProvider(Handler<Provider>( new FloatProvider(this) ));
-	this->registerProvider(Handler<Provider>( new StringProvider(this) ));
+	this->registerProvider(Handler<Provider>( new FloatProvider(self) ));
+	this->registerProvider(Handler<Provider>( new StringProvider(self) ));
 
 	this->objectProto_ = this->donutObjectProvider()->prototype();
 	this->intProto_ = this->intProvider()->prototype();
@@ -66,10 +67,10 @@ void Heap::bootstrap()
 	this->nullProto_ = this->nullProvider()->prototype();
 
 	this->globalObject_ = this->createEmptyDonutObject();
-	this->globalObject_->store(this, "Object", this->objectProto());
-	this->globalObject_->store(this, "Int", this->intProto());
-	this->globalObject_->store(this, "Boolean", this->boolProto());
-	this->globalObject_->store(this, "Null", this->nullProto());
+	this->globalObject_->store(self, "Object", this->objectProto());
+	this->globalObject_->store(self, "Int", this->intProto());
+	this->globalObject_->store(self, "Boolean", this->boolProto());
+	this->globalObject_->store(self, "Null", this->nullProto());
 }
 
 tinyxml2::XMLElement* Heap::serialize(tinyxml2::XMLDocument* doc)
@@ -91,7 +92,7 @@ Handler<Provider> Heap::getProvider( const std::string& name ) const
 	return Handler<Provider>();
 }
 
-void Heap::registerObject( const Handler<HeapObject>& obj )
+void Heap::registerObject( Handler<HeapObject> obj )
 {
 	obj->id(++this->objectId_);
 	this->objectPool_.push_back(obj.get());
@@ -101,8 +102,8 @@ void Heap::registerObject( const Handler<HeapObject>& obj )
 }
 Handler<DonutObject> Heap::createDonutObject()
 {
-	Handler<DonutObject> obj(new DonutObject(this));
-	obj->store(this, "__proto__", this->objectProto());
+	Handler<DonutObject> obj(new DonutObject(self()));
+	obj->store(self(), "__proto__", this->objectProto());
 	this->registerObject(obj);
 
 	return obj;
@@ -110,7 +111,7 @@ Handler<DonutObject> Heap::createDonutObject()
 
 Handler<DonutObject> Heap::createEmptyDonutObject()
 {
-	Handler<DonutObject> obj(new DonutObject(this));
+	Handler<DonutObject> obj(new DonutObject(self()));
 	this->registerObject(obj);
 
 	return obj;
@@ -118,7 +119,7 @@ Handler<DonutObject> Heap::createEmptyDonutObject()
 
 Handler<StringObject> Heap::createStringObject(const std::string& val)
 {
-	Handler<StringObject> obj(new StringObject(this, val));
+	Handler<StringObject> obj(new StringObject(self(), val));
 	this->registerObject(obj);
 
 	return obj;
@@ -126,15 +127,15 @@ Handler<StringObject> Heap::createStringObject(const std::string& val)
 
 Handler<FloatObject> Heap::createFloatObject(const float& val)
 {
-	Handler<FloatObject> obj(new FloatObject(this, val));
+	Handler<FloatObject> obj(new FloatObject(self(), val));
 	this->registerObject(obj);
 
 	return obj;
 }
 
-Handler<DonutClosureObject> Heap::createDonutClosureObject( const Handler<Closure>& closure, const Handler<Object>& scope )
+Handler<DonutClosureObject> Heap::createDonutClosureObject( Handler<Closure> closure, Handler<Object> scope )
 {
-	Handler<DonutClosureObject> obj(new DonutClosureObject(this, closure, scope));
+	Handler<DonutClosureObject> obj(new DonutClosureObject(self(), closure, scope));
 	this->registerObject(obj);
 
 	return obj;
@@ -142,7 +143,7 @@ Handler<DonutClosureObject> Heap::createDonutClosureObject( const Handler<Closur
 
 Handler<PureNativeClosureObject> Heap::createPureNativeClosureObject(const std::string& objectProviderName, const std::string& closureName, PureNativeClosureEntry::Signature f)
 {
-	Handler<PureNativeClosureObject> obj(new PureNativeClosureObject(this, objectProviderName, closureName, f));
+	Handler<PureNativeClosureObject> obj(new PureNativeClosureObject(self(), objectProviderName, closureName, f));
 	this->registerObject(obj);
 
 	return obj;

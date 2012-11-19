@@ -27,7 +27,7 @@ namespace donut {
 static const std::string TAG("DonutObjectProvider");
 
 
-DonutObjectProvider::DonutObjectProvider(Heap* const heap)
+DonutObjectProvider::DonutObjectProvider(const Handler<Heap>& heap)
 :Provider(heap, "DonutObject")
 {
 }

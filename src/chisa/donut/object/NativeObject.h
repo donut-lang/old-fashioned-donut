@@ -28,36 +28,38 @@ class StringObject: public NativeObject {
 private:
 	const std::string str_;
 public:
-	StringObject(Heap* const heap, const std::string& str);
+	StringObject(const Handler<Heap>& heap, const std::string& str);
 	virtual ~StringObject() noexcept = default;
-	virtual std::string toStringImpl() const override;
-	virtual int toIntImpl() const override;
-	virtual float toFloatImpl() const override;
-	virtual bool toBoolImpl() const override;
+	virtual std::string toStringImpl(const Handler<Heap>& heap) const override;
+	virtual int toIntImpl(const Handler<Heap>& heap) const override;
+	virtual float toFloatImpl(const Handler<Heap>& heap) const override;
+	virtual bool toBoolImpl(const Handler<Heap>& heap) const override;
 };
 
 class FloatObject: public NativeObject {
 private:
 	const float value_;
 public:
-	FloatObject(Heap* const heap, const float& str);
+	FloatObject(const Handler<Heap>& heap, const float& str);
 	virtual ~FloatObject() noexcept = default;
-	virtual std::string toStringImpl() const override;
-	virtual int toIntImpl() const override;
-	virtual float toFloatImpl() const override;
-	virtual bool toBoolImpl() const override;
+	virtual std::string toStringImpl(const Handler<Heap>& heap) const override;
+	virtual int toIntImpl(const Handler<Heap>& heap) const override;
+	virtual float toFloatImpl(const Handler<Heap>& heap) const override;
+	virtual bool toBoolImpl(const Handler<Heap>& heap) const override;
 };
 
 
 class PureNativeClosureObject : public NativeClosureObject {
 private:
-	std::function<Handler<Object>(Handler<Object> self, Handler<DonutObject> arg)> func_;
+	std::function<Handler<Object>(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& arg)> func_;
 public:
-	PureNativeClosureObject(Heap* const heap, std::string objectProviderName, std::string closureName, std::function<Handler<Object>(Handler<Object> self, Handler<DonutObject> arg)> f)
+	PureNativeClosureObject(const Handler<Heap>& heap, std::string objectProviderName, std::string closureName, std::function<Handler<Object>(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& arg)> f)
 	:NativeClosureObject(heap, objectProviderName, closureName), func_(f){}
 	virtual ~PureNativeClosureObject() noexcept {}
 public:
-	Handler<Object> apply(Handler<Object> self, Handler<DonutObject> arg){ return func_(self,arg); }
+	Handler<Object> apply(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& arg){
+		return func_(heap, self,arg);
+	}
 };
 
 }}

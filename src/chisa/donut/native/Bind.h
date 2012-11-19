@@ -29,31 +29,31 @@ namespace donut {
 namespace native {
 
 template <size_t idx, typename R, typename T>
-Handler<Object> callWithBind(Handler<Object> self, Handler<DonutObject> args, std::function<R(T)> const& funct)
+Handler<Object> callWithBind(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& args, std::function<R(T)> const& funct)
 {
-	T s = native::Decoder<T>::exec( args->heap(), self );
-	return native::Encoder<R>::exec( args->heap(), funct(s) );
+	T s = native::Decoder<T>::exec( heap, self );
+	return native::Encoder<R>::exec( heap, funct(s) );
 }
 
 template <size_t idx, typename R, typename T, typename U, typename... Args>
-Handler<Object> callWithBind(Handler<Object> self, Handler<DonutObject> args, std::function<R(T self, U val, Args... args)> const& funct)
+Handler<Object> callWithBind(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& args, std::function<R(T self, U val, Args... args)> const& funct)
 {
-	if( !args->have(args->heap(), idx) ) {
+	if( !args->have(heap, idx) ) {
 		constexpr int _idx = idx+1;
 		throw DonutException(__FILE__, __LINE__, "oops. args size mismatched. need more than %d arguments.", _idx);
 	}
-	U const val = native::Decoder<U>::exec( args->heap(), args->load(args->heap(), idx) );
+	U const val = native::Decoder<U>::exec( heap, args->load(heap, idx) );
 	std::function<R(T self, Args... args)> left = [funct, val](T self, Args... args)->R{
 		return funct(self, val, args...);
 	};
-	return callWithBind<idx+1>(self, args, left);
+	return callWithBind<idx+1>(heap, self, args, left);
 }
 
 template <typename R, typename... Args>
-std::function<Handler<Object>(Handler<Object> self, Handler<DonutObject> args)> createBind(std::function<R(Args... args)> f)
+std::function<Handler<Object>(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& args)> createBind(std::function<R(Args... args)> f)
 {
-	return [f](Handler<Object> self, Handler<DonutObject> args){
-		return callWithBind<0>(self, args, f);
+	return [f](const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& args){
+		return callWithBind<0>(heap, self, args, f);
 	};
 }
 

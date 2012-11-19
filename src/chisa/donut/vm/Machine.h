@@ -42,7 +42,7 @@ class Machine : public HandlerBody<Machine> {
 	DEFINE_MEMBER_REF(private, logging::Logger, log);
 private:
 	Handler<Source> const src_;
-	Heap* const heap_;
+	Handler<Heap> heap_;
 	pc_t pc_;
 	Handler<Object> self_;
 	Handler<DonutClosureObject> closure_;
@@ -52,7 +52,7 @@ private:
 	std::vector<Handler<Object> > local_;
 	std::vector<Callchain> callStack_;
 public:
-	Machine(logging::Logger& log, const Handler<Source>& code, Heap* heap);
+	Machine(logging::Logger& log, const Handler<Source>& code, const Handler<Heap>& heap);
 	virtual ~Machine() noexcept = default;
 	bool onFree() noexcept { return false; };
 public:

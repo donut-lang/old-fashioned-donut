@@ -23,27 +23,27 @@ namespace chisa {
 namespace donut {
 
 const std::string TAG("StringObject");
-StringObject::StringObject(Heap* heap, const std::string& str)
+StringObject::StringObject(const Handler<Heap>& heap, const std::string& str)
 		: NativeObject(heap, "String"), str_(str)
 {
 }
 
-std::string StringObject::toStringImpl() const
+std::string StringObject::toStringImpl(const Handler<Heap>& heap) const
 {
 	return this->str_;
 }
 
-int StringObject::toIntImpl() const
+int StringObject::toIntImpl(const Handler<Heap>& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast String to Integer implicitly. Use toInteger()");
 }
 
-float StringObject::toFloatImpl() const
+float StringObject::toFloatImpl(const Handler<Heap>& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast String to Float implicitly. Use toFloat()");
 }
 
-bool StringObject::toBoolImpl() const
+bool StringObject::toBoolImpl(const Handler<Heap>& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast String to Float implicitly. Use toBoolean()");
 }

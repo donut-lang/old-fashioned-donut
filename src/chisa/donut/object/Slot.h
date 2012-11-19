@@ -30,28 +30,27 @@ class Object;
 class Slot {
 	STACK_OBJECT(Slot);
 private:
-	Heap* heap_;
 	std::vector<std::pair<timestamp_t, Object*> > rev_;
-	std::vector<std::pair<timestamp_t, Object*> >::iterator index_;
+	int index_;
 public:
-	Slot(Heap* const heap, Object* const obj);
+	Slot();
 	~Slot() noexcept = default;
 public:
-	Slot(const Slot& other):heap_(other.heap_),rev_(other.rev_),index_(other.index_){}
-	Slot(Slot&& other):heap_(other.heap_), index_(other.index_){ other.rev_.swap(rev_); }
-	Slot& operator=(const Slot& other) { heap_=other.heap_;rev_=other.rev_;index_=other.index_;return *this; }
-	Slot& operator=(Slot&& other) { heap_=other.heap_;rev_.swap(other.rev_);index_=other.index_;return *this; }
+	Slot(const Slot& other):rev_(other.rev_),index_(other.index_){}
+	Slot(Slot&& other):index_(other.index_){ other.rev_.swap(rev_); }
+	Slot& operator=(const Slot& other) { rev_=other.rev_;index_=other.index_;return *this; }
+	Slot& operator=(Slot&& other) { rev_.swap(other.rev_);index_=other.index_;return *this; }
 public:
-	void seek( timestamp_t timestamp );
+	void seek( const Handler<Heap>& heap, timestamp_t timestamp );
 	void discardHistory();
 	void discardFuture();
 	Object* load() const;
-	Object* store( Object* obj );
+	Object* store( const Handler<Heap>& heap, Object* obj );
 	timestamp_t firstGen() const noexcept;
 	timestamp_t lastGen() const noexcept;
 	bool have() const;
 	inline std::size_t size() const noexcept { return this->rev_.size()-1; };
-	void mark(int color);
+	void mark(const Handler<Heap>& heap, int color);
 };
 
 }}

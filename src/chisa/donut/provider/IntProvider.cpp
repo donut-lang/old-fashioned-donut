@@ -27,7 +27,7 @@ namespace donut {
 
 static const std::string TAG("IntProvider");
 
-IntProvider::IntProvider(Heap* heap)
+IntProvider::IntProvider(const Handler<Heap>& heap)
 :NativeObjectProvider(heap, "Integer")
 {
 	this->registerPureNativeClosure("opAdd", std::function<int(int, int)>([&](int self, int v) {
