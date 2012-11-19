@@ -27,7 +27,8 @@
 namespace chisa {
 namespace donut {
 
-class Donut {
+class Donut : public HandlerBody<Donut> {
+	inline bool onFree() noexcept { return false; };
 	DEFINE_MEMBER_REF(public, logging::Logger, log);
 private:
 	Handler<Clock> clock_;
