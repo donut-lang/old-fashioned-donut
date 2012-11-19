@@ -52,7 +52,10 @@ TEST(StringUtilTest, ToStringIntegerTest)
 TEST(StringUtilTest, ToStringFloatTest)
 {
 	ASSERT_TRUE(startsWith(toString(12.3f), "12.3"));
-	ASSERT_EQ(toLower(toString(NAN)), "nan");
+}
+TEST(StringUtilTest, ToStringFloatNANTest)
+{
+	ASSERT_EQ(toLower(toString((float)NAN)), "nan");
 }
 
 TEST(StringUtilTest, ToStringBoolTest)
