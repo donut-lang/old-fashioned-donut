@@ -92,7 +92,7 @@ Handler<Provider> Heap::getProvider( const std::string& name ) const
 	return Handler<Provider>();
 }
 
-void Heap::registerObject( Handler<HeapObject> obj )
+void Heap::registerObject( const Handler<HeapObject>& obj )
 {
 	obj->id(++this->objectId_);
 	this->objectPool_.push_back(obj.get());
@@ -136,7 +136,7 @@ Handler<FloatObject> Heap::createFloatObject(const float& val)
 	return obj;
 }
 
-Handler<DonutClosureObject> Heap::createDonutClosureObject( Handler<Closure> closure, Handler<Object> scope )
+Handler<DonutClosureObject> Heap::createDonutClosureObject( const Handler<Closure>& closure, const Handler<Object>& scope )
 {
 	Handler<DonutClosureObject> obj(new DonutClosureObject(self(), closure, scope));
 	this->registerObject(obj);
