@@ -31,14 +31,11 @@ private:
 private:
 	std::vector<Handler<FloatObject> > floatPool_;
 	std::vector<Handler<StringObject> > stringPool_;
-	std::vector<Handler<DonutClosureObject> > closPool_;
 public:
 	ConstPool(const Handler<Heap>& heap, const Handler<Source>& source);
 	virtual ~ConstPool() noexcept = default;
 	bool onFree() noexcept { return false; };
 public:
-	Handler<Object> getBool(const unsigned int& idx);
-	Handler<Object> getInt(const unsigned int& idx);
 	Handler<FloatObject> getFloat(const unsigned int& idx);
 	Handler<StringObject> getString(const unsigned int& idx);
 };
