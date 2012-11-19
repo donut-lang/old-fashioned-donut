@@ -28,7 +28,8 @@ Heap::Heap(logging::Logger& log, const Handler<Clock>& clock)
 ,clock_(clock)
 ,objectId_(0)
 ,walkColor_(0)
-,gcLimit_(0)
+,gcLimit_(1024)
+,gcLimitMax_(65536)
 ,donutObjectProvider_()
 ,boolProvider_()
 ,intProvider_()
@@ -95,8 +96,11 @@ void Heap::registerObject( Handler<HeapObject> obj )
 {
 	obj->id(++this->objectId_);
 	this->objectPool_.push_back(obj.get());
-	if( this->objectPool_.size() > 10 ) {
+	if( this->objectPool_.size() >= this->gcLimit_ ) {
 		this->gc();
+		if(this->gcLimit_ < this->gcLimitMax_){
+			this->gcLimit_ *= 2;
+		}
 	}
 }
 Handler<DonutObject> Heap::createDonutObject()
