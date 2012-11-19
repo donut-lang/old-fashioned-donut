@@ -16,14 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "World.h"
+#include "Heap.h"
 
 namespace chisa {
 namespace donut {
 
-const static std::string TAG("World");
+const static std::string TAG("Heap");
 
-World::World(logging::Logger& log)
+Heap::Heap(logging::Logger& log)
 :log_(log)
 ,code_(new Code)
 ,timestamp_(0)
@@ -39,7 +39,7 @@ World::World(logging::Logger& log)
 	this->bootstrap();
 }
 
-World::~World() noexcept
+Heap::~Heap() noexcept
 {
 	for(HeapObject* obj : this->objectPool_){
 		obj->erase();
@@ -47,7 +47,7 @@ World::~World() noexcept
 	(decltype(this->objectPool_)()).swap(this->objectPool_);
 }
 
-void World::bootstrap()
+void Heap::bootstrap()
 {
 	this->donutObjectProvider_ = Handler<DonutObjectProvider>( new DonutObjectProvider(this) );
 	this->boolProvider_ = Handler<BoolProvider>(new BoolProvider(this));
@@ -73,27 +73,27 @@ void World::bootstrap()
 	this->globalObject_->store(this, "Null", this->nullProto());
 }
 
-tinyxml2::XMLElement* World::serialize(tinyxml2::XMLDocument* doc)
+tinyxml2::XMLElement* Heap::serialize(tinyxml2::XMLDocument* doc)
 {
 
 }
 
-void World::deserialize(tinyxml2::XMLElement* xml)
+void Heap::deserialize(tinyxml2::XMLElement* xml)
 {
 
 }
 
-unsigned int World::nextTimestamp()
+unsigned int Heap::nextTimestamp()
 {
 	return ++this->timestamp_;
 }
 
-int World::nextWalkColor()
+int Heap::nextWalkColor()
 {
 	return ++this->walkColor_;
 }
 
-Handler<Provider> World::getProvider( const std::string& name ) const
+Handler<Provider> Heap::getProvider( const std::string& name ) const
 {
 	auto it = this->providers_.find(name);
 	if(it != this->providers_.end()){
@@ -102,7 +102,7 @@ Handler<Provider> World::getProvider( const std::string& name ) const
 	return Handler<Provider>();
 }
 
-void World::registerObject( const Handler<HeapObject>& obj )
+void Heap::registerObject( const Handler<HeapObject>& obj )
 {
 	obj->id(++this->objectId_);
 	this->objectPool_.push_back(obj.get());
@@ -110,7 +110,7 @@ void World::registerObject( const Handler<HeapObject>& obj )
 		this->gc();
 	}
 }
-Handler<DonutObject> World::createDonutObject()
+Handler<DonutObject> Heap::createDonutObject()
 {
 	Handler<DonutObject> obj(new DonutObject(this));
 	obj->store(this, "__proto__", this->objectProto());
@@ -119,7 +119,7 @@ Handler<DonutObject> World::createDonutObject()
 	return obj;
 }
 
-Handler<DonutObject> World::createEmptyDonutObject()
+Handler<DonutObject> Heap::createEmptyDonutObject()
 {
 	Handler<DonutObject> obj(new DonutObject(this));
 	this->registerObject(obj);
@@ -127,7 +127,7 @@ Handler<DonutObject> World::createEmptyDonutObject()
 	return obj;
 }
 
-Handler<StringObject> World::createStringObject(const std::string& val)
+Handler<StringObject> Heap::createStringObject(const std::string& val)
 {
 	Handler<StringObject> obj(new StringObject(this, val));
 	this->registerObject(obj);
@@ -135,7 +135,7 @@ Handler<StringObject> World::createStringObject(const std::string& val)
 	return obj;
 }
 
-Handler<FloatObject> World::createFloatObject(const float& val)
+Handler<FloatObject> Heap::createFloatObject(const float& val)
 {
 	Handler<FloatObject> obj(new FloatObject(this, val));
 	this->registerObject(obj);
@@ -143,7 +143,7 @@ Handler<FloatObject> World::createFloatObject(const float& val)
 	return obj;
 }
 
-Handler<DonutClosureObject> World::createDonutClosureObject( const Handler<Closure>& closure, const Handler<Object>& scope )
+Handler<DonutClosureObject> Heap::createDonutClosureObject( const Handler<Closure>& closure, const Handler<Object>& scope )
 {
 	Handler<DonutClosureObject> obj(new DonutClosureObject(this, closure, scope));
 	this->registerObject(obj);
@@ -151,7 +151,7 @@ Handler<DonutClosureObject> World::createDonutClosureObject( const Handler<Closu
 	return obj;
 }
 
-Handler<PureNativeClosureObject> World::createPureNativeClosureObject(const std::string& objectProviderName, const std::string& closureName, PureNativeClosureEntry::Signature f)
+Handler<PureNativeClosureObject> Heap::createPureNativeClosureObject(const std::string& objectProviderName, const std::string& closureName, PureNativeClosureEntry::Signature f)
 {
 	Handler<PureNativeClosureObject> obj(new PureNativeClosureObject(this, objectProviderName, closureName, f));
 	this->registerObject(obj);
@@ -159,22 +159,22 @@ Handler<PureNativeClosureObject> World::createPureNativeClosureObject(const std:
 	return obj;
 }
 
-Handler<Object> World::createInt(const int& val)
+Handler<Object> Heap::createInt(const int& val)
 {
 	return this->intProvider()->create(val);
 }
 
-Handler<Object> World::createBool(const bool& val)
+Handler<Object> Heap::createBool(const bool& val)
 {
 	return this->boolProvider()->create(val);
 }
 
-Handler<Object> World::createNull()
+Handler<Object> Heap::createNull()
 {
 	return this->nullProvider()->create();
 }
 
-void World::registerProvider( Handler<Provider> provider )
+void Heap::registerProvider( Handler<Provider> provider )
 {
 	this->providers_.insert(
 			std::pair<std::string, Handler<Provider> >(provider->name(), provider)

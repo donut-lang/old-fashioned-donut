@@ -18,22 +18,22 @@
 
 #include "Provider.h"
 #include "../object/NativeObject.h"
-#include "../object/World.h"
+#include "../object/Heap.h"
 #include "../Exception.h"
 #include <tinyxml2.h>
 
 namespace chisa {
 namespace donut {
 
-Provider::Provider( World* const world, const std::string& name )
-:world_(world), name_(name)
+Provider::Provider( Heap* const heap, const std::string& name )
+:heap_(heap), name_(name)
 {
-	this->prototype_ = world->createEmptyDonutObject();
+	this->prototype_ = heap->createEmptyDonutObject();
 }
 
 void Provider::addPrototype( const std::string& name, Handler<NativeClosureEntry> clos )
 {
-	this->prototype_->store(world(), name, clos->createObject(world(), this->name(), name));
+	this->prototype_->store(heap(), name, clos->createObject(heap(), this->name(), name));
 }
 
 tinyxml2::XMLElement* Provider::serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj_ )
@@ -68,7 +68,7 @@ Handler<Object> Provider::deserialize( tinyxml2::XMLElement* xml )
 //	if( !objProvider->haveClosure(closureName) ){
 //		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. %s does not have closure: %s", objectProviderName.c_str(), closureName.c_str());
 //	}
-//	return objProvider->getClosure(closureName)->createObject( world(), objectProviderName, closureName );
+//	return objProvider->getClosure(closureName)->createObject( heap(), objectProviderName, closureName );
 }
 
 }}

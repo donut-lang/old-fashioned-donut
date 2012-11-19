@@ -18,7 +18,7 @@
 
 #include "Provider.h"
 #include "../../util/StringUtil.h"
-#include "../object/World.h"
+#include "../object/Heap.h"
 #include "../Exception.h"
 #include <tinyxml2.h>
 #include <sstream>
@@ -28,25 +28,25 @@ namespace donut {
 
 static const std::string TAG("StringProvider");
 
-StringProvider::StringProvider(World* world)
-:NativeObjectProvider(world, "String")
+StringProvider::StringProvider( Heap* heap )
+:NativeObjectProvider(heap, "String")
 {
 	this->registerPureNativeClosure("toInteger", std::function<int(StringObject*)>([&](StringObject* self) {
-		return util::parseInt(self->toString(this->world()), 0);
+		return util::parseInt(self->toString(this->heap()), 0);
 	}));
 	this->registerPureNativeClosure("toFloat", std::function<float(StringObject*)>([&](StringObject* self) {
-		return util::parseFloat(self->toString(this->world()));
+		return util::parseFloat(self->toString(this->heap()));
 	}));
 	this->registerPureNativeClosure("toBoolean", std::function<bool(StringObject*)>([&](StringObject* self) {
-		return util::parseBool(self->toString(this->world()));
+		return util::parseBool(self->toString(this->heap()));
 	}));
 	this->registerPureNativeClosure("opAdd", std::function<std::string(StringObject*,StringObject*)>([&](StringObject* self, StringObject* other) {
-		std::string const str = self->toString(this->world());
-		std::string const ostr = other->toString(this->world());
+		std::string const str = self->toString(this->heap());
+		std::string const ostr = other->toString(this->heap());
 		return str + ostr;
 	}));
 	this->registerPureNativeClosure("opMul", std::function<std::string(StringObject*, int)>([&](StringObject* self, int times) {
-		std::string const str = self->toString(this->world());
+		std::string const str = self->toString(this->heap());
 		std::stringstream ss;
 		for(int i=0;i<times;++i){
 			ss << str;
@@ -58,7 +58,7 @@ StringProvider::StringProvider(World* world)
 tinyxml2::XMLElement* StringProvider::serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj )
 {
 	tinyxml2::XMLElement* elm = doc->NewElement("string");
-	elm->SetAttribute("val", obj->toString(world()).c_str());
+	elm->SetAttribute("val", obj->toString(heap()).c_str());
 	return elm;
 }
 Handler<Object> StringProvider::deserializeImpl( tinyxml2::XMLElement* xml )
@@ -70,7 +70,7 @@ Handler<Object> StringProvider::deserializeImpl( tinyxml2::XMLElement* xml )
 	if(!(val = xml->Attribute("val"))){
 		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. failed to read xml");
 	}
-	return world()->createStringObject(val);
+	return heap()->createStringObject(val);
 }
 
 }}

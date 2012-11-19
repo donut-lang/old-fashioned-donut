@@ -19,7 +19,7 @@
 #include "NativeObject.h"
 #include "../../util/StringUtil.h"
 #include "../Exception.h"
-#include "../object/World.h"
+#include "Heap.h"
 
 namespace chisa {
 namespace donut {
@@ -57,7 +57,7 @@ bool NativeClosureObject::haveOwnImpl(const std::string& name) const
 
 Handler<Object> NativeClosureObject::storeImpl(const std::string& name, Handler<Object> obj)
 {
-	world()->log().w(TAG, "NativeClosureObject cannot have any property.");
+	heap()->log().w(TAG, "NativeClosureObject cannot have any property.");
 	return obj;
 }
 

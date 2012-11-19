@@ -24,24 +24,24 @@
 
 namespace chisa {
 namespace donut {
-class World;
+class Heap;
 class Object;
 class ObjectWalker;
 
 class Slot {
 	STACK_OBJECT(Slot);
 private:
-	World* world_;
+	Heap* heap_;
 	std::vector<std::pair<timestamp_t, Object*> > rev_;
 	std::vector<std::pair<timestamp_t, Object*> >::iterator index_;
 public:
-	Slot(World* const world, Object* const obj);
+	Slot(Heap* const heap, Object* const obj);
 	~Slot() noexcept = default;
 public:
-	Slot(const Slot& other):world_(other.world_),rev_(other.rev_),index_(other.index_){}
-	Slot(Slot&& other):world_(other.world_), index_(other.index_){ other.rev_.swap(rev_); }
-	Slot& operator=(const Slot& other) { world_=other.world_;rev_=other.rev_;index_=other.index_;return *this; }
-	Slot& operator=(Slot&& other) { world_=other.world_;rev_.swap(other.rev_);index_=other.index_;return *this; }
+	Slot(const Slot& other):heap_(other.heap_),rev_(other.rev_),index_(other.index_){}
+	Slot(Slot&& other):heap_(other.heap_), index_(other.index_){ other.rev_.swap(rev_); }
+	Slot& operator=(const Slot& other) { heap_=other.heap_;rev_=other.rev_;index_=other.index_;return *this; }
+	Slot& operator=(Slot&& other) { heap_=other.heap_;rev_.swap(other.rev_);index_=other.index_;return *this; }
 public:
 	void seek( timestamp_t timestamp );
 	void discardHistory();

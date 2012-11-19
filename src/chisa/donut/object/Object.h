@@ -25,7 +25,7 @@
 
 namespace chisa {
 namespace donut {
-class World;
+class Heap;
 class ObjectWalker;
 
 /**
@@ -45,19 +45,19 @@ public:
 	Object() = default;
 	virtual ~Object() noexcept = default;
 public: //すべてのオブジェクトに出来なければならないこと
-	std::string toString(World* const pool) const;
-	int toInt(World* const pool) const;
-	float toFloat(World* const pool) const;
-	bool toBool(World* const pool) const;
-	bool have(World* const pool, const std::string& name) const;
-	bool have(World* const pool, const int& idx) const;
-	bool haveOwn(World* const pool, const std::string& name) const;
-	bool haveOwn(World* const pool, const int& idx) const;
-	Handler<Object> store(World* const pool, const std::string& name, Handler<Object> obj);
-	Handler<Object> store(World* const pool, const int& idx, Handler<Object> obj);
-	Handler<Object> load(World* const pool, const std::string& name) const;
-	Handler<Object> load(World* const pool, const int& idx) const;
-	std::string providerName(World* const world) const;
+	std::string toString(Heap* const heep) const;
+	int toInt(Heap* const heep) const;
+	float toFloat(Heap* const heep) const;
+	bool toBool(Heap* const heep) const;
+	bool have(Heap* const heep, const std::string& name) const;
+	bool have(Heap* const heep, const int& idx) const;
+	bool haveOwn(Heap* const heep, const std::string& name) const;
+	bool haveOwn(Heap* const heep, const int& idx) const;
+	Handler<Object> store(Heap* const heep, const std::string& name, Handler<Object> obj);
+	Handler<Object> store(Heap* const heep, const int& idx, Handler<Object> obj);
+	Handler<Object> load(Heap* const heep, const std::string& name) const;
+	Handler<Object> load(Heap* const heep, const int& idx) const;
+	std::string providerName(Heap* const world) const;
 public:
 	inline bool isObject() const noexcept { return Tag::Obj==tag(); };
 	inline bool isNull() const noexcept { return Tag::Null==tag(); };
@@ -92,16 +92,16 @@ namespace donut {
 
 class HeapObject : public Object {
 private:
-	World* const world_;
+	Heap* const heap_;
 	std::string const providerName_;
 	uintptr_t id_;
 	bool erased_;
 	int walkColor_;
 public:
-	HeapObject(World* const world, const std::string& providerName);
+	HeapObject(Heap* const world, const std::string& providerName);
 	virtual ~HeapObject() noexcept = default;
 public:
-	inline World* world() const noexcept { return this->world_; }
+	inline Heap* heap() const noexcept { return this->heap_; }
 	inline std::string providerName() const noexcept { return this->providerName_; }
 	inline uintptr_t id() const noexcept { return this->id_; }
 	inline void id(uintptr_t nid) noexcept { this->id_ = nid; }
@@ -126,10 +126,10 @@ class DonutObject : public HeapObject {
 private:
 	std::map<std::string, Slot> slots_;
 public:
-	DonutObject(World* const world);
+	DonutObject(Heap* const heap);
 	virtual ~DonutObject() noexcept = default;
 protected: /* 継承用 */
-	DonutObject(World* const world, const std::string& providerName);
+	DonutObject(Heap* const world, const std::string& providerName);
 protected:
 	virtual std::string toStringImpl() const override;
 	virtual std::string providerNameImpl() const override;
@@ -159,7 +159,7 @@ class NativeObject : public HeapObject {
 private:
 	DonutObject* prototype_;
 protected:
-	NativeObject(World* const world, const std::string& providerName);
+	NativeObject(Heap* const heap, const std::string& providerName);
 public:
 	virtual ~NativeObject() noexcept = default;
 protected:
@@ -188,8 +188,8 @@ class NativeClosureObject : public HeapObject {
 private:
 	std::string const closureName_;
 public:
-	NativeClosureObject(World* const world, const std::string& objectProviderName, const std::string& closureName)
-	:HeapObject(world, objectProviderName),closureName_(closureName) {};
+	NativeClosureObject(Heap* const heap, const std::string& objectProviderName, const std::string& closureName)
+	:HeapObject(heap, objectProviderName),closureName_(closureName) {};
 	virtual ~NativeClosureObject() noexcept = default;
 	std::string closureName() const noexcept { return this->closureName_; };
 protected:

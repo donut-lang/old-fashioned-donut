@@ -30,7 +30,7 @@
 namespace chisa {
 namespace donut {
 
-class World {
+class Heap {
 	DEFINE_MEMBER_REF(public, logging::Logger, log)
 private:
 	Handler<Code> code_;
@@ -56,8 +56,8 @@ private:
 	Handler<DonutObject> intProto_;
 	Handler<DonutObject> nullProto_;
 public:
-	World(logging::Logger& log);
-	virtual ~World() noexcept;
+	Heap(logging::Logger& log);
+	virtual ~Heap() noexcept;
 	void bootstrap();
 	tinyxml2::XMLElement* serialize(tinyxml2::XMLDocument* doc);
 	void deserialize(tinyxml2::XMLElement* xml);

@@ -28,7 +28,7 @@ class StringObject: public NativeObject {
 private:
 	const std::string str_;
 public:
-	StringObject(World* const world, const std::string& str);
+	StringObject(Heap* const heap, const std::string& str);
 	virtual ~StringObject() noexcept = default;
 	virtual std::string toStringImpl() const override;
 	virtual int toIntImpl() const override;
@@ -40,7 +40,7 @@ class FloatObject: public NativeObject {
 private:
 	const float value_;
 public:
-	FloatObject(World* const world, const float& str);
+	FloatObject(Heap* const heap, const float& str);
 	virtual ~FloatObject() noexcept = default;
 	virtual std::string toStringImpl() const override;
 	virtual int toIntImpl() const override;
@@ -53,8 +53,8 @@ class PureNativeClosureObject : public NativeClosureObject {
 private:
 	std::function<Handler<Object>(Handler<Object> self, Handler<DonutObject> arg)> func_;
 public:
-	PureNativeClosureObject(World* const world, std::string objectProviderName, std::string closureName, std::function<Handler<Object>(Handler<Object> self, Handler<DonutObject> arg)> f)
-	:NativeClosureObject(world, objectProviderName, closureName), func_(f){}
+	PureNativeClosureObject(Heap* const heap, std::string objectProviderName, std::string closureName, std::function<Handler<Object>(Handler<Object> self, Handler<DonutObject> arg)> f)
+	:NativeClosureObject(heap, objectProviderName, closureName), func_(f){}
 	virtual ~PureNativeClosureObject() noexcept {}
 public:
 	Handler<Object> apply(Handler<Object> self, Handler<DonutObject> arg){ return func_(self,arg); }

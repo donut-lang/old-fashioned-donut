@@ -31,18 +31,18 @@ namespace native {
 template <size_t idx, typename R, typename T>
 Handler<Object> callWithBind(Handler<Object> self, Handler<DonutObject> args, std::function<R(T)> const& funct)
 {
-	T s = native::Decoder<T>::exec( args->world(), self );
-	return native::Encoder<R>::exec( args->world(), funct(s) );
+	T s = native::Decoder<T>::exec( args->heap(), self );
+	return native::Encoder<R>::exec( args->heap(), funct(s) );
 }
 
 template <size_t idx, typename R, typename T, typename U, typename... Args>
 Handler<Object> callWithBind(Handler<Object> self, Handler<DonutObject> args, std::function<R(T self, U val, Args... args)> const& funct)
 {
-	if( !args->have(args->world(), idx) ) {
+	if( !args->have(args->heap(), idx) ) {
 		constexpr int _idx = idx+1;
 		throw DonutException(__FILE__, __LINE__, "oops. args size mismatched. need more than %d arguments.", _idx);
 	}
-	U const val = native::Decoder<U>::exec( args->world(), args->load(args->world(), idx) );
+	U const val = native::Decoder<U>::exec( args->heap(), args->load(args->heap(), idx) );
 	std::function<R(T self, Args... args)> left = [funct, val](T self, Args... args)->R{
 		return funct(self, val, args...);
 	};

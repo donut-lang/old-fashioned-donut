@@ -23,25 +23,25 @@
 
 namespace chisa {
 namespace donut {
-class World;
+class Heap;
 
 namespace native {
 
 template <typename T>
-T decode(World* world, Handler<chisa::donut::Object> obj);
+T decode(Heap* heap, Handler<chisa::donut::Object> obj);
 
 //-----------------------------------------------------------------------------
 
 template <typename T, bool = IsBaseOf<T, Object>::result >
 struct PointerDecoder {
-	static T* exec(World* world, Handler<chisa::donut::Object> obj) {
-		return decode<T*>( world, obj );
+	static T* exec(Heap* heap, Handler<chisa::donut::Object> obj) {
+		return decode<T*>( heap, obj );
 	}
 };
 
 template <typename T>
 struct PointerDecoder<T, true> {
-	static T* exec(World* world, Handler<chisa::donut::Object> obj)
+	static T* exec(Heap* heap, Handler<chisa::donut::Object> obj)
 	{
 		return obj.cast<T>().get();
 	}
@@ -51,15 +51,15 @@ struct PointerDecoder<T, true> {
 
 template <typename T, bool = IsBaseOf<T, Object>::result, bool = IsBaseOf<Object, T>::result >
 struct HandlerDecoder {
-	static Handler<T> exec(World* world, Handler<chisa::donut::Object> obj)
+	static Handler<T> exec(Heap* heap, Handler<chisa::donut::Object> obj)
 	{
-		return decode<Handler<T> >( world, obj );
+		return decode<Handler<T> >( heap, obj );
 	}
 };
 
 template <typename T>
 struct HandlerDecoder<T, true, false> {
-	static Handler<T> exec(World* world, Handler<chisa::donut::Object> obj)
+	static Handler<T> exec(Heap* heap, Handler<chisa::donut::Object> obj)
 	{
 		return obj.cast<T>();
 	}
@@ -67,7 +67,7 @@ struct HandlerDecoder<T, true, false> {
 
 template <typename T>
 struct HandlerDecoder<T, true, true> {
-	static Handler<T> exec(World* world, Handler<chisa::donut::Object> obj)
+	static Handler<T> exec(Heap* heap, Handler<chisa::donut::Object> obj)
 	{
 		return obj;
 	}
@@ -77,25 +77,25 @@ struct HandlerDecoder<T, true, true> {
 
 template <typename T>
 struct Decoder {
-	static T exec(World* world, Handler<Object> obj)
+	static T exec(Heap* heap, Handler<Object> obj)
 	{
-		return decode<T>(world, obj);
+		return decode<T>(heap, obj);
 	}
 };
 
 template <typename T>
 struct Decoder<T*> {
-	static T* exec(World* world, Handler<chisa::donut::Object> obj)
+	static T* exec(Heap* heap, Handler<chisa::donut::Object> obj)
 	{
-		return PointerDecoder<T>::exec(world, obj);
+		return PointerDecoder<T>::exec(heap, obj);
 	}
 };
 
 template <typename T>
 struct Decoder< Handler<T> > {
-	static Handler<T> exec(World* world, Handler<Object> obj)
+	static Handler<T> exec(Heap* heap, Handler<Object> obj)
 	{
-		return HandlerDecoder<T>::exec(world, obj);
+		return HandlerDecoder<T>::exec(heap, obj);
 	}
 };
 

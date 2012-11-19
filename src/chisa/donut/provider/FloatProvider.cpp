@@ -18,7 +18,7 @@
 
 #include "Provider.h"
 #include "../../util/StringUtil.h"
-#include "../object/World.h"
+#include "../object/Heap.h"
 #include "../Exception.h"
 #include <tinyxml2.h>
 
@@ -27,8 +27,8 @@ namespace donut {
 
 static const std::string TAG("FloatProvider");
 
-FloatProvider::FloatProvider(World* world)
-:NativeObjectProvider(world, "Float")
+FloatProvider::FloatProvider(Heap* heap)
+:NativeObjectProvider(heap, "Float")
 {
 	this->registerPureNativeClosure("opAdd", std::function<float(float, float)>([&](float self, float v) {
 		return self+v;
@@ -75,7 +75,7 @@ FloatProvider::FloatProvider(World* world)
 tinyxml2::XMLElement* FloatProvider::serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj )
 {
 	tinyxml2::XMLElement* elm = doc->NewElement("float");
-	elm->SetAttribute("val", obj->toFloat(world()));
+	elm->SetAttribute("val", obj->toFloat(heap()));
 	return elm;
 }
 Handler<Object> FloatProvider::deserializeImpl( tinyxml2::XMLElement* xml )
@@ -87,7 +87,7 @@ Handler<Object> FloatProvider::deserializeImpl( tinyxml2::XMLElement* xml )
 	if(xml->QueryFloatAttribute("val", &val) != tinyxml2::XML_SUCCESS){
 		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. failed to read xml");
 	}
-	return world()->createFloatObject(val);
+	return heap()->createFloatObject(val);
 }
 
 }}

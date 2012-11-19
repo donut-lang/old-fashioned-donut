@@ -30,7 +30,7 @@ public:
 	virtual ~NativeClosureEntry() noexcept = default;
 public:
 	inline bool onFree() noexcept { return false; };
-	virtual Handler<Object> createObject( World* const world, const std::string& objectProviderName, const std::string& closureName ) = 0;
+	virtual Handler<Object> createObject( Heap* const heap, const std::string& objectProviderName, const std::string& closureName ) = 0;
 };
 
 //-----------------------------------------------------------------------------
@@ -44,7 +44,7 @@ public:
 	template <typename T>
 	PureNativeClosureEntry(T f):NativeClosureEntry(), func_( native::createBind(f) ){}
 	virtual ~PureNativeClosureEntry() noexcept {};
-	virtual Handler<Object> createObject( World* const world, const std::string& objectProviderName, const std::string& closureName ) override;
+	virtual Handler<Object> createObject( Heap* const heap, const std::string& objectProviderName, const std::string& closureName ) override;
 };
 
 }}

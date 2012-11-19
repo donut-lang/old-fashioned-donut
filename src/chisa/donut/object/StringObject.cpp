@@ -23,8 +23,8 @@ namespace chisa {
 namespace donut {
 
 const std::string TAG("StringObject");
-StringObject::StringObject(World* world, const std::string& str)
-		: NativeObject(world, "String"), str_(str)
+StringObject::StringObject(Heap* heap, const std::string& str)
+		: NativeObject(heap, "String"), str_(str)
 {
 }
 

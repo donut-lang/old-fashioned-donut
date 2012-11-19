@@ -16,15 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "World.h"
+#include "Heap.h"
 #include "ObjectWalker.h"
 
 namespace chisa {
 namespace donut {
 
-const static std::string TAG("WorldGC");
+const static std::string TAG("HeapGC");
 
-void World::walkAndGC( ObjectWalker& walker )
+void Heap::walkAndGC( ObjectWalker& walker )
 {
 	this->objectPoolMarked_.clear();
 	const int color = walker.color();
@@ -52,13 +52,13 @@ void World::walkAndGC( ObjectWalker& walker )
 	this->objectPoolMarked_.clear();
 }
 
-void World::gc()
+void Heap::gc()
 {
 	class Collector : public ObjectWalker {
 	private:
 		std::vector<HeapObject*>& heap_;
 	public:
-		Collector(World* world, std::vector<HeapObject*>& heap)
+		Collector(Heap* world, std::vector<HeapObject*>& heap)
 		:ObjectWalker(world->nextWalkColor())
 		,heap_(heap)
 		{
@@ -83,13 +83,13 @@ void World::gc()
 	this->walkAndGC(c);
 }
 
-void World::seek(timestamp_t time) {
+void Heap::seek(timestamp_t time) {
 	class SeekWalker : public ObjectWalker {
 	private:
-		World* const world_;
+		Heap* const world_;
 		std::vector<HeapObject*>& heap_;
 	public:
-		SeekWalker(World* world, std::vector<HeapObject*>& heap)
+		SeekWalker(Heap* world, std::vector<HeapObject*>& heap)
 		:ObjectWalker(world->nextWalkColor())
 		,world_(world)
 		,heap_(heap)
