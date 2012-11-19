@@ -22,22 +22,21 @@
 #include "vm/Machine.h"
 #include "../logging/Logger.h"
 #include "../Handler.h"
+#include "Clock.h"
 
 namespace chisa {
 namespace donut {
 
-
 class Donut {
 	DEFINE_MEMBER_REF(public, logging::Logger, log);
-private: // 全体の時間をここで管理する。
-	unsigned int clock_;
 private:
+	Handler<Clock> clock_;
 	Handler<Source> source_;
 	Handler<Heap> heap_;
 	std::map<std::string, Handler<Machine> > machines_;
 public:
-	Donut();
-	virtual ~Donut();
+	Donut(logging::Logger& log);
+	virtual ~Donut() noexcept = default;
 public:
 	Handler<Machine> queryMachine( const std::string& name = "" );
 	void registerGlobalObject( const std::string& name, const Handler<Object>& obj );

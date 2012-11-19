@@ -21,5 +21,13 @@
 namespace chisa {
 namespace donut {
 
+Donut::Donut(logging::Logger& log)
+:log_(log)
+,clock_(new Clock())
+,source_(new Source())
+,heap_(new Heap(log_, clock_))
+{
+
+}
 
 }}

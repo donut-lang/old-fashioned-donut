@@ -23,7 +23,7 @@ namespace donut {
 
 const static std::string TAG("Heap");
 
-Heap::Heap(logging::Logger& log, Clock& clock)
+Heap::Heap(logging::Logger& log, const Handler<Clock>& clock)
 :log_(log)
 ,clock_(clock)
 ,objectId_(0)
@@ -37,12 +37,13 @@ Heap::Heap(logging::Logger& log, Clock& clock)
 	this->bootstrap();
 }
 
-Heap::~Heap() noexcept
+bool Heap::onFree() noexcept
 {
 	for(HeapObject* obj : this->objectPool_){
 		obj->erase();
 	}
 	(decltype(this->objectPool_)()).swap(this->objectPool_);
+	return false;
 }
 
 void Heap::bootstrap()

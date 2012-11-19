@@ -16,22 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-#include "../Handler.h"
-#include <vector>
+#include "../../TestCommon.h"
+#include "DonutHelper.h"
+#include <math.h>
 
 namespace chisa {
 namespace donut {
 
-class Clock : public HandlerBody<Clock> {
-	std::vector<unsigned int> clockStack_;
-	unsigned int now_;
-public:
-	Clock();
-	virtual ~Clock() noexcept = default;
-	bool onFree() noexcept { return false; };
-public:
-	unsigned int now() const noexcept { return this->now_; };
-};
+TEST(SeekTest, SeekTest)
+{
+	INIT_DONUT
+	unsigned int idx = Parser::fromString("test = 1;", "<MEM>", 0)->parseProgram( source );
+	Handler<Object> result = machine.start(idx);
+
+	unsigned int idx2 = Parser::fromString("test = 2;", "<MEM>", 0)->parseProgram( source );
+	result = machine.start(idx2);
+}
 
 }}
+
+
