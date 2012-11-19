@@ -40,6 +40,7 @@ private:
 	uintptr_t objectId_;
 	int walkColor_;
 	std::size_t gcLimit_;
+	std::size_t gcLimitMax_;
 private:
 	std::map<std::string, Handler<Provider> > providers_;
 	std::vector<HeapObject*> objectPool_;

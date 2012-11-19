@@ -52,7 +52,8 @@ void Heap::gc()
 	const std::size_t newObjectCount = this->objectPool_.size();
 
 	if( log().d() ){
-		this->log().d("TAG", "Garbage collected: %d -> %d, %0.2f%% collected.", origObjectCount, newObjectCount, ((float)(origObjectCount-newObjectCount))/origObjectCount );
+		float const percent = (origObjectCount-newObjectCount)*100.0f/origObjectCount;
+		this->log().d("TAG", "Garbage collected: %d -> %d, %0.2f%% collected.", origObjectCount, newObjectCount, percent);
 	}
 
 	this->objectPoolMarked_.clear();
