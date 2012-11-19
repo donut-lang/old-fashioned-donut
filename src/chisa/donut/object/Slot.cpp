@@ -77,7 +77,8 @@ Object* Slot::load() const
 	if(this->index_ < 0){
 		throw DonutException(__FILE__, __LINE__, "[BUG] No objects.");
 	}
-	return this->rev_[this->index_].second;
+	std::pair<timestamp_t, Object*> const& p = this->rev_.at(this->index_);
+	return p.second;
 }
 
 timestamp_t Slot::firstGen() const noexcept
@@ -85,7 +86,8 @@ timestamp_t Slot::firstGen() const noexcept
 	if(this->rev_.size() <= 0){
 		return 0;
 	}
-	return this->rev_.at(0).first;
+	std::pair<timestamp_t, Object*> const& p = (*this->rev_.begin());
+	return p.first;
 }
 
 timestamp_t Slot::lastGen() const noexcept
@@ -93,7 +95,8 @@ timestamp_t Slot::lastGen() const noexcept
 	if(this->rev_.size() <= 0){
 		return 0;
 	}
-	return (this->rev_.end()-1)->first;
+	std::pair<timestamp_t, Object*> const& p = *(this->rev_.end()-1);
+	return p.first;
 }
 
 Object* Slot::store(const Handler<Heap>& heap, Object* obj)
