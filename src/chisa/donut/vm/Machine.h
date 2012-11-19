@@ -38,10 +38,6 @@ public:
 	}
 };
 
-struct Context {
-
-};
-
 class Machine {
 	DEFINE_MEMBER_REF(private, logging::Logger, log)
 private:

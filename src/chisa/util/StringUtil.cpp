@@ -25,6 +25,7 @@
 #include <cmath>
 #include <algorithm>
 #include <sstream>
+#include <cmath>
 
 namespace chisa {
 namespace util {
@@ -81,6 +82,11 @@ std::string toString(const unsigned int val, int radix)
 
 std::string toString(const float val)
 {
+	if(!(val == val)){
+		return "nan";
+	}else if(!std::isfinite(val)){
+		return val < 0 ? "-infinity" : "infinity";
+	}
 	return util::format("%f", val);
 }
 
