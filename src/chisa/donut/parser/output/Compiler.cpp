@@ -316,16 +316,16 @@ pANTLR3_UINT8   CompilerTokenNames[95+4]
 //
 static 
  unsigned int
-	prog    (pCompiler ctx, donut::Code* code);
+	prog    (pCompiler ctx, donut::Source* code);
 static 
  Compiler_closure_return
-	closure    (pCompiler ctx, donut::Code* code);
+	closure    (pCompiler ctx, donut::Source* code);
 static 
  std::vector<std::string>
-	vars    (pCompiler ctx, donut::Code* code);
+	vars    (pCompiler ctx, donut::Source* code);
 static 
  std::vector<donut::Instruction>
-	block    (pCompiler ctx, donut::Code* code);
+	block    (pCompiler ctx, donut::Source* code);
 static 
  std::string
 	operation    (pCompiler ctx);
@@ -334,28 +334,28 @@ static
 	unary_operation    (pCompiler ctx);
 static 
  std::vector<donut::Instruction>
-	expr    (pCompiler ctx, donut::Code* code);
+	expr    (pCompiler ctx, donut::Source* code);
 static 
  std::vector<donut::Instruction>
-	index    (pCompiler ctx, donut::Code* code);
+	index    (pCompiler ctx, donut::Source* code);
 static 
  std::vector<donut::Instruction>
-	apply    (pCompiler ctx, donut::Code* code);
+	apply    (pCompiler ctx, donut::Source* code);
 static 
  std::vector<donut::Instruction>
-	literal    (pCompiler ctx, donut::Code* code);
+	literal    (pCompiler ctx, donut::Source* code);
 static 
  std::vector<donut::Instruction>
-	object    (pCompiler ctx, donut::Code* code);
+	object    (pCompiler ctx, donut::Source* code);
 static 
  std::vector<donut::Instruction>
-	object_pair    (pCompiler ctx, donut::Code* code);
+	object_pair    (pCompiler ctx, donut::Source* code);
 static 
  std::vector<donut::Instruction>
-	array    (pCompiler ctx, donut::Code* code);
+	array    (pCompiler ctx, donut::Source* code);
 static 
  Compiler_arglist_return
-	arglist    (pCompiler ctx, donut::Code* code);
+	arglist    (pCompiler ctx, donut::Source* code);
 static void	CompilerFree(pCompiler ctx);
 static void     CompilerReset (pCompiler ctx);
 
@@ -887,7 +887,7 @@ static  ANTLR3_BITSET_LIST FOLLOW_expr_in_arglist985	= { FOLLOW_expr_in_arglist9
  * d:/Dropbox/src/chisa/src/chisa/donut/parser\\Compiler.g:34:1: prog[ donut::Code* code] returns [ unsigned int mainClosure ] : closure[$code] ;
  */
 static unsigned int
-prog(pCompiler ctx, donut::Code* code)
+prog(pCompiler ctx, donut::Source* code)
 {
     unsigned int mainClosure;
 
@@ -946,7 +946,7 @@ prog(pCompiler ctx, donut::Code* code)
  * d:/Dropbox/src/chisa/src/chisa/donut/parser\\Compiler.g:41:1: closure[ donut::Code* code] returns [ std::vector<donut::Instruction> asmlist, unsigned int closureNo ] : ^( CLOS vars[$code] block[$code] ) ;
  */
 static Compiler_closure_return
-closure(pCompiler ctx, donut::Code* code)
+closure(pCompiler ctx, donut::Source* code)
 {
     Compiler_closure_return retval;
 
@@ -1049,7 +1049,7 @@ closure(pCompiler ctx, donut::Code* code)
  * d:/Dropbox/src/chisa/src/chisa/donut/parser\\Compiler.g:52:1: vars[ donut::Code* code ] returns [ std::vector<std::string> list ] : ^( VARS ( IDENT )* ) ;
  */
 static std::vector<std::string>
-vars(pCompiler ctx, donut::Code* code)
+vars(pCompiler ctx, donut::Source* code)
 {
     std::vector<std::string> list;
 
@@ -1156,7 +1156,7 @@ vars(pCompiler ctx, donut::Code* code)
  * d:/Dropbox/src/chisa/src/chisa/donut/parser\\Compiler.g:57:1: block[ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ] : ^( CONT (ex= expr[$code] )* ) ;
  */
 static std::vector<donut::Instruction>
-block(pCompiler ctx, donut::Code* code)
+block(pCompiler ctx, donut::Source* code)
 {
     std::vector<donut::Instruction> asmlist;
 
@@ -1841,7 +1841,7 @@ unary_operation(pCompiler ctx)
  * d:/Dropbox/src/chisa/src/chisa/donut/parser\\Compiler.g:98:1: expr[ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ] : (lt= literal[$code] |app= apply[$code] |idx= index[$code] | ^( POST_OP postop= operation ^( DOT SCOPE IDENT ) ) | ^( POST_OP postop= operation ^( DOT postexpr= expr[$code] IDENT ) ) | ^( PRE_OP preop= operation ^( DOT SCOPE IDENT ) ) | ^( PRE_OP preop= operation ^( DOT preexpr= expr[$code] IDENT ) ) | ^( ASSIGN ^( DOT SCOPE IDENT ) asrhs= expr[$code] ) | ^( ASSIGN ^( DOT asscope= expr[$code] IDENT ) asrhs= expr[$code] ) | ^( ASSIGN_OP asopoperation= operation ^( DOT SCOPE IDENT ) asoprhs= expr[$code] ) | ^( ASSIGN_OP operation ^( DOT asopscope= expr[$code] IDENT ) asoprhs= expr[$code] ) | ^( unary_operation uobj= expr[$code] ) | ^(biop= operation blhs= expr[$code] brhs= expr[$code] ) | ^( DOT dexpr= expr[$code] IDENT ) | ^( DOT SCOPE IDENT ) );
  */
 static std::vector<donut::Instruction>
-expr(pCompiler ctx, donut::Code* code)
+expr(pCompiler ctx, donut::Source* code)
 {
     std::vector<donut::Instruction> asmlist;
 
@@ -8342,7 +8342,7 @@ expr(pCompiler ctx, donut::Code* code)
  * d:/Dropbox/src/chisa/src/chisa/donut/parser\\Compiler.g:284:1: index[ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ] : ^( IDX obj= expr[$code] ex= arglist[$code] ) ;
  */
 static std::vector<donut::Instruction>
-index(pCompiler ctx, donut::Code* code)
+index(pCompiler ctx, donut::Source* code)
 {
     std::vector<donut::Instruction> asmlist;
 
@@ -8452,7 +8452,7 @@ index(pCompiler ctx, donut::Code* code)
  * d:/Dropbox/src/chisa/src/chisa/donut/parser\\Compiler.g:296:1: apply[ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ] : ( ^( APPLY ^( DOT SCOPE IDENT ) ex= arglist[$code] ) | ^( APPLY ^( DOT obj= expr[$code] IDENT ) ex= arglist[$code] ) | ^( IF ifcond= expr[$code] ift= block[$code] iff= block[$code] ) | ^( FOR forstart= block[$code] forcond= block[$code] fornext= block[$code] forblock= block[$code] ) );
  */
 static std::vector<donut::Instruction>
-apply(pCompiler ctx, donut::Code* code)
+apply(pCompiler ctx, donut::Source* code)
 {
     std::vector<donut::Instruction> asmlist;
 
@@ -9069,7 +9069,7 @@ apply(pCompiler ctx, donut::Code* code)
  * d:/Dropbox/src/chisa/src/chisa/donut/parser\\Compiler.g:337:1: literal[ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ] : ( 'true' | 'false' | 'null' | HEX_LITERAL | OCT_LITERAL | INT_LITERAL | FLOAT_LITERAL | STRING_SINGLE | STRING_DOUBLE | array[$code] | object[$code] | closure[$code] );
  */
 static std::vector<donut::Instruction>
-literal(pCompiler ctx, donut::Code* code)
+literal(pCompiler ctx, donut::Source* code)
 {
     std::vector<donut::Instruction> asmlist;
 
@@ -9475,7 +9475,7 @@ literal(pCompiler ctx, donut::Code* code)
  * d:/Dropbox/src/chisa/src/chisa/donut/parser\\Compiler.g:391:1: object[ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ] : ^( OBJECT (v= object_pair[$code] )* ) ;
  */
 static std::vector<donut::Instruction>
-object(pCompiler ctx, donut::Code* code)
+object(pCompiler ctx, donut::Source* code)
 {
     std::vector<donut::Instruction> asmlist;
 
@@ -9601,7 +9601,7 @@ object(pCompiler ctx, donut::Code* code)
  * d:/Dropbox/src/chisa/src/chisa/donut/parser\\Compiler.g:404:1: object_pair[ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ] : ^( PAIR IDENT v= expr[$code] ) ;
  */
 static std::vector<donut::Instruction>
-object_pair(pCompiler ctx, donut::Code* code)
+object_pair(pCompiler ctx, donut::Source* code)
 {
     std::vector<donut::Instruction> asmlist;
 
@@ -9695,7 +9695,7 @@ object_pair(pCompiler ctx, donut::Code* code)
  * d:/Dropbox/src/chisa/src/chisa/donut/parser\\Compiler.g:412:1: array[ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ] : ^( ARRAY (v= expr[$code] )* ) ;
  */
 static std::vector<donut::Instruction>
-array(pCompiler ctx, donut::Code* code)
+array(pCompiler ctx, donut::Source* code)
 {
     std::vector<donut::Instruction> asmlist;
 
@@ -9859,7 +9859,7 @@ array(pCompiler ctx, donut::Code* code)
  * d:/Dropbox/src/chisa/src/chisa/donut/parser\\Compiler.g:425:1: arglist[ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist, int count ] : ^( ARGS (v= expr[$code] )* ) ;
  */
 static Compiler_arglist_return
-arglist(pCompiler ctx, donut::Code* code)
+arglist(pCompiler ctx, donut::Source* code)
 {
     Compiler_arglist_return retval;
 

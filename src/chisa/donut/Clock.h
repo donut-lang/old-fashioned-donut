@@ -17,25 +17,19 @@
  */
 
 #pragma once
+#include <vector>
 
-#include "Object.h"
 namespace chisa {
 namespace donut {
-class Object;
 
-class ObjectWalker {
-private:
-	int const color_;
+class Clock {
+	std::vector<unsigned int> clockStack_;
+	unsigned int now_;
 public:
-	ObjectWalker(const int color):color_(color){};
-	virtual ~ObjectWalker() noexcept = default;
+	Clock();
+	~Clock() noexcept = default;
 public:
-	void start(HeapObject* obj) { obj->walk(this); };
-	int color() const noexcept { return this->color_; };
-public:
-	virtual void onWalk(NativeObject* obj) = 0;
-	virtual void onWalk(NativeClosureObject* obj) = 0;
-	virtual void onWalk(DonutObject* obj) = 0;
+	unsigned int now() const noexcept { return this->now_; };
 };
 
 }}

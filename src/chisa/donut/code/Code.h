@@ -54,18 +54,17 @@ public:
 	}
 };
 
-class Code : public HandlerBody<Code> {
+class Source : public HandlerBody<Source> {
 private:
 	ConstTable<int> intTable_;
 	ConstTable<float> floatTable_;
 	ConstTable<std::string> stringTable_;
 	ConstTable<Handler<Closure> > closureTable_;
 public:
-	Code();
-	virtual ~Code() noexcept = default;
+	Source();
+	virtual ~Source() noexcept = default;
 	bool onFree() noexcept { return false; }
 	template <typename T> Instruction constCode(T const& val);
-public:
 public:
 	std::string disasm( Instruction inst );
 	inline void disasm( Instruction inst, Instruction& opcode, Instruction& constKind, int& constIndex ) const {

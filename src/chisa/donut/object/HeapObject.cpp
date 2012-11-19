@@ -28,7 +28,7 @@ HeapObject::HeapObject(Heap* const heap, const std::string& providerName)
 ,providerName_(providerName)
 ,id_(0)
 ,erased_(0)
-,walkColor_(0)
+,color_(0)
 {
 }
 

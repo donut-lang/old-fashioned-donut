@@ -23,11 +23,9 @@ namespace donut {
 
 const static std::string TAG("Heap");
 
-Heap::Heap(logging::Logger& log)
+Heap::Heap(logging::Logger& log, Clock& clock)
 :log_(log)
-,code_(new Code)
-,timestamp_(0)
-,nowTime_(0)
+,clock_(clock)
 ,objectId_(0)
 ,walkColor_(0)
 ,gcLimit_(0)
@@ -81,16 +79,6 @@ tinyxml2::XMLElement* Heap::serialize(tinyxml2::XMLDocument* doc)
 void Heap::deserialize(tinyxml2::XMLElement* xml)
 {
 
-}
-
-unsigned int Heap::nextTimestamp()
-{
-	return ++this->timestamp_;
-}
-
-int Heap::nextWalkColor()
-{
-	return ++this->walkColor_;
 }
 
 Handler<Provider> Heap::getProvider( const std::string& name ) const

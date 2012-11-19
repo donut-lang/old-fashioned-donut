@@ -66,7 +66,7 @@ public:
 	inline intptr_t tag() const noexcept { return reinterpret_cast<std::uintptr_t>(this) & Tag::Mask; };
 	inline void incref( bool check ) { if(isObject()) { this->HandlerBody<Object>::incref(check); } }
 	inline void decref() { if(isObject()) { this->HandlerBody<Object>::decref(); } };
-	inline void walk(ObjectWalker* walker) { if(isObject()){ this->walkImpl(walker); } }
+	inline void mark(int color) { if(isObject()){ this->markImpl(color); } }
 	inline void seek(timestamp_t time){ if(isObject()){ this->seekImpl(time); } };
 protected: /* 実装すべきもの */
 	virtual std::string toStringImpl() const = 0;
@@ -78,7 +78,7 @@ protected: /* 実装すべきもの */
 	virtual bool haveOwnImpl(const std::string& name) const = 0;
 	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) = 0;
 	virtual Handler<Object> loadImpl(const std::string& name) const = 0;
-	virtual void walkImpl(ObjectWalker* walker) = 0;
+	virtual void markImpl(int color) = 0;
 	virtual void seekImpl(timestamp_t time) = 0;
 public:
 	virtual bool onFree() noexcept = 0;
@@ -96,7 +96,7 @@ private:
 	std::string const providerName_;
 	uintptr_t id_;
 	bool erased_;
-	int walkColor_;
+	int color_;
 public:
 	HeapObject(Heap* const heap, const std::string& providerName);
 	virtual ~HeapObject() noexcept = default;
@@ -108,10 +108,10 @@ public:
 	inline void erase() noexcept { this->erased_ = true; if(refcount() == 0){ delete this; } };
 public:
 	virtual bool onFree() noexcept { if(this->erased_){ return false; }else{ return true; } };
-	int walkColor() noexcept { return this->walkColor_; };
+	int color() noexcept { return this->color_; };
 	inline bool used() { return this->refcount() > 0; };
 protected:
-	void walkColor(const int color) noexcept { this->walkColor_=color; };
+	void color(const int color) noexcept { this->color_=color; };
 };
 
 }}
@@ -140,7 +140,7 @@ protected:
 	virtual bool haveOwnImpl(const std::string& name) const override;
 	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) override;
 	virtual Handler<Object> loadImpl(const std::string& name) const override;
-	virtual void walkImpl(ObjectWalker* walker) override;
+	virtual void markImpl(int color) override;
 	virtual void seekImpl(timestamp_t time) override;
 };
 
@@ -173,7 +173,7 @@ protected:
 	virtual bool haveOwnImpl(const std::string& name) const override;
 	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) override;
 	virtual Handler<Object> loadImpl(const std::string& name) const override;
-	virtual void walkImpl(ObjectWalker* walker) override;
+	virtual void markImpl(int color) override;
 	virtual void seekImpl(timestamp_t time) override;
 };
 
@@ -203,7 +203,7 @@ protected:
 	virtual bool haveOwnImpl(const std::string& name) const override;
 	virtual Handler<Object> storeImpl(const std::string& name, Handler<Object> obj) override;
 	virtual Handler<Object> loadImpl(const std::string& name) const override;
-	virtual void walkImpl(ObjectWalker* walker) override;
+	virtual void markImpl(int color) override;
 	virtual void seekImpl(timestamp_t time) override;
 };
 

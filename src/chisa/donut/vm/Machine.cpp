@@ -27,8 +27,9 @@ namespace donut {
 
 const static std::string TAG("Machine");
 
-Machine::Machine(logging::Logger& log, Heap* heap)
+Machine::Machine(logging::Logger& log, const Handler<Source>& src, Heap* heap)
 :log_(log)
+,src_(src)
 ,heap_(heap)
 ,pc_(0)
 ,asmlist_(nullptr)
@@ -38,7 +39,7 @@ Machine::Machine(logging::Logger& log, Heap* heap)
 
 Handler<Object> Machine::start( const std::size_t closureIndex )
 {
-	this->enterClosure(heap_->createNull(), createClosure( heap_->code()->getClosure( closureIndex ) ), heap_->createNull());
+	this->enterClosure(heap_->createNull(), createClosure( src_->getClosure( closureIndex ) ), heap_->createNull());
 	return this->run();
 }
 
@@ -89,7 +90,6 @@ bool Machine::returnClosure()
 }
 Handler<Object> Machine::run()
 {
-	Handler<Code> const code = this->heap_->code();
 	bool running = true;
 	while( running ){
 		if( this->pc_ >= asmlist_->size() ){
@@ -99,9 +99,9 @@ Handler<Object> Machine::run()
 		Instruction const inst((*asmlist_)[this->pc_++]);
 		Instruction opcode, constKind;
 		int constIndex;
-		code->disasm(inst, opcode, constKind, constIndex);
+		this->src_->disasm(inst, opcode, constKind, constIndex);
 		if(this->log().t()){
-			this->log().t(TAG, util::format("$%04x ", this->pc_)+code->disasm(inst));
+			this->log().t(TAG, util::format("$%04x ", this->pc_)+this->src_->disasm(inst));
 		}
 		switch(opcode){
 		case Inst::Nop:
@@ -109,23 +109,23 @@ Handler<Object> Machine::run()
 		case Inst::Push: {
 			switch(constKind){
 			case Inst::ConstBool: {
-				this->stack_.push_back( heap_->createBool( code->getBool(constIndex) ) );
+				this->stack_.push_back( heap_->createBool( this->src_->getBool(constIndex) ) );
 				break;
 			}
 			case Inst::ConstFloat: {
-				this->stack_.push_back( heap_->createFloatObject( code->getFloat(constIndex) ) );
+				this->stack_.push_back( heap_->createFloatObject( this->src_->getFloat(constIndex) ) );
 				break;
 			}
 			case Inst::ConstClosure: {
-				this->stack_.push_back( createClosure( code->getClosure(constIndex) ) );
+				this->stack_.push_back( createClosure( this->src_->getClosure(constIndex) ) );
 				break;
 			}
 			case Inst::ConstInt: {
-				this->stack_.push_back( heap_->createInt( code->getInt(constIndex) ) );
+				this->stack_.push_back( heap_->createInt( this->src_->getInt(constIndex) ) );
 				break;
 			}
 			case Inst::ConstString: {
-				this->stack_.push_back( heap_->createStringObject( code->getString(constIndex) ) );
+				this->stack_.push_back( heap_->createStringObject( this->src_->getString(constIndex) ) );
 				break;
 			}
 			case Inst::ConstNull: {

@@ -26,10 +26,10 @@ namespace donut {
 class DonutParserTest : public ::testing::Test
 {
 protected:
-	Handler<Code> code;
+	Handler<Source> code;
 public:
 	void SetUp(){
-		code = Handler<Code>(new Code());
+		code = Handler<Source>(new Source());
 	}
 	void TearDown(){
 		code.reset();
