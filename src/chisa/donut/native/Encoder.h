@@ -27,20 +27,20 @@ class Heap;
 namespace native {
 
 template <typename T>
-Handler<Object> encode(Heap* heap, T obj);
+Handler<Object> encode(const Handler<Heap>& heap, T obj);
 
 //-----------------------------------------------------------------------------
 
 template <typename T, bool = IsBaseOf<T, Object>::result >
 struct PointerEncoder {
-	static Handler<Object> exec(Heap* heap, T* obj) {
+	static Handler<Object> exec(const Handler<Heap>& heap, T* obj) {
 		return encode<T*>( heap, obj );
 	}
 };
 
 template <typename T>
 struct PointerEncoder<T, true> {
-	static Handler<Object> exec(Heap* heap, T* obj)
+	static Handler<Object> exec(const Handler<Heap>& heap, T* obj)
 	{
 		return Handler<Object>::__internal__fromRawPointerWithoutCheck( obj );
 	}
@@ -50,7 +50,7 @@ struct PointerEncoder<T, true> {
 
 template <typename T, bool = IsBaseOf<T, Object>::result >
 struct HandlerEncoder {
-	static Handler<Object> exec(Heap* heap, Handler<T> obj)
+	static Handler<Object> exec(const Handler<Heap>& heap, Handler<T> obj)
 	{
 		return encode<Handler<T> >( heap, obj );
 	}
@@ -58,7 +58,7 @@ struct HandlerEncoder {
 
 template <typename T>
 struct HandlerEncoder<T, true> {
-	static Handler<Object> exec(Heap* heap, Handler<T> obj)
+	static Handler<Object> exec(const Handler<Heap>& heap, Handler<T> obj)
 	{
 		return obj;
 	}
@@ -68,14 +68,14 @@ struct HandlerEncoder<T, true> {
 
 template <typename T>
 struct Encoder{
-	static Handler<Object> exec(Heap* heap, T obj) {
+	static Handler<Object> exec(const Handler<Heap>& heap, T obj) {
 		return encode<T>(heap, obj);
 	}
 };
 
 template <typename T>
 struct Encoder<T*> {
-	static Handler<Object> exec(Heap* heap, T* obj)
+	static Handler<Object> exec(const Handler<Heap>& heap, T* obj)
 	{
 		return PointerEncoder<T>::exec(heap, obj);
 	}
@@ -83,7 +83,7 @@ struct Encoder<T*> {
 
 template <typename T>
 struct Encoder< Handler<T> > {
-	static Handler<Object> exec(Heap* heap, Handler<T> obj)
+	static Handler<Object> exec(const Handler<Heap>& heap, Handler<T> obj)
 	{
 		return HandlerEncoder<T>::exec( heap, obj );
 	}

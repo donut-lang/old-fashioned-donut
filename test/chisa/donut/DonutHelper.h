@@ -25,8 +25,8 @@
 #define INIT_DONUT\
 	Handler<Source> source( new Source() );\
 	Handler<Clock> clock( new Clock() );\
-	Heap heap(log_trace, clock);\
-	Machine machine(log_trace, source, &heap);
+	Handler<Heap> heap(new Heap(log_trace, clock));\
+	Machine machine(log_trace, source, heap);
 
 #define EXECUTE_SRC(src) INIT_DONUT\
 	unsigned int idx = Parser::fromString(src, "<MEM>", 0)->parseProgram(source);\
@@ -50,7 +50,7 @@
 	ASSERT_FALSE(result->isNull());\
 	ASSERT_FALSE(result->isObject());\
 	ASSERT_TRUE(result->isBool());\
-	ASSERT_TRUE(result->toBool(&heap));\
+	ASSERT_TRUE(result->toBool(heap));\
 }
 
 #define SOURCE_TEST_FALSE(expr)\
@@ -60,7 +60,7 @@
 	ASSERT_FALSE(result->isObject());\
 	ASSERT_FALSE(result->isInt());\
 	ASSERT_TRUE(result->isBool());\
-	ASSERT_FALSE(result->toBool(&heap));\
+	ASSERT_FALSE(result->toBool(heap));\
 }
 
 #define SOURCE_TEST_INT(num, expr)\
@@ -70,7 +70,7 @@
 	ASSERT_FALSE(result->isBool());\
 	ASSERT_FALSE(result->isObject());\
 	ASSERT_TRUE(result->isInt());\
-	ASSERT_EQ(num, result->toInt(&heap));\
+	ASSERT_EQ(num, result->toInt(heap));\
 }
 
 #define SOURCE_TEST_FLOAT(num, expr)\
@@ -80,7 +80,7 @@
 	ASSERT_FALSE(result->isBool());\
 	ASSERT_TRUE(result->isObject());\
 	ASSERT_FALSE(result->isInt());\
-	ASSERT_FLOAT_EQ(num, result->toFloat(&heap));\
+	ASSERT_FLOAT_EQ(num, result->toFloat(heap));\
 }
 
 #define SOURCE_TEST_STR(str, expr)\
@@ -90,5 +90,5 @@
 	ASSERT_FALSE(result->isBool());\
 	ASSERT_TRUE(result->isObject());\
 	ASSERT_FALSE(result->isInt());\
-	ASSERT_EQ(std::string(str), result->toString(&heap));\
+	ASSERT_EQ(std::string(str), result->toString(heap));\
 }

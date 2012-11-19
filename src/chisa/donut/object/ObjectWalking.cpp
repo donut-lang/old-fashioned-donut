@@ -23,37 +23,37 @@
 namespace chisa {
 namespace donut {
 
-void DonutObject::markImpl(int color)
+void DonutObject::markImpl(const Handler<Heap>& heap, int color)
 {
 	if(this->color() == color){
 		return;
 	}
 	this->color(color);
 	for(auto slot : this->slots_){
-		slot.second.mark(color);
+		slot.second.mark(heap, color);
 	}
 }
 
-void Slot::mark(int color)
+void Slot::mark(const Handler<Heap>& heap, int color)
 {
 	typedef decltype(this->rev_) ListType;
 	for(const std::pair<unsigned int, Object*>& rev : this->rev_){
 		if( rev.second ) {
-			rev.second->mark(color);
+			rev.second->mark(heap, color);
 		}
 	}
 }
 
-void NativeObject::markImpl(int color)
+void NativeObject::markImpl(const Handler<Heap>& heap, int color)
 {
 	if(this->color() == color){
 		return;
 	}
 	this->color(color);
-	this->prototype_->mark(color);
+	this->prototype_->mark(heap, color);
 }
 
-void NativeClosureObject::markImpl(int color)
+void NativeClosureObject::markImpl(const Handler<Heap>& heap, int color)
 {
 	if(this->color() == color){
 		return;

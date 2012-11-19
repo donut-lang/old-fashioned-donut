@@ -23,53 +23,53 @@
 namespace chisa {
 namespace donut {
 
-NativeObject::NativeObject(Heap* const heap, const std::string& providerName)
+NativeObject::NativeObject(const Handler<Heap>& heap, const std::string& providerName)
 :HeapObject(heap, providerName)
 {
 	this->prototype_ = heap->getProvider(providerName)->prototype().get();
 }
 
-std::string NativeObject::toStringImpl() const
+std::string NativeObject::toStringImpl(const Handler<Heap>& heap) const
 {
 	return util::format("(NativeObject %p)", this);
 }
 
-int NativeObject::toIntImpl() const
+int NativeObject::toIntImpl(const Handler<Heap>& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to NativeObject to int.");
 }
 
-float NativeObject::toFloatImpl() const
+float NativeObject::toFloatImpl(const Handler<Heap>& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to NativeObject to float.");
 }
 
-bool NativeObject::toBoolImpl() const
+bool NativeObject::toBoolImpl(const Handler<Heap>& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to NativeObject to bool.");
 }
 
-bool NativeObject::haveImpl(const std::string& name) const
+bool NativeObject::haveImpl(const Handler<Heap>& heap, const std::string& name) const
 {
-	return this->prototype_->have(heap(), name);
+	return this->prototype_->have(heap, name);
 }
 
-bool NativeObject::haveOwnImpl(const std::string& name) const
+bool NativeObject::haveOwnImpl(const Handler<Heap>& heap, const std::string& name) const
 {
 	return false;
 }
 
-Handler<Object> NativeObject::storeImpl(const std::string& name, Handler<Object> obj)
+Handler<Object> NativeObject::storeImpl(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj)
 {
 	return obj;
 }
 
-Handler<Object> NativeObject::loadImpl(const std::string& name) const
+Handler<Object> NativeObject::loadImpl(const Handler<Heap>& heap, const std::string& name) const
 {
-	return this->prototype_->load(heap(), name);
+	return this->prototype_->load(heap, name);
 }
 
-void NativeObject::seekImpl(timestamp_t time)
+void NativeObject::seekImpl(const Handler<Heap>& heap, timestamp_t time)
 {
 
 }

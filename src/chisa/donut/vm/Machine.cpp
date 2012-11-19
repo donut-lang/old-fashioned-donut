@@ -27,7 +27,7 @@ namespace donut {
 
 const static std::string TAG("Machine");
 
-Machine::Machine(logging::Logger& log, const Handler<Source>& src, Heap* heap)
+Machine::Machine(logging::Logger& log, const Handler<Source>& src, const Handler<Heap>& heap)
 :log_(log)
 ,src_(src)
 ,heap_(heap)
@@ -218,7 +218,7 @@ Handler<Object> Machine::run()
 			} else if ( Handler<DonutClosureObject> closObj = closureObj.tryCast<DonutClosureObject>() ) {
 				this->enterClosure(destObj, closObj, obj);
 			} else if ( Handler<PureNativeClosureObject> clos = closureObj.tryCast<PureNativeClosureObject>() ) {
-				this->stack_.push_back( clos->apply(destObj, obj) );
+				this->stack_.push_back( clos->apply(heap_, destObj, obj) );
 			}else{
 				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. \"%s\" is not callable.", closureObj->toString(heap_).c_str());
 			}

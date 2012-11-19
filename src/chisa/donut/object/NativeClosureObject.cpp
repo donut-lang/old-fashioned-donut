@@ -25,48 +25,48 @@ namespace chisa {
 namespace donut {
 static const std::string TAG("NativeClosureObject");
 
-std::string NativeClosureObject::toStringImpl() const
+std::string NativeClosureObject::toStringImpl(const Handler<Heap>& heap) const
 {
 	return util::format("(NativeClosureObject %p)", this);
 }
 
-int NativeClosureObject::toIntImpl() const
+int NativeClosureObject::toIntImpl(const Handler<Heap>& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to convert NativeClosureObject to int.");
 }
 
-float NativeClosureObject::toFloatImpl() const
+float NativeClosureObject::toFloatImpl(const Handler<Heap>& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to convert NativeClosureObject to float.");
 }
 
-bool NativeClosureObject::toBoolImpl() const
+bool NativeClosureObject::toBoolImpl(const Handler<Heap>& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to convert NativeClosureObject to bool.");
 }
 
-bool NativeClosureObject::haveImpl(const std::string& name) const
+bool NativeClosureObject::haveImpl(const Handler<Heap>& heap, const std::string& name) const
 {
 	return false;
 }
 
-bool NativeClosureObject::haveOwnImpl(const std::string& name) const
+bool NativeClosureObject::haveOwnImpl(const Handler<Heap>& heap, const std::string& name) const
 {
 	return false;
 }
 
-Handler<Object> NativeClosureObject::storeImpl(const std::string& name, Handler<Object> obj)
+Handler<Object> NativeClosureObject::storeImpl(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj)
 {
-	heap()->log().w(TAG, "NativeClosureObject cannot have any property.");
+	heap->log().w(TAG, "NativeClosureObject cannot have any property.");
 	return obj;
 }
 
-Handler<Object> NativeClosureObject::loadImpl(const std::string& name) const
+Handler<Object> NativeClosureObject::loadImpl(const Handler<Heap>& heap, const std::string& name) const
 {
 	throw DonutException(__FILE__, __LINE__, "Native Closure does not have any properety.");
 }
 
-void NativeClosureObject::seekImpl(timestamp_t time)
+void NativeClosureObject::seekImpl(const Handler<Heap>& heap, timestamp_t time)
 {
 
 }

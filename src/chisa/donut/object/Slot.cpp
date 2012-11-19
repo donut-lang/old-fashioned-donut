@@ -39,55 +39,59 @@ struct Order {
 	}
 };
 
-Slot::Slot(Heap* const heap, Object* const obj)
-:heap_(heap)
-,rev_()
-,index_()
+Slot::Slot()
+:rev_()
+,index_(-1)
 {
-	this->rev_.push_back( std::pair<timestamp_t, Object*>(0, nullptr) );
-	this->rev_.push_back( std::pair<timestamp_t, Object*>(heap->clock()->now(), obj) );
-	this->index_ = this->rev_.begin()+1;
 }
 
-void Slot::seek(timestamp_t timestamp)
+void Slot::seek( const Handler<Heap>& heap, timestamp_t timestamp )
 {
-	this->index_ = std::lower_bound(rev_.begin(), rev_.end(), timestamp, Order());
+	this->index_ = std::lower_bound(rev_.begin(), rev_.end(), timestamp, Order()) - this->rev_.begin();
 }
 
 void Slot::discardHistory()
 {
-	this->rev_.erase(this->rev_.begin()+1, this->index_-1 );
+	std::vector<std::pair<timestamp_t, Object*> >::iterator end = this->rev_.begin()+index_;
+	this->rev_.erase(this->rev_.begin(), end);
 }
 
 void Slot::discardFuture()
 {
-	std::size_t const idx = this->index_ - this->rev_.begin();
-	this->rev_.erase(this->index_+1, this->rev_.end());
-	this->index_=this->rev_.begin()+idx;
+	this->rev_.erase(this->rev_.begin() + this->index_, this->rev_.end());
 }
 
 Object* Slot::load() const
 {
-	return this->index_->second;
+	if(this->index_ < 0){
+
+	}
+	return this->rev_[this->index_].second;
 }
 
 timestamp_t Slot::firstGen() const noexcept
 {
-	return this->size() == 0 ? 0 : (this->rev_.begin()+1)->first;
+	if(this->index_ < 0){
+		return 0;
+	}
+	return this->rev_[this->index_].first;
 }
 
 timestamp_t Slot::lastGen() const noexcept
 {
+	if(this->index_ < 0){
+		return 0;
+	}
 	return (this->rev_.end()-1)->first;
 }
 
-Object* Slot::store(Object* obj)
+Object* Slot::store(const Handler<Heap>& heap, Object* obj)
 {
 	this->discardFuture();
-	unsigned int now = this->heap_->clock()->now();
+	unsigned int now = heap->clock()->now();
 	if(lastGen() < now){
 		this->rev_.push_back( std::pair<timestamp_t, Object*>(now, obj) );
-		this->index_ = this->rev_.end()-1;
+		this->index_ = this->rev_.size()-1;
 	}else{
 		std::vector<std::pair<timestamp_t, Object*> >::iterator last = this->rev_.end()-1;
 		*last = std::pair<timestamp_t, Object*>(now, obj);
@@ -97,7 +101,7 @@ Object* Slot::store(Object* obj)
 
 bool Slot::have() const
 {
-	return this->rev_.begin() != this->index_ && this->rev_.end() != this->index_;
+	return this->index_ > 0;
 }
 
 }}

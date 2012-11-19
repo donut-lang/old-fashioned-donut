@@ -27,7 +27,7 @@ namespace donut {
 
 static const std::string TAG("FloatProvider");
 
-FloatProvider::FloatProvider(Heap* heap)
+FloatProvider::FloatProvider(const Handler<Heap>& heap)
 :NativeObjectProvider(heap, "Float")
 {
 	this->registerPureNativeClosure("opAdd", std::function<float(float, float)>([&](float self, float v) {
@@ -74,20 +74,28 @@ FloatProvider::FloatProvider(Heap* heap)
 
 tinyxml2::XMLElement* FloatProvider::serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj )
 {
-	tinyxml2::XMLElement* elm = doc->NewElement("float");
-	elm->SetAttribute("val", obj->toFloat(heap()));
-	return elm;
+	if(Handler<Heap> heap = this->heap().lock()){
+		tinyxml2::XMLElement* elm = doc->NewElement("float");
+		elm->SetAttribute("val", obj->toFloat(heap));
+		return elm;
+	}else{
+		throw DonutException(__FILE__, __LINE__, "[BUG] heap was already dead!");
+	}
 }
 Handler<Object> FloatProvider::deserializeImpl( tinyxml2::XMLElement* xml )
 {
-	if( std::string("int") != xml->Name() ){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. wrong element name: %s != \"bool\"", xml->Name());
+	if(Handler<Heap> heap = this->heap().lock()){
+		if( std::string("int") != xml->Name() ){
+			throw DonutException(__FILE__, __LINE__, "[BUG] Oops. wrong element name: %s != \"bool\"", xml->Name());
+		}
+		float val;
+		if(xml->QueryFloatAttribute("val", &val) != tinyxml2::XML_SUCCESS){
+			throw DonutException(__FILE__, __LINE__, "[BUG] Oops. failed to read xml");
+		}
+		return heap->createFloatObject(val);
+	}else{
+		throw DonutException(__FILE__, __LINE__, "[BUG] heap was already dead!");
 	}
-	float val;
-	if(xml->QueryFloatAttribute("val", &val) != tinyxml2::XML_SUCCESS){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. failed to read xml");
-	}
-	return heap()->createFloatObject(val);
 }
 
 }}

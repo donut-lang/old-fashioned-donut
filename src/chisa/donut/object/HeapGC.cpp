@@ -37,7 +37,7 @@ void Heap::gc()
 
 	for(HeapObject*& obj : this->objectPool_){
 		if(obj->used() ){
-			obj->mark(color);
+			obj->mark(self(), color);
 		}
 	}
 

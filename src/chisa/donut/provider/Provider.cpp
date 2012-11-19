@@ -25,7 +25,7 @@
 namespace chisa {
 namespace donut {
 
-Provider::Provider( Heap* const heap, const std::string& name )
+Provider::Provider( const Handler<Heap>& heap, const std::string& name )
 :heap_(heap), name_(name)
 {
 	this->prototype_ = heap->createEmptyDonutObject();
@@ -33,7 +33,9 @@ Provider::Provider( Heap* const heap, const std::string& name )
 
 void Provider::addPrototype( const std::string& name, Handler<NativeClosureEntry> clos )
 {
-	this->prototype_->store(heap(), name, clos->createObject(heap(), this->name(), name));
+	if(Handler<Heap> heap = this->heap().lock()){
+		this->prototype_->store(heap, name, clos->createObject(heap, this->name(), name));
+	}
 }
 
 tinyxml2::XMLElement* Provider::serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj_ )

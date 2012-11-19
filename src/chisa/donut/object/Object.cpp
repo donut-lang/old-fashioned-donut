@@ -31,11 +31,11 @@ static std::string toName( const int& id){
 }
 
 
-std::string Object::toString(Heap* const heap) const
+std::string Object::toString(const Handler<Heap>& heap) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
-		return this->toStringImpl();
+		return this->toStringImpl(heap);
 	case Tag::Int:
 		return heap->intProvider()->toString(this);
 	case Tag::Bool:
@@ -47,11 +47,11 @@ std::string Object::toString(Heap* const heap) const
 	}
 }
 
-int Object::toInt(Heap* const heap) const
+int Object::toInt(const Handler<Heap>& heap) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
-		return this->toIntImpl();
+		return this->toIntImpl(heap);
 	case Tag::Int:
 		return heap->intProvider()->toInt(this);
 	case Tag::Bool:
@@ -63,11 +63,11 @@ int Object::toInt(Heap* const heap) const
 	}
 }
 
-float Object::toFloat(Heap* const heap) const
+float Object::toFloat(const Handler<Heap>& heap) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
-		return this->toFloatImpl();
+		return this->toFloatImpl(heap);
 	case Tag::Int:
 		return heap->intProvider()->toFloat(this);
 	case Tag::Bool:
@@ -79,11 +79,11 @@ float Object::toFloat(Heap* const heap) const
 	}
 }
 
-bool Object::toBool(Heap* const heap) const
+bool Object::toBool(const Handler<Heap>& heap) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
-		return this->toBoolImpl();
+		return this->toBoolImpl(heap);
 	case Tag::Int:
 		return heap->intProvider()->toBool(this);
 	case Tag::Bool:
@@ -95,43 +95,43 @@ bool Object::toBool(Heap* const heap) const
 	}
 }
 
-bool Object::have(Heap* const heap, const std::string& name) const
+bool Object::have(const Handler<Heap>& heap, const std::string& name) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
-		return this->haveImpl(name);
+		return this->haveImpl(heap, name);
 	case Tag::Int:
-		return heap->intProto()->haveImpl(name);
+		return heap->intProto()->haveImpl(heap, name);
 	case Tag::Bool:
-		return heap->boolProto()->haveImpl(name);
+		return heap->boolProto()->haveImpl(heap, name);
 	case Tag::Null:
-		return heap->nullProto()->haveImpl(name);
+		return heap->nullProto()->haveImpl(heap, name);
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
 }
 
-bool Object::haveOwn(Heap* const heap, const std::string& name) const
+bool Object::haveOwn(const Handler<Heap>& heap, const std::string& name) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
-		return this->haveOwnImpl(name);
+		return this->haveOwnImpl(heap, name);
 	case Tag::Int:
-		return heap->intProto()->haveOwnImpl(name);
+		return heap->intProto()->haveOwnImpl(heap, name);
 	case Tag::Bool:
-		return heap->boolProto()->haveOwnImpl(name);
+		return heap->boolProto()->haveOwnImpl(heap, name);
 	case Tag::Null:
-		return heap->nullProto()->haveOwnImpl(name);
+		return heap->nullProto()->haveOwnImpl(heap, name);
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
 }
 
-Handler<Object> Object::store(Heap* const heap, const std::string& name, Handler<Object> obj)
+Handler<Object> Object::store(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj)
 {
 	switch(this->tag()){
 	case Tag::Obj:
-		return this->storeImpl(name, obj);
+		return this->storeImpl(heap, name, obj);
 	case Tag::Int:
 		heap->log().w(TAG, "Failed to store value to int object.");
 		return obj;
@@ -146,27 +146,27 @@ Handler<Object> Object::store(Heap* const heap, const std::string& name, Handler
 	}
 }
 
-Handler<Object> Object::load(Heap* const heap, const std::string& name) const
+Handler<Object> Object::load(const Handler<Heap>& heap, const std::string& name) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
-		return this->loadImpl(name);
+		return this->loadImpl(heap, name);
 	case Tag::Int:
-		return heap->intProto()->loadImpl(name);
+		return heap->intProto()->loadImpl(heap, name);
 	case Tag::Bool:
-		return heap->boolProto()->loadImpl(name);
+		return heap->boolProto()->loadImpl(heap, name);
 	case Tag::Null:
-		return heap->nullProto()->loadImpl(name);
+		return heap->nullProto()->loadImpl(heap, name);
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
 }
 
-std::string Object::providerName(Heap* const heap) const
+std::string Object::providerName(const Handler<Heap>& heap) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
-		return this->providerNameImpl();
+		return this->providerNameImpl(heap);
 	case Tag::Int:
 		return heap->intProvider()->name();
 	case Tag::Bool:
@@ -179,21 +179,21 @@ std::string Object::providerName(Heap* const heap) const
 }
 
 
-Handler<Object> Object::store(Heap* const heap, const int& idx, Handler<Object> obj)
+Handler<Object> Object::store(const Handler<Heap>& heap, const int& idx, Handler<Object> obj)
 {
 	return this->store(heap, toName(idx), obj);
 }
-Handler<Object> Object::load(Heap* const heap, const int& idx) const
+Handler<Object> Object::load(const Handler<Heap>& heap, const int& idx) const
 {
 	return this->load(heap, toName(idx));
 }
 
-bool Object::have(Heap* const heap, const int& idx) const
+bool Object::have(const Handler<Heap>& heap, const int& idx) const
 {
 	return this->have(heap, toName(idx));
 }
 
-bool Object::haveOwn(Heap* const heap, const int& idx) const
+bool Object::haveOwn(const Handler<Heap>& heap, const int& idx) const
 {
 	return this->have(heap, toName(idx));
 }
