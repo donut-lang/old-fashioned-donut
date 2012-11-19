@@ -56,11 +56,11 @@ void Heap::gc()
 {
 	class Collector : public ObjectWalker {
 	private:
-		std::vector<HeapObject*>& heap_;
+		std::vector<HeapObject*>& heapMarked_;
 	public:
-		Collector(Heap* world, std::vector<HeapObject*>& heap)
-		:ObjectWalker(world->nextWalkColor())
-		,heap_(heap)
+		Collector(Heap* heap, std::vector<HeapObject*>& heapMarked)
+		:ObjectWalker(heap->nextWalkColor())
+		,heapMarked_(heapMarked)
 		{
 
 		}
@@ -68,15 +68,15 @@ void Heap::gc()
 	public:
 		virtual void onWalk(NativeObject* obj) override
 		{
-			heap_.push_back(obj);
+			heapMarked_.push_back(obj);
 		}
 		virtual void onWalk(NativeClosureObject* obj) override
 		{
-			heap_.push_back(obj);
+			heapMarked_.push_back(obj);
 		}
 		virtual void onWalk(DonutObject* obj) override
 		{
-			heap_.push_back(obj);
+			heapMarked_.push_back(obj);
 		}
 	};
 	Collector c(this, this->objectPoolMarked_);
@@ -86,13 +86,13 @@ void Heap::gc()
 void Heap::seek(timestamp_t time) {
 	class SeekWalker : public ObjectWalker {
 	private:
-		Heap* const world_;
-		std::vector<HeapObject*>& heap_;
+		Heap* const heap_;
+		std::vector<HeapObject*>& heapMarked_;
 	public:
-		SeekWalker(Heap* world, std::vector<HeapObject*>& heap)
-		:ObjectWalker(world->nextWalkColor())
-		,world_(world)
+		SeekWalker(Heap* heap, std::vector<HeapObject*>& heapMarked)
+		:ObjectWalker(heap->nextWalkColor())
 		,heap_(heap)
+		,heapMarked_(heapMarked)
 		{
 
 		}
@@ -100,18 +100,18 @@ void Heap::seek(timestamp_t time) {
 	public:
 		virtual void onWalk(NativeObject* obj) override
 		{
-			obj->seek(world_->time());
-			heap_.push_back(obj);
+			obj->seek(heap_->time());
+			heapMarked_.push_back(obj);
 		}
 		virtual void onWalk(NativeClosureObject* obj) override
 		{
-			obj->seek(world_->time());
-			heap_.push_back(obj);
+			obj->seek(heap_->time());
+			heapMarked_.push_back(obj);
 		}
 		virtual void onWalk(DonutObject* obj) override
 		{
-			obj->seek(world_->time());
-			heap_.push_back(obj);
+			obj->seek(heap_->time());
+			heapMarked_.push_back(obj);
 		}
 
 	};
