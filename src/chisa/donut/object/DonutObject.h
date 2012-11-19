@@ -27,7 +27,7 @@ class DonutClosureObject : public DonutObject {
 private:
 	Handler<Closure> asm_;
 public:
-	DonutClosureObject(const Handler<Heap>& heap, Handler<Closure> clos, Handler<Object> scope);
+	DonutClosureObject(const Handler<Heap>& heap, const Handler<Closure>& clos, const Handler<Object>& scope);
 	virtual ~DonutClosureObject() noexcept = default;
 public:
 	Handler<Closure> closureCode() const { return this->asm_; };
