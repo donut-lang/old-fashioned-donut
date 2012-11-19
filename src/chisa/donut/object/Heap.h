@@ -26,15 +26,17 @@
 #include "DonutObject.h"
 #include "NativeObject.h"
 #include "../provider/Provider.h"
+#include "../Clock.h"
 
 namespace chisa {
 namespace donut {
-class Clock;
 
-class Heap {
+class Heap : public HandlerBody<Heap> {
+public:
+	bool onFree() noexcept;
 	DEFINE_MEMBER_REF(public, logging::Logger, log)
-	DEFINE_MEMBER_REF(public, Clock, clock)
 private:
+	Handler<Clock> clock_;
 	uintptr_t objectId_;
 	int walkColor_;
 	std::size_t gcLimit_;
@@ -54,8 +56,9 @@ private:
 	Handler<DonutObject> intProto_;
 	Handler<DonutObject> nullProto_;
 public:
-	Heap(logging::Logger& log, Clock& clock);
-	virtual ~Heap() noexcept;
+	Heap(logging::Logger& log, const Handler<Clock>& clock);
+	virtual ~Heap() noexcept = default;
+	Handler<Clock> clock() const noexcept { return this->clock_; };
 	void bootstrap();
 	tinyxml2::XMLElement* serialize(tinyxml2::XMLDocument* doc);
 	void deserialize(tinyxml2::XMLElement* xml);

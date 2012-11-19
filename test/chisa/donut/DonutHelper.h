@@ -24,7 +24,7 @@
 
 #define INIT_DONUT\
 	Handler<Source> source( new Source() );\
-	Clock clock;\
+	Handler<Clock> clock( new Clock() );\
 	Heap heap(log_trace, clock);\
 	Machine machine(log_trace, source, &heap);
 

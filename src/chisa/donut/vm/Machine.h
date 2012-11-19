@@ -38,7 +38,7 @@ public:
 	}
 };
 
-class Machine {
+class Machine : public HandlerBody<Machine> {
 	DEFINE_MEMBER_REF(private, logging::Logger, log);
 private:
 	Handler<Source> const src_;
@@ -54,6 +54,7 @@ private:
 public:
 	Machine(logging::Logger& log, const Handler<Source>& code, Heap* heap);
 	virtual ~Machine() noexcept = default;
+	bool onFree() noexcept { return false; };
 public:
 	Handler<Object> start( const std::size_t closureIndex );
 private:
