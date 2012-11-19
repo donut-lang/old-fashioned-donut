@@ -14,8 +14,8 @@ options {
 #include <cstdlib>
 #include <cstddef>
 #include <algorithm>
-#include "../../code/Code.h"
-#include "../../code/Closure.h"
+#include "../../source/Source.h"
+#include "../../source/Closure.h"
 #include "../ParseUtil.h"
 #include "../../../util/StringUtil.h"
 using namespace chisa;
@@ -31,14 +31,14 @@ typedef pANTLR3_COMMON_TOKEN Token;
 #undef __cplusplus
 }
 
-prog [ donut::Code* code] returns [ unsigned int mainClosure ]
+prog [ donut::Source* code] returns [ unsigned int mainClosure ]
 	: closure[$code]
 	{
 		$mainClosure = $closure.closureNo;
 	}
 	;
 
-closure [ donut::Code* code] returns [ std::vector<donut::Instruction> asmlist, unsigned int closureNo ]
+closure [ donut::Source* code] returns [ std::vector<donut::Instruction> asmlist, unsigned int closureNo ]
 	: ^(CLOS vars[$code] block[$code]
 	{
 		Handler<donut::Closure> closure = Handler<donut::Closure>(new donut::Closure($vars.list, $block.asmlist));
@@ -49,12 +49,12 @@ closure [ donut::Code* code] returns [ std::vector<donut::Instruction> asmlist, 
 	)
 	;
 
-vars [ donut::Code* code ] returns [ std::vector<std::string> list ]
+vars [ donut::Source* code ] returns [ std::vector<std::string> list ]
 	: ^(VARS (IDENT{
 		list.push_back(createStringFromString($IDENT.text));
 	})*);
 
-block [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
+block [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
 @after{
 	if( $asmlist.empty() ){
 		//null値がセットされる
@@ -95,7 +95,7 @@ unary_operation returns [ std::string sym ]
 	| NOT { sym="opNot"; }
 	;
 
-expr [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
+expr [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	: lt=literal[$code] { $asmlist.swap($lt.asmlist); }
 	| app=apply[$code] { $asmlist.swap($app.asmlist); }
 	| idx=index[$code] { $asmlist.swap($idx.asmlist); }
@@ -281,7 +281,7 @@ expr [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	}
 	;
 
-index [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
+index [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	: ^(IDX obj=expr[$code] ex=arglist[$code])
 	{
 		$asmlist.insert($asmlist.end(), $obj.asmlist.begin(), $obj.asmlist.end());
@@ -293,7 +293,7 @@ index [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	}
 	;
 
-apply [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
+apply [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	: ^(APPLY ^(DOT SCOPE IDENT) ex=arglist[$code])
 	{
 		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
@@ -334,7 +334,7 @@ apply [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	}
 	;
 
-literal [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
+literal [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	: 'true'
 	{
 		$asmlist.push_back(Inst::Push | $code->constCode<bool>(true));
@@ -388,7 +388,7 @@ literal [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist 
 	| closure[$code] { $asmlist.swap($closure.asmlist); }
 	;
 
-object [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
+object [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
 @init {
 	int size=0;
 }
@@ -401,7 +401,7 @@ object [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	}
 	;
 
-object_pair [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
+object_pair [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	: ^(PAIR IDENT v=expr[$code])
 	{
 		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
@@ -409,7 +409,7 @@ object_pair [ donut::Code* code ] returns [ std::vector<donut::Instruction> asml
 	}
 	;
 
-array [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
+array [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
 @init {
 	int array_count=0;
 }
@@ -422,7 +422,7 @@ array [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	}
 	;
 
-arglist [ donut::Code* code ] returns [ std::vector<donut::Instruction> asmlist, int count ]
+arglist [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist, int count ]
 @init {
 	$count=0;
 }

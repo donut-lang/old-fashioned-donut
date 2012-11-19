@@ -17,7 +17,7 @@
  */
 
 #include "Inst.h"
-#include "Code.h"
+#include "Source.h"
 
 namespace chisa {
 namespace donut {

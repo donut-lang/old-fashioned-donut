@@ -21,16 +21,18 @@
 #include "../../util/StringUtil.h"
 #include "../object/NativeObject.h"
 #include "../object/DonutObject.h"
+#include "../source/Source.h"
 
 namespace chisa {
 namespace donut {
 
 const static std::string TAG("Machine");
 
-Machine::Machine(logging::Logger& log, const Handler<Source>& src, const Handler<Heap>& heap)
+Machine::Machine(logging::Logger& log, const Handler<Source>& src, const Handler<Heap>& heap, const Handler<ConstPool>& constPool)
 :log_(log)
 ,src_(src)
 ,heap_(heap)
+,constPool_(constPool)
 ,pc_(0)
 ,asmlist_(nullptr)
 ,local_(32)
@@ -109,11 +111,11 @@ Handler<Object> Machine::run()
 		case Inst::Push: {
 			switch(constKind){
 			case Inst::ConstBool: {
-				this->stack_.push_back( heap_->createBool( this->src_->getBool(constIndex) ) );
+				this->stack_.push_back( this->constPool_->getBool( constIndex ) );
 				break;
 			}
 			case Inst::ConstFloat: {
-				this->stack_.push_back( heap_->createFloatObject( this->src_->getFloat(constIndex) ) );
+				this->stack_.push_back( this->constPool_->getFloat( constIndex ) );
 				break;
 			}
 			case Inst::ConstClosure: {
@@ -121,11 +123,11 @@ Handler<Object> Machine::run()
 				break;
 			}
 			case Inst::ConstInt: {
-				this->stack_.push_back( heap_->createInt( this->src_->getInt(constIndex) ) );
+				this->stack_.push_back( this->constPool_->getInt(constIndex) );
 				break;
 			}
 			case Inst::ConstString: {
-				this->stack_.push_back( heap_->createStringObject( this->src_->getString(constIndex) ) );
+				this->stack_.push_back( this->constPool_->getString(constIndex) );
 				break;
 			}
 			case Inst::ConstNull: {

@@ -67,7 +67,7 @@ public:
 	template <typename T> Instruction constCode(T const& val);
 public:
 	std::string disasm( Instruction inst );
-	inline void disasm( Instruction inst, Instruction& opcode, Instruction& constKind, int& constIndex ) const {
+	static inline void disasm( Instruction inst, Instruction& opcode, Instruction& constKind, int& constIndex ) {
 		opcode = inst & Inst::OpcodeMask;
 		constKind = inst & Inst::ConstKindMask;
 		constIndex = inst & 0xffff;

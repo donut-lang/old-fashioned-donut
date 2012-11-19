@@ -19,7 +19,7 @@
 #pragma once
 #include <memory>
 #include "../../Handler.h"
-#include "../code/Code.h"
+#include "../source/Source.h"
 
 namespace chisa {
 namespace donut {

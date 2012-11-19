@@ -20,6 +20,7 @@
 #include "../../../TestCommon.h"
 #include "../../../../src/chisa/donut/parser/Parser.h"
 #include "../../../../src/chisa/donut/object/Heap.h"
+#include "../../../../src/chisa/donut/source/Source.h"
 #include "../../../../src/chisa/donut/Clock.h"
 #include "../../../../src/chisa/donut/vm/Machine.h"
 
@@ -27,8 +28,9 @@
 	Handler<Source> source( new Source() );\
 	Handler<Clock> clock( new Clock() );\
 	Handler<Heap> heap(new Heap(log_trace, clock));\
+	Handler<ConstPool> constPool(new ConstPool(heap, source));\
 	heap->bootstrap();\
-	Machine machine(log_trace, source, heap);
+	Machine machine(log_trace, source, heap, constPool);
 
 #define EXECUTE_SRC(src) INIT_DONUT\
 	unsigned int idx = Parser::fromString(src, "<MEM>", 0)->parseProgram(source);\

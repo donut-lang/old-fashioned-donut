@@ -17,7 +17,7 @@
  */
 
 #include <cstddef>
-#include "Code.h"
+#include "Source.h"
 #include "Closure.h"
 #include "..//Exception.h"
 #include "../../util/StringUtil.h"
@@ -36,7 +36,7 @@ std::string Source::disasm( Instruction inst )
 	Instruction opcode;
 	Instruction constKind;
 	int constIndex;
-	this->disasm(inst, opcode, constKind, constIndex);
+	Source::disasm(inst, opcode, constKind, constIndex);
 
 	std::string repl=util::format("#%08x ", inst);
 
