@@ -43,6 +43,7 @@ closure [ donut::Code* code] returns [ std::vector<donut::Instruction> asmlist, 
 	{
 		Handler<donut::Closure> closure = Handler<donut::Closure>(new donut::Closure($vars.list, $block.asmlist));
 		$closureNo = $code->constCode<Handler<donut::Closure> >(closure);
+		closure->code($closureNo);
 		$asmlist.push_back(Inst::Push | $closureNo);
 	}
 	)
