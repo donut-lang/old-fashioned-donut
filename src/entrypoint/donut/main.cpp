@@ -134,7 +134,7 @@ int main(int argc, char* argv[]){
 	std::cout << source << std::endl;
 
 	{
-		Handler<Code> code(new Code);
+		Handler<Source> code(new Source);
 		unsigned int idx = Parser::fromString(source, "<CIN>", 0)->parseProgram(code);
 		World world(log, code);
 		Machine machine(log, &world);

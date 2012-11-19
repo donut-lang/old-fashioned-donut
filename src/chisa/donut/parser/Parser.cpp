@@ -156,7 +156,7 @@ public:
 			this->tree = nullptr;
 		}
 	}
-	unsigned int compile(Handler<donut::Code> code){
+	unsigned int compile(Handler<donut::Source> code){
 		unsigned int no = compiler->prog(compiler, code.get());
 		if(compiler->pTreeParser->rec->state->error){
 			ANTLR3_EXCEPTION* ex = compiler->pTreeParser->rec->state->exception;
@@ -203,7 +203,7 @@ std::shared_ptr<Parser> Parser::fromStream(std::istream& stream_, const std::str
 	return parser;
 }
 
-unsigned int Parser::parseProgram(Handler<donut::Code> code)
+unsigned int Parser::parseProgram(Handler<donut::Source> code)
 {
 	return compilerImpl->compile(code);
 }

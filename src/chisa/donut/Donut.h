@@ -16,9 +16,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ObjectWalker.h"
+#pragma once
+#include "code/Code.h"
+#include "object/Heap.h"
+#include "vm/Machine.h"
+#include "../logging/Logger.h"
+#include "../Handler.h"
 
 namespace chisa {
 namespace donut {
 
+
+class Donut {
+	DEFINE_MEMBER_REF(public, logging::Logger, log);
+private: // 全体の時間をここで管理する。
+	unsigned int clock_;
+private:
+	Handler<Source> source_;
+	Handler<Heap> heap_;
+	std::map<std::string, Handler<Machine> > machines_;
+public:
+	Donut();
+	virtual ~Donut();
+public:
+	Handler<Machine> queryMachine( const std::string& name = "" );
+	void registerGlobalObject( const std::string& name, const Handler<Object>& obj );
+	bool existsGlobalObject( const std::string& name );
+	Handler<Object> readGlobalObject( const std::string& name );
+};
+
 }}
+

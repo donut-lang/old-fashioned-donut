@@ -16,49 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Object.h"
-#include "Slot.h"
-#include "../Clock.h"
+#include "Donut.h"
 
 namespace chisa {
 namespace donut {
 
-void DonutObject::markImpl(int color)
-{
-	if(this->color() == color){
-		return;
-	}
-	this->color(color);
-	for(auto slot : this->slots_){
-		slot.second.mark(color);
-	}
-}
-
-void Slot::mark(int color)
-{
-	typedef decltype(this->rev_) ListType;
-	for(const std::pair<unsigned int, Object*>& rev : this->rev_){
-		if( rev.second ) {
-			rev.second->mark(color);
-		}
-	}
-}
-
-void NativeObject::markImpl(int color)
-{
-	if(this->color() == color){
-		return;
-	}
-	this->color(color);
-	this->prototype_->mark(color);
-}
-
-void NativeClosureObject::markImpl(int color)
-{
-	if(this->color() == color){
-		return;
-	}
-	this->color(color);
-}
 
 }}

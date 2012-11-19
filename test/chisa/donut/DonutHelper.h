@@ -19,27 +19,28 @@
 #pragma once
 #include "../../../src/chisa/donut/parser/Parser.h"
 #include "../../../src/chisa/donut/object/Heap.h"
+#include "../../../src/chisa/donut/Clock.h"
 #include "../../../src/chisa/donut/vm/Machine.h"
 
-#define EXECUTE_SRC(src)\
-	Heap heap(log_trace);\
-	unsigned int idx = Parser::fromString(src, "<MEM>", 0)->parseProgram(heap.code());\
-	Machine machine(log_trace, &heap);\
+#define INIT_DONUT\
+	Handler<Source> source( new Source() );\
+	Clock clock;\
+	Heap heap(log_trace, clock);\
+	Machine machine(log_trace, source, &heap);
+
+#define EXECUTE_SRC(src) INIT_DONUT\
+	unsigned int idx = Parser::fromString(src, "<MEM>", 0)->parseProgram(source);\
 	Handler<Object> result = machine.start(idx);
 
-#define SOURCE_TEST_THROW(src)\
+#define SOURCE_TEST_THROW(src) INIT_DONUT\
 {\
-	Heap heap(log_trace);\
-	unsigned int idx = Parser::fromString(src, "<MEM>", 0)->parseProgram(heap.code());\
-	Machine machine(log_trace, &heap);\
+	unsigned int idx = Parser::fromString(src, "<MEM>", 0)->parseProgram(source);\
 	ASSERT_ANY_THROW( machine.start(idx) );\
 }
 
-#define SOURCE_TEST_NO_THROW(src)\
+#define SOURCE_TEST_NO_THROW(src) INIT_DONUT\
 {\
-	Heap heap(log_trace);\
-	unsigned int idx = Parser::fromString(src, "<MEM>", 0)->parseProgram(heap.code());\
-	Machine machine(log_trace, &heap);\
+	unsigned int idx = Parser::fromString(src, "<MEM>", 0)->parseProgram(source);\
 	ASSERT_NO_THROW( machine.start(idx) );\
 }
 

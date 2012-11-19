@@ -26,7 +26,6 @@ namespace chisa {
 namespace donut {
 class Heap;
 class Object;
-class ObjectWalker;
 
 class Slot {
 	STACK_OBJECT(Slot);
@@ -52,7 +51,7 @@ public:
 	timestamp_t lastGen() const noexcept;
 	bool have() const;
 	inline std::size_t size() const noexcept { return this->rev_.size()-1; };
-	void walk(ObjectWalker* walker);
+	void mark(int color);
 };
 
 }}

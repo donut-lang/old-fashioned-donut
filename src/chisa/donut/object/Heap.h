@@ -29,14 +29,12 @@
 
 namespace chisa {
 namespace donut {
+class Clock;
 
 class Heap {
 	DEFINE_MEMBER_REF(public, logging::Logger, log)
+	DEFINE_MEMBER_REF(public, Clock, clock)
 private:
-	Handler<Code> code_;
-private:
-	unsigned int timestamp_;
-	unsigned int nowTime_;
 	uintptr_t objectId_;
 	int walkColor_;
 	std::size_t gcLimit_;
@@ -56,14 +54,12 @@ private:
 	Handler<DonutObject> intProto_;
 	Handler<DonutObject> nullProto_;
 public:
-	Heap(logging::Logger& log);
+	Heap(logging::Logger& log, Clock& clock);
 	virtual ~Heap() noexcept;
 	void bootstrap();
 	tinyxml2::XMLElement* serialize(tinyxml2::XMLDocument* doc);
 	void deserialize(tinyxml2::XMLElement* xml);
 public:
-	unsigned int nextTimestamp();
-	unsigned int time() const noexcept { return this->nowTime_; };
 	Handler<DonutObjectProvider>& donutObjectProvider() { return donutObjectProvider_; };
 	Handler<BoolProvider>& boolProvider() {return boolProvider_;};
 	Handler<IntProvider>& intProvider() {return intProvider_;};
@@ -80,10 +76,8 @@ private:
 	void registerObject( const Handler<HeapObject>& obj );
 
 	int nextWalkColor();
-	void walkAndGC( ObjectWalker& walker );
 	void seek(timestamp_t time);
 public:
-	Handler<Code> code() { return this->code_; }
 	Handler<DonutObject> createDonutObject();
 	Handler<DonutObject> createEmptyDonutObject();
 	Handler<DonutClosureObject> createDonutClosureObject( const Handler<Closure>& closure, const Handler<Object>& scope );

@@ -39,8 +39,9 @@ public:
 };
 
 class Machine {
-	DEFINE_MEMBER_REF(private, logging::Logger, log)
+	DEFINE_MEMBER_REF(private, logging::Logger, log);
 private:
+	Handler<Source> const src_;
 	Heap* const heap_;
 	pc_t pc_;
 	Handler<Object> self_;
@@ -51,7 +52,7 @@ private:
 	std::vector<Handler<Object> > local_;
 	std::vector<Callchain> callStack_;
 public:
-	Machine(logging::Logger& log, Heap* heap);
+	Machine(logging::Logger& log, const Handler<Source>& code, Heap* heap);
 	virtual ~Machine() noexcept = default;
 public:
 	Handler<Object> start( const std::size_t closureIndex );

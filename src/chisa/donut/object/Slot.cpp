@@ -19,6 +19,7 @@
 #include "Slot.h"
 #include "Heap.h"
 #include "Object.h"
+#include "../Clock.h"
 #include <algorithm>
 
 namespace chisa {
@@ -45,7 +46,7 @@ Slot::Slot(Heap* const heap, Object* const obj)
 ,index_()
 {
 	this->rev_.push_back( std::pair<timestamp_t, Object*>(0, nullptr) );
-	this->rev_.push_back( std::pair<timestamp_t, Object*>(heap->nextTimestamp(), obj) );
+	this->rev_.push_back( std::pair<timestamp_t, Object*>(heap->clock().now(), obj) );
 	this->index_ = this->rev_.begin()+1;
 }
 
@@ -84,12 +85,13 @@ timestamp_t Slot::lastGen() const noexcept
 Object* Slot::store(Object* obj)
 {
 	this->discardFuture();
-	if(lastGen() < this->heap_->time()){
-		this->rev_.push_back( std::pair<timestamp_t, Object*>(this->heap_->nextTimestamp(), obj) );
+	unsigned int now = this->heap_->clock().now();
+	if(lastGen() < now){
+		this->rev_.push_back( std::pair<timestamp_t, Object*>(now, obj) );
 		this->index_ = this->rev_.end()-1;
 	}else{
 		std::vector<std::pair<timestamp_t, Object*> >::iterator last = this->rev_.end()-1;
-		*last = std::pair<timestamp_t, Object*>(this->heap_->nextTimestamp(), obj);
+		*last = std::pair<timestamp_t, Object*>(now, obj);
 	}
 	return obj;
 }

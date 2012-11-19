@@ -205,16 +205,16 @@ struct Compiler_Ctx_struct
 
 
      unsigned int
-     (*prog)	(struct Compiler_Ctx_struct * ctx, donut::Code* code);
+     (*prog)	(struct Compiler_Ctx_struct * ctx, donut::Source* code);
 
      Compiler_closure_return
-     (*closure)	(struct Compiler_Ctx_struct * ctx, donut::Code* code);
+     (*closure)	(struct Compiler_Ctx_struct * ctx, donut::Source* code);
 
      std::vector<std::string>
-     (*vars)	(struct Compiler_Ctx_struct * ctx, donut::Code* code);
+     (*vars)	(struct Compiler_Ctx_struct * ctx, donut::Source* code);
 
      std::vector<donut::Instruction>
-     (*block)	(struct Compiler_Ctx_struct * ctx, donut::Code* code);
+     (*block)	(struct Compiler_Ctx_struct * ctx, donut::Source* code);
 
      std::string
      (*operation)	(struct Compiler_Ctx_struct * ctx);
@@ -223,28 +223,28 @@ struct Compiler_Ctx_struct
      (*unary_operation)	(struct Compiler_Ctx_struct * ctx);
 
      std::vector<donut::Instruction>
-     (*expr)	(struct Compiler_Ctx_struct * ctx, donut::Code* code);
+     (*expr)	(struct Compiler_Ctx_struct * ctx, donut::Source* code);
 
      std::vector<donut::Instruction>
-     (*index)	(struct Compiler_Ctx_struct * ctx, donut::Code* code);
+     (*index)	(struct Compiler_Ctx_struct * ctx, donut::Source* code);
 
      std::vector<donut::Instruction>
-     (*apply)	(struct Compiler_Ctx_struct * ctx, donut::Code* code);
+     (*apply)	(struct Compiler_Ctx_struct * ctx, donut::Source* code);
 
      std::vector<donut::Instruction>
-     (*literal)	(struct Compiler_Ctx_struct * ctx, donut::Code* code);
+     (*literal)	(struct Compiler_Ctx_struct * ctx, donut::Source* code);
 
      std::vector<donut::Instruction>
-     (*object)	(struct Compiler_Ctx_struct * ctx, donut::Code* code);
+     (*object)	(struct Compiler_Ctx_struct * ctx, donut::Source* code);
 
      std::vector<donut::Instruction>
-     (*object_pair)	(struct Compiler_Ctx_struct * ctx, donut::Code* code);
+     (*object_pair)	(struct Compiler_Ctx_struct * ctx, donut::Source* code);
 
      std::vector<donut::Instruction>
-     (*array)	(struct Compiler_Ctx_struct * ctx, donut::Code* code);
+     (*array)	(struct Compiler_Ctx_struct * ctx, donut::Source* code);
 
      Compiler_arglist_return
-     (*arglist)	(struct Compiler_Ctx_struct * ctx, donut::Code* code);
+     (*arglist)	(struct Compiler_Ctx_struct * ctx, donut::Source* code);
     // Delegated rules
 
     const char * (*getGrammarFileName)();

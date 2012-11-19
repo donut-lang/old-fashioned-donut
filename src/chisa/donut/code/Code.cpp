@@ -25,13 +25,13 @@
 namespace chisa {
 namespace donut {
 
-Code::Code()
+Source::Source()
 {
 	// TODO Auto-generated constructor stub
 
 }
 
-std::string Code::disasm( Instruction inst )
+std::string Source::disasm( Instruction inst )
 {
 	Instruction opcode;
 	Instruction constKind;
@@ -126,37 +126,37 @@ std::string Code::disasm( Instruction inst )
 
 
 template<>
-Instruction Code::constCode<bool>(bool const& val)
+Instruction Source::constCode<bool>(bool const& val)
 {
 	return Inst::ConstBool | (val ? 1 : 0);
 }
 
 template<>
-Instruction Code::constCode<int>(int const& val)
+Instruction Source::constCode<int>(int const& val)
 {
 	return Inst::ConstInt | this->intTable_.regist(val);
 }
 
 template<>
-Instruction Code::constCode<float>(float const& val)
+Instruction Source::constCode<float>(float const& val)
 {
 	return Inst::ConstFloat | this->floatTable_.regist(val);
 }
 
 template<>
-Instruction Code::constCode<Handler<donut::Closure> >(Handler<donut::Closure> const& val)
+Instruction Source::constCode<Handler<donut::Closure> >(Handler<donut::Closure> const& val)
 {
 	return Inst::ConstClosure | this->closureTable_.regist(val);
 }
 
 template<>
-Instruction Code::constCode<std::nullptr_t>(std::nullptr_t const& null)
+Instruction Source::constCode<std::nullptr_t>(std::nullptr_t const& null)
 {
 	return Inst::ConstNull;
 }
 
 template<>
-Instruction Code::constCode<std::string>(std::string const& val)
+Instruction Source::constCode<std::string>(std::string const& val)
 {
 	return Inst::ConstString | this->stringTable_.regist(val);
 }
