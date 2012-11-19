@@ -55,9 +55,11 @@ void Slot::discardHistory()
 	if(this->index_ < 0){
 		return;
 	}
-	std::vector<std::pair<timestamp_t, Object*> >::iterator end = this->rev_.begin()+index_;
-	this->rev_.erase(this->rev_.begin(), end);
-	this->index_ = this->rev_.size()-1;
+	if( this->rev_.size() > 0 ) {
+		std::vector<std::pair<timestamp_t, Object*> >::iterator end = this->rev_.begin()+index_;
+		this->rev_.erase(this->rev_.begin(), end);
+		this->index_ = this->rev_.size()-1;
+	}
 }
 
 void Slot::discardFuture()
@@ -65,7 +67,9 @@ void Slot::discardFuture()
 	if(this->index_ < 0){
 		return;
 	}
-	this->rev_.erase(this->rev_.begin() + this->index_, this->rev_.end());
+	if( this->rev_.size() > 0 ) {
+		this->rev_.erase(this->rev_.begin() + this->index_ + 1, this->rev_.end());
+	}
 }
 
 Object* Slot::load() const
