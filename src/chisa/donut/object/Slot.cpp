@@ -25,15 +25,15 @@ namespace chisa {
 namespace donut {
 
 struct Order {
-	bool operator()(std::pair<unsigned int, Object*>const&a, std::pair<unsigned int, Object*>const&b)
+	inline bool operator()(std::pair<unsigned int, Object*> const& a, std::pair<unsigned int, Object*> const& b)
 	{
 		return a.first < b.first;
 	}
-	bool operator()(std::pair<unsigned int, Object*>const&a, unsigned int b)
+	inline bool operator()(std::pair<unsigned int, Object*> const& a, unsigned int const& b)
 	{
 		return a.first < b;
 	}
-	bool operator()(unsigned int a, std::pair<unsigned int, Object*>const&b)
+	inline bool operator()(unsigned int const& a, std::pair<unsigned int, Object*> const& b)
 	{
 		return a < b.first;
 	}
