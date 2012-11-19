@@ -16,21 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../TestCommon.h"
 #include "DonutHelper.h"
 #include <math.h>
 
 namespace chisa {
 namespace donut {
 
-TEST(SeekTest, SeekTest)
+TEST(DonutProtoTest, NullTest)
 {
-	INIT_DONUT
-	unsigned int idx = Parser::fromString("test = 1;", "<MEM>", 0)->parseProgram( source );
-	Handler<Object> result = machine.start(idx);
-
-	unsigned int idx2 = Parser::fromString("test = 2;", "<MEM>", 0)->parseProgram( source );
-	result = machine.start(idx2);
+	SOURCE_TEST_INT(1, "z={};x={__proto__=>z};z.x=1;x.x;");
 }
 
 }}

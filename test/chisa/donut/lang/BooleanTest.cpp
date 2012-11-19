@@ -16,17 +16,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../TestCommon.h"
 #include "DonutHelper.h"
 #include <math.h>
 
 namespace chisa {
 namespace donut {
 
-TEST(DonutProtoTest, NullTest)
+TEST(DonutBooleanTest, LiteralTest)
 {
-	SOURCE_TEST_INT(1, "z={};x={__proto__=>z};z.x=1;x.x;");
+	SOURCE_TEST_TRUE("true");
+	SOURCE_TEST_FALSE("false");
 }
+TEST(DonutBooleanTest, AndTest)
+{
+	SOURCE_TEST_FALSE("false && false");
+	SOURCE_TEST_FALSE("false && true");
+	SOURCE_TEST_FALSE("true && false");
+	SOURCE_TEST_TRUE("true && true");
+}
+TEST(DonutBooleanTest, OrTest)
+{
+	SOURCE_TEST_TRUE("true || true");
+	SOURCE_TEST_TRUE("true || false");
+	SOURCE_TEST_TRUE("false || true");
+	SOURCE_TEST_FALSE("false || false");
+}
+TEST(DonutBooleanTest, NotTest)
+{
+	SOURCE_TEST_FALSE("!true");
+	SOURCE_TEST_TRUE("!false");
+}
+
 
 }}
 

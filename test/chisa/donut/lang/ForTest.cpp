@@ -16,43 +16,47 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../TestCommon.h"
 #include "DonutHelper.h"
 #include <math.h>
 
 namespace chisa {
 namespace donut {
 
-TEST(DonutFunctionTest, ReturnTest)
+class DonutForTest : public ::testing::Test
 {
-	SOURCE_TEST_INT(3, "z = func(a,b){a+b;};z(1,2);");
+protected:
+	Handler<Source> code;
+public:
+	void SetUp(){
+		code = Handler<Source>(new Source());
+	}
+	void TearDown(){
+		code.reset();
+	}
+};
+
+TEST_F(DonutForTest, CountTest)
+{
+	SOURCE_TEST_INT(10, "cnt=0;for(i=0;i<10;++i){cnt+=1;};");
 }
 
-TEST(DonutFunctionTest, ReturnWithContTest)
+TEST_F(DonutForTest, ZeroCountTest)
 {
-	SOURCE_TEST_INT(12, "z = func(a,b){a+b;};z(1,2);12");
-}
-
-TEST(DonutFunctionTest, ArgumentTest)
-{
-	SOURCE_TEST_INT(3, "z = func(a,b,c,d){c;};z(1,2,3,4);");
-}
-
-TEST(DonutFunctionTest, ScopeTest)
-{
-	SOURCE_TEST_INT(0, "a = 1; f = func(){ a=0; };f(); a;");
+	SOURCE_TEST_INT(-12, "cnt=10;for(i=-12;i>0;++i){cnt+=1;};");
 }
 
 
-TEST(DonutFunctionTest, ScopeHideTest)
+TEST_F(DonutForTest, WhileTest)
 {
-	SOURCE_TEST_INT(1, "a = 1; f = func(a){ a=0; };f(1); a;");
+	SOURCE_TEST_INT(10, "cnt=0;i=0;while(i<10){++i;cnt+=1;};");
 }
 
-TEST(DonutFunctionTest, RecursiveTest)
+TEST_F(DonutForTest, ForWhileTest)
 {
-	SOURCE_TEST_INT(55, "f = func(a){ if(a>0){ a+f(a-1); }else{ 0; }; };f(10);");
+	SOURCE_TEST_INT(10, "cnt=0;i=0;for(;i<10;){++i;cnt+=1;};");
 }
+
+
 
 }}
 

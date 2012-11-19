@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../TestCommon.h"
-#include "../../../src/chisa/donut/parser/Parser.h"
+#include "Helper.h"
 #include <math.h>
 
 namespace chisa {
@@ -35,6 +34,7 @@ public:
 		code.reset();
 	}
 };
+
 TEST_F(DonutParserTest, BasicTest)
 {
 	ASSERT_NO_THROW( Parser::fromString("test=1;", "<MEM>", 0)->parseProgram(code) );
