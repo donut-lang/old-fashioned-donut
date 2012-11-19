@@ -47,7 +47,14 @@ Slot::Slot()
 
 void Slot::seek( const Handler<Heap>& heap, timestamp_t timestamp )
 {
-	this->index_ = std::lower_bound(rev_.begin(), rev_.end(), timestamp, Order()) - this->rev_.begin();
+	this->index_ = -1;
+	for(int i=this->rev_.size()-1; i>=0; --i){
+		std::pair<timestamp_t, Object*> const& p = this->rev_.at(i);
+		if(p.first <= timestamp){
+			this->index_ = i;
+			return;
+		}
+	}
 }
 
 void Slot::discardHistory()
@@ -81,29 +88,11 @@ Object* Slot::load() const
 	return p.second;
 }
 
-timestamp_t Slot::firstGen() const noexcept
-{
-	if(this->rev_.size() <= 0){
-		return 0;
-	}
-	std::pair<timestamp_t, Object*> const& p = (*this->rev_.begin());
-	return p.first;
-}
-
-timestamp_t Slot::lastGen() const noexcept
-{
-	if(this->rev_.size() <= 0){
-		return 0;
-	}
-	std::pair<timestamp_t, Object*> const& p = *(this->rev_.end()-1);
-	return p.first;
-}
-
 Object* Slot::store(const Handler<Heap>& heap, Object* obj)
 {
 	this->discardFuture();
 	unsigned int now = heap->clock()->now();
-	if(lastGen() < now){
+	if(this->index_ < 0 || ((std::pair<timestamp_t, Object*> const&)this->rev_[this->index_]).first < now){
 		this->rev_.push_back( std::pair<timestamp_t, Object*>(now, obj) );
 		this->index_ = this->rev_.size()-1;
 	}else{
