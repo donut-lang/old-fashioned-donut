@@ -52,34 +52,41 @@ void Slot::seek( const Handler<Heap>& heap, timestamp_t timestamp )
 
 void Slot::discardHistory()
 {
+	if(this->index_ < 0){
+		return;
+	}
 	std::vector<std::pair<timestamp_t, Object*> >::iterator end = this->rev_.begin()+index_;
 	this->rev_.erase(this->rev_.begin(), end);
+	this->index_ = this->rev_.size()-1;
 }
 
 void Slot::discardFuture()
 {
+	if(this->index_ < 0){
+		return;
+	}
 	this->rev_.erase(this->rev_.begin() + this->index_, this->rev_.end());
 }
 
 Object* Slot::load() const
 {
 	if(this->index_ < 0){
-
+		throw DonutException(__FILE__, __LINE__, "[BUG] No objects.");
 	}
 	return this->rev_[this->index_].second;
 }
 
 timestamp_t Slot::firstGen() const noexcept
 {
-	if(this->index_ < 0){
+	if(this->rev_.size() <= 0){
 		return 0;
 	}
-	return this->rev_[this->index_].first;
+	return this->rev_.at(0).first;
 }
 
 timestamp_t Slot::lastGen() const noexcept
 {
-	if(this->index_ < 0){
+	if(this->rev_.size() <= 0){
 		return 0;
 	}
 	return (this->rev_.end()-1)->first;
@@ -101,7 +108,7 @@ Object* Slot::store(const Handler<Heap>& heap, Object* obj)
 
 bool Slot::have() const
 {
-	return this->index_ > 0;
+	return this->index_ >= 0;
 }
 
 }}

@@ -77,7 +77,6 @@ public:
 	Handler<DonutObject> global() { return this->globalObject_; }
 private:
 	void registerObject( Handler<HeapObject> obj );
-
 	int nextWalkColor();
 	void seek(timestamp_t time);
 public:

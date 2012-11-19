@@ -26,6 +26,7 @@
 	Handler<Source> source( new Source() );\
 	Handler<Clock> clock( new Clock() );\
 	Handler<Heap> heap(new Heap(log_trace, clock));\
+	heap->bootstrap();\
 	Machine machine(log_trace, source, heap);
 
 #define EXECUTE_SRC(src) INIT_DONUT\
