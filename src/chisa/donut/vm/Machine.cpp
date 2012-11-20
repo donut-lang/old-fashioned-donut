@@ -72,7 +72,7 @@ pc_t& Machine::pc()
 	return chain.pc_;
 }
 
-bool Machine::nextPC( Instruction& inst )
+bool Machine::fetchPC( Instruction& inst )
 {
 	Context& ctx =  this->contextRevs_.back();
 	Callchain& chain = ctx.callStack_.back();
@@ -146,7 +146,7 @@ Handler<Object> Machine::run()
 	bool running = true;
 	Instruction inst;
 	while( running ){
-		if(!this->nextPC( inst )){
+		if(!this->fetchPC( inst )){
 			running &= this->returnClosure();
 			continue;
 		}
