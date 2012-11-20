@@ -104,10 +104,10 @@ def build(bld):
 		bld.fatal('call "waf build_debug" or "waf build_release", and try "waf --help"')
 	srcdir=repr(bld.path)
 	bld(
-		features = 'cxx cprogram',
-		source = DONUT_SRC,
-		target = 'donut',
-		use=['PPROF','PTHREAD','BOOST','ICU','ANTLR'])
+			features = 'cxx cprogram',
+			source = DONUT_SRC,
+			target = 'donut',
+			use=['PPROF','PTHREAD','BOOST','ICU','ANTLR'])
 	bld(
 			features = 'cxx cprogram',
 			source = MAIN_SRC,

@@ -142,7 +142,7 @@ int main(int argc, char* argv[]){
 		Handler<ConstPool> constPool( new ConstPool(heap, code) );
 		heap->bootstrap();
 		unsigned int idx = Parser::fromString(source, "<CIN>", 0)->parseProgram(code);
-		Machine machine(log, code, heap, constPool);
+		Machine machine(log, clock, code, heap, constPool);
 
 		Handler<Object> obj = machine.start( idx );
 

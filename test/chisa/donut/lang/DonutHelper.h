@@ -30,7 +30,7 @@
 	Handler<Heap> heap(new Heap(log_trace, clock));\
 	Handler<ConstPool> constPool(new ConstPool(heap, source));\
 	heap->bootstrap();\
-	Machine machine(log_trace, source, heap, constPool);
+	Machine machine(log_trace, clock, source, heap, constPool);
 
 #define EXECUTE_SRC(src) INIT_DONUT\
 	unsigned int idx = Parser::fromString(src, "<MEM>", 0)->parseProgram(source);\
