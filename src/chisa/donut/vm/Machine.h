@@ -39,22 +39,36 @@ public:
 	}
 };
 
-class Machine : public HandlerBody<Machine> {
-	DEFINE_MEMBER_REF(private, logging::Logger, log);
-private:
-	Handler<Source> const src_;
-	Handler<Heap> const heap_;
-	Handler<ConstPool> const constPool_;
-	pc_t pc_;
-	Handler<Object> self_;
-	Handler<DonutClosureObject> closure_;
-	Handler<DonutObject> scope_;
-	std::vector<Instruction> const* asmlist_;
+struct Context {
+	unsigned int time_;
 	std::vector<Handler<Object> > stack_;
 	std::vector<Handler<Object> > local_;
 	std::vector<Callchain> callStack_;
+	Context(const Handler<Clock>& clk);
+	Context() = delete;
+	~Context() noexcept = default;
+};
+
+class Machine : public HandlerBody<Machine> {
+	DEFINE_MEMBER_REF(private, logging::Logger, log);
+private: //何があっても不変なもの。
+	const Handler<Clock>& clock_;
+	Handler<Source> const src_;
+	Handler<Heap> const heap_;
+	Handler<ConstPool> const constPool_;
+private: //時とともに変わっていくもの
+	std::vector<Context> contextRevs_;
+private: //それへのアクセス手段の提供。
+	Handler<Object> const& self();
+	Handler<DonutObject> const& scope();
+	Handler<DonutClosureObject> const& closure();
+	std::vector<Handler<Object> >& local();
+	std::vector<Handler<Object> >& stack();
+	std::vector<Callchain>& callStack();
+	pc_t& pc();
+	bool nextPC( Instruction& inst );
 public:
-	Machine(logging::Logger& log, const Handler<Source>& src, const Handler<Heap>& heap, const Handler<ConstPool>& constPool);
+	Machine(logging::Logger& log, const Handler<Clock>& clock, const Handler<Source>& src, const Handler<Heap>& heap, const Handler<ConstPool>& constPool);
 	virtual ~Machine() noexcept = default;
 	bool onFree() noexcept { return false; };
 public:
