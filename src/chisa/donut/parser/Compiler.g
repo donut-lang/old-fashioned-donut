@@ -98,6 +98,8 @@ unary_operation returns [ std::string sym ]
 expr [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	: lt=literal[$code] { $asmlist.swap($lt.asmlist); }
 	| app=apply[$code] { $asmlist.swap($app.asmlist); }
+	| lp=loop[$code] { $asmlist.swap($lp.asmlist); }
+	| br=branch[$code] { $asmlist.swap($br.asmlist); }
 	| idx=index[$code] { $asmlist.swap($idx.asmlist); }
 	| ^(POST_OP postop=operation ^(DOT SCOPE IDENT) {
 		//設定先を取得
@@ -313,7 +315,17 @@ apply [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist 
 		$asmlist.insert($asmlist.end(), $ex.asmlist.begin(), $ex.asmlist.end());
 		$asmlist.push_back(Inst::Apply | $ex.count);
 	}
-	| ^(IF ifcond=expr[$code] ift=block[$code] iff=block[$code])
+	| ^(APPLY func=closure[$code] ex=arglist[$code])
+	{
+		$asmlist.push_back(Inst::PushSelf);
+		$asmlist.insert($asmlist.end(), $func.asmlist.begin(), $func.asmlist.end());
+		$asmlist.insert($asmlist.end(), $ex.asmlist.begin(), $ex.asmlist.end());
+		$asmlist.push_back(Inst::Apply | $ex.count);
+	}
+	;
+
+branch [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
+	: ^(IF ifcond=expr[$code] ift=block[$code] iff=block[$code])
 	{
 		$asmlist.insert($asmlist.end(), $ifcond.asmlist.begin(), $ifcond.asmlist.end());
 		$asmlist.push_back(Inst::BranchFalse | $ift.asmlist.size()+1);
@@ -321,7 +333,10 @@ apply [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist 
 		$asmlist.push_back(Inst::Branch | $iff.asmlist.size());
 		$asmlist.insert($asmlist.end(), $iff.asmlist.begin(), $iff.asmlist.end());
 	}
-	| ^(FOR forstart=block[$code] forcond=block[$code] fornext=block[$code] forblock=block[$code])
+	;
+
+loop [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
+	: ^(FOR forstart=block[$code] forcond=block[$code] fornext=block[$code] forblock=block[$code])
 	{
 		$asmlist.insert($asmlist.end(), $forstart.asmlist.begin(), $forstart.asmlist.end());
 		$asmlist.insert($asmlist.end(), $forcond.asmlist.begin(), $forcond.asmlist.end());
@@ -386,6 +401,7 @@ literal [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlis
 	| array[$code] { $asmlist.swap($array.asmlist); }
 	| object[$code] { $asmlist.swap($object.asmlist); }
 	| closure[$code] { $asmlist.swap($closure.asmlist); }
+	| SELF { $asmlist.push_back(Inst::PushSelf); }
 	;
 
 object [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]

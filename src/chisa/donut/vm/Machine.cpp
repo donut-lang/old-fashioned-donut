@@ -323,6 +323,10 @@ Handler<Object> Machine::run()
 			}
 			break;
 		}
+		case Inst::PushSelf: {
+			this->stack().push_back( this->self() );
+			break;
+		}
 		default:
 			throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Unknwon opcode: closure<%s>:%08x", closure()->toString(heap_).c_str(), this->pc()-1);
 		}
