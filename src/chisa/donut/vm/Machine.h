@@ -66,13 +66,15 @@ private: //それへのアクセス手段の提供。
 	std::vector<Handler<Object> >& stack();
 	std::vector<Callchain>& callStack();
 	pc_t& pc();
-	bool nextPC( Instruction& inst );
+	bool fetchPC( Instruction& inst );
 public:
 	Machine(logging::Logger& log, const Handler<Clock>& clock, const Handler<Source>& src, const Handler<Heap>& heap, const Handler<ConstPool>& constPool);
 	virtual ~Machine() noexcept = default;
 	bool onFree() noexcept { return false; };
 public:
 	Handler<Object> start( const std::size_t closureIndex );
+public:
+	void seek( timestamp_t time );
 private:
 	void enterClosure(const Handler<Object>& self, const Handler<DonutClosureObject>& clos, const Handler<Object>& args);
 	bool returnClosure();
