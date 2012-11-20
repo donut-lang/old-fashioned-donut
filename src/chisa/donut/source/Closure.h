@@ -36,8 +36,8 @@ public:
 	bool onFree() noexcept { return false; };
 public:
 	unsigned int code() const noexcept { return this->code_; };
-	std::vector<std::string> const& arglist() const noexcept { return this->arglist_; };
-	std::vector<donut::Instruction> const& instlist() const noexcept { return this->instlist_; };
+	inline std::vector<std::string> const& arglist() const noexcept { return this->arglist_; };
+	inline std::vector<donut::Instruction> const& instlist() const noexcept { return this->instlist_; };
 };
 
 }}
