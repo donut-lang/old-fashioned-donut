@@ -67,6 +67,9 @@ private: //それへのアクセス手段の提供。
 	std::vector<Callchain>& callStack();
 	pc_t& pc();
 	bool fetchPC( Instruction& inst );
+private:
+	void discardFuture();
+	void discardHistory();
 public:
 	Machine(logging::Logger& log, const Handler<Clock>& clock, const Handler<Source>& src, const Handler<Heap>& heap, const Handler<ConstPool>& constPool);
 	virtual ~Machine() noexcept = default;
@@ -78,7 +81,6 @@ public:
 private:
 	void enterClosure(const Handler<Object>& self, const Handler<DonutClosureObject>& clos, const Handler<Object>& args);
 	bool returnClosure();
-	Handler<DonutClosureObject> createClosure(const Handler<Closure>& closureCode);
 private:
 	Handler<Object> run();
 };

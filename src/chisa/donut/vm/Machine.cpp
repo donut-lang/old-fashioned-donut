@@ -77,10 +77,10 @@ bool Machine::fetchPC( Instruction& inst )
 	Context& ctx =  this->contextRevs_.back();
 	Callchain& chain = ctx.callStack_.back();
 	std::vector<donut::Instruction> const& instList = chain.closure_->closureCode()->instlist();
-	if( chain.pc_ > instList.size() ){
+	if( chain.pc_ >= instList.size() ){
 		return false;
 	}
-	inst = instList[chain.pc_++];
+	inst = instList.at(chain.pc_++);
 	return true;
 }
 
@@ -104,42 +104,46 @@ std::vector<Handler<Object> >& Machine::stack()
 
 Handler<Object> Machine::start( const std::size_t closureIndex )
 {
-	this->enterClosure(heap_->createNull(), createClosure( src_->getClosure( closureIndex ) ), heap_->createNull());
-	return this->run();
-}
-
-Handler<DonutClosureObject> Machine::createClosure(const Handler<Closure>& closureCode)
-{
-	if( this->scope() ){
-		return heap_->createDonutClosureObject(closureCode, this->scope());
-	}else{
-		return heap_->createDonutClosureObject(closureCode, heap_->global());
+	timestamp_t const time = clock_->now();
+	int idx = -1;
+	for(int i=this->contextRevs_.size()-1; i>=0;--i){
+		Context& c = this->contextRevs_[i];
+		if(time >= c.time_){
+			idx = i;
+			break;
+		}
 	}
+	if(idx >= 0){
+		this->contextRevs_.erase( this->contextRevs_.begin()+idx+1, this->contextRevs_.end() );
+		//TODO: ヒープのdiscard
+	}else{
+		this->contextRevs_.push_back( Context(this->clock_) );
+	}
+
+	Handler<DonutClosureObject> entryPoint( heap_->createDonutClosureObject(src_->getClosure( closureIndex ), heap_->global()) );
+	this->enterClosure(heap_->createNull(), entryPoint, heap_->createNull());
+	return this->run();
 }
 
 void Machine::enterClosure(const Handler<Object>& self, const Handler<DonutClosureObject>& clos, const Handler<Object>& args)
 {
 	Handler<DonutObject> scope = heap_->createEmptyDonutObject();
 	scope->store(heap_, "__scope__", clos);
-	pc_t pc = 0;
 	{
 		Handler<Closure> c = clos->closureCode();
 		const std::size_t max = c->arglist().size();
 		for(std::size_t i=0;i<max;++i){
 			const std::string arg = c->arglist().at(i);
-			this->scope()->store( heap_, arg, args->load(heap_, i) );
+			scope->store( heap_, arg, args->load(heap_, i) );
 		}
 	}
-	this->callStack().push_back( Callchain(pc, self, clos, scope) );
+	this->callStack().push_back( Callchain(0, self, clos, scope) );
 }
 
 bool Machine::returnClosure()
 {
-	if(this->callStack().empty()){
-		return false;
-	}
 	this->callStack().pop_back();
-	return true;
+	return !this->callStack().empty();
 }
 Handler<Object> Machine::run()
 {
@@ -170,7 +174,7 @@ Handler<Object> Machine::run()
 				break;
 			}
 			case Inst::ConstClosure: {
-				this->stack().push_back( createClosure( this->src_->getClosure(constIndex) ) );
+				this->stack().push_back( this->heap_->createDonutClosureObject(this->src_->getClosure(constIndex), this->scope()) );
 				break;
 			}
 			case Inst::ConstInt: {
@@ -182,7 +186,7 @@ Handler<Object> Machine::run()
 				break;
 			}
 			case Inst::ConstNull: {
-				this->stack().push_back( heap_->createNull() );
+				this->stack().push_back( this->heap_->createNull() );
 				break;
 			}
 			default:
