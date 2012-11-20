@@ -125,6 +125,7 @@ postfix
 primary
 	: literal
 	| array
+	| SELF
 	| name -> ^(DOT SCOPE name)
 	| '(' expr ')' -> expr
 	| object
@@ -162,6 +163,8 @@ numeric_literal
 string_literal : STRING_SINGLE | STRING_DOUBLE;
 
 //---------------------------------------------------------------------------------------------------------------------
+
+SELF: 'self';
 
 IDENT:
 	LETTER (LETTER | DIGIT)*;
