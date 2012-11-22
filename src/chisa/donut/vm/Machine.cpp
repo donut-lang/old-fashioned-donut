@@ -333,6 +333,9 @@ Handler<Object> Machine::run()
 	}
 	Handler<Object> result(this->stack().back());
 	this->stack().pop_back();
+	if(!this->stack().empty()){
+		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Execution ended, but stack id not empty:%d", this->stack().size());
+	}
 	return result;
 }
 
