@@ -25,9 +25,7 @@
 #include <sstream>
 #include "../../chisa/logging/Logger.h"
 #include "../../chisa/donut/Exception.h"
-#include "../../chisa/donut/parser/Parser.h"
-#include "../../chisa/donut/vm/Machine.h"
-#include "../../chisa/donut/source/Source.h"
+#include "../../chisa/donut/Donut.h"
 
 namespace chisa{
 namespace donut {
@@ -135,16 +133,12 @@ int main(int argc, char* argv[]){
 	std::cout << source << std::endl;
 
 	{
-		Handler<Clock> clock(new Clock);
-		Handler<Heap> heap(new Heap(log, clock));
-		heap->bootstrap();
+		Donut donut(log);
+		Handler<Machine> machine = donut.queryMachine();
+		Handler<Source> src = donut.parse( source, "<CIN>" );
+		Handler<Object> obj = machine->start( src );
 
-		Handler<Source> code = Parser::fromString(source, "<CIN>", 0)->parseProgram();
-		Machine machine(log, clock, heap);
-
-		Handler<Object> obj = machine.start( code );
-
-		std::cout << obj->toString(heap) << std::endl;
+		std::cout << obj->toString( donut.heap() ) << std::endl;
 	}
 
 	return 0;

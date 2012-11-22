@@ -24,8 +24,14 @@
 #include "../Handler.h"
 #include "Clock.h"
 
+namespace tinyxml2 {
+class XMLElement;
+class XMLDocument;
+}
+
 namespace chisa {
 namespace donut {
+class Provider;
 
 class Donut : public HandlerBody<Donut> {
 	inline bool onFree() noexcept { return false; };
@@ -39,10 +45,20 @@ public:
 	Donut(logging::Logger& log);
 	virtual ~Donut() noexcept = default;
 public:
+	void onSeek( timestamp_t const& time );
+public:
 	Handler<Machine> queryMachine( const std::string& name = "" );
 	void registerGlobalObject( const std::string& name, const Handler<Object>& obj );
+	void registerProvider( const Handler<Provider>& provider );
 	bool existsGlobalObject( const std::string& name );
 	Handler<Object> readGlobalObject( const std::string& name );
+public:
+	Handler<Heap> heap() const noexcept { return this->heap_; };
+	Handler<Source> parse(const std::string& src, const std::string& filename="<DEFAULT>", const int& lineno=0);
+public:
+	void bootstrap();
+	void restore( tinyxml2::XMLElement* from );
+	tinyxml2::XMLElement* save( tinyxml2::XMLDocument* doc );
 };
 
 }}

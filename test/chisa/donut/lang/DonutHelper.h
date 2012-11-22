@@ -18,32 +18,28 @@
 
 #pragma once
 #include "../../../TestCommon.h"
-#include "../../../../src/chisa/donut/parser/Parser.h"
-#include "../../../../src/chisa/donut/object/Heap.h"
-#include "../../../../src/chisa/donut/source/Source.h"
-#include "../../../../src/chisa/donut/Clock.h"
-#include "../../../../src/chisa/donut/vm/Machine.h"
+#include "../../../../src/chisa/donut/Donut.h"
 
 #define INIT_DONUT\
-	Handler<Clock> clock( new Clock() );\
-	Handler<Heap> heap(new Heap(log_trace, clock));\
-	heap->bootstrap();\
-	Machine machine(log_trace, clock, heap);
+	Donut donut(log_trace);\
+	donut.bootstrap();\
+	Handler<Heap> heap( donut.heap() );\
+	Handler<Machine> machine = donut.queryMachine();
 
 #define EXECUTE_SRC(src) INIT_DONUT\
-	Handler<Source> source = Parser::fromString(src, "<MEM>", 0)->parseProgram();\
-	Handler<Object> result = machine.start(source);
+	Handler<Source> source = donut.parse(src, "<MEM>", 0);\
+	Handler<Object> result = machine->start( source );
 
 #define SOURCE_TEST_THROW(src) INIT_DONUT\
 {\
-	Handler<Source> source = Parser::fromString(src, "<MEM>", 0)->parseProgram();\
-	ASSERT_ANY_THROW( machine.start( source ) );\
+	Handler<Source> source = donut.parse(src, "<MEM>", 0);\
+	ASSERT_ANY_THROW( machine->start( source ) );\
 }
 
 #define SOURCE_TEST_NO_THROW(src) INIT_DONUT\
 {\
-	Handler<Source> source = Parser::fromString(src, "<MEM>", 0)->parseProgram();\
-	ASSERT_NO_THROW( machine.start( source ) );\
+	Handler<Source> source = donut.parse(src, "<MEM>", 0);\
+	ASSERT_NO_THROW( machine->start( source ) );\
 }
 
 #define SOURCE_TEST_TRUE(expr)\
