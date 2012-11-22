@@ -56,7 +56,7 @@ Handler<DonutObject> const& Machine::scope()
 	return chain.scope_;
 }
 
-Handler<DonutClosureObject> const& Machine::closure()
+Handler<DonutClosureObject> const& Machine::closureObject()
 {
 	Context& ctx =  this->contextRevs_.back();
 	Callchain& chain = ctx.callStack_.back();
@@ -69,6 +69,14 @@ Handler<Source> const& Machine::src()
 	Callchain& chain = ctx.callStack_.back();
 	Handler<DonutClosureObject> const& clos = chain.closure_;
 	return clos->source();
+}
+
+Handler<Closure> const& Machine::closure()
+{
+	Context& ctx =  this->contextRevs_.back();
+	Callchain& chain = ctx.callStack_.back();
+	Handler<DonutClosureObject> const& clos = chain.closure_;
+	return clos->closureCode();
 }
 
 pc_t& Machine::pc()
@@ -334,7 +342,7 @@ Handler<Object> Machine::run()
 			break;
 		}
 		default:
-			throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Unknwon opcode: closure<%s>:%08x", closure()->toString(heap_).c_str(), this->pc()-1);
+			throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Unknwon opcode: closure<%s>:%08x", closureObject()->toString(heap_).c_str(), this->pc()-1);
 		}
 	}
 	Handler<Object> result(this->stack().back());
