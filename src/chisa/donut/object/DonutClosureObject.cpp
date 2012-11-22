@@ -25,9 +25,10 @@ namespace donut {
 
 const std::string TAG("DonutClosureObject");
 
-DonutClosureObject::DonutClosureObject(const Handler<Heap>& heap, const Handler<Closure>& clos, const Handler<Object>& scope)
+DonutClosureObject::DonutClosureObject(const Handler<Heap>& heap, Handler<Source> const& src, unsigned int const& closureIndex, const Handler<Object>& scope)
 :DonutObject(heap, "chisa::donut::DonutClosureObject")
-,asm_(clos)
+,src_(src)
+,asm_(src->getClosure( closureIndex ))
 {
 	if(scope){
 		this->store(heap, "__scope__", scope);

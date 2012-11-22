@@ -25,26 +25,25 @@
 #include "../../../../src/chisa/donut/vm/Machine.h"
 
 #define INIT_DONUT\
-	Handler<Source> source( new Source() );\
 	Handler<Clock> clock( new Clock() );\
 	Handler<Heap> heap(new Heap(log_trace, clock));\
 	heap->bootstrap();\
-	Machine machine(log_trace, clock, source, heap);
+	Machine machine(log_trace, clock, heap);
 
 #define EXECUTE_SRC(src) INIT_DONUT\
-	unsigned int idx = Parser::fromString(src, "<MEM>", 0)->parseProgram(source);\
-	Handler<Object> result = machine.start(idx);
+	Handler<Source> source = Parser::fromString(src, "<MEM>", 0)->parseProgram();\
+	Handler<Object> result = machine.start(source);
 
 #define SOURCE_TEST_THROW(src) INIT_DONUT\
 {\
-	unsigned int idx = Parser::fromString(src, "<MEM>", 0)->parseProgram(source);\
-	ASSERT_ANY_THROW( machine.start(idx) );\
+	Handler<Source> source = Parser::fromString(src, "<MEM>", 0)->parseProgram();\
+	ASSERT_ANY_THROW( machine.start( source ) );\
 }
 
 #define SOURCE_TEST_NO_THROW(src) INIT_DONUT\
 {\
-	unsigned int idx = Parser::fromString(src, "<MEM>", 0)->parseProgram(source);\
-	ASSERT_NO_THROW( machine.start(idx) );\
+	Handler<Source> source = Parser::fromString(src, "<MEM>", 0)->parseProgram();\
+	ASSERT_NO_THROW( machine.start( source ) );\
 }
 
 #define SOURCE_TEST_TRUE(expr)\

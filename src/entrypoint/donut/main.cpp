@@ -136,13 +136,13 @@ int main(int argc, char* argv[]){
 
 	{
 		Handler<Clock> clock(new Clock);
-		Handler<Source> code(new Source);
 		Handler<Heap> heap(new Heap(log, clock));
 		heap->bootstrap();
-		unsigned int idx = Parser::fromString(source, "<CIN>", 0)->parseProgram(code);
-		Machine machine(log, clock, code, heap);
 
-		Handler<Object> obj = machine.start( idx );
+		Handler<Source> code = Parser::fromString(source, "<CIN>", 0)->parseProgram();
+		Machine machine(log, clock, heap);
+
+		Handler<Object> obj = machine.start( code );
 
 		std::cout << obj->toString(heap) << std::endl;
 	}

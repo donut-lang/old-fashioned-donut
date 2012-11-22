@@ -83,7 +83,7 @@ private:
 public:
 	Handler<DonutObject> createDonutObject();
 	Handler<DonutObject> createEmptyDonutObject();
-	Handler<DonutClosureObject> createDonutClosureObject( const Handler<Closure>& closure, const Handler<Object>& scope );
+	Handler<DonutClosureObject> createDonutClosureObject( const Handler<Source>& src, unsigned int const& closureIndex, const Handler<Object>& scope );
 	Handler<StringObject> createStringObject(const std::string& val);
 	Handler<FloatObject> createFloatObject(const float& val);
 	Handler<Object> createInt(const int& val);
