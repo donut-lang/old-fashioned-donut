@@ -58,8 +58,9 @@ private: //時とともに変わっていくもの
 private: //それへのアクセス手段の提供。
 	Handler<Object> const& self();
 	Handler<DonutObject> const& scope();
-	Handler<DonutClosureObject> const& closure();
+	Handler<DonutClosureObject> const& closureObject();
 	Handler<Source> const& src();
+	Handler<Closure> const& closure();
 	std::vector<Handler<Object> >& local();
 	std::vector<Handler<Object> >& stack();
 	std::vector<Callchain>& callStack();
