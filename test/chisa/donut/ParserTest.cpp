@@ -24,27 +24,23 @@ namespace donut {
 
 class DonutParserTest : public ::testing::Test
 {
-protected:
-	Handler<Source> code;
 public:
 	void SetUp(){
-		code = Handler<Source>(new Source());
 	}
 	void TearDown(){
-		code.reset();
 	}
 };
 
 TEST_F(DonutParserTest, BasicTest)
 {
-	ASSERT_NO_THROW( Parser::fromString("test=1;", "<MEM>", 0)->parseProgram(code) );
+	ASSERT_NO_THROW( Parser::fromString("test=1;", "<MEM>", 0)->parseProgram() );
 }
 
 TEST_F(DonutParserTest, BasicCheckTest)
 {
-	unsigned int const idx = Parser::fromString("test=1;", "<MEM>", 0)->parseProgram(code);
+	Handler<Source> code = Parser::fromString("test=1;", "<MEM>", 0)->parseProgram();
 	ASSERT_EQ(1, code->numClosure());
-	Handler<Closure> clos = code->getClosure(idx);
+	Handler<Closure> clos = code->getEntrypoint();
 
 	ASSERT_EQ(0, clos->arglist().size());
 	ASSERT_LE(0, clos->instlist().size());
@@ -52,21 +48,21 @@ TEST_F(DonutParserTest, BasicCheckTest)
 
 TEST_F(DonutParserTest, DotTest)
 {
-	unsigned int const idx = Parser::fromString("func(zux){test.aux=1;};", "<MEM>", 0)->parseProgram(code);
+	Handler<Source> code = Parser::fromString("func(zux){test.aux=1;};", "<MEM>", 0)->parseProgram();
 	ASSERT_EQ(2, code->numClosure());
-	Handler<Closure> clos = code->getClosure(idx);
+	Handler<Closure> clos = code->getEntrypoint();
 
 	ASSERT_EQ(0, clos->arglist().size());
 	ASSERT_LT(0, clos->instlist().size());
 
-	Handler<Closure> another = code->getClosure((idx+1)%2);
+	Handler<Closure> another = code->getClosure((code->getEntrypointID()+1)%2);
 	ASSERT_EQ(1, another->arglist().size());
 	ASSERT_LT(0, another->instlist().size());
 }
 
 TEST_F(DonutParserTest, BinaryOpTest)
 {
-	unsigned int const idx = Parser::fromString(R"delimiter(
+	Handler<Source> code = Parser::fromString(R"delimiter(
 test1=2;
 test2+=1;
 test3-=5;
@@ -79,9 +75,9 @@ test9=test-1;
 test10=test*1;
 test11=test/1;
 test12=test%1;
-			)delimiter", "<MEM>", 0)->parseProgram(code);
+			)delimiter", "<MEM>", 0)->parseProgram();
 	ASSERT_EQ(1, code->numClosure());
-	Handler<Closure> clos = code->getClosure(idx);
+	Handler<Closure> clos = code->getEntrypoint();
 
 	ASSERT_EQ(0, clos->arglist().size());
 	ASSERT_LE(0, clos->instlist().size());
@@ -89,13 +85,13 @@ test12=test%1;
 
 TEST_F(DonutParserTest, ArrayLiteralTest)
 {
-	unsigned int const idx = Parser::fromString(R"delimiter(
+	Handler<Source> code = Parser::fromString(R"delimiter(
 [10,20,30,"test",12.3,];
 [10,20,30,"test",12.3];
 [];
-			)delimiter", "<MEM>", 0)->parseProgram(code);
+			)delimiter", "<MEM>", 0)->parseProgram();
 	ASSERT_EQ(1, code->numClosure());
-	Handler<Closure> clos = code->getClosure(idx);
+	Handler<Closure> clos = code->getEntrypoint();
 
 	ASSERT_EQ(0, clos->arglist().size());
 	ASSERT_LE(0, clos->instlist().size());
@@ -103,13 +99,13 @@ TEST_F(DonutParserTest, ArrayLiteralTest)
 
 TEST_F(DonutParserTest, ObjectLiteralTest)
 {
-	unsigned int const idx = Parser::fromString(R"delimiter(
+	Handler<Source> code = Parser::fromString(R"delimiter(
 {a=>"a1", b=>"b2", c=>"c3",}; //カンマあり
 {a=>"a1", b=>"b2", c=>"c3"}; //カンマなし
 {}; //空
-	)delimiter", "<MEM>", 0)->parseProgram(code);
+	)delimiter", "<MEM>", 0)->parseProgram();
 	ASSERT_EQ(1, code->numClosure());
-	Handler<Closure> clos = code->getClosure(idx);
+	Handler<Closure> clos = code->getEntrypoint();
 
 	ASSERT_EQ(0, clos->arglist().size());
 	ASSERT_LE(0, clos->instlist().size());

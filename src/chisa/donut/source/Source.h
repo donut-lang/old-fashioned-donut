@@ -18,6 +18,7 @@
 
 #pragma once
 #include "../../Handler.h"
+#include "../Exception.h"
 #include "Closure.h"
 #include <vector>
 #include <algorithm>
@@ -44,7 +45,7 @@ public:
 	T get(std::size_t index) const
 	{
 		if(index >= table_.size()){
-			throw logging::Exception(__FILE__, __LINE__, "Unknown const index: %d", index);
+			throw DonutException(__FILE__, __LINE__, "Unknown const index: %d", index);
 		}
 		return table_.at(index);
 	}
@@ -60,6 +61,7 @@ private:
 	ConstTable<float> floatTable_;
 	ConstTable<std::string> stringTable_;
 	ConstTable<Handler<Closure> > closureTable_;
+	int entrypoint_id_;
 public:
 	Source();
 	virtual ~Source() noexcept = default;
@@ -106,6 +108,21 @@ public:
 	inline std::size_t numClosure() const noexcept
 	{
 		return this->closureTable_.size();
+	}
+	inline Handler<Closure> getEntrypoint()
+	{
+		if( this->entrypoint_id_ == -1 ){
+			throw DonutException(__FILE__, __LINE__, "[BUG] Entrypoint ID is not set.");
+		}
+		return this->getClosure( this->entrypoint_id_ );
+	}
+	inline void setEntrypointID( unsigned int id ) noexcept
+	{
+		this->entrypoint_id_ = id;
+	}
+	inline unsigned int getEntrypointID() const noexcept
+	{
+		return this->entrypoint_id_;
 	}
 };
 

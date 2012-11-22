@@ -31,10 +31,13 @@ typedef pANTLR3_COMMON_TOKEN Token;
 #undef __cplusplus
 }
 
-prog [ donut::Source* code] returns [ unsigned int mainClosure ]
-	: closure[$code]
+prog returns [ Handler<donut::Source> code ]
+@init {
+	$code = Handler<donut::Source>( new donut::Source() );
+}
+	: closure[$code.get()]
 	{
-		$mainClosure = $closure.closureNo;
+		$code->setEntrypointID( $closure.closureNo );
 	}
 	;
 
@@ -43,7 +46,6 @@ closure [ donut::Source* code] returns [ std::vector<donut::Instruction> asmlist
 	{
 		Handler<donut::Closure> closure = Handler<donut::Closure>(new donut::Closure($vars.list, $block.asmlist));
 		$closureNo = $code->constCode<Handler<donut::Closure> >(closure);
-		closure->code($closureNo);
 		$asmlist.push_back(Inst::Push | $closureNo);
 	}
 	)

@@ -25,17 +25,14 @@ namespace chisa {
 namespace donut {
 
 class Closure : public HandlerBody<Closure>{
-	unsigned int code_;
 	const std::vector<std::string> arglist_;
 	const std::vector<donut::Instruction> instlist_;
 public:
 	Closure(const std::vector<std::string>& arglist, const std::vector<donut::Instruction>& instlist);
 	virtual ~Closure() noexcept = default;
-	void code(unsigned int code);
 public:
 	bool onFree() noexcept { return false; };
 public:
-	unsigned int code() const noexcept { return this->code_; };
 	inline std::vector<std::string> const& arglist() const noexcept { return this->arglist_; };
 	inline std::vector<donut::Instruction> const& instlist() const noexcept { return this->instlist_; };
 };

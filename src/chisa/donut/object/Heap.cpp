@@ -136,9 +136,9 @@ Handler<FloatObject> Heap::createFloatObject(const float& val)
 	return obj;
 }
 
-Handler<DonutClosureObject> Heap::createDonutClosureObject( const Handler<Closure>& closure, const Handler<Object>& scope )
+Handler<DonutClosureObject> Heap::createDonutClosureObject( const Handler<Source>& src, unsigned int const& closureIndex, const Handler<Object>& scope )
 {
-	Handler<DonutClosureObject> obj(new DonutClosureObject(self(), closure, scope));
+	Handler<DonutClosureObject> obj(new DonutClosureObject(self(), src, closureIndex, scope));
 	this->registerObject(obj);
 
 	return obj;

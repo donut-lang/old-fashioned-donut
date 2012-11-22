@@ -26,8 +26,8 @@ namespace chisa {
 namespace donut {
 
 Source::Source()
+:entrypoint_id_(-1)
 {
-	// TODO Auto-generated constructor stub
 
 }
 

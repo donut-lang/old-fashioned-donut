@@ -22,13 +22,8 @@ namespace chisa {
 namespace donut {
 
 Closure::Closure(const std::vector<std::string>& arglist, const std::vector<donut::Instruction>& instlist)
-:code_(-1), arglist_(arglist), instlist_(instlist)
+:arglist_(arglist), instlist_(instlist)
 {
-}
-
-void Closure::code(unsigned int code)
-{
-	this->code_ = code;
 }
 
 }}

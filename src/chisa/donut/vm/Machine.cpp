@@ -35,10 +35,9 @@ Context::Context(const Handler<Clock>& clk)
 
 }
 
-Machine::Machine(logging::Logger& log, const Handler<Clock>& clock, const Handler<Source>& src, const Handler<Heap>& heap)
+Machine::Machine(logging::Logger& log, const Handler<Clock>& clock, const Handler<Heap>& heap)
 :log_(log)
 ,clock_(clock)
-,src_(src)
 ,heap_(heap)
 {
 }
@@ -62,6 +61,14 @@ Handler<DonutClosureObject> const& Machine::closure()
 	Context& ctx =  this->contextRevs_.back();
 	Callchain& chain = ctx.callStack_.back();
 	return chain.closure_;
+}
+
+Handler<Source> const& Machine::src()
+{
+	Context& ctx =  this->contextRevs_.back();
+	Callchain& chain = ctx.callStack_.back();
+	Handler<DonutClosureObject> const& clos = chain.closure_;
+	return clos->source();
 }
 
 pc_t& Machine::pc()
@@ -101,7 +108,7 @@ std::vector<Handler<Object> >& Machine::stack()
 	return ctx.stack_;
 }
 
-Handler<Object> Machine::start( const std::size_t closureIndex )
+Handler<Object> Machine::start( const Handler<Source>& src )
 {
 	timestamp_t const time = clock_->now();
 	int idx = -1;
@@ -119,7 +126,7 @@ Handler<Object> Machine::start( const std::size_t closureIndex )
 		this->contextRevs_.push_back( Context(this->clock_) );
 	}
 
-	Handler<DonutClosureObject> entryPoint( heap_->createDonutClosureObject(src_->getClosure( closureIndex ), heap_->global()) );
+	Handler<DonutClosureObject> entryPoint( heap_->createDonutClosureObject(src, src->getEntrypointID(), heap_->global()) );
 	this->enterClosure(heap_->createNull(), entryPoint, heap_->createNull());
 	return this->run();
 }
@@ -155,9 +162,9 @@ Handler<Object> Machine::run()
 		}
 		Instruction opcode, constKind;
 		int constIndex;
-		this->src_->disasm(inst, opcode, constKind, constIndex);
+		Source::disasm(inst, opcode, constKind, constIndex);
 		if(this->log().t()){
-			this->log().t(TAG, util::format("$%04x ", this->pc())+this->src_->disasm(inst));
+			this->log().t(TAG, util::format("$%04x ", this->pc())+this->src()->disasm(inst));
 		}
 		switch(opcode){
 		case Inst::Nop:
@@ -165,23 +172,23 @@ Handler<Object> Machine::run()
 		case Inst::Push: {
 			switch(constKind){
 			case Inst::ConstBool: {
-				this->stack().push_back( this->heap_->createBool( this->src_->getBool( constIndex ) ) );
+				this->stack().push_back( this->heap_->createBool( this->src()->getBool( constIndex ) ) );
 				break;
 			}
 			case Inst::ConstFloat: {
-				this->stack().push_back( this->heap_->createFloatObject( this->src_->getFloat( constIndex ) ) );
+				this->stack().push_back( this->heap_->createFloatObject( this->src()->getFloat( constIndex ) ) );
 				break;
 			}
 			case Inst::ConstClosure: {
-				this->stack().push_back( this->heap_->createDonutClosureObject(this->src_->getClosure(constIndex), this->scope()) );
+				this->stack().push_back( this->heap_->createDonutClosureObject(this->src(), constIndex, this->scope()) );
 				break;
 			}
 			case Inst::ConstInt: {
-				this->stack().push_back( this->heap_->createInt( this->src_->getInt( constIndex ) ) );
+				this->stack().push_back( this->heap_->createInt( this->src()->getInt( constIndex ) ) );
 				break;
 			}
 			case Inst::ConstString: {
-				this->stack().push_back( this->heap_->createStringObject( this->src_->getString( constIndex ) ) );
+				this->stack().push_back( this->heap_->createStringObject( this->src()->getString( constIndex ) ) );
 				break;
 			}
 			case Inst::ConstNull: {

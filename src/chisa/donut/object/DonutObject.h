@@ -25,12 +25,14 @@ namespace chisa {
 namespace donut {
 class DonutClosureObject : public DonutObject {
 private:
-	Handler<Closure> asm_;
+	Handler<Source> const src_;
+	Handler<Closure> const asm_;
 public:
-	DonutClosureObject(const Handler<Heap>& heap, const Handler<Closure>& clos, const Handler<Object>& scope);
+	DonutClosureObject(const Handler<Heap>& heap, Handler<Source> const& src, unsigned int const& closureIndex, const Handler<Object>& scope);
 	virtual ~DonutClosureObject() noexcept = default;
 public:
-	Handler<Closure> closureCode() const { return this->asm_; };
+	inline Handler<Source> const& source() const { return this->src_; };
+	inline Handler<Closure> const& closureCode() const { return this->asm_; };
 };
 
 }}

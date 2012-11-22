@@ -156,13 +156,13 @@ public:
 			this->tree = nullptr;
 		}
 	}
-	unsigned int compile(Handler<donut::Source> code){
-		unsigned int no = compiler->prog(compiler, code.get());
+	Handler<donut::Source> compile(){
+		Handler<donut::Source> src = compiler->prog(compiler);
 		if(compiler->pTreeParser->rec->state->error){
 			ANTLR3_EXCEPTION* ex = compiler->pTreeParser->rec->state->exception;
 			throw logging::Exception(__FILE__, __LINE__, "Parser error: %s line: %d pos: %d", ex->message, ex->line, ex->charPositionInLine);
 		}
-		return no;
+		return src;
 	}
 };
 
@@ -203,9 +203,9 @@ std::shared_ptr<Parser> Parser::fromStream(std::istream& stream_, const std::str
 	return parser;
 }
 
-unsigned int Parser::parseProgram(Handler<donut::Source> code)
+Handler<donut::Source> Parser::parseProgram()
 {
-	return compilerImpl->compile(code);
+	return compilerImpl->compile();
 }
 
 }}

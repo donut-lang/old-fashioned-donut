@@ -52,7 +52,6 @@ class Machine : public HandlerBody<Machine> {
 	DEFINE_MEMBER_REF(private, logging::Logger, log);
 private: //何があっても不変なもの。
 	const Handler<Clock>& clock_;
-	Handler<Source> const src_;
 	Handler<Heap> const heap_;
 private: //時とともに変わっていくもの
 	std::vector<Context> contextRevs_;
@@ -60,6 +59,7 @@ private: //それへのアクセス手段の提供。
 	Handler<Object> const& self();
 	Handler<DonutObject> const& scope();
 	Handler<DonutClosureObject> const& closure();
+	Handler<Source> const& src();
 	std::vector<Handler<Object> >& local();
 	std::vector<Handler<Object> >& stack();
 	std::vector<Callchain>& callStack();
@@ -69,11 +69,11 @@ private:
 	void discardFuture();
 	void discardHistory();
 public:
-	Machine(logging::Logger& log, const Handler<Clock>& clock, const Handler<Source>& src, const Handler<Heap>& heap);
+	Machine(logging::Logger& log, const Handler<Clock>& clock, const Handler<Heap>& heap);
 	virtual ~Machine() noexcept = default;
 	bool onFree() noexcept { return false; };
 public:
-	Handler<Object> start( const std::size_t closureIndex );
+	Handler<Object> start( const Handler<Source>& src );
 public:
 	void seek( timestamp_t time );
 private:
