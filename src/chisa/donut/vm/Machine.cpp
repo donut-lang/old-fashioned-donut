@@ -35,12 +35,11 @@ Context::Context(const Handler<Clock>& clk)
 
 }
 
-Machine::Machine(logging::Logger& log, const Handler<Clock>& clock, const Handler<Source>& src, const Handler<Heap>& heap, const Handler<ConstPool>& constPool)
+Machine::Machine(logging::Logger& log, const Handler<Clock>& clock, const Handler<Source>& src, const Handler<Heap>& heap)
 :log_(log)
 ,clock_(clock)
 ,src_(src)
 ,heap_(heap)
-,constPool_(constPool)
 {
 }
 
@@ -170,7 +169,7 @@ Handler<Object> Machine::run()
 				break;
 			}
 			case Inst::ConstFloat: {
-				this->stack().push_back( this->constPool_->getFloat( constIndex ) );
+				this->stack().push_back( this->heap_->createFloatObject( this->src_->getFloat( constIndex ) ) );
 				break;
 			}
 			case Inst::ConstClosure: {
@@ -182,7 +181,7 @@ Handler<Object> Machine::run()
 				break;
 			}
 			case Inst::ConstString: {
-				this->stack().push_back( this->constPool_->getString(constIndex) );
+				this->stack().push_back( this->heap_->createStringObject( this->src_->getString( constIndex ) ) );
 				break;
 			}
 			case Inst::ConstNull: {

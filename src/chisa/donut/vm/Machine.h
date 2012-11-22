@@ -21,7 +21,6 @@
 #include "../object/Object.h"
 #include "../object/Heap.h"
 #include "../source/Source.h"
-#include "../ConstPool.h"
 
 namespace chisa {
 namespace donut {
@@ -55,7 +54,6 @@ private: //何があっても不変なもの。
 	const Handler<Clock>& clock_;
 	Handler<Source> const src_;
 	Handler<Heap> const heap_;
-	Handler<ConstPool> const constPool_;
 private: //時とともに変わっていくもの
 	std::vector<Context> contextRevs_;
 private: //それへのアクセス手段の提供。
@@ -71,7 +69,7 @@ private:
 	void discardFuture();
 	void discardHistory();
 public:
-	Machine(logging::Logger& log, const Handler<Clock>& clock, const Handler<Source>& src, const Handler<Heap>& heap, const Handler<ConstPool>& constPool);
+	Machine(logging::Logger& log, const Handler<Clock>& clock, const Handler<Source>& src, const Handler<Heap>& heap);
 	virtual ~Machine() noexcept = default;
 	bool onFree() noexcept { return false; };
 public:
