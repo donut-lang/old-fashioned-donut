@@ -28,7 +28,6 @@
 #include "../../chisa/donut/parser/Parser.h"
 #include "../../chisa/donut/vm/Machine.h"
 #include "../../chisa/donut/source/Source.h"
-#include "../../chisa/donut/ConstPool.h"
 
 namespace chisa{
 namespace donut {
@@ -139,10 +138,9 @@ int main(int argc, char* argv[]){
 		Handler<Clock> clock(new Clock);
 		Handler<Source> code(new Source);
 		Handler<Heap> heap(new Heap(log, clock));
-		Handler<ConstPool> constPool( new ConstPool(heap, code) );
 		heap->bootstrap();
 		unsigned int idx = Parser::fromString(source, "<CIN>", 0)->parseProgram(code);
-		Machine machine(log, clock, code, heap, constPool);
+		Machine machine(log, clock, code, heap);
 
 		Handler<Object> obj = machine.start( idx );
 
