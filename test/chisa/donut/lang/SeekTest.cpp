@@ -25,11 +25,11 @@ namespace donut {
 TEST(SeekTest, SeekTest)
 {
 	INIT_DONUT
-	Handler<Source> src1 = Parser::fromString("test = 1;", "<MEM>", 0)->parseProgram();
-	Handler<Object> result = machine.start( src1 );
+	Handler<Source> src1 = donut.parse("test = 1;", "<MEM>", 0);
+	Handler<Object> result = machine->start( src1 );
 
-	Handler<Source> src2 = Parser::fromString("test = 2;", "<MEM>", 0)->parseProgram();
-	result = machine.start( src2 );
+	Handler<Source> src2 = donut.parse("test = 2;", "<MEM>", 0);
+	result = machine->start( src2 );
 }
 
 }}

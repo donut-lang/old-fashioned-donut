@@ -17,12 +17,14 @@
  */
 
 #include "Clock.h"
+#include "Donut.h"
 
 namespace chisa {
 namespace donut {
 
-Clock::Clock()
+Clock::Clock( Donut* const donut)
 :now_(1)
+,donut_(donut)
 {
 }
 

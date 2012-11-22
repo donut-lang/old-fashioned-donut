@@ -23,15 +23,21 @@
 namespace chisa {
 namespace donut {
 
+class Donut;
+
 class Clock : public HandlerBody<Clock> {
 	std::vector<unsigned int> clockStack_;
 	unsigned int now_;
+private:
+	HandlerW<Donut> donut_;
 public:
-	Clock();
+	Clock( Donut* const donut );
 	virtual ~Clock() noexcept = default;
 	bool onFree() noexcept { return false; };
 public:
 	unsigned int now() const noexcept { return this->now_; };
+public:
+
 };
 
 }}
