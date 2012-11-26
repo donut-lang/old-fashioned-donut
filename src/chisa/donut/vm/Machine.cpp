@@ -118,19 +118,8 @@ std::vector<Handler<Object> >& Machine::stack()
 
 Handler<Object> Machine::start( const Handler<Source>& src )
 {
-	timestamp_t const time = clock_->now();
-	int idx = -1;
-	for(int i=this->contextRevs_.size()-1; i>=0;--i){
-		Context& c = this->contextRevs_[i];
-		if(time >= c.time_){
-			idx = i;
-			break;
-		}
-	}
-	if(idx >= 0){
-		this->contextRevs_.erase( this->contextRevs_.begin()+idx+1, this->contextRevs_.end() );
-		//TODO: ヒープのdiscard
-	}else{
+	this->clock_->discardFuture();
+	if( this->contextRevs_.empty() ){
 		this->contextRevs_.push_back( Context(this->clock_) );
 	}
 
@@ -354,6 +343,16 @@ Handler<Object> Machine::run()
 }
 void Machine::discardFuture()
 {
+	timestamp_t const time = clock_->now();
+	int idx = -1;
+	for(int i=this->contextRevs_.size()-1; i>=0;--i){
+		Context& c = this->contextRevs_[i];
+		if(time >= c.time_){
+			idx = i;
+			break;
+		}
+	}
+	this->contextRevs_.erase( this->contextRevs_.begin()+idx+1, this->contextRevs_.end() );
 }
 
 void Machine::discardHistory()
