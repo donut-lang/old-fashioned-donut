@@ -44,6 +44,7 @@ struct Context {
 	std::vector<Handler<Object> > local_;
 	std::vector<Callchain> callStack_;
 	Context(const Handler<Clock>& clk);
+	Context(const Handler<Clock>& clk, const Context& other);
 	Context() = delete;
 	~Context() noexcept = default;
 };

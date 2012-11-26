@@ -30,10 +30,22 @@ const static std::string TAG("Machine");
 
 Context::Context(const Handler<Clock>& clk)
 :time_(clk->now())
+,stack_()
 ,local_(32)
+,callStack_()
 {
 
 }
+
+Context::Context(const Handler<Clock>& clk, const Context& other)
+:time_(clk->now())
+,stack_(other.stack_)
+,local_(other.local_)
+,callStack_(other.callStack_)
+{
+
+}
+
 
 Machine::Machine(logging::Logger& log, const Handler<Clock>& clock, const Handler<Heap>& heap)
 :log_(log)
@@ -119,10 +131,12 @@ std::vector<Handler<Object> >& Machine::stack()
 Handler<Object> Machine::start( const Handler<Source>& src )
 {
 	this->clock_->discardFuture();
+	this->clock_->tick();
 	if( this->contextRevs_.empty() ){
-		this->contextRevs_.push_back( Context(this->clock_) );
+		this->contextRevs_.push_back( Context( this->clock_ ) );
+	}else{
+		this->contextRevs_.push_back( Context( this->clock_, this->contextRevs_.back() ) );
 	}
-
 	Handler<DonutClosureObject> entryPoint( heap_->createDonutClosureObject(src, src->getEntrypointID(), heap_->global()) );
 	this->enterClosure(heap_->createNull(), entryPoint, heap_->createNull());
 	return this->run();

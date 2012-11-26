@@ -31,6 +31,11 @@ Clock::Clock( Donut* const donut)
 {
 }
 
+void Clock::tick()
+{
+	++this->now_;
+}
+
 void Clock::discardFuture()
 {
 	Handler<Donut> donut = this->donut_.lock();
