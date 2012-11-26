@@ -176,6 +176,9 @@ void Heap::registerProvider( Handler<Provider> provider )
 
 void Heap::discardFuture()
 {
+	if(this->log().d()){
+		this->log().d(TAG, "Discarding future... now: %d", this->clock_->now());
+	}
 	for( Object* const& o : this->objectPool_){
 		o->discardFuture(self());
 	}
@@ -183,6 +186,9 @@ void Heap::discardFuture()
 
 void Heap::discardHistory()
 {
+	if(this->log().d()){
+		this->log().d(TAG, "Discarding history... now: %d", this->clock_->now());
+	}
 	for( Object* const& o : this->objectPool_){
 		o->discardHistory(self());
 	}
