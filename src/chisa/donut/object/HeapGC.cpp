@@ -53,7 +53,7 @@ void Heap::gc()
 
 	if( log().d() ){
 		float const percent = (origObjectCount-newObjectCount)*100.0f/origObjectCount;
-		this->log().d("TAG", "Garbage collected: %d -> %d, %0.2f%% collected.", origObjectCount, newObjectCount, percent);
+		this->log().d(TAG, "Garbage collected: %d -> %d, %0.2f%% collected.", origObjectCount, newObjectCount, percent);
 	}
 
 	this->objectPoolMarked_.clear();
