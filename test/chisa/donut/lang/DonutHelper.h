@@ -21,24 +21,24 @@
 #include "../../../../src/chisa/donut/Donut.h"
 
 #define INIT_DONUT\
-	Donut donut(log_trace);\
-	donut.bootstrap();\
-	Handler<Heap> heap( donut.heap() );\
-	Handler<Machine> machine = donut.queryMachine();
+	Handler<Donut> donut(new Donut(log_trace));\
+	donut->bootstrap();\
+	Handler<Heap> heap( donut->heap() );\
+	Handler<Machine> machine = donut->queryMachine();
 
 #define EXECUTE_SRC(src) INIT_DONUT\
-	Handler<Source> source = donut.parse(src, "<MEM>", 0);\
+	Handler<Source> source = donut->parse(src, "<MEM>", 0);\
 	Handler<Object> result = machine->start( source );
 
 #define SOURCE_TEST_THROW(src) INIT_DONUT\
 {\
-	Handler<Source> source = donut.parse(src, "<MEM>", 0);\
+	Handler<Source> source = donut->parse(src, "<MEM>", 0);\
 	ASSERT_ANY_THROW( machine->start( source ) );\
 }
 
 #define SOURCE_TEST_NO_THROW(src) INIT_DONUT\
 {\
-	Handler<Source> source = donut.parse(src, "<MEM>", 0);\
+	Handler<Source> source = donut->parse(src, "<MEM>", 0);\
 	ASSERT_NO_THROW( machine->start( source ) );\
 }
 
