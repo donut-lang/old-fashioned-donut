@@ -371,6 +371,18 @@ void Machine::discardFuture()
 
 void Machine::discardHistory()
 {
+	timestamp_t const time = clock_->now();
+	int idx = this->contextRevs_.size();
+	const int max = this->contextRevs_.size();
+	for(int i=0; i<max;++i){
+		Context& c = this->contextRevs_[i];
+		if( c.time_ > time ){
+			idx = i;
+			break;
+		}
+	}
+	this->contextRevs_.erase( this->contextRevs_.begin(), this->contextRevs_.begin()+idx );
 }
+
 }}
 
