@@ -93,6 +93,8 @@ public:
 public:
 	void registerProvider( Handler<Provider> provider );
 	void gc();
+	void discardFuture();
+	void discardHistory();
 };
 
 }}

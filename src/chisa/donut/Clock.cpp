@@ -22,10 +22,33 @@
 namespace chisa {
 namespace donut {
 
+static const std::string TAG("Clock");
+
 Clock::Clock( Donut* const donut)
-:now_(1)
+:log_(donut->log())
+,now_(1)
 ,donut_(donut)
 {
 }
+
+void Clock::discardFuture()
+{
+	Handler<Donut> donut = this->donut_.lock();
+	if(!donut){
+		log().e(TAG, "Tried to discard future, but donut was already dead.");
+		return;
+	}
+	donut->discardFuture();
+}
+void Clock::discardHistory()
+{
+	Handler<Donut> donut = this->donut_.lock();
+	if(!donut){
+		log().e(TAG, "Tried to discard history, but donut was already dead.");
+		return;
+	}
+	donut->discardHistory();
+}
+
 
 }}

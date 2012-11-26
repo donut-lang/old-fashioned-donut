@@ -352,6 +352,12 @@ Handler<Object> Machine::run()
 	}
 	return result;
 }
+void Machine::discardFuture()
+{
+}
 
+void Machine::discardHistory()
+{
+}
 }}
 

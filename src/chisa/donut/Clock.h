@@ -19,6 +19,8 @@
 #pragma once
 #include "../Handler.h"
 #include <vector>
+#include "../util/ClassUtil.h"
+#include "../logging/Logger.h"
 
 namespace chisa {
 namespace donut {
@@ -26,6 +28,8 @@ namespace donut {
 class Donut;
 
 class Clock : public HandlerBody<Clock> {
+	DEFINE_MEMBER_REF(private, logging::Logger, log)
+private:
 	std::vector<unsigned int> clockStack_;
 	unsigned int now_;
 private:
@@ -37,7 +41,9 @@ public:
 public:
 	unsigned int now() const noexcept { return this->now_; };
 public:
-
+	void tick();
+	void discardFuture();
+	void discardHistory();
 };
 
 }}
