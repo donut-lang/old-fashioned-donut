@@ -45,8 +45,8 @@ private:
 	timestamp_t lastGen() const noexcept;
 public:
 	void mark(const Handler<Heap>& heap, int color);
-	void discardHistory();
-	void discardFuture();
+	void discardHistory( const Handler<Heap>& heap );
+	void discardFuture( const Handler<Heap>& heap );
 	void seek( const Handler<Heap>& heap, timestamp_t timestamp );
 	Object* load() const;
 	Object* store( const Handler<Heap>& heap, Object* obj );

@@ -57,26 +57,24 @@ void Slot::seek( const Handler<Heap>& heap, timestamp_t timestamp )
 	}
 }
 
-void Slot::discardHistory()
+void Slot::discardHistory( const Handler<Heap>& heap )
 {
-	if(this->index_ < 0){
+	this->seek( heap, heap->clock()->now() );
+	if(this->index_ < 0 || this->rev_.size() <= 0){
 		return;
 	}
-	if( this->rev_.size() > 0 ) {
-		std::vector<std::pair<timestamp_t, Object*> >::iterator end = this->rev_.begin()+index_;
-		this->rev_.erase(this->rev_.begin(), end);
-		this->index_ = this->rev_.size()-1;
-	}
+	std::vector<std::pair<timestamp_t, Object*> >::iterator end = this->rev_.begin()+index_;
+	this->rev_.erase(this->rev_.begin(), end);
+	this->index_ = this->rev_.size()-1;
 }
 
-void Slot::discardFuture()
+void Slot::discardFuture( const Handler<Heap>& heap )
 {
-	if(this->index_ < 0){
+	this->seek( heap, heap->clock()->now() );
+	if(this->index_ < 0 || this->rev_.size() <= 0){
 		return;
 	}
-	if( this->rev_.size() > 0 ) {
-		this->rev_.erase(this->rev_.begin() + this->index_ + 1, this->rev_.end());
-	}
+	this->rev_.erase(this->rev_.begin() + this->index_ + 1, this->rev_.end());
 }
 
 Object* Slot::load() const
@@ -90,14 +88,15 @@ Object* Slot::load() const
 
 Object* Slot::store(const Handler<Heap>& heap, Object* obj)
 {
-	this->discardFuture();
 	unsigned int now = heap->clock()->now();
-	if(this->index_ < 0 || ((std::pair<timestamp_t, Object*> const&)this->rev_[this->index_]).first < now){
+	if( static_cast<int>(this->rev_.size())-1 != this->index_ ){
+		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. this slot is not synchronized.");
+	}
+	if(this->index_ < 0 || ((std::pair<timestamp_t, Object*> const&)this->rev_.back()).first < now){
 		this->rev_.push_back( std::pair<timestamp_t, Object*>(now, obj) );
 		this->index_ = this->rev_.size()-1;
 	}else{
-		std::vector<std::pair<timestamp_t, Object*> >::iterator last = this->rev_.end()-1;
-		*last = std::pair<timestamp_t, Object*>(now, obj);
+		this->rev_.back() = std::pair<timestamp_t, Object*>(now, obj);
 	}
 	return obj;
 }
