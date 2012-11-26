@@ -142,6 +142,15 @@ Handler<Object> Machine::start( const Handler<Source>& src )
 	return this->run();
 }
 
+Handler<Object> Machine::startContinue(const Handler<Object>& obj)
+{
+	this->clock_->discardFuture();
+	this->clock_->tick();
+	this->contextRevs_.push_back( Context( this->clock_, this->contextRevs_.back() ) );
+	this->stack().push_back(obj);
+	return this->run();
+}
+
 void Machine::enterClosure(const Handler<Object>& self, const Handler<DonutClosureObject>& clos, const Handler<Object>& args)
 {
 	Handler<DonutObject> scope = heap_->createEmptyDonutObject();

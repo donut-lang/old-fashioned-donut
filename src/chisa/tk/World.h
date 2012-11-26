@@ -23,6 +23,7 @@
 #include "../util/ClassUtil.h"
 #include "../gl/Canvas.h"
 #include "../geom/Area.h"
+#include "../donut/Donut.h"
 
 #include "Task.h"
 #include "Stack.h"

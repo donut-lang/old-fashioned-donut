@@ -43,6 +43,16 @@ Handler<Machine> Donut::queryMachine( const std::string& name )
 	}
 }
 
+void Donut::sendMessage( const std::string& name, const Handler<Object>& obj )
+{
+	auto it = this->machines_.find(name);
+	if(it == this->machines_.end()){
+		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Machine: \"%s\" not found.", name.c_str());
+	}
+	Handler<Machine> machine = it->second;
+	machine->startContinue(obj);
+}
+
 void Donut::bootstrap()
 {
 	this->heap_->bootstrap();

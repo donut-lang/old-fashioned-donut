@@ -48,6 +48,7 @@ public:
 	void onSeek( timestamp_t const& time );
 public:
 	Handler<Machine> queryMachine( const std::string& name = "" );
+	void sendMessage( const std::string& name, const Handler<Object>& obj );
 	void registerGlobalObject( const std::string& name, const Handler<Object>& obj );
 	void registerProvider( const Handler<Provider>& provider );
 	bool existsGlobalObject( const std::string& name );

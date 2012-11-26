@@ -75,12 +75,12 @@ public:
 	void discardHistory();
 public:
 	Handler<Object> start( const Handler<Source>& src );
+	Handler<Object> startContinue( const Handler<Object>& obj );
 public:
 	void seek( timestamp_t time );
 private:
 	void enterClosure(const Handler<Object>& self, const Handler<DonutClosureObject>& clos, const Handler<Object>& args);
 	bool returnClosure();
-private:
 	Handler<Object> run();
 };
 
