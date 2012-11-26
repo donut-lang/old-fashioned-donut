@@ -47,6 +47,15 @@ bool FloatObject::toBoolImpl(const Handler<Heap>& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast Float to Float implicitly. Use toBoolean()");
 }
+void FloatObject::discardHistoryImpl(const Handler<Heap>& heap)
+{
+
+}
+
+void FloatObject::discardFutureImpl(const Handler<Heap>& heap)
+{
+
+}
 
 }}
 

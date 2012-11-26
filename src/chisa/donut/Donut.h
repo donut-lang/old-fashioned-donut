@@ -34,7 +34,6 @@ namespace donut {
 class Provider;
 
 class Donut : public HandlerBody<Donut> {
-	inline bool onFree() noexcept { return false; };
 	DEFINE_MEMBER_REF(public, logging::Logger, log);
 private:
 	Handler<Clock> clock_;
@@ -44,6 +43,7 @@ private:
 public:
 	Donut(logging::Logger& log);
 	virtual ~Donut() noexcept = default;
+	inline bool onFree() noexcept { return false; };
 public:
 	void onSeek( timestamp_t const& time );
 public:
@@ -56,9 +56,13 @@ public:
 	Handler<Heap> heap() const noexcept { return this->heap_; };
 	Handler<Source> parse(const std::string& src, const std::string& filename="<DEFAULT>", const int& lineno=0);
 public:
+	unsigned int nowTime() const noexcept;
+public:
 	void bootstrap();
 	void restore( tinyxml2::XMLElement* from );
 	tinyxml2::XMLElement* save( tinyxml2::XMLDocument* doc );
+	void discardFuture();
+	void discardHistory();
 };
 
 }}

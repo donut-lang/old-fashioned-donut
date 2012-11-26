@@ -66,13 +66,12 @@ private: //それへのアクセス手段の提供。
 	std::vector<Callchain>& callStack();
 	pc_t& pc();
 	bool fetchPC( Instruction& inst );
-private:
-	void discardFuture();
-	void discardHistory();
 public:
 	Machine(logging::Logger& log, const Handler<Clock>& clock, const Handler<Heap>& heap);
 	virtual ~Machine() noexcept = default;
 	bool onFree() noexcept { return false; };
+	void discardFuture();
+	void discardHistory();
 public:
 	Handler<Object> start( const Handler<Source>& src );
 public:

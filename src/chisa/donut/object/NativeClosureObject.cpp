@@ -70,6 +70,15 @@ void NativeClosureObject::seekImpl(const Handler<Heap>& heap, timestamp_t time)
 {
 
 }
+void NativeClosureObject::discardHistoryImpl(const Handler<Heap>& heap)
+{
+
+}
+
+void NativeClosureObject::discardFutureImpl(const Handler<Heap>& heap)
+{
+
+}
 
 }}
 

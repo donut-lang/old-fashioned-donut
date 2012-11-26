@@ -22,4 +22,5 @@
 #include "../../../src/chisa/donut/parser/Parser.h"
 #include "../../../src/chisa/donut/object/Slot.h"
 #include "../../../src/chisa/donut/object/Heap.h"
+#include "../../../src/chisa/donut/Donut.h"
 

@@ -53,9 +53,28 @@ void Donut::onSeek( timestamp_t const& time )
 
 }
 
+unsigned int Donut::nowTime() const noexcept
+{
+	return this->clock_->now();
+}
+
 Handler<Source> Donut::parse(const std::string& src, const std::string& filename, const int& lineno)
 {
 	return Parser::fromString(src, filename, lineno)->parseProgram();
+}
+void Donut::discardFuture()
+{
+	this->heap_->discardFuture();
+	for( auto m : this->machines_ ){
+		m.second->discardFuture();
+	}
+}
+void Donut::discardHistory()
+{
+	this->heap_->discardHistory();
+	for( auto m : this->machines_ ){
+		m.second->discardHistory();
+	}
 }
 
 }}

@@ -25,12 +25,10 @@ namespace donut {
 class DonutSlotTest : public ::testing::Test
 {
 protected:
-	Handler<Clock> clock;
-	Handler<Heap> heap;
+	Handler<Donut> donut;
 public:
 	void SetUp(){
-		clock = Handler<Clock>(new Clock(nullptr));
-		heap = Handler<Heap>(new Heap(log_trace, clock));
+		donut = Handler<Donut>(new Donut(log_trace));
 	}
 	void TearDown(){
 	}
@@ -45,6 +43,7 @@ TEST_F(DonutSlotTest, NopTest)
 
 TEST_F(DonutSlotTest, RegTest)
 {
+	Handler<Heap> heap = donut->heap();
 	Handler<Object> obj100 = heap->createInt(100);
 	Slot slot;
 	slot.store(heap, obj100.get());

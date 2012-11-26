@@ -34,6 +34,8 @@ public:
 	virtual int toIntImpl(const Handler<Heap>& heap) const override;
 	virtual float toFloatImpl(const Handler<Heap>& heap) const override;
 	virtual bool toBoolImpl(const Handler<Heap>& heap) const override;
+	virtual void discardHistoryImpl(const Handler<Heap>& heap) override;
+	virtual void discardFutureImpl(const Handler<Heap>& heap) override;
 };
 
 class FloatObject: public NativeObject {
@@ -46,6 +48,8 @@ public:
 	virtual int toIntImpl(const Handler<Heap>& heap) const override;
 	virtual float toFloatImpl(const Handler<Heap>& heap) const override;
 	virtual bool toBoolImpl(const Handler<Heap>& heap) const override;
+	virtual void discardHistoryImpl(const Handler<Heap>& heap) override;
+	virtual void discardFutureImpl(const Handler<Heap>& heap) override;
 };
 
 

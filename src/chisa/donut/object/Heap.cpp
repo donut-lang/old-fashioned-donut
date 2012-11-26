@@ -174,4 +174,19 @@ void Heap::registerProvider( Handler<Provider> provider )
 			);
 }
 
+void Heap::discardFuture()
+{
+	for( Object* const& o : this->objectPool_){
+		o->discardFuture(self());
+	}
+}
+
+void Heap::discardHistory()
+{
+	for( Object* const& o : this->objectPool_){
+		o->discardHistory(self());
+	}
+}
+
+
 }}

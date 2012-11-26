@@ -114,5 +114,18 @@ void DonutObject::seekImpl(const Handler<Heap>& heap, timestamp_t time)
 		it.second.seek(heap, time);
 	}
 }
+void DonutObject::discardFutureImpl(const Handler<Heap>& heap)
+{
+	for(std::pair<const std::string, Slot>& it : this->slots_){
+		it.second.discardFuture();
+	}
+}
+
+void DonutObject::discardHistoryImpl(const Handler<Heap>& heap)
+{
+	for(std::pair<const std::string, Slot>& it : this->slots_){
+		it.second.discardHistory();
+	}
+}
 
 }}
