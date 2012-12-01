@@ -72,10 +72,10 @@ std::string Source::disasm( Instruction inst )
 		repl += "Apply";
 		break;
 	case ConstructArray:
-		repl += "ConstuctArray";
+		repl += "ConstructArray";
 		break;
 	case ConstructObject:
-		repl += "ConstuctObject";
+		repl += "ConstructObject";
 		break;
 	case Branch:
 		repl += "Branch";
@@ -86,12 +86,15 @@ std::string Source::disasm( Instruction inst )
 	case BranchFalse:
 		repl += "BranchFalse";
 		break;
+	case PushSelf:
+		repl += "PushSelf";
+		break;
 	default:
 		repl += "????????";
 		break;
 	}
 
-	while(repl.size() < 22){
+	while(repl.size() < 26){
 		repl += " ";
 	}
 
