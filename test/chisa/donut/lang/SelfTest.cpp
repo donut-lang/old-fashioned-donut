@@ -27,6 +27,12 @@ TEST(SelfTest, BasicTest)
 	SOURCE_TEST_INT(1, "z={x=>0,add=>func(){self.x+=1;}}; z.add(); z.x;");
 }
 
+TEST(SelfTest, SelfAssignTest)
+{
+	SOURCE_TEST_INT(2, "z={x=>0,add=>func(){ self.x = 2;}}; z.add();");
+	SOURCE_TEST_INT(2, "z={x=>0,add=>func(){ self.x = 2;}}; z.add(); z.x;");
+}
+
 TEST(SelfTest, SelfRecusriveTest)
 {
 	SOURCE_TEST_INT(30, "z={x=>0,add=>func(){ self.x+=1; if(self.x < 30){ self.add(); }else{ self.x; };}}; z.add();");
