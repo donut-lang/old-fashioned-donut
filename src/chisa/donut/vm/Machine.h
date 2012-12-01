@@ -76,6 +76,7 @@ public:
 public:
 	Handler<Object> start( const Handler<Source>& src );
 	Handler<Object> startContinue( const Handler<Object>& obj );
+	bool isInterrupted() const noexcept;
 public:
 	void seek( timestamp_t time );
 private:

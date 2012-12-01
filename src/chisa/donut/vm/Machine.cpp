@@ -151,6 +151,15 @@ Handler<Object> Machine::startContinue(const Handler<Object>& obj)
 	return this->run();
 }
 
+bool Machine::isInterrupted() const noexcept
+{
+	if( this->contextRevs_.empty() ) {
+		return false;
+	}
+	Context const& ctx =  this->contextRevs_.back();
+	return !ctx.callStack_.empty();
+}
+
 void Machine::enterClosure(const Handler<Object>& self, const Handler<DonutClosureObject>& clos, const Handler<Object>& args)
 {
 	Handler<DonutObject> scope = heap_->createEmptyDonutObject();

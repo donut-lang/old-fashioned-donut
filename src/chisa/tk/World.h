@@ -23,7 +23,7 @@
 #include "../util/ClassUtil.h"
 #include "../gl/Canvas.h"
 #include "../geom/Area.h"
-#include "../donut/Donut.h"
+#include "../donut/DozenBox.h"
 
 #include "Task.h"
 #include "Stack.h"
@@ -55,6 +55,7 @@ private:
 	const std::weak_ptr<Universe> universe_;
 	DEFINE_MEMBER_CONST(public, std::string, name);
 	TaskHandler taskHandler_;
+	Handler<donut::DozenBox> dozenBox_;
 	Stack<std::shared_ptr<Element> > elementStack_;
 	std::map<std::string, element::WidgetElement*> widgetMap_;
 	DEFINE_MEMBER(private, private, geom::Area, area);
