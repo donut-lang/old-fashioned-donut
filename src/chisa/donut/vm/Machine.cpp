@@ -130,7 +130,6 @@ std::vector<Handler<Object> >& Machine::stack()
 
 Handler<Object> Machine::start( const Handler<Source>& src )
 {
-	this->clock_->discardFuture();
 	this->clock_->tick();
 	if( this->contextRevs_.empty() ){
 		this->contextRevs_.push_back( Context( this->clock_ ) );
@@ -144,7 +143,6 @@ Handler<Object> Machine::start( const Handler<Source>& src )
 
 Handler<Object> Machine::startContinue(const Handler<Object>& obj)
 {
-	this->clock_->discardFuture();
 	this->clock_->tick();
 	this->contextRevs_.push_back( Context( this->clock_, this->contextRevs_.back() ) );
 	this->stack().push_back(obj);

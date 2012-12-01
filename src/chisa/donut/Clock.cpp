@@ -26,6 +26,8 @@ static const std::string TAG("Clock");
 
 Clock::Clock( Donut* const donut)
 :log_(donut->log())
+,last_(1)
+,first_(1)
 ,now_(1)
 ,donut_(donut)
 {
@@ -33,26 +35,39 @@ Clock::Clock( Donut* const donut)
 
 void Clock::tick()
 {
-	++this->now_;
+	if( this->last_ != this->now_ ){
+		this->discardFuture();
+	}
+	this->last_ = ++this->now_;
 }
 
 void Clock::discardFuture()
 {
+	if( this->last_ == this->now_ ){
+		log().w(TAG, "Tried to discard future, but vm state is already latest.");
+		return;
+	}
 	Handler<Donut> donut = this->donut_.lock();
 	if(!donut){
 		log().e(TAG, "Tried to discard future, but donut was already dead.");
 		return;
 	}
 	donut->discardFuture();
+	this->last_ = this->now_;
 }
 void Clock::discardHistory()
 {
+	if( this->first_ == this->now_ ){
+		log().w(TAG, "Tried to discard history, but vm state is already oldest.");
+		return;
+	}
 	Handler<Donut> donut = this->donut_.lock();
 	if(!donut){
 		log().e(TAG, "Tried to discard history, but donut was already dead.");
 		return;
 	}
 	donut->discardHistory();
+	this->first_ = now_;
 }
 
 
