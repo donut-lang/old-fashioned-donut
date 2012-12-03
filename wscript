@@ -92,12 +92,12 @@ MAIN_SRC=\
 		enum('src', [udir('src/entrypoint'), ANTLR_OUT_DIR])+\
 		enum(udir('src/entrypoint/pc/'))
 DONUT_SRC=\
-        ANTLR_OUT_SRC+\
-        TINYXML2_SRC+\
-        enum(udir('src/chisa/donut'), [ANTLR_OUT_DIR])+\
-        enum(udir('src/chisa/logging'))+\
-        enum(udir('src/chisa/util'))+\
-        enum(udir('src/entrypoint/donut'))
+		ANTLR_OUT_SRC+\
+		TINYXML2_SRC+\
+		enum(udir('src/chisa/donut'), [ANTLR_OUT_DIR])+\
+		enum(udir('src/chisa/logging'))+\
+		enum(udir('src/chisa/util'))+\
+		enum(udir('src/entrypoint/donut'))
 
 def build(bld):
 	if not bld.variant:

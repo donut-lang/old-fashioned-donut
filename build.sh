@@ -1,11 +1,10 @@
 #! /bin/sh
 DIRNAME=$(cd $(dirname $0);pwd)
 
+BUILDDIR=$DIRNAME/build
 if [ "$MSYSTEM" = "MINGW32" -o "$OS" = "Windows_NT" ] ; then
-	BUILDDIR=$DIRNAME/Win
 	CONFIGURE_CMD="python waf configure --out $BUILDDIR --boost-includes=/d/software/dev/applib/boost/include --boost-lib=/d/software/dev/applib/boost/lib"
 else
-	BUILDDIR=$DIRNAME/Linux
 	CONFIGURE_CMD="python waf configure --out $BUILDDIR"
 fi
 
