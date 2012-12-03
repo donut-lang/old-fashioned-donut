@@ -21,8 +21,7 @@
 .waf*/
 
 #build dir
-Win*/
-Linux*/
+build/
 waf*/
 
 #antlr
