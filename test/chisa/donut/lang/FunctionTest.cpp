@@ -22,6 +22,11 @@
 namespace chisa {
 namespace donut {
 
+TEST(DonutFunctionTest, ReservedWord)
+{
+	SOURCE_TEST_THROW("func(a,b);");
+}
+
 TEST(DonutFunctionTest, ReturnTest)
 {
 	SOURCE_TEST_INT(3, "z = func(a,b){a+b;};z(1,2);");
