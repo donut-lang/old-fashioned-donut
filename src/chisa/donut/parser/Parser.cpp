@@ -121,10 +121,11 @@ public:
 	pANTLR3_BASE_TREE parseProgram()
 	{
 		pANTLR3_BASE_TREE t = parser->source(parser).tree;
-		if(parser->pParser->rec->state->error)
+
+		if(parser->pParser->rec->state->errorCount > 0)
 		{
 			ANTLR3_EXCEPTION* ex = parser->pParser->rec->state->exception;
-			throw logging::Exception(__FILE__, __LINE__, "Parser error: %s line: %d pos: %d", ex->message, ex->line, ex->charPositionInLine);
+			throw logging::Exception(__FILE__, __LINE__, "Failed to parse.");
 		}
 		return t;
 	}
@@ -158,9 +159,10 @@ public:
 	}
 	Handler<donut::Source> compile(){
 		Handler<donut::Source> src = compiler->prog(compiler);
-		if(compiler->pTreeParser->rec->state->error){
-			ANTLR3_EXCEPTION* ex = compiler->pTreeParser->rec->state->exception;
-			throw logging::Exception(__FILE__, __LINE__, "Parser error: %s line: %d pos: %d", ex->message, ex->line, ex->charPositionInLine);
+		if(compiler->pTreeParser->rec->state->errorCount > 0)
+		{
+			//ANTLR3_EXCEPTION* ex = compiler->pTreeParser->rec->state->exception;
+			throw logging::Exception(__FILE__, __LINE__, "Failed to compile.");
 		}
 		return src;
 	}
@@ -174,6 +176,8 @@ Parser::Parser(ParserImpl* pimpl)
 	}
 	this->parserImpl = pimpl;
 	pANTLR3_BASE_TREE tree = pimpl->parseProgram();
+//	std::string treeStr(createStringFromString(tree->toStringTree(tree)));
+//	std::cout << treeStr << std::endl;
 	this->compilerImpl = new CompilerImpl(pimpl->filename(), tree);
 }
 Parser::~Parser()

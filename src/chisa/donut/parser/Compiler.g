@@ -42,7 +42,7 @@ prog returns [ Handler<donut::Source> code ]
 	;
 
 closure [ donut::Source* code] returns [ std::vector<donut::Instruction> asmlist, unsigned int closureNo ]
-	: ^(FUNC vars[$code] block[$code]
+	: ^(CLOS vars[$code] block[$code]
 	{
 		Handler<donut::Closure> closure = Handler<donut::Closure>(new donut::Closure($vars.list, $block.asmlist));
 		$closureNo = $code->constCode<Handler<donut::Closure> >(closure);
@@ -319,10 +319,10 @@ apply [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist 
 		$asmlist.insert($asmlist.end(), $ex.asmlist.begin(), $ex.asmlist.end());
 		$asmlist.push_back(Inst::Apply | $ex.count);
 	}
-	| ^(APPLY func=closure[$code] ex=arglist[$code])
+	| ^(APPLY closure[$code] ex=arglist[$code])
 	{
 		$asmlist.push_back(Inst::PushSelf);
-		$asmlist.insert($asmlist.end(), $func.asmlist.begin(), $func.asmlist.end());
+		$asmlist.insert($asmlist.end(), $closure.asmlist.begin(), $closure.asmlist.end());
 		$asmlist.insert($asmlist.end(), $ex.asmlist.begin(), $ex.asmlist.end());
 		$asmlist.push_back(Inst::Apply | $ex.count);
 	}

@@ -7,6 +7,7 @@ options {
 
 tokens {
 	ARRAY;
+	CLOS;
 	VARS;
 	ARGS;
 	CONT;
@@ -58,12 +59,12 @@ tokens {
 
 source : program EOF -> program;
 
-program : exprlist -> ^(FUNC VARS exprlist);
+program : exprlist -> ^(CLOS VARS exprlist);
 
 exprlist : expr? ((';')+ expr)* (';')? -> ^(CONT expr*);
 
 expr
-	: FUNC '(' varlist ')' '{' exprlist '}' -> ^(FUNC varlist exprlist)
+	: FUNC '(' varlist ')' '{' exprlist '}' -> ^(CLOS varlist exprlist)
 	| 'if' '(' expr ')' '{' a=exprlist '}' 'else' '{' b=exprlist '}' -> ^(IF expr $a $b)
 	| 'for' '(' fa=expr? ';' fb=expr? ';' fc=expr? ')' '{' fd=exprlist '}' -> ^(FOR ^(CONT $fa?) ^(CONT $fb?) ^(CONT $fc?) $fd)
 	| 'while' '(' fb=expr? ')' '{' fd=exprlist '}' -> ^(FOR ^(CONT) ^(CONT $fb) ^(CONT) $fd)

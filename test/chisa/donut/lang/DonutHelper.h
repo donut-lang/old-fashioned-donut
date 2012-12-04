@@ -27,13 +27,11 @@
 	Handler<Machine> machine = donut->queryMachine();
 
 #define EXECUTE_SRC(src) INIT_DONUT\
-	Handler<Source> source = donut->parse(src, "<MEM>", 0);\
-	Handler<Object> result = machine->start( source );
+	Handler<Object> result = machine->start( donut->parse(src, "<MEM>", 0) );
 
 #define SOURCE_TEST_THROW(src) INIT_DONUT\
 {\
-	Handler<Source> source = donut->parse(src, "<MEM>", 0);\
-	ASSERT_ANY_THROW( machine->start( source ) );\
+	ASSERT_ANY_THROW( machine->start( donut->parse(src, "<MEM>", 0) ) );\
 }
 
 #define SOURCE_TEST_NO_THROW(src) INIT_DONUT\
