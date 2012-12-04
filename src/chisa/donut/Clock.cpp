@@ -56,7 +56,7 @@ void Clock::seek( unsigned int const& time )
 		return;
 	}
 	donut->onSeekNotify();
-	// これだけではまだ未来は削除しない
+	// これだけではまだ未来・過去は削除しない
 }
 
 void Clock::discardFuture()
