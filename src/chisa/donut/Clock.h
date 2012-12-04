@@ -41,11 +41,15 @@ public:
 	virtual ~Clock() noexcept = default;
 	bool onFree() noexcept { return false; };
 public:
-	unsigned int now() const noexcept { return this->now_; };
+	inline unsigned int now() const noexcept { return this->now_; };
 public:
 	void tick();
+	void seek( unsigned int const& time );
 	void discardFuture();
 	void discardHistory();
+public:
+	inline unsigned int lastTime() const noexcept { return this->last_; };
+	inline unsigned int firstTime() const noexcept { return this->first_; };
 };
 
 }}

@@ -365,12 +365,18 @@ Handler<Object> Machine::run()
 	}
 	return result;
 }
+
+void Machine::onSeekNotify()
+{
+
+}
+
 /**
  * 現在の時刻以降のコンテキストを消し去る。
  * これが実際に必要なのは、ヒープを共有する他のマシンがシークされた後に動き出した時。
  *  あくまでクロックからのみ呼ばれる。自分からは呼び出さない。
  */
-void Machine::discardFuture()
+void Machine::onDiscardFutureNotify()
 {
 	timestamp_t const time = clock_->now();
 	int idx = -1;
@@ -388,7 +394,7 @@ void Machine::discardFuture()
  * 現在の時刻以前のコンテキストを消し去ってしまう。
  *  あくまでクロックからのみ呼ばれる。自分からは呼び出さない。
  */
-void Machine::discardHistory()
+void Machine::onDiscardHistoryNotify()
 {
 	timestamp_t const time = clock_->now();
 	int idx = this->contextRevs_.size();

@@ -108,23 +108,23 @@ Handler<Object> DonutObject::loadImpl(const Handler<Heap>& heap, const std::stri
 	}
 }
 
-void DonutObject::seekImpl(const Handler<Heap>& heap, timestamp_t time)
+void DonutObject::onSeekNotifyImpl(const Handler<Heap>& heap)
 {
 	for(std::pair<const std::string, Slot>& it : this->slots_){
-		it.second.seek(heap, time);
+		it.second.onSeekNotify(heap);
 	}
 }
-void DonutObject::discardFutureImpl(const Handler<Heap>& heap)
+void DonutObject::onDiscardFutureNotifyImpl(const Handler<Heap>& heap)
 {
 	for(std::pair<const std::string, Slot>& it : this->slots_){
-		it.second.discardFuture( heap );
+		it.second.onDiscardFutureNotify( heap );
 	}
 }
 
-void DonutObject::discardHistoryImpl(const Handler<Heap>& heap)
+void DonutObject::onDiscardHistoryNotifyImpl(const Handler<Heap>& heap)
 {
 	for(std::pair<const std::string, Slot>& it : this->slots_){
-		it.second.discardHistory( heap );
+		it.second.onDiscardHistoryNotify( heap );
 	}
 }
 

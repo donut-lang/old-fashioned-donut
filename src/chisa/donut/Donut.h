@@ -63,9 +63,9 @@ public:
 	void restore( tinyxml2::XMLElement* from );
 	tinyxml2::XMLElement* save( tinyxml2::XMLDocument* doc );
 public: /* clockから呼ばれます */
-	void seek( timestamp_t const& time );
-	void discardFuture();
-	void discardHistory();
+	void onSeekNotify();
+	void onDiscardFutureNotify();
+	void onDiscardHistoryNotify();
 };
 
 }}

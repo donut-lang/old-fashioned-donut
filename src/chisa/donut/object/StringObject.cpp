@@ -48,12 +48,12 @@ bool StringObject::toBoolImpl(const Handler<Heap>& heap) const
 	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast String to Float implicitly. Use toBoolean()");
 }
 
-void StringObject::discardHistoryImpl(const Handler<Heap>& heap)
+void StringObject::onDiscardHistoryNotifyImpl(const Handler<Heap>& heap)
 {
 
 }
 
-void StringObject::discardFutureImpl(const Handler<Heap>& heap)
+void StringObject::onDiscardFutureNotifyImpl(const Handler<Heap>& heap)
 {
 
 }

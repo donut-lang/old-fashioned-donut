@@ -174,23 +174,33 @@ void Heap::registerProvider( Handler<Provider> provider )
 			);
 }
 
-void Heap::discardFuture()
+void Heap::onSeekNotify()
+{
+	if(this->log().d()){
+		this->log().d(TAG, "Seeking to... %d", this->clock_->now());
+	}
+	for( Object* const& o : this->objectPool_){
+		o->onSeekNotify(self());
+	}
+}
+
+void Heap::onDiscardFutureNotify()
 {
 	if(this->log().d()){
 		this->log().d(TAG, "Discarding future... now: %d", this->clock_->now());
 	}
 	for( Object* const& o : this->objectPool_){
-		o->discardFuture(self());
+		o->onDiscardFutureNotify(self());
 	}
 }
 
-void Heap::discardHistory()
+void Heap::onDiscardHistoryNotify()
 {
 	if(this->log().d()){
 		this->log().d(TAG, "Discarding history... now: %d", this->clock_->now());
 	}
 	for( Object* const& o : this->objectPool_){
-		o->discardHistory(self());
+		o->onDiscardHistoryNotify(self());
 	}
 }
 

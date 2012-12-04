@@ -73,23 +73,26 @@ Handler<Source> Donut::parse(const std::string& src, const std::string& filename
  * from clock
  **********************************************************************************/
 
-void Donut::seek( timestamp_t const& time )
+void Donut::onSeekNotify()
 {
-
-}
-void Donut::discardFuture()
-{
-	this->heap_->discardFuture();
-	for( auto m : this->machines_ ){
-		m.second->discardFuture();
+	for( std::pair<std::string const,Handler<Machine>> const& m : this->machines_ ){
+		m.second->onSeekNotify();
 	}
+	this->heap_->onSeekNotify();
 }
-void Donut::discardHistory()
+void Donut::onDiscardFutureNotify()
 {
-	this->heap_->discardHistory();
-	for( auto m : this->machines_ ){
-		m.second->discardHistory();
+	for( std::pair<std::string const,Handler<Machine>> const& m : this->machines_ ){
+		m.second->onDiscardFutureNotify();
 	}
+	this->heap_->onDiscardFutureNotify();
+}
+void Donut::onDiscardHistoryNotify()
+{
+	for( std::pair<std::string const,Handler<Machine>> const& m : this->machines_ ){
+		m.second->onDiscardHistoryNotify();
+	}
+	this->heap_->onDiscardHistoryNotify();
 }
 
 }}
