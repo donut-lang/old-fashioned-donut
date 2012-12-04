@@ -45,12 +45,13 @@ private:
 	timestamp_t lastGen() const noexcept;
 public:
 	void mark(const Handler<Heap>& heap, int color);
-	void onDiscardHistoryNotify( const Handler<Heap>& heap );
-	void onDiscardFutureNotify( const Handler<Heap>& heap );
-	void onSeekNotify( const Handler<Heap>& heap );
 	Object* load() const;
 	Object* store( const Handler<Heap>& heap, Object* obj );
 	bool have() const;
+public: /* クロックから呼ばれる */
+	void onDiscardHistoryNotify( const Handler<Heap>& heap );
+	void onDiscardFutureNotify( const Handler<Heap>& heap );
+	void onSeekNotify( const Handler<Heap>& heap );
 };
 
 }}
