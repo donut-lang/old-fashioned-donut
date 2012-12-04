@@ -67,9 +67,9 @@ public:
 	inline void incref( bool check ) { if(isObject()) { this->HandlerBody<Object>::incref(check); } }
 	inline void decref() { if(isObject()) { this->HandlerBody<Object>::decref(); } };
 	inline void mark(const Handler<Heap>& heap, int color) { if(isObject()){ this->markImpl(heap, color); } }
-	inline void seek(const Handler<Heap>& heap, timestamp_t time){ if(isObject()){ this->seekImpl(heap, time); } };
-	inline void discardFuture(const Handler<Heap>& heap){ if(isObject()){ this->discardFutureImpl(heap); } };
-	inline void discardHistory(const Handler<Heap>& heap){ if(isObject()){ this->discardHistoryImpl(heap); } };
+	inline void onSeekNotify(const Handler<Heap>& heap){ if(isObject()){ this->onSeekNotifyImpl(heap); } };
+	inline void onDiscardFutureNotify(const Handler<Heap>& heap){ if(isObject()){ this->onDiscardFutureNotifyImpl(heap); } };
+	inline void onDiscardHistoryNotify(const Handler<Heap>& heap){ if(isObject()){ this->onDiscardHistoryNotifyImpl(heap); } };
 protected: /* 実装すべきもの */
 	virtual std::string toStringImpl(const Handler<Heap>& heap) const = 0;
 	virtual std::string providerNameImpl(const Handler<Heap>& heap) const = 0;
@@ -81,9 +81,9 @@ protected: /* 実装すべきもの */
 	virtual Handler<Object> storeImpl(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj) = 0;
 	virtual Handler<Object> loadImpl(const Handler<Heap>& heap, const std::string& name) const = 0;
 	virtual void markImpl(const Handler<Heap>& heap, int color) = 0;
-	virtual void seekImpl(const Handler<Heap>& heap, timestamp_t time) = 0;
-	virtual void discardHistoryImpl(const Handler<Heap>& heap) = 0;
-	virtual void discardFutureImpl(const Handler<Heap>& heap) = 0;
+	virtual void onSeekNotifyImpl(const Handler<Heap>& heap) = 0;
+	virtual void onDiscardHistoryNotifyImpl(const Handler<Heap>& heap) = 0;
+	virtual void onDiscardFutureNotifyImpl(const Handler<Heap>& heap) = 0;
 public:
 	virtual bool onFree() noexcept = 0;
 };
@@ -144,9 +144,9 @@ protected:
 	virtual Handler<Object> storeImpl(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj) override;
 	virtual Handler<Object> loadImpl(const Handler<Heap>& heap, const std::string& name) const override;
 	virtual void markImpl(const Handler<Heap>& heap, int color) override;
-	virtual void seekImpl(const Handler<Heap>& heap, timestamp_t time) override;
-	virtual void discardHistoryImpl(const Handler<Heap>& heap) override;
-	virtual void discardFutureImpl(const Handler<Heap>& heap) override;
+	virtual void onSeekNotifyImpl(const Handler<Heap>& heap) override;
+	virtual void onDiscardHistoryNotifyImpl(const Handler<Heap>& heap) override;
+	virtual void onDiscardFutureNotifyImpl(const Handler<Heap>& heap) override;
 };
 
 }}
@@ -179,7 +179,7 @@ protected:
 	virtual Handler<Object> storeImpl(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj) override;
 	virtual Handler<Object> loadImpl(const Handler<Heap>& heap, const std::string& name) const override;
 	virtual void markImpl(const Handler<Heap>& heap, int color) override;
-	virtual void seekImpl(const Handler<Heap>& heap, timestamp_t time) override;
+	virtual void onSeekNotifyImpl(const Handler<Heap>& heap) override;
 };
 
 }}
@@ -209,9 +209,9 @@ protected:
 	virtual Handler<Object> storeImpl(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj) override;
 	virtual Handler<Object> loadImpl(const Handler<Heap>& heap, const std::string& name) const override;
 	virtual void markImpl(const Handler<Heap>& heap, int color) override;
-	virtual void seekImpl(const Handler<Heap>& heap, timestamp_t time) override;
-	virtual void discardHistoryImpl(const Handler<Heap>& heap) override;
-	virtual void discardFutureImpl(const Handler<Heap>& heap) override;
+	virtual void onSeekNotifyImpl(const Handler<Heap>& heap) override;
+	virtual void onDiscardHistoryNotifyImpl(const Handler<Heap>& heap) override;
+	virtual void onDiscardFutureNotifyImpl(const Handler<Heap>& heap) override;
 };
 
 }}

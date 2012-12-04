@@ -79,7 +79,6 @@ public:
 private:
 	void registerObject( const Handler<HeapObject>& obj );
 	int nextWalkColor();
-	void seek(timestamp_t time);
 public:
 	Handler<DonutObject> createDonutObject();
 	Handler<DonutObject> createEmptyDonutObject();
@@ -93,8 +92,10 @@ public:
 public:
 	void registerProvider( Handler<Provider> provider );
 	void gc();
-	void discardFuture();
-	void discardHistory();
+public: /* Clockから呼ばれる */
+	void onDiscardFutureNotify();
+	void onDiscardHistoryNotify();
+	void onSeekNotify();
 };
 
 }}

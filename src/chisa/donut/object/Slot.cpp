@@ -45,8 +45,9 @@ Slot::Slot()
 {
 }
 
-void Slot::seek( const Handler<Heap>& heap, timestamp_t timestamp )
+void Slot::onSeekNotify( const Handler<Heap>& heap )
 {
+	unsigned int const timestamp = heap->clock()->now();
 	this->index_ = -1;
 	for(int i=this->rev_.size()-1; i>=0; --i){
 		std::pair<timestamp_t, Object*> const& p = this->rev_.at(i);
@@ -57,9 +58,8 @@ void Slot::seek( const Handler<Heap>& heap, timestamp_t timestamp )
 	}
 }
 
-void Slot::discardHistory( const Handler<Heap>& heap )
+void Slot::onDiscardHistoryNotify( const Handler<Heap>& heap )
 {
-	this->seek( heap, heap->clock()->now() );
 	if(this->index_ < 0 || this->rev_.size() <= 0){
 		return;
 	}
@@ -68,9 +68,8 @@ void Slot::discardHistory( const Handler<Heap>& heap )
 	this->index_ = this->rev_.size()-1;
 }
 
-void Slot::discardFuture( const Handler<Heap>& heap )
+void Slot::onDiscardFutureNotify( const Handler<Heap>& heap )
 {
-	this->seek( heap, heap->clock()->now() );
 	if(this->index_ < 0 || this->rev_.size() <= 0){
 		return;
 	}

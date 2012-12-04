@@ -59,7 +59,4 @@ void Heap::gc()
 	this->objectPoolMarked_.clear();
 }
 
-void Heap::seek(timestamp_t time) {
-}
-
 }}

@@ -69,7 +69,7 @@ Handler<Object> NativeObject::loadImpl(const Handler<Heap>& heap, const std::str
 	return this->prototype_->load(heap, name);
 }
 
-void NativeObject::seekImpl(const Handler<Heap>& heap, timestamp_t time)
+void NativeObject::onSeekNotifyImpl(const Handler<Heap>& heap)
 {
 
 }

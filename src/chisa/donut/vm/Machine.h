@@ -82,9 +82,9 @@ public: /* 外部からの実行指示 */
 	Handler<Object> startContinue( const Handler<Object>& obj );
 	bool isInterrupted() const noexcept;
 public: /* 時間操作 */
-	void seek( timestamp_t time );
-	void discardFuture();
-	void discardHistory();
+	void onSeekNotify();
+	void onDiscardFutureNotify();
+	void onDiscardHistoryNotify();
 private: /* スタック操作 */
 	void pushStack( const Handler<Object>& obj );
 	Handler<Object> popStack();

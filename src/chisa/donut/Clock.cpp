@@ -41,6 +41,24 @@ void Clock::tick()
 	this->last_ = ++this->now_;
 }
 
+void Clock::seek( unsigned int const& time )
+{
+	if( time < this->first_ ) {
+		throw DonutException(__FILE__, __LINE__, "[BUG] Failed to seek. time: %d < %d", time, this->first_);
+	}
+	if( time > this->last_ ) {
+		throw DonutException(__FILE__, __LINE__, "[BUG] Failed to seek. time: %d > %d", time, this->last_);
+	}
+	this->now_ = time;
+	Handler<Donut> donut = this->donut_.lock();
+	if(!donut){
+		log().e(TAG, "Tried to discard future, but donut was already dead.");
+		return;
+	}
+	donut->onSeekNotify();
+	// これだけではまだ未来は削除しない
+}
+
 void Clock::discardFuture()
 {
 	if( this->last_ == this->now_ ){
@@ -52,7 +70,7 @@ void Clock::discardFuture()
 		log().e(TAG, "Tried to discard future, but donut was already dead.");
 		return;
 	}
-	donut->discardFuture();
+	donut->onDiscardFutureNotify();
 	this->last_ = this->now_;
 }
 void Clock::discardHistory()
@@ -66,7 +84,7 @@ void Clock::discardHistory()
 		log().e(TAG, "Tried to discard history, but donut was already dead.");
 		return;
 	}
-	donut->discardHistory();
+	donut->onDiscardHistoryNotify();
 	this->first_ = now_;
 }
 
