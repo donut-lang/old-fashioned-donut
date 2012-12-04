@@ -25,7 +25,6 @@ namespace donut {
 Donut::Donut(logging::Logger& log)
 :log_(log)
 ,clock_(new Clock(this))
-,source_(new Source())
 ,heap_(new Heap(log_, clock_))
 {
 

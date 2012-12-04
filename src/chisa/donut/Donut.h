@@ -37,7 +37,6 @@ class Donut : public HandlerBody<Donut> {
 	DEFINE_MEMBER_REF(public, logging::Logger, log);
 private:
 	Handler<Clock> clock_;
-	Handler<Source> source_;
 	Handler<Heap> heap_;
 	std::map<std::string, Handler<Machine> > machines_;
 public: /* 生成・破棄 */
