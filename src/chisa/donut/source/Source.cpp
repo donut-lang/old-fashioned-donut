@@ -92,6 +92,9 @@ std::string Source::disasm( Instruction inst )
 	case Interrupt:
 		repl += "Interrupt";
 		break;
+	case Return:
+		repl += "Return";
+		break;
 	default:
 		repl += "????????";
 		break;

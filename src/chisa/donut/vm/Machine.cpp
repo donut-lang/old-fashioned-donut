@@ -128,6 +128,13 @@ std::vector<Handler<Object> >& Machine::stack()
 	return ctx.stack_;
 }
 
+unsigned int Machine::stackBase()
+{
+	Context& ctx =  this->contextRevs_.back();
+	Callchain& chain = ctx.callStack_.back();
+	return chain.stackBase_;
+}
+
 Handler<Object> Machine::start( const Handler<Source>& src )
 {
 	this->clock_->tick();
@@ -160,7 +167,7 @@ bool Machine::isInterrupted() const noexcept
 
 void Machine::enterClosure(const Handler<Object>& self, const Handler<DonutClosureObject>& clos, const Handler<Object>& args)
 {
-	Handler<DonutObject> scope = heap_->createEmptyDonutObject();
+	Handler<DonutObject> scope ( heap_->createEmptyDonutObject() );
 	scope->store(heap_, "__scope__", clos);
 	{
 		Handler<Closure> c = clos->closureCode();
@@ -170,8 +177,15 @@ void Machine::enterClosure(const Handler<Object>& self, const Handler<DonutClosu
 			scope->store( heap_, arg, args->load(heap_, i) );
 		}
 	}
-	this->callStack().push_back( Callchain(0, self, clos, scope) );
+	this->callStack().push_back( Callchain(0, this->stack().size(), self, clos, scope) );
 }
+
+bool Machine::leaveClosure()
+{
+	this->callStack().pop_back();
+	return !this->callStack().empty(); //まだ実行するコールスタックが存在する
+}
+
 
 void Machine::pushStack( const Handler<Object>& obj )
 {
@@ -195,8 +209,7 @@ Handler<Object> Machine::run()
 	Instruction inst;
 	while( running ){
 		if(!this->fetchPC( inst )){ //このクロージャの終端に来ました
-			this->callStack().pop_back();
-			running &= !this->callStack().empty(); //まだ実行するコールスタックが存在する
+			running &= this->leaveClosure();
 			continue;
 		}
 		Instruction opcode, constKind;
@@ -357,6 +370,11 @@ Handler<Object> Machine::run()
 		}
 		case Inst::Interrupt: {
 			running = false;
+			break;
+		}
+		case Inst::Return: {
+			this->stack().resize( this->stackBase()+1 );
+			running &= this->leaveClosure();
 			break;
 		}
 		default:

@@ -34,14 +34,14 @@ namespace donut {
 typedef unsigned int Instruction;
 enum Inst {
 	// inst
-	OpcodeMask  = 0xff<<24,
-	OpcodeShift = 24,
+	OpcodeMask  		= 0xff<<24,
+	OpcodeShift 		= 24,
 	Nop				= 0<<24,
-	Push			= 1<<24,
-	PushCopy		= 2<<24,
+	Push				= 1<<24,
+	PushCopy			= 2<<24,
 	Pop				= 3<<24,
 	SearchScope		= 4<<24,
-	StoreObj		= 5<<24,
+	StoreObj			= 5<<24,
 	LoadObj			= 6<<24,
 	LoadLocal		= 7<<24,
 	StoreLocal		= 8<<24,
@@ -53,6 +53,7 @@ enum Inst {
 	BranchFalse		=14<<24,
 	PushSelf			=15<<24,
 	Interrupt		=16<<24,
+	Return			=17<<24,
 	//const mask
 	ConstKindMask  = 0xff<<16,
 	ConstKindShift  = 16,

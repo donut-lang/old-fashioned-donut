@@ -9,7 +9,6 @@ tokens {
 	ARRAY;
 	VARS;
 	ARGS;
-	CLOS;
 	CONT;
 	IDX;
 	APPLY;
@@ -59,15 +58,17 @@ tokens {
 
 source : program EOF -> program;
 
-program : exprlist -> ^(CLOS VARS exprlist);
+program : exprlist -> ^(FUNC VARS exprlist);
 
 exprlist : expr? ((';')+ expr)* (';')? -> ^(CONT expr*);
 
 expr
-	: 'func' '(' varlist ')' '{' exprlist '}' -> ^(CLOS varlist exprlist)
+	: FUNC '(' varlist ')' '{' exprlist '}' -> ^(FUNC varlist exprlist)
 	| 'if' '(' expr ')' '{' a=exprlist '}' 'else' '{' b=exprlist '}' -> ^(IF expr $a $b)
 	| 'for' '(' fa=expr? ';' fb=expr? ';' fc=expr? ')' '{' fd=exprlist '}' -> ^(FOR ^(CONT $fa?) ^(CONT $fb?) ^(CONT $fc?) $fd)
 	| 'while' '(' fb=expr? ')' '{' fd=exprlist '}' -> ^(FOR ^(CONT) ^(CONT $fb) ^(CONT) $fd)
+	| RETURN expr -> ^(RETURN expr)
+	| INTERRUPT expr -> ^(INTERRUPT expr)
 	| expr8;
 
 expr8 : (a=expr7->$a)
@@ -165,6 +166,9 @@ string_literal : STRING_SINGLE | STRING_DOUBLE;
 //---------------------------------------------------------------------------------------------------------------------
 
 SELF: 'self';
+FUNC: 'func';
+RETURN: 'return';
+INTERRUPT: 'interrupt';
 
 IDENT:
 	LETTER (LETTER | DIGIT)*;

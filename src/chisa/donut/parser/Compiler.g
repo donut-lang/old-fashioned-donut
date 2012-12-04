@@ -42,7 +42,7 @@ prog returns [ Handler<donut::Source> code ]
 	;
 
 closure [ donut::Source* code] returns [ std::vector<donut::Instruction> asmlist, unsigned int closureNo ]
-	: ^(CLOS vars[$code] block[$code]
+	: ^(FUNC vars[$code] block[$code]
 	{
 		Handler<donut::Closure> closure = Handler<donut::Closure>(new donut::Closure($vars.list, $block.asmlist));
 		$closureNo = $code->constCode<Handler<donut::Closure> >(closure);
@@ -98,11 +98,13 @@ unary_operation returns [ std::string sym ]
 	;
 
 expr [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
-	: lt=literal[$code] { $asmlist.swap($lt.asmlist); }
-	| app=apply[$code] { $asmlist.swap($app.asmlist); }
-	| lp=loop[$code] { $asmlist.swap($lp.asmlist); }
-	| br=branch[$code] { $asmlist.swap($br.asmlist); }
-	| idx=index[$code] { $asmlist.swap($idx.asmlist); }
+	: literal[$code] { $asmlist.swap($literal.asmlist); }
+	| apply[$code] { $asmlist.swap($apply.asmlist); }
+	| loop[$code] { $asmlist.swap($loop.asmlist); }
+	| branch[$code] { $asmlist.swap($branch.asmlist); }
+	| index[$code] { $asmlist.swap($index.asmlist); }
+	| return_[$code] { $asmlist.swap($return_.asmlist); }
+	| interrupt[$code] { $asmlist.swap($interrupt.asmlist); }
 	| ^(POST_OP postop=operation ^(DOT SCOPE IDENT) {
 		//設定先を取得
 		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
@@ -404,6 +406,22 @@ literal [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlis
 	| object[$code] { $asmlist.swap($object.asmlist); }
 	| closure[$code] { $asmlist.swap($closure.asmlist); }
 	| SELF { $asmlist.push_back(Inst::PushSelf); }
+	;
+
+return_ [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
+	: ^(RETURN expr[$code])
+	{
+		$asmlist.insert($asmlist.end(), $expr.asmlist.begin(), $expr.asmlist.end());
+		$asmlist.push_back(Inst::Return | 0);
+	}
+	;
+
+interrupt [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
+	: ^(INTERRUPT expr[$code])
+	{
+		$asmlist.insert($asmlist.end(), $expr.asmlist.begin(), $expr.asmlist.end());
+		$asmlist.push_back(Inst::Interrupt | 0);
+	}
 	;
 
 object [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
