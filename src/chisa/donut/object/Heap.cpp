@@ -71,6 +71,8 @@ void Heap::bootstrap()
 	this->globalObject_->store(self, "Int", this->intProto());
 	this->globalObject_->store(self, "Boolean", this->boolProto());
 	this->globalObject_->store(self, "Null", this->nullProto());
+
+	this->globalObject_->store(self, "Global", this->globalObject_);
 }
 
 tinyxml2::XMLElement* Heap::serialize(tinyxml2::XMLDocument* doc)
@@ -167,11 +169,28 @@ Handler<Object> Heap::createNull()
 	return this->nullProvider()->create();
 }
 
+/**********************************************************************************
+ * 外部との接続
+ **********************************************************************************/
 void Heap::registerProvider( Handler<Provider> provider )
 {
 	this->providers_.insert(
 			std::pair<std::string, Handler<Provider> >(provider->name(), provider)
 			);
+}
+
+void Heap::registerGlobalObject( std::string const& name, Handler<Object> const& obj )
+{
+	this->global()->store(self(), name, obj);
+}
+
+bool Heap::hasGlobalObject( std::string const& name )
+{
+	return this->global()->haveOwn( self(), name );
+}
+Handler<Object> Heap::loadGlobalObject( std::string const& name )
+{
+	return this->global()->load(self(), name);
 }
 
 /**********************************************************************************

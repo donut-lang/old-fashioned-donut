@@ -79,7 +79,7 @@ public:
 private:
 	void registerObject( const Handler<HeapObject>& obj );
 	int nextWalkColor();
-public:
+public: /* オブジェクトを作ってそれをプールに登録し、メモリ管理の対象にする。 */
 	Handler<DonutObject> createDonutObject();
 	Handler<DonutObject> createEmptyDonutObject();
 	Handler<DonutClosureObject> createDonutClosureObject( const Handler<Source>& src, unsigned int const& closureIndex, const Handler<Object>& scope );
@@ -89,9 +89,13 @@ public:
 	Handler<Object> createBool(const bool& val);
 	Handler<Object> createNull();
 	Handler<PureNativeClosureObject> createPureNativeClosureObject(const std::string& objectProviderName, const std::string& closureName, PureNativeClosureEntry::Signature sig);
-public:
-	void registerProvider( Handler<Provider> provider );
+public: /* ヒープ管理 */
 	void gc();
+public: /* 外部との接続 */
+	void registerProvider( Handler<Provider> provider );
+	void registerGlobalObject( std::string const& name, Handler<Object> const& obj );
+	bool hasGlobalObject( std::string const& name );
+	Handler<Object> loadGlobalObject( std::string const& name );
 public: /* Clockから呼ばれる */
 	void onDiscardFutureNotify();
 	void onDiscardHistoryNotify();
