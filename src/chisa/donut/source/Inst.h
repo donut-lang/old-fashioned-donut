@@ -52,6 +52,7 @@ enum Inst {
 	BranchTrue		=13<<24,
 	BranchFalse		=14<<24,
 	PushSelf			=15<<24,
+	Interrupt		=16<<24,
 	//const mask
 	ConstKindMask  = 0xff<<16,
 	ConstKindShift  = 16,

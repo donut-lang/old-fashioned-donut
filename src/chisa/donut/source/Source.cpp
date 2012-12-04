@@ -89,6 +89,9 @@ std::string Source::disasm( Instruction inst )
 	case PushSelf:
 		repl += "PushSelf";
 		break;
+	case Interrupt:
+		repl += "Interrupt";
+		break;
 	default:
 		repl += "????????";
 		break;

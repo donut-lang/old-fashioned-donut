@@ -355,12 +355,16 @@ Handler<Object> Machine::run()
 			this->pushStack( this->self() );
 			break;
 		}
+		case Inst::Interrupt: {
+			running = false;
+			break;
+		}
 		default:
 			throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Unknwon opcode: closure<%s>:%08x", closureObject()->toString(heap_).c_str(), this->pc()-1);
 		}
 	}
 	Handler<Object> result(this->popStack());
-	if(!this->stack().empty()){
+	if( !this->isInterrupted() && !this->stack().empty() ){
 		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Execution ended, but stack id not empty:%d", this->stack().size());
 	}
 	return result;
