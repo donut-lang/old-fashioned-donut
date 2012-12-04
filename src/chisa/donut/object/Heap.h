@@ -32,8 +32,6 @@ namespace chisa {
 namespace donut {
 
 class Heap : public HandlerBody<Heap> {
-public:
-	bool onFree() noexcept;
 	DEFINE_MEMBER_REF(public, logging::Logger, log)
 private:
 	Handler<Clock> clock_;
@@ -59,6 +57,8 @@ private:
 public:
 	Heap(logging::Logger& log, const Handler<Clock>& clock);
 	virtual ~Heap() noexcept = default;
+	bool onFree() noexcept;
+public:
 	Handler<Clock> clock() const noexcept { return this->clock_; };
 	void bootstrap();
 	tinyxml2::XMLElement* serialize(tinyxml2::XMLDocument* doc);
