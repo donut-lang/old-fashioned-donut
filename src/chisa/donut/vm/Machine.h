@@ -32,12 +32,13 @@ typedef unsigned int pc_t;
  */
 struct Callchain {
 	pc_t pc_; // Program counter
+	unsigned int stackBase_;
 	Handler<Object> self_; //このクロージャの対象self
 	Handler<DonutClosureObject> closure_; //クロージャ本体
 	Handler<DonutObject> scope_; //ローカル変数の格納されるオブジェクト
 public:
-	Callchain(pc_t pc, const Handler<Object>& self, const Handler<DonutClosureObject>& closure, const Handler<DonutObject>& scope)
-	:pc_(pc), self_(self), closure_(closure), scope_(scope){
+	Callchain(pc_t pc, unsigned int const& stackBase, const Handler<Object>& self, const Handler<DonutClosureObject>& closure, const Handler<DonutObject>& scope)
+	:pc_(pc), stackBase_(stackBase), self_(self), closure_(closure), scope_(scope){
 	}
 };
 
@@ -71,6 +72,7 @@ private: /* それへのアクセス手段の提供。 */
 	Handler<Closure> const& closure();
 	std::vector<Handler<Object> >& local();
 	std::vector<Handler<Object> >& stack();
+	unsigned int stackBase();
 	std::vector<Callchain>& callStack();
 	pc_t& pc();
 public: /* 生成 */
@@ -91,6 +93,7 @@ private: /* スタック操作 */
 	Handler<Object> topStack();
 private: /* 実行 */
 	void enterClosure(const Handler<Object>& self, const Handler<DonutClosureObject>& clos, const Handler<Object>& args);
+	bool leaveClosure();
 	bool fetchPC( Instruction& inst );
 	Handler<Object> run();
 };
