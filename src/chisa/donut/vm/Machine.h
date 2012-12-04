@@ -27,17 +27,24 @@ namespace donut {
 class Heap;
 typedef unsigned int pc_t;
 
+/**
+ * クロージャの実行状態
+ */
 struct Callchain {
-	pc_t pc_;
-	Handler<Object> self_;
-	Handler<DonutClosureObject> closure_;
-	Handler<DonutObject> scope_;
+	pc_t pc_; // Program counter
+	Handler<Object> self_; //このクロージャの対象self
+	Handler<DonutClosureObject> closure_; //クロージャ本体
+	Handler<DonutObject> scope_; //ローカル変数の格納されるオブジェクト
 public:
 	Callchain(pc_t pc, const Handler<Object>& self, const Handler<DonutClosureObject>& closure, const Handler<DonutObject>& scope)
 	:pc_(pc), self_(self), closure_(closure), scope_(scope){
 	}
 };
 
+/**
+ * 機械の実行状態。
+ * 命令実行とは、このコンテキストの状態が変化していくこと
+ */
 struct Context {
 	unsigned int time_;
 	std::vector<Handler<Object> > stack_;
@@ -51,12 +58,12 @@ struct Context {
 
 class Machine : public HandlerBody<Machine> {
 	DEFINE_MEMBER_REF(private, logging::Logger, log);
-private: //何があっても不変なもの。
+private: /* 何があっても不変なもの。*/
 	const Handler<Clock>& clock_;
 	Handler<Heap> const heap_;
-private: //時とともに変わっていくもの
+private: /* 時とともに変わっていくもの */
 	std::vector<Context> contextRevs_;
-private: //それへのアクセス手段の提供。
+private: /* それへのアクセス手段の提供。 */
 	Handler<Object> const& self();
 	Handler<DonutObject> const& scope();
 	Handler<DonutClosureObject> const& closureObject();
@@ -66,24 +73,25 @@ private: //それへのアクセス手段の提供。
 	std::vector<Handler<Object> >& stack();
 	std::vector<Callchain>& callStack();
 	pc_t& pc();
-	bool fetchPC( Instruction& inst );
-public:
+public: /* 生成 */
 	Machine(logging::Logger& log, const Handler<Clock>& clock, const Handler<Heap>& heap);
 	virtual ~Machine() noexcept = default;
 	bool onFree() noexcept { return false; };
-	void discardFuture();
-	void discardHistory();
-public:
+public: /* 外部からの実行指示 */
 	Handler<Object> start( const Handler<Source>& src );
 	Handler<Object> startContinue( const Handler<Object>& obj );
 	bool isInterrupted() const noexcept;
-public:
+public: /* 時間操作 */
 	void seek( timestamp_t time );
-private:
+	void discardFuture();
+	void discardHistory();
+private: /* スタック操作 */
 	void pushStack( const Handler<Object>& obj );
 	Handler<Object> popStack();
 	Handler<Object> topStack();
+private: /* 実行 */
 	void enterClosure(const Handler<Object>& self, const Handler<DonutClosureObject>& clos, const Handler<Object>& args);
+	bool fetchPC( Instruction& inst );
 	Handler<Object> run();
 };
 
