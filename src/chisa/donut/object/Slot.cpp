@@ -45,6 +45,36 @@ Slot::Slot()
 {
 }
 
+Object* Slot::load() const
+{
+	if(this->index_ < 0){
+		throw DonutException(__FILE__, __LINE__, "[BUG] No objects.");
+	}
+	std::pair<timestamp_t, Object*> const& p = this->rev_.at(this->index_);
+	return p.second;
+}
+
+Object* Slot::store(const Handler<Heap>& heap, Object* obj)
+{
+	unsigned int now = heap->clock()->now();
+	if( static_cast<int>(this->rev_.size())-1 != this->index_ ){
+		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. this slot is not synchronized.");
+	}
+	if(this->index_ < 0 || ((std::pair<timestamp_t, Object*> const&)this->rev_.back()).first < now){
+		this->rev_.push_back( std::pair<timestamp_t, Object*>(now, obj) );
+		this->index_ = this->rev_.size()-1;
+	}else{
+		this->rev_.back() = std::pair<timestamp_t, Object*>(now, obj);
+	}
+	return obj;
+}
+
+bool Slot::have() const
+{
+	return this->index_ >= 0;
+}
+
+
 void Slot::onSeekNotify( const Handler<Heap>& heap )
 {
 	unsigned int const timestamp = heap->clock()->now();
@@ -75,34 +105,4 @@ void Slot::onDiscardFutureNotify( const Handler<Heap>& heap )
 	}
 	this->rev_.erase(this->rev_.begin() + this->index_ + 1, this->rev_.end());
 }
-
-Object* Slot::load() const
-{
-	if(this->index_ < 0){
-		throw DonutException(__FILE__, __LINE__, "[BUG] No objects.");
-	}
-	std::pair<timestamp_t, Object*> const& p = this->rev_.at(this->index_);
-	return p.second;
-}
-
-Object* Slot::store(const Handler<Heap>& heap, Object* obj)
-{
-	unsigned int now = heap->clock()->now();
-	if( static_cast<int>(this->rev_.size())-1 != this->index_ ){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. this slot is not synchronized.");
-	}
-	if(this->index_ < 0 || ((std::pair<timestamp_t, Object*> const&)this->rev_.back()).first < now){
-		this->rev_.push_back( std::pair<timestamp_t, Object*>(now, obj) );
-		this->index_ = this->rev_.size()-1;
-	}else{
-		this->rev_.back() = std::pair<timestamp_t, Object*>(now, obj);
-	}
-	return obj;
-}
-
-bool Slot::have() const
-{
-	return this->index_ >= 0;
-}
-
 }}
