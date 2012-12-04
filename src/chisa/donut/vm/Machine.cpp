@@ -372,7 +372,8 @@ Handler<Object> Machine::run()
 
 void Machine::onSeekNotify()
 {
-	//特に何もしない　問題ないはず
+	// 特に何もしない　問題ないはず
+	// 実行時にdiscardFuture/discardHistoryされるので実行時に駄目になることはないはず
 }
 
 /**
