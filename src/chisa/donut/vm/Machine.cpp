@@ -145,7 +145,7 @@ Handler<Object> Machine::startContinue(const Handler<Object>& obj)
 {
 	this->clock_->tick();
 	this->contextRevs_.push_back( Context( this->clock_, this->contextRevs_.back() ) );
-	this->stack().push_back(obj);
+	this->pushStack(obj);
 	return this->run();
 }
 
@@ -173,18 +173,31 @@ void Machine::enterClosure(const Handler<Object>& self, const Handler<DonutClosu
 	this->callStack().push_back( Callchain(0, self, clos, scope) );
 }
 
-bool Machine::returnClosure()
+Handler<Object> Machine::pushStack( const Handler<Object>& obj )
 {
-	this->callStack().pop_back();
-	return !this->callStack().empty();
+	this->stack().push_back( obj );
+	return obj;
 }
+Handler<Object> Machine::popStack()
+{
+	std::vector<Handler<Object> >& stack = this->stack();
+	Handler<Object> obj( stack.back() );
+	stack.pop_back();
+	return obj;
+}
+Handler<Object> Machine::topStack()
+{
+	return this->stack().back();
+}
+
 Handler<Object> Machine::run()
 {
 	bool running = true;
 	Instruction inst;
 	while( running ){
-		if(!this->fetchPC( inst )){
-			running &= this->returnClosure();
+		if(!this->fetchPC( inst )){ //このクロージャの終端に来ました
+			this->callStack().pop_back();
+			running &= !this->callStack().empty(); //まだ実行するコールスタックが存在する
 			continue;
 		}
 		Instruction opcode, constKind;
@@ -199,27 +212,27 @@ Handler<Object> Machine::run()
 		case Inst::Push: {
 			switch(constKind){
 			case Inst::ConstBool: {
-				this->stack().push_back( this->heap_->createBool( this->src()->getBool( constIndex ) ) );
+				this->pushStack( this->heap_->createBool( this->src()->getBool( constIndex ) ) );
 				break;
 			}
 			case Inst::ConstFloat: {
-				this->stack().push_back( this->heap_->createFloatObject( this->src()->getFloat( constIndex ) ) );
+				this->pushStack( this->heap_->createFloatObject( this->src()->getFloat( constIndex ) ) );
 				break;
 			}
 			case Inst::ConstClosure: {
-				this->stack().push_back( this->heap_->createDonutClosureObject(this->src(), constIndex, this->scope()) );
+				this->pushStack( this->heap_->createDonutClosureObject(this->src(), constIndex, this->scope()) );
 				break;
 			}
 			case Inst::ConstInt: {
-				this->stack().push_back( this->heap_->createInt( this->src()->getInt( constIndex ) ) );
+				this->pushStack( this->heap_->createInt( this->src()->getInt( constIndex ) ) );
 				break;
 			}
 			case Inst::ConstString: {
-				this->stack().push_back( this->heap_->createStringObject( this->src()->getString( constIndex ) ) );
+				this->pushStack( this->heap_->createStringObject( this->src()->getString( constIndex ) ) );
 				break;
 			}
 			case Inst::ConstNull: {
-				this->stack().push_back( this->heap_->createNull() );
+				this->pushStack( this->heap_->createNull() );
 				break;
 			}
 			default:
@@ -228,23 +241,21 @@ Handler<Object> Machine::run()
 			break;
 		}
 		case Inst::PushCopy: {
-			Handler<Object> obj(this->stack().back());
-			this->stack().push_back(obj);
+			this->pushStack( this->topStack() );
 			break;
 		}
 		case Inst::Pop:
-			this->stack().pop_back();
+			this->popStack();
 			break;
 		case Inst::SearchScope: {
-			Handler<Object> nameObj = this->stack().back();
+			Handler<Object> nameObj = this->popStack();
 			const std::string name = nameObj->toString(heap_);
-			this->stack().pop_back();
 
 			bool found = false;
 			Handler<Object> obj = this->scope();
 			while(!found){
 				if(obj->have(heap_, name)){
-					this->stack().push_back( obj );
+					this->pushStack( obj );
 					found = true;
 					break;
 				}else if( obj->have(heap_, "__scope__") ){
@@ -254,53 +265,42 @@ Handler<Object> Machine::run()
 				}
 			}
 			if(!found){
-				this->stack().push_back( this->scope() );
+				this->pushStack( this->scope() );
 			}
 			break;
 		}
 		case Inst::StoreObj: {
-			Handler<Object> storeObj = this->stack().back();
-			this->stack().pop_back();
-			Handler<Object> nameObj = this->stack().back();
-			this->stack().pop_back();
-			Handler<Object> destObj = this->stack().back();
-			this->stack().pop_back();
-			this->stack().push_back( destObj->store(heap_, nameObj->toString(heap_), storeObj) );
+			Handler<Object> storeObj = this->popStack();
+			Handler<Object> nameObj = this->popStack();
+			Handler<Object> destObj = this->popStack();
+			this->pushStack( destObj->store(heap_, nameObj->toString(heap_), storeObj) );
 			break;
 		}
 		case Inst::LoadObj: {
-			Handler<Object> nameObj = this->stack().back();
-			this->stack().pop_back();
+			Handler<Object> nameObj = this->popStack();
+			Handler<Object> destObj = this->popStack();
 
-			Handler<Object> destObj = this->stack().back();
-			this->stack().pop_back();
-
-			this->stack().push_back( destObj->load(heap_, nameObj->toString(heap_)) );
+			this->pushStack( destObj->load(heap_, nameObj->toString(heap_)) );
 			break;
 		}
 		case Inst::LoadLocal: {
 			Handler<Object> obj = this->local()[constIndex&31];
-			this->stack().push_back(obj);
+			this->pushStack(obj);
 			break;
 		}
 		case Inst::StoreLocal: {
-			Handler<Object> obj = this->stack().back();
-			this->local()[constIndex&31] = obj;
+			this->local()[constIndex&31] = this->topStack();
 			break;
 		}
 		case Inst::Apply: {
 			Handler<DonutObject> obj(heap_->createEmptyDonutObject());
 			for(unsigned int i=constIndex;i>0;--i){
-				Handler<Object> val = this->stack().back();
-				this->stack().pop_back();
+				Handler<Object> val = this->popStack();
 				obj->store(heap_, i-1, val);
 			}
 
-			Handler<Object> closureObj = this->stack().back();
-			this->stack().pop_back();
-
-			Handler<Object> destObj = this->stack().back();
-			this->stack().pop_back();
+			Handler<Object> closureObj = this->popStack();
+			Handler<Object> destObj = this->popStack();
 
 			//XXX: ちゃんと型を使う
 			if(!closureObj->isObject()){
@@ -308,7 +308,7 @@ Handler<Object> Machine::run()
 			} else if ( Handler<DonutClosureObject> closObj = closureObj.tryCast<DonutClosureObject>() ) {
 				this->enterClosure(destObj, closObj, obj);
 			} else if ( Handler<PureNativeClosureObject> clos = closureObj.tryCast<PureNativeClosureObject>() ) {
-				this->stack().push_back( clos->apply(heap_, destObj, obj) );
+				this->pushStack( clos->apply(heap_, destObj, obj) );
 			}else{
 				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. \"%s\" is not callable.", closureObj->toString(heap_).c_str());
 			}
@@ -317,23 +317,21 @@ Handler<Object> Machine::run()
 		case Inst::ConstructArray: {
 			Handler<Object> obj(heap_->createEmptyDonutObject() );
 			for(unsigned int i=constIndex;i>0;--i){
-				Handler<Object> val = this->stack().back();
-				this->stack().pop_back();
+				Handler<Object> val = this->popStack();
+
 				obj->store(heap_, util::toString(i-1), val);
 			}
-			this->stack().push_back(obj);
+			this->pushStack(obj);
 			break;
 		}
 		case Inst::ConstructObject: {
 			Handler<Object> obj(heap_->createEmptyDonutObject() );
 			for(int i=0;i<constIndex;++i){
-				Handler<Object> val = this->stack().back();
-				this->stack().pop_back();
-				Handler<Object> name = this->stack().back();
-				this->stack().pop_back();
+				Handler<Object> val = this->popStack();
+				Handler<Object> name = this->popStack();
 				obj->store(heap_, name->toString(heap_), val);
 			}
-			this->stack().push_back(obj);
+			this->pushStack(obj);
 			break;
 		}
 		case Inst::Branch: {
@@ -341,36 +339,38 @@ Handler<Object> Machine::run()
 			break;
 		}
 		case Inst::BranchTrue: {
-			Handler<Object> val = this->stack().back();
-			this->stack().pop_back();
+			Handler<Object> val = this->popStack();
 			if(val->toBool(heap_)){
 				this->pc() += constIndex;
 			}
 			break;
 		}
 		case Inst::BranchFalse: {
-			Handler<Object> val = this->stack().back();
-			this->stack().pop_back();
+			Handler<Object> val = this->popStack();
 			if(!val->toBool(heap_)){
 				this->pc() += constIndex;
 			}
 			break;
 		}
 		case Inst::PushSelf: {
-			this->stack().push_back( this->self() );
+			this->pushStack( this->self() );
 			break;
 		}
 		default:
 			throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Unknwon opcode: closure<%s>:%08x", closureObject()->toString(heap_).c_str(), this->pc()-1);
 		}
 	}
-	Handler<Object> result(this->stack().back());
-	this->stack().pop_back();
+	Handler<Object> result(this->popStack());
 	if(!this->stack().empty()){
 		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Execution ended, but stack id not empty:%d", this->stack().size());
 	}
 	return result;
 }
+/**
+ * 現在の時刻以降のコンテキストを消し去る。
+ * これが実際に必要なのは、ヒープを共有する他のマシンがシークされた後に動き出した時。
+ *  あくまでクロックからのみ呼ばれる。自分からは呼び出さない。
+ */
 void Machine::discardFuture()
 {
 	timestamp_t const time = clock_->now();
@@ -385,6 +385,10 @@ void Machine::discardFuture()
 	this->contextRevs_.erase( this->contextRevs_.begin()+idx+1, this->contextRevs_.end() );
 }
 
+/**
+ * 現在の時刻以前のコンテキストを消し去ってしまう。
+ *  あくまでクロックからのみ呼ばれる。自分からは呼び出さない。
+ */
 void Machine::discardHistory()
 {
 	timestamp_t const time = clock_->now();
