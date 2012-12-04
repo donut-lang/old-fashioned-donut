@@ -122,9 +122,10 @@ public:
 	{
 		pANTLR3_BASE_TREE t = parser->source(parser).tree;
 
+		// エラー自体は既に表示されているので、こちらでは例外を投げるだけ
 		if(parser->pParser->rec->state->errorCount > 0)
 		{
-			ANTLR3_EXCEPTION* ex = parser->pParser->rec->state->exception;
+			//ANTLR3_EXCEPTION* ex = parser->pParser->rec->state->exception;
 			throw logging::Exception(__FILE__, __LINE__, "Failed to parse.");
 		}
 		return t;
@@ -159,6 +160,7 @@ public:
 	}
 	Handler<donut::Source> compile(){
 		Handler<donut::Source> src = compiler->prog(compiler);
+		// エラー自体は既に表示されているので、こちらでは例外を投げるだけ
 		if(compiler->pTreeParser->rec->state->errorCount > 0)
 		{
 			//ANTLR3_EXCEPTION* ex = compiler->pTreeParser->rec->state->exception;
