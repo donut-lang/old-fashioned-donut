@@ -55,12 +55,9 @@ void Donut::sendMessage( const std::string& name, const Handler<Object>& obj )
 
 void Donut::bootstrap()
 {
+	//ヒープのブートを行う
 	this->heap_->bootstrap();
-}
-
-void Donut::onSeek( timestamp_t const& time )
-{
-
+	//マシンは何も起動しない
 }
 
 unsigned int Donut::nowTime() const noexcept
@@ -71,6 +68,15 @@ unsigned int Donut::nowTime() const noexcept
 Handler<Source> Donut::parse(const std::string& src, const std::string& filename, const int& lineno)
 {
 	return Parser::fromString(src, filename, lineno)->parseProgram();
+}
+
+/**********************************************************************************
+ * from clock
+ **********************************************************************************/
+
+void Donut::seek( timestamp_t const& time )
+{
+
 }
 void Donut::discardFuture()
 {
