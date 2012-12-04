@@ -22,14 +22,30 @@
 namespace chisa {
 namespace donut {
 
-TEST(SeekTest, SeekTest)
+TEST(SeekTest, TimeShouldAdvanceTest)
 {
 	INIT_DONUT
-	Handler<Source> src1 = donut->parse("test = 1;", "<MEM>", 0);
-	Handler<Object> result = machine->start( src1 );
+	unsigned int const time1 = donut->nowTime();
+	Handler<Object> result = machine->start( donut->parse("test = 1;", "<MEM>", 0) );
+	ASSERT_EQ(1, result->toInt(heap));
+	unsigned int const time2 = donut->nowTime();
 
-	Handler<Source> src2 = donut->parse("test = 2;", "<MEM>", 0);
-	result = machine->start( src2 );
+	ASSERT_LT(time1, time2);
+
+	result = machine->start( donut->parse("test = 2;", "<MEM>", 0) );
+	ASSERT_EQ(2, result->toInt(heap));
+	unsigned int const time3 = donut->nowTime();
+
+	ASSERT_LT(time2, time3);
+}
+
+TEST(SeekTest, SeekBefore)
+{
+	INIT_DONUT
+	unsigned int const time1 = donut->nowTime();
+	Handler<Object> result = machine->start( donut->parse("test = 1;", "<MEM>", 0) );
+	unsigned int const time2 = donut->nowTime();
+	result = machine->start( donut->parse("test = 2;", "<MEM>", 0) );
 }
 
 }}
