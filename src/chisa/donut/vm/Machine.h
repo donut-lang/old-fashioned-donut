@@ -80,7 +80,7 @@ public:
 public:
 	void seek( timestamp_t time );
 private:
-	Handler<Object> pushStack( const Handler<Object>& obj );
+	void pushStack( const Handler<Object>& obj );
 	Handler<Object> popStack();
 	Handler<Object> topStack();
 	void enterClosure(const Handler<Object>& self, const Handler<DonutClosureObject>& clos, const Handler<Object>& args);

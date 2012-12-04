@@ -173,10 +173,9 @@ void Machine::enterClosure(const Handler<Object>& self, const Handler<DonutClosu
 	this->callStack().push_back( Callchain(0, self, clos, scope) );
 }
 
-Handler<Object> Machine::pushStack( const Handler<Object>& obj )
+void Machine::pushStack( const Handler<Object>& obj )
 {
 	this->stack().push_back( obj );
-	return obj;
 }
 Handler<Object> Machine::popStack()
 {
