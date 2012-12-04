@@ -59,14 +59,46 @@ void Donut::bootstrap()
 	//マシンは何も起動しない
 }
 
+Handler<Source> Donut::parse(const std::string& src, const std::string& filename, const int& lineno)
+{
+	return Parser::fromString(src, filename, lineno)->parseProgram();
+}
+
+/**********************************************************************************
+ * from clock
+ **********************************************************************************/
 unsigned int Donut::nowTime() const noexcept
 {
 	return this->clock_->now();
 }
-
-Handler<Source> Donut::parse(const std::string& src, const std::string& filename, const int& lineno)
+void Donut::seek( unsigned int const& time )
 {
-	return Parser::fromString(src, filename, lineno)->parseProgram();
+	this->clock_->seek( time );
+}
+void Donut::discardFuture()
+{
+	this->clock_->discardFuture();
+}
+void Donut::discardHistory()
+{
+	this->clock_->discardFuture();
+}
+unsigned int Donut::lastTime() const noexcept
+{
+	return this->clock_->lastTime();
+}
+unsigned int Donut::firstTime() const noexcept
+{
+	return this->clock_->firstTime();
+}
+
+bool Donut::canBack() const noexcept
+{
+	return this->clock_->canBack();
+}
+bool Donut::canAdvance() const noexcept
+{
+	return this->clock_->canAdvance();
 }
 
 /**********************************************************************************

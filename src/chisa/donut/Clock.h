@@ -50,8 +50,8 @@ public:
 public:
 	inline unsigned int lastTime() const noexcept { return this->last_; };
 	inline unsigned int firstTime() const noexcept { return this->first_; };
-	inline bool canBack() const noexcept { return this->now_ < this->last_; };
-	inline bool canAdvance() const noexcept { return this->first_ < this->now_; };
+	inline bool canBack() const noexcept { return this->first_ < this->now_; };
+	inline bool canAdvance() const noexcept { return this->now_ < this->last_; };
 };
 
 }}
