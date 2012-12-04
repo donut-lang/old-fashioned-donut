@@ -57,11 +57,19 @@ public:
 	Handler<Heap> heap() const noexcept { return this->heap_; };
 	Handler<Source> parse(const std::string& src, const std::string& filename="<DEFAULT>", const int& lineno=0);
 public:
-	unsigned int nowTime() const noexcept;
 public:
 	void bootstrap();
 	void restore( tinyxml2::XMLElement* from );
 	tinyxml2::XMLElement* save( tinyxml2::XMLDocument* doc );
+public: /* seekとかをします。外部から呼びます */
+	unsigned int nowTime() const noexcept;
+	void seek( unsigned int const& time );
+	void discardFuture();
+	void discardHistory();
+	unsigned int lastTime() const noexcept;
+	unsigned int firstTime() const noexcept;
+	bool canBack() const noexcept;
+	bool canAdvance() const noexcept;
 public: /* clockから呼ばれます */
 	void onSeekNotify();
 	void onDiscardFutureNotify();
