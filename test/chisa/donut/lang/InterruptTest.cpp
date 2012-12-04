@@ -33,12 +33,14 @@ Global.x = interrupt 20;
 	INIT_DONUT;
 	ASSERT_FALSE(machine->isInterrupted());
 	Handler<Object> result;
+	Handler<Source> src_(donut->parse(src));
 	{
-		result = machine->start( donut->parse(src) );
+		result = machine->start( src_ );
 		ASSERT_TRUE(machine->isInterrupted());
 		ASSERT_EQ(10, result->toInt(heap) );
 		ASSERT_EQ( 0, heap->loadGlobalObject("x")->toInt(heap) );
 	}
+	ASSERT_ANY_THROW( machine->start(src_) );
 	{
 		result = machine->startContinue( heap->createInt(1) );
 		ASSERT_TRUE(machine->isInterrupted());
@@ -51,6 +53,7 @@ Global.x = interrupt 20;
 		ASSERT_EQ( 2, result->toInt(heap) );
 		ASSERT_EQ( 2, heap->loadGlobalObject("x")->toInt(heap) );
 	}
+	ASSERT_ANY_THROW( machine->startContinue( heap->createNull() ) );
 }
 
 

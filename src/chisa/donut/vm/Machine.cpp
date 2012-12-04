@@ -137,6 +137,9 @@ unsigned int Machine::stackBase()
 
 Handler<Object> Machine::start( const Handler<Source>& src )
 {
+	if( this->isInterrupted() ){
+		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. This machine is interrupted now. Call #startContinue instead.");
+	}
 	this->clock_->tick();
 	if( this->contextRevs_.empty() ){
 		this->contextRevs_.push_back( Context( this->clock_ ) );
@@ -150,6 +153,9 @@ Handler<Object> Machine::start( const Handler<Source>& src )
 
 Handler<Object> Machine::startContinue(const Handler<Object>& obj)
 {
+	if( !this->isInterrupted() ){
+		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. This machine is not interrupted now. Call #start instead.");
+	}
 	this->clock_->tick();
 	this->contextRevs_.push_back( Context( this->clock_, this->contextRevs_.back() ) );
 	this->pushStack(obj);
