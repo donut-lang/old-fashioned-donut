@@ -108,6 +108,9 @@ Handler<Object> DonutObject::loadImpl(const Handler<Heap>& heap, const std::stri
 	}
 }
 
+/**********************************************************************************
+ * from clock
+ **********************************************************************************/
 void DonutObject::onSeekNotifyImpl(const Handler<Heap>& heap)
 {
 	for(std::pair<const std::string, Slot>& it : this->slots_){
