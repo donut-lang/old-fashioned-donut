@@ -40,17 +40,18 @@ private:
 	Handler<Source> source_;
 	Handler<Heap> heap_;
 	std::map<std::string, Handler<Machine> > machines_;
-public:
+public: /* 生成・破棄 */
 	Donut(logging::Logger& log);
 	virtual ~Donut() noexcept = default;
 	inline bool onFree() noexcept { return false; };
 public:
-	void onSeek( timestamp_t const& time );
-public:
 	Handler<Machine> queryMachine( const std::string& name = "" );
 	void sendMessage( const std::string& name, const Handler<Object>& obj );
-	void registerGlobalObject( const std::string& name, const Handler<Object>& obj );
+public: /* 外部オブジェクトの管理 */
+	/* プロバイダ */
 	void registerProvider( const Handler<Provider>& provider );
+	/* グローバルオブジェクトの管理 */
+	void registerGlobalObject( const std::string& name, const Handler<Object>& obj );
 	bool existsGlobalObject( const std::string& name );
 	Handler<Object> readGlobalObject( const std::string& name );
 public:
@@ -62,6 +63,8 @@ public:
 	void bootstrap();
 	void restore( tinyxml2::XMLElement* from );
 	tinyxml2::XMLElement* save( tinyxml2::XMLDocument* doc );
+public: /* clockから呼ばれます */
+	void seek( timestamp_t const& time );
 	void discardFuture();
 	void discardHistory();
 };
