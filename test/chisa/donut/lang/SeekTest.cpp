@@ -348,7 +348,6 @@ TEST(SeekTest, SeekWithMultMachineAndInterruptAndExecuteTest)
 		result = emachine->startContinue( heap->createInt(30) );
 		ASSERT_EQ(30, result->toInt(heap));
 		ASSERT_TRUE( heap->hasGlobalObject("test2") );
-		ASSERT_EQ(30, result->toInt(heap));
 		ASSERT_EQ(30, heap->loadGlobalObject("test2")->toInt(heap));
 		ASSERT_FALSE( emachine->isInterrupted() );
 	}
