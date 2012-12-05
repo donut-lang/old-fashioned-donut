@@ -282,6 +282,75 @@ TEST(SeekTest, SeekWithMultMachineAndInterruptTest)
 	}
 }
 
+TEST(SeekTest, InterruptTest)
+{
+	INIT_DONUT;
+	Handler<Object> result;
+	ASSERT_FALSE( donut->canBack() );
+	ASSERT_FALSE( donut->canAdvance() );
+	ASSERT_FALSE( machine->isInterrupted() );
+	unsigned int const time1 = donut->nowTime();
+	{
+		result = machine->start( donut->parse("Global.test = interrupt 1;", "<MEM>", 0) );
+		ASSERT_EQ(1, result->toInt(heap));
+		ASSERT_FALSE( heap->hasGlobalObject("test") );
+		ASSERT_TRUE( machine->isInterrupted() );
+	}
+	ASSERT_TRUE( donut->canBack() );
+	ASSERT_FALSE( donut->canAdvance() );
+	unsigned int const time2 = donut->nowTime();
+	{
+		result = machine->startContinue( heap->createNull() );
+		ASSERT_TRUE( result->isNull() );
+		ASSERT_TRUE( heap->loadGlobalObject("test")->isNull() );
+		ASSERT_FALSE( machine->isInterrupted() );
+	}
+	ASSERT_TRUE( donut->canBack() );
+	ASSERT_FALSE( donut->canAdvance() );
+	unsigned int const time3 = donut->nowTime();
+
+	ASSERT_LT(time1, time2);
+	ASSERT_LT(time2, time3);
+
+	ASSERT_TRUE( donut->canBack() );
+	ASSERT_FALSE( donut->canAdvance() );
+
+	{
+		donut->seek( time1 );
+		ASSERT_FALSE( heap->hasGlobalObject("test") );
+		ASSERT_FALSE( machine->isInterrupted() );
+		ASSERT_FALSE( donut->canBack() );
+		ASSERT_TRUE( donut->canAdvance() );
+	}
+	{
+		donut->seek( time2 );
+		ASSERT_FALSE( heap->hasGlobalObject("test") );
+		ASSERT_TRUE( machine->isInterrupted() );
+		ASSERT_TRUE( donut->canBack() );
+		ASSERT_TRUE( donut->canAdvance() );
+	}
+	{
+		donut->seek( time3 );
+		ASSERT_TRUE( heap->hasGlobalObject("test") );
+		ASSERT_EQ( 1, heap->loadGlobalObject("test")->isNull() );
+		ASSERT_FALSE( machine->isInterrupted() );
+		ASSERT_TRUE( donut->canBack() );
+		ASSERT_FALSE( donut->canAdvance() );
+	}
+
+	{ //さらに実行
+		donut->seek( time2 );
+		result = machine->startContinue( heap->createBool( true ) );
+		ASSERT_TRUE( heap->hasGlobalObject("test") );
+		ASSERT_TRUE( result->toBool( heap ) );
+		ASSERT_TRUE( heap->loadGlobalObject("test")->toBool(heap) );
+		ASSERT_FALSE( machine->isInterrupted() );
+
+		ASSERT_TRUE( donut->canBack() );
+		ASSERT_FALSE( donut->canAdvance() );
+	}
+}
+
 TEST(SeekTest, SeekWithMultMachineAndInterruptAndExecuteTest)
 {
 	INIT_DONUT;
