@@ -93,7 +93,7 @@ void Slot::onSeekNotify( const Handler<Heap>& heap )
 
 void Slot::onDiscardHistoryNotify( const Handler<Heap>& heap )
 {
-	if(this->index_ < 0 || this->rev_.size() <= 0){
+	if(this->rev_.size() <= 0){
 		return;
 	}
 	std::vector<std::pair<timestamp_t, Object*> >::iterator end = this->rev_.begin()+index_;
@@ -103,7 +103,7 @@ void Slot::onDiscardHistoryNotify( const Handler<Heap>& heap )
 
 void Slot::onDiscardFutureNotify( const Handler<Heap>& heap )
 {
-	if(this->index_ < 0 || this->rev_.size() <= 0){
+	if(this->rev_.size() <= 0){
 		return;
 	}
 	this->rev_.erase(this->rev_.begin() + this->index_ + 1, this->rev_.end());
