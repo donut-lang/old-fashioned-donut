@@ -167,7 +167,25 @@ bool Machine::isInterrupted() const noexcept
 	if( this->contextRevs_.empty() ) {
 		return false;
 	}
-	Context const& ctx =  this->contextRevs_.back();
+	unsigned int const time = this->clock_->now();
+	// シークされてない
+	Context const& last = this->contextRevs_.back();
+	if( time == last.time_ ){
+		return !last.callStack_.empty();
+	}
+	// シークされてるので、インデックスを探す
+	int idx = -1;
+	for(int i=this->contextRevs_.size()-1; i>=0;--i){
+		Context const& c = this->contextRevs_[i];
+		if(time >= c.time_){
+			idx = i;
+			break;
+		}
+	}
+	if( idx < 0 ){
+		return false;
+	}
+	Context const& ctx = this->contextRevs_[idx];
 	return !ctx.callStack_.empty();
 }
 
