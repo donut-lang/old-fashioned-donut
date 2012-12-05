@@ -356,6 +356,7 @@ TEST(SeekTest, SeekWithMultMachineAndInterruptAndExecuteTest)
 	ASSERT_LT(time3, time42);
 	ASSERT_TRUE( heap->hasGlobalObject("test") );
 	ASSERT_TRUE( heap->hasGlobalObject("test2") );
+	//3-4間の操作が取り消されている事を確認
 	ASSERT_EQ( 1, heap->loadGlobalObject("test")->toInt(heap) );
 
 }
