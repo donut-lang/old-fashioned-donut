@@ -26,6 +26,13 @@
 #include <algorithm>
 #include <sstream>
 #include <cmath>
+#include "Platform.h"
+
+#if CHISA_WINDOWS
+#define _64INT_FORMAT_ "I64"
+#else
+#define _64INT_FORMAT_ "ll"
+#endif
 
 namespace chisa {
 namespace util {
@@ -84,13 +91,13 @@ std::string toString(const int64_t val, int radix)
 {
 	switch(radix){
 	case 0:
-		return util::format("%I64d", val);
+		return util::format("%" _64INT_FORMAT_ "d", val);
 	case 8:
-		return util::format("0%I64o", val);
+		return util::format("0%" _64INT_FORMAT_ "o", val);
 	case 10:
-		return util::format("%I64d", val);
+		return util::format("%" _64INT_FORMAT_ "d", val);
 	case 16:
-		return util::format("0x%I64x", val);
+		return util::format("0x%" _64INT_FORMAT_ "x", val);
 	default:
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon radix: %d", radix);
 	}
@@ -100,13 +107,13 @@ std::string toString(const uint64_t val, int radix)
 {
 	switch(radix){
 	case 0:
-		return util::format("%I64u", val);
+		return util::format("%" _64INT_FORMAT_ "u", val);
 	case 8:
-		return util::format("0%I64o", val);
+		return util::format("0%" _64INT_FORMAT_ "o", val);
 	case 10:
-		return util::format("%I64u", val);
+		return util::format("%" _64INT_FORMAT_ "u", val);
 	case 16:
-		return util::format("0x%I64x", val);
+		return util::format("0x%" _64INT_FORMAT_ "x", val);
 	default:
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon radix: %d", radix);
 	}
