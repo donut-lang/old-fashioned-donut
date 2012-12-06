@@ -226,6 +226,7 @@ public:
 	template <typename T> static XValue fromString( std::string const& str );
 
 	static XValue fromXML( tinyxml2::XMLElement* elm );
+	tinyxml2::XMLElement* toXML( tinyxml2::XMLDocument* doc );
 	std::string toString() const noexcept;
 };
 
@@ -234,6 +235,7 @@ private:
 	std::vector<XValue > list_;
 public:
 	XArray( tinyxml2::XMLElement* elm );
+	tinyxml2::XMLElement* toXML( tinyxml2::XMLDocument* doc );
 	XArray(){};
 	~XArray() noexcept = default;
 	inline bool onFree() const noexcept { return false; };
@@ -268,6 +270,7 @@ class XObject : public HandlerBody<XObject> {
 	std::unordered_map<std::string, XValue> map_;
 public:
 	XObject( tinyxml2::XMLElement* elm );
+	tinyxml2::XMLElement* toXML( tinyxml2::XMLDocument* doc );
 	XObject() {}
 	~XObject() noexcept = default;
 	inline bool onFree() const noexcept { return false; };
@@ -301,7 +304,8 @@ public:
 	}
 	template <typename T>
 	T const& set( const std::string& name, T const& obj ) {
-		return this->map_[name] = XValue(obj);
+		this->map_[name] = XValue(obj);
+		return obj;
 	}
 };
 

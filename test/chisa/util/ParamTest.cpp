@@ -190,16 +190,16 @@ TEST(ParamTest, TreeTest)
 
 TEST(ParamTest, GetSetTest)
 {
-	ParamSet p;
-	p.addInt("int", 1);
-	p.addFloat("float", 1.2f);
-	p.addString("str", "text");
-	p.addBool("bool", true);
+	Handler<XObject> obj(new XObject());
+	obj->set("int", 1);
+	obj->set("float", 1.2f);
+	obj->set("str", "test");
+	obj->set("bool", true);
 
-	ASSERT_EQ(1, p.getInt("int"));
-	ASSERT_FLOAT_EQ(1.2f, p.getFloat("float"));
-	ASSERT_EQ("text", p.getString("str"));
-	ASSERT_EQ(true, p.getBool("bool"));
+	ASSERT_EQ(1, obj->get<XSInt>("int"));
+	ASSERT_FLOAT_EQ(1.2f, obj->get<XFloat>("float"));
+	ASSERT_EQ("test", obj->get<XString>("str"));
+	ASSERT_EQ(true, obj->get<XBool>("bool"));
 }
 
 TEST(ParamTest, SerializeDeserializeTest)
@@ -207,25 +207,24 @@ TEST(ParamTest, SerializeDeserializeTest)
 	tinyxml2::XMLDocument doc;
 	tinyxml2::XMLElement* elm;
 	{
-		ParamSet p;
-		p.addInt("int", 0xFFFFFFFF);
-		p.addInt("int2", 0x7FFFFFFF);
-		p.addFloat("float", 1.2f);
-		p.addString("str", "text");
-		p.addBool("bool", true);
-		elm = p.synthTree(&doc);
+		Handler<XObject> obj(new XObject());
+		obj->set("int", 0xFFFFFFFF);
+		obj->set("int2", 0x7FFFFFFF);
+		obj->set("float", 1.2f);
+		obj->set("str", "text");
+		obj->set("bool", true);
+		elm = obj->toXML(&doc);
 		//こうしないとリークする
 		doc.InsertFirstChild(elm);
 	}
 
 	{
-		ParamSet p;
-		p.parseTree(elm);
-		ASSERT_EQ(0xFFFFFFFF, p.getInt("int"));
-		ASSERT_EQ(0x7FFFFFFF, p.getInt("int2"));
-		ASSERT_FLOAT_EQ(1.2f, p.getFloat("float"));
-		ASSERT_EQ("text", p.getString("str"));
-		ASSERT_EQ(true, p.getBool("bool"));
+		Handler<XObject> obj(new XObject(elm));
+		ASSERT_EQ(0xFFFFFFFF, obj->get<XUInt>("int"));
+		ASSERT_EQ(0x7FFFFFFF, obj->get<XSInt>("int2"));
+		ASSERT_FLOAT_EQ(1.2f, obj->get<XFloat>("float"));
+		ASSERT_EQ("text", obj->get<XString>("str"));
+		ASSERT_EQ(true, obj->get<XBool>("bool"));
 	}
 }
 

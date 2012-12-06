@@ -33,6 +33,15 @@ XArray::XArray( tinyxml2::XMLElement* elm )
 	}
 }
 
+tinyxml2::XMLElement* XArray::toXML( tinyxml2::XMLDocument* doc )
+{
+	tinyxml2::XMLElement* top = doc->NewElement("xarray");
+	for(XValue& x : this->list_){
+		top->InsertEndChild(x.toXML(doc));
+	}
+	return top;
+}
+
 XObject::XObject( tinyxml2::XMLElement* elm )
 {
 	for( tinyxml2::XMLElement* e = elm->FirstChildElement("xpair"); e; e = e->NextSiblingElement("xpair") ){
@@ -40,9 +49,23 @@ XObject::XObject( tinyxml2::XMLElement* elm )
 	}
 }
 
+tinyxml2::XMLElement* XObject::toXML( tinyxml2::XMLDocument* doc )
+{
+	tinyxml2::XMLElement* top = doc->NewElement("xobject");
+	for(std::pair<std::string const, XValue>& x : this->map_){
+		tinyxml2::XMLElement* pair = doc->NewElement("xpair");
+		pair->SetAttribute("name", x.first.c_str());
+		pair->InsertEndChild(x.second.toXML(doc));
+		top->InsertEndChild(pair);
+	}
+	return top;
+}
+
 XValue XValue::fromXML( tinyxml2::XMLElement* elm ) {
 	std::string const name(elm->Name());
-	if( name == "xarray" ){
+	if(name=="xnull"){
+		return XValue();
+	}else if( name == "xarray" ){
 		return XValue(Handler<XArray>( new XArray(elm)));
 	}else if(name=="xobject") {
 		return XValue(Handler<XObject>( new XObject(elm)) );
@@ -60,6 +83,46 @@ XValue XValue::fromXML( tinyxml2::XMLElement* elm ) {
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon type!: %s", name.c_str());
 	}
 }
+
+tinyxml2::XMLElement* XValue::toXML( tinyxml2::XMLDocument* doc )
+{
+	switch(type_){
+	case NullT:
+		return doc->NewElement("xnull");
+	case ArrayT:
+		return this->array_->toXML(doc);
+	case ObjectT:
+		return this->object_->toXML(doc);
+	case StringT: {
+		tinyxml2::XMLElement* elm = doc->NewElement("xstring");
+		elm->InsertEndChild(doc->NewText(this->spirit_.str_->c_str()));
+		return elm;
+	}
+	case UIntT: {
+		tinyxml2::XMLElement* elm = doc->NewElement("xuint");
+		elm->InsertEndChild(doc->NewText(util::toString(this->spirit_.uint_).c_str()));
+		return elm;
+	}
+	case SIntT: {
+		tinyxml2::XMLElement* elm = doc->NewElement("xsint");
+		elm->InsertEndChild(doc->NewText(util::toString(this->spirit_.int_).c_str()));
+		return elm;
+	}
+	case FloatT: {
+		tinyxml2::XMLElement* elm = doc->NewElement("xfloat");
+		elm->InsertEndChild(doc->NewText(util::toString(this->spirit_.dbl_).c_str()));
+		return elm;
+	}
+	case BoolT: {
+		tinyxml2::XMLElement* elm = doc->NewElement("xbool");
+		elm->InsertEndChild(doc->NewText(util::toString(this->spirit_.b_).c_str()));
+		return elm;
+	}
+	default:
+		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon type!: %d", type_);
+	}
+}
+
 std::string XValue::toString() const noexcept {
 	switch ( this->type_ ){
 	case Type::ArrayT:
