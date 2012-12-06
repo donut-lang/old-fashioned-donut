@@ -144,17 +144,15 @@ TEST(ParamTest, TreeTest)
 	auto tree = parse(R"delimiter(
 		<?xml version="1.0" encoding="UTF-8"?>
 		<xobject>
-			<xpair name="a"><xbool>true</xbool></xpair>
-			<xpair name="b"><xsint>-1</xsint></xpair>
-			<xpair name="c"><xuint>1</xuint></xpair>
-			<xpair name="d"><xstring>test</xstring></xpair>
-			<xpair name="e"><xfloat>10.11</xfloat></xpair>
-			<xpair name="f">
-				<xarray>
-					<xsint>10</xsint>
-					<xsint>20</xsint>
-				</xarray>
-			</xpair>
+			<xbool name="a">true</xbool>
+			<xsint name="b">-1</xsint>
+			<xuint name="c">1</xuint>
+			<xstring name="d">test</xstring>
+			<xfloat name="e">10.11</xfloat>
+			<xarray name="f">
+				<xsint>10</xsint>
+				<xsint>20</xsint>
+			</xarray>
 		</xobject>
 		)delimiter");
 	tree->PrintError();
