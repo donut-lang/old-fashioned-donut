@@ -35,7 +35,7 @@ class Heap : public HandlerBody<Heap> {
 	DEFINE_MEMBER_REF(public, logging::Logger, log)
 private:
 	Handler<Clock> clock_;
-	intptr_t objectId_;
+	objectid_t objectId_;
 	int walkColor_;
 	std::size_t gcLimit_;
 	std::size_t gcLimitMax_;
