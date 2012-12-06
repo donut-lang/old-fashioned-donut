@@ -23,4 +23,7 @@ namespace donut {
 
 typedef unsigned int timestamp_t;
 
+typedef int objectid_t;
+typedef int object_desc_t;
+
 }}

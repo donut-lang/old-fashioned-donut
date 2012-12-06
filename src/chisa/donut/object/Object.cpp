@@ -178,12 +178,12 @@ std::string Object::providerName(const Handler<Heap>& heap) const
 	}
 }
 
-intptr_t Object::toDescriptor() const noexcept
+object_desc_t Object::toDescriptor() const noexcept
 {
 	if( this->isObject() ) {
 		return this->toDescriptorImpl();
 	}else{
-		return reinterpret_cast<intptr_t>(this);
+		return static_cast<object_desc_t>( reinterpret_cast<intptr_t>(this) );
 	}
 }
 
