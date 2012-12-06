@@ -19,6 +19,8 @@
 #include "Clock.h"
 #include "Donut.h"
 
+#include "../util/Param.h"
+
 namespace chisa {
 namespace donut {
 
@@ -40,6 +42,36 @@ void Clock::tick()
 	}
 	this->last_ = ++this->now_;
 }
+
+/**********************************************************************************
+ * save/restore function
+ **********************************************************************************/
+void Clock::bootstrap()
+{
+	this->last_ = 1;
+	this->first_ = 1;
+	this->now_ = 1;
+}
+tinyxml2::XMLElement* Clock::save(tinyxml2::XMLDocument* doc)
+{
+	util::ParamSet set;
+	set.addInt("now", this->now_);
+	set.addInt("first", this->first_);
+	set.addInt("last", this->last_);
+	return set.synthTree(doc);
+}
+void Clock::load(tinyxml2::XMLElement* data)
+{
+	util::ParamSet set;
+	set.parseTree(data);
+	this->now_ = set.getInt("now");
+	this->first_ = set.getInt("first");
+	this->last_ = set.getInt("last");
+}
+
+/**********************************************************************************
+ * time function
+ **********************************************************************************/
 
 void Clock::seek( unsigned int const& time )
 {
