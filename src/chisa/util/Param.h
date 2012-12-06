@@ -223,7 +223,7 @@ public:
 	template <typename T> bool is() const noexcept;
 	template <typename T> typename _GetType<T>::type get();
 	template <typename T> typename _GetType<T>::const_type get() const;
-	template <typename T> static XValue fromString( std::string const& str );
+	template <typename T> static XValue decode( std::string const& str );
 
 	static XValue fromXML( tinyxml2::XMLElement* elm );
 	tinyxml2::XMLElement* toXML( tinyxml2::XMLDocument* doc );
@@ -335,11 +335,11 @@ FUNCT(Bool, spirit_.b_);
 
 #undef FUNCT
 
-template <> inline XValue XValue::fromString<XValue::String>(std::string const& str)
+template <> inline XValue XValue::decode<XValue::String>(std::string const& str)
 {
 	return XValue((String)str);
 }
-template <> inline XValue XValue::fromString<XValue::UInt>(std::string const& str)
+template <> inline XValue XValue::decode<XValue::UInt>(std::string const& str)
 {
 	bool success = false;
 	XValue::UInt val = util::parseInt(str, 0, &success);
@@ -348,7 +348,7 @@ template <> inline XValue XValue::fromString<XValue::UInt>(std::string const& st
 	}
 	return XValue((UInt)val);
 }
-template <> inline XValue XValue::fromString<XValue::SInt>(std::string const& str)
+template <> inline XValue XValue::decode<XValue::SInt>(std::string const& str)
 {
 	bool success = false;
 	XValue::SInt val = util::parseInt(str, 0, &success);
@@ -357,7 +357,7 @@ template <> inline XValue XValue::fromString<XValue::SInt>(std::string const& st
 	}
 	return XValue((SInt)val);
 }
-template <> inline XValue XValue::fromString<XValue::Float>(std::string const& str)
+template <> inline XValue XValue::decode<XValue::Float>(std::string const& str)
 {
 	bool success = false;
 	XValue::Float val = util::parseFloat(str, &success);
@@ -366,7 +366,7 @@ template <> inline XValue XValue::fromString<XValue::Float>(std::string const& s
 	}
 	return XValue((Float)val);
 }
-template <> inline XValue XValue::fromString<XValue::Bool>(std::string const& str)
+template <> inline XValue XValue::decode<XValue::Bool>(std::string const& str)
 {
 	bool success = false;
 	XValue::SInt val = util::parseBool(str, &success);

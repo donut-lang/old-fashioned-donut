@@ -69,15 +69,15 @@ XValue XValue::fromXML( tinyxml2::XMLElement* elm ) {
 	}else if(name=="xobject") {
 		return XValue(Handler<XObject>( new XObject(elm)) );
 	}else if(name=="xstring") {
-		return XValue::fromString<String>( elm->GetText() );
+		return XValue::decode<String>( elm->GetText() );
 	}else if(name=="xuint") {
-		return XValue::fromString<UInt>( elm->GetText() );
+		return XValue::decode<UInt>( elm->GetText() );
 	}else if(name=="xsint") {
-		return XValue::fromString<SInt>( elm->GetText() );
+		return XValue::decode<SInt>( elm->GetText() );
 	}else if(name=="xbool") {
-		return XValue::fromString<Bool>( elm->GetText() );
+		return XValue::decode<Bool>( elm->GetText() );
 	}else if(name=="xfloat") {
-		return XValue::fromString<Float>( elm->GetText() );
+		return XValue::decode<Float>( elm->GetText() );
 	}else{
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon type!: %s", name.c_str());
 	}
