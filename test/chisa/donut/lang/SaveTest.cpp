@@ -53,6 +53,18 @@ TEST(SaveTest, ClockSaveTest)
 	ASSERT_EQ(clock->firstTime(), clock2->firstTime());
 }
 
+TEST(SaveTest, DonutSaveTest)
+{
+	INIT_DONUT;
+	tinyxml2::XMLDocument doc;
+	tinyxml2::XMLElement *elm = donut->save(&doc);
+	doc.InsertEndChild(elm);
+	tinyxml2::XMLPrinter printer;
+	doc.Print(&printer);
+	std::string src = printer.CStr();
+//	std::cout << src << std::endl;
+}
+
 }}
 
 
