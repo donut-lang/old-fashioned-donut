@@ -19,14 +19,11 @@
 #pragma once
 #include <map>
 #include <string>
+#include <tinyxml2.h>
+
 #include "../../Handler.h"
 #include "../object/Object.h"
 #include "NativeClosureEntry.h"
-
-namespace tinyxml2{
-class XMLDocument;
-class XMLElement;
-}
 
 namespace chisa {
 namespace donut {
