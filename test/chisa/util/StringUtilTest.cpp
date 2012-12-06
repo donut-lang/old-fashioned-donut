@@ -47,6 +47,17 @@ TEST(StringUtilTest, ToStringIntegerTest)
 
 	ASSERT_EQ("014", toString(12, 8));
 	ASSERT_EQ("0xc", toString(12, 16));
+
+	ASSERT_EQ("2147483647", toString(2147483647U, 10));
+	ASSERT_EQ("-2147483647", toString(-2147483647, 10));
+	ASSERT_EQ("4294967295", toString(4294967295U, 10));
+}
+
+TEST(StringUtilTest, ToStringInteger64bitTest)
+{
+	ASSERT_EQ("4294967297", toString(4294967297LL));
+	ASSERT_EQ("4294967297", toString(4294967297LLU));
+	ASSERT_EQ("-4294967297", toString(-4294967297LL));
 }
 
 TEST(StringUtilTest, ToStringFloatTest)

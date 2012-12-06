@@ -30,6 +30,8 @@ std::string format(const std::string& fmt, ...);
 std::string formatv(const std::string& fmt, va_list args);
 std::string toString(const int val, int radix=10);
 std::string toString(const unsigned int val, int radix=10);
+std::string toString(const long long int val, int radix=10);
+std::string toString(const long long unsigned int val, int radix=10);
 std::string toString(const float val);
 std::string toString(const bool val);
 std::string toLower(const std::string& str);
