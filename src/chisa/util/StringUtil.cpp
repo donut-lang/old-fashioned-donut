@@ -238,6 +238,21 @@ int parseInt(const std::string& str, int radix, bool* succeed)
 	return result;
 }
 
+int64_t parseInt64(const std::string& str, int radix, bool* succeed)
+{
+	char* end;
+	int64_t const result = std::strtoll(str.c_str(), &end, radix);
+	if((*end) != '\0'){
+		if(succeed != nullptr){
+			*succeed = false;
+		}else{
+			throw logging::Exception(__FILE__, __LINE__, "Invalid number: %s", str.c_str());
+		}
+	} else {
+		if(succeed) *succeed = true;
+	}
+	return result;
+}
 float parseFloat(const std::string& str, bool* succeed)
 {
 	char* end;

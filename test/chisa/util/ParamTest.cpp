@@ -43,17 +43,39 @@ TEST(ParamTest, StringTest)
 TEST(ParamTest, IntTest)
 {
 	std::shared_ptr<Param> p;
-	int val = 0xDEADBEEF;
+	int64_t val = 0xDEADBEEFDEADBEEF;
 	p = Param::createParam("name", "int", "hi");
 	ASSERT_FALSE(p->queryFloat(0));
 	ASSERT_FALSE(p->queryInt(&val));
 	ASSERT_FALSE(p->queryString(0));
-	ASSERT_EQ(val, 0xDEADBEEF);
+	ASSERT_EQ(val, 0xDEADBEEFDEADBEEF);
 	p = Param::createParam("name", "int", "100");
 	ASSERT_FALSE(p->queryFloat(0));
 	ASSERT_TRUE(p->queryInt(&val));
 	ASSERT_FALSE(p->queryString(0));
 	ASSERT_EQ(val, 100);
+}
+
+TEST(ParamTest, IntMaxTest)
+{
+	std::shared_ptr<Param> p;
+	{
+		int64_t val = 0xFFFFFFFFFFFFFFFF;
+		p = Param::createParam("name", "int", "hi");
+		ASSERT_FALSE(p->queryFloat(0));
+		ASSERT_FALSE(p->queryInt(&val));
+		ASSERT_FALSE(p->queryString(0));
+		ASSERT_EQ(val, 0xFFFFFFFFFFFFFFFF);
+	}
+
+	{
+		int64_t val = 0x7FFFFFFFFFFFFFFF;
+		p = Param::createParam("name", "int", "hi");
+		ASSERT_FALSE(p->queryFloat(0));
+		ASSERT_FALSE(p->queryInt(&val));
+		ASSERT_FALSE(p->queryString(0));
+		ASSERT_EQ(val, 0x7FFFFFFFFFFFFFFF);
+	}
 }
 
 TEST(ParamTest, FloatTest)
@@ -160,7 +182,7 @@ TEST(ParamTest, TreeFloatTest)
 
 	ASSERT_EQ(2, pset->size());
 	ASSERT_TRUE(pset->get("intval") != nullptr);
-	int val = 0;
+	int64_t val = 0;
 	ASSERT_TRUE(pset->get("intval")->queryInt(&val));
 	ASSERT_EQ(val, 0);
 
@@ -190,7 +212,8 @@ TEST(ParamTest, SerializeDeserializeTest)
 	tinyxml2::XMLElement* elm;
 	{
 		ParamSet p;
-		p.addInt("int", 1);
+		p.addInt("int", 0xFFFFFFFFFFFFFFFF);
+		p.addInt("int2", 0x7FFFFFFFFFFFFFFF);
 		p.addFloat("float", 1.2f);
 		p.addString("str", "text");
 		p.addBool("bool", true);
@@ -202,7 +225,8 @@ TEST(ParamTest, SerializeDeserializeTest)
 	{
 		ParamSet p;
 		p.parseTree(elm);
-		ASSERT_EQ(1, p.getInt("int"));
+		ASSERT_EQ(0xFFFFFFFFFFFFFFFF, p.getInt("int"));
+		ASSERT_EQ(0x7FFFFFFFFFFFFFFF, p.getInt("int2"));
 		ASSERT_FLOAT_EQ(1.2f, p.getFloat("float"));
 		ASSERT_EQ("text", p.getString("str"));
 		ASSERT_EQ(true, p.getBool("bool"));

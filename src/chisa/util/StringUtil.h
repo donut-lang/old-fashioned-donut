@@ -38,6 +38,7 @@ std::string toLower(const std::string& str);
 std::string toUpper(const std::string& str);
 
 int parseInt(const std::string& str, int radix=0, bool* succeed=nullptr);
+int64_t parseInt64(const std::string& str, int radix=0, bool* succeed=nullptr);
 float parseFloat(const std::string& str, bool* succeed=nullptr);
 bool parseBool(const std::string& val, bool* succeed=nullptr);
 
