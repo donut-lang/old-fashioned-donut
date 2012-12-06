@@ -67,7 +67,8 @@ void Donut::bootstrap()
 	this->clock_->bootstrap();
 	// 2: ヒープ
 	this->heap_->bootstrap();
-	//マシンは何も起動しない -> TODO: すでにある状態を破棄できるようにする？
+	// 3:マシン
+	this->machines_.clear(); //すべて削除
 }
 tinyxml2::XMLElement* Donut::save(tinyxml2::XMLDocument* doc)
 {

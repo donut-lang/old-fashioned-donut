@@ -23,6 +23,8 @@
 #include "../object/DonutObject.h"
 #include "../source/Source.h"
 
+#include <algorithm>
+
 namespace chisa {
 namespace donut {
 
@@ -417,15 +419,142 @@ Handler<Object> Machine::run()
  **********************************************************************************/
 void Machine::bootstrap()
 {
-
+	this->contextRevs_.clear();
 }
+
+tinyxml2::XMLElement* Callchain::save(tinyxml2::XMLDocument* doc)
+{
+	tinyxml2::XMLElement* top ( doc->NewElement("callchain") );
+	top->SetAttribute("pc", this->pc_);
+	top->SetAttribute("stack_base", this->stackBase_);
+	top->SetAttribute("self", this->self_->toDescriptor());
+	top->SetAttribute("closure", this->closure_->toDescriptor());
+	top->SetAttribute("scope", this->scope_->toDescriptor());
+	return top;
+}
+
+Callchain::Callchain(Handler<Heap> const& heap, tinyxml2::XMLElement* data)
+{
+	if( data->QueryUnsignedAttribute( "pc", &this->pc_ ) != tinyxml2::XML_SUCCESS ) {
+		throw DonutException(__FILE__, __LINE__, "[BUG] Invalid save data. \"pc\" not found.");
+	}
+	if( data->QueryUnsignedAttribute( "stack_base", &this->stackBase_ ) != tinyxml2::XML_SUCCESS ) {
+		throw DonutException(__FILE__, __LINE__, "[BUG] Invalid save data. \"stack_base\" not found.");
+	}
+	{
+		object_desc_t desc;
+		if( data->QueryIntAttribute("self", &desc) != tinyxml2::XML_SUCCESS ){
+			throw DonutException(__FILE__, __LINE__, "[BUG] Invalid save data. \"self\" not found.");
+		}
+		this->self_ = heap->decodeDescriptor(desc);
+	}
+	{
+		object_desc_t desc;
+		if( data->QueryIntAttribute("closure", &desc) != tinyxml2::XML_SUCCESS ){
+			throw DonutException(__FILE__, __LINE__, "[BUG] Invalid save data. \"closure\" not found.");
+		}
+		this->closure_ = heap->decodeDescriptor(desc).cast<DonutClosureObject>();
+	}
+	{
+		object_desc_t desc;
+		if( data->QueryIntAttribute("scope", &desc) != tinyxml2::XML_SUCCESS ){
+			throw DonutException(__FILE__, __LINE__, "[BUG] Invalid save data. \"scope\" not found.");
+		}
+		this->scope_ = heap->decodeDescriptor(desc).cast<DonutObject>();
+	}
+}
+
+tinyxml2::XMLElement* Context::save(tinyxml2::XMLDocument* doc)
+{
+	tinyxml2::XMLElement* top ( doc->NewElement("context") );
+
+	// time
+	top->SetAttribute("time", this->time_);
+
+	{ // callstack
+		tinyxml2::XMLElement* callstackE ( doc->NewElement("callstack") );
+		for( Callchain& chain : this->callStack_ ) {
+			callstackE->InsertEndChild( chain.save(doc) );
+		}
+		top->InsertEndChild( callstackE );
+	}
+	{ //stack
+		tinyxml2::XMLElement* stackE ( doc->NewElement("stack") );
+		for( Handler<Object> const& obj : this->stack_ ) {
+			tinyxml2::XMLElement* objE = doc->NewElement("obj");
+			objE->SetAttribute("desc", obj->toDescriptor());
+			stackE->InsertEndChild( objE );
+		}
+		top->InsertEndChild( stackE );
+	}
+	{ //local
+		tinyxml2::XMLElement* localE ( doc->NewElement("local") );
+		for( Handler<Object> const& obj : this->local_ ) {
+			tinyxml2::XMLElement* objE = doc->NewElement("obj");
+			objE->SetAttribute("desc", obj->toDescriptor());
+			localE->InsertEndChild( objE );
+		}
+		top->InsertEndChild( localE );
+	}
+	return top;
+}
+Context::Context(Handler<Heap> const& heap, tinyxml2::XMLElement* data)
+{
+	{ //time
+		int time;
+		if( data->QueryIntAttribute("time", &time) != tinyxml2::XML_SUCCESS ){
+			throw DonutException(__FILE__, __LINE__, "[BUG] Invalid save data. \"time\" attr not found.");
+		}
+		this->time_ = time;
+	}
+	{ // callstack
+
+		tinyxml2::XMLElement* callstackE = data->FirstChildElement("callstack");
+		for( tinyxml2::XMLElement* e = callstackE->FirstChildElement(); e; e=e->NextSiblingElement() ) {
+			this->callStack_.push_back( Callchain(heap, e) );
+		}
+	}
+	{ //stack
+		tinyxml2::XMLElement* stackE = data->FirstChildElement("stack");
+		for( tinyxml2::XMLElement* e = stackE->FirstChildElement(); e; e=e->NextSiblingElement() ) {
+			object_desc_t desc;
+			if( e->QueryIntAttribute("desc", &desc) != tinyxml2::XML_SUCCESS){
+				throw DonutException(__FILE__, __LINE__, "[BUG] Invalid save data. \"desc\" attr not found for stack.");
+			}
+			this->stack_.push_back( heap->decodeDescriptor(desc) );
+		}
+	}
+	{ //local
+		tinyxml2::XMLElement* localE = data->FirstChildElement("local");
+		int i=0;
+		for( tinyxml2::XMLElement* e = localE->FirstChildElement(); e; e=e->NextSiblingElement() ) {
+			object_desc_t desc;
+			if( e->QueryIntAttribute("desc", &desc) != tinyxml2::XML_SUCCESS){
+				throw DonutException(__FILE__, __LINE__, "[BUG] Invalid save data. \"desc\" attr not found for local.");
+			}
+			this->local_.at(i) = heap->decodeDescriptor(desc);
+			++i;
+		}
+	}
+}
+
 tinyxml2::XMLElement* Machine::save(tinyxml2::XMLDocument* doc)
 {
-
+	tinyxml2::XMLElement* top ( doc->NewElement("machine") );
+	//context_revsさえ保存すればよい
+	for( Context& ctx : this->contextRevs_ ) {
+		top->InsertEndChild( ctx.save(doc) );
+	}
+	return top;
 }
 void Machine::load(tinyxml2::XMLElement* data)
 {
-
+	for(tinyxml2::XMLElement* elm = data->FirstChildElement(); elm; elm = elm->NextSiblingElement()) {
+		this->contextRevs_.push_back( Context(heap_, elm) );
+	}
+	if( !std::is_sorted(this->contextRevs_.begin(), this->contextRevs_.end(), Context::TimeComparator()) ){
+		throw DonutException(__FILE__, __LINE__, "[BUG] Invalid save data. Revision data is not sorted.");
+	}
 }
 
 /**********************************************************************************
