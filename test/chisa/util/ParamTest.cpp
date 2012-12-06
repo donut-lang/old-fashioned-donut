@@ -62,14 +62,14 @@ TEST(ParamTest, IntMaxTest)
 	}
 
 	{
-		XValue p(XValue::fromString<XSInt>("0x7fffffff"));
+		XValue p(XValue::decode<XSInt>("0x7fffffff"));
 		ASSERT_TRUE( p.is<XSInt>() );
 		ASSERT_ANY_THROW( p.get<XUInt>() );
 		ASSERT_EQ(0x7fffffff, p.get<XSInt>());
 	}
 
 	{
-		XValue p(XValue::fromString<XUInt>("0xffffffff"));
+		XValue p(XValue::decode<XUInt>("0xffffffff"));
 		ASSERT_TRUE( p.is<XUInt>() );
 		ASSERT_ANY_THROW( p.get<XSInt>() );
 		ASSERT_EQ(0xffffffff, p.get<XUInt>());
@@ -94,12 +94,12 @@ TEST(ParamTest, FloatTest)
 		ASSERT_TRUE( isnan( p.get<XFloat>() ) );
 	}
 	{
-		XValue p(XValue::fromString<XFloat>("nan"));
+		XValue p(XValue::decode<XFloat>("nan"));
 		ASSERT_TRUE( p.is<XFloat>() );
 		ASSERT_TRUE( isnan( p.get<XFloat>() ) );
 	}
 	{
-		XValue p(XValue::fromString<XFloat>("NAN"));
+		XValue p(XValue::decode<XFloat>("NAN"));
 		ASSERT_TRUE( p.is<XFloat>() );
 		ASSERT_TRUE( isnan( p.get<XFloat>() ) );
 	}
@@ -115,25 +115,25 @@ TEST(ParamTest, BooleanTest)
 
 	{
 		XValue p;
-		ASSERT_ANY_THROW( p = XValue::fromString<XBool>("float") );
+		ASSERT_ANY_THROW( p = XValue::decode<XBool>("float") );
 	}
 	{
-		XValue p( XValue::fromString<XBool>("false") );
+		XValue p( XValue::decode<XBool>("false") );
 		ASSERT_TRUE( p.is<XBool>() );
 		ASSERT_FALSE( p.get<XBool>() );
 	}
 	{
-		XValue p( XValue::fromString<XBool>("no") );
+		XValue p( XValue::decode<XBool>("no") );
 		ASSERT_TRUE( p.is<XBool>() );
 		ASSERT_FALSE( p.get<XBool>() );
 	}
 	{
-		XValue p( XValue::fromString<XBool>("true") );
+		XValue p( XValue::decode<XBool>("true") );
 		ASSERT_TRUE( p.is<XBool>() );
 		ASSERT_TRUE( p.get<XBool>() );
 	}
 	{
-		XValue p( XValue::fromString<XBool>("yes") );
+		XValue p( XValue::decode<XBool>("yes") );
 		ASSERT_TRUE( p.is<XBool>() );
 		ASSERT_TRUE( p.get<XBool>() );
 	}
