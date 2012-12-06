@@ -130,6 +130,16 @@ std::string toString(const float val)
 	return util::format("%f", val);
 }
 
+std::string toString(const double val)
+{
+	if(!(val == val)){
+		return "nan";
+	}else if(!std::isfinite(val)){
+		return val < 0 ? "-infinity" : "infinity";
+	}
+	return util::format("%f", val);
+}
+
 std::string toString(const bool val)
 {
 	return val ? "true" : "false";
@@ -253,10 +263,10 @@ int64_t parseInt64(const std::string& str, int radix, bool* succeed)
 	}
 	return result;
 }
-float parseFloat(const std::string& str, bool* succeed)
+double parseFloat(const std::string& str, bool* succeed)
 {
 	char* end;
-	float const result = std::strtod(str.c_str(), &end);
+	double const result = std::strtod(str.c_str(), &end);
 	if((*end) != '\0'){
 		if(succeed != nullptr){
 			*succeed = false;
