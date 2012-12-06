@@ -46,45 +46,6 @@ bool Heap::onFree() noexcept
 	return false;
 }
 
-void Heap::bootstrap()
-{
-	Handler<Heap> self = this->self();
-	this->donutObjectProvider_ = Handler<DonutObjectProvider>( new DonutObjectProvider(self) );
-	this->boolProvider_ = Handler<BoolProvider>(new BoolProvider(self));
-	this->intProvider_ = Handler<IntProvider>(new IntProvider(self));
-	this->nullProvider_ = Handler<NullProvider>(new NullProvider(self));
-
-	this->registerProvider( this->donutObjectProvider() );
-	this->registerProvider( this->boolProvider() );
-	this->registerProvider( this->intProvider() );
-	this->registerProvider( this->nullProvider() );
-	this->registerProvider(Handler<Provider>( new FloatProvider(self) ));
-	this->registerProvider(Handler<Provider>( new StringProvider(self) ));
-
-	this->objectProto_ = this->donutObjectProvider()->prototype();
-	this->intProto_ = this->intProvider()->prototype();
-	this->boolProto_ = this->boolProvider()->prototype();
-	this->nullProto_ = this->nullProvider()->prototype();
-
-	this->globalObject_ = this->createEmptyDonutObject();
-	this->globalObject_->store(self, "Object", this->objectProto());
-	this->globalObject_->store(self, "Int", this->intProto());
-	this->globalObject_->store(self, "Boolean", this->boolProto());
-	this->globalObject_->store(self, "Null", this->nullProto());
-
-	this->globalObject_->store(self, "Global", this->globalObject_);
-}
-
-tinyxml2::XMLElement* Heap::serialize(tinyxml2::XMLDocument* doc)
-{
-
-}
-
-void Heap::deserialize(tinyxml2::XMLElement* xml)
-{
-
-}
-
 Handler<Provider> Heap::getProvider( const std::string& name ) const
 {
 	auto it = this->providers_.find(name);
@@ -192,9 +153,52 @@ Handler<Object> Heap::loadGlobalObject( std::string const& name )
 {
 	return this->global()->load(self(), name);
 }
+/**********************************************************************************
+ * save/load
+ **********************************************************************************/
+
+void Heap::bootstrap()
+{
+	Handler<Heap> self = this->self();
+	this->donutObjectProvider_ = Handler<DonutObjectProvider>( new DonutObjectProvider(self) );
+	this->boolProvider_ = Handler<BoolProvider>(new BoolProvider(self));
+	this->intProvider_ = Handler<IntProvider>(new IntProvider(self));
+	this->nullProvider_ = Handler<NullProvider>(new NullProvider(self));
+
+	this->registerProvider( this->donutObjectProvider() );
+	this->registerProvider( this->boolProvider() );
+	this->registerProvider( this->intProvider() );
+	this->registerProvider( this->nullProvider() );
+	this->registerProvider(Handler<Provider>( new FloatProvider(self) ));
+	this->registerProvider(Handler<Provider>( new StringProvider(self) ));
+
+	this->objectProto_ = this->donutObjectProvider()->prototype();
+	this->intProto_ = this->intProvider()->prototype();
+	this->boolProto_ = this->boolProvider()->prototype();
+	this->nullProto_ = this->nullProvider()->prototype();
+
+	this->globalObject_ = this->createEmptyDonutObject();
+	this->globalObject_->store(self, "Object", this->objectProto());
+	this->globalObject_->store(self, "Int", this->intProto());
+	this->globalObject_->store(self, "Boolean", this->boolProto());
+	this->globalObject_->store(self, "Null", this->nullProto());
+
+	this->globalObject_->store(self, "Global", this->globalObject_);
+}
+
+tinyxml2::XMLElement* Heap::save(tinyxml2::XMLDocument* doc)
+{
+
+}
+
+void Heap::load(tinyxml2::XMLElement* xml)
+{
+
+}
+
 
 /**********************************************************************************
- * from clock
+ * time functions
  **********************************************************************************/
 void Heap::onSeekNotify()
 {
