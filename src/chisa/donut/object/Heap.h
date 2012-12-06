@@ -98,6 +98,8 @@ public: /* 処理系の保存・復帰をします。 */
 	void bootstrap();
 	tinyxml2::XMLElement* save(tinyxml2::XMLDocument* doc);
 	void load(tinyxml2::XMLElement* data);
+private:
+	void initPrimitive();
 public: /* Clockから呼ばれる */
 	void onDiscardFutureNotify();
 	void onDiscardHistoryNotify();
