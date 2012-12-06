@@ -159,7 +159,7 @@ Handler<Object> Heap::loadGlobalObject( std::string const& name )
 
 void Heap::bootstrap()
 {
-	Handler<Heap> self = this->self();
+	Handler<Heap> const self = this->self();
 	this->donutObjectProvider_ = Handler<DonutObjectProvider>( new DonutObjectProvider(self) );
 	this->boolProvider_ = Handler<BoolProvider>(new BoolProvider(self));
 	this->intProvider_ = Handler<IntProvider>(new IntProvider(self));
