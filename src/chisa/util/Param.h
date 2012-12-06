@@ -111,6 +111,35 @@ public:
 			break;
 		}
 	}
+	XValue(XValue&& o):type_(o.type_){
+		o.type_ = NullT;
+		switch(type_){
+		case NullT:
+			break;
+		case ArrayT:
+			this->array_ = o.array_;
+			break;
+		case ObjectT:
+			this->object_ = o.object_;
+			break;
+		case StringT:
+			this->spirit_.str_ = o.spirit_.str_;
+			o.spirit_.str_ = nullptr;
+			break;
+		case UIntT:
+			this->spirit_ = o.spirit_;
+			break;
+		case SIntT:
+			this->spirit_ = o.spirit_;
+			break;
+		case FloatT:
+			this->spirit_ = o.spirit_;
+			break;
+		case BoolT:
+			this->spirit_ = o.spirit_;
+			break;
+		}
+	}
 	XValue& operator=(XValue const& o){
 		this->type_ = o.type_;
 		switch(type_){
@@ -124,6 +153,37 @@ public:
 			break;
 		case StringT:
 			this->spirit_.str_ = new std::string(*o.spirit_.str_);
+			break;
+		case UIntT:
+			this->spirit_ = o.spirit_;
+			break;
+		case SIntT:
+			this->spirit_ = o.spirit_;
+			break;
+		case FloatT:
+			this->spirit_ = o.spirit_;
+			break;
+		case BoolT:
+			this->spirit_ = o.spirit_;
+			break;
+		}
+		return *this;
+	}
+	XValue& operator=(XValue&& o){
+		this->type_ = o.type_;
+		o.type_ = NullT;
+		switch(type_){
+		case NullT:
+			break;
+		case ArrayT:
+			this->array_ = o.array_;
+			break;
+		case ObjectT:
+			this->object_ = o.object_;
+			break;
+		case StringT:
+			this->spirit_.str_ = o.spirit_.str_;
+			o.spirit_.str_ = nullptr;
 			break;
 		case UIntT:
 			this->spirit_ = o.spirit_;
