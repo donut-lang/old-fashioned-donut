@@ -207,7 +207,12 @@ void Heap::bootstrap()
 
 tinyxml2::XMLElement* Heap::save(tinyxml2::XMLDocument* doc)
 {
+	tinyxml2::XMLElement* top = doc->NewElement("heap");
+	for( HeapObject* const& obj : this->objectPool_ ) {
 
+		obj->providerName();
+	}
+	return top;
 }
 
 void Heap::load(tinyxml2::XMLElement* xml)
