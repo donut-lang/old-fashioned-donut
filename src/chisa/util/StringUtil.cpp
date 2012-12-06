@@ -48,7 +48,7 @@ std::string formatv(const std::string& fmt, va_list args)
 	return buff;
 }
 
-std::string toString(const int val, int radix)
+std::string toString(const int32_t val, int radix)
 {
 	switch(radix){
 	case 0:
@@ -64,7 +64,7 @@ std::string toString(const int val, int radix)
 	}
 }
 
-std::string toString(const unsigned int val, int radix)
+std::string toString(const uint32_t val, int radix)
 {
 	switch(radix){
 	case 0:
@@ -80,7 +80,7 @@ std::string toString(const unsigned int val, int radix)
 	}
 }
 
-std::string toString(const long long int val, int radix)
+std::string toString(const int64_t val, int radix)
 {
 	switch(radix){
 	case 0:
@@ -96,7 +96,7 @@ std::string toString(const long long int val, int radix)
 	}
 }
 
-std::string toString(const long long unsigned int val, int radix)
+std::string toString(const uint64_t val, int radix)
 {
 	switch(radix){
 	case 0:
