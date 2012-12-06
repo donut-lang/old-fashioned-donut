@@ -58,21 +58,21 @@ public:
 
 class IntegerParam : public Param {
 private:
-	int64_t value_;
+	int value_;
 	bool succeed_;
 public:
 	IntegerParam(const std::string& name, const std::string& value)
 	:Param(name)
 	{
-		this->value_ = parseInt64(value, 0, &this->succeed_);
+		this->value_ = parseInt(value, 0, &this->succeed_);
 	}
-	IntegerParam(const std::string& name, const int64_t value)
+	IntegerParam(const std::string& name, const int value)
 	:Param(name)
 	,value_(value)
 	,succeed_(true)
 	{
 	}
-	virtual bool queryInt(int64_t* val) override
+	virtual bool queryInt(int* val) override
 	{
 		if(!succeed_){
 			return false;
@@ -234,7 +234,7 @@ void ParamSet::parseTree(tinyxml2::XMLElement* elem)
 	}
 }
 
-void ParamSet::addInt(const std::string& name, int64_t value)
+void ParamSet::addInt(const std::string& name, int value)
 {
 	this->params_.insert( std::pair<std::string, std::shared_ptr<Param> >(name, std::shared_ptr<Param>( new IntegerParam(name, value)) ) );
 }
@@ -265,7 +265,7 @@ tinyxml2::XMLElement* ParamSet::synthTree(tinyxml2::XMLDocument* doc)
 	return elm;
 }
 
-bool ParamSet::queryInt(const std::string& name, int64_t* val)
+bool ParamSet::queryInt(const std::string& name, int* val)
 {
 	if(std::shared_ptr<Param> p = this->get(name)){
 		return p->queryInt(val);
@@ -295,9 +295,9 @@ bool ParamSet::queryBool(const std::string& name, bool* val)
 	return false;
 }
 
-int64_t ParamSet::getInt(const std::string& name)
+int ParamSet::getInt(const std::string& name)
 {
-	int64_t val;
+	int val;
 	if(!this->has(name)){
 		throw logging::Exception(__FILE__, __LINE__, "Does not have parameter: %s", name.c_str());
 	}

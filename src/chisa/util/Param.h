@@ -51,7 +51,7 @@ public:
 public:
 	std::string name() const{ return name_; };
 public:
-	virtual bool queryInt(int64_t* val) { return false; };
+	virtual bool queryInt(int* val) { return false; };
 	virtual bool queryString(std::string* val) { return false; };
 	virtual bool queryFloat(float* val) { return false; };
 	virtual bool queryBool(bool* val) { return false; };
@@ -73,17 +73,17 @@ public:
 	std::shared_ptr<Param> get(const std::string& name);
 	bool has(const std::string& name);
 	std::size_t size() const{ return this->params_.size(); };
-	bool queryInt(const std::string& name, int64_t* val);
+	bool queryInt(const std::string& name, int* val);
 	bool queryString(const std::string& name, std::string* val);
 	bool queryFloat(const std::string& name, float* val);
 	bool queryBool(const std::string& name, bool* val);
 
-	void addInt(const std::string& name, int64_t value);
+	void addInt(const std::string& name, int value);
 	void addString(const std::string& name, const std::string value);
 	void addFloat(const std::string& name, float value);
 	void addBool(const std::string& name, bool value);
 
-	int64_t getInt(const std::string& name);
+	int getInt(const std::string& name);
 	std::string getString(const std::string& name);
 	float getFloat(const std::string& name);
 	bool getBool(const std::string& name);
