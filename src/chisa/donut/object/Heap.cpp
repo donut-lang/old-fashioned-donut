@@ -178,6 +178,20 @@ Handler<Object> Heap::loadGlobalObject( std::string const& name )
 
 void Heap::bootstrap()
 {
+	this->initPrimitive();
+	Handler<Heap> const self = this->self();
+
+	this->globalObject_ = this->createEmptyDonutObject();
+	this->globalObject_->store(self, "Object", this->objectProto());
+	this->globalObject_->store(self, "Int", this->intProto());
+	this->globalObject_->store(self, "Boolean", this->boolProto());
+	this->globalObject_->store(self, "Null", this->nullProto());
+
+	this->globalObject_->store(self, "Global", this->globalObject_);
+}
+
+void Heap::initPrimitive()
+{
 	Handler<Heap> const self = this->self();
 	this->donutObjectProvider_ = Handler<DonutObjectProvider>( new DonutObjectProvider(self) );
 	this->boolProvider_ = Handler<BoolProvider>(new BoolProvider(self));
@@ -195,28 +209,43 @@ void Heap::bootstrap()
 	this->intProto_ = this->intProvider()->prototype();
 	this->boolProto_ = this->boolProvider()->prototype();
 	this->nullProto_ = this->nullProvider()->prototype();
-
-	this->globalObject_ = this->createEmptyDonutObject();
-	this->globalObject_->store(self, "Object", this->objectProto());
-	this->globalObject_->store(self, "Int", this->intProto());
-	this->globalObject_->store(self, "Boolean", this->boolProto());
-	this->globalObject_->store(self, "Null", this->nullProto());
-
-	this->globalObject_->store(self, "Global", this->globalObject_);
 }
 
 tinyxml2::XMLElement* Heap::save(tinyxml2::XMLDocument* doc)
 {
-	tinyxml2::XMLElement* top = doc->NewElement("heap");
-	for( HeapObject* const& obj : this->objectPool_ ) {
-
-		obj->providerName();
+	tinyxml2::XMLElement* const top = doc->NewElement("heap");
+	{ //pool
+		tinyxml2::XMLElement* const poolE = doc->NewElement("pool");
+		for( HeapObject* const& obj : this->objectPool_ ) {
+			tinyxml2::XMLElement* const objE = doc->NewElement("pool");
+			objE->SetAttribute("provider", obj->providerName().c_str());
+			objE->SetAttribute("id", obj->id());
+			poolE->InsertEndChild(objE);
+		}
+		top->InsertEndChild( poolE );
 	}
 	return top;
 }
 
 void Heap::load(tinyxml2::XMLElement* xml)
 {
+	this->initPrimitive();
+	{ //pool
+		tinyxml2::XMLElement* const poolE = xml->FirstChildElement("pool");
+		for(tinyxml2::XMLElement* e=poolE->FirstChildElement(); e; e=e->NextSiblingElement()){
+			char const* const provider = e->Attribute("provider");
+			if(!provider){
+				throw DonutException(__FILE__, __LINE__, "[BUG] Broken save data. \"provider\" attr not found.");
+			}
+			objectid_t id;
+			if( e->QueryIntAttribute("id", &id) != tinyxml2::XML_SUCCESS ){
+				throw DonutException(__FILE__, __LINE__, "[BUG] Broken save data. \"id\" attr not found.");
+			}
+			// FIXME: どうしよう
+			//HeapObject* obj = this->getProvider(provider)->deserialize(e->FirstChildElement());
+			// obj->id(id);
+		}
+	}
 
 }
 
