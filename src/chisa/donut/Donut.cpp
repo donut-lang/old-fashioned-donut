@@ -52,12 +52,6 @@ void Donut::sendMessage( const std::string& name, const Handler<Object>& obj )
 	machine->startContinue(obj);
 }
 
-void Donut::bootstrap()
-{
-	//ヒープのブートを行う
-	this->heap_->bootstrap();
-	//マシンは何も起動しない
-}
 
 Handler<Source> Donut::parse(const std::string& src, const std::string& filename, const int& lineno)
 {
@@ -65,7 +59,29 @@ Handler<Source> Donut::parse(const std::string& src, const std::string& filename
 }
 
 /**********************************************************************************
- * from clock
+ * save/restore function
+ **********************************************************************************/
+void Donut::bootstrap()
+{
+	//ヒープのブートを行う
+	this->heap_->bootstrap();
+	//マシンは何も起動しない -> TODO: すでにある状態を破棄できるようにする？
+}
+tinyxml2::XMLElement* Donut::save(tinyxml2::XMLDocument* doc)
+{
+	tinyxml2::XMLElement* top = doc->NewElement("donut");
+	// 1: 時計
+	{
+		tinyxml2::XMLElement* clockElm = doc->NewElement("clock");
+		clockElm->InsertEndChild( this->clock_->save(doc) );
+		top->InsertEndChild( clockElm );
+	}
+
+	return top;
+}
+
+/**********************************************************************************
+ * time function
  **********************************************************************************/
 unsigned int Donut::nowTime() const noexcept
 {

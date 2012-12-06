@@ -17,17 +17,13 @@
  */
 
 #pragma once
+#include <tinyxml2.h>
 #include "source/Source.h"
 #include "object/Heap.h"
 #include "vm/Machine.h"
 #include "../logging/Logger.h"
 #include "../Handler.h"
 #include "Clock.h"
-
-namespace tinyxml2 {
-class XMLElement;
-class XMLDocument;
-}
 
 namespace chisa {
 namespace donut {
@@ -56,11 +52,10 @@ public: /* 外部オブジェクトの管理 */
 public:
 	Handler<Heap> heap() const noexcept { return this->heap_; };
 	Handler<Source> parse(const std::string& src, const std::string& filename="<DEFAULT>", const int& lineno=0);
-public:
-public:
+public: /* 処理系の保存・復帰をします。 */
 	void bootstrap();
-	void restore( tinyxml2::XMLElement* from );
-	tinyxml2::XMLElement* save( tinyxml2::XMLDocument* doc );
+	tinyxml2::XMLElement* save(tinyxml2::XMLDocument* doc);
+	void load(tinyxml2::XMLElement* data);
 public: /* seekとかをします。外部から呼びます */
 	unsigned int nowTime() const noexcept;
 	void seek( unsigned int const& time );
