@@ -17,6 +17,7 @@
  */
 
 #include "Heap.h"
+#include "../../util/Param.h"
 
 namespace chisa {
 namespace donut {
@@ -72,9 +73,14 @@ Handler<Object> Heap::decodeDescriptor( object_desc_t const& desc )
 	if( Object::isDescriptorPrimitive(desc) ) {
 		return Object::decodePrimitiveDescriptor(desc);
 	}
+	return decodeHeapDescriptor(desc);
+}
+
+Handler<HeapObject> Heap::decodeHeapDescriptor( object_desc_t const& desc )
+{
 	objectid_t const id = Object::decodeHeapObjectDescriptor(desc);
 	if( id == 0 ){
-		return Handler<Object>();
+		return Handler<HeapObject>();
 	}
 	std::vector<HeapObject*>::iterator const it =
 			std::lower_bound( this->objectPool_.begin(), this->objectPool_.end(), id, CompareHeapById());
@@ -82,7 +88,7 @@ Handler<Object> Heap::decodeDescriptor( object_desc_t const& desc )
 	if( it == this->objectPool_.end() || obj->id() != id ) {
 		throw DonutException(__FILE__, __LINE__, "[BUG] Object id: %d not found. Invalid Object Descriptor.", id);
 	}
-	return Handler<Object>::__internal__fromRawPointerWithoutCheck(obj);
+	return Handler<HeapObject>::__internal__fromRawPointerWithoutCheck(obj);
 }
 
 Handler<DonutObject> Heap::createDonutObject()
@@ -178,8 +184,13 @@ Handler<Object> Heap::loadGlobalObject( std::string const& name )
 
 void Heap::bootstrap()
 {
-	this->initPrimitive();
+	this->initPrimitiveProviders();
 	Handler<Heap> const self = this->self();
+
+	this->objectProto_ = this->donutObjectProvider()->prototype();
+	this->intProto_ = this->intProvider()->prototype();
+	this->boolProto_ = this->boolProvider()->prototype();
+	this->nullProto_ = this->nullProvider()->prototype();
 
 	this->globalObject_ = this->createEmptyDonutObject();
 	this->globalObject_->store(self, "Object", this->objectProto());
@@ -190,7 +201,7 @@ void Heap::bootstrap()
 	this->globalObject_->store(self, "Global", this->globalObject_);
 }
 
-void Heap::initPrimitive()
+void Heap::initPrimitiveProviders()
 {
 	Handler<Heap> const self = this->self();
 	this->donutObjectProvider_ = Handler<DonutObjectProvider>( new DonutObjectProvider(self) );
@@ -204,11 +215,6 @@ void Heap::initPrimitive()
 	this->registerProvider( this->nullProvider() );
 	this->registerProvider(Handler<Provider>( new FloatProvider(self) ));
 	this->registerProvider(Handler<Provider>( new StringProvider(self) ));
-
-	this->objectProto_ = this->donutObjectProvider()->prototype();
-	this->intProto_ = this->intProvider()->prototype();
-	this->boolProto_ = this->boolProvider()->prototype();
-	this->nullProto_ = this->nullProvider()->prototype();
 }
 
 tinyxml2::XMLElement* Heap::save(tinyxml2::XMLDocument* doc)
@@ -224,12 +230,23 @@ tinyxml2::XMLElement* Heap::save(tinyxml2::XMLDocument* doc)
 		}
 		top->InsertEndChild( poolE );
 	}
+	{
+		tinyxml2::XMLElement* const globalE = doc->NewElement("global");
+		util::ParamSet set;
+		set.addInt("object-prototype", this->donutObjectProvider()->prototype()->toDescriptor());
+		set.addInt("int-prototype", this->intProvider()->prototype()->toDescriptor());
+		set.addInt("bool-prototype", this->boolProvider()->prototype()->toDescriptor());
+		set.addInt("null-prototype", this->nullProvider()->prototype()->toDescriptor());
+		set.addInt("global", this->global()->toDescriptor());
+		globalE->InsertEndChild( set.synthTree(doc) );
+		top->InsertEndChild( globalE );
+	}
 	return top;
 }
 
 void Heap::load(tinyxml2::XMLElement* xml)
 {
-	this->initPrimitive();
+	this->initPrimitiveProviders();
 	{ //pool
 		tinyxml2::XMLElement* const poolE = xml->FirstChildElement("pool");
 		for(tinyxml2::XMLElement* e=poolE->FirstChildElement(); e; e=e->NextSiblingElement()){
@@ -245,6 +262,19 @@ void Heap::load(tinyxml2::XMLElement* xml)
 			//HeapObject* obj = this->getProvider(provider)->deserialize(e->FirstChildElement());
 			// obj->id(id);
 		}
+	}
+	{ //global
+		tinyxml2::XMLElement* const globalE = xml->FirstChildElement("global");
+		if(!globalE){
+			throw DonutException(__FILE__, __LINE__, "[BUG] Broken save data.");
+		}
+		util::ParamSet set;
+		set.parseTree(globalE);
+		this->objectProto_ = this->decodeHeapDescriptor( set.getInt("object-prototype") ).cast<DonutObject>();
+		this->intProto_ = this->decodeHeapDescriptor( set.getInt("int-prototype") ).cast<DonutObject>();
+		this->boolProto_ = this->decodeHeapDescriptor( set.getInt("bool-prototype") ).cast<DonutObject>();
+		this->nullProto_ = this->decodeHeapDescriptor( set.getInt("null-prototype") ).cast<DonutObject>();
+		this->globalObject_ = this->decodeHeapDescriptor( set.getInt("global") ).cast<DonutObject>();
 	}
 
 }

@@ -89,6 +89,8 @@ public: /* オブジェクトを作ってそれをプールに登録し、メモ
 public: /* ヒープ管理 */
 	void gc();
 	Handler<Object> decodeDescriptor( object_desc_t const& desc );
+private:
+	Handler<HeapObject> decodeHeapDescriptor( object_desc_t const& desc );
 public: /* 外部との接続 */
 	void registerProvider( Handler<Provider> provider );
 	void registerGlobalObject( std::string const& name, Handler<Object> const& obj );
@@ -99,7 +101,7 @@ public: /* 処理系の保存・復帰をします。 */
 	tinyxml2::XMLElement* save(tinyxml2::XMLDocument* doc);
 	void load(tinyxml2::XMLElement* data);
 private:
-	void initPrimitive();
+	void initPrimitiveProviders();
 public: /* Clockから呼ばれる */
 	void onDiscardFutureNotify();
 	void onDiscardHistoryNotify();
