@@ -25,6 +25,9 @@ namespace donut {
 TEST(DonutIntegerTest, LiteralTest)
 {
 	SOURCE_TEST_INT(1, "1;");
+	//2^(31-2)-1 -> 536870911
+	SOURCE_TEST_INT(536870911, "536870911;");
+	SOURCE_TEST_INT(-536870911, "-536870911;");
 }
 
 TEST(DonutIntegerTest, SubTest)
