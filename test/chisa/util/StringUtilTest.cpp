@@ -51,6 +51,9 @@ TEST(StringUtilTest, ToStringIntegerTest)
 	ASSERT_EQ("2147483647", toString(2147483647U, 10));
 	ASSERT_EQ("-2147483647", toString(-2147483647, 10));
 	ASSERT_EQ("4294967295", toString(4294967295U, 10));
+
+	ASSERT_EQ("0xffffffff", toString(4294967295U, 16));
+	ASSERT_EQ("037777777777", toString(4294967295U, 8));
 }
 
 TEST(StringUtilTest, ToStringInteger64bitTest)
@@ -61,6 +64,8 @@ TEST(StringUtilTest, ToStringInteger64bitTest)
 	//最大値近辺
 	ASSERT_EQ("18446744073709551615", toString(18446744073709551615U));
 	ASSERT_EQ("-9223372036854775807", toString(-9223372036854775807));
+	ASSERT_EQ("0xffffffffffffffff", toString(18446744073709551615U, 16));
+	ASSERT_EQ("01777777777777777777777", toString(18446744073709551615U, 8));
 }
 
 TEST(StringUtilTest, ToStringFloatTest)
