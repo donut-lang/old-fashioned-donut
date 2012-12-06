@@ -35,7 +35,7 @@ class Heap : public HandlerBody<Heap> {
 	DEFINE_MEMBER_REF(public, logging::Logger, log)
 private:
 	Handler<Clock> clock_;
-	uintptr_t objectId_;
+	intptr_t objectId_;
 	int walkColor_;
 	std::size_t gcLimit_;
 	std::size_t gcLimitMax_;
@@ -60,9 +60,6 @@ public:
 	bool onFree() noexcept;
 public:
 	Handler<Clock> clock() const noexcept { return this->clock_; };
-	void bootstrap();
-	tinyxml2::XMLElement* serialize(tinyxml2::XMLDocument* doc);
-	void deserialize(tinyxml2::XMLElement* xml);
 public:
 	Handler<DonutObjectProvider>& donutObjectProvider() { return donutObjectProvider_; };
 	Handler<BoolProvider>& boolProvider() {return boolProvider_;};
@@ -96,6 +93,10 @@ public: /* 外部との接続 */
 	void registerGlobalObject( std::string const& name, Handler<Object> const& obj );
 	bool hasGlobalObject( std::string const& name );
 	Handler<Object> loadGlobalObject( std::string const& name );
+public: /* 処理系の保存・復帰をします。 */
+	void bootstrap();
+	tinyxml2::XMLElement* save(tinyxml2::XMLDocument* doc);
+	void load(tinyxml2::XMLElement* data);
 public: /* Clockから呼ばれる */
 	void onDiscardFutureNotify();
 	void onDiscardHistoryNotify();

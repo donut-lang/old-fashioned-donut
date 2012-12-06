@@ -34,6 +34,7 @@ class ObjectWalker;
 class Object : public HandlerBody<Object> {
 	DISABLE_COPY_AND_ASSIGN(Object);
 public:
+	static constexpr const int TagShift = 2U;
 	enum Tag{
 		Mask=3U,
 		Obj=0U,
@@ -58,12 +59,13 @@ public: //すべてのオブジェクトに出来なければならないこと
 	Handler<Object> load(const Handler<Heap>& heap, const std::string& name) const;
 	Handler<Object> load(const Handler<Heap>& heap, const int& idx) const;
 	std::string providerName(const Handler<Heap>& heap) const;
+	intptr_t toDescriptor() const noexcept;
 public:
 	inline bool isObject() const noexcept { return Tag::Obj==tag(); };
 	inline bool isNull() const noexcept { return Tag::Null==tag(); };
 	inline bool isBool() const noexcept { return Tag::Bool==tag(); };
 	inline bool isInt() const noexcept { return Tag::Int==tag(); };
-	inline intptr_t tag() const noexcept { return reinterpret_cast<std::uintptr_t>(this) & Tag::Mask; };
+	inline intptr_t tag() const noexcept { return reinterpret_cast<std::intptr_t>(this) & Tag::Mask; };
 	inline void incref( bool check ) { if(isObject()) { this->HandlerBody<Object>::incref(check); } }
 	inline void decref() { if(isObject()) { this->HandlerBody<Object>::decref(); } };
 	inline void mark(const Handler<Heap>& heap, int color) { if(isObject()){ this->markImpl(heap, color); } }
@@ -84,6 +86,7 @@ protected: /* 実装すべきもの */
 	virtual void onSeekNotifyImpl(const Handler<Heap>& heap) = 0;
 	virtual void onDiscardHistoryNotifyImpl(const Handler<Heap>& heap) = 0;
 	virtual void onDiscardFutureNotifyImpl(const Handler<Heap>& heap) = 0;
+	virtual intptr_t toDescriptorImpl() const noexcept = 0;
 public:
 	virtual bool onFree() noexcept = 0;
 };
@@ -98,7 +101,7 @@ class HeapObject : public Object {
 private:
 	const HandlerW<Heap> heap_;
 	std::string const providerName_;
-	uintptr_t id_;
+	intptr_t id_;
 	bool erased_;
 	int color_;
 public:
@@ -106,8 +109,9 @@ public:
 	virtual ~HeapObject() noexcept = default;
 public:
 	inline std::string providerName() const noexcept { return this->providerName_; }
-	inline uintptr_t id() const noexcept { return this->id_; }
-	inline void id(uintptr_t nid) noexcept { this->id_ = nid; }
+	inline intptr_t id() const noexcept { return this->id_; }
+	virtual intptr_t toDescriptorImpl() const noexcept override final {return (this->id_ << Object::TagShift) | Object::Tag::Obj; };
+	inline void id(intptr_t const& nid) noexcept { this->id_ = nid; }
 	inline void erase() noexcept { this->erased_ = true; if(refcount() == 0){ delete this; } };
 public:
 	virtual bool onFree() noexcept { if(this->erased_){ return false; }else{ return true; } };

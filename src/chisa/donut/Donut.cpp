@@ -70,15 +70,29 @@ void Donut::bootstrap()
 tinyxml2::XMLElement* Donut::save(tinyxml2::XMLDocument* doc)
 {
 	tinyxml2::XMLElement* top = doc->NewElement("donut");
-	// 1: 時計
-	{
+	{ // 1: 時計
 		tinyxml2::XMLElement* clockElm = doc->NewElement("clock");
 		clockElm->InsertEndChild( this->clock_->save(doc) );
 		top->InsertEndChild( clockElm );
 	}
+	{ // 2: ヒープ
+		tinyxml2::XMLElement* heapElm = doc->NewElement("heap");
+		heapElm->InsertEndChild( this->heap_->save(doc) );
+		top->InsertEndChild( heapElm );
+	}
 
 	return top;
 }
+void Donut::load(tinyxml2::XMLElement* data)
+{
+	// 1: 時計
+	{
+		tinyxml2::XMLElement* clockElm = data->FirstChildElement("clock");
+		this->clock_->load(clockElm);
+	}
+
+}
+
 
 /**********************************************************************************
  * time function
