@@ -74,11 +74,15 @@ public:
 	bool has(const std::string& name);
 	std::size_t size() const{ return this->params_.size(); };
 	bool queryInt(const std::string& name, int* val);
+//	bool queryInt(const std::string& name, int64_t* val) = delete;
+//	bool queryInt(const std::string& name, uint64_t* val) = delete;
 	bool queryString(const std::string& name, std::string* val);
 	bool queryFloat(const std::string& name, float* val);
 	bool queryBool(const std::string& name, bool* val);
 
 	void addInt(const std::string& name, int value);
+//	void addInt(const std::string& name, int64_t value) = delete;
+//	void addInt(const std::string& name, uint64_t value) = delete;
 	void addString(const std::string& name, const std::string value);
 	void addFloat(const std::string& name, float value);
 	void addBool(const std::string& name, bool value);
