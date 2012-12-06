@@ -136,6 +136,18 @@ protected:
 	void color(const int color) noexcept { this->color_=color; };
 };
 
+struct CompareHeapById : std::binary_function<HeapObject* const&,HeapObject* const&,bool>{
+	bool operator()(HeapObject* const& a, HeapObject* const& b){
+		return a->id() < b->id();
+	}
+	bool operator()(HeapObject* const& a, objectid_t const& b){
+		return a->id() < b;
+	}
+	bool operator()(objectid_t const& a, HeapObject* const& b){
+		return a < b->id();
+	}
+};
+
 }}
 //---------------------------------------------------------------------------------------------------------------------
 
