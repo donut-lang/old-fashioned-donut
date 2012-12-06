@@ -43,12 +43,12 @@ TEST(ParamTest, StringTest)
 TEST(ParamTest, IntTest)
 {
 	std::shared_ptr<Param> p;
-	int64_t val = 0xDEADBEEFDEADBEEF;
+	int val = 0xffffffff;
 	p = Param::createParam("name", "int", "hi");
 	ASSERT_FALSE(p->queryFloat(0));
 	ASSERT_FALSE(p->queryInt(&val));
 	ASSERT_FALSE(p->queryString(0));
-	ASSERT_EQ(val, 0xDEADBEEFDEADBEEF);
+	ASSERT_EQ(val, 0xffffffff);
 	p = Param::createParam("name", "int", "100");
 	ASSERT_FALSE(p->queryFloat(0));
 	ASSERT_TRUE(p->queryInt(&val));
@@ -60,21 +60,21 @@ TEST(ParamTest, IntMaxTest)
 {
 	std::shared_ptr<Param> p;
 	{
-		int64_t val = 0xFFFFFFFFFFFFFFFF;
+		int val = 0xFFFFFFFF;
 		p = Param::createParam("name", "int", "hi");
 		ASSERT_FALSE(p->queryFloat(0));
 		ASSERT_FALSE(p->queryInt(&val));
 		ASSERT_FALSE(p->queryString(0));
-		ASSERT_EQ(val, 0xFFFFFFFFFFFFFFFF);
+		ASSERT_EQ(val, 0xFFFFFFFF);
 	}
 
 	{
-		int64_t val = 0x7FFFFFFFFFFFFFFF;
+		int val = 0x7FFFFFFF;
 		p = Param::createParam("name", "int", "hi");
 		ASSERT_FALSE(p->queryFloat(0));
 		ASSERT_FALSE(p->queryInt(&val));
 		ASSERT_FALSE(p->queryString(0));
-		ASSERT_EQ(val, 0x7FFFFFFFFFFFFFFF);
+		ASSERT_EQ(val, 0x7FFFFFFF);
 	}
 }
 
@@ -182,7 +182,7 @@ TEST(ParamTest, TreeFloatTest)
 
 	ASSERT_EQ(2, pset->size());
 	ASSERT_TRUE(pset->get("intval") != nullptr);
-	int64_t val = 0;
+	int val = 0;
 	ASSERT_TRUE(pset->get("intval")->queryInt(&val));
 	ASSERT_EQ(val, 0);
 
@@ -212,8 +212,8 @@ TEST(ParamTest, SerializeDeserializeTest)
 	tinyxml2::XMLElement* elm;
 	{
 		ParamSet p;
-		p.addInt("int", 0xFFFFFFFFFFFFFFFF);
-		p.addInt("int2", 0x7FFFFFFFFFFFFFFF);
+		p.addInt("int", 0xFFFFFFFF);
+		p.addInt("int2", 0x7FFFFFFF);
 		p.addFloat("float", 1.2f);
 		p.addString("str", "text");
 		p.addBool("bool", true);
@@ -225,8 +225,8 @@ TEST(ParamTest, SerializeDeserializeTest)
 	{
 		ParamSet p;
 		p.parseTree(elm);
-		ASSERT_EQ(0xFFFFFFFFFFFFFFFF, p.getInt("int"));
-		ASSERT_EQ(0x7FFFFFFFFFFFFFFF, p.getInt("int2"));
+		ASSERT_EQ(0xFFFFFFFF, p.getInt("int"));
+		ASSERT_EQ(0x7FFFFFFF, p.getInt("int2"));
 		ASSERT_FLOAT_EQ(1.2f, p.getFloat("float"));
 		ASSERT_EQ("text", p.getString("str"));
 		ASSERT_EQ(true, p.getBool("bool"));
