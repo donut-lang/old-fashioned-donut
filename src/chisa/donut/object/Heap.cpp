@@ -66,6 +66,38 @@ void Heap::registerObject( const Handler<HeapObject>& obj )
 		}
 	}
 }
+
+struct ObjectFinder{
+	bool operator()(HeapObject* const& a, HeapObject* const& b){
+		return a->id() < b->id();
+	}
+	bool operator()(HeapObject* const& a, objectid_t const& b){
+		return a->id() < b;
+	}
+	bool operator()(objectid_t const& a, HeapObject* const& b){
+		return a < b->id();
+	}
+
+};
+
+Handler<Object> Heap::decodeDescriptor( object_desc_t const& desc )
+{
+	if( Object::isDescriptorPrimitive(desc) ) {
+		return Object::decodePrimitiveDescriptor(desc);
+	}
+	objectid_t const id = Object::decodeHeapObjectDescriptor(desc);
+	if( id == 0 ){
+		return Handler<Object>();
+	}
+	std::vector<HeapObject*>::iterator const it =
+			std::lower_bound( this->objectPool_.begin(), this->objectPool_.end(), id, ObjectFinder());
+	HeapObject* obj = *it;
+	if( it == this->objectPool_.end() || obj->id() != id ) {
+		throw DonutException(__FILE__, __LINE__, "[BUG] Object id: %d not found. Invalid Object Descriptor.", id);
+	}
+	return Handler<Object>::__internal__fromRawPointerWithoutCheck(obj);
+}
+
 Handler<DonutObject> Heap::createDonutObject()
 {
 	Handler<DonutObject> obj(new DonutObject(self()));

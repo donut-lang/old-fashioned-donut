@@ -88,6 +88,7 @@ public: /* オブジェクトを作ってそれをプールに登録し、メモ
 	Handler<PureNativeClosureObject> createPureNativeClosureObject(const std::string& objectProviderName, const std::string& closureName, PureNativeClosureEntry::Signature sig);
 public: /* ヒープ管理 */
 	void gc();
+	Handler<Object> decodeDescriptor( object_desc_t const& desc );
 public: /* 外部との接続 */
 	void registerProvider( Handler<Provider> provider );
 	void registerGlobalObject( std::string const& name, Handler<Object> const& obj );

@@ -40,6 +40,8 @@ public:
 	Callchain(pc_t pc, unsigned int const& stackBase, const Handler<Object>& self, const Handler<DonutClosureObject>& closure, const Handler<DonutObject>& scope)
 	:pc_(pc), stackBase_(stackBase), self_(self), closure_(closure), scope_(scope){
 	}
+	Callchain(Handler<Heap> const& heap, tinyxml2::XMLElement* data);
+	tinyxml2::XMLElement* save(tinyxml2::XMLDocument* doc);
 };
 
 /**
@@ -53,8 +55,16 @@ struct Context {
 	std::vector<Callchain> callStack_;
 	Context(const Handler<Clock>& clk);
 	Context(const Handler<Clock>& clk, const Context& other);
-	Context() = delete;
+	Context(Handler<Heap> const& heap, tinyxml2::XMLElement* data);
 	~Context() noexcept = default;
+	tinyxml2::XMLElement* save(tinyxml2::XMLDocument* doc);
+public:
+	struct TimeComparator : std::binary_function<Context const&, Context const&, bool> {
+		bool operator()(Context const& a, Context const& b) const noexcept
+		{
+			return a.time_ < b.time_;
+		}
+	};
 };
 
 class Machine : public HandlerBody<Machine> {

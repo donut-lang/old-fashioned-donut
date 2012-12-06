@@ -34,6 +34,7 @@ void Heap::gc()
 	const int color = this->nextWalkColor();
 
 	const std::size_t origObjectCount = this->objectPool_.size();
+	this->objectPoolMarked_.reserve(origObjectCount);
 
 	for(HeapObject*& obj : this->objectPool_){
 		if(obj->used() ){

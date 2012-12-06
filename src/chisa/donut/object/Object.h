@@ -21,6 +21,7 @@
 #include <map>
 #include "../../Handler.h"
 #include "../../util/ClassUtil.h"
+#include "../Exception.h"
 #include "Slot.h"
 
 namespace chisa {
@@ -89,6 +90,20 @@ protected: /* 実装すべきもの */
 	virtual object_desc_t toDescriptorImpl() const noexcept = 0;
 public:
 	virtual bool onFree() noexcept = 0;
+public:
+	static inline int isDescriptorPrimitive( object_desc_t const& desc ) noexcept { return (desc & Object::Tag::Mask) == Object::Tag::Obj; };
+	static inline Handler<Object> decodePrimitiveDescriptor( object_desc_t const& desc ) noexcept {
+		if(!Object::isDescriptorPrimitive(desc)) {
+			throw DonutException(__FILE__, __LINE__, "[BUG] Decoding heap object descriptor.");
+		}
+		return Handler<Object>::__internal__fromRawPointerWithoutCheck( reinterpret_cast<Object*>(static_cast<intptr_t>(desc)) );
+	};
+	static inline objectid_t decodeHeapObjectDescriptor( object_desc_t const& desc ) noexcept {
+		if(Object::isDescriptorPrimitive(desc)) {
+			throw DonutException(__FILE__, __LINE__, "[BUG] Decoding primitive descriptor.");
+		}
+		return desc >> TagShift;
+	};
 };
 
 }}
