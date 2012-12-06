@@ -20,13 +20,8 @@
 #include <memory>
 #include <map>
 #include <string>
+#include <tinyxml2.h>
 #include "Decl.h"
-
-namespace tinyxml2 {
-class XMLNode;
-class XMLElement;
-class XMLText;
-}
 
 namespace chisa {
 namespace doc {
