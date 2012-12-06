@@ -413,7 +413,23 @@ Handler<Object> Machine::run()
 }
 
 /**********************************************************************************
- * from clock
+ * save/load
+ **********************************************************************************/
+void Machine::bootstrap()
+{
+
+}
+tinyxml2::XMLElement* Machine::save(tinyxml2::XMLDocument* doc)
+{
+
+}
+void Machine::load(tinyxml2::XMLElement* data)
+{
+
+}
+
+/**********************************************************************************
+ * time functions
  **********************************************************************************/
 
 void Machine::onSeekNotify()

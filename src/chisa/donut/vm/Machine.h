@@ -83,10 +83,6 @@ public: /* 外部からの実行指示 */
 	Handler<Object> start( const Handler<Source>& src );
 	Handler<Object> startContinue( const Handler<Object>& obj );
 	bool isInterrupted() const noexcept;
-public: /* 時間操作 */
-	void onSeekNotify();
-	void onDiscardFutureNotify();
-	void onDiscardHistoryNotify();
 private: /* スタック操作 */
 	void pushStack( const Handler<Object>& obj );
 	Handler<Object> popStack();
@@ -96,6 +92,14 @@ private: /* 実行 */
 	bool leaveClosure();
 	bool fetchPC( Instruction& inst );
 	Handler<Object> run();
+public: /* 処理系の保存・復帰をします。 */
+	void bootstrap();
+	tinyxml2::XMLElement* save(tinyxml2::XMLDocument* doc);
+	void load(tinyxml2::XMLElement* data);
+public: /* 時間操作 */
+	void onSeekNotify();
+	void onDiscardFutureNotify();
+	void onDiscardHistoryNotify();
 };
 
 }}
