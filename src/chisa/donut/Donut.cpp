@@ -63,7 +63,9 @@ Handler<Source> Donut::parse(const std::string& src, const std::string& filename
  **********************************************************************************/
 void Donut::bootstrap()
 {
-	//ヒープのブートを行う
+	// 1: 時計
+	this->clock_->bootstrap();
+	// 2: ヒープ
 	this->heap_->bootstrap();
 	//マシンは何も起動しない -> TODO: すでにある状態を破棄できるようにする？
 }
