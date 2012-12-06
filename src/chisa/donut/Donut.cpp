@@ -80,6 +80,14 @@ tinyxml2::XMLElement* Donut::save(tinyxml2::XMLDocument* doc)
 		heapElm->InsertEndChild( this->heap_->save(doc) );
 		top->InsertEndChild( heapElm );
 	}
+	{ // 3: マシン
+		for(std::pair<std::string const, Handler<Machine> > const& m : this->machines_) {
+			tinyxml2::XMLElement* mElm = doc->NewElement("machine");
+			mElm->SetAttribute("name", m.first.c_str());
+			mElm->InsertEndChild( m.second->save(doc) );
+			top->InsertEndChild( mElm );
+		}
+	}
 
 	return top;
 }
@@ -88,7 +96,28 @@ void Donut::load(tinyxml2::XMLElement* data)
 	// 1: 時計
 	{
 		tinyxml2::XMLElement* clockElm = data->FirstChildElement("clock");
-		this->clock_->load(clockElm);
+		if( !clockElm ) {
+			throw DonutException(__FILE__, __LINE__, "[BUG] Broken save file. \"clock\" element not found.");
+		}
+		this->clock_->load( clockElm->FirstChildElement() );
+	}
+	{ // 2: ヒープ
+		tinyxml2::XMLElement* heapElm = data->FirstChildElement("heap");
+		if( !heapElm ) {
+			throw DonutException(__FILE__, __LINE__, "[BUG] Broken save file. \"heap\" element not found.");
+		}
+		this->heap_->load( heapElm->FirstChildElement() );
+	}
+	{ // 3: マシン
+		this->machines_.clear();
+		for(tinyxml2::XMLElement* mElm = data->FirstChildElement("machine"); mElm; mElm = mElm->NextSiblingElement("machine")){
+			char const* name = mElm->Attribute("name");
+			if( !name ) {
+				throw DonutException(__FILE__, __LINE__, "[BUG] Broken save file. \"name\" attr of machine not found.");
+			}
+			Handler<Machine> machine ( this->queryMachine(name) );
+			machine->load( mElm->FirstChildElement() );
+		}
 	}
 
 }
