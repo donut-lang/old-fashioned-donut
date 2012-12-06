@@ -24,6 +24,64 @@
 
 namespace chisa {
 namespace util {
+namespace xvalue {
+
+XArray::XArray( tinyxml2::XMLElement* elm )
+{
+	for( tinyxml2::XMLElement* e = elm->FirstChildElement(); e; e = e->NextSiblingElement() ){
+		append( XValue::fromXML(e) );
+	}
+}
+
+XObject::XObject( tinyxml2::XMLElement* elm )
+{
+	for( tinyxml2::XMLElement* e = elm->FirstChildElement("xpair"); e; e = e->NextSiblingElement("xpair") ){
+		set(e->Attribute("name"), XValue::fromXML(e->FirstChildElement()));
+	}
+}
+
+XValue XValue::fromXML( tinyxml2::XMLElement* elm ) {
+	std::string const name(elm->Name());
+	if( name == "xarray" ){
+		return XValue(Handler<XArray>( new XArray(elm)));
+	}else if(name=="xobject") {
+		return XValue(Handler<XObject>( new XObject(elm)) );
+	}else if(name=="xstring") {
+		return XValue::fromString<String>( elm->GetText() );
+	}else if(name=="xuint") {
+		return XValue::fromString<UInt>( elm->GetText() );
+	}else if(name=="xsint") {
+		return XValue::fromString<SInt>( elm->GetText() );
+	}else if(name=="xbool") {
+		return XValue::fromString<Bool>( elm->GetText() );
+	}else if(name=="xfloat") {
+		return XValue::fromString<Float>( elm->GetText() );
+	}else{
+		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon type!: %s", name.c_str());
+	}
+}
+std::string XValue::toString() const noexcept {
+	switch ( this->type_ ){
+	case Type::ArrayT:
+		return "Array";
+	case Type::ObjectT:
+		return "Object";
+	case Type::StringT:
+		return *this->spirit_.str_;
+	case Type::UIntT:
+		return util::toString( this->spirit_.uint_ );
+	case Type::SIntT:
+		return util::toString( this->spirit_.int_ );
+	case Type::BoolT:
+		return util::toString(this->spirit_.b_);
+	case Type::FloatT:
+		return util::toString(this->spirit_.dbl_);
+	default:
+		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon type!: %d", type_);
+	}
+}
+
+}
 
 using namespace tinyxml2;
 

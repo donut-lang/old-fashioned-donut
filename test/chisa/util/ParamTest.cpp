@@ -26,170 +26,166 @@ namespace util {
 
 TEST(ParamTest, StringTest)
 {
-	std::shared_ptr<Param> p;
-	std::string str;
-	p = Param::createParam("name", "string", "hi");
-	ASSERT_FALSE(p->queryFloat(0));
-	ASSERT_FALSE(p->queryInt(0));
-	ASSERT_TRUE(p->queryString(&str));
-	ASSERT_EQ(str, "hi");
-	p = Param::createParam("name", "STRING", "hi");
-	ASSERT_FALSE(p->queryFloat(0));
-	ASSERT_FALSE(p->queryInt(0));
-	ASSERT_TRUE(p->queryString(&str));
-	ASSERT_EQ(str, "hi");
+	XValue x("string");
+	ASSERT_TRUE( x.is<XString>() );
+	ASSERT_EQ( "string", x.get<XString>() );
 }
 
 TEST(ParamTest, IntTest)
 {
-	std::shared_ptr<Param> p;
 	int val = 0xffffffff;
-	p = Param::createParam("name", "int", "hi");
-	ASSERT_FALSE(p->queryFloat(0));
-	ASSERT_FALSE(p->queryInt(&val));
-	ASSERT_FALSE(p->queryString(0));
-	ASSERT_EQ(val, 0xffffffff);
-	p = Param::createParam("name", "int", "100");
-	ASSERT_FALSE(p->queryFloat(0));
-	ASSERT_TRUE(p->queryInt(&val));
-	ASSERT_FALSE(p->queryString(0));
-	ASSERT_EQ(val, 100);
+	{
+		XValue p((val));
+		ASSERT_TRUE( p.is<XSInt>() );
+		ASSERT_ANY_THROW( p.get<XUInt>() );
+		ASSERT_EQ(p.get<XSInt>(), 0xffffffff);
+	}
+	{
+		XValue p((10U));
+		ASSERT_TRUE( p.is<XUInt>() );
+		ASSERT_ANY_THROW( p.get<XSInt>() );
+		ASSERT_EQ(10, p.get<XUInt>());
+	}
 }
 
 TEST(ParamTest, IntMaxTest)
 {
 	std::shared_ptr<Param> p;
 	{
-		int val = 0xFFFFFFFF;
-		p = Param::createParam("name", "int", "hi");
-		ASSERT_FALSE(p->queryFloat(0));
-		ASSERT_FALSE(p->queryInt(&val));
-		ASSERT_FALSE(p->queryString(0));
-		ASSERT_EQ(val, 0xFFFFFFFF);
+		XValue p((0xFFFFFFFF));
+		ASSERT_EQ(0xFFFFFFFF, p.get<XUInt>());
 	}
 
 	{
-		int val = 0x7FFFFFFF;
-		p = Param::createParam("name", "int", "hi");
-		ASSERT_FALSE(p->queryFloat(0));
-		ASSERT_FALSE(p->queryInt(&val));
-		ASSERT_FALSE(p->queryString(0));
-		ASSERT_EQ(val, 0x7FFFFFFF);
+		XValue p((0x7FFFFFFF));
+		ASSERT_EQ(0x7FFFFFFF, p.get<XSInt>());
+	}
+
+	{
+		XValue p(XValue::fromString<XSInt>("0x7fffffff"));
+		ASSERT_TRUE( p.is<XSInt>() );
+		ASSERT_ANY_THROW( p.get<XUInt>() );
+		ASSERT_EQ(0x7fffffff, p.get<XSInt>());
+	}
+
+	{
+		XValue p(XValue::fromString<XUInt>("0xffffffff"));
+		ASSERT_TRUE( p.is<XUInt>() );
+		ASSERT_ANY_THROW( p.get<XSInt>() );
+		ASSERT_EQ(0xffffffff, p.get<XUInt>());
 	}
 }
 
 TEST(ParamTest, FloatTest)
 {
-	std::shared_ptr<Param> p;
-	float val = 0xDEADBEEF;
-	p = Param::createParam("name", "float", "float");
-	ASSERT_FALSE(p->queryFloat(&val));
-	ASSERT_FALSE(p->queryInt(0));
-	ASSERT_FALSE(p->queryString(0));
-	ASSERT_FLOAT_EQ(val, 0xDEADBEEF);
-
-	p = Param::createParam("name", "float", "10.1");
-	ASSERT_TRUE(p->queryFloat(&val));
-	ASSERT_FALSE(p->queryInt(0));
-	ASSERT_FALSE(p->queryString(0));
-	ASSERT_FLOAT_EQ(val, 10.1);
-
-	p = Param::createParam("name", "float", "nan");
-	ASSERT_TRUE(p->queryFloat(&val));
-	ASSERT_FALSE(p->queryInt(0));
-	ASSERT_FALSE(p->queryString(0));
-	ASSERT_TRUE(isnan(val));
-
-	p = Param::createParam("name", "float", "NAN");
-	ASSERT_TRUE(p->queryFloat(&val));
-	ASSERT_FALSE(p->queryInt(0));
-	ASSERT_FALSE(p->queryString(0));
-	ASSERT_TRUE(isnan(val));
+	{
+		float val = 0xDEADBEEF;
+		XValue p((val));
+		ASSERT_EQ(val, p.get<XFloat>());
+	}
+	{
+		float val = 10.1;
+		XValue p((val));
+		ASSERT_EQ(val, p.get<XFloat>());
+	}
+	{
+		float val = NAN;
+		XValue p((val));
+		ASSERT_TRUE( isnan( p.get<XFloat>() ) );
+	}
+	{
+		XValue p(XValue::fromString<XFloat>("nan"));
+		ASSERT_TRUE( p.is<XFloat>() );
+		ASSERT_TRUE( isnan( p.get<XFloat>() ) );
+	}
+	{
+		XValue p(XValue::fromString<XFloat>("NAN"));
+		ASSERT_TRUE( p.is<XFloat>() );
+		ASSERT_TRUE( isnan( p.get<XFloat>() ) );
+	}
 }
 
 TEST(ParamTest, BooleanTest)
 {
-	std::shared_ptr<Param> p;
+	{
+		bool val = true;
+		XValue p((val));
+		ASSERT_EQ(val, p.get<XBool>());
+	}
 
 	{
-		bool v=true;
-		p = Param::createParam("name", "bool", "float");
-		ASSERT_FALSE(p->queryFloat(0));
-		ASSERT_FALSE(p->queryInt(0));
-		ASSERT_FALSE(p->queryString(0));
-		ASSERT_FALSE(p->queryBool(&v));
-		ASSERT_TRUE(v);
+		XValue p;
+		ASSERT_ANY_THROW( p = XValue::fromString<XBool>("float") );
 	}
 	{
-		bool v=true;
-		p = Param::createParam("name", "bool", "false");
-		ASSERT_FALSE(p->queryFloat(0));
-		ASSERT_FALSE(p->queryInt(0));
-		ASSERT_FALSE(p->queryString(0));
-		ASSERT_TRUE(p->queryBool(&v));
-		ASSERT_FALSE(v);
+		XValue p( XValue::fromString<XBool>("false") );
+		ASSERT_TRUE( p.is<XBool>() );
+		ASSERT_FALSE( p.get<XBool>() );
 	}
 	{
-		bool v=true;
-		p = Param::createParam("name", "bool", "no");
-		ASSERT_FALSE(p->queryFloat(0));
-		ASSERT_FALSE(p->queryInt(0));
-		ASSERT_FALSE(p->queryString(0));
-		ASSERT_TRUE(p->queryBool(&v));
-		ASSERT_FALSE(v);
+		XValue p( XValue::fromString<XBool>("no") );
+		ASSERT_TRUE( p.is<XBool>() );
+		ASSERT_FALSE( p.get<XBool>() );
 	}
 	{
-		bool v=false;
-		p = Param::createParam("name", "bool", "true");
-		ASSERT_FALSE(p->queryFloat(0));
-		ASSERT_FALSE(p->queryInt(0));
-		ASSERT_FALSE(p->queryString(0));
-		ASSERT_TRUE(p->queryBool(&v));
-		ASSERT_TRUE(v);
+		XValue p( XValue::fromString<XBool>("true") );
+		ASSERT_TRUE( p.is<XBool>() );
+		ASSERT_TRUE( p.get<XBool>() );
 	}
 	{
-		bool v=false;
-		p = Param::createParam("name", "bool", "yes");
-		ASSERT_FALSE(p->queryFloat(0));
-		ASSERT_FALSE(p->queryInt(0));
-		ASSERT_FALSE(p->queryString(0));
-		ASSERT_TRUE(p->queryBool(&v));
-		ASSERT_TRUE(v);
+		XValue p( XValue::fromString<XBool>("yes") );
+		ASSERT_TRUE( p.is<XBool>() );
+		ASSERT_TRUE( p.get<XBool>() );
 	}
 }
 
-TEST(ParamTest, TreeFloatTest)
+TEST(ParamTest, TreeTest)
 {
-	std::shared_ptr<ParamSet> pset(new ParamSet());
-	pset->add("intval", "int", "0");
-	tinyxml2::XMLDocument doc;
-	tinyxml2::XMLElement* pElem;
-	pElem = doc.NewElement("widget");
-	doc.InsertEndChild(pElem);
+	auto tree = parse(R"delimiter(
+		<?xml version="1.0" encoding="UTF-8"?>
+		<xobject>
+			<xpair name="a"><xbool>true</xbool></xpair>
+			<xpair name="b"><xsint>-1</xsint></xpair>
+			<xpair name="c"><xuint>1</xuint></xpair>
+			<xpair name="d"><xstring>test</xstring></xpair>
+			<xpair name="e"><xfloat>10.11</xfloat></xpair>
+			<xpair name="f">
+				<xarray>
+					<xsint>10</xsint>
+					<xsint>20</xsint>
+				</xarray>
+			</xpair>
+		</xobject>
+		)delimiter");
+	tree->PrintError();
+	tinyxml2::XMLElement* elm = tree->RootElement();
+	XValue p( XValue::fromXML( elm ) );
+	ASSERT_TRUE( p.is<XObject>() );
+	Handler<XObject> obj = p.get<XObject>();
+	{
+		ASSERT_TRUE(obj->has<XBool>("a"));
+		ASSERT_TRUE(obj->get<XBool>("a"));
 
-	pElem = doc.NewElement("param");
-	pElem->SetAttribute("name", "str");
-	pElem->InsertFirstChild(doc.NewText("strvalue"));
-	doc.RootElement()->InsertEndChild(pElem);
+		ASSERT_TRUE(obj->has<XSInt>("b"));
+		ASSERT_EQ(-1, obj->get<XSInt>("b"));
 
-	pElem = doc.NewElement("param");
-	pElem->SetAttribute("name", "intval");
-	pElem->SetAttribute("type", Param::TypeName::Integer);
-	pElem->InsertFirstChild(doc.NewText("256"));
-	doc.RootElement()->InsertEndChild(pElem);
+		ASSERT_TRUE(obj->has<XUInt>("c"));
+		ASSERT_EQ(1, obj->get<XUInt>("c"));
 
-	pset->parseTree(doc.RootElement());
+		ASSERT_TRUE(obj->has<XString>("d"));
+		ASSERT_EQ("test", obj->get<XString>("d"));
 
-	ASSERT_EQ(2, pset->size());
-	ASSERT_TRUE(pset->get("intval") != nullptr);
-	int val = 0;
-	ASSERT_TRUE(pset->get("intval")->queryInt(&val));
-	ASSERT_EQ(val, 0);
+		ASSERT_TRUE(obj->has<XFloat>("e"));
+		ASSERT_FLOAT_EQ(10.11, obj->get<XFloat>("e"));
 
-	std::string str;
-	ASSERT_TRUE(pset->get("str") != nullptr);
-	ASSERT_TRUE(pset->get("str")->queryString(&str));
-	ASSERT_EQ(str, "strvalue");
+		ASSERT_TRUE(obj->has<XArray>("f"));
+		Handler<XArray> array(obj->get<XArray>("f"));
+		{
+			ASSERT_EQ(2, array->size());
+			ASSERT_EQ(10, array->get<XSInt>(0));
+			ASSERT_EQ(20, array->get<XSInt>(1));
+		}
+	}
 }
 
 TEST(ParamTest, GetSetTest)
