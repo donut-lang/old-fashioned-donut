@@ -552,7 +552,7 @@ void Machine::load(tinyxml2::XMLElement* data)
 	for(tinyxml2::XMLElement* elm = data->FirstChildElement(); elm; elm = elm->NextSiblingElement()) {
 		this->contextRevs_.push_back( Context(heap_, elm) );
 	}
-	if( !std::is_sorted(this->contextRevs_.begin(), this->contextRevs_.end(), Context::TimeComparator()) ){
+	if( !std::is_sorted(this->contextRevs_.begin(), this->contextRevs_.end(), Context::CompareByTime()) ){
 		throw DonutException(__FILE__, __LINE__, "[BUG] Invalid save data. Revision data is not sorted.");
 	}
 }

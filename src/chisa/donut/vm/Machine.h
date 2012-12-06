@@ -59,7 +59,7 @@ struct Context {
 	~Context() noexcept = default;
 	tinyxml2::XMLElement* save(tinyxml2::XMLDocument* doc);
 public:
-	struct TimeComparator : std::binary_function<Context const&, Context const&, bool> {
+	struct CompareByTime : std::binary_function<Context const&, Context const&, bool> {
 		bool operator()(Context const& a, Context const& b) const noexcept
 		{
 			return a.time_ < b.time_;
