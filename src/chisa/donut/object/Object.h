@@ -18,7 +18,7 @@
 
 #pragma once
 #include <cstdint>
-#include <map>
+#include <unordered_map>
 #include "../../Handler.h"
 #include "../../util/ClassUtil.h"
 #include "../Exception.h"
@@ -157,8 +157,9 @@ namespace donut {
  * ドーナツ言語内でのクロージャやオブジェクトなどのクラス
  */
 class DonutObject : public HeapObject {
+	friend class DonutObjectProvider;
 private:
-	std::map<std::string, Slot> slots_;
+	std::unordered_map<std::string, Slot> slots_;
 public:
 	DonutObject(const Handler<Heap>& heap);
 	virtual ~DonutObject() noexcept = default;
