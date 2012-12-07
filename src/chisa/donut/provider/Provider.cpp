@@ -38,23 +38,20 @@ void Provider::addPrototype( const std::string& name, Handler<NativeClosureEntry
 	}
 }
 
-util::XValue Provider::save(Handler<Object> const& obj)
+util::XValue Provider::save(Handler<HeapObject> const& obj)
 {
 	using namespace chisa::util;
-	if( obj->isObject() ){
-		if( Handler<NativeClosureObject> cobj = obj.tryCast<NativeClosureObject>() ) {
-			Handler<XObject> val(new XObject);
-			val->set("type","closure");
-			val->set("closureName", cobj->closureName());
-			return val;
-		}
-	}
 	Handler<XObject> val(new XObject);
-	val->set("type","object");
-	val->set("impl", this->saveImpl(obj));
+	if( Handler<NativeClosureObject> cobj = obj.tryCast<NativeClosureObject>() ) {
+		val->set("type","closure");
+		val->set("closureName", cobj->closureName());
+	} else {
+		val->set("type","object");
+		val->set("impl", this->saveImpl(obj));
+	}
 	return val;
 }
-Handler<Object> Provider::load(util::XValue const& data)
+Handler<HeapObject> Provider::load(util::XValue const& data)
 {
 	using namespace chisa::util;
 	Handler<XObject> val(data.as<XObject>());

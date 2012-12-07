@@ -72,7 +72,7 @@ FloatProvider::FloatProvider(const Handler<Heap>& heap)
 }
 
 
-util::XValue FloatProvider::saveImpl(Handler<Object> const& obj)
+util::XValue FloatProvider::saveImpl(Handler<HeapObject> const& obj)
 {
 	if(Handler<Heap> heap = this->heap().lock()){
 		return util::XValue( obj->toFloat(heap) );
@@ -80,7 +80,7 @@ util::XValue FloatProvider::saveImpl(Handler<Object> const& obj)
 		throw DonutException(__FILE__, __LINE__, "[BUG] heap was already dead!");
 	}
 }
-Handler<Object> FloatProvider::loadImpl(util::XValue const& data)
+Handler<HeapObject> FloatProvider::loadImpl(util::XValue const& data)
 {
 	if(Handler<Heap> heap = this->heap().lock()){
 		return heap->createFloatObject( data.as<util::XFloat>() );

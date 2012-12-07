@@ -109,13 +109,13 @@ Handler<Object> IntProvider::create( const int& val )
 	return Handler<Object>::__internal__fromRawPointerWithoutCheck( IntProvider::toPointer(val) );
 }
 
-util::XValue IntProvider::saveImpl(Handler<Object> const& obj)
+util::XValue IntProvider::saveImpl(Handler<HeapObject> const& obj)
 {
-	return util::XValue( IntProvider::fromPointer(obj.get()) );
+	throw DonutException(__FILE__, __LINE__, "[BUG] Do not call IntProvider#saveImpl.");
 }
-Handler<Object> IntProvider::loadImpl(util::XValue const& data)
+Handler<HeapObject> IntProvider::loadImpl(util::XValue const& data)
 {
-	return Handler<Object>::__internal__fromRawPointerWithoutCheck( IntProvider::toPointer(data.as<int>()) );
+	throw DonutException(__FILE__, __LINE__, "[BUG] Do not call IntProvider#loadImpl.");
 }
 
 }}

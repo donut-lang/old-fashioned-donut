@@ -55,7 +55,7 @@ StringProvider::StringProvider(const Handler<Heap>& heap )
 	}));
 }
 
-util::XValue StringProvider::saveImpl(Handler<Object> const& obj)
+util::XValue StringProvider::saveImpl(Handler<HeapObject> const& obj)
 {
 	if(Handler<Heap> heap = this->heap().lock()){
 		return util::XValue( obj->toString(heap) );
@@ -63,7 +63,7 @@ util::XValue StringProvider::saveImpl(Handler<Object> const& obj)
 		throw DonutException(__FILE__, __LINE__, "[BUG] heap was already dead!");
 	}
 }
-Handler<Object> StringProvider::loadImpl(util::XValue const& data)
+Handler<HeapObject> StringProvider::loadImpl(util::XValue const& data)
 {
 	if(Handler<Heap> heap = this->heap().lock()){
 		return heap->createStringObject( data.as<util::XString>() );
