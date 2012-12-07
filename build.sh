@@ -20,5 +20,5 @@ if [ -z $VAR ] ; then
 VAR="build"
 fi
 shift
-python waf --out $BUILDDIR -p ${VAR}_debug $*
-
+python waf --out $BUILDDIR --progress ${VAR}_debug $* 2>&1
+exit $?
