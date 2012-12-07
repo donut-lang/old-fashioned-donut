@@ -100,7 +100,7 @@ public:
 public:
 	template <typename T> bool is() const noexcept;
 	template <typename T> typename _GetType<T>::type as();
-	template <typename T> typename _GetType<T>::const_type get() const;
+	template <typename T> typename _GetType<T>::const_type as() const;
 	template <typename T> static XValue decode( std::string const& str );
 
 	static XValue fromXML( tinyxml2::XMLElement* elm );

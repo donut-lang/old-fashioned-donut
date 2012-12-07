@@ -216,7 +216,7 @@ void Heap::initPrimitiveProviders()
 	this->registerProvider(Handler<Provider>( new StringProvider(self) ));
 }
 
-Handler<util::XObject> Heap::save()
+util::XValue Heap::save()
 {
 	Handler<util::XObject> top(new util::XObject);
 	/*
@@ -245,8 +245,9 @@ Handler<util::XObject> Heap::save()
 	return top;
 }
 
-void Heap::load(Handler<util::XObject> const& data)
+void Heap::load(util::XValue const& data)
 {
+	Handler<util::XObject> obj ( data.as<util::XObject>() );
 	/*
 	this->initPrimitiveProviders();
 	{ //pool

@@ -45,7 +45,7 @@ template <typename T> T& XArray::get( std::size_t const& idx ) {
 	if( !val.is<T>() ) {
 		throw logging::Exception(__FILE__, __LINE__, "Object: %s type mismatch %s != %s.", typeid(T).name(), val.toString().c_str());
 	}
-	return val.get<T>();
+	return val.as<T>();
 }
 template <typename T> T const& XArray::set( const std::size_t& idx, T const& obj ) {
 	if( idx < 0 || idx >= list_.size() ){
@@ -66,7 +66,7 @@ template<typename T> typename _GetType<T>::type XObject::get( std::string const&
 	if( !it->second.is<T>() ) {
 		throw logging::Exception(__FILE__, __LINE__, "Object: %s type mismatch %s != %s.", typeid(T).name(), it->second.toString().c_str());
 	}
-	return it->second.get<T>();
+	return it->second.as<T>();
 }
 template<typename T> typename _GetType<T>::type XObject::opt(std::string const& name)
 {
@@ -74,7 +74,7 @@ template<typename T> typename _GetType<T>::type XObject::opt(std::string const& 
 	if (it == this->map_.end() || !it->second.is<T>()) {
 		return T();
 	}
-	return it->second.get<T>();
+	return it->second.as<T>();
 }
 template<typename T> bool XObject::has(std::string const& name)
 {
@@ -94,13 +94,13 @@ template<typename T> T const& XObject::set(const std::string& name, T const& obj
 		template <> inline bool XValue::is<XValue::TYPE>() const noexcept {\
 			return this->type_ == XValue::Type::TYPE##T;\
 		};\
-		template <> inline typename _GetType<XValue::TYPE>::type XValue::get<XValue::TYPE>() {\
+		template <> inline typename _GetType<XValue::TYPE>::type XValue::as<XValue::TYPE>() {\
 			if(this->type_ != XValue::Type::TYPE##T) {\
 				throw logging::Exception(__FILE__, __LINE__, "Type mismatch %s != %s.", typeid(XValue::TYPE).name(), this->toString().c_str());\
 			}\
 			return VAL;\
 		};\
-		template <> inline typename _GetType<XValue::TYPE>::const_type XValue::get<XValue::TYPE>() const {\
+		template <> inline typename _GetType<XValue::TYPE>::const_type XValue::as<XValue::TYPE>() const {\
 			if(this->type_ != XValue::Type::TYPE##T) {\
 				throw logging::Exception(__FILE__, __LINE__, "Type mismatch %s != %s.", typeid(XValue::TYPE).name(), this->toString().c_str());\
 			}\

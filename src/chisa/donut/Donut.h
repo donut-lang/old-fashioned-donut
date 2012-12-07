@@ -54,8 +54,8 @@ public:
 	Handler<Source> parse(const std::string& src, const std::string& filename="<DEFAULT>", const int& lineno=0);
 public: /* 処理系の保存・復帰をします。 */
 	void bootstrap();
-	Handler<util::XObject> save();
-	void load( Handler<util::XObject> const& data);
+	util::XValue save();
+	void load( util::XValue const& data);
 public: /* seekとかをします。外部から呼びます */
 	unsigned int nowTime() const noexcept;
 	void seek( unsigned int const& time );
