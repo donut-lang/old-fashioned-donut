@@ -27,15 +27,15 @@ namespace widget {
 
 NesScreenWidget::NesScreenWidget(chisa::logging::Logger& log, std::weak_ptr<chisa::tk::World> _world, tinyxml2::XMLElement* element)
 :Widget(log, _world, element)
+,conf_(new chisa::util::XObject)
 {
 	std::shared_ptr<chisa::tk::World> world(_world.lock());
 	std::shared_ptr<nes::NesGeist> geist(std::dynamic_pointer_cast<nes::NesGeist>(world->geist()));
 	this->geist_ = geist;
-	this->params_.parseTree(element);
+	this->conf_->accumlate(element->FirstChildElement());
 
-	std::string rom;
-	if(this->params_.queryString("rom", &rom)){
-		geist->loadNES(world->resolveUniverseFilepath(rom));
+	if(this->conf_->has<chisa::util::XString>("rom")){
+		geist->loadNES(world->resolveUniverseFilepath(this->conf_->get<chisa::util::XString>("rom")));
 		geist->startNES();
 	}
 }

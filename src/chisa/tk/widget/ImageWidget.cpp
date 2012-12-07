@@ -29,22 +29,17 @@ const static std::string TAG("ImageWidget");
 
 ImageWidget::ImageWidget(logging::Logger& log, std::weak_ptr<World> world, tinyxml2::XMLElement* element)
 :Widget(log, world, element)
-,paramSet_(new util::ParamSet())
+,conf_(new util::XObject( element->FirstChildElement() ))
 {
-	paramSet_->parseTree(element);
 	if( std::shared_ptr<World> w = world.lock() ) {
-		if(paramSet_->has("src")){
-			std::string src;
-			if(paramSet_->get("src")->queryString(&src)){
-				std::string fpath = w->resolveUniverseFilepath(src);
-				this->imageSprite_ = w->drawableManager()->queryImage(fpath);
-				if(this->imageSprite_ && log.t()){
-					log.t(TAG, "file: %s loaded: %dx%d", fpath.c_str(), imageSprite_->width(), imageSprite_->height());
-				}else if(!this->imageSprite_){
-					log.e(TAG, "Failed to load: %s", fpath.c_str());
-				}
-			}else{
-				log.e(TAG, "Oops. Src parameter is not string.");
+		if(this->conf_->has<util::XString>("src")){
+			std::string src = this->conf_->get<util::XString>("src");
+			std::string fpath = w->resolveUniverseFilepath(src);
+			this->imageSprite_ = w->drawableManager()->queryImage(fpath);
+			if(this->imageSprite_ && log.t()){
+				log.t(TAG, "file: %s loaded: %dx%d", fpath.c_str(), imageSprite_->width(), imageSprite_->height());
+			}else if(!this->imageSprite_){
+				log.e(TAG, "Failed to load: %s", fpath.c_str());
 			}
 		}else{
 			log.e(TAG, "Oops. Src parameter not found!");
@@ -56,7 +51,6 @@ ImageWidget::ImageWidget(logging::Logger& log, std::weak_ptr<World> world, tinyx
 
 ImageWidget::~ImageWidget()
 {
-	delete paramSet_;
 }
 
 void ImageWidget::render(gl::Canvas& cv, const geom::Area& area)

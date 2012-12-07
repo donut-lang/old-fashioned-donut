@@ -19,6 +19,7 @@
 #pragma once
 
 #include "../Widget.h"
+#include "../../util/Param.h"
 #include "../../gl/Sprite.h"
 
 namespace chisa {
@@ -33,7 +34,7 @@ class ImageWidget: public chisa::tk::Widget {
 	DISABLE_COPY_AND_ASSIGN(ImageWidget);
 private:
 	Handler<gl::Sprite> imageSprite_;
-	util::ParamSet* const paramSet_;
+	Handler<util::XObject> conf_;
 public:
 	ImageWidget(logging::Logger& log, std::weak_ptr<World> world, tinyxml2::XMLElement* element);
 	virtual ~ImageWidget();
