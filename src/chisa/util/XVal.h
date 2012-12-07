@@ -91,15 +91,15 @@ public:
 	explicit inline XValue(Bool const& val):type_(Type::BoolT){ this->spirit_.bool_=val; };
 	explicit inline XValue(SInt const& val):type_(Type::SIntT){ this->spirit_.int_=val; };
 	explicit inline XValue(UInt const& val):type_(Type::UIntT){ this->spirit_.uint_=val; };
-	explicit inline XValue(Handler<XArray> const& val):type_(Type::ArrayT){ this->spirit_.array_= new Handler<Array>( val ); };
-	explicit inline XValue(Handler<XObject> const& val):type_(Type::ObjectT){ this->spirit_.object_= new Handler<Object>( val ); };
+	inline XValue(Handler<XArray> const& val):type_(Type::ArrayT){ this->spirit_.array_= new Handler<Array>( val ); };
+	inline XValue(Handler<XObject> const& val):type_(Type::ObjectT){ this->spirit_.object_= new Handler<Object>( val ); };
 	explicit inline XValue(String const& val):type_(Type::StringT){ this->spirit_.str_= new std::string(val); };
 	explicit inline XValue(const char* const& val):type_(Type::StringT){ this->spirit_.str_ = new std::string(val); };
 	~XValue() noexcept { this->remove(); }
 	inline bool onFree() const noexcept { return false; };
 public:
 	template <typename T> bool is() const noexcept;
-	template <typename T> typename _GetType<T>::type get();
+	template <typename T> typename _GetType<T>::type as();
 	template <typename T> typename _GetType<T>::const_type get() const;
 	template <typename T> static XValue decode( std::string const& str );
 

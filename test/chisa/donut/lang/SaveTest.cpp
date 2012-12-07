@@ -34,7 +34,7 @@ TEST(SaveTest, ClockSaveTest)
 	clock->seek(clock->lastTime()-2);
 	clock->seek(clock->lastTime()-4);
 	{
-		Handler<util::XObject> obj = clock->save();
+		Handler<util::XObject> obj = clock->save().get<util::XObject>();
 		tinyxml2::XMLDocument doc;
 		doc.InsertFirstChild(obj->toXML(&doc));
 		tinyxml2::XMLPrinter printer;
@@ -56,7 +56,7 @@ TEST(SaveTest, DonutSaveTest)
 {
 	INIT_DONUT;
 	tinyxml2::XMLDocument doc;
-	Handler<util::XObject> obj = donut->save();
+	Handler<util::XObject> obj = donut->save().get<util::XObject>();
 	doc.InsertEndChild(obj->toXML(&doc));
 	tinyxml2::XMLPrinter printer;
 	doc.Print(&printer);
