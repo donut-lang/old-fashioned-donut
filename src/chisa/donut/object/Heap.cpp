@@ -182,10 +182,10 @@ Handler<Object> Heap::loadGlobalObject( std::string const& name )
 
 void Heap::bootstrap()
 {
-	this->initPrimitiveProviders();
-	Handler<Heap> const self = this->self();
 	this->objectId_ = 0;
 	this->walkColor_ = 0;
+	this->initPrimitiveProviders();
+	Handler<Heap> const self = this->self();
 
 	this->objectProto_ = this->donutObjectProvider()->prototype();
 	this->intProto_ = this->intProvider()->prototype();
