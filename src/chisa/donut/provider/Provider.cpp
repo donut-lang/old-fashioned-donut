@@ -28,7 +28,6 @@ namespace donut {
 Provider::Provider( const Handler<Heap>& heap, const std::string& name )
 :heap_(heap), name_(name)
 {
-	this->prototype_ = heap->createEmptyDonutObject();
 }
 
 void Provider::addPrototype( const std::string& name, Handler<NativeClosureEntry> clos )
@@ -38,7 +37,26 @@ void Provider::addPrototype( const std::string& name, Handler<NativeClosureEntry
 	}
 }
 
-util::XValue Provider::save(Handler<HeapObject> const& obj)
+void Provider::bootstrap()
+{
+	if(Handler<Heap> heap = this->heap().lock()){
+		this->prototype_ = heap->createEmptyDonutObject();
+		for( std::pair<std::string, Handler<NativeClosureEntry>> const& p : this->nativeClosures_ ){
+			this->prototype_->store(heap, p.first, p.second->createObject(heap, this->name(), p.first));
+		}
+	}
+}
+util::XValue Provider::save()
+{
+
+}
+
+void Provider::load( util::XValue const& data)
+{
+
+}
+
+util::XValue Provider::saveObject(Handler<HeapObject> const& obj)
 {
 	using namespace chisa::util;
 	Handler<XObject> val(new XObject);
@@ -47,19 +65,35 @@ util::XValue Provider::save(Handler<HeapObject> const& obj)
 		val->set("closureName", cobj->closureName());
 	} else {
 		val->set("type","object");
-		val->set("impl", this->saveImpl(obj));
+		val->set("impl", this->saveObjectImpl(obj));
 	}
 	return val;
 }
-Handler<HeapObject> Provider::load(util::XValue const& data)
+
+Handler<NativeClosureEntry> const& Provider::findClosureEntry( std::string const& name )
+{
+	auto it = std::lower_bound(this->nativeClosures_.begin(), this->nativeClosures_.end(), name, Comparator());
+	std::pair<std::string, Handler<NativeClosureEntry> >& p = *it;
+	if(it == this->nativeClosures_.end() || p.first != name){
+		throw DonutException(__FILE__, __LINE__, "Closure %s not found in %s!!", name.c_str(), this->name().c_str());
+	}
+	return p.second;
+}
+
+Handler<HeapObject> Provider::loadObject(util::XValue const& data)
 {
 	using namespace chisa::util;
 	Handler<XObject> val(data.as<XObject>());
 	std::string const type( val->get<XString>("type") );
 	if( type == "closure" ){
-
+		if( Handler<Heap> heap = this->heap_.lock() ){
+			std::string const closName ( val->get<XString>("closureName") );
+			return this->findClosureEntry(closName)->createObject(heap, this->name(), closName);
+		}else{
+			throw DonutException(__FILE__, __LINE__, "[BUG] Heap was already dead.");
+		}
 	}else if( type=="object" ){
-		return this->loadImpl( val->get<XValue>("impl") );
+		return this->loadObjectImpl( val->get<XValue>("impl") );
 	}else{
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object type: %s", type.c_str());
 	}

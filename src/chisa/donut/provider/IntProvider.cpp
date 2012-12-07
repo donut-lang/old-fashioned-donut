@@ -109,11 +109,11 @@ Handler<Object> IntProvider::create( const int& val )
 	return Handler<Object>::__internal__fromRawPointerWithoutCheck( IntProvider::toPointer(val) );
 }
 
-util::XValue IntProvider::saveImpl(Handler<HeapObject> const& obj)
+util::XValue IntProvider::saveObjectImpl(Handler<HeapObject> const& obj)
 {
 	throw DonutException(__FILE__, __LINE__, "[BUG] Do not call IntProvider#saveImpl.");
 }
-Handler<HeapObject> IntProvider::loadImpl(util::XValue const& data)
+Handler<HeapObject> IntProvider::loadObjectImpl(util::XValue const& data)
 {
 	throw DonutException(__FILE__, __LINE__, "[BUG] Do not call IntProvider#loadImpl.");
 }
