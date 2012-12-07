@@ -218,68 +218,44 @@ void Heap::initPrimitiveProviders()
 
 util::XValue Heap::save()
 {
-	Handler<util::XObject> top(new util::XObject);
-	/*
+	using namespace chisa::util;
+	Handler<XObject> top(new XObject);
 	{ //pool
-		tinyxml2::XMLElement* const poolE = doc->NewElement("pool");
+		Handler<XArray> pool(new XArray);
 		for( HeapObject* const& obj : this->objectPool_ ) {
-			tinyxml2::XMLElement* const objE = doc->NewElement("pool");
-			objE->SetAttribute("provider", obj->providerName().c_str());
-			objE->SetAttribute("id", obj->id());
-			poolE->InsertEndChild(objE);
+			Handler<XObject> xobj(new XObject);
+			xobj->set("provider", obj->providerName().c_str());
+			xobj->set("id", obj->id());
+			pool->append(xobj);
 		}
-		top->InsertEndChild( poolE );
+		top->set("pool", pool);
 	}
-	{
-		tinyxml2::XMLElement* const globalE = doc->NewElement("global");
-		util::ParamSet set;
-		set.addInt("object-prototype", this->donutObjectProvider()->prototype()->toDescriptor());
-		set.addInt("int-prototype", this->intProvider()->prototype()->toDescriptor());
-		set.addInt("bool-prototype", this->boolProvider()->prototype()->toDescriptor());
-		set.addInt("null-prototype", this->nullProvider()->prototype()->toDescriptor());
-		set.addInt("global", this->global()->toDescriptor());
-		globalE->InsertEndChild( set.synthTree(doc) );
-		top->InsertEndChild( globalE );
-	}
-	*/
+	top->set("object-prototype", this->donutObjectProvider()->prototype()->toDescriptor());
+	top->set("int-prototype", this->intProvider()->prototype()->toDescriptor());
+	top->set("bool-prototype", this->boolProvider()->prototype()->toDescriptor());
+	top->set("null-prototype", this->nullProvider()->prototype()->toDescriptor());
+	top->set("global", this->global()->toDescriptor());
 	return top;
 }
 
 void Heap::load(util::XValue const& data)
 {
-	Handler<util::XObject> obj ( data.as<util::XObject>() );
-	/*
 	this->initPrimitiveProviders();
-	{ //pool
-		tinyxml2::XMLElement* const poolE = xml->FirstChildElement("pool");
-		for(tinyxml2::XMLElement* e=poolE->FirstChildElement(); e; e=e->NextSiblingElement()){
-			char const* const provider = e->Attribute("provider");
-			if(!provider){
-				throw DonutException(__FILE__, __LINE__, "[BUG] Broken save data. \"provider\" attr not found.");
-			}
-			objectid_t id;
-			if( e->QueryIntAttribute("id", &id) != tinyxml2::XML_SUCCESS ){
-				throw DonutException(__FILE__, __LINE__, "[BUG] Broken save data. \"id\" attr not found.");
-			}
-			// FIXME: どうしよう
-			//HeapObject* obj = this->getProvider(provider)->deserialize(e->FirstChildElement());
-			// obj->id(id);
-		}
+	using namespace chisa::util;
+	Handler<util::XObject> obj ( data.as<util::XObject>() );
+	for( XValue& val : *(obj->get<XArray>("pool")) ){ //pool
+		Handler<XObject> obj ( val.as<XObject>() );
+		std::string const provider = obj->get<XString>("provider");
+		objectid_t id = obj->get<objectid_t>("id");
+		// FIXME: どうしよう
+		//HeapObject* obj = this->getProvider(provider)->deserialize(e->FirstChildElement());
+		// obj->id(id);
 	}
-	{ //global
-		tinyxml2::XMLElement* const globalE = xml->FirstChildElement("global");
-		if(!globalE){
-			throw DonutException(__FILE__, __LINE__, "[BUG] Broken save data.");
-		}
-		util::ParamSet set;
-		set.parseTree(globalE);
-		this->objectProto_ = this->decodeHeapDescriptor( set.getInt("object-prototype") ).cast<DonutObject>();
-		this->intProto_ = this->decodeHeapDescriptor( set.getInt("int-prototype") ).cast<DonutObject>();
-		this->boolProto_ = this->decodeHeapDescriptor( set.getInt("bool-prototype") ).cast<DonutObject>();
-		this->nullProto_ = this->decodeHeapDescriptor( set.getInt("null-prototype") ).cast<DonutObject>();
-		this->globalObject_ = this->decodeHeapDescriptor( set.getInt("global") ).cast<DonutObject>();
-	}
-	*/
+	this->objectProto_ = this->decodeHeapDescriptor(obj->get<object_desc_t>("object-prototype")).cast<DonutObject>();
+	this->intProto_ = this->decodeHeapDescriptor(obj->get<object_desc_t>("int-prototype")).cast<DonutObject>();
+	this->boolProto_ = this->decodeHeapDescriptor(obj->get<object_desc_t>("bool-prototype")).cast<DonutObject>();
+	this->nullProto_ = this->decodeHeapDescriptor(obj->get<object_desc_t>("null-prototype")).cast<DonutObject>();
+	this->globalObject_ = this->decodeHeapDescriptor(obj->get<object_desc_t>("global")).cast<DonutObject>();
 }
 
 
