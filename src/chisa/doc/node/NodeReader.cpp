@@ -61,13 +61,13 @@ public:
 NodeReader::NodeReader()
 {
 	using namespace std::placeholders;
-	this->elementParser_.insert(std::make_pair("h1", Proxy<Heading>(1)));
-	this->elementParser_.insert(std::make_pair("h2", Proxy<Heading>(2)));
-	this->elementParser_.insert(std::make_pair("h3", Proxy<Heading>(3)));
-	this->elementParser_.insert(std::make_pair("p", Proxy<Paragraph>()));
-	this->elementParser_.insert(std::make_pair("br", Proxy<BreakLine>()));
-	this->elementParser_.insert(std::make_pair("font", Proxy<Font>()));
-	this->elementParser_.insert(std::make_pair("link", Proxy<Link>()));
+	this->elementParser_.insert("h1", Proxy<Heading>(1));
+	this->elementParser_.insert("h2", Proxy<Heading>(2));
+	this->elementParser_.insert("h3", Proxy<Heading>(3));
+	this->elementParser_.insert("p", Proxy<Paragraph>());
+	this->elementParser_.insert("br", Proxy<BreakLine>());
+	this->elementParser_.insert("font", Proxy<Font>());
+	this->elementParser_.insert("link", Proxy<Link>());
 }
 
 #define NODE_FOREACH(it, node)\

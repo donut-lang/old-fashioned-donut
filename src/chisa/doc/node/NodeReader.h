@@ -18,10 +18,10 @@
 #pragma once
 #include "../../util/ClassUtil.h"
 #include <memory>
-#include <map>
 #include <string>
 #include <tinyxml2.h>
 #include "Decl.h"
+#include "../../util/VectorMap.h"
 
 namespace chisa {
 namespace doc {
@@ -34,7 +34,7 @@ public:
 	typedef std::function<BlockNode*(Document*, BlockNode*, TreeNode*)> BlockConstructor;
 private:
 	static const std::string RootElementName;
-	std::map<std::string, ParseFunc> elementParser_;
+	util::VectorMap<std::string, ParseFunc> elementParser_;
 public:
 	NodeReader();
 	virtual ~NodeReader() = default;
