@@ -171,6 +171,7 @@ class XObject : public HandlerBody<XObject> {
 public:
 	XObject( tinyxml2::XMLElement* elm );
 	tinyxml2::XMLElement* toXML( tinyxml2::XMLDocument* doc );
+	void accumlate( tinyxml2::XMLElement* elm );
 	XObject() {}
 	~XObject() noexcept = default;
 	inline bool onFree() const noexcept { return false; };

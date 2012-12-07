@@ -28,6 +28,9 @@ namespace xvalue {
 
 XArray::XArray( tinyxml2::XMLElement* elm )
 {
+	if(std::string("xarray") != elm->Name()){
+		throw logging::Exception(__FILE__, __LINE__, "Element is not xarray. type: %s value: %s", elm->Name(), elm->GetText());
+	}
 	for( tinyxml2::XMLElement* e = elm->FirstChildElement(); e; e = e->NextSiblingElement() ){
 		append( XValue::fromXML(e) );
 	}
@@ -44,8 +47,20 @@ tinyxml2::XMLElement* XArray::toXML( tinyxml2::XMLDocument* doc )
 
 XObject::XObject( tinyxml2::XMLElement* elm )
 {
+	accumlate(elm);
+}
+
+void XObject::accumlate( tinyxml2::XMLElement* elm )
+{
+	if(std::string("xobject") != elm->Name()){
+		throw logging::Exception(__FILE__, __LINE__, "Element is not xobject. type: %s value: %s", elm->Name(), elm->GetText());
+	}
 	for( tinyxml2::XMLElement* e = elm->FirstChildElement(); e; e = e->NextSiblingElement() ){
-		set(e->Attribute("name"), XValue::fromXML(e));
+		const char* const name = e->Attribute("name");
+		if(!name){
+			throw logging::Exception(__FILE__, __LINE__, "Object element name not specified. type: %s value: %s", e->Name(), e->GetText());
+		}
+		set(name, XValue::fromXML(e));
 	}
 }
 

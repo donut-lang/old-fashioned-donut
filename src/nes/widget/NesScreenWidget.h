@@ -30,7 +30,7 @@ namespace widget {
 class NesScreenWidget: public ::chisa::tk::Widget {
 private:
 	std::weak_ptr<nes::NesGeist> geist_;
-	chisa::util::ParamSet params_;
+	chisa::Handler<chisa::util::XObject> conf_;
 public:
 	NesScreenWidget(chisa::logging::Logger& log, std::weak_ptr<chisa::tk::World> world, tinyxml2::XMLElement* element);
 	virtual ~NesScreenWidget();
