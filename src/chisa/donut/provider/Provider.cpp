@@ -76,7 +76,8 @@ Handler<NativeClosureEntry> const& Provider::findClosureEntry( std::string const
 	if(it == this->nativeClosures_.end()){
 		throw DonutException(__FILE__, __LINE__, "Closure %s not found in %s!!", name.c_str(), this->name().c_str());
 	}
-	return it->second;
+	util::VectorMap<std::string, Handler<NativeClosureEntry> >::Pair const& p = *it;
+	return p.second;
 }
 
 Handler<HeapObject> Provider::loadObject(util::XValue const& data)
