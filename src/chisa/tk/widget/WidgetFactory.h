@@ -18,11 +18,12 @@
 
 #pragma once
 #include <memory>
-#include <map>
 #include <functional>
 #include <tinyxml2.h>
+#include <vector>
 #include "../../logging/Logger.h"
 #include "../../util/ClassUtil.h"
+#include "../../util/MapUtil.h"
 
 namespace chisa {
 namespace util {
@@ -44,7 +45,9 @@ class WidgetFactory {
 private:
 	logging::Logger& log_;
 	std::weak_ptr<World> world_;
-	std::map<std::string, std::function<Widget*(logging::Logger& log, std::weak_ptr<World> world, tinyxml2::XMLElement* elem)> > widgetMap_;
+	typedef std::function<Widget*(logging::Logger& log, std::weak_ptr<World> world, tinyxml2::XMLElement* elem)> ConstructorType;
+	typedef util::PairCompare<std::string, ConstructorType> Comparator;
+	std::vector<std::pair<std::string, ConstructorType> > widgetMap_;
 public:
 	WidgetFactory(logging::Logger& log, std::weak_ptr<World> world);
 	virtual ~WidgetFactory();

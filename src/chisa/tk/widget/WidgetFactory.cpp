@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <algorithm>
 
 #include "WidgetFactory.h"
 #include "ImageWidget.h"
@@ -39,16 +40,23 @@ WidgetFactory::~WidgetFactory()
 
 void WidgetFactory::registerWidget(const std::string& klass, std::function<Widget*(logging::Logger& log, std::weak_ptr<World> world, tinyxml2::XMLElement* elem)> func)
 {
-	this->widgetMap_.insert(std::make_pair(klass, func));
+	auto it = std::lower_bound(this->widgetMap_.begin(), this->widgetMap_.end(), klass, Comparator());
+	std::pair<std::string, ConstructorType>& p = *it;
+	if( it == this->widgetMap_.end() || p.first != klass ){
+		this->widgetMap_.insert( it, std::make_pair(klass, func) );
+	}else{
+		p.second = func;
+	}
 }
 
 Widget* WidgetFactory::createWidget(const std::string& klass, tinyxml2::XMLElement* elem)
 {
-	auto it = this->widgetMap_.find(klass);
-	if(it == this->widgetMap_.end()){
+	auto it = std::lower_bound(this->widgetMap_.begin(), this->widgetMap_.end(), klass, Comparator());
+	std::pair<std::string, ConstructorType>& p = *it;
+	if(it == this->widgetMap_.end() || p.first != klass){
 		return nullptr;
 	}
-	return it->second(log_, world_, elem);
+	return p.second(log_, world_, elem);
 }
 
 }}}
