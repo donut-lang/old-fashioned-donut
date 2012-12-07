@@ -91,7 +91,7 @@ protected: /* 実装すべきもの */
 public:
 	virtual bool onFree() noexcept = 0;
 public:
-	static inline int isDescriptorPrimitive( object_desc_t const& desc ) noexcept { return (desc & Object::Tag::Mask) == Object::Tag::Obj; };
+	static inline int isDescriptorPrimitive( object_desc_t const& desc ) noexcept { return (desc & Object::Tag::Mask) != Object::Tag::Obj; };
 	static inline Handler<Object> decodePrimitiveDescriptor( object_desc_t const& desc ) noexcept {
 		if(!Object::isDescriptorPrimitive(desc)) {
 			throw DonutException(__FILE__, __LINE__, "[BUG] Decoding heap object descriptor.");
