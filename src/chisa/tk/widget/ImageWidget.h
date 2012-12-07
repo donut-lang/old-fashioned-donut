@@ -19,7 +19,7 @@
 #pragma once
 
 #include "../Widget.h"
-#include "../../util/Param.h"
+#include "../../util/XVal.h"
 #include "../../gl/Sprite.h"
 
 namespace chisa {

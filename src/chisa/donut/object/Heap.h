@@ -18,15 +18,19 @@
 
 #pragma once
 #include <set>
+
 #include "../../logging/Logger.h"
 #include "../../util/ClassUtil.h"
 #include "../../Handler.h"
+
 #include "../source/Source.h"
+
+#include "../provider/Provider.h"
+#include "../Clock.h"
+
 #include "Object.h"
 #include "DonutObject.h"
 #include "NativeObject.h"
-#include "../provider/Provider.h"
-#include "../Clock.h"
 
 namespace chisa {
 namespace donut {
@@ -98,8 +102,8 @@ public: /* 外部との接続 */
 	Handler<Object> loadGlobalObject( std::string const& name );
 public: /* 処理系の保存・復帰をします。 */
 	void bootstrap();
-	tinyxml2::XMLElement* save(tinyxml2::XMLDocument* doc);
-	void load(tinyxml2::XMLElement* data);
+	Handler<util::XObject> save();
+	void load( Handler<util::XObject> const& data);
 private:
 	void initPrimitiveProviders();
 public: /* Clockから呼ばれる */

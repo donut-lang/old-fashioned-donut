@@ -34,10 +34,9 @@ TEST(SaveTest, ClockSaveTest)
 	clock->seek(clock->lastTime()-2);
 	clock->seek(clock->lastTime()-4);
 	{
-
+		Handler<util::XObject> obj = clock->save();
 		tinyxml2::XMLDocument doc;
-		tinyxml2::XMLElement* saved = clock->save(&doc);
-		doc.InsertFirstChild(saved);
+		doc.InsertFirstChild(obj->toXML(&doc));
 		tinyxml2::XMLPrinter printer;
 		doc.Print(&printer);
 		src = printer.CStr();
@@ -46,7 +45,7 @@ TEST(SaveTest, ClockSaveTest)
 	{
 		tinyxml2::XMLDocument doc;
 		doc.Parse(src.c_str());
-		clock2->load(doc.RootElement());
+		clock2->load(Handler<util::XObject>(new util::XObject(doc.RootElement())));
 	}
 	ASSERT_EQ(clock->now(), clock2->now());
 	ASSERT_EQ(clock->lastTime(), clock2->lastTime());
@@ -57,8 +56,8 @@ TEST(SaveTest, DonutSaveTest)
 {
 	INIT_DONUT;
 	tinyxml2::XMLDocument doc;
-	tinyxml2::XMLElement *elm = donut->save(&doc);
-	doc.InsertEndChild(elm);
+	Handler<util::XObject> obj = donut->save();
+	doc.InsertEndChild(obj->toXML(&doc));
 	tinyxml2::XMLPrinter printer;
 	doc.Print(&printer);
 	std::string src = printer.CStr();

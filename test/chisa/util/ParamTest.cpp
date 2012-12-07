@@ -17,7 +17,7 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../../src/chisa/util/Param.h"
+#include "../../../src/chisa/util/XVal.h"
 #include <math.h>
 using namespace chisa::util;
 
@@ -149,7 +149,6 @@ TEST(ParamTest, IntTest)
 
 TEST(ParamTest, IntMaxTest)
 {
-	std::shared_ptr<Param> p;
 	{
 		XValue p((0xFFFFFFFF));
 		ASSERT_EQ(0xFFFFFFFF, p.get<XUInt>());

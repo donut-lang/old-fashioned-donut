@@ -70,49 +70,37 @@ void Donut::bootstrap()
 	// 3:マシン
 	this->machines_.clear(); //すべて削除
 }
-tinyxml2::XMLElement* Donut::save(tinyxml2::XMLDocument* doc)
+Handler<util::XObject> Donut::save()
 {
-	tinyxml2::XMLElement* top = doc->NewElement("donut");
+	Handler<util::XObject> top( new util::XObject );
 	{ // 1: 時計
-		tinyxml2::XMLElement* clockElm = doc->NewElement("clock");
-		clockElm->InsertEndChild( this->clock_->save(doc) );
-		top->InsertEndChild( clockElm );
+		top->set("clock", clock_->save());
 	}
 	{ // 2: ヒープ
-		tinyxml2::XMLElement* heapElm = doc->NewElement("heap");
-		heapElm->InsertEndChild( this->heap_->save(doc) );
-		top->InsertEndChild( heapElm );
+		top->set("heap", heap_->save());
 	}
 	{ // 3: マシン
+		Handler<util::XObject> machine( new util::XObject );
 		for(std::pair<std::string const, Handler<Machine> > const& m : this->machines_) {
-			tinyxml2::XMLElement* mElm = doc->NewElement("machine");
-			mElm->SetAttribute("name", m.first.c_str());
-			mElm->InsertEndChild( m.second->save(doc) );
-			top->InsertEndChild( mElm );
+			machine->set(m.first, m.second->save());
 		}
+		top->set("machine", machine);
 	}
-
 	return top;
 }
-void Donut::load(tinyxml2::XMLElement* data)
+void Donut::load(Handler<util::XObject> const& data)
 {
 	// 1: 時計
 	{
-		tinyxml2::XMLElement* clockElm = data->FirstChildElement("clock");
-		if( !clockElm ) {
-			throw DonutException(__FILE__, __LINE__, "[BUG] Broken save file. \"clock\" element not found.");
-		}
-		this->clock_->load( clockElm->FirstChildElement() );
+		this->clock_->load(data->get<util::XObject>("clock"));
 	}
 	{ // 2: ヒープ
-		tinyxml2::XMLElement* heapElm = data->FirstChildElement("heap");
-		if( !heapElm ) {
-			throw DonutException(__FILE__, __LINE__, "[BUG] Broken save file. \"heap\" element not found.");
-		}
-		this->heap_->load( heapElm->FirstChildElement() );
+		this->heap_->load(data->get<util::XObject>("heap"));
 	}
 	{ // 3: マシン
+		Handler<util::XObject> machine ( data->get<util::XObject>("machine") );
 		this->machines_.clear();
+		/*
 		for(tinyxml2::XMLElement* mElm = data->FirstChildElement("machine"); mElm; mElm = mElm->NextSiblingElement("machine")){
 			char const* name = mElm->Attribute("name");
 			if( !name ) {
@@ -120,7 +108,7 @@ void Donut::load(tinyxml2::XMLElement* data)
 			}
 			Handler<Machine> machine ( this->queryMachine(name) );
 			machine->load( mElm->FirstChildElement() );
-		}
+		}*/
 	}
 
 }

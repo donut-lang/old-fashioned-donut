@@ -17,7 +17,6 @@
  */
 
 #include "Heap.h"
-#include "../../util/Param.h"
 
 namespace chisa {
 namespace donut {
@@ -217,8 +216,9 @@ void Heap::initPrimitiveProviders()
 	this->registerProvider(Handler<Provider>( new StringProvider(self) ));
 }
 
-tinyxml2::XMLElement* Heap::save(tinyxml2::XMLDocument* doc)
+Handler<util::XObject> Heap::save()
 {
+	/*
 	tinyxml2::XMLElement* const top = doc->NewElement("heap");
 	{ //pool
 		tinyxml2::XMLElement* const poolE = doc->NewElement("pool");
@@ -242,10 +242,12 @@ tinyxml2::XMLElement* Heap::save(tinyxml2::XMLDocument* doc)
 		top->InsertEndChild( globalE );
 	}
 	return top;
+	*/
 }
 
-void Heap::load(tinyxml2::XMLElement* xml)
+void Heap::load(Handler<util::XObject> const& data)
 {
+	/*
 	this->initPrimitiveProviders();
 	{ //pool
 		tinyxml2::XMLElement* const poolE = xml->FirstChildElement("pool");
@@ -276,7 +278,7 @@ void Heap::load(tinyxml2::XMLElement* xml)
 		this->nullProto_ = this->decodeHeapDescriptor( set.getInt("null-prototype") ).cast<DonutObject>();
 		this->globalObject_ = this->decodeHeapDescriptor( set.getInt("global") ).cast<DonutObject>();
 	}
-
+	*/
 }
 
 

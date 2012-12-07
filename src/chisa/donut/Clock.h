@@ -18,9 +18,9 @@
 
 #pragma once
 #include <vector>
-#include <tinyxml2.h>
 #include "../Handler.h"
 #include "../util/ClassUtil.h"
+#include "../util/XVal.h"
 #include "../logging/Logger.h"
 
 namespace chisa {
@@ -45,8 +45,8 @@ public:
 	inline unsigned int now() const noexcept { return this->now_; };
 public: /* 処理系の保存・復帰をします。 */
 	void bootstrap();
-	tinyxml2::XMLElement* save(tinyxml2::XMLDocument* doc);
-	void load(tinyxml2::XMLElement* data);
+	Handler<util::XObject> save();
+	void load( Handler<util::XObject> const& data);
 public: /* time functions */
 	void tick();
 	void seek( unsigned int const& time );
