@@ -23,7 +23,7 @@
 
 #include "../../Handler.h"
 #include "../../util/XVal.h"
-#include "../../util/MapUtil.h"
+#include "../../util/VectorMap.h"
 #include "../object/Object.h"
 #include "NativeClosureEntry.h"
 
