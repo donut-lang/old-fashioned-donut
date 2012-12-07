@@ -63,13 +63,13 @@ bool BoolProvider::toBool(const Object* ptr) const
 	return BoolProvider::fromPointer(ptr);
 }
 
-util::XValue BoolProvider::saveImpl(Handler<Object> const& obj)
+util::XValue BoolProvider::saveImpl(Handler<HeapObject> const& obj)
 {
-	return util::XValue( BoolProvider::fromPointer(obj.get()) );
+	throw DonutException(__FILE__, __LINE__, "[BUG] Do not call BoolProvider#saveImpl.");
 }
-Handler<Object> BoolProvider::loadImpl(util::XValue const& data)
+Handler<HeapObject> BoolProvider::loadImpl(util::XValue const& data)
 {
-	return Handler<Object>::__internal__fromRawPointerWithoutCheck( BoolProvider::toPointer(data.as<util::XBool>()) );
+	throw DonutException(__FILE__, __LINE__, "[BUG] Do not call BoolProvider#loadImpl.");
 }
 
 

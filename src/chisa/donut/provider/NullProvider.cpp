@@ -56,16 +56,13 @@ Handler<Object> NullProvider::create()
 	return Handler<Object>::__internal__fromRawPointerWithoutCheck( NullProvider::toPointer() );
 }
 
-util::XValue NullProvider::saveImpl(Handler<Object> const& obj)
+util::XValue NullProvider::saveImpl(Handler<HeapObject> const& obj)
 {
-	return util::XValue( );
+	throw DonutException(__FILE__, __LINE__, "[BUG] Do not call NullProvider#saveImpl.");
 }
-Handler<Object> NullProvider::loadImpl(util::XValue const& data)
+Handler<HeapObject> NullProvider::loadImpl(util::XValue const& data)
 {
-	if(!data.is<util::XNull>()){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. wrong data: %s", data.toString().c_str());
-	}
-	return Handler<Object>::__internal__fromRawPointerWithoutCheck( NullProvider::toPointer() );
+	throw DonutException(__FILE__, __LINE__, "[BUG] Do not call NullProvider#loadImpl.");
 }
 
 }}
