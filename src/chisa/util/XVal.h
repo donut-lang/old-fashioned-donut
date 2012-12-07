@@ -60,6 +60,7 @@ public:
 private:
 	enum Type type_;
 	union {
+		Null null_;
 		Handler<Array>* array_;
 		Handler<Object>* object_;
 		String* str_;
@@ -155,6 +156,7 @@ inline void swap(XValue& a, XValue& b) {
 	a.swap(b);
 }
 
+typedef XValue::Null XNull;
 typedef XValue::String XString;
 typedef XValue::UInt XUInt;
 typedef XValue::SInt XSInt;

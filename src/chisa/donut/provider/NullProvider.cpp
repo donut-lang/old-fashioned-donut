@@ -56,15 +56,14 @@ Handler<Object> NullProvider::create()
 	return Handler<Object>::__internal__fromRawPointerWithoutCheck( NullProvider::toPointer() );
 }
 
-tinyxml2::XMLElement* NullProvider::serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj )
+util::XValue NullProvider::saveImpl(Handler<Object> const& obj)
 {
-	tinyxml2::XMLElement* elm = doc->NewElement("null");
-	return elm;
+	return util::XValue( );
 }
-Handler<Object> NullProvider::deserializeImpl( tinyxml2::XMLElement* xml )
+Handler<Object> NullProvider::loadImpl(util::XValue const& data)
 {
-	if( std::string("null") != xml->Name() ){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. wrong element name: %s != \"bool\"", xml->Name());
+	if(!data.is<util::XNull>()){
+		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. wrong data: %s", data.toString().c_str());
 	}
 	return Handler<Object>::__internal__fromRawPointerWithoutCheck( NullProvider::toPointer() );
 }

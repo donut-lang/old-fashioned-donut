@@ -32,12 +32,24 @@ DonutObjectProvider::DonutObjectProvider(const Handler<Heap>& heap)
 {
 }
 
-tinyxml2::XMLElement* DonutObjectProvider::serializeImpl(tinyxml2::XMLDocument* doc, Handler<Object> obj)
+
+
+util::XValue DonutObjectProvider::saveImpl(Handler<Object> const& obj)
 {
+	if(Handler<Heap> heap = this->heap().lock()){
+		//return util::XValue( obj->toFloat(heap) );
+	}else{
+		throw DonutException(__FILE__, __LINE__, "[BUG] heap was already dead!");
+	}
+}
+Handler<Object> DonutObjectProvider::loadImpl(util::XValue const& data)
+{
+	if(Handler<Heap> heap = this->heap().lock()){
+		return heap->createDonutObject(  );
+	}else{
+		throw DonutException(__FILE__, __LINE__, "[BUG] heap was already dead!");
+	}
 }
 
-Handler<Object> DonutObjectProvider::deserializeImpl(tinyxml2::XMLElement* xml)
-{
-}
 
 }}

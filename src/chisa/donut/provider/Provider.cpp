@@ -38,16 +38,46 @@ void Provider::addPrototype( const std::string& name, Handler<NativeClosureEntry
 	}
 }
 
-tinyxml2::XMLElement* Provider::serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj_ )
+util::XValue Provider::save(Handler<Object> const& obj)
 {
+	using namespace chisa::util;
+	if( obj->isObject() ){
+		if( Handler<NativeClosureObject> cobj = obj.tryCast<NativeClosureObject>() ) {
+			Handler<XObject> val(new XObject);
+			val->set("type","closure");
+			val->set("closureName", cobj->closureName());
+			return val;
+		}
+	}
+	Handler<XObject> val(new XObject);
+	val->set("type","object");
+	val->set("impl", this->saveImpl(obj));
+	return val;
+}
+Handler<Object> Provider::load(util::XValue const& data)
+{
+	using namespace chisa::util;
+	Handler<XObject> val(data.as<XObject>());
+	std::string const type( val->get<XString>("type") );
+	if( type == "closure" ){
+
+	}else if( type=="object" ){
+
+	}else{
+		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object type: %s", type.c_str());
+	}
+}
+
+//tinyxml2::XMLElement* Provider::serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj_ )
+//{
 //			Handler<NativeClosure> obj = obj_.cast<NativeClosure>();
 //			tinyxml2::XMLElement* elm = doc->NewElement("clos");
 //			elm->SetAttribute("objectProvider", obj->objectProviderName().c_str());
 //			elm->SetAttribute("closureName", obj->closureName().c_str());
 //			return elm;
-}
-Handler<Object> Provider::deserialize( tinyxml2::XMLElement* xml )
-{
+//}
+//Handler<Object> Provider::deserialize( tinyxml2::XMLElement* xml )
+//{
 //	if( std::string("clos") != xml->Name() ){
 //		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. wrong element name: %s != \"clos\"", xml->Name());
 //	}
@@ -71,6 +101,6 @@ Handler<Object> Provider::deserialize( tinyxml2::XMLElement* xml )
 //		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. %s does not have closure: %s", objectProviderName.c_str(), closureName.c_str());
 //	}
 //	return objProvider->getClosure(closureName)->createObject( heap(), objectProviderName, closureName );
-}
+//}
 
 }}

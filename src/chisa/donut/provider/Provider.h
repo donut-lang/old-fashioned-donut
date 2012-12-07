@@ -19,9 +19,9 @@
 #pragma once
 #include <map>
 #include <string>
-#include <tinyxml2.h>
 
 #include "../../Handler.h"
+#include "../../util/XVal.h"
 #include "../object/Object.h"
 #include "NativeClosureEntry.h"
 
@@ -54,10 +54,10 @@ public:
 	inline HandlerW<Heap> heap() const noexcept { return this->heap_; };
 	inline Handler<DonutObject> prototype() const noexcept { return this->prototype_; };
 public:
-	tinyxml2::XMLElement* serialize( tinyxml2::XMLDocument* doc, Handler<Object> obj );
-	Handler<Object> deserialize( tinyxml2::XMLElement* xml );
-	virtual tinyxml2::XMLElement* serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj ) = 0;
-	virtual Handler<Object> deserializeImpl( tinyxml2::XMLElement* xml ) = 0;
+	util::XValue save(Handler<Object> const& obj);
+	Handler<Object> load(util::XValue const& data);
+	virtual util::XValue saveImpl(Handler<Object> const& obj) = 0;
+	virtual Handler<Object> loadImpl(util::XValue const& data) = 0;
 };
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -86,8 +86,8 @@ public:
 	int toInt(const Object* ptr) const;
 	float toFloat(const Object* ptr) const;
 	bool toBool(const Object* ptr) const;
-	virtual tinyxml2::XMLElement* serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
-	virtual Handler<Object> deserializeImpl( tinyxml2::XMLElement* xml ) override;
+	virtual util::XValue saveImpl(Handler<Object> const& obj) override final;
+	virtual Handler<Object> loadImpl(util::XValue const& data) override final;
 	Handler<Object> create( const int& val );
 };
 
@@ -107,8 +107,8 @@ public:
 	int toInt(const Object* ptr) const;
 	float toFloat(const Object* ptr) const;
 	bool toBool(const Object* ptr) const;
-	virtual tinyxml2::XMLElement* serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
-	virtual Handler<Object> deserializeImpl( tinyxml2::XMLElement* xml ) override;
+	virtual util::XValue saveImpl(Handler<Object> const& obj) override final;
+	virtual Handler<Object> loadImpl(util::XValue const& data) override final;
 	Handler<Object> create( const bool& val );
 };
 
@@ -125,8 +125,8 @@ public:
 	int toInt(const Object* ptr) const;
 	float toFloat(const Object* ptr) const;
 	bool toBool(const Object* ptr) const;
-	virtual tinyxml2::XMLElement* serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
-	virtual Handler<Object> deserializeImpl( tinyxml2::XMLElement* xml ) override;
+	virtual util::XValue saveImpl(Handler<Object> const& obj) override final;
+	virtual Handler<Object> loadImpl(util::XValue const& data) override final;
 	Handler<Object> create();
 };
 
@@ -135,8 +135,8 @@ public:
 	StringProvider(const Handler<Heap>& heap);
 	virtual ~StringProvider() noexcept = default;
 public:
-	virtual tinyxml2::XMLElement* serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
-	virtual Handler<Object> deserializeImpl( tinyxml2::XMLElement* xml ) override;
+	virtual util::XValue saveImpl(Handler<Object> const& obj) override final;
+	virtual Handler<Object> loadImpl(util::XValue const& data) override final;
 };
 
 class FloatProvider : public NativeObjectProvider {
@@ -144,8 +144,8 @@ public:
 	FloatProvider(const Handler<Heap>& heap);
 	virtual ~FloatProvider() noexcept = default;
 public:
-	virtual tinyxml2::XMLElement* serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
-	virtual Handler<Object> deserializeImpl( tinyxml2::XMLElement* xml ) override;
+	virtual util::XValue saveImpl(Handler<Object> const& obj) override final;
+	virtual Handler<Object> loadImpl(util::XValue const& data) override final;
 };
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -154,8 +154,8 @@ public:
 	DonutObjectProvider( const Handler<Heap>& heap );
 	virtual ~DonutObjectProvider() noexcept = default;
 public:
-	virtual tinyxml2::XMLElement* serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj ) override;
-	virtual Handler<Object> deserializeImpl( tinyxml2::XMLElement* xml ) override;
+	virtual util::XValue saveImpl(Handler<Object> const& obj) override final;
+	virtual Handler<Object> loadImpl(util::XValue const& data) override final;
 public:
 	Handler<DonutObject> create();
 };
