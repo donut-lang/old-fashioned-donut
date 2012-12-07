@@ -68,6 +68,15 @@ template<typename T> typename _GetType<T>::type XObject::get( std::string const&
 	}
 	return it->second.as<T>();
 }
+
+template<> inline XValue& XObject::get<XValue>( std::string const& name ) {
+	std::unordered_map<std::string, XValue>::iterator it = this->map_.find(name);
+	if( it == this->map_.end()){
+		throw logging::Exception(__FILE__, __LINE__, "Object: %s not found.", name.c_str());
+	}
+	return it->second;
+}
+
 template<typename T> typename _GetType<T>::type XObject::opt(std::string const& name)
 {
 	std::unordered_map<std::string, XValue>::iterator it = this->map_.find(name);
@@ -76,6 +85,7 @@ template<typename T> typename _GetType<T>::type XObject::opt(std::string const& 
 	}
 	return it->second.as<T>();
 }
+
 template<typename T> bool XObject::has(std::string const& name)
 {
 	std::unordered_map<std::string, XValue>::iterator it = this->map_.find(name);
@@ -89,7 +99,10 @@ template<typename T> T const& XObject::set(const std::string& name, T const& obj
 	this->map_[name] = XValue(obj);
 	return obj;
 }
-
+template<> inline XValue const& XObject::set<XValue>(const std::string& name, XValue const& obj)
+{
+	return this->map_[name] = obj;
+}
 #define FUNCT(TYPE, VAL) \
 		template <> inline bool XValue::is<XValue::TYPE>() const noexcept {\
 			return this->type_ == XValue::Type::TYPE##T;\
