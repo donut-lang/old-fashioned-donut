@@ -159,9 +159,7 @@ Handler<Object> Heap::createNull()
  **********************************************************************************/
 void Heap::registerProvider( Handler<Provider> provider )
 {
-	this->providers_.insert(
-			std::pair<std::string, Handler<Provider> >(provider->name(), provider)
-			);
+	this->providers_.insert(provider->name(), provider);
 }
 
 void Heap::registerGlobalObject( std::string const& name, Handler<Object> const& obj )

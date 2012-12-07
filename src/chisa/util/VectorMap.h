@@ -60,10 +60,12 @@ public:
 	VectorMap(VectorMap const& other) = default;
 	VectorMap(VectorMap && other) = default;
 	~VectorMap() noexcept = default;
-	inline Iterator begin() { return data_.begin(); }
-	inline Iterator end() { return data_.end(); }
-	inline ConstIterator cbegin() { return data_.cbegin(); }
-	inline ConstIterator cend() { return data_.cend(); }
+	inline Iterator begin() noexcept { return data_.begin(); }
+	inline Iterator end() noexcept { return data_.end(); }
+	inline ConstIterator begin() const noexcept { return data_.begin(); }
+	inline ConstIterator end() const noexcept { return data_.end(); }
+	inline ConstIterator cbegin() const noexcept { return data_.cbegin(); }
+	inline ConstIterator cend() const noexcept { return data_.cend(); }
 public:
 	inline Iterator find( T const& key ) {
 		Comparator cmp;
@@ -74,7 +76,16 @@ public:
 			return it;
 		}
 	}
-	inline bool have (T const& key) {
+	inline ConstIterator find( T const& key ) const {
+		Comparator cmp;
+		auto it = std::lower_bound( data_.begin(), data_.end(), key, cmp );
+		if( it == data_.end() || !eq(key, *it) ) {
+			return data_.end();
+		}else{
+			return it;
+		}
+	}
+	inline bool have (T const& key) const {
 		return this->end() != find(key);
 	}
 	inline bool insert( T const& key, U const& val ) {

@@ -27,11 +27,11 @@ DrawableManager::DrawableManager(logging::Logger& log, const DrawableSetting& se
 ,imageManager_(new gl::internal::ImageManager(log, this->spriteManager_))
 ,fontManager_(new gl::internal::FontManager(log, setting.fontdir()))
 {
-	this->factories_.insert(std::make_pair("stretch:", StretchDrawable::create));
-	this->factories_.insert(std::make_pair("repeat:", RepeatDrawable::create));
-	this->factories_.insert(std::make_pair("image:", ImageDrawable::create));
-	this->factories_.insert(std::make_pair("color:", ColorDrawable::create));
-	this->factories_.insert(std::make_pair("none:", NullDrawable::create));
+	this->factories_.insert("stretch:", StretchDrawable::create);
+	this->factories_.insert("repeat:", RepeatDrawable::create);
+	this->factories_.insert("image:", ImageDrawable::create);
+	this->factories_.insert("color:", ColorDrawable::create);
+	this->factories_.insert("none:", NullDrawable::create);
 }
 
 Handler<Sprite> DrawableManager::queryRawSprite(const int width, const int height)

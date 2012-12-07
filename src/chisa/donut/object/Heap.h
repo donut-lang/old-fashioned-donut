@@ -17,10 +17,9 @@
  */
 
 #pragma once
-#include <set>
-
 #include "../../logging/Logger.h"
 #include "../../util/ClassUtil.h"
+#include "../../util/VectorMap.h"
 #include "../../Handler.h"
 
 #include "../source/Source.h"
@@ -44,7 +43,7 @@ private:
 	std::size_t gcLimit_;
 	std::size_t gcLimitMax_;
 private:
-	std::map<std::string, Handler<Provider> > providers_;
+	util::VectorMap<std::string, Handler<Provider> > providers_;
 	std::vector<HeapObject*> objectPool_;
 	std::vector<HeapObject*> objectPoolMarked_;
 	Handler<DonutObjectProvider> donutObjectProvider_;
