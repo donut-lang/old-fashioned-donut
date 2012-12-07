@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include <map>
+#include <unordered_map>
 #include <string>
 
 #include "../../Handler.h"
@@ -30,7 +30,7 @@ namespace donut {
 
 class Provider : public HandlerBody<Provider> {
 private:
-	std::map<std::string, Handler<NativeClosureEntry> > nativeClosures_;
+	std::unordered_map<std::string, Handler<NativeClosureEntry> > nativeClosures_;
 	HandlerW<Heap> const heap_;
 	Handler<DonutObject> prototype_;
 	std::string const name_;

@@ -153,7 +153,7 @@ element::WidgetElement* World::getWidgetById(const std::string& name)
 
 bool World::replaceWidget(const std::string& widgetId, element::WidgetElement* const newHandler)
 {
-	std::map<std::string, element::WidgetElement*>::iterator it = this->widgetMap_.find(widgetId);
+	std::unordered_map<std::string, element::WidgetElement*>::iterator it = this->widgetMap_.find(widgetId);
 	if(it != widgetMap_.end()) {
 		this->widgetMap_.erase(it);
 	}
@@ -162,7 +162,7 @@ bool World::replaceWidget(const std::string& widgetId, element::WidgetElement* c
 }
 bool World::deleteWidget(const std::string& widgetId, element::WidgetElement* const handler)
 {
-	std::map<std::string, element::WidgetElement*>::iterator it = this->widgetMap_.find(widgetId);
+	std::unordered_map<std::string, element::WidgetElement*>::iterator it = this->widgetMap_.find(widgetId);
 	if(it != widgetMap_.end()) {
 		log_.w(TAG, "Oops. WidgetID: %s not found.", widgetId.c_str());
 		return false;
