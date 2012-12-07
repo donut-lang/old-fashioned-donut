@@ -99,7 +99,8 @@ Node* NodeReader::parseNode(Document* root, BlockNode* block, TreeNode* parent, 
 		if(it == this->elementParser_.end()){
 			throw logging::Exception(__FILE__, __LINE__, "Unknwon document tag: %s", elm->Name());
 		}
-		const ParseFunc f = it->second;
+		util::VectorMap<std::string, ParseFunc>::Pair const& p = *it;
+		const ParseFunc f = p.second;
 		return f(*this, root, block, parent, elm);
 	}else if(tinyxml2::XMLText* txt = node->ToText()){
 		return this->parseText(root, block, parent, txt);

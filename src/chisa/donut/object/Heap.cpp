@@ -50,7 +50,8 @@ Handler<Provider> Heap::getProvider( const std::string& name ) const
 {
 	auto it = this->providers_.find(name);
 	if(it != this->providers_.end()){
-		return it->second;
+		util::VectorMap<std::string, Handler<Provider> >::Pair const& p = *it;
+		return p.second;
 	}
 	return Handler<Provider>();
 }
