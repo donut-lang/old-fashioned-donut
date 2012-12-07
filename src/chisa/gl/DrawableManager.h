@@ -20,6 +20,7 @@
 #include <deque>
 #include "../util/ClassUtil.h"
 #include "../logging/Logger.h"
+#include "../util/VectorMap.h"
 #include "Sprite.h"
 #include "Font.h"
 #include "internal/ImageManager.h"
@@ -52,7 +53,7 @@ class DrawableManager : public HandlerBody<DrawableManager> {
 	DEFINE_MEMBER_REF(private, logging::Logger, log);
 private:
 	typedef std::function<Handler<Drawable>(HandlerW<DrawableManager>, const geom::Box&, const std::string&)> constructor;
-	std::map<std::string, constructor> factories_;
+	util::VectorMap<std::string, constructor> factories_;
 private:
 	Handler<internal::SpriteManager> spriteManager_;
 	Handler<internal::ImageManager> imageManager_;
