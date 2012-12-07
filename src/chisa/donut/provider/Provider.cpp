@@ -62,7 +62,7 @@ Handler<Object> Provider::load(util::XValue const& data)
 	if( type == "closure" ){
 
 	}else if( type=="object" ){
-
+		return this->loadImpl( val->get<XValue>("impl") );
 	}else{
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object type: %s", type.c_str());
 	}
