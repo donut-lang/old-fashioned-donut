@@ -46,8 +46,7 @@ private:
 	logging::Logger& log_;
 	std::weak_ptr<World> world_;
 	typedef std::function<Widget*(logging::Logger& log, std::weak_ptr<World> world, tinyxml2::XMLElement* elem)> ConstructorType;
-	typedef util::PairCompare<std::string, ConstructorType> Comparator;
-	std::vector<std::pair<std::string, ConstructorType> > widgetMap_;
+	util::VectorMap<std::string, ConstructorType> widgetMap_;
 public:
 	WidgetFactory(logging::Logger& log, std::weak_ptr<World> world);
 	virtual ~WidgetFactory();

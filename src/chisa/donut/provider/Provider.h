@@ -32,8 +32,7 @@ namespace donut {
 
 class Provider : public HandlerBody<Provider> {
 private:
-	std::vector<std::pair<std::string, Handler<NativeClosureEntry> > > nativeClosures_;
-	typedef util::PairCompare<std::string, Handler<NativeClosureEntry> > Comparator;
+	util::VectorMap<std::string, Handler<NativeClosureEntry> > nativeClosures_;
 	HandlerW<Heap> const heap_;
 	Handler<DonutObject> prototype_;
 	std::string const name_;
@@ -42,15 +41,7 @@ protected:
 	template <typename T>
 	bool registerPureNativeClosure( const std::string& name, T f)
 	{
-		Handler<NativeClosureEntry> ent(new PureNativeClosureEntry(f) );
-		auto it = std::lower_bound(this->nativeClosures_.begin(), this->nativeClosures_.end(), name, Comparator());
-		std::pair<std::string, Handler<NativeClosureEntry> >& p = *it;
-		if(it == this->nativeClosures_.end() || p.first != name){
-			this->nativeClosures_.insert(it, std::pair<std::string,Handler<NativeClosureEntry> >(name, ent ));
-			return true;
-		}else{
-			return false;
-		}
+		return nativeClosures_.update( name, Handler<NativeClosureEntry>(new PureNativeClosureEntry(f) ) );
 	}
 private:
 	void addPrototype( const std::string& name, Handler<NativeClosureEntry> clos );
