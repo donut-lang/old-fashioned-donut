@@ -19,12 +19,14 @@
 #include "ElementFactory.h"
 #include "../Element.h"
 #include "../../logging/Exception.h"
-#include <memory>
-#include <tinyxml2.h>
 #include "SplitCombo.h"
 #include "Empty.h"
 #include "ScrollCombo.h"
 #include "WidgetElement.h"
+
+#include <algorithm>
+#include <memory>
+#include <tinyxml2.h>
 
 namespace chisa {
 namespace tk {
@@ -109,14 +111,21 @@ ElementFactory::~ElementFactory()
 
 void ElementFactory::registerElement(const std::string& elementName, std::function<std::shared_ptr<Element>(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent)> constructor)
 {
-	this->elementMap_.insert(std::make_pair(elementName, constructor));
+	auto it = std::lower_bound(this->elementMap_.begin(), elementMap_.end(), elementName, Comparator());
+	std::pair<std::string, ConstructorType>& p = *it;
+	if( it == this->elementMap_.end() || p.first != elementName ){
+		this->elementMap_.insert( it, std::make_pair(elementName, constructor) );
+	}else{
+		p.second = constructor;
+	}
 }
 
 std::shared_ptr<Element> ElementFactory::parseTree(std::weak_ptr<Element> root, std::weak_ptr<Element> parent, XMLElement* top)
 {
 	const char* name = top->Name();
-	auto it = this->elementMap_.find(name);
-	if(this->elementMap_.end() == it){
+	auto it = std::lower_bound(this->elementMap_.begin(), elementMap_.end(), name, Comparator());
+	std::pair<std::string, ConstructorType>& p = *it;
+	if(this->elementMap_.end() == it || p.first != name){
 		throw logging::Exception(__FILE__,__LINE__, "Unknwon Element: %s", name);
 	}
 	std::shared_ptr<Element> elm(it->second(this->log(), this->world(), root, parent));
