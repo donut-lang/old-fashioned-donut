@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include <algorithm>
+
 namespace chisa {
 namespace util {
 
@@ -59,49 +61,66 @@ template <typename T> T const& XArray::append( T const& obj ) {
 }
 
 template<typename T> typename _GetType<T>::type XObject::get( std::string const& name ) {
-	std::unordered_map<std::string, XValue>::iterator it = this->map_.find(name);
-	if( it == this->map_.end()){
+	auto it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );
+	std::pair<std::string, XValue>& p = *it;
+	if( it == this->map_.end() || p.first != name){
 		throw logging::Exception(__FILE__, __LINE__, "Object: %s not found.", name.c_str());
 	}
-	if( !it->second.is<T>() ) {
+	if( !p.second.is<T>() ) {
 		throw logging::Exception(__FILE__, __LINE__, "Object: %s type mismatch %s != %s.", typeid(T).name(), it->second.toString().c_str());
 	}
-	return it->second.as<T>();
+	return p.second.as<T>();
 }
 
 template<> inline XValue& XObject::get<XValue>( std::string const& name ) {
-	std::unordered_map<std::string, XValue>::iterator it = this->map_.find(name);
-	if( it == this->map_.end()){
+	auto it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );
+	std::pair<std::string, XValue>& p = *it;
+	if( it == this->map_.end() || p.first != name){
 		throw logging::Exception(__FILE__, __LINE__, "Object: %s not found.", name.c_str());
 	}
-	return it->second;
+	return p.second;
 }
 
 template<typename T> typename _GetType<T>::type XObject::opt(std::string const& name)
 {
-	std::unordered_map<std::string, XValue>::iterator it = this->map_.find(name);
-	if (it == this->map_.end() || !it->second.is<T>()) {
+	auto it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );
+	std::pair<std::string, XValue> const& p = *it;
+	if( it == this->map_.end() || p.first != name || !p.second.is<T>()){
 		return T();
 	}
-	return it->second.as<T>();
+	return p.second.as<T>();
 }
 
 template<typename T> bool XObject::has(std::string const& name)
 {
-	std::unordered_map<std::string, XValue>::iterator it = this->map_.find(name);
-	if (it == this->map_.end() || !it->second.is<T>()) {
+	auto it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );
+	std::pair<std::string, XValue> const& p = *it;
+	if( it == this->map_.end() || p.first != name || !p.second.is<T>()){
 		return false;
 	}
 	return true;
 }
-template<typename T> T const& XObject::set(const std::string& name, T const& obj)
+template<typename T> T const& XObject::set(std::string const& name, T const& obj)
 {
-	this->map_[name] = XValue(obj);
+	auto it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );
+	std::pair<std::string, XValue>& p = *it;
+	if( it == this->map_.end() || p.first != name) {
+		it = this->map_.insert(it, std::pair<std::string, XValue>(name, XValue(obj)));
+	}else{
+		p.second = XValue(obj);
+	}
 	return obj;
 }
-template<> inline XValue const& XObject::set<XValue>(const std::string& name, XValue const& obj)
+template<> inline XValue const& XObject::set<XValue>(std::string const& name, XValue const& obj)
 {
-	return this->map_[name] = obj;
+	auto it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );
+	std::pair<std::string, XValue>& p = *it;
+	if( it == this->map_.end() || p.first != name) {
+		it = this->map_.insert(it, std::pair<std::string, XValue>(name, obj));
+		return it->second;
+	}else{
+		return p.second = obj;
+	}
 }
 #define FUNCT(TYPE, VAL) \
 		template <> inline bool XValue::is<XValue::TYPE>() const noexcept {\

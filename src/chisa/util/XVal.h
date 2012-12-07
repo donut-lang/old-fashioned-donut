@@ -27,6 +27,7 @@
 #include "ClassUtil.h"
 #include "StringUtil.h"
 #include "../Handler.h"
+#include "MapUtil.h"
 
 namespace chisa {
 namespace util {
@@ -131,7 +132,8 @@ public:
 };
 
 class XObject : public HandlerBody<XObject> {
-	std::unordered_map<std::string, XValue> map_;
+	typedef PairCompare<std::string, XValue> Comparator;
+	std::vector<std::pair<std::string, XValue> > map_;
 public:
 	XObject( tinyxml2::XMLElement* elm );
 	tinyxml2::XMLElement* toXML( tinyxml2::XMLDocument* doc );
@@ -143,12 +145,12 @@ public:
 	template <typename T> typename _GetType<T>::type get( std::string const& name );
 	template <typename T> typename _GetType<T>::type opt( std::string const& name );
 	template <typename T> bool has( std::string const& name );
-	template <typename T> T const& set( const std::string& name, T const& obj );
-	std::unordered_map<std::string, XValue>::iterator begin(){ return this->map_.begin(); };
-	std::unordered_map<std::string, XValue>::iterator end(){ return this->map_.end(); };
-	std::unordered_map<std::string, XValue>::const_iterator cbegin(){ return this->map_.cbegin(); };
-	std::unordered_map<std::string, XValue>::const_iterator cend(){ return this->map_.cend(); };
-	std::unordered_map<std::string, XValue>::size_type size(){ return this->map_.size(); };
+	template <typename T> T const& set( std::string const& name, T const& obj );
+	std::vector<std::pair<std::string, XValue> >::iterator begin(){ return this->map_.begin(); };
+	std::vector<std::pair<std::string, XValue> >::iterator end(){ return this->map_.end(); };
+	std::vector<std::pair<std::string, XValue> >::const_iterator cbegin(){ return this->map_.cbegin(); };
+	std::vector<std::pair<std::string, XValue> >::const_iterator cend(){ return this->map_.cend(); };
+	std::vector<std::pair<std::string, XValue> >::size_type size(){ return this->map_.size(); };
 };
 
 
