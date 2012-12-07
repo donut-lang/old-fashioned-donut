@@ -63,23 +63,15 @@ bool BoolProvider::toBool(const Object* ptr) const
 	return BoolProvider::fromPointer(ptr);
 }
 
-tinyxml2::XMLElement* BoolProvider::serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj )
+util::XValue BoolProvider::saveImpl(Handler<Object> const& obj)
 {
-	tinyxml2::XMLElement* elm = doc->NewElement("bool");
-	elm->SetAttribute("val", BoolProvider::fromPointer(obj.get()));
-	return elm;
+	return util::XValue( BoolProvider::fromPointer(obj.get()) );
 }
-Handler<Object> BoolProvider::deserializeImpl( tinyxml2::XMLElement* xml )
+Handler<Object> BoolProvider::loadImpl(util::XValue const& data)
 {
-	if( std::string("bool") != xml->Name() ){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. wrong element name: %s != \"bool\"", xml->Name());
-	}
-	bool val;
-	if(xml->QueryBoolAttribute("val", &val) != tinyxml2::XML_SUCCESS){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. failed to read xml");
-	}
-	return Handler<Object>::__internal__fromRawPointerWithoutCheck( BoolProvider::toPointer(val) );
+	return Handler<Object>::__internal__fromRawPointerWithoutCheck( BoolProvider::toPointer(data.as<util::XBool>()) );
 }
+
 
 Handler<Object> BoolProvider::create( const bool& val )
 {

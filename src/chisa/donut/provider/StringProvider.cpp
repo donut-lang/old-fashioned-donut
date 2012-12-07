@@ -55,29 +55,20 @@ StringProvider::StringProvider(const Handler<Heap>& heap )
 	}));
 }
 
-tinyxml2::XMLElement* StringProvider::serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj )
+util::XValue StringProvider::saveImpl(Handler<Object> const& obj)
 {
 	if(Handler<Heap> heap = this->heap().lock()){
-		tinyxml2::XMLElement* elm = doc->NewElement("string");
-		elm->SetAttribute("val", obj->toString(heap).c_str());
-		return elm;
+		return util::XValue( obj->toString(heap) );
 	}else{
-		throw DonutException(__FILE__, __LINE__, "[BUG] Heap was already dead.");
+		throw DonutException(__FILE__, __LINE__, "[BUG] heap was already dead!");
 	}
 }
-Handler<Object> StringProvider::deserializeImpl( tinyxml2::XMLElement* xml )
+Handler<Object> StringProvider::loadImpl(util::XValue const& data)
 {
-	if (Handler<Heap> heap = this->heap().lock()) {
-		if (std::string("string") != xml->Name()) {
-			throw DonutException(__FILE__, __LINE__, "[BUG] Oops. wrong element name: %s != \"string\"", xml->Name());
-		}
-		char const* val = nullptr;
-		if (!(val = xml->Attribute("val"))) {
-			throw DonutException(__FILE__, __LINE__, "[BUG] Oops. failed to read xml");
-		}
-		return heap->createStringObject(val);
-	} else {
-		throw DonutException(__FILE__, __LINE__, "[BUG] Heap was already dead.");
+	if(Handler<Heap> heap = this->heap().lock()){
+		return heap->createStringObject( data.as<util::XString>() );
+	}else{
+		throw DonutException(__FILE__, __LINE__, "[BUG] heap was already dead!");
 	}
 }
 

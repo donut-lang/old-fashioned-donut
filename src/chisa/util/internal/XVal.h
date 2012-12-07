@@ -106,6 +106,7 @@ template<typename T> T const& XObject::set(const std::string& name, T const& obj
 			}\
 			return VAL;\
 		};
+FUNCT(Null, spirit_.null_);
 FUNCT(Array, *spirit_.array_);
 FUNCT(Object, *spirit_.object_);
 FUNCT(String, *spirit_.str_);

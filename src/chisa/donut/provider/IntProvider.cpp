@@ -109,22 +109,13 @@ Handler<Object> IntProvider::create( const int& val )
 	return Handler<Object>::__internal__fromRawPointerWithoutCheck( IntProvider::toPointer(val) );
 }
 
-tinyxml2::XMLElement* IntProvider::serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj )
+util::XValue IntProvider::saveImpl(Handler<Object> const& obj)
 {
-	tinyxml2::XMLElement* elm = doc->NewElement("int");
-	elm->SetAttribute("val", IntProvider::fromPointer(obj.get()));
-	return elm;
+	return util::XValue( IntProvider::fromPointer(obj.get()) );
 }
-Handler<Object> IntProvider::deserializeImpl( tinyxml2::XMLElement* xml )
+Handler<Object> IntProvider::loadImpl(util::XValue const& data)
 {
-	if( std::string("int") != xml->Name() ){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. wrong element name: %s != \"bool\"", xml->Name());
-	}
-	int val;
-	if(xml->QueryIntAttribute("val", &val) != tinyxml2::XML_SUCCESS){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. failed to read xml");
-	}
-	return Handler<Object>::__internal__fromRawPointerWithoutCheck( IntProvider::toPointer(val) );
+	return Handler<Object>::__internal__fromRawPointerWithoutCheck( IntProvider::toPointer(data.as<int>()) );
 }
 
 }}

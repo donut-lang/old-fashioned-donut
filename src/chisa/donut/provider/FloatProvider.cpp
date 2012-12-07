@@ -72,27 +72,18 @@ FloatProvider::FloatProvider(const Handler<Heap>& heap)
 }
 
 
-tinyxml2::XMLElement* FloatProvider::serializeImpl( tinyxml2::XMLDocument* doc, Handler<Object> obj )
+util::XValue FloatProvider::saveImpl(Handler<Object> const& obj)
 {
 	if(Handler<Heap> heap = this->heap().lock()){
-		tinyxml2::XMLElement* elm = doc->NewElement("float");
-		elm->SetAttribute("val", obj->toFloat(heap));
-		return elm;
+		return util::XValue( obj->toFloat(heap) );
 	}else{
 		throw DonutException(__FILE__, __LINE__, "[BUG] heap was already dead!");
 	}
 }
-Handler<Object> FloatProvider::deserializeImpl( tinyxml2::XMLElement* xml )
+Handler<Object> FloatProvider::loadImpl(util::XValue const& data)
 {
 	if(Handler<Heap> heap = this->heap().lock()){
-		if( std::string("int") != xml->Name() ){
-			throw DonutException(__FILE__, __LINE__, "[BUG] Oops. wrong element name: %s != \"bool\"", xml->Name());
-		}
-		float val;
-		if(xml->QueryFloatAttribute("val", &val) != tinyxml2::XML_SUCCESS){
-			throw DonutException(__FILE__, __LINE__, "[BUG] Oops. failed to read xml");
-		}
-		return heap->createFloatObject(val);
+		return heap->createFloatObject( data.as<util::XFloat>() );
 	}else{
 		throw DonutException(__FILE__, __LINE__, "[BUG] heap was already dead!");
 	}
