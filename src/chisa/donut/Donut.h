@@ -50,6 +50,7 @@ public: /* 外部オブジェクトの管理 */
 	bool existsGlobalObject( const std::string& name );
 	Handler<Object> readGlobalObject( const std::string& name );
 public:
+	Handler<Clock> clock() const noexcept{ return this->clock_; };
 	Handler<Heap> heap() const noexcept { return this->heap_; };
 	Handler<Source> parse(const std::string& src, const std::string& filename="<DEFAULT>", const int& lineno=0);
 public: /* 処理系の保存・復帰をします。 */

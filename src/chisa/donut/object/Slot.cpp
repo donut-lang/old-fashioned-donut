@@ -78,6 +78,47 @@ bool Slot::have() const
  * from clock
  **********************************************************************************/
 
+void Slot::bootstrap()
+{
+	this->index_ = -1;
+	this->rev_.clear();
+}
+util::XValue Slot::save()
+{
+	using namespace chisa::util;
+	Handler<XObject> obj( new XObject );
+	obj->set("index", this->index_);
+	{
+		Handler<XArray> list( new XArray );
+		for( std::pair<timestamp_t, Object*> const& p : rev_ ) {
+			Handler<XObject> sobj( new XObject );
+			sobj->set("time", p.first);
+			sobj->set("obj",p.second->toDescriptor());
+			list->append(sobj);
+		}
+		obj->set("rev", list);
+	}
+	return obj;
+}
+void Slot::load( const Handler<Heap>& heap, util::XValue const& data)
+{
+	using namespace chisa::util;
+	Handler<XObject> obj( data.as<XObject>() );
+	this->index_=obj->get<int>("index");
+	for( XValue const& p : (*obj->get<XArray>("rev")) ) {
+		Handler<XObject> sobj( p.as<XObject>() );
+		this->rev_.push_back(
+				std::pair<timestamp_t, Object*>(
+						sobj->get<timestamp_t>("time"),
+						heap->decodeDescriptor(sobj->get<object_desc_t>("obj")).get()
+						));
+	}
+}
+
+/**********************************************************************************
+ * from clock
+ **********************************************************************************/
+
 void Slot::onSeekNotify( const Handler<Heap>& heap )
 {
 	unsigned int const timestamp = heap->clock()->now();

@@ -20,6 +20,7 @@
 #include "Decl.h"
 #include "../../Handler.h"
 #include "../../util/ClassUtil.h"
+#include "../../util/XVal.h"
 #include <vector>
 
 namespace chisa {
@@ -48,6 +49,10 @@ public:
 	Object* load() const;
 	Object* store( const Handler<Heap>& heap, Object* obj );
 	bool have() const;
+public: /* 処理系の保存・復帰をします。 */
+	void bootstrap();
+	util::XValue save();
+	void load( const Handler<Heap>& heap, util::XValue const& data);
 public: /* クロックから呼ばれる */
 	void onDiscardHistoryNotify( const Handler<Heap>& heap );
 	void onDiscardFutureNotify( const Handler<Heap>& heap );
