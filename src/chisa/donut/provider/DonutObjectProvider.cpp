@@ -28,7 +28,7 @@ static const std::string TAG("DonutObjectProvider");
 
 
 DonutObjectProvider::DonutObjectProvider(const Handler<Heap>& heap)
-:Provider(heap, "DonutObject")
+:Provider(heap, "chisa::donut::DonutObject")
 {
 }
 
