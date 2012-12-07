@@ -19,7 +19,7 @@
 #pragma once
 #include <memory>
 #include <string>
-#include <map>
+#include <unordered_map>
 #include "../util/ClassUtil.h"
 #include "../gl/Canvas.h"
 #include "../geom/Area.h"
@@ -57,7 +57,7 @@ private:
 	TaskHandler taskHandler_;
 	Handler<donut::DozenBox> dozenBox_;
 	Stack<std::shared_ptr<Element> > elementStack_;
-	std::map<std::string, element::WidgetElement*> widgetMap_;
+	std::unordered_map<std::string, element::WidgetElement*> widgetMap_;
 	DEFINE_MEMBER(private, private, geom::Area, area);
 private:
 	tinyxml2::XMLDocument* doc_;
