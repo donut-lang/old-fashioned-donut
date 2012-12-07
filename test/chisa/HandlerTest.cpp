@@ -55,6 +55,12 @@ public:
 	}
 };
 
+TEST(HandlerTest, SizeConstraintTest)
+{
+	static_assert(sizeof(TestFix*) == sizeof(Handler<TestFix>), "size of Handler must be equal to the pointer.");
+	static_assert(sizeof(HandlerBody<TestFix>) <= sizeof(void*)*4, "Overhead of HandlerBody must be less then or equal to 4 pointers.");
+}
+
 TEST(HandlerTest, HandlerTest)
 {
 	int e = 0;

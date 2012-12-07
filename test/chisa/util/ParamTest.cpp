@@ -24,6 +24,62 @@ using namespace chisa::util;
 namespace chisa {
 namespace util {
 
+TEST(ParamTest, SizeTest)
+{
+	//static_debug<sizeof(XValue), sizeof(void*), sizeof(XValue::Type)>();
+	static_assert( sizeof(XValue) <= sizeof(void*)*2, "size of XValue must be less than or equal to that of 2 pointers." );
+}
+
+TEST(ParamTest, ArrayHandlerTest)
+{
+	Handler<XArray> array( new XArray() );
+	{
+		XValue x (array);
+		//assign refs
+		XValue y (10);
+		ASSERT_EQ(2, array.refcount());
+		x=y;
+		y=x;
+		// rvalue
+		x = XValue(x);
+		x = XValue(10.1f);
+		// Effective STL-6 参照　関数宣言と間違えられないために。
+		XValue z((XValue(XValue(x))));
+
+		//swap
+		using std::swap;
+		swap(x,y);
+		swap(y,z);
+		swap(z,x);
+	}
+	ASSERT_EQ(1, array.refcount());
+}
+
+TEST(ParamTest, ObjectHandlerTest)
+{
+	Handler<XObject> obj( new XObject() );
+	{
+		XValue x (obj);
+		//assign refs
+		XValue y (10);
+		ASSERT_EQ(2, obj.refcount());
+		x=y;
+		y=x;
+		// rvalue
+		x = XValue(x);
+		x = XValue(10.1f);
+		// Effective STL-6 参照　関数宣言と間違えられないために。
+		XValue z((XValue(XValue(x))));
+
+		//swap
+		using std::swap;
+		swap(x,y);
+		swap(y,z);
+		swap(z,x);
+	}
+	ASSERT_EQ(1, obj.refcount());
+}
+
 TEST(ParamTest, StringTest)
 {
 	XValue x("string");
