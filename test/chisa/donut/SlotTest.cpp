@@ -76,7 +76,7 @@ TEST_F(DonutSlotTest, SeekTest)
 	ASSERT_EQ(obj100->toInt(heap), slot.load()->toInt(heap));
 
 	clock->tick();
-	slot.onSeekNotify(heap);
+	slot.onSeekNotify(heap); //FIXME: シークの通知はヒープにぶら下がったオブジェクトのスロットにしか、来ない
 	Handler<Object> obj200 = heap->createInt(200);
 	slot.store(heap, obj200.get());
 
@@ -85,14 +85,14 @@ TEST_F(DonutSlotTest, SeekTest)
 	ASSERT_EQ(obj200->toInt(heap), slot.load()->toInt(heap));
 
 	clock->seek(clock->now()-1);
-	slot.onSeekNotify(heap);
+	slot.onSeekNotify(heap); //FIXME: シークの通知はヒープにぶら下がったオブジェクトのスロットにしか、来ない
 
 	ASSERT_TRUE(slot.have());
 	ASSERT_NO_THROW(slot.load());
 	ASSERT_EQ(obj100->toInt(heap), slot.load()->toInt(heap));
 
 	clock->seek(clock->firstTime());
-	slot.onSeekNotify(heap);
+	slot.onSeekNotify(heap); //FIXME: シークの通知はヒープにぶら下がったオブジェクトのスロットにしか、来ない
 	ASSERT_FALSE(slot.have());
 	ASSERT_ANY_THROW(slot.load());
 }
@@ -100,20 +100,22 @@ TEST_F(DonutSlotTest, SeekTest)
 TEST_F(DonutSlotTest, SaveTest)
 {
 	util::XValue v;
-	timestamp_t t;
+	timestamp_t t1,t2,t3;
 	{
 		Slot slot;
+		t1 = clock->now();
 		clock->tick();
-		const timestamp_t t = clock->now();
+		t2 = clock->now();
 		Handler<Object> obj100 = heap->createInt(100);
 		slot.store(heap, obj100.get());
 
 		clock->tick();
+		t3 = clock->now();
 		slot.onSeekNotify(heap);
 		Handler<Object> obj200 = heap->createInt(200);
 		slot.store(heap, obj200.get());
 
-		clock->seek(t);
+		clock->seek(t2);
 		slot.onSeekNotify(heap);
 		v = slot.save();
 	}
@@ -121,9 +123,25 @@ TEST_F(DonutSlotTest, SaveTest)
 		Slot slot;
 		slot.load(heap, v);
 		ASSERT_EQ(100, slot.load()->toInt(heap));
+
+		clock->seek(t1);
+		slot.onSeekNotify(heap);
+
+		ASSERT_FALSE(slot.have());
+		ASSERT_ANY_THROW(slot.load());
+
+		clock->seek(t2);
+		slot.onSeekNotify(heap);
+		ASSERT_TRUE(slot.have());
+		ASSERT_NO_THROW(slot.load());
+		ASSERT_EQ(100, slot.load()->toInt(heap));
+
+		clock->seek(t3);
+		slot.onSeekNotify(heap);
+		ASSERT_TRUE(slot.have());
+		ASSERT_NO_THROW(slot.load());
+		ASSERT_EQ(200, slot.load()->toInt(heap));
 	}
-
-
 }
 }}
 
