@@ -62,7 +62,7 @@ void XObject::accumlate( tinyxml2::XMLElement* elm )
 tinyxml2::XMLElement* XObject::toXML( tinyxml2::XMLDocument* doc )
 {
 	tinyxml2::XMLElement* top = doc->NewElement("xobject");
-	for(std::pair<std::string const, XValue>& x : this->map_){
+	for(std::pair<std::string, XValue>& x : this->map_){
 		tinyxml2::XMLElement* e = x.second.toXML(doc);
 		e->SetAttribute("name", x.first.c_str());
 		top->InsertEndChild(e);
