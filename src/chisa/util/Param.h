@@ -42,13 +42,13 @@ struct _GetType{
 };
 template <>
 struct _GetType<XArray> {
-	typedef Handler<XArray> type;
-	typedef Handler<XArray> const_type;
+	typedef Handler<XArray>& type;
+	typedef Handler<XArray> const& const_type;
 };
 template <>
 struct _GetType<XObject> {
-	typedef Handler<XObject> type;
-	typedef Handler<XObject> const_type;
+	typedef Handler<XObject>& type;
+	typedef Handler<XObject> const& const_type;
 };
 
 class XValue {
@@ -74,151 +74,50 @@ public:
 	typedef bool Bool;
 private:
 	enum Type type_;
-	Handler<Array> array_;
-	Handler<Object> object_;
 	union {
+		Handler<Array>* array_;
+		Handler<Object>* object_;
 		String* str_;
 		UInt uint_;
 		SInt int_;
-		Float dbl_;
-		Bool b_;
+		Float float_;
+		Bool bool_;
 	} spirit_;
+	void remove();
+	void grab(XValue&& o);
+	void copy(XValue const& o);
 public:
 	XValue(XValue const& o):type_(o.type_){
-		switch(type_){
-		case NullT:
-			break;
-		case ArrayT:
-			this->array_ = o.array_;
-			break;
-		case ObjectT:
-			this->object_ = o.object_;
-			break;
-		case StringT:
-			this->spirit_.str_ = new std::string(*o.spirit_.str_);
-			break;
-		case UIntT:
-			this->spirit_ = o.spirit_;
-			break;
-		case SIntT:
-			this->spirit_ = o.spirit_;
-			break;
-		case FloatT:
-			this->spirit_ = o.spirit_;
-			break;
-		case BoolT:
-			this->spirit_ = o.spirit_;
-			break;
-		}
+		this->copy(o);
 	}
 	XValue(XValue&& o):type_(o.type_){
-		o.type_ = NullT;
-		switch(type_){
-		case NullT:
-			break;
-		case ArrayT:
-			this->array_ = o.array_;
-			break;
-		case ObjectT:
-			this->object_ = o.object_;
-			break;
-		case StringT:
-			this->spirit_.str_ = o.spirit_.str_;
-			o.spirit_.str_ = nullptr;
-			break;
-		case UIntT:
-			this->spirit_ = o.spirit_;
-			break;
-		case SIntT:
-			this->spirit_ = o.spirit_;
-			break;
-		case FloatT:
-			this->spirit_ = o.spirit_;
-			break;
-		case BoolT:
-			this->spirit_ = o.spirit_;
-			break;
-		}
+		this->grab(static_cast<XValue&&>(o));
 	}
 	XValue& operator=(XValue const& o){
+		this->remove();
 		this->type_ = o.type_;
-		switch(type_){
-		case NullT:
-			break;
-		case ArrayT:
-			this->array_ = o.array_;
-			break;
-		case ObjectT:
-			this->object_ = o.object_;
-			break;
-		case StringT:
-			this->spirit_.str_ = new std::string(*o.spirit_.str_);
-			break;
-		case UIntT:
-			this->spirit_ = o.spirit_;
-			break;
-		case SIntT:
-			this->spirit_ = o.spirit_;
-			break;
-		case FloatT:
-			this->spirit_ = o.spirit_;
-			break;
-		case BoolT:
-			this->spirit_ = o.spirit_;
-			break;
-		}
+		this->copy(o);
 		return *this;
 	}
 	XValue& operator=(XValue&& o){
+		this->remove();
 		this->type_ = o.type_;
-		o.type_ = NullT;
-		switch(type_){
-		case NullT:
-			break;
-		case ArrayT:
-			this->array_ = o.array_;
-			break;
-		case ObjectT:
-			this->object_ = o.object_;
-			break;
-		case StringT:
-			this->spirit_.str_ = o.spirit_.str_;
-			o.spirit_.str_ = nullptr;
-			break;
-		case UIntT:
-			this->spirit_ = o.spirit_;
-			break;
-		case SIntT:
-			this->spirit_ = o.spirit_;
-			break;
-		case FloatT:
-			this->spirit_ = o.spirit_;
-			break;
-		case BoolT:
-			this->spirit_ = o.spirit_;
-			break;
-		}
+		this->grab(static_cast<XValue&&>(o));
 		return *this;
 	}
 	explicit inline XValue():type_(Type::NullT){};
-	explicit inline XValue(Float const& val):type_(Type::FloatT){ this->spirit_.dbl_=val; };
-	explicit inline XValue(Bool const& val):type_(Type::BoolT){ this->spirit_.b_=val; };
+	explicit inline XValue(Float const& val):type_(Type::FloatT){ this->spirit_.float_=val; };
+	explicit inline XValue(Bool const& val):type_(Type::BoolT){ this->spirit_.bool_=val; };
 	explicit inline XValue(SInt const& val):type_(Type::SIntT){ this->spirit_.int_=val; };
 	explicit inline XValue(UInt const& val):type_(Type::UIntT){ this->spirit_.uint_=val; };
-	explicit inline XValue(Handler<XArray> const& val):type_(Type::ArrayT){ this->array_=val; };
-	explicit inline XValue(Handler<XObject> const& val):type_(Type::ObjectT){ this->object_=val; };
+	explicit inline XValue(Handler<XArray> const& val):type_(Type::ArrayT){ this->spirit_.array_= new Handler<Array>( val ); };
+	explicit inline XValue(Handler<XObject> const& val):type_(Type::ObjectT){ this->spirit_.object_= new Handler<Object>( val ); };
 	explicit inline XValue(String const& val):type_(Type::StringT){ this->spirit_.str_= new std::string(val); };
 	explicit inline XValue(const char* const& val):type_(Type::StringT){ this->spirit_.str_ = new std::string(val); };
 
 	inline bool onFree() const noexcept { return false; };
 	~XValue() noexcept {
-		switch(this->type_){
-		case Type::StringT:
-			delete this->spirit_.str_;
-			break;
-		default:
-			break;
-		}
+		this->remove();
 	}
 	template <typename T> bool is() const noexcept;
 	template <typename T> typename _GetType<T>::type get();
@@ -228,6 +127,7 @@ public:
 	static XValue fromXML( tinyxml2::XMLElement* elm );
 	tinyxml2::XMLElement* toXML( tinyxml2::XMLDocument* doc );
 	std::string toString() const noexcept;
+	void swap( XValue& o );
 };
 
 class XArray : public HandlerBody<XArray> {
@@ -325,13 +225,13 @@ public:
 			}\
 			return VAL;\
 		};
-FUNCT(Array, array_);
-FUNCT(Object, object_);
+FUNCT(Array, *spirit_.array_);
+FUNCT(Object, *spirit_.object_);
 FUNCT(String, *spirit_.str_);
 FUNCT(UInt, spirit_.uint_);
 FUNCT(SInt, spirit_.int_);
-FUNCT(Float, spirit_.dbl_);
-FUNCT(Bool, spirit_.b_);
+FUNCT(Float, spirit_.float_);
+FUNCT(Bool, spirit_.bool_);
 
 #undef FUNCT
 
@@ -376,6 +276,9 @@ template <> inline XValue XValue::decode<XValue::Bool>(std::string const& str)
 	return XValue((Bool)val);
 }
 
+inline void swap(XValue& a, XValue& b) {
+	a.swap(b);
+}
 }
 
 typedef xvalue::XValue XValue;
@@ -386,6 +289,7 @@ typedef XValue::UInt XUInt;
 typedef XValue::SInt XSInt;
 typedef XValue::Float XFloat;
 typedef XValue::Bool XBool;
+using xvalue::swap;
 
 class Param {
 	DISABLE_COPY_AND_ASSIGN(Param);

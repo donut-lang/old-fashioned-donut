@@ -89,9 +89,9 @@ tinyxml2::XMLElement* XValue::toXML( tinyxml2::XMLDocument* doc )
 	case NullT:
 		return doc->NewElement("xnull");
 	case ArrayT:
-		return this->array_->toXML(doc);
+		return (*this->spirit_.array_)->toXML(doc);
 	case ObjectT:
-		return this->object_->toXML(doc);
+		return (*this->spirit_.object_)->toXML(doc);
 	case StringT: {
 		tinyxml2::XMLElement* elm = doc->NewElement("xstring");
 		elm->InsertEndChild(doc->NewText(this->spirit_.str_->c_str()));
@@ -109,12 +109,12 @@ tinyxml2::XMLElement* XValue::toXML( tinyxml2::XMLDocument* doc )
 	}
 	case FloatT: {
 		tinyxml2::XMLElement* elm = doc->NewElement("xfloat");
-		elm->InsertEndChild(doc->NewText(util::toString(this->spirit_.dbl_).c_str()));
+		elm->InsertEndChild(doc->NewText(util::toString(this->spirit_.float_).c_str()));
 		return elm;
 	}
 	case BoolT: {
 		tinyxml2::XMLElement* elm = doc->NewElement("xbool");
-		elm->InsertEndChild(doc->NewText(util::toString(this->spirit_.b_).c_str()));
+		elm->InsertEndChild(doc->NewText(util::toString(this->spirit_.bool_).c_str()));
 		return elm;
 	}
 	default:
@@ -124,6 +124,8 @@ tinyxml2::XMLElement* XValue::toXML( tinyxml2::XMLDocument* doc )
 
 std::string XValue::toString() const noexcept {
 	switch ( this->type_ ){
+	case Type::NullT:
+		return "Null";
 	case Type::ArrayT:
 		return "Array";
 	case Type::ObjectT:
@@ -135,12 +137,98 @@ std::string XValue::toString() const noexcept {
 	case Type::SIntT:
 		return util::toString( this->spirit_.int_ );
 	case Type::BoolT:
-		return util::toString(this->spirit_.b_);
+		return util::toString(this->spirit_.bool_);
 	case Type::FloatT:
-		return util::toString(this->spirit_.dbl_);
+		return util::toString(this->spirit_.float_);
 	default:
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon type!: %d", type_);
 	}
+}
+
+void XValue::remove()
+{
+	switch(this->type_){
+	case Type::ArrayT:
+		delete this->spirit_.array_;
+		this->spirit_.array_ = nullptr;
+		break;
+	case Type::ObjectT:
+		delete this->spirit_.object_;
+		this->spirit_.object_ = nullptr;
+		break;
+	case Type::StringT:
+		delete this->spirit_.str_;
+		this->spirit_.str_ = nullptr;
+		break;
+	default:
+		break;
+	}
+}
+void XValue::grab(XValue&& o)
+{
+	o.type_ = NullT;
+	switch(type_){
+	case NullT:
+		break;
+	case ArrayT:
+		this->spirit_.array_ = o.spirit_.array_;
+		o.spirit_.array_ = nullptr;
+		break;
+	case ObjectT:
+		this->spirit_.object_ = o.spirit_.object_;
+		o.spirit_.object_ = nullptr;
+		break;
+	case StringT:
+		this->spirit_.str_ = o.spirit_.str_;
+		o.spirit_.str_ = nullptr;
+		break;
+	case UIntT:
+		this->spirit_.uint_ = o.spirit_.uint_;
+		break;
+	case SIntT:
+		this->spirit_.int_ = o.spirit_.int_;
+		break;
+	case FloatT:
+		this->spirit_.float_ = o.spirit_.float_;
+		break;
+	case BoolT:
+		this->spirit_.bool_ = o.spirit_.bool_;
+		break;
+	}
+}
+void XValue::copy(XValue const& o)
+{
+	switch(type_){
+	case NullT:
+		break;
+	case ArrayT:
+		this->spirit_.array_ = new Handler<Array>(*o.spirit_.array_);
+		break;
+	case ObjectT:
+		this->spirit_.object_ = new Handler<Object>(*o.spirit_.object_);
+		break;
+	case StringT:
+		this->spirit_.str_ = new std::string(*o.spirit_.str_);
+		break;
+	case UIntT:
+		this->spirit_.uint_ = o.spirit_.uint_;
+		break;
+	case SIntT:
+		this->spirit_.int_ = o.spirit_.int_;
+		break;
+	case FloatT:
+		this->spirit_.float_ = o.spirit_.float_;
+		break;
+	case BoolT:
+		this->spirit_.bool_ = o.spirit_.bool_;
+		break;
+	}
+}
+
+void XValue::swap( XValue& o )
+{
+	std::swap(o.type_, type_);
+	std::swap(o.spirit_, spirit_);
 }
 
 }

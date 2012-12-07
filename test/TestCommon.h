@@ -36,4 +36,14 @@ static Logger log_err(std::cout, Logger::ERROR_);
 #include <tinyxml2.h>
 std::shared_ptr<tinyxml2::XMLDocument> parse(const std::string& str);
 
+template <int... Args>
+void static_debug(){
+	static_assert(sizeof...(Args) < 0, "see type for compiler");
+}
+
+template <typename... Args>
+void static_debug(){
+	static_assert(sizeof...(Args) < 0, "see type for compiler");
+}
+
 #endif /* SACCUBUS_TESTCOMMON_H_ */
