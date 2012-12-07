@@ -40,23 +40,16 @@ WidgetFactory::~WidgetFactory()
 
 void WidgetFactory::registerWidget(const std::string& klass, std::function<Widget*(logging::Logger& log, std::weak_ptr<World> world, tinyxml2::XMLElement* elem)> func)
 {
-	auto it = std::lower_bound(this->widgetMap_.begin(), this->widgetMap_.end(), klass, Comparator());
-	std::pair<std::string, ConstructorType>& p = *it;
-	if( it == this->widgetMap_.end() || p.first != klass ){
-		this->widgetMap_.insert( it, std::make_pair(klass, func) );
-	}else{
-		p.second = func;
-	}
+	this->widgetMap_.update(klass, func);
 }
 
 Widget* WidgetFactory::createWidget(const std::string& klass, tinyxml2::XMLElement* elem)
 {
-	auto it = std::lower_bound(this->widgetMap_.begin(), this->widgetMap_.end(), klass, Comparator());
-	std::pair<std::string, ConstructorType>& p = *it;
-	if(it == this->widgetMap_.end() || p.first != klass){
+	auto it = this->widgetMap_.find(klass);
+	if(it == this->widgetMap_.end()){
 		return nullptr;
 	}
-	return p.second(log_, world_, elem);
+	return it->second(log_, world_, elem);
 }
 
 }}}

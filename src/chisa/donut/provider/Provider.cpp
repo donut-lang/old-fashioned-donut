@@ -72,12 +72,11 @@ util::XValue Provider::saveObject(Handler<HeapObject> const& obj)
 
 Handler<NativeClosureEntry> const& Provider::findClosureEntry( std::string const& name )
 {
-	auto it = std::lower_bound(this->nativeClosures_.begin(), this->nativeClosures_.end(), name, Comparator());
-	std::pair<std::string, Handler<NativeClosureEntry> >& p = *it;
-	if(it == this->nativeClosures_.end() || p.first != name){
+	auto it = nativeClosures_.find(name);
+	if(it == this->nativeClosures_.end()){
 		throw DonutException(__FILE__, __LINE__, "Closure %s not found in %s!!", name.c_str(), this->name().c_str());
 	}
-	return p.second;
+	return it->second;
 }
 
 Handler<HeapObject> Provider::loadObject(util::XValue const& data)
