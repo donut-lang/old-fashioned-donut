@@ -61,7 +61,7 @@ TEST(SaveTest, DonutSaveTest)
 	tinyxml2::XMLPrinter printer;
 	doc.Print(&printer);
 	std::string src = printer.CStr();
-//	std::cout << src << std::endl;
+	std::cout << src << std::endl;
 }
 
 }}
