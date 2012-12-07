@@ -21,11 +21,12 @@
 #include <string>
 #include <memory>
 #include <functional>
-#include <map>
+#include <vector>
 #include <tinyxml2.h>
 #include "../../logging/Exception.h"
 #include "../../logging/Logger.h"
 #include "../../util/ClassUtil.h"
+#include "../../util/MapUtil.h"
 #include "../Element.h"
 
 namespace chisa {
@@ -58,7 +59,9 @@ public:
 private:
 	logging::Logger& log_;
 	std::weak_ptr<World> world_;
-	std::map<std::string, std::function<std::shared_ptr<Element>(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent)> > elementMap_;
+	typedef std::function<std::shared_ptr<Element>(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent)> ConstructorType;
+	std::vector<std::pair<std::string ,ConstructorType> > elementMap_;
+	typedef util::PairCompare<std::string, ConstructorType> Comparator;
 public:
 	inline logging::Logger& log() const { return log_; }
 	inline std::weak_ptr<World> world() const { return world_; }
