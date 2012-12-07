@@ -63,11 +63,11 @@ bool BoolProvider::toBool(const Object* ptr) const
 	return BoolProvider::fromPointer(ptr);
 }
 
-util::XValue BoolProvider::saveImpl(Handler<HeapObject> const& obj)
+util::XValue BoolProvider::saveObjectImpl(Handler<HeapObject> const& obj)
 {
 	throw DonutException(__FILE__, __LINE__, "[BUG] Do not call BoolProvider#saveImpl.");
 }
-Handler<HeapObject> BoolProvider::loadImpl(util::XValue const& data)
+Handler<HeapObject> BoolProvider::loadObjectImpl(util::XValue const& data)
 {
 	throw DonutException(__FILE__, __LINE__, "[BUG] Do not call BoolProvider#loadImpl.");
 }

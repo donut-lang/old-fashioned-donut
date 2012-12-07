@@ -23,7 +23,7 @@
 namespace chisa {
 namespace donut {
 
-Handler<Object> PureNativeClosureEntry::createObject( const Handler<Heap>& heap, const std::string& objectProviderName, const std::string& closureName )
+Handler<HeapObject> PureNativeClosureEntry::createObject( const Handler<Heap>& heap, const std::string& objectProviderName, const std::string& closureName )
 {
 	return heap->createPureNativeClosureObject(objectProviderName, closureName, this->func_);
 }

@@ -216,6 +216,10 @@ void Heap::initPrimitiveProviders()
 	this->registerProvider( this->nullProvider() );
 	this->registerProvider(Handler<Provider>( new FloatProvider(self) ));
 	this->registerProvider(Handler<Provider>( new StringProvider(self) ));
+
+	for(std::pair<std::string, Handler<Provider> > const& p : this->providers_){
+		p.second->bootstrap();
+	}
 }
 
 util::XValue Heap::save()
@@ -228,7 +232,7 @@ util::XValue Heap::save()
 			Handler<XObject> xobj(new XObject);
 			xobj->set("provider", obj->providerName().c_str());
 			xobj->set("id", obj->id());
-			xobj->set("content", this->getProvider(obj->providerName())->save(Handler<HeapObject>::__internal__fromRawPointerWithoutCheck(obj)));
+			xobj->set("content", this->getProvider(obj->providerName())->saveObject(Handler<HeapObject>::__internal__fromRawPointerWithoutCheck(obj)));
 			pool->append(xobj);
 		}
 		top->set("pool", pool);
@@ -253,7 +257,7 @@ void Heap::load(util::XValue const& data)
 		std::string const provider = obj->get<XString>("provider");
 		objectid_t id = obj->get<objectid_t>("id");
 		//中身
-		Handler<HeapObject> robj ( this->getProvider(provider)->load( obj->get<XValue>("content") ) );
+		Handler<HeapObject> robj ( this->getProvider(provider)->loadObject( obj->get<XValue>("content") ) );
 		robj->id(id);
 	}
 	this->objectProto_ = this->decodeHeapDescriptor(xobj->get<object_desc_t>("object-prototype")).cast<DonutObject>();

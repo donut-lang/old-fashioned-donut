@@ -17,11 +17,13 @@
  */
 
 #pragma once
-#include <unordered_map>
+#include <vector>
 #include <string>
+#include <algorithm>
 
 #include "../../Handler.h"
 #include "../../util/XVal.h"
+#include "../../util/MapUtil.h"
 #include "../object/Object.h"
 #include "NativeClosureEntry.h"
 
@@ -30,20 +32,25 @@ namespace donut {
 
 class Provider : public HandlerBody<Provider> {
 private:
-	std::unordered_map<std::string, Handler<NativeClosureEntry> > nativeClosures_;
+	std::vector<std::pair<std::string, Handler<NativeClosureEntry> > > nativeClosures_;
+	typedef util::PairCompare<std::string, Handler<NativeClosureEntry> > Comparator;
 	HandlerW<Heap> const heap_;
 	Handler<DonutObject> prototype_;
 	std::string const name_;
 protected:
 	Provider( const Handler<Heap>& heap, const std::string& name );
 	template <typename T>
-	void registerPureNativeClosure( const std::string& name, T f)
+	bool registerPureNativeClosure( const std::string& name, T f)
 	{
 		Handler<NativeClosureEntry> ent(new PureNativeClosureEntry(f) );
-		this->nativeClosures_.insert(
-				std::pair<std::string,Handler<NativeClosureEntry> >(
-						name, ent ) );
-		this->addPrototype(name, ent);
+		auto it = std::lower_bound(this->nativeClosures_.begin(), this->nativeClosures_.end(), name, Comparator());
+		std::pair<std::string, Handler<NativeClosureEntry> >& p = *it;
+		if(it == this->nativeClosures_.end() || p.first != name){
+			this->nativeClosures_.insert(it, std::pair<std::string,Handler<NativeClosureEntry> >(name, ent ));
+			return true;
+		}else{
+			return false;
+		}
 	}
 private:
 	void addPrototype( const std::string& name, Handler<NativeClosureEntry> clos );
@@ -53,11 +60,18 @@ public:
 	inline std::string name() const noexcept { return this->name_; };
 	inline HandlerW<Heap> heap() const noexcept { return this->heap_; };
 	inline Handler<DonutObject> prototype() const noexcept { return this->prototype_; };
-public:
-	util::XValue save(Handler<HeapObject> const& obj);
-	Handler<HeapObject> load(util::XValue const& data);
-	virtual util::XValue saveImpl(Handler<HeapObject> const& obj) = 0;
-	virtual Handler<HeapObject> loadImpl(util::XValue const& data) = 0;
+private:
+	Handler<NativeClosureEntry> const& findClosureEntry( std::string const& name );
+public: /* 処理系の保存・復帰をします。 */
+	void bootstrap();
+	util::XValue save();
+	void load( util::XValue const& data);
+public: //結び付けられたオブジェクトの保存・復帰
+	util::XValue saveObject(Handler<HeapObject> const& obj);
+	Handler<HeapObject> loadObject(util::XValue const& data);
+public: //その具体的な実装
+	virtual util::XValue saveObjectImpl(Handler<HeapObject> const& obj) = 0;
+	virtual Handler<HeapObject> loadObjectImpl(util::XValue const& data) = 0;
 };
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -86,8 +100,8 @@ public:
 	int toInt(const Object* ptr) const;
 	float toFloat(const Object* ptr) const;
 	bool toBool(const Object* ptr) const;
-	virtual util::XValue saveImpl(Handler<HeapObject> const& obj) override final;
-	virtual Handler<HeapObject> loadImpl(util::XValue const& data) override final;
+	virtual util::XValue saveObjectImpl(Handler<HeapObject> const& obj) override final;
+	virtual Handler<HeapObject> loadObjectImpl(util::XValue const& data) override final;
 	Handler<Object> create( const int& val );
 };
 
@@ -107,8 +121,8 @@ public:
 	int toInt(const Object* ptr) const;
 	float toFloat(const Object* ptr) const;
 	bool toBool(const Object* ptr) const;
-	virtual util::XValue saveImpl(Handler<HeapObject> const& obj) override final;
-	virtual Handler<HeapObject> loadImpl(util::XValue const& data) override final;
+	virtual util::XValue saveObjectImpl(Handler<HeapObject> const& obj) override final;
+	virtual Handler<HeapObject> loadObjectImpl(util::XValue const& data) override final;
 	Handler<Object> create( const bool& val );
 };
 
@@ -125,8 +139,8 @@ public:
 	int toInt(const Object* ptr) const;
 	float toFloat(const Object* ptr) const;
 	bool toBool(const Object* ptr) const;
-	virtual util::XValue saveImpl(Handler<HeapObject> const& obj) override final;
-	virtual Handler<HeapObject> loadImpl(util::XValue const& data) override final;
+	virtual util::XValue saveObjectImpl(Handler<HeapObject> const& obj) override final;
+	virtual Handler<HeapObject> loadObjectImpl(util::XValue const& data) override final;
 	Handler<Object> create();
 };
 
@@ -135,8 +149,8 @@ public:
 	StringProvider(const Handler<Heap>& heap);
 	virtual ~StringProvider() noexcept = default;
 public:
-	virtual util::XValue saveImpl(Handler<HeapObject> const& obj) override final;
-	virtual Handler<HeapObject> loadImpl(util::XValue const& data) override final;
+	virtual util::XValue saveObjectImpl(Handler<HeapObject> const& obj) override final;
+	virtual Handler<HeapObject> loadObjectImpl(util::XValue const& data) override final;
 };
 
 class FloatProvider : public NativeObjectProvider {
@@ -144,8 +158,8 @@ public:
 	FloatProvider(const Handler<Heap>& heap);
 	virtual ~FloatProvider() noexcept = default;
 public:
-	virtual util::XValue saveImpl(Handler<HeapObject> const& obj) override final;
-	virtual Handler<HeapObject> loadImpl(util::XValue const& data) override final;
+	virtual util::XValue saveObjectImpl(Handler<HeapObject> const& obj) override final;
+	virtual Handler<HeapObject> loadObjectImpl(util::XValue const& data) override final;
 };
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -154,8 +168,8 @@ public:
 	DonutObjectProvider( const Handler<Heap>& heap );
 	virtual ~DonutObjectProvider() noexcept = default;
 public:
-	virtual util::XValue saveImpl(Handler<HeapObject> const& obj) override final;
-	virtual Handler<HeapObject> loadImpl(util::XValue const& data) override final;
+	virtual util::XValue saveObjectImpl(Handler<HeapObject> const& obj) override final;
+	virtual Handler<HeapObject> loadObjectImpl(util::XValue const& data) override final;
 public:
 	Handler<DonutObject> create();
 };

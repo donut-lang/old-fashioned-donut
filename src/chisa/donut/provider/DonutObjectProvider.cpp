@@ -34,7 +34,7 @@ DonutObjectProvider::DonutObjectProvider(const Handler<Heap>& heap)
 
 
 
-util::XValue DonutObjectProvider::saveImpl(Handler<HeapObject> const& obj)
+util::XValue DonutObjectProvider::saveObjectImpl(Handler<HeapObject> const& obj)
 {
 	if(Handler<Heap> heap = this->heap().lock()){
 		//return util::XValue( obj->toFloat(heap) );
@@ -42,7 +42,7 @@ util::XValue DonutObjectProvider::saveImpl(Handler<HeapObject> const& obj)
 		throw DonutException(__FILE__, __LINE__, "[BUG] heap was already dead!");
 	}
 }
-Handler<HeapObject> DonutObjectProvider::loadImpl(util::XValue const& data)
+Handler<HeapObject> DonutObjectProvider::loadObjectImpl(util::XValue const& data)
 {
 	if(Handler<Heap> heap = this->heap().lock()){
 		return heap->createDonutObject(  );
