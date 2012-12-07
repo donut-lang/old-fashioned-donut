@@ -17,13 +17,13 @@
  */
 
 #pragma once
-#include <tinyxml2.h>
 #include "source/Source.h"
 #include "object/Heap.h"
 #include "vm/Machine.h"
 #include "../logging/Logger.h"
 #include "../Handler.h"
 #include "Clock.h"
+#include "../util/XVal.h"
 
 namespace chisa {
 namespace donut {
@@ -54,8 +54,8 @@ public:
 	Handler<Source> parse(const std::string& src, const std::string& filename="<DEFAULT>", const int& lineno=0);
 public: /* 処理系の保存・復帰をします。 */
 	void bootstrap();
-	tinyxml2::XMLElement* save(tinyxml2::XMLDocument* doc);
-	void load(tinyxml2::XMLElement* data);
+	Handler<util::XObject> save();
+	void load( Handler<util::XObject> const& data);
 public: /* seekとかをします。外部から呼びます */
 	unsigned int nowTime() const noexcept;
 	void seek( unsigned int const& time );

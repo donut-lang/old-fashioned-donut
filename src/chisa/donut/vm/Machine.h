@@ -40,8 +40,8 @@ public:
 	Callchain(pc_t pc, unsigned int const& stackBase, const Handler<Object>& self, const Handler<DonutClosureObject>& closure, const Handler<DonutObject>& scope)
 	:pc_(pc), stackBase_(stackBase), self_(self), closure_(closure), scope_(scope){
 	}
-	Callchain(Handler<Heap> const& heap, tinyxml2::XMLElement* data);
-	tinyxml2::XMLElement* save(tinyxml2::XMLDocument* doc);
+	Callchain(Handler<Heap> const& heap, Handler<util::XObject> const& data);
+	Handler<util::XObject> save();
 };
 
 /**
@@ -55,9 +55,9 @@ struct Context {
 	std::vector<Callchain> callStack_;
 	Context(const Handler<Clock>& clk);
 	Context(const Handler<Clock>& clk, const Context& other);
-	Context(Handler<Heap> const& heap, tinyxml2::XMLElement* data);
+	Context(Handler<Heap> const& heap, Handler<util::XObject> const& data);
 	~Context() noexcept = default;
-	tinyxml2::XMLElement* save(tinyxml2::XMLDocument* doc);
+	Handler<util::XObject> save();
 public:
 	struct CompareByTime : std::binary_function<Context const&, Context const&, bool> {
 		bool operator()(Context const& a, Context const& b) const noexcept
@@ -104,8 +104,8 @@ private: /* 実行 */
 	Handler<Object> run();
 public: /* 処理系の保存・復帰をします。 */
 	void bootstrap();
-	tinyxml2::XMLElement* save(tinyxml2::XMLDocument* doc);
-	void load(tinyxml2::XMLElement* data);
+	Handler<util::XObject> save();
+	void load( Handler<util::XObject> const& data);
 public: /* 時間操作 */
 	void onSeekNotify();
 	void onDiscardFutureNotify();

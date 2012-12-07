@@ -18,7 +18,6 @@
 
 #include "ImageWidget.h"
 #include "../World.h"
-#include "../../util/Param.h"
 #include "../../gl/DrawableManager.h"
 
 namespace chisa {

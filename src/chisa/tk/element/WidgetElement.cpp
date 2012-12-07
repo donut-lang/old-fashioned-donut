@@ -19,7 +19,6 @@
 #include "GL/gl.h"
 #include "WidgetElement.h"
 #include "../World.h"
-#include "../../util/Param.h"
 #include "../../gl/Canvas.h"
 
 namespace chisa {

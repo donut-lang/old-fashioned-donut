@@ -20,7 +20,7 @@
 
 #include "../../chisa/tk/Widget.h"
 #include "../../chisa/Hexe.h"
-#include "../../chisa/util/Param.h"
+#include "../../chisa/util/XVal.h"
 
 namespace nes {
 class NesGeist;

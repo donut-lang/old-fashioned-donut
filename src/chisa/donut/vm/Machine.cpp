@@ -422,8 +422,9 @@ void Machine::bootstrap()
 	this->contextRevs_.clear();
 }
 
-tinyxml2::XMLElement* Callchain::save(tinyxml2::XMLDocument* doc)
+Handler<util::XObject> Callchain::save()
 {
+	/*
 	tinyxml2::XMLElement* top ( doc->NewElement("callchain") );
 	top->SetAttribute("pc", this->pc_);
 	top->SetAttribute("stack_base", this->stackBase_);
@@ -431,10 +432,12 @@ tinyxml2::XMLElement* Callchain::save(tinyxml2::XMLDocument* doc)
 	top->SetAttribute("closure", this->closure_->toDescriptor());
 	top->SetAttribute("scope", this->scope_->toDescriptor());
 	return top;
+	*/
 }
 
-Callchain::Callchain(Handler<Heap> const& heap, tinyxml2::XMLElement* data)
+Callchain::Callchain(Handler<Heap> const& heap, Handler<util::XObject> const& data)
 {
+	/*
 	if( data->QueryUnsignedAttribute( "pc", &this->pc_ ) != tinyxml2::XML_SUCCESS ) {
 		throw DonutException(__FILE__, __LINE__, "[BUG] Invalid save data. \"pc\" not found.");
 	}
@@ -462,10 +465,12 @@ Callchain::Callchain(Handler<Heap> const& heap, tinyxml2::XMLElement* data)
 		}
 		this->scope_ = heap->decodeDescriptor(desc).cast<DonutObject>();
 	}
+	*/
 }
 
-tinyxml2::XMLElement* Context::save(tinyxml2::XMLDocument* doc)
+Handler<util::XObject> Context::save()
 {
+	/*
 	tinyxml2::XMLElement* top ( doc->NewElement("context") );
 
 	// time
@@ -497,9 +502,11 @@ tinyxml2::XMLElement* Context::save(tinyxml2::XMLDocument* doc)
 		top->InsertEndChild( localE );
 	}
 	return top;
+	*/
 }
-Context::Context(Handler<Heap> const& heap, tinyxml2::XMLElement* data)
+Context::Context(Handler<Heap> const& heap, Handler<util::XObject> const& data)
 {
+	/*
 	{ //time
 		int time;
 		if( data->QueryIntAttribute("time", &time) != tinyxml2::XML_SUCCESS ){
@@ -536,25 +543,30 @@ Context::Context(Handler<Heap> const& heap, tinyxml2::XMLElement* data)
 			++i;
 		}
 	}
+	*/
 }
 
-tinyxml2::XMLElement* Machine::save(tinyxml2::XMLDocument* doc)
+Handler<util::XObject> Machine::save()
 {
+	/*
 	tinyxml2::XMLElement* top ( doc->NewElement("machine") );
 	//context_revsさえ保存すればよい
 	for( Context& ctx : this->contextRevs_ ) {
 		top->InsertEndChild( ctx.save(doc) );
 	}
 	return top;
+	*/
 }
-void Machine::load(tinyxml2::XMLElement* data)
+void Machine::load( Handler<util::XObject> const& obj)
 {
+	/*
 	for(tinyxml2::XMLElement* elm = data->FirstChildElement(); elm; elm = elm->NextSiblingElement()) {
 		this->contextRevs_.push_back( Context(heap_, elm) );
 	}
 	if( !std::is_sorted(this->contextRevs_.begin(), this->contextRevs_.end(), Context::CompareByTime()) ){
 		throw DonutException(__FILE__, __LINE__, "[BUG] Invalid save data. Revision data is not sorted.");
 	}
+	*/
 }
 
 /**********************************************************************************
