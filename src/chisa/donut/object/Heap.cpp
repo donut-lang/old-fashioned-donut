@@ -185,6 +185,8 @@ void Heap::bootstrap()
 {
 	this->initPrimitiveProviders();
 	Handler<Heap> const self = this->self();
+	this->objectId_ = 0;
+	this->walkColor_ = 0;
 
 	this->objectProto_ = this->donutObjectProvider()->prototype();
 	this->intProto_ = this->intProvider()->prototype();
@@ -226,6 +228,7 @@ util::XValue Heap::save()
 			Handler<XObject> xobj(new XObject);
 			xobj->set("provider", obj->providerName().c_str());
 			xobj->set("id", obj->id());
+			xobj->set("content", this->getProvider(obj->providerName())->save(Handler<HeapObject>::__internal__fromRawPointerWithoutCheck(obj)));
 			pool->append(xobj);
 		}
 		top->set("pool", pool);
@@ -235,6 +238,8 @@ util::XValue Heap::save()
 	top->set("bool-prototype", this->boolProvider()->prototype()->toDescriptor());
 	top->set("null-prototype", this->nullProvider()->prototype()->toDescriptor());
 	top->set("global", this->global()->toDescriptor());
+	top->set("object_id", this->objectId_);
+	top->set("walk_color", this->walkColor_);
 	return top;
 }
 
@@ -242,20 +247,23 @@ void Heap::load(util::XValue const& data)
 {
 	this->initPrimitiveProviders();
 	using namespace chisa::util;
-	Handler<util::XObject> obj ( data.as<util::XObject>() );
-	for( XValue& val : *(obj->get<XArray>("pool")) ){ //pool
+	Handler<util::XObject> xobj ( data.as<util::XObject>() );
+	for( XValue& val : *(xobj->get<XArray>("pool")) ){ //pool
 		Handler<XObject> obj ( val.as<XObject>() );
 		std::string const provider = obj->get<XString>("provider");
 		objectid_t id = obj->get<objectid_t>("id");
-		// FIXME: どうしよう
-		//HeapObject* obj = this->getProvider(provider)->deserialize(e->FirstChildElement());
-		// obj->id(id);
+		//中身
+		Handler<HeapObject> robj ( this->getProvider(provider)->load( obj->get<XValue>("content") ) );
+		robj->id(id);
 	}
-	this->objectProto_ = this->decodeHeapDescriptor(obj->get<object_desc_t>("object-prototype")).cast<DonutObject>();
-	this->intProto_ = this->decodeHeapDescriptor(obj->get<object_desc_t>("int-prototype")).cast<DonutObject>();
-	this->boolProto_ = this->decodeHeapDescriptor(obj->get<object_desc_t>("bool-prototype")).cast<DonutObject>();
-	this->nullProto_ = this->decodeHeapDescriptor(obj->get<object_desc_t>("null-prototype")).cast<DonutObject>();
-	this->globalObject_ = this->decodeHeapDescriptor(obj->get<object_desc_t>("global")).cast<DonutObject>();
+	this->objectProto_ = this->decodeHeapDescriptor(xobj->get<object_desc_t>("object-prototype")).cast<DonutObject>();
+	this->intProto_ = this->decodeHeapDescriptor(xobj->get<object_desc_t>("int-prototype")).cast<DonutObject>();
+	this->boolProto_ = this->decodeHeapDescriptor(xobj->get<object_desc_t>("bool-prototype")).cast<DonutObject>();
+	this->nullProto_ = this->decodeHeapDescriptor(xobj->get<object_desc_t>("null-prototype")).cast<DonutObject>();
+	this->globalObject_ = this->decodeHeapDescriptor(xobj->get<object_desc_t>("global")).cast<DonutObject>();
+
+	this->objectId_ = xobj->get<objectid_t>("object_id");
+	this->walkColor_ = xobj->get<int>("walk_color");
 }
 
 
