@@ -79,7 +79,7 @@ TEST(ParamTest, AssignTest)
 	ASSERT_TRUE( x.is<XSInt>() );
 	ASSERT_EQ(10, x.get<XSInt>() );
 
-	x.get<XSInt>() = 20;
+	x.as<XSInt>() = 20;
 	ASSERT_TRUE( x.is<XSInt>() );
 	ASSERT_EQ(20, x.get<XSInt>() );
 }
@@ -89,11 +89,11 @@ TEST(ParamTest, AssignObjectTest)
 	XValue x(Handler<XObject>(new XObject()));
 	ASSERT_TRUE( x.is<XObject>() );
 
-	x.get<XObject>()->set("name", 10);
+	x.as<XObject>()->set("name", 10);
 	ASSERT_TRUE( x.get<XObject>()->has<XSInt>("name") );
 	ASSERT_EQ(10, x.get<XObject>()->get<XSInt>("name") );
 
-	x.get<XObject>() = Handler<XObject>(new XObject());
+	x.as<XObject>() = Handler<XObject>(new XObject());
 	ASSERT_TRUE( x.is<XObject>() );
 	ASSERT_FALSE( x.get<XObject>()->has<XSInt>("name") );
 }
