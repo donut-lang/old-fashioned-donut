@@ -43,7 +43,7 @@ TEST(ParamTest, ArrayHandlerTest)
 		// rvalue
 		x = XValue(x);
 		x = XValue(10.1f);
-		// Effective STL-6 参照　関数宣言と間違えられないために。
+		// Effective STL-6 参照　関数宣言と間違えられないために、余分にカッコをつける。
 		XValue z((XValue(XValue(x))));
 
 		//swap
@@ -53,6 +53,49 @@ TEST(ParamTest, ArrayHandlerTest)
 		swap(z,x);
 	}
 	ASSERT_EQ(1, array.refcount());
+}
+
+TEST(ParamTest, SwapTest)
+{
+	XValue x(10);
+	XValue y(-1.3f);
+	ASSERT_TRUE( x.is<XSInt>() );
+	ASSERT_EQ(10, x.get<XSInt>() );
+	ASSERT_TRUE( y.is<XFloat>() );
+	ASSERT_EQ(-1.3f, y.get<XFloat>() );
+
+	using std::swap;
+	swap(x,y);
+
+	ASSERT_TRUE( y.is<XSInt>() );
+	ASSERT_EQ(10, y.get<XSInt>() );
+	ASSERT_TRUE( x.is<XFloat>() );
+	ASSERT_EQ(-1.3f, x.get<XFloat>() );
+}
+
+TEST(ParamTest, AssignTest)
+{
+	XValue x(10);
+	ASSERT_TRUE( x.is<XSInt>() );
+	ASSERT_EQ(10, x.get<XSInt>() );
+
+	x.get<XSInt>() = 20;
+	ASSERT_TRUE( x.is<XSInt>() );
+	ASSERT_EQ(20, x.get<XSInt>() );
+}
+
+TEST(ParamTest, AssignObjectTest)
+{
+	XValue x(Handler<XObject>(new XObject()));
+	ASSERT_TRUE( x.is<XObject>() );
+
+	x.get<XObject>()->set("name", 10);
+	ASSERT_TRUE( x.get<XObject>()->has<XSInt>("name") );
+	ASSERT_EQ(10, x.get<XObject>()->get<XSInt>("name") );
+
+	x.get<XObject>() = Handler<XObject>(new XObject());
+	ASSERT_TRUE( x.is<XObject>() );
+	ASSERT_FALSE( x.get<XObject>()->has<XSInt>("name") );
 }
 
 TEST(ParamTest, ObjectHandlerTest)
