@@ -27,7 +27,7 @@
 #include "ClassUtil.h"
 #include "StringUtil.h"
 #include "../Handler.h"
-#include "MapUtil.h"
+#include "VectorMap.h"
 
 namespace chisa {
 namespace util {

@@ -23,7 +23,7 @@
 #include <vector>
 #include "../../logging/Logger.h"
 #include "../../util/ClassUtil.h"
-#include "../../util/MapUtil.h"
+#include "../../util/VectorMap.h"
 
 namespace chisa {
 namespace util {

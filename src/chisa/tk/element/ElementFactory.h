@@ -26,7 +26,7 @@
 #include "../../logging/Exception.h"
 #include "../../logging/Logger.h"
 #include "../../util/ClassUtil.h"
-#include "../../util/MapUtil.h"
+#include "../../util/VectorMap.h"
 #include "../Element.h"
 
 namespace chisa {

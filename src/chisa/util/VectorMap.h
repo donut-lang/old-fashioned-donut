@@ -45,6 +45,7 @@ public:
 	typedef std::pair<T,U> Pair;
 	typedef typename Vector::iterator Iterator;
 	typedef typename Vector::const_iterator ConstIterator;
+	typedef typename Vector::size_type SizeType;
 private:
 	Vector data_;
 	inline bool eq(T const& key, Pair const& p) const noexcept {
@@ -91,12 +92,27 @@ public:
 		auto it = std::lower_bound( data_.begin(), data_.end(), key, cmp );
 		if( it == data_.end() || !eq(key, *it) ) {
 			data_.insert(it, Pair(key, val));
-			return true;
+			return false;
 		}else{
 			it->second = val;
-			return false;
+			return true;
 		}
 	}
+	inline bool remove(T const& key){
+		Comparator cmp;
+		auto it = find(key);
+		if( it == end() ) {
+			return false;
+		}else{
+			this->data_.erase(it);
+			return true;
+		}
+	}
+	inline Iterator erase(Iterator it){
+		return data_.erase(it);
+	}
+	inline SizeType size() const noexcept{ return data_.size(); };
+	inline bool empty() const noexcept{ return data_.empty(); };
 };
 
 }}

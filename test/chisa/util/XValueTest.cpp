@@ -24,13 +24,13 @@ using namespace chisa::util;
 namespace chisa {
 namespace util {
 
-TEST(ParamTest, SizeTest)
+TEST(XValueTest, SizeTest)
 {
 	//static_debug<sizeof(XValue), sizeof(void*), sizeof(XValue::Type)>();
 	static_assert( sizeof(XValue) <= sizeof(void*)*2, "size of XValue must be less than or equal to that of 2 pointers." );
 }
 
-TEST(ParamTest, ArrayHandlerTest)
+TEST(XValueTest, ArrayHandlerTest)
 {
 	Handler<XArray> array( new XArray() );
 	{
@@ -55,7 +55,7 @@ TEST(ParamTest, ArrayHandlerTest)
 	ASSERT_EQ(1, array.refcount());
 }
 
-TEST(ParamTest, SwapTest)
+TEST(XValueTest, SwapTest)
 {
 	XValue x(10);
 	XValue y(-1.3f);
@@ -73,7 +73,7 @@ TEST(ParamTest, SwapTest)
 	ASSERT_EQ(-1.3f, x.as<XFloat>() );
 }
 
-TEST(ParamTest, AssignTest)
+TEST(XValueTest, AssignTest)
 {
 	XValue x(10);
 	ASSERT_TRUE( x.is<XSInt>() );
@@ -84,7 +84,7 @@ TEST(ParamTest, AssignTest)
 	ASSERT_EQ(20, x.as<XSInt>() );
 }
 
-TEST(ParamTest, AssignObjectTest)
+TEST(XValueTest, AssignObjectTest)
 {
 	XValue x(Handler<XObject>(new XObject()));
 	ASSERT_TRUE( x.is<XObject>() );
@@ -98,7 +98,7 @@ TEST(ParamTest, AssignObjectTest)
 	ASSERT_FALSE( x.as<XObject>()->has<XSInt>("name") );
 }
 
-TEST(ParamTest, ObjectHandlerTest)
+TEST(XValueTest, ObjectHandlerTest)
 {
 	Handler<XObject> obj( new XObject() );
 	{
@@ -123,14 +123,14 @@ TEST(ParamTest, ObjectHandlerTest)
 	ASSERT_EQ(1, obj.refcount());
 }
 
-TEST(ParamTest, StringTest)
+TEST(XValueTest, StringTest)
 {
 	XValue x("string");
 	ASSERT_TRUE( x.is<XString>() );
 	ASSERT_EQ( "string", x.as<XString>() );
 }
 
-TEST(ParamTest, IntTest)
+TEST(XValueTest, IntTest)
 {
 	int val = 0xffffffff;
 	{
@@ -147,7 +147,7 @@ TEST(ParamTest, IntTest)
 	}
 }
 
-TEST(ParamTest, IntMaxTest)
+TEST(XValueTest, IntMaxTest)
 {
 	{
 		XValue p((0xFFFFFFFF));
@@ -174,7 +174,7 @@ TEST(ParamTest, IntMaxTest)
 	}
 }
 
-TEST(ParamTest, FloatTest)
+TEST(XValueTest, FloatTest)
 {
 	{
 		float val = 0xDEADBEEF;
@@ -203,7 +203,7 @@ TEST(ParamTest, FloatTest)
 	}
 }
 
-TEST(ParamTest, BooleanTest)
+TEST(XValueTest, BooleanTest)
 {
 	{
 		bool val = true;
@@ -237,7 +237,7 @@ TEST(ParamTest, BooleanTest)
 	}
 }
 
-TEST(ParamTest, TreeTest)
+TEST(XValueTest, TreeTest)
 {
 	auto tree = parse(R"delimiter(
 		<?xml version="1.0" encoding="UTF-8"?>
@@ -284,7 +284,7 @@ TEST(ParamTest, TreeTest)
 	}
 }
 
-TEST(ParamTest, GetSetTest)
+TEST(XValueTest, GetSetTest)
 {
 	Handler<XObject> obj(new XObject());
 	obj->set("int", 1);
@@ -298,7 +298,7 @@ TEST(ParamTest, GetSetTest)
 	ASSERT_EQ(true, obj->get<XBool>("bool"));
 }
 
-TEST(ParamTest, SerializeDeserializeTest)
+TEST(XValueTest, SerializeDeserializeTest)
 {
 	tinyxml2::XMLDocument doc;
 	tinyxml2::XMLElement* elm;
