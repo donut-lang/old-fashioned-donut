@@ -129,6 +129,9 @@ public:
 	{
 		return this->sprite;
 	}
+	inline S& operator*() const noexcept{
+		return *this->sprite;
+	}
 	inline S* get() const noexcept
 	{
 		return this->sprite;

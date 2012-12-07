@@ -100,15 +100,10 @@ void Donut::load(Handler<util::XObject> const& data)
 	{ // 3: マシン
 		Handler<util::XObject> machine ( data->get<util::XObject>("machine") );
 		this->machines_.clear();
-		/*
-		for(tinyxml2::XMLElement* mElm = data->FirstChildElement("machine"); mElm; mElm = mElm->NextSiblingElement("machine")){
-			char const* name = mElm->Attribute("name");
-			if( !name ) {
-				throw DonutException(__FILE__, __LINE__, "[BUG] Broken save file. \"name\" attr of machine not found.");
-			}
-			Handler<Machine> machine ( this->queryMachine(name) );
-			machine->load( mElm->FirstChildElement() );
-		}*/
+		for(std::pair<std::string, util::XValue> const& val : *data){
+			Handler<Machine> machine ( this->queryMachine(val.first) );
+			machine->load( val.second.get<util::XObject>() );
+		}
 	}
 
 }

@@ -218,8 +218,8 @@ void Heap::initPrimitiveProviders()
 
 Handler<util::XObject> Heap::save()
 {
+	Handler<util::XObject> top(new util::XObject);
 	/*
-	tinyxml2::XMLElement* const top = doc->NewElement("heap");
 	{ //pool
 		tinyxml2::XMLElement* const poolE = doc->NewElement("pool");
 		for( HeapObject* const& obj : this->objectPool_ ) {
@@ -241,8 +241,8 @@ Handler<util::XObject> Heap::save()
 		globalE->InsertEndChild( set.synthTree(doc) );
 		top->InsertEndChild( globalE );
 	}
-	return top;
 	*/
+	return top;
 }
 
 void Heap::load(Handler<util::XObject> const& data)

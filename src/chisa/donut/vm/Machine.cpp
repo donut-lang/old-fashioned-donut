@@ -548,14 +548,14 @@ Context::Context(Handler<Heap> const& heap, Handler<util::XObject> const& data)
 
 Handler<util::XObject> Machine::save()
 {
+	Handler<util::XObject> top(new util::XObject);
 	/*
-	tinyxml2::XMLElement* top ( doc->NewElement("machine") );
 	//context_revsさえ保存すればよい
 	for( Context& ctx : this->contextRevs_ ) {
 		top->InsertEndChild( ctx.save(doc) );
 	}
-	return top;
 	*/
+	return top;
 }
 void Machine::load( Handler<util::XObject> const& obj)
 {
