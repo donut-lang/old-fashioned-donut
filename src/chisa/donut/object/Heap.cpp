@@ -231,7 +231,11 @@ util::XValue Heap::save()
 			Handler<XObject> xobj(new XObject);
 			xobj->set("provider", obj->providerName().c_str());
 			xobj->set("id", obj->id());
-			xobj->set("content", this->getProvider(obj->providerName())->saveObject(Handler<HeapObject>::__internal__fromRawPointerWithoutCheck(obj)));
+			Handler<Provider> provider ( this->getProvider(obj->providerName()) );
+			if(!provider){
+				throw DonutException(__FILE__, __LINE__, "Provider %s not found.", obj->providerName().c_str());
+			}
+			xobj->set("content", provider->saveObject(Handler<HeapObject>::__internal__fromRawPointerWithoutCheck(obj)));
 			pool->append(xobj);
 		}
 		top->set("pool", pool);
