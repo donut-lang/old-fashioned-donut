@@ -40,8 +40,8 @@ public:
 	Callchain(pc_t pc, unsigned int const& stackBase, const Handler<Object>& self, const Handler<DonutClosureObject>& closure, const Handler<DonutObject>& scope)
 	:pc_(pc), stackBase_(stackBase), self_(self), closure_(closure), scope_(scope){
 	}
-	Callchain(Handler<Heap> const& heap, Handler<util::XObject> const& data);
-	Handler<util::XObject> save();
+	Callchain(Handler<Heap> const& heap, util::XValue const& data);
+	util::XValue save();
 };
 
 /**
@@ -55,9 +55,9 @@ struct Context {
 	std::vector<Callchain> callStack_;
 	Context(const Handler<Clock>& clk);
 	Context(const Handler<Clock>& clk, const Context& other);
-	Context(Handler<Heap> const& heap, Handler<util::XObject> const& data);
+	Context(Handler<Heap> const& heap, util::XValue const& data);
 	~Context() noexcept = default;
-	Handler<util::XObject> save();
+	util::XValue save();
 public:
 	struct CompareByTime : std::binary_function<Context const&, Context const&, bool> {
 		bool operator()(Context const& a, Context const& b) const noexcept
@@ -104,8 +104,8 @@ private: /* 実行 */
 	Handler<Object> run();
 public: /* 処理系の保存・復帰をします。 */
 	void bootstrap();
-	Handler<util::XObject> save();
-	void load( Handler<util::XObject> const& data);
+	util::XValue save();
+	void load( util::XValue const& data);
 public: /* 時間操作 */
 	void onSeekNotify();
 	void onDiscardFutureNotify();

@@ -50,7 +50,7 @@ void Clock::bootstrap()
 	this->first_ = 1;
 	this->now_ = 1;
 }
-Handler<util::XObject> Clock::save()
+util::XValue Clock::save()
 {
 	Handler<util::XObject> val( new util::XObject );
 	val->set("now", this->now_);
@@ -58,11 +58,12 @@ Handler<util::XObject> Clock::save()
 	val->set("last", this->last_);
 	return val;
 }
-void Clock::load(Handler<util::XObject> const& data)
+void Clock::load(util::XValue const& data)
 {
-	this->now_ = data->get<util::XUInt>("now");
-	this->first_ = data->get<util::XUInt>("first");
-	this->last_ = data->get<util::XUInt>("last");
+	auto obj = data.as<util::XObject>();
+	this->now_ = obj->get<util::XUInt>("now");
+	this->first_ = obj->get<util::XUInt>("first");
+	this->last_ = obj->get<util::XUInt>("last");
 }
 
 /**********************************************************************************

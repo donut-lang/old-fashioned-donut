@@ -45,8 +45,8 @@ public:
 	inline unsigned int now() const noexcept { return this->now_; };
 public: /* 処理系の保存・復帰をします。 */
 	void bootstrap();
-	Handler<util::XObject> save();
-	void load( Handler<util::XObject> const& data);
+	util::XValue save();
+	void load( util::XValue const& data);
 public: /* time functions */
 	void tick();
 	void seek( unsigned int const& time );

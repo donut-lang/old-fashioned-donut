@@ -60,28 +60,28 @@ TEST(ParamTest, SwapTest)
 	XValue x(10);
 	XValue y(-1.3f);
 	ASSERT_TRUE( x.is<XSInt>() );
-	ASSERT_EQ(10, x.get<XSInt>() );
+	ASSERT_EQ(10, x.as<XSInt>() );
 	ASSERT_TRUE( y.is<XFloat>() );
-	ASSERT_EQ(-1.3f, y.get<XFloat>() );
+	ASSERT_EQ(-1.3f, y.as<XFloat>() );
 
 	using std::swap;
 	swap(x,y);
 
 	ASSERT_TRUE( y.is<XSInt>() );
-	ASSERT_EQ(10, y.get<XSInt>() );
+	ASSERT_EQ(10, y.as<XSInt>() );
 	ASSERT_TRUE( x.is<XFloat>() );
-	ASSERT_EQ(-1.3f, x.get<XFloat>() );
+	ASSERT_EQ(-1.3f, x.as<XFloat>() );
 }
 
 TEST(ParamTest, AssignTest)
 {
 	XValue x(10);
 	ASSERT_TRUE( x.is<XSInt>() );
-	ASSERT_EQ(10, x.get<XSInt>() );
+	ASSERT_EQ(10, x.as<XSInt>() );
 
 	x.as<XSInt>() = 20;
 	ASSERT_TRUE( x.is<XSInt>() );
-	ASSERT_EQ(20, x.get<XSInt>() );
+	ASSERT_EQ(20, x.as<XSInt>() );
 }
 
 TEST(ParamTest, AssignObjectTest)
@@ -90,12 +90,12 @@ TEST(ParamTest, AssignObjectTest)
 	ASSERT_TRUE( x.is<XObject>() );
 
 	x.as<XObject>()->set("name", 10);
-	ASSERT_TRUE( x.get<XObject>()->has<XSInt>("name") );
-	ASSERT_EQ(10, x.get<XObject>()->get<XSInt>("name") );
+	ASSERT_TRUE( x.as<XObject>()->has<XSInt>("name") );
+	ASSERT_EQ(10, x.as<XObject>()->get<XSInt>("name") );
 
 	x.as<XObject>() = Handler<XObject>(new XObject());
 	ASSERT_TRUE( x.is<XObject>() );
-	ASSERT_FALSE( x.get<XObject>()->has<XSInt>("name") );
+	ASSERT_FALSE( x.as<XObject>()->has<XSInt>("name") );
 }
 
 TEST(ParamTest, ObjectHandlerTest)
@@ -127,7 +127,7 @@ TEST(ParamTest, StringTest)
 {
 	XValue x("string");
 	ASSERT_TRUE( x.is<XString>() );
-	ASSERT_EQ( "string", x.get<XString>() );
+	ASSERT_EQ( "string", x.as<XString>() );
 }
 
 TEST(ParamTest, IntTest)
@@ -136,14 +136,14 @@ TEST(ParamTest, IntTest)
 	{
 		XValue p((val));
 		ASSERT_TRUE( p.is<XSInt>() );
-		ASSERT_ANY_THROW( p.get<XUInt>() );
-		ASSERT_EQ(p.get<XSInt>(), 0xffffffff);
+		ASSERT_ANY_THROW( p.as<XUInt>() );
+		ASSERT_EQ(p.as<XSInt>(), 0xffffffff);
 	}
 	{
 		XValue p((10U));
 		ASSERT_TRUE( p.is<XUInt>() );
-		ASSERT_ANY_THROW( p.get<XSInt>() );
-		ASSERT_EQ(10, p.get<XUInt>());
+		ASSERT_ANY_THROW( p.as<XSInt>() );
+		ASSERT_EQ(10, p.as<XUInt>());
 	}
 }
 
@@ -151,26 +151,26 @@ TEST(ParamTest, IntMaxTest)
 {
 	{
 		XValue p((0xFFFFFFFF));
-		ASSERT_EQ(0xFFFFFFFF, p.get<XUInt>());
+		ASSERT_EQ(0xFFFFFFFF, p.as<XUInt>());
 	}
 
 	{
 		XValue p((0x7FFFFFFF));
-		ASSERT_EQ(0x7FFFFFFF, p.get<XSInt>());
+		ASSERT_EQ(0x7FFFFFFF, p.as<XSInt>());
 	}
 
 	{
 		XValue p(XValue::decode<XSInt>("0x7fffffff"));
 		ASSERT_TRUE( p.is<XSInt>() );
-		ASSERT_ANY_THROW( p.get<XUInt>() );
-		ASSERT_EQ(0x7fffffff, p.get<XSInt>());
+		ASSERT_ANY_THROW( p.as<XUInt>() );
+		ASSERT_EQ(0x7fffffff, p.as<XSInt>());
 	}
 
 	{
 		XValue p(XValue::decode<XUInt>("0xffffffff"));
 		ASSERT_TRUE( p.is<XUInt>() );
-		ASSERT_ANY_THROW( p.get<XSInt>() );
-		ASSERT_EQ(0xffffffff, p.get<XUInt>());
+		ASSERT_ANY_THROW( p.as<XSInt>() );
+		ASSERT_EQ(0xffffffff, p.as<XUInt>());
 	}
 }
 
@@ -179,27 +179,27 @@ TEST(ParamTest, FloatTest)
 	{
 		float val = 0xDEADBEEF;
 		XValue p((val));
-		ASSERT_EQ(val, p.get<XFloat>());
+		ASSERT_EQ(val, p.as<XFloat>());
 	}
 	{
 		float val = 10.1;
 		XValue p((val));
-		ASSERT_EQ(val, p.get<XFloat>());
+		ASSERT_EQ(val, p.as<XFloat>());
 	}
 	{
 		float val = NAN;
 		XValue p((val));
-		ASSERT_TRUE( isnan( p.get<XFloat>() ) );
+		ASSERT_TRUE( isnan( p.as<XFloat>() ) );
 	}
 	{
 		XValue p(XValue::decode<XFloat>("nan"));
 		ASSERT_TRUE( p.is<XFloat>() );
-		ASSERT_TRUE( isnan( p.get<XFloat>() ) );
+		ASSERT_TRUE( isnan( p.as<XFloat>() ) );
 	}
 	{
 		XValue p(XValue::decode<XFloat>("NAN"));
 		ASSERT_TRUE( p.is<XFloat>() );
-		ASSERT_TRUE( isnan( p.get<XFloat>() ) );
+		ASSERT_TRUE( isnan( p.as<XFloat>() ) );
 	}
 }
 
@@ -208,7 +208,7 @@ TEST(ParamTest, BooleanTest)
 	{
 		bool val = true;
 		XValue p((val));
-		ASSERT_EQ(val, p.get<XBool>());
+		ASSERT_EQ(val, p.as<XBool>());
 	}
 
 	{
@@ -218,22 +218,22 @@ TEST(ParamTest, BooleanTest)
 	{
 		XValue p( XValue::decode<XBool>("false") );
 		ASSERT_TRUE( p.is<XBool>() );
-		ASSERT_FALSE( p.get<XBool>() );
+		ASSERT_FALSE( p.as<XBool>() );
 	}
 	{
 		XValue p( XValue::decode<XBool>("no") );
 		ASSERT_TRUE( p.is<XBool>() );
-		ASSERT_FALSE( p.get<XBool>() );
+		ASSERT_FALSE( p.as<XBool>() );
 	}
 	{
 		XValue p( XValue::decode<XBool>("true") );
 		ASSERT_TRUE( p.is<XBool>() );
-		ASSERT_TRUE( p.get<XBool>() );
+		ASSERT_TRUE( p.as<XBool>() );
 	}
 	{
 		XValue p( XValue::decode<XBool>("yes") );
 		ASSERT_TRUE( p.is<XBool>() );
-		ASSERT_TRUE( p.get<XBool>() );
+		ASSERT_TRUE( p.as<XBool>() );
 	}
 }
 
@@ -257,7 +257,7 @@ TEST(ParamTest, TreeTest)
 	tinyxml2::XMLElement* elm = tree->RootElement();
 	XValue p( XValue::fromXML( elm ) );
 	ASSERT_TRUE( p.is<XObject>() );
-	Handler<XObject> obj = p.get<XObject>();
+	Handler<XObject> obj = p.as<XObject>();
 	{
 		ASSERT_TRUE(obj->has<XBool>("a"));
 		ASSERT_TRUE(obj->get<XBool>("a"));

@@ -70,7 +70,7 @@ void Donut::bootstrap()
 	// 3:マシン
 	this->machines_.clear(); //すべて削除
 }
-Handler<util::XObject> Donut::save()
+util::XValue Donut::save()
 {
 	Handler<util::XObject> top( new util::XObject );
 	{ // 1: 時計
@@ -88,21 +88,22 @@ Handler<util::XObject> Donut::save()
 	}
 	return top;
 }
-void Donut::load(Handler<util::XObject> const& data)
+void Donut::load(util::XValue const& data)
 {
+	Handler<util::XObject> obj = data.as<util::XObject>();
 	// 1: 時計
 	{
-		this->clock_->load(data->get<util::XObject>("clock"));
+		this->clock_->load(obj->get<util::XObject>("clock"));
 	}
 	{ // 2: ヒープ
-		this->heap_->load(data->get<util::XObject>("heap"));
+		this->heap_->load(obj->get<util::XObject>("heap"));
 	}
 	{ // 3: マシン
-		Handler<util::XObject> machine ( data->get<util::XObject>("machine") );
+		Handler<util::XObject> machine ( obj->get<util::XObject>("machine") );
 		this->machines_.clear();
-		for(std::pair<std::string, util::XValue> const& val : *data){
+		for(std::pair<std::string, util::XValue> const& val : *obj){
 			Handler<Machine> machine ( this->queryMachine(val.first) );
-			machine->load( val.second.get<util::XObject>() );
+			machine->load( val.second.as<util::XObject>() );
 		}
 	}
 
