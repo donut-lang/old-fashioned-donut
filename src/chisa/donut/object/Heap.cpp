@@ -68,27 +68,35 @@ void Heap::registerObject( const Handler<HeapObject>& obj )
 	}
 }
 
+void Heap::adjustReference( Object*& ref )
+{
+	if(!ref->isObject()){
+		return;
+	}
+	ref = findHeapObjectFromID(Object::decodeHeapObjectId(ref));
+}
 Handler<Object> Heap::decodeDescriptor( object_desc_t const& desc )
 {
-	if( Object::isDescriptorPrimitive(desc) ) {
-		return Object::decodePrimitiveDescriptor(desc);
+	if( Object::isPrimitiveDescriptor(desc) ) {
+		return Handler<Object>::__internal__fromRawPointerWithoutCheck( Object::castToPointer(desc) );
 	}
-	return decodeHeapDescriptor(desc);
+	return Handler<HeapObject>::__internal__fromRawPointerWithoutCheck( findHeapObjectFromID( Object::decodeHeapObjectId( desc) ) );
 }
 
-Handler<HeapObject> Heap::decodeHeapDescriptor( object_desc_t const& desc )
+HeapObject* Heap::findHeapObjectFromID( objectid_t const& id )
 {
-	objectid_t const id = Object::decodeHeapObjectDescriptor(desc);
-	if( id == 0 ){
-		return Handler<HeapObject>();
-	}
 	std::vector<HeapObject*>::iterator const it =
 			std::lower_bound( this->objectPool_.begin(), this->objectPool_.end(), id, CompareHeapById());
 	HeapObject* obj = *it;
 	if( it == this->objectPool_.end() || obj->id() != id ) {
 		throw DonutException(__FILE__, __LINE__, "[BUG] Object id: %d not found. Invalid Object Descriptor.", id);
 	}
-	return Handler<HeapObject>::__internal__fromRawPointerWithoutCheck(obj);
+	return obj;
+}
+
+Handler<HeapObject> Heap::decodeHeapDescriptor( object_desc_t const& desc )
+{
+	return Handler<HeapObject>::__internal__fromRawPointerWithoutCheck( findHeapObjectFromID( Object::decodeHeapObjectId(desc) ) );
 }
 
 Handler<DonutObject> Heap::createDonutObject()

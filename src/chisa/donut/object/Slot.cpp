@@ -78,11 +78,6 @@ bool Slot::have() const
  * from clock
  **********************************************************************************/
 
-void Slot::bootstrap()
-{
-	this->index_ = -1;
-	this->rev_.clear();
-}
 util::XValue Slot::save()
 {
 	using namespace chisa::util;
@@ -100,7 +95,7 @@ util::XValue Slot::save()
 	}
 	return obj;
 }
-void Slot::load( const Handler<Heap>& heap, util::XValue const& data)
+Slot::Slot( util::XValue const& data)
 {
 	using namespace chisa::util;
 	Handler<XObject> obj( data.as<XObject>() );
@@ -110,11 +105,16 @@ void Slot::load( const Handler<Heap>& heap, util::XValue const& data)
 		this->rev_.push_back(
 				std::pair<timestamp_t, Object*>(
 						sobj->get<timestamp_t>("time"),
-						heap->decodeDescriptor(sobj->get<object_desc_t>("obj")).get()
+						Object::castToPointer(sobj->get<object_desc_t>("obj"))
 						));
 	}
 }
-
+void Slot::resolveReference( const Handler<Heap>& heap )
+{
+	for( std::pair<timestamp_t, Object*>& p : rev_ ) {
+		heap->adjustReference( p.second );
+	}
+}
 /**********************************************************************************
  * from clock
  **********************************************************************************/
