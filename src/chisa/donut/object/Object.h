@@ -91,18 +91,29 @@ protected: /* 実装すべきもの */
 public:
 	virtual bool onFree() noexcept = 0;
 public:
-	static inline int isDescriptorPrimitive( object_desc_t const& desc ) noexcept { return (desc & Object::Tag::Mask) != Object::Tag::Obj; };
-	static inline Handler<Object> decodePrimitiveDescriptor( object_desc_t const& desc ) noexcept {
-		if(!Object::isDescriptorPrimitive(desc)) {
-			throw DonutException(__FILE__, __LINE__, "[BUG] Decoding heap object descriptor.");
-		}
-		return Handler<Object>::__internal__fromRawPointerWithoutCheck( reinterpret_cast<Object*>(static_cast<intptr_t>(desc)) );
+	static inline bool isPrimitiveDescriptor( object_desc_t const& desc ) noexcept {
+		return (desc & Object::Tag::Mask) != Object::Tag::Obj;
 	};
-	static inline objectid_t decodeHeapObjectDescriptor( object_desc_t const& desc ) noexcept {
-		if(Object::isDescriptorPrimitive(desc)) {
+	static inline Object* castToPointer(object_desc_t const& desc) noexcept {
+		return reinterpret_cast<Object*>(static_cast<intptr_t>(desc));
+	};
+	static inline object_desc_t castToDescriptor(Object* const& desc) noexcept {
+		return static_cast<object_desc_t>(reinterpret_cast<intptr_t>(desc));
+	};
+	static inline object_desc_t createToDescriptor( objectid_t const& id ) {
+		return (id << Object::TagShift) | Object::Tag::Obj;
+	}
+	static inline objectid_t decodeHeapObjectId( object_desc_t const& desc ) noexcept {
+		if(Object::isPrimitiveDescriptor(desc)) {
 			throw DonutException(__FILE__, __LINE__, "[BUG] Decoding primitive descriptor.");
 		}
 		return desc >> TagShift;
+	};
+	static inline objectid_t decodeHeapObjectId( Object* const& desc ) noexcept {
+		if(!desc->isObject()) {
+			throw DonutException(__FILE__, __LINE__, "[BUG] Decoding primitive descriptor.");
+		}
+		return castToDescriptor(desc) >> TagShift;
 	};
 };
 
@@ -125,7 +136,7 @@ public:
 public:
 	inline std::string providerName() const noexcept { return this->providerName_; }
 	inline objectid_t id() const noexcept { return this->id_; }
-	virtual object_desc_t toDescriptorImpl() const noexcept override final {return (this->id_ << Object::TagShift) | Object::Tag::Obj; };
+	virtual object_desc_t toDescriptorImpl() const noexcept override final { return Object::createToDescriptor(this->id_); };
 	inline void id(objectid_t const& nid) noexcept { this->id_ = nid; }
 	inline void erase() noexcept { this->erased_ = true; if(refcount() == 0){ delete this; } };
 public:
