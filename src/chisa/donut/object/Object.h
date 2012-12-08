@@ -100,16 +100,16 @@ public:
 	static inline object_desc_t castToDescriptor(Object* const& desc) noexcept {
 		return static_cast<object_desc_t>(reinterpret_cast<intptr_t>(desc));
 	};
-	static inline object_desc_t createToDescriptor( objectid_t const& id ) {
+	static inline object_desc_t castToDescriptor( objectid_t const& id ) {
 		return (id << Object::TagShift) | Object::Tag::Obj;
 	}
-	static inline objectid_t decodeHeapObjectId( object_desc_t const& desc ) noexcept {
+	static inline objectid_t castToHeapObjectId( object_desc_t const& desc ) noexcept {
 		if(Object::isPrimitiveDescriptor(desc)) {
 			throw DonutException(__FILE__, __LINE__, "[BUG] Decoding primitive descriptor.");
 		}
 		return desc >> TagShift;
 	};
-	static inline objectid_t decodeHeapObjectId( Object* const& desc ) noexcept {
+	static inline objectid_t castToHeapObjectId( Object* const& desc ) noexcept {
 		if(!desc->isObject()) {
 			throw DonutException(__FILE__, __LINE__, "[BUG] Decoding primitive descriptor.");
 		}
@@ -136,11 +136,11 @@ public:
 public:
 	inline std::string providerName() const noexcept { return this->providerName_; }
 	inline objectid_t id() const noexcept { return this->id_; }
-	virtual object_desc_t toDescriptorImpl() const noexcept override final { return Object::createToDescriptor(this->id_); };
+	virtual object_desc_t toDescriptorImpl() const noexcept override final { return Object::castToDescriptor(this->id_); };
 	inline void id(objectid_t const& nid) noexcept { this->id_ = nid; }
-	inline void erase() noexcept { this->erased_ = true; if(refcount() == 0){ delete this; } };
 public:
 	virtual bool onFree() noexcept { if(this->erased_){ return false; }else{ return true; } };
+	inline void erase() noexcept { this->erased_ = true; if(refcount() == 0){ delete this; } };
 	int color() noexcept { return this->color_; };
 	inline bool used() { return this->refcount() > 0; };
 protected:

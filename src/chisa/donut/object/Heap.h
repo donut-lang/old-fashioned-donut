@@ -92,7 +92,7 @@ public: /* オブジェクトを作ってそれをプールに登録し、メモ
 public: /* ヒープ管理 */
 	void gc();
 	Handler<Object> decodeDescriptor( object_desc_t const& desc );
-	void adjustReference( Object*& ref );
+	void adjustObjectPointer( Object*& ref );
 private: //内部使用
 	HeapObject* findHeapObjectFromID( objectid_t const& id );
 	Handler<HeapObject> decodeHeapDescriptor( object_desc_t const& desc );
