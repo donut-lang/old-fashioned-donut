@@ -465,13 +465,6 @@ util::XValue Context::save()
 		}
 		top->set("stack", list);
 	}
-	{ //local
-		Handler<util::XArray> list(new util::XArray);
-		for( Handler<Object> const& obj : this->local_ ) {
-			list->append( obj->toDescriptor() );
-		}
-		top->set("stack", list);
-	}
 	return top;
 }
 Context::Context(Handler<Heap> const& heap, util::XValue const& data)
@@ -491,13 +484,7 @@ Context::Context(Handler<Heap> const& heap, util::XValue const& data)
 			this->stack_.push_back( heap->decodeDescriptor(e.as<object_desc_t>()) );
 		}
 	}
-	{ //local
-		int i=0;
-		for( XValue& e : *(obj->get<XArray>("local"))) {
-			this->local_.at(i) = heap->decodeDescriptor(e.as<object_desc_t>());
-			++i;
-		}
-	}
+	//ローカルは再利用されない前提なので保存しない
 }
 
 util::XValue Machine::save()

@@ -95,7 +95,7 @@ util::XValue Slot::save()
 	}
 	return obj;
 }
-Slot::Slot( util::XValue const& data)
+Slot::Slot( Handler<Heap> const& heap, util::XValue const& data)
 {
 	using namespace chisa::util;
 	Handler<XObject> obj( data.as<XObject>() );
@@ -105,7 +105,7 @@ Slot::Slot( util::XValue const& data)
 		this->rev_.push_back(
 				std::pair<timestamp_t, Object*>(
 						sobj->get<timestamp_t>("time"),
-						Object::castToPointer(sobj->get<object_desc_t>("obj"))
+						heap->decodeDescriptor(sobj->get<object_desc_t>("obj")).get()
 						));
 	}
 }

@@ -123,7 +123,7 @@ void DonutObject::load( Handler<Heap> const& heap, util::XValue const& data )
 	Handler<XObject> obj(data.as<XObject>());
 	{
 		for(std::pair<std::string, XValue>& p : *(obj->get<XObject>("slot"))){
-			this->slots_.insert( std::pair<std::string const, Slot>( p.first, Slot(p.second) ));
+			this->slots_.insert( std::pair<std::string const, Slot>( p.first, Slot(heap, p.second) ));
 		}
 	}
 	this->loadImpl( heap, obj->get<XValue>("content") );

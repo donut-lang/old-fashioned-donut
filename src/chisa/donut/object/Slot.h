@@ -51,7 +51,7 @@ public:
 	bool have() const;
 public: /* 処理系の保存・復帰をします。 */
 	util::XValue save();
-	Slot( util::XValue const& data );
+	Slot( Handler<Heap> const& heap, util::XValue const& data );
 public: /* クロックから呼ばれる */
 	void onDiscardHistoryNotify( const Handler<Heap>& heap );
 	void onDiscardFutureNotify( const Handler<Heap>& heap );
