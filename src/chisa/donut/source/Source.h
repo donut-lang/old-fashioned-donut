@@ -23,6 +23,7 @@
 #include <vector>
 #include <algorithm>
 #include "Inst.h"
+#include "../../util/XVal.h"
 
 namespace chisa {
 namespace donut {
@@ -31,7 +32,31 @@ template <typename T>
 class ConstTable {
 private:
 	std::vector<T> table_;
+	ConstTable(ConstTable const& other) = delete;
+	ConstTable(ConstTable&& other) = delete;
+	ConstTable& operator=(ConstTable const& other) = delete;
+	ConstTable& operator=(ConstTable&& other) = delete;
 public:
+	ConstTable() {
+		bootstrap();
+	}
+	void bootstrap() {
+		this->table_.clear();
+	}
+	void load(util::XValue const& data) {
+		using namespace chisa::util;
+		for(XValue& v : *(data.as<XArray>())){
+			table_.push_back(v.as<T>());
+		}
+	}
+	util::XValue save() {
+		using namespace chisa::util;
+		Handler<XArray> top(new XArray);
+		for(auto it : table_){
+			top->append(it);
+		}
+		return top;
+	}
 	Instruction regist( T const& val ) {
 		auto it = std::find(table_.begin(), table_.end(), val);
 		if(it == table_.end()){
@@ -53,19 +78,42 @@ public:
 	{
 		return this->table_.size();
 	}
+	bool operator==( ConstTable<T> const& other ) const noexcept{
+		return table_ == other.table_;
+	}
+	bool operator!=( ConstTable<T> const& other ) const noexcept{
+		return !operator ==(other);
+	}
 };
 
+//この2つだけ特殊なので別扱い
+template<> void ConstTable<Handler<Closure> >::load(util::XValue const& data);
+template<> util::XValue ConstTable<Handler<Closure> >::save();
+template<> bool ConstTable<Handler<Closure> >::operator==( ConstTable<Handler<Closure> > const& other ) const noexcept;
+
 class Source : public HandlerBody<Source> {
+private:
+	bool erased_;
+	int const id_;
 private:
 	ConstTable<int> intTable_;
 	ConstTable<float> floatTable_;
 	ConstTable<std::string> stringTable_;
 	ConstTable<Handler<Closure> > closureTable_;
 	int entrypoint_id_;
+private:
+	Source(Source const& other) = delete;
+	Source(Source&& other) = delete;
+	Source& operator=(Source const& other) = delete;
+	Source& operator=(Source&& other) = delete;
 public:
-	Source();
+	Source(int id = -1);
+	Source(util::XValue const& data);
+	util::XValue save();
 	virtual ~Source() noexcept = default;
-	bool onFree() noexcept { return false; }
+public:
+	virtual bool onFree() noexcept { if(this->erased_||this->id_<0){ return false; }else{ return true; } };
+	inline void erase() noexcept { this->erased_ = true; if(refcount() == 0){ delete this; } };
 	template <typename T> Instruction constCode(T const& val);
 public:
 	std::string disasm( Instruction inst );
@@ -76,6 +124,18 @@ public:
 		if(constIndex >= 0x8000) {
 			constIndex -= 0x10000;
 		}
+	}
+public:
+	bool operator==( Source const& other ) const noexcept{
+		return
+				intTable_ == other.intTable_ &&
+				floatTable_ == other.floatTable_ &&
+				stringTable_ == other.stringTable_ &&
+				closureTable_ == other.closureTable_ &&
+				entrypoint_id_ == other.entrypoint_id_;
+	}
+	bool operator!=( Source const& other ) const noexcept{
+		return !operator==(other);
 	}
 public:
 	inline bool getBool(const unsigned int& idx) const noexcept{

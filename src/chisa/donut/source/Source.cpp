@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <algorithm>
 #include <cstddef>
 #include "Source.h"
 #include "Closure.h"
@@ -25,10 +26,72 @@
 namespace chisa {
 namespace donut {
 
-Source::Source()
-:entrypoint_id_(-1)
+Source::Source(int id)
+:erased_(false),id_(id),entrypoint_id_(-1)
 {
 
+}
+
+Source::Source(util::XValue const& data)
+:erased_(false),id_(data.as<util::XObject>()->get<int>("id"))
+{
+	using namespace chisa::util;
+	Handler<XObject> xobj(data.as<XObject>());
+	this->entrypoint_id_ = xobj->get<int>("entrypoint_id");
+	this->intTable_.load( xobj->get<XValue>("intTable") );
+	this->floatTable_.load( xobj->get<XValue>("floatTable") );
+	this->stringTable_.load( xobj->get<XValue>("stringTable") );
+	this->closureTable_.load( xobj->get<XValue>("closureTable") );
+}
+
+template<>
+void ConstTable<Handler<Closure> >::load(util::XValue const& data)
+{
+	using namespace chisa::util;
+	for(XValue& v : *(data.as<XArray>())){
+		this->table_.push_back(Handler<Closure>(new Closure(v)));
+	}
+}
+
+template<>
+util::XValue ConstTable<Handler<Closure> >::save()
+{
+	using namespace chisa::util;
+	Handler<XArray> top(new XArray);
+	for(Handler<Closure>& clos : this->table_){
+		top->append(clos->save());
+	}
+	return top;
+}
+
+template<>
+bool ConstTable<Handler<Closure> >::operator==(ConstTable<Handler<Closure> > const& other) const noexcept
+{
+	struct Unref : public std::binary_function<Handler<Closure>&, Handler<Closure>&, bool>{
+		bool operator()(Handler<Closure> const& p, Handler<Closure> const& q){
+			return *p == *q;
+		}
+	};
+	return table_.size() == other.table_.size() && std::equal(
+			this->table_.begin(),
+			this->table_.end(),
+			other.table_.begin(),
+			Unref()
+	);
+}
+
+
+util::XValue Source::save()
+{
+	using namespace chisa::util;
+	Handler<XObject> top(new XObject);
+	top->set("id", this->id_);
+	top->set("entrypoint_id", this->entrypoint_id_);
+	top->set("intTable", this->intTable_.save());
+	top->set("floatTable", this->floatTable_.save());
+	top->set("stringTable", this->stringTable_.save());
+	top->set("closureTable", this->closureTable_.save());
+	return top;
 }
 
 std::string Source::disasm( Instruction inst )

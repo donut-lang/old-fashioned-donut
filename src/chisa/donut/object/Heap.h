@@ -46,6 +46,7 @@ private:
 	util::VectorMap<std::string, Handler<HeapObjectProvider> > providers_;
 	std::vector<HeapObject*> objectPool_;
 	std::vector<HeapObject*> objectPoolMarked_;
+	std::vector<Source*> sourcePool_;
 	Handler<DonutObjectProvider> donutObjectProvider_;
 	Handler<DonutClosureObjectProvider> donutClosureObjectProvider_;
 private:

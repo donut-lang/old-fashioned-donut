@@ -111,6 +111,25 @@ TEST_F(DonutParserTest, ObjectLiteralTest)
 	ASSERT_LE(0, clos->instlist().size());
 }
 
+TEST_F(DonutParserTest, ClosureCompTest)
+{
+	Handler<Closure> clos1;
+	Handler<Closure> clos2;
+	{
+		std::vector<std::string> list = {"test","test2","test3"};
+		std::vector<Instruction> inst = {1,2,3};
+		clos1 = Handler<Closure>( new Closure(list, inst) );
+	}
+	{
+		std::vector<std::string> list = {"test","test2","test3"};
+		std::vector<Instruction> inst = {1,2,3};
+		clos2 = Handler<Closure>( new Closure(list, inst) );
+	}
+	ASSERT_NE(clos1,clos2);
+	ASSERT_EQ(*clos1,*clos2);
+}
+
+
 }}
 
 
