@@ -47,6 +47,12 @@ TEST(DonutBooleanTest, NotTest)
 	SOURCE_TEST_TRUE("!false");
 }
 
+TEST(DonutBooleanTest, ToStringTest)
+{
+	SOURCE_TEST_STR("true","true.toString();");
+	SOURCE_TEST_STR("false","false.toString();");
+}
+
 
 }}
 
