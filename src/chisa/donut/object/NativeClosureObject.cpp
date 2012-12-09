@@ -80,6 +80,11 @@ void NativeClosureObject::onDiscardFutureNotifyImpl(const Handler<Heap>& heap)
 
 }
 
+void NativeClosureObject::bootstrap( std::string const& name )
+{
+	const_cast<std::string&>( this->closureName_ ) = name;
+}
+
 util::XValue NativeClosureObject::save( Handler<Heap> const& heap )
 {
 	using namespace chisa::util;
@@ -98,6 +103,12 @@ void NativeClosureObject::load( Handler<Heap> const& heap, util::XValue const& d
 }
 
 //-----------------------------------------------------------------------------
+
+void PureNativeClosureObject::bootstrap( std::string const& name, PureNativeClosureObject::Signature f )
+{
+	this->NativeClosureObject::bootstrap(name);
+	this->func_ = f;
+}
 
 
 }}

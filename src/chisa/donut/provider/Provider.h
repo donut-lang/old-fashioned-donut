@@ -24,7 +24,10 @@
 #include "../../Handler.h"
 #include "../../util/XVal.h"
 #include "../../util/VectorMap.h"
+#include "../source/Source.h"
 #include "../object/Object.h"
+#include "../object/NativeObject.h"
+#include "../object/DonutObject.h"
 #include "NativeClosureEntry.h"
 
 namespace chisa {
@@ -58,8 +61,7 @@ public: /* 処理系の保存・復帰をします。 */
 	util::XValue save();
 	void load( util::XValue const& data);
 public:
-	virtual HeapObject* create( Handler<Heap> const& heap ) = 0;
-	NativeClosureObject* createNativeClosure( Handler<Heap> const& heap, std::string const& name );
+	virtual HeapObject* create() = 0;
 };
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -78,12 +80,12 @@ protected:
 public:
 	virtual ~HeapObjectProviderImpl() noexcept = default;
 public:
-	T* createDerived( Handler<Heap> const& heap ) {
-		return new T( heap, this->name() );
+	T* createDerived() {
+		return new T( this->name() );
 	}
 private:
-	virtual HeapObject* create( Handler<Heap> const& heap ) override {
-		return createDerived(heap);
+	virtual HeapObject* create() override {
+		return createDerived();
 	}
 };
 
@@ -106,7 +108,7 @@ public:
 	bool toBool(const Object* ptr) const;
 public:
 	Handler<Object> create( const int& val );
-	virtual HeapObject* create( Handler<Heap> const& heap ) override final {
+	virtual HeapObject* create() override final {
 		throw DonutException(__FILE__, __LINE__, "[BUG] Int Provider does not provide heap object.");
 	}
 };
@@ -129,7 +131,7 @@ public:
 	bool toBool(const Object* ptr) const;
 public:
 	Handler<Object> create( const bool& val );
-	virtual HeapObject* create( Handler<Heap> const& heap ) override final {
+	virtual HeapObject* create() override final {
 		throw DonutException(__FILE__, __LINE__, "[BUG] Bool Provider does not provide heap object.");
 	}
 };
@@ -148,11 +150,13 @@ public:
 	float toFloat(const Object* ptr) const;
 	bool toBool(const Object* ptr) const;
 public:
-	Handler<Object> create();
-	virtual HeapObject* create( Handler<Heap> const& heap ) override final {
+	Handler<Object> createNull();
+	virtual HeapObject* create() override final {
 		throw DonutException(__FILE__, __LINE__, "[BUG] Null Provider does not provide heap object.");
 	}
 };
+
+//---------------------------------------------------------------------------------------------------------------------
 
 class StringObject;
 class StringProvider : public HeapObjectProviderImpl<StringObject> {
@@ -170,10 +174,28 @@ public:
 //---------------------------------------------------------------------------------------------------------------------
 
 class DonutObject;
+class DonutClosureObject;
 class DonutObjectProvider : public HeapObjectProviderImpl<DonutObject> {
 public:
-	DonutObjectProvider( const Handler<Heap>& heap );
+	DonutObjectProvider( const Handler<Heap>& heap )
+	:HeapObjectProviderImpl<DonutObject>(heap, "DonutObject"){};
 	virtual ~DonutObjectProvider() noexcept = default;
+};
+class DonutClosureObjectProvider : public HeapObjectProviderImpl<DonutClosureObject> {
+public:
+	DonutClosureObjectProvider( const Handler<Heap>& heap )
+	:HeapObjectProviderImpl<DonutClosureObject>(heap,"DonutClosureObject"){};
+	virtual ~DonutClosureObjectProvider() noexcept = default;
+};
+
+//---------------------------------------------------------------------------------------------------------------------
+
+class PureNativeClosureObject;
+class PureNativeObjectProvider : public HeapObjectProviderImpl<PureNativeClosureObject> {
+public:
+	PureNativeObjectProvider( const Handler<Heap>& heap )
+	:HeapObjectProviderImpl<PureNativeClosureObject>(heap, "PureNativeObject"){}
+	virtual ~PureNativeObjectProvider() noexcept = default;
 };
 
 }}

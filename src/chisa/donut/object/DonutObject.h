@@ -26,11 +26,14 @@ namespace donut {
 class DonutClosureObject : public DonutObject {
 private:
 	Handler<Source> const src_;
+	unsigned int const index_;
 	Handler<Closure> const asm_;
 public:
-	DonutClosureObject(const Handler<Heap>& heap, Handler<Source> const& src, unsigned int const& closureIndex, const Handler<Object>& scope);
+	DonutClosureObject(std::string const& providerName):DonutObject(providerName)
+	,src_(nullptr),index_(-1),asm_(nullptr){};
 	virtual ~DonutClosureObject() noexcept = default;
 public:
+	void bootstrap(Handler<Heap> const& heap, Handler<Source> const& src, unsigned int const& closureIndex, const Handler<Object>& scope);
 	inline Handler<Source> const& source() const { return this->src_; };
 	inline Handler<Closure> const& closureCode() const { return this->asm_; };
 };

@@ -51,7 +51,7 @@ bool NullProvider::toBool(const Object* ptr) const
 	return false;
 }
 
-Handler<Object> NullProvider::create()
+Handler<Object> NullProvider::createNull()
 {
 	return Handler<Object>::__internal__fromRawPointerWithoutCheck( NullProvider::toPointer() );
 }

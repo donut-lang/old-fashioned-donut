@@ -96,7 +96,7 @@ Handler<HeapObject> Heap::decodeHeapDescriptor( object_desc_t const& desc )
 
 Handler<DonutObject> Heap::createDonutObject()
 {
-	Handler<DonutObject> obj(donutObjectProvider_->createDerived(self()));
+	Handler<DonutObject> obj(donutObjectProvider_->createDerived());
 	obj->set(self(), "__proto__", this->objectProto());
 	this->registerObject(obj);
 
@@ -105,16 +105,17 @@ Handler<DonutObject> Heap::createDonutObject()
 
 Handler<DonutObject> Heap::createEmptyDonutObject()
 {
-	Handler<DonutObject> obj(donutObjectProvider_->createDerived(self()));
+	Handler<DonutObject> obj(donutObjectProvider_->createDerived());
 	this->registerObject(obj);
 
 	return obj;
 }
+class DonutObject;
 
 Handler<StringObject> Heap::createStringObject(const std::string& val)
 {
-	Handler<StringObject> obj(this->stringProvider_->createDerived(self()));
-	obj->bootstrap(val);
+	Handler<StringObject> obj(this->stringProvider_->createDerived());
+	obj->bootstrap(self(), val);
 	this->registerObject(obj);
 
 	return obj;
@@ -122,8 +123,8 @@ Handler<StringObject> Heap::createStringObject(const std::string& val)
 
 Handler<FloatObject> Heap::createFloatObject(const float& val)
 {
-	Handler<FloatObject> obj(this->floatProvider_->createDerived(self()));
-	obj->bootstrap(val);
+	Handler<FloatObject> obj(this->floatProvider_->createDerived());
+	obj->bootstrap(self(), val);
 	this->registerObject(obj);
 
 	return obj;
@@ -131,7 +132,8 @@ Handler<FloatObject> Heap::createFloatObject(const float& val)
 
 Handler<DonutClosureObject> Heap::createDonutClosureObject( const Handler<Source>& src, unsigned int const& closureIndex, const Handler<Object>& scope )
 {
-	Handler<DonutClosureObject> obj(new DonutClosureObject(self(), src, closureIndex, scope));
+	Handler<DonutClosureObject> obj(this->donutClosureObjectProvider_->createDerived());
+	obj->bootstrap(self(), src, closureIndex, scope);
 	this->registerObject(obj);
 
 	return obj;
@@ -139,7 +141,8 @@ Handler<DonutClosureObject> Heap::createDonutClosureObject( const Handler<Source
 
 Handler<PureNativeClosureObject> Heap::createPureNativeClosureObject(const std::string& objectProviderName, const std::string& closureName, PureNativeClosureEntry::Signature f)
 {
-	Handler<PureNativeClosureObject> obj(new PureNativeClosureObject(self(), objectProviderName, closureName, f));
+	Handler<PureNativeClosureObject> obj(this->pureNativeClosureProvider_->createDerived());
+	obj->bootstrap(closureName, f);
 	this->registerObject(obj);
 
 	return obj;
@@ -157,7 +160,7 @@ Handler<Object> Heap::createBool(const bool& val)
 
 Handler<Object> Heap::createNull()
 {
-	return this->nullProvider()->create();
+	return this->nullProvider()->createNull();
 }
 
 /**********************************************************************************
@@ -207,8 +210,9 @@ void Heap::bootstrap()
 	this->globalObject_->set(self, "Global", this->globalObject_);
 }
 void Heap::load(util::XValue const& data)
-{
-	Handler<util::XObject> xobj ( data.as<util::XObject>() );
+{Handler<PureNativeClosureObject> pureNativeClosureProvider_;
+	Handler<util::XObject> const xobj ( data.as<util::XObject>() );
+	Handler<Heap> const self(this->self());
 	this->objectId_ = xobj->get<objectid_t>("object_id");
 	this->walkColor_ = xobj->get<int>("walk_color");
 	this->initPrimitiveProviders();
@@ -219,12 +223,24 @@ void Heap::load(util::XValue const& data)
 		std::string const provider = obj->get<XString>("provider");
 		objectid_t id = obj->get<objectid_t>("id");
 		//中身
-		Handler<HeapObject> robj ( this->getProvider(provider)->create(self()) );
+		HeapObject* robj ( this->getProvider(provider)->create() );
 		robj->id(id);
+		this->objectPool_.push_back( robj );
+	}
+	{ //ロード
+		auto it = xobj->get<XArray>("pool")->begin();
+		for(HeapObject*& obj : this->objectPool_){
+			Handler<XObject> const xobj ( ((XValue&)*it).as<XObject>() );
+			objectid_t id = xobj->get<objectid_t>("id");
+			if(id != obj->id()){
+				throw DonutException(__FILE__, __LINE__, "[BUG] Object ID mismatched while loading.");
+			}
+			obj->load(self, xobj->get<XValue>("content"));
+			++it;
+		}
 	}
 
 	initPrototypes();
-
 	this->globalObject_ = this->decodeHeapDescriptor(xobj->get<object_desc_t>("global")).cast<DonutObject>();
 }
 
@@ -233,11 +249,13 @@ void Heap::initPrimitiveProviders()
 {
 	Handler<Heap> const self = this->self();
 	this->registerProvider( this->donutObjectProvider_ = Handler<DonutObjectProvider>(new DonutObjectProvider(self)) );
+	this->registerProvider( this->donutClosureObjectProvider_ = Handler<DonutClosureObjectProvider>(new DonutClosureObjectProvider(self)) );
 	this->registerProvider( this->boolProvider_ = Handler<BoolProvider>(new BoolProvider(self)) );
 	this->registerProvider( this->intProvider_ = Handler<IntProvider>(new IntProvider(self)) );
 	this->registerProvider( this->nullProvider_ = Handler<NullProvider>(new NullProvider(self)) );
 	this->registerProvider( this->stringProvider_ = Handler<StringProvider>( new StringProvider(self) ) );
 	this->registerProvider( this->floatProvider_ = Handler<FloatProvider>( new FloatProvider(self) ) );
+	this->registerProvider( this->pureNativeClosureProvider_ = Handler<PureNativeObjectProvider>( new PureNativeObjectProvider(self) ) );
 
 	for(std::pair<std::string, Handler<Provider> > const& p : this->providers_){
 		p.second->bootstrap();

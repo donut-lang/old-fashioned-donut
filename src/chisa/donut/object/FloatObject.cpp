@@ -53,8 +53,9 @@ void FloatObject::onDiscardFutureNotifyImpl(const Handler<Heap>& heap)
 
 }
 
-void FloatObject::bootstrap( float const& val )
+void FloatObject::bootstrap( Handler<Heap> const& heap, float const& val )
 {
+	this->NativeObject::bootstrap(heap);
 	const_cast<float&>(this->value_) = val;
 }
 
