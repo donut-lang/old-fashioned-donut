@@ -23,10 +23,6 @@ namespace chisa {
 namespace donut {
 
 const std::string TAG("StringObject");
-StringObject::StringObject(const Handler<Heap>& heap, const std::string& str)
-: NativeObject(heap, "String"), str_(str)
-{
-}
 
 std::string StringObject::toStringImpl(const Handler<Heap>& heap) const
 {
@@ -57,6 +53,12 @@ void StringObject::onDiscardFutureNotifyImpl(const Handler<Heap>& heap)
 {
 
 }
+
+void StringObject::bootstrap( std::string const& val )
+{
+	const_cast<std::string&>(this->str_) = val;
+}
+
 
 /**********************************************************************************
  * save/load

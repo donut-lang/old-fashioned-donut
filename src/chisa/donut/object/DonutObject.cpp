@@ -33,11 +33,6 @@ DonutObject::DonutObject(const Handler<Heap>& heap, const std::string& providerN
 
 }
 
-DonutObject::DonutObject(const Handler<Heap>& heap)
-:HeapObject(heap, "chisa::donut::DonutObject")
-{
-
-}
 
 std::string DonutObject::toStringImpl(const Handler<Heap>& heap) const
 {

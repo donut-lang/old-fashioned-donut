@@ -43,7 +43,7 @@ private:
 	std::size_t gcLimit_;
 	std::size_t gcLimitMax_;
 private:
-	util::VectorMap<std::string, Handler<Provider> > providers_;
+	util::VectorMap<std::string, Handler<HeapObjectProvider> > providers_;
 	std::vector<HeapObject*> objectPool_;
 	std::vector<HeapObject*> objectPoolMarked_;
 	Handler<DonutObjectProvider> donutObjectProvider_;
@@ -54,6 +54,10 @@ private:
 	Handler<BoolProvider> boolProvider_;
 	Handler<IntProvider> intProvider_;
 	Handler<NullProvider> nullProvider_;
+
+	Handler<FloatProvider> floatProvider_;
+	Handler<StringProvider> stringProvider_;
+
 	Handler<DonutObject> boolProto_;
 	Handler<DonutObject> intProto_;
 	Handler<DonutObject> nullProto_;
@@ -74,7 +78,7 @@ public:
 	Handler<Object> intProto() {return intProto_;};
 	Handler<Object> nullProto() {return nullProto_;};
 
-	Handler<Provider> getProvider( const std::string& name ) const;
+	Handler<HeapObjectProvider> getProvider( const std::string& name ) const;
 	Handler<DonutObject> global() { return this->globalObject_; }
 private:
 	void registerObject( const Handler<HeapObject>& obj );
@@ -96,7 +100,7 @@ public: /* ヒープ管理 */
 private: //内部使用
 	HeapObject* findHeapObjectFromID( objectid_t const& id );
 public: /* 外部との接続 */
-	void registerProvider( Handler<Provider> provider );
+	void registerProvider( Handler<HeapObjectProvider> const& provider );
 	void registerGlobalObject( std::string const& name, Handler<Object> const& obj );
 	bool hasGlobalObject( std::string const& name );
 	Handler<Object> loadGlobalObject( std::string const& name );

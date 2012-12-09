@@ -171,10 +171,8 @@ class DonutObject : public HeapObject {
 private:
 	std::unordered_map<std::string, Slot> slots_;
 public:
-	DonutObject(const Handler<Heap>& heap);
-	virtual ~DonutObject() noexcept = default;
-protected: /* 継承用 */
 	DonutObject(const Handler<Heap>& heap, const std::string& providerName);
+	virtual ~DonutObject() noexcept = default;
 protected:
 	virtual std::string toStringImpl(const Handler<Heap>& heap) const override;
 	virtual std::string providerNameImpl(const Handler<Heap>& heap) const override;

@@ -28,34 +28,8 @@ static const std::string TAG("DonutObjectProvider");
 
 
 DonutObjectProvider::DonutObjectProvider(const Handler<Heap>& heap)
-:Provider(heap, "chisa::donut::DonutObject")
+:HeapObjectProviderImpl<DonutObject>(heap, "chisa::donut::DonutObject")
 {
 }
-
-
-
-util::XValue DonutObjectProvider::saveObjectImpl(Handler<HeapObject> const& obj)
-{
-	if(Handler<Heap> heap = this->heap().lock()){
-		using namespace chisa::util;
-		Handler<XObject> xobj(new XObject);
-//		for(){
-
-//		}
-		//return util::XValue( obj->toFloat(heap) );
-		return xobj;
-	}else{
-		throw DonutException(__FILE__, __LINE__, "[BUG] heap was already dead!");
-	}
-}
-Handler<HeapObject> DonutObjectProvider::loadObjectImpl(util::XValue const& data)
-{
-	if(Handler<Heap> heap = this->heap().lock()){
-		return heap->createDonutObject(  );
-	}else{
-		throw DonutException(__FILE__, __LINE__, "[BUG] heap was already dead!");
-	}
-}
-
 
 }}

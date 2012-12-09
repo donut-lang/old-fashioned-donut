@@ -23,10 +23,6 @@ namespace chisa {
 namespace donut {
 
 const std::string TAG("FloatObject");
-FloatObject::FloatObject(const Handler<Heap>& heap, const float& val)
-: NativeObject(heap, "Float"), value_(val)
-{
-}
 
 std::string FloatObject::toStringImpl(const Handler<Heap>& heap) const
 {
@@ -56,6 +52,12 @@ void FloatObject::onDiscardFutureNotifyImpl(const Handler<Heap>& heap)
 {
 
 }
+
+void FloatObject::bootstrap( float const& val )
+{
+	const_cast<float&>(this->value_) = val;
+}
+
 
 /**********************************************************************************
  * save/load

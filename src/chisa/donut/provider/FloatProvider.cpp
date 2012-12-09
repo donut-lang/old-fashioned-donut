@@ -28,7 +28,7 @@ namespace donut {
 static const std::string TAG("FloatProvider");
 
 FloatProvider::FloatProvider(const Handler<Heap>& heap)
-:NativeObjectProvider(heap, "Float")
+:HeapObjectProviderImpl<FloatObject>(heap, "Float")
 {
 	this->registerPureNativeClosure("opAdd", std::function<float(float, float)>([&](float self, float v) {
 		return self+v;
@@ -69,24 +69,6 @@ FloatProvider::FloatProvider(const Handler<Heap>& heap)
 	this->registerPureNativeClosure("toInteger", std::function<int(float)>([&](float self) {
 		return static_cast<int>(self);
 	}));
-}
-
-
-util::XValue FloatProvider::saveObjectImpl(Handler<HeapObject> const& obj)
-{
-	if(Handler<Heap> heap = this->heap().lock()){
-		return util::XValue( obj->toFloat(heap) );
-	}else{
-		throw DonutException(__FILE__, __LINE__, "[BUG] heap was already dead!");
-	}
-}
-Handler<HeapObject> FloatProvider::loadObjectImpl(util::XValue const& data)
-{
-	if(Handler<Heap> heap = this->heap().lock()){
-		return heap->createFloatObject( data.as<util::XFloat>() );
-	}else{
-		throw DonutException(__FILE__, __LINE__, "[BUG] heap was already dead!");
-	}
 }
 
 }}

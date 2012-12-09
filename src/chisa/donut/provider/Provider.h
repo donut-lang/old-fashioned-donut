@@ -57,25 +57,35 @@ public: /* 処理系の保存・復帰をします。 */
 	void bootstrap();
 	util::XValue save();
 	void load( util::XValue const& data);
-public: //結び付けられたオブジェクトの保存・復帰
-	util::XValue saveObject(Handler<HeapObject> const& obj);
-	Handler<HeapObject> loadObject(util::XValue const& data);
-public: //その具体的な実装
-	virtual util::XValue saveObjectImpl(Handler<HeapObject> const& obj) = 0;
-	virtual Handler<HeapObject> loadObjectImpl(util::XValue const& data) = 0;
 };
 
 //---------------------------------------------------------------------------------------------------------------------
 
-class NativeObjectProvider : public Provider {
+class HeapObjectProvider : public Provider {
 protected:
-	NativeObjectProvider( const Handler<Heap>& heap, const std::string& name ):Provider(heap, name){};
+	HeapObjectProvider( const Handler<Heap>& heap, const std::string& name ):Provider(heap, name){};
 public:
-	virtual ~NativeObjectProvider() noexcept = default;
+	virtual ~HeapObjectProvider() noexcept = default;
+	virtual HeapObject* create( Handler<Heap> const& heap ) = 0;
+};
+
+template <typename T>
+class HeapObjectProviderImpl : public HeapObjectProvider {
+protected:
+	HeapObjectProviderImpl( const Handler<Heap>& heap, const std::string& name ):HeapObjectProvider(heap, name){};
+public:
+	virtual ~HeapObjectProviderImpl() noexcept = default;
+public:
+	T* createDerived( Handler<Heap> const& heap ) {
+		return new T( heap, this->name() );
+	}
+	virtual HeapObject* create( Handler<Heap> const& heap ) override {
+		return createDerived(heap);
+	}
 };
 
 //---------------------------------------------------------------------------------------------------------------------
-class IntProvider : public NativeObjectProvider {
+class IntProvider : public Provider {
 public:
 	IntProvider(const Handler<Heap>& heap);
 	virtual ~IntProvider() noexcept = default;
@@ -91,12 +101,11 @@ public:
 	int toInt(const Object* ptr) const;
 	float toFloat(const Object* ptr) const;
 	bool toBool(const Object* ptr) const;
-	virtual util::XValue saveObjectImpl(Handler<HeapObject> const& obj) override final;
-	virtual Handler<HeapObject> loadObjectImpl(util::XValue const& data) override final;
+public:
 	Handler<Object> create( const int& val );
 };
 
-class BoolProvider : public NativeObjectProvider {
+class BoolProvider : public Provider {
 public:
 	BoolProvider(const Handler<Heap>& heap);
 	virtual ~BoolProvider() noexcept = default;
@@ -112,12 +121,11 @@ public:
 	int toInt(const Object* ptr) const;
 	float toFloat(const Object* ptr) const;
 	bool toBool(const Object* ptr) const;
-	virtual util::XValue saveObjectImpl(Handler<HeapObject> const& obj) override final;
-	virtual Handler<HeapObject> loadObjectImpl(util::XValue const& data) override final;
+public:
 	Handler<Object> create( const bool& val );
 };
 
-class NullProvider : public NativeObjectProvider {
+class NullProvider : public Provider {
 public:
 	NullProvider(const Handler<Heap>& heap);
 	virtual ~NullProvider() noexcept = default;
@@ -130,39 +138,31 @@ public:
 	int toInt(const Object* ptr) const;
 	float toFloat(const Object* ptr) const;
 	bool toBool(const Object* ptr) const;
-	virtual util::XValue saveObjectImpl(Handler<HeapObject> const& obj) override final;
-	virtual Handler<HeapObject> loadObjectImpl(util::XValue const& data) override final;
+public:
 	Handler<Object> create();
+
 };
 
-class StringProvider : public NativeObjectProvider {
+class StringObject;
+class StringProvider : public HeapObjectProviderImpl<StringObject> {
 public:
 	StringProvider(const Handler<Heap>& heap);
 	virtual ~StringProvider() noexcept = default;
-public:
-	virtual util::XValue saveObjectImpl(Handler<HeapObject> const& obj) override final;
-	virtual Handler<HeapObject> loadObjectImpl(util::XValue const& data) override final;
 };
 
-class FloatProvider : public NativeObjectProvider {
+class FloatObject;
+class FloatProvider : public HeapObjectProviderImpl<FloatObject> {
 public:
 	FloatProvider(const Handler<Heap>& heap);
 	virtual ~FloatProvider() noexcept = default;
-public:
-	virtual util::XValue saveObjectImpl(Handler<HeapObject> const& obj) override final;
-	virtual Handler<HeapObject> loadObjectImpl(util::XValue const& data) override final;
 };
 //---------------------------------------------------------------------------------------------------------------------
 
-class DonutObjectProvider : public Provider {
+class DonutObject;
+class DonutObjectProvider : public HeapObjectProviderImpl<DonutObject> {
 public:
 	DonutObjectProvider( const Handler<Heap>& heap );
 	virtual ~DonutObjectProvider() noexcept = default;
-public:
-	virtual util::XValue saveObjectImpl(Handler<HeapObject> const& obj) override final;
-	virtual Handler<HeapObject> loadObjectImpl(util::XValue const& data) override final;
-public:
-	Handler<DonutObject> create();
 };
 
 }}

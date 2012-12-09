@@ -27,7 +27,7 @@ namespace donut {
 static const std::string TAG("BoolProvider");
 
 BoolProvider::BoolProvider(const Handler<Heap>& heap)
-:NativeObjectProvider(heap, "Boolean")
+:Provider(heap, "Boolean")
 {
 	this->registerPureNativeClosure("opAnd", std::function<Object*(Object*, bool)>(
 			[&](Object* self, bool v)->Object*{
@@ -62,16 +62,6 @@ bool BoolProvider::toBool(const Object* ptr) const
 {
 	return BoolProvider::fromPointer(ptr);
 }
-
-util::XValue BoolProvider::saveObjectImpl(Handler<HeapObject> const& obj)
-{
-	throw DonutException(__FILE__, __LINE__, "[BUG] Do not call BoolProvider#saveImpl.");
-}
-Handler<HeapObject> BoolProvider::loadObjectImpl(util::XValue const& data)
-{
-	throw DonutException(__FILE__, __LINE__, "[BUG] Do not call BoolProvider#loadImpl.");
-}
-
 
 Handler<Object> BoolProvider::create( const bool& val )
 {

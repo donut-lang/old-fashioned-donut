@@ -29,7 +29,7 @@ namespace donut {
 static const std::string TAG("StringProvider");
 
 StringProvider::StringProvider(const Handler<Heap>& heap )
-:NativeObjectProvider(heap, "String")
+:HeapObjectProviderImpl<StringObject>(heap, "String")
 {
 	this->registerPureNativeClosure("toInteger", std::function<int(StringObject*)>([&](StringObject* self) {
 		return util::parseInt(self->toString(this->heap().lock()), 0);
@@ -53,23 +53,6 @@ StringProvider::StringProvider(const Handler<Heap>& heap )
 		}
 		return ss.str();
 	}));
-}
-
-util::XValue StringProvider::saveObjectImpl(Handler<HeapObject> const& obj)
-{
-	if(Handler<Heap> heap = this->heap().lock()){
-		return util::XValue( obj->toString(heap) );
-	}else{
-		throw DonutException(__FILE__, __LINE__, "[BUG] heap was already dead!");
-	}
-}
-Handler<HeapObject> StringProvider::loadObjectImpl(util::XValue const& data)
-{
-	if(Handler<Heap> heap = this->heap().lock()){
-		return heap->createStringObject( data.as<util::XString>() );
-	}else{
-		throw DonutException(__FILE__, __LINE__, "[BUG] heap was already dead!");
-	}
 }
 
 }}
