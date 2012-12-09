@@ -69,7 +69,7 @@ private:
 public:
 	PureNativeClosureObject( std::string const& providerName):NativeClosureObject(providerName){}
 	virtual ~PureNativeClosureObject() noexcept {}
-	void bootstrap( std::string const& name, Signature f );
+	void bootstrap( std::string const& objectProviderName, std::string const& closureName, Signature f );
 public:
 	Handler<Object> apply(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& arg){
 		return func_(heap, self,arg);

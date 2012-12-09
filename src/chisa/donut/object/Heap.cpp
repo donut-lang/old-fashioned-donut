@@ -47,12 +47,28 @@ bool Heap::onFree() noexcept
 	return false;
 }
 
-Handler<HeapObjectProvider> Heap::getProvider( const std::string& name ) const
+Handler<HeapObjectProvider> Heap::getHeapProvider( const std::string& name ) const
 {
 	auto it = this->providers_.find(name);
 	if(it != this->providers_.end()){
 		util::VectorMap<std::string, Handler<HeapObjectProvider> >::Pair const& p = *it;
 		return p.second;
+	}
+	return Handler<HeapObjectProvider>();
+}
+
+Handler<Provider> Heap::getProvider( const std::string& name ) const
+{
+	auto it = getHeapProvider(name);
+	if(it){
+		return it;
+	}
+	if( name == this->intProvider_->name() ){
+		return intProvider_;
+	}else if(name==this->boolProvider_->name()){
+		return boolProvider_;
+	}else if(name==this->nullProvider_->name()){
+		return nullProvider_;
 	}
 	return Handler<HeapObjectProvider>();
 }
@@ -142,7 +158,7 @@ Handler<DonutClosureObject> Heap::createDonutClosureObject( const Handler<Source
 Handler<PureNativeClosureObject> Heap::createPureNativeClosureObject(const std::string& objectProviderName, const std::string& closureName, PureNativeClosureObject::Signature f)
 {
 	Handler<PureNativeClosureObject> obj(this->pureNativeClosureProvider_->createDerived());
-	obj->bootstrap(closureName, f);
+	obj->bootstrap(objectProviderName, closureName, f);
 	this->registerObject(obj);
 
 	return obj;
@@ -213,46 +229,53 @@ void Heap::bootstrap()
 	this->globalObject_->set(self, "Global", this->globalObject_);
 }
 void Heap::load(util::XValue const& data)
-{Handler<PureNativeClosureObject> pureNativeClosureProvider_;
+{
 	Handler<util::XObject> const xobj ( data.as<util::XObject>() );
 	Handler<Heap> const self(this->self());
 	this->objectId_ = xobj->get<objectid_t>("object_id");
 	this->walkColor_ = xobj->get<int>("walk_color");
 	this->initPrimitiveProviders();
 	using namespace chisa::util;
-	for( XValue& val : *(xobj->get<XArray>("pool")) ){ //プール、ただし生成だけ
-		Handler<XObject> obj ( val.as<XObject>() );
-		std::string const provider = obj->get<XString>("provider");
-		objectid_t id = obj->get<objectid_t>("id");
-		//中身
-		HeapObject* robj ( this->getProvider(provider)->create() );
-		robj->id(id);
-		this->objectPool_.push_back( robj );
+
+	{ //とりあえず全オブジェクトを生成し、あとで参照できるようにしておかなければならない
+		for( XValue& val : *(xobj->get<XArray>("pool")) ){ //プール、ただし生成だけ
+			Handler<XObject> obj ( val.as<XObject>() );
+			std::string const provider = obj->get<XString>("provider");
+			objectid_t id = obj->get<objectid_t>("id");
+			//中身
+			HeapObject* robj ( this->getHeapProvider(provider)->create() );
+			robj->id(id);
+			this->objectPool_.push_back( robj );
+		}
 	}
+
 	{ //やっとプロバイダのロードができる。
-		{
-			Handler<util::XObject> const pobj ( xobj->get<util::XObject>("primitives") );
+		{ //まずはヒープではない特殊プロバイダ
+			Handler<util::XObject> const pobj ( xobj->get<util::XObject>("provider-primitives") );
 			this->intProvider_->load(pobj->get<XValue>(this->intProvider_->name()));
 			this->boolProvider_->load(pobj->get<XValue>(this->boolProvider_->name()));
 			this->nullProvider_->load(pobj->get<XValue>(this->nullProvider_->name()));
 		}
-		{
-			Handler<util::XObject> const hobj ( xobj->get<util::XObject>("heaps") );
+		{ //一般のヒーププロバイダ
+			Handler<util::XObject> const hobj ( xobj->get<util::XObject>("provider-heaps") );
 			for(std::pair<std::string, Handler<HeapObjectProvider> >& p : this->providers_){
 				p.second->load(hobj->get<XValue>(p.first));
 			}
 		}
 	}
-	{ //ロード
-		auto it = xobj->get<XArray>("pool")->begin();
+	{ //オブジェクトのデータの復帰
+		Handler<XArray> array(xobj->get<XArray>("pool"));
+		auto it = array->begin();
 		for(HeapObject*& obj : this->objectPool_){
-			Handler<XObject> const xobj ( ((XValue&)*it).as<XObject>() );
+			if(it == array->end()){
+				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Heap size mismatched while loading.");
+			}
+			Handler<XObject> const xobj ( (it++)->as<XObject>() );
 			objectid_t id = xobj->get<objectid_t>("id");
 			if(id != obj->id()){
 				throw DonutException(__FILE__, __LINE__, "[BUG] Object ID mismatched while loading.");
 			}
 			obj->load(self, xobj->get<XValue>("content"));
-			++it;
 		}
 	}
 
@@ -272,10 +295,6 @@ void Heap::initPrimitiveProviders()
 	this->registerProvider( this->stringProvider_ = Handler<StringProvider>( new StringProvider(self) ) );
 	this->registerProvider( this->floatProvider_ = Handler<FloatProvider>( new FloatProvider(self) ) );
 	this->registerProvider( this->pureNativeClosureProvider_ = Handler<PureNativeObjectProvider>( new PureNativeObjectProvider(self) ) );
-
-	for(std::pair<std::string, Handler<Provider> > const& p : this->providers_){
-		p.second->bootstrap();
-	}
 }
 
 void Heap::initPrototypes()
@@ -292,18 +311,19 @@ util::XValue Heap::save()
 	Handler<XObject> top(new XObject);
 	Handler<Heap> self(this->self());
 	{ //providers
-		{
+		{ //特殊プロバイダ
 			Handler<util::XObject> const pobj ( new XObject );
 			pobj->set(this->intProvider_->name(), this->intProvider_->save());
 			pobj->set(this->boolProvider_->name(), this->boolProvider_->save());
 			pobj->set(this->nullProvider_->name(), this->nullProvider_->save());
+			top->set("provider-primitives", pobj);
 		}
-		{
+		{ //通常プロバイダ
 			Handler<util::XObject> const hobj ( new XObject );
 			for(std::pair<std::string, Handler<HeapObjectProvider> >& p : this->providers_){
 				hobj->set(p.first, p.second->save());
 			}
-			top->set("heaps", hobj);
+			top->set("provider-heaps", hobj);
 		}
 	}
 	{ //pool
@@ -312,7 +332,7 @@ util::XValue Heap::save()
 			Handler<XObject> xobj(new XObject);
 			xobj->set("provider", obj->providerName().c_str());
 			xobj->set("id", obj->id());
-			Handler<Provider> provider ( this->getProvider(obj->providerName()) );
+			Handler<Provider> provider ( this->getHeapProvider(obj->providerName()) );
 			if(!provider){
 				throw DonutException(__FILE__, __LINE__, "Provider %s not found.", obj->providerName().c_str());
 			}

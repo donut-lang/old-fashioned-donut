@@ -80,16 +80,18 @@ void NativeClosureObject::onDiscardFutureNotifyImpl(const Handler<Heap>& heap)
 
 }
 
-void NativeClosureObject::bootstrap( std::string const& name )
+void NativeClosureObject::bootstrap( std::string const& objectProviderName, std::string const& closureName )
 {
-	const_cast<std::string&>( this->closureName_ ) = name;
+	const_cast<std::string&>( this->objectProviderName_ ) = objectProviderName;
+	const_cast<std::string&>( this->closureName_ ) = closureName;
 }
 
 util::XValue NativeClosureObject::save( Handler<Heap> const& heap )
 {
 	using namespace chisa::util;
 	Handler<XObject> obj(new XObject);
-	obj->set("name", this->closureName_);
+	obj->set("objectProviderName", this->objectProviderName_);
+	obj->set("closureName", this->closureName_);
 	obj->set("content", this->saveImpl(heap));
 	return obj;
 }
@@ -98,15 +100,16 @@ void NativeClosureObject::load( Handler<Heap> const& heap, util::XValue const& d
 {
 	using namespace chisa::util;
 	Handler<XObject> obj(data.as<XObject>());
-	const_cast<std::string&>( this->closureName_ ) = obj->get<XString>("name");
+	const_cast<std::string&>( this->objectProviderName_ ) = obj->get<XString>("objectProviderName");
+	const_cast<std::string&>( this->closureName_ ) = obj->get<XString>("closureName");
 	this->loadImpl(heap, obj->get<XValue>("content"));
 }
 
 //-----------------------------------------------------------------------------
 
-void PureNativeClosureObject::bootstrap( std::string const& name, PureNativeClosureObject::Signature f )
+void PureNativeClosureObject::bootstrap( std::string const& objectProviderName, std::string const& closureName, PureNativeClosureObject::Signature f )
 {
-	this->NativeClosureObject::bootstrap(name);
+	this->NativeClosureObject::bootstrap(objectProviderName, closureName);
 	this->func_ = f;
 }
 
@@ -118,7 +121,7 @@ util::XValue PureNativeClosureObject::saveImpl( Handler<Heap> const& heap )
 
 void PureNativeClosureObject::loadImpl( Handler<Heap> const& heap, util::XValue const& data )
 {
-	this->func_ = heap->getProvider(this->closureName())->findClosureEntry("name");
+	this->func_ = heap->getProvider(this->objectProviderName())->findPureNativeClosureEntry(this->closureName());
 }
 
 }}

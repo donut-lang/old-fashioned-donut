@@ -45,7 +45,7 @@ template <typename T> T& XArray::get( std::size_t const& idx ) {
 	}
 	XValue& val = list_[idx];
 	if( !val.is<T>() ) {
-		throw logging::Exception(__FILE__, __LINE__, "Object: %s type mismatch %s != %s.", typeid(T).name(), val.toString().c_str());
+		throw logging::Exception(__FILE__, __LINE__, "Object: %s type mismatch required: %s actual: %s.", typeid(T).name(), val.toString().c_str());
 	}
 	return val.as<T>();
 }
@@ -67,7 +67,7 @@ template<typename T> typename _GetType<T>::type XObject::get( std::string const&
 		throw logging::Exception(__FILE__, __LINE__, "Object: %s not found.", name.c_str());
 	}
 	if( !p.second.is<T>() ) {
-		throw logging::Exception(__FILE__, __LINE__, "Object: %s type mismatch %s != %s.", typeid(T).name(), it->second.toString().c_str());
+		throw logging::Exception(__FILE__, __LINE__, "Object: %s type mismatch required: %s actual: %s.", typeid(T).name(), it->second.toString().c_str());
 	}
 	return p.second.as<T>();
 }
@@ -128,13 +128,13 @@ template<> inline XValue const& XObject::set<XValue>(std::string const& name, XV
 		};\
 		template <> inline typename _GetType<XValue::TYPE>::type XValue::as<XValue::TYPE>() {\
 			if(this->type_ != XValue::Type::TYPE##T) {\
-				throw logging::Exception(__FILE__, __LINE__, "Type mismatch %s != %s.", typeid(XValue::TYPE).name(), this->toString().c_str());\
+				throw logging::Exception(__FILE__, __LINE__, "Type mismatch required: %s actual: %s.", typeid(XValue::TYPE).name(), this->toString().c_str());\
 			}\
 			return VAL;\
 		};\
 		template <> inline typename _GetType<XValue::TYPE>::const_type XValue::as<XValue::TYPE>() const {\
 			if(this->type_ != XValue::Type::TYPE##T) {\
-				throw logging::Exception(__FILE__, __LINE__, "Type mismatch %s != %s.", typeid(XValue::TYPE).name(), this->toString().c_str());\
+				throw logging::Exception(__FILE__, __LINE__, "Type mismatch required: %s actual: %s.", typeid(XValue::TYPE).name(), this->toString().c_str());\
 			}\
 			return VAL;\
 		};

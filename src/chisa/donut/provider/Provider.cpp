@@ -37,7 +37,7 @@ void Provider::addPrototype( const std::string& name, PureNativeClosureObject::S
 	}
 }
 
-PureNativeClosureObject::Signature const& Provider::findClosureEntry( std::string const& name )
+PureNativeClosureObject::Signature const& Provider::findPureNativeClosureEntry( std::string const& name )
 {
 	auto it = pureNativeClosures_.find(name);
 	if(it == this->pureNativeClosures_.end()){
