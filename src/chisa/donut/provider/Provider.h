@@ -183,7 +183,7 @@ class PureNativeClosureObject;
 class PureNativeObjectProvider : public HeapObjectProviderImpl<PureNativeClosureObject> {
 public:
 	PureNativeObjectProvider( const Handler<Heap>& heap )
-	:HeapObjectProviderImpl<PureNativeClosureObject>(heap, "PureNativeObject"){}
+	:HeapObjectProviderImpl<PureNativeClosureObject>(heap, "PureNativeClosureObject"){}
 	virtual ~PureNativeObjectProvider() noexcept = default;
 };
 
