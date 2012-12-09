@@ -131,7 +131,7 @@ Handler<Object> Object::set(const Handler<Heap>& heap, const std::string& name, 
 {
 	switch(this->tag()){
 	case Tag::Obj:
-		return this->storeImpl(heap, name, obj);
+		return this->setImpl(heap, name, obj);
 	case Tag::Int:
 		heap->log().w(TAG, "Failed to store value to int object.");
 		return obj;
@@ -150,13 +150,13 @@ Handler<Object> Object::get(const Handler<Heap>& heap, const std::string& name) 
 {
 	switch(this->tag()){
 	case Tag::Obj:
-		return this->loadImpl(heap, name);
+		return this->getImpl(heap, name);
 	case Tag::Int:
-		return heap->intProto()->loadImpl(heap, name);
+		return heap->intProto()->getImpl(heap, name);
 	case Tag::Bool:
-		return heap->boolProto()->loadImpl(heap, name);
+		return heap->boolProto()->getImpl(heap, name);
 	case Tag::Null:
-		return heap->nullProto()->loadImpl(heap, name);
+		return heap->nullProto()->getImpl(heap, name);
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}

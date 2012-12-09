@@ -52,7 +52,6 @@ public:
 public: /* 処理系の保存・復帰をします。 */
 	util::XValue save();
 	Slot( util::XValue const& data );
-	void adjustObjectPointers( const Handler<Heap>& heap );
 public: /* クロックから呼ばれる */
 	void onDiscardHistoryNotify( const Handler<Heap>& heap );
 	void onDiscardFutureNotify( const Handler<Heap>& heap );

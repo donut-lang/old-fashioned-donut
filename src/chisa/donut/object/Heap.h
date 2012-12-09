@@ -92,10 +92,9 @@ public: /* オブジェクトを作ってそれをプールに登録し、メモ
 public: /* ヒープ管理 */
 	void gc();
 	Handler<Object> decodeDescriptor( object_desc_t const& desc );
-	void adjustObjectPointer( Object*& ref );
+	Handler<HeapObject> decodeHeapDescriptor( object_desc_t const& desc );
 private: //内部使用
 	HeapObject* findHeapObjectFromID( objectid_t const& id );
-	Handler<HeapObject> decodeHeapDescriptor( object_desc_t const& desc );
 public: /* 外部との接続 */
 	void registerProvider( Handler<Provider> provider );
 	void registerGlobalObject( std::string const& name, Handler<Object> const& obj );

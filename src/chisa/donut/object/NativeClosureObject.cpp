@@ -55,13 +55,13 @@ bool NativeClosureObject::haveOwnImpl(const Handler<Heap>& heap, const std::stri
 	return false;
 }
 
-Handler<Object> NativeClosureObject::storeImpl(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj)
+Handler<Object> NativeClosureObject::setImpl(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj)
 {
 	heap->log().w(TAG, "NativeClosureObject cannot have any property.");
 	return obj;
 }
 
-Handler<Object> NativeClosureObject::loadImpl(const Handler<Heap>& heap, const std::string& name) const
+Handler<Object> NativeClosureObject::getImpl(const Handler<Heap>& heap, const std::string& name) const
 {
 	throw DonutException(__FILE__, __LINE__, "Native Closure does not have any properety.");
 }
@@ -79,6 +79,26 @@ void NativeClosureObject::onDiscardFutureNotifyImpl(const Handler<Heap>& heap)
 {
 
 }
+
+util::XValue NativeClosureObject::save( Handler<Heap> const& heap )
+{
+	using namespace chisa::util;
+	Handler<XObject> obj(new XObject);
+	obj->set("name", this->closureName_);
+	obj->set("content", this->saveImpl(heap));
+	return obj;
+}
+
+void NativeClosureObject::load( Handler<Heap> const& heap, util::XValue const& data )
+{
+	using namespace chisa::util;
+	Handler<XObject> obj(data.as<XObject>());
+	const_cast<std::string&>( this->closureName_ ) = obj->get<XString>("name");
+	this->loadImpl(heap, obj->get<XValue>("content"));
+}
+
+//-----------------------------------------------------------------------------
+
 
 }}
 

@@ -57,5 +57,18 @@ void FloatObject::onDiscardFutureNotifyImpl(const Handler<Heap>& heap)
 
 }
 
+/**********************************************************************************
+ * save/load
+ **********************************************************************************/
+
+util::XValue FloatObject::saveImpl( Handler<Heap> const& heap )
+{
+	return util::XValue( this->value_ );
+}
+void FloatObject::loadImpl( Handler<Heap> const& heap, util::XValue const& data )
+{
+	const_cast<float&>(this->value_) = data.as<util::XFloat>();
+}
+
 }}
 

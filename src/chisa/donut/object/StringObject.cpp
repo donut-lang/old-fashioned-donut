@@ -24,7 +24,7 @@ namespace donut {
 
 const std::string TAG("StringObject");
 StringObject::StringObject(const Handler<Heap>& heap, const std::string& str)
-		: NativeObject(heap, "String"), str_(str)
+: NativeObject(heap, "String"), str_(str)
 {
 }
 
@@ -58,6 +58,18 @@ void StringObject::onDiscardFutureNotifyImpl(const Handler<Heap>& heap)
 
 }
 
+/**********************************************************************************
+ * save/load
+ **********************************************************************************/
+
+util::XValue StringObject::saveImpl( Handler<Heap> const& heap )
+{
+	return util::XValue(this->str_);
+}
+void StringObject::loadImpl( Handler<Heap> const& heap, util::XValue const& data )
+{
+	const_cast<std::string&>(this->str_) = data.as<util::XString>();
+}
 
 }}
 

@@ -30,12 +30,14 @@ private:
 public:
 	StringObject(const Handler<Heap>& heap, const std::string& str);
 	virtual ~StringObject() noexcept = default;
-	virtual std::string toStringImpl(const Handler<Heap>& heap) const override;
-	virtual int toIntImpl(const Handler<Heap>& heap) const override;
-	virtual float toFloatImpl(const Handler<Heap>& heap) const override;
-	virtual bool toBoolImpl(const Handler<Heap>& heap) const override;
-	virtual void onDiscardHistoryNotifyImpl(const Handler<Heap>& heap) override;
-	virtual void onDiscardFutureNotifyImpl(const Handler<Heap>& heap) override;
+	virtual std::string toStringImpl(const Handler<Heap>& heap) const override final;
+	virtual int toIntImpl(const Handler<Heap>& heap) const override final;
+	virtual float toFloatImpl(const Handler<Heap>& heap) const override final;
+	virtual bool toBoolImpl(const Handler<Heap>& heap) const override final;
+	virtual void onDiscardHistoryNotifyImpl(const Handler<Heap>& heap) override final;
+	virtual void onDiscardFutureNotifyImpl(const Handler<Heap>& heap) override final;
+	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override final;
+	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override final;
 };
 
 class FloatObject: public NativeObject {
@@ -44,12 +46,14 @@ private:
 public:
 	FloatObject(const Handler<Heap>& heap, const float& str);
 	virtual ~FloatObject() noexcept = default;
-	virtual std::string toStringImpl(const Handler<Heap>& heap) const override;
-	virtual int toIntImpl(const Handler<Heap>& heap) const override;
-	virtual float toFloatImpl(const Handler<Heap>& heap) const override;
-	virtual bool toBoolImpl(const Handler<Heap>& heap) const override;
-	virtual void onDiscardHistoryNotifyImpl(const Handler<Heap>& heap) override;
-	virtual void onDiscardFutureNotifyImpl(const Handler<Heap>& heap) override;
+	virtual std::string toStringImpl(const Handler<Heap>& heap) const override final;
+	virtual int toIntImpl(const Handler<Heap>& heap) const override final;
+	virtual float toFloatImpl(const Handler<Heap>& heap) const override final;
+	virtual bool toBoolImpl(const Handler<Heap>& heap) const override final;
+	virtual void onDiscardHistoryNotifyImpl(const Handler<Heap>& heap) override final;
+	virtual void onDiscardFutureNotifyImpl(const Handler<Heap>& heap) override final;
+	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override final;
+	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override final;
 };
 
 

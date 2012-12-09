@@ -59,12 +59,12 @@ bool NativeObject::haveOwnImpl(const Handler<Heap>& heap, const std::string& nam
 	return false;
 }
 
-Handler<Object> NativeObject::storeImpl(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj)
+Handler<Object> NativeObject::setImpl(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj)
 {
 	return obj;
 }
 
-Handler<Object> NativeObject::loadImpl(const Handler<Heap>& heap, const std::string& name) const
+Handler<Object> NativeObject::getImpl(const Handler<Heap>& heap, const std::string& name) const
 {
 	return this->prototype_->get(heap, name);
 }
@@ -73,6 +73,23 @@ void NativeObject::onSeekNotifyImpl(const Handler<Heap>& heap)
 {
 
 }
+
+util::XValue NativeObject::save( Handler<Heap> const& heap )
+{
+	using namespace chisa::util;
+	Handler<XObject> obj (new XObject());
+	obj->set("prototype", this->prototype_->toDescriptor());
+	obj->set("content",  this->saveImpl(heap));
+	return obj;
+}
+void NativeObject::load( Handler<Heap> const& heap, util::XValue const& data )
+{
+	using namespace chisa::util;
+	Handler<XObject> obj ( data.as<XObject>() );
+	this->prototype_ = heap->decodeHeapDescriptor( obj->get<object_desc_t>("prototype") ).cast<DonutObject>().get();
+	this->loadImpl( heap, obj->get<XValue>("content") );
+}
+
 
 }}
 
