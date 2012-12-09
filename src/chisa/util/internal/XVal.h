@@ -45,7 +45,7 @@ template <typename T> T& XArray::get( std::size_t const& idx ) {
 	}
 	XValue& val = list_[idx];
 	if( !val.is<T>() ) {
-		throw logging::Exception(__FILE__, __LINE__, "Object: %s type mismatch required: %s actual: %s.", typeid(T).name(), val.toString().c_str());
+		throw logging::Exception(__FILE__, __LINE__, "Array: \"%d\" type mismatch required: %s actual: %s.", idx, typeid(T).name(), val.toString().c_str());
 	}
 	return val.as<T>();
 }
@@ -64,10 +64,10 @@ template<typename T> typename _GetType<T>::type XObject::get( std::string const&
 	auto it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );
 	std::pair<std::string, XValue>& p = *it;
 	if( it == this->map_.end() || p.first != name){
-		throw logging::Exception(__FILE__, __LINE__, "Object: %s not found.", name.c_str());
+		throw logging::Exception(__FILE__, __LINE__, "Object: \"%s\" not found.", name.c_str());
 	}
 	if( !p.second.is<T>() ) {
-		throw logging::Exception(__FILE__, __LINE__, "Object: %s type mismatch required: %s actual: %s.", typeid(T).name(), it->second.toString().c_str());
+		throw logging::Exception(__FILE__, __LINE__, "Object: \"%s\" type mismatch required: %s actual: %s.", typeid(T).name(), it->second.toString().c_str());
 	}
 	return p.second.as<T>();
 }
@@ -76,7 +76,7 @@ template<> inline XValue& XObject::get<XValue>( std::string const& name ) {
 	auto it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );
 	std::pair<std::string, XValue>& p = *it;
 	if( it == this->map_.end() || p.first != name){
-		throw logging::Exception(__FILE__, __LINE__, "Object: %s not found.", name.c_str());
+		throw logging::Exception(__FILE__, __LINE__, "Object: \"%s\" not found.", name.c_str());
 	}
 	return p.second;
 }

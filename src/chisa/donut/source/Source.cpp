@@ -33,11 +33,12 @@ Source::Source(int id)
 }
 
 Source::Source(util::XValue const& data)
-:erased_(false),id_(data.as<util::XObject>()->get<int>("id"))
+:erased_(false)
 {
 	using namespace chisa::util;
 	Handler<XObject> xobj(data.as<XObject>());
 	this->entrypoint_id_ = xobj->get<int>("entrypoint_id");
+	this->id_ = xobj->get<int>("id");
 	this->intTable_.load( xobj->get<XValue>("intTable") );
 	this->floatTable_.load( xobj->get<XValue>("floatTable") );
 	this->stringTable_.load( xobj->get<XValue>("stringTable") );
@@ -72,12 +73,8 @@ bool ConstTable<Handler<Closure> >::operator==(ConstTable<Handler<Closure> > con
 			return *p == *q;
 		}
 	};
-	return table_.size() == other.table_.size() && std::equal(
-			this->table_.begin(),
-			this->table_.end(),
-			other.table_.begin(),
-			Unref()
-	);
+	return table_.size() == other.table_.size() &&
+		std::equal(this->table_.begin(), this->table_.end(), other.table_.begin(), Unref() );
 }
 
 

@@ -35,4 +35,22 @@ void DonutClosureObject::bootstrap(const Handler<Heap>& heap, Handler<Source> co
 	}
 }
 
+util::XValue DonutClosureObject::saveImpl( Handler<Heap> const& heap )
+{
+	using namespace chisa::util;
+	Handler<XObject> top(new XObject);
+	top->set("src", this->src_->id());
+	top->set("index", this->index_);
+	return top;
+}
+void DonutClosureObject::loadImpl(Handler<Heap> const& heap, util::XValue const& data)
+{
+	using namespace chisa::util;
+	Handler<XObject> top(data.as<XObject>());
+	const_cast<Handler<Source>&>(this->src_) = heap->decodeSourceID(top->get<int>("src"));
+	const_cast<unsigned int&>(this->index_) = top->get<unsigned int>("index");
+	const_cast<Handler<Closure>&>(this->asm_) = this->src_->getClosure(this->index_);
+}
+
+
 }}

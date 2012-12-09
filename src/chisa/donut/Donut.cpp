@@ -55,7 +55,7 @@ void Donut::sendMessage( const std::string& name, const Handler<Object>& obj )
 
 Handler<Source> Donut::parse(const std::string& src, const std::string& filename, const int& lineno)
 {
-	return Parser::fromString(src, filename, lineno)->parseProgram();
+	return heap_->registerSource ( Parser::fromString(src, filename, lineno)->parseProgram() );
 }
 
 /**********************************************************************************

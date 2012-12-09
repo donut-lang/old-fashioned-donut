@@ -94,7 +94,7 @@ template<> bool ConstTable<Handler<Closure> >::operator==( ConstTable<Handler<Cl
 class Source : public HandlerBody<Source> {
 private:
 	bool erased_;
-	int const id_;
+	int id_;
 private:
 	ConstTable<int> intTable_;
 	ConstTable<float> floatTable_;
@@ -111,10 +111,13 @@ public:
 	Source(util::XValue const& data);
 	util::XValue save();
 	virtual ~Source() noexcept = default;
+	int id() const noexcept{ return this->id_; };
+	void id(int const& id)noexcept{this->id_ = id;};
 public:
 	virtual bool onFree() noexcept { if(this->erased_||this->id_<0){ return false; }else{ return true; } };
 	inline void erase() noexcept { this->erased_ = true; if(refcount() == 0){ delete this; } };
 	template <typename T> Instruction constCode(T const& val);
+	inline bool used() const noexcept{ return this->refcount() > 0; };
 public:
 	std::string disasm( Instruction inst );
 	static inline void disasm( Instruction inst, Instruction& opcode, Instruction& constKind, int& constIndex ) {
@@ -184,6 +187,18 @@ public:
 	{
 		return this->entrypoint_id_;
 	}
+public:
+	struct CompareById : std::binary_function<Source* const&,Source* const&,bool> {
+		bool operator()(Source* const& a, Source* const& b) {
+			return a->id() < b->id();
+		}
+		bool operator()(Source* const& a, int const& b) {
+			return a->id() < b;
+		}
+		bool operator()(int const& a, Source* const& b) {
+			return a < b->id();
+		}
+	};
 };
 
 }}
