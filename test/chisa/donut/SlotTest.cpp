@@ -120,7 +120,7 @@ TEST_F(DonutSlotTest, SaveTest)
 		v = slot.save();
 	}
 	{
-		Slot slot(v);
+		Slot slot(heap, v);
 		ASSERT_EQ(100, slot.load()->toInt(heap));
 
 		clock->seek(t1);

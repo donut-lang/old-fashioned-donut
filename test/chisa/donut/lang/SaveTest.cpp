@@ -57,6 +57,7 @@ TEST(SaveTest, DonutSaveTest)
 	std::string src;
 	{
 		INIT_DONUT;
+		machine->start(donut->parse("Global.val = {}; Global.val.x=1+1;"));
 		tinyxml2::XMLDocument doc;
 		Handler<util::XObject> obj = donut->save().as<util::XObject>();
 		doc.InsertEndChild(obj->toXML(&doc));
@@ -64,13 +65,16 @@ TEST(SaveTest, DonutSaveTest)
 		doc.Print(&printer);
 		src = printer.CStr();
 	}
-	std::cout << src << std::endl;
+	//std::cout << src << std::endl;
 	{
 		Handler<Donut> donut(new Donut(log_trace));
 		tinyxml2::XMLDocument doc;
 		doc.Parse(src.c_str());
 		util::XValue v = util::XValue::fromXML(doc.RootElement());
 		donut->load(v);
+		Handler<Object> obj = donut->queryMachine()->start(donut->parse("Global.val.x;"));
+		ASSERT_TRUE(obj->isInt());
+		ASSERT_EQ(2, obj->toInt(donut->heap()));
 	}
 
 }
