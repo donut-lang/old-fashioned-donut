@@ -37,6 +37,30 @@ void Provider::addPrototype( const std::string& name, Handler<NativeClosureEntry
 	}
 }
 
+Handler<NativeClosureEntry> const& Provider::findClosureEntry( std::string const& name )
+{
+	auto it = nativeClosures_.find(name);
+	if(it == this->nativeClosures_.end()){
+		throw DonutException(__FILE__, __LINE__, "Closure %s not found in %s!!", name.c_str(), this->name().c_str());
+	}
+	util::VectorMap<std::string, Handler<NativeClosureEntry> >::Pair const& p = *it;
+	return p.second;
+}
+
+NativeClosureObject* Provider::createNativeClosure( Handler<Heap> const& heap, std::string const& name )
+{
+	auto it = nativeClosures_.find(name);
+	util::VectorMap<std::string, Handler<NativeClosureEntry> >::Pair const& p = *it;
+	if(it == nativeClosures_.end()){
+		throw DonutException(__FILE__, __LINE__, "Closure: \"%s\" not found in \"%s.\"", name.c_str(),this->name_.c_str());
+	}
+	return p.second->createObject(heap, this->name(), name).get();
+}
+
+/******************************************************************************
+ * save/load
+ ******************************************************************************/
+
 void Provider::bootstrap()
 {
 	if(Handler<Heap> heap = this->heap().lock()){
@@ -56,13 +80,5 @@ void Provider::load( util::XValue const& data)
 
 }
 
-Handler<NativeClosureEntry> const& Provider::findClosureEntry( std::string const& name )
-{
-	auto it = nativeClosures_.find(name);
-	if(it == this->nativeClosures_.end()){
-		throw DonutException(__FILE__, __LINE__, "Closure %s not found in %s!!", name.c_str(), this->name().c_str());
-	}
-	util::VectorMap<std::string, Handler<NativeClosureEntry> >::Pair const& p = *it;
-	return p.second;
-}
+
 }}

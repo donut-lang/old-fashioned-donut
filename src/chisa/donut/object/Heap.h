@@ -43,7 +43,7 @@ private:
 	std::size_t gcLimit_;
 	std::size_t gcLimitMax_;
 private:
-	util::VectorMap<std::string, Handler<HeapObjectProvider> > providers_;
+	util::VectorMap<std::string, Handler<Provider> > providers_;
 	std::vector<HeapObject*> objectPool_;
 	std::vector<HeapObject*> objectPoolMarked_;
 	Handler<DonutObjectProvider> donutObjectProvider_;
@@ -78,7 +78,7 @@ public:
 	Handler<Object> intProto() {return intProto_;};
 	Handler<Object> nullProto() {return nullProto_;};
 
-	Handler<HeapObjectProvider> getProvider( const std::string& name ) const;
+	Handler<Provider> getProvider( const std::string& name ) const;
 	Handler<DonutObject> global() { return this->globalObject_; }
 private:
 	void registerObject( const Handler<HeapObject>& obj );
@@ -100,7 +100,7 @@ public: /* ヒープ管理 */
 private: //内部使用
 	HeapObject* findHeapObjectFromID( objectid_t const& id );
 public: /* 外部との接続 */
-	void registerProvider( Handler<HeapObjectProvider> const& provider );
+	void registerProvider( Handler<Provider> const& provider );
 	void registerGlobalObject( std::string const& name, Handler<Object> const& obj );
 	bool hasGlobalObject( std::string const& name );
 	Handler<Object> loadGlobalObject( std::string const& name );
@@ -110,6 +110,7 @@ public: /* 処理系の保存・復帰をします。 */
 	void load( util::XValue const& data);
 private:
 	void initPrimitiveProviders();
+	void initPrototypes();
 public: /* Clockから呼ばれる */
 	void onDiscardFutureNotify();
 	void onDiscardHistoryNotify();
