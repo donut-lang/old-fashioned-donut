@@ -45,6 +45,11 @@ TEST(FloatTest, IntCastTest)
 	SOURCE_TEST_INT(12, "(12.34).toInteger();");
 }
 
+TEST(FloatTest, ToStringTest)
+{
+	SOURCE_TEST_STR(util::toString((10.12345)), "(10.12345).toString();");
+}
+
 }}
 
 

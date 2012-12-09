@@ -123,6 +123,11 @@ TEST(DonutIntegerTest, FloatAddWithCastTest)
 	SOURCE_TEST_FLOAT(2.1, "(1).toFloat()+1.1");
 }
 
+TEST(DonutIntegerTest, ToStringTest)
+{
+	SOURCE_TEST_STR("12345", "(12345).toString();");
+}
+
 }}
 
 
