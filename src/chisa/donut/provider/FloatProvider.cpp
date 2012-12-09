@@ -69,6 +69,9 @@ FloatProvider::FloatProvider(const Handler<Heap>& heap)
 	this->registerPureNativeClosure("toInteger", std::function<int(float)>([&](float self) {
 		return static_cast<int>(self);
 	}));
+	this->registerPureNativeClosure("toString", std::function<std::string(float)>([&](float self) {
+		return util::toString(self);
+	}));
 }
 
 }}
