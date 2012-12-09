@@ -27,7 +27,7 @@ namespace donut {
 static const std::string TAG("NullProvider");
 
 NullProvider::NullProvider(const Handler<Heap>& heap)
-:NativeObjectProvider(heap, "Null")
+:Provider(heap, "Null")
 {
 }
 
@@ -54,15 +54,6 @@ bool NullProvider::toBool(const Object* ptr) const
 Handler<Object> NullProvider::create()
 {
 	return Handler<Object>::__internal__fromRawPointerWithoutCheck( NullProvider::toPointer() );
-}
-
-util::XValue NullProvider::saveObjectImpl(Handler<HeapObject> const& obj)
-{
-	throw DonutException(__FILE__, __LINE__, "[BUG] Do not call NullProvider#saveImpl.");
-}
-Handler<HeapObject> NullProvider::loadObjectImpl(util::XValue const& data)
-{
-	throw DonutException(__FILE__, __LINE__, "[BUG] Do not call NullProvider#loadImpl.");
 }
 
 }}

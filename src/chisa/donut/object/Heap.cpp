@@ -46,14 +46,14 @@ bool Heap::onFree() noexcept
 	return false;
 }
 
-Handler<Provider> Heap::getProvider( const std::string& name ) const
+Handler<HeapObjectProvider> Heap::getProvider( const std::string& name ) const
 {
 	auto it = this->providers_.find(name);
 	if(it != this->providers_.end()){
-		util::VectorMap<std::string, Handler<Provider> >::Pair const& p = *it;
+		util::VectorMap<std::string, Handler<HeapObjectProvider> >::Pair const& p = *it;
 		return p.second;
 	}
-	return Handler<Provider>();
+	return Handler<HeapObjectProvider>();
 }
 
 void Heap::registerObject( const Handler<HeapObject>& obj )
@@ -95,7 +95,7 @@ Handler<HeapObject> Heap::decodeHeapDescriptor( object_desc_t const& desc )
 
 Handler<DonutObject> Heap::createDonutObject()
 {
-	Handler<DonutObject> obj(new DonutObject(self()));
+	Handler<DonutObject> obj(donutObjectProvider_->createDerived(self()));
 	obj->set(self(), "__proto__", this->objectProto());
 	this->registerObject(obj);
 
@@ -104,7 +104,7 @@ Handler<DonutObject> Heap::createDonutObject()
 
 Handler<DonutObject> Heap::createEmptyDonutObject()
 {
-	Handler<DonutObject> obj(new DonutObject(self()));
+	Handler<DonutObject> obj(donutObjectProvider_->createDerived(self()));
 	this->registerObject(obj);
 
 	return obj;
@@ -112,7 +112,8 @@ Handler<DonutObject> Heap::createEmptyDonutObject()
 
 Handler<StringObject> Heap::createStringObject(const std::string& val)
 {
-	Handler<StringObject> obj(new StringObject(self(), val));
+	Handler<StringObject> obj(this->stringProvider_->createDerived(self()));
+	obj->bootstrap(val);
 	this->registerObject(obj);
 
 	return obj;
@@ -120,7 +121,8 @@ Handler<StringObject> Heap::createStringObject(const std::string& val)
 
 Handler<FloatObject> Heap::createFloatObject(const float& val)
 {
-	Handler<FloatObject> obj(new FloatObject(self(), val));
+	Handler<FloatObject> obj(this->floatProvider_->createDerived(self()));
+	obj->bootstrap(val);
 	this->registerObject(obj);
 
 	return obj;
@@ -160,7 +162,7 @@ Handler<Object> Heap::createNull()
 /**********************************************************************************
  * 外部との接続
  **********************************************************************************/
-void Heap::registerProvider( Handler<Provider> provider )
+void Heap::registerProvider( Handler<HeapObjectProvider> const& provider )
 {
 	this->providers_.insert(provider->name(), provider);
 }
@@ -189,6 +191,15 @@ void Heap::bootstrap()
 	this->initPrimitiveProviders();
 	Handler<Heap> const self = this->self();
 
+	//providers_に入ってないプロバイダのbootstrap
+	this->intProvider_->bootstrap();
+	this->boolProvider_->bootstrap();
+	this->nullProvider_->bootstrap();
+	//入ってるプロバイダのbootstrap
+	for( std::pair<std::string, Handler<HeapObjectProvider>>& p : this->providers_ ){
+		p.second->bootstrap();
+	}
+
 	this->objectProto_ = this->donutObjectProvider()->prototype();
 	this->intProto_ = this->intProvider()->prototype();
 	this->boolProto_ = this->boolProvider()->prototype();
@@ -210,13 +221,12 @@ void Heap::initPrimitiveProviders()
 	this->boolProvider_ = Handler<BoolProvider>(new BoolProvider(self));
 	this->intProvider_ = Handler<IntProvider>(new IntProvider(self));
 	this->nullProvider_ = Handler<NullProvider>(new NullProvider(self));
+	this->stringProvider_ = Handler<StringProvider>( new StringProvider(self) );
+	this->floatProvider_ = Handler<FloatProvider>( new FloatProvider(self) );
 
 	this->registerProvider( this->donutObjectProvider() );
-	this->registerProvider( this->boolProvider() );
-	this->registerProvider( this->intProvider() );
-	this->registerProvider( this->nullProvider() );
-	this->registerProvider(Handler<Provider>( new FloatProvider(self) ));
-	this->registerProvider(Handler<Provider>( new StringProvider(self) ));
+	this->registerProvider( this->floatProvider_ );
+	this->registerProvider( this->stringProvider_ );
 
 	for(std::pair<std::string, Handler<Provider> > const& p : this->providers_){
 		p.second->bootstrap();
@@ -227,6 +237,7 @@ util::XValue Heap::save()
 {
 	using namespace chisa::util;
 	Handler<XObject> top(new XObject);
+	Handler<Heap> self(this->self());
 	{ //pool
 		Handler<XArray> pool(new XArray);
 		for( HeapObject* const& obj : this->objectPool_ ) {
@@ -237,7 +248,7 @@ util::XValue Heap::save()
 			if(!provider){
 				throw DonutException(__FILE__, __LINE__, "Provider %s not found.", obj->providerName().c_str());
 			}
-			xobj->set("content", provider->saveObject(Handler<HeapObject>::__internal__fromRawPointerWithoutCheck(obj)));
+			xobj->set("content", obj->save(self));
 			pool->append(xobj);
 		}
 		top->set("pool", pool);
@@ -262,7 +273,7 @@ void Heap::load(util::XValue const& data)
 		std::string const provider = obj->get<XString>("provider");
 		objectid_t id = obj->get<objectid_t>("id");
 		//中身
-		Handler<HeapObject> robj ( this->getProvider(provider)->loadObject( obj->get<XValue>("content") ) );
+		Handler<HeapObject> robj ( this->getProvider(provider)->create(self()) );
 		robj->id(id);
 	}
 	this->objectProto_ = this->decodeHeapDescriptor(xobj->get<object_desc_t>("object-prototype")).cast<DonutObject>();

@@ -28,7 +28,8 @@ class StringObject: public NativeObject {
 private:
 	const std::string str_;
 public:
-	StringObject(const Handler<Heap>& heap, const std::string& str);
+	StringObject(const Handler<Heap>& heap, std::string const& providerName)
+	:NativeObject(heap,providerName){};
 	virtual ~StringObject() noexcept = default;
 	virtual std::string toStringImpl(const Handler<Heap>& heap) const override final;
 	virtual int toIntImpl(const Handler<Heap>& heap) const override final;
@@ -38,13 +39,16 @@ public:
 	virtual void onDiscardFutureNotifyImpl(const Handler<Heap>& heap) override final;
 	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override final;
 	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override final;
+public:
+	void bootstrap( std::string const& val );
 };
 
 class FloatObject: public NativeObject {
 private:
 	const float value_;
 public:
-	FloatObject(const Handler<Heap>& heap, const float& str);
+	FloatObject(const Handler<Heap>& heap, std::string const& providerName)
+	:NativeObject(heap,providerName),value_(NAN){};
 	virtual ~FloatObject() noexcept = default;
 	virtual std::string toStringImpl(const Handler<Heap>& heap) const override final;
 	virtual int toIntImpl(const Handler<Heap>& heap) const override final;
@@ -54,6 +58,8 @@ public:
 	virtual void onDiscardFutureNotifyImpl(const Handler<Heap>& heap) override final;
 	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override final;
 	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override final;
+public:
+	void bootstrap( float const& val );
 };
 
 

@@ -28,7 +28,7 @@ namespace donut {
 static const std::string TAG("IntProvider");
 
 IntProvider::IntProvider(const Handler<Heap>& heap)
-:NativeObjectProvider(heap, "Integer")
+:Provider(heap, "Integer")
 {
 	this->registerPureNativeClosure("opAdd", std::function<int(int, int)>([&](int self, int v) {
 		return self + v;
@@ -107,15 +107,6 @@ bool IntProvider::toBool(const Object* ptr) const
 Handler<Object> IntProvider::create( const int& val )
 {
 	return Handler<Object>::__internal__fromRawPointerWithoutCheck( IntProvider::toPointer(val) );
-}
-
-util::XValue IntProvider::saveObjectImpl(Handler<HeapObject> const& obj)
-{
-	throw DonutException(__FILE__, __LINE__, "[BUG] Do not call IntProvider#saveImpl.");
-}
-Handler<HeapObject> IntProvider::loadObjectImpl(util::XValue const& data)
-{
-	throw DonutException(__FILE__, __LINE__, "[BUG] Do not call IntProvider#loadImpl.");
 }
 
 }}
