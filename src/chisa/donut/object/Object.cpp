@@ -127,7 +127,7 @@ bool Object::haveOwn(const Handler<Heap>& heap, const std::string& name) const
 	}
 }
 
-Handler<Object> Object::store(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj)
+Handler<Object> Object::set(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj)
 {
 	switch(this->tag()){
 	case Tag::Obj:
@@ -146,7 +146,7 @@ Handler<Object> Object::store(const Handler<Heap>& heap, const std::string& name
 	}
 }
 
-Handler<Object> Object::load(const Handler<Heap>& heap, const std::string& name) const
+Handler<Object> Object::get(const Handler<Heap>& heap, const std::string& name) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
@@ -187,13 +187,13 @@ object_desc_t Object::toDescriptor() const noexcept
 	}
 }
 
-Handler<Object> Object::store(const Handler<Heap>& heap, const int& idx, Handler<Object> obj)
+Handler<Object> Object::set(const Handler<Heap>& heap, const int& idx, Handler<Object> obj)
 {
-	return this->store(heap, toName(idx), obj);
+	return this->set(heap, toName(idx), obj);
 }
-Handler<Object> Object::load(const Handler<Heap>& heap, const int& idx) const
+Handler<Object> Object::get(const Handler<Heap>& heap, const int& idx) const
 {
-	return this->load(heap, toName(idx));
+	return this->get(heap, toName(idx));
 }
 
 bool Object::have(const Handler<Heap>& heap, const int& idx) const

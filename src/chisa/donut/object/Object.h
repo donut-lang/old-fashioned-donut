@@ -55,10 +55,10 @@ public: //すべてのオブジェクトに出来なければならないこと
 	bool have(const Handler<Heap>& heap, const int& idx) const;
 	bool haveOwn(const Handler<Heap>& heap, const std::string& name) const;
 	bool haveOwn(const Handler<Heap>& heap, const int& idx) const;
-	Handler<Object> store(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj);
-	Handler<Object> store(const Handler<Heap>& heap, const int& idx, Handler<Object> obj);
-	Handler<Object> load(const Handler<Heap>& heap, const std::string& name) const;
-	Handler<Object> load(const Handler<Heap>& heap, const int& idx) const;
+	Handler<Object> set(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj);
+	Handler<Object> set(const Handler<Heap>& heap, const int& idx, Handler<Object> obj);
+	Handler<Object> get(const Handler<Heap>& heap, const std::string& name) const;
+	Handler<Object> get(const Handler<Heap>& heap, const int& idx) const;
 	std::string providerName(const Handler<Heap>& heap) const;
 	object_desc_t toDescriptor() const noexcept;
 public:
@@ -143,8 +143,15 @@ public:
 	inline void erase() noexcept { this->erased_ = true; if(refcount() == 0){ delete this; } };
 	int color() noexcept { return this->color_; };
 	inline bool used() { return this->refcount() > 0; };
+public:
+	//void bootstrap();
+	//util::XValue save( Handler<Heap> const& heap );
+	//void load( util::XValue const& data );
 protected:
 	void color(const int color) noexcept { this->color_=color; };
+//	virtual void bootstrapImpl() {};
+//	virtual util::XValue saveImpl( Handler<Heap> const& heap ) = 0;
+//	virtual void loadImpl( util::XValue const& data ) = 0;
 };
 
 struct CompareHeapById : std::binary_function<HeapObject* const&,HeapObject* const&,bool>{
