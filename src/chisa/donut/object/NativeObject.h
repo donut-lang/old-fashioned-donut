@@ -20,6 +20,7 @@
 #include "Object.h"
 #include <functional>
 #include "../native/Bind.h"
+#include "../provider/NativeClosureEntry.h"
 
 namespace chisa {
 namespace donut {
@@ -28,8 +29,7 @@ class StringObject: public NativeObject {
 private:
 	const std::string str_;
 public:
-	StringObject(const Handler<Heap>& heap, std::string const& providerName)
-	:NativeObject(heap,providerName){};
+	StringObject(std::string const& providerName):NativeObject(providerName){};
 	virtual ~StringObject() noexcept = default;
 	virtual std::string toStringImpl(const Handler<Heap>& heap) const override final;
 	virtual int toIntImpl(const Handler<Heap>& heap) const override final;
@@ -40,15 +40,14 @@ public:
 	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override final;
 	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override final;
 public:
-	void bootstrap( std::string const& val );
+	void bootstrap( Handler<Heap> const& heap, std::string const& val );
 };
 
 class FloatObject: public NativeObject {
 private:
 	const float value_;
 public:
-	FloatObject(const Handler<Heap>& heap, std::string const& providerName)
-	:NativeObject(heap,providerName),value_(NAN){};
+	FloatObject(std::string const& providerName):NativeObject(providerName),value_(NAN){};
 	virtual ~FloatObject() noexcept = default;
 	virtual std::string toStringImpl(const Handler<Heap>& heap) const override final;
 	virtual int toIntImpl(const Handler<Heap>& heap) const override final;
@@ -59,17 +58,18 @@ public:
 	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override final;
 	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override final;
 public:
-	void bootstrap( float const& val );
+	void bootstrap( Handler<Heap> const& heap, float const& val );
 };
 
 
 class PureNativeClosureObject : public NativeClosureObject {
 private:
-	std::function<Handler<Object>(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& arg)> func_;
+	typedef PureNativeClosureEntry::Signature Signature;
+	Signature func_;
 public:
-	PureNativeClosureObject(const Handler<Heap>& heap, std::string objectProviderName, std::string closureName, std::function<Handler<Object>(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& arg)> f)
-	:NativeClosureObject(heap, objectProviderName, closureName), func_(f){}
+	PureNativeClosureObject( std::string const& providerName):NativeClosureObject(providerName){}
 	virtual ~PureNativeClosureObject() noexcept {}
+	void bootstrap( std::string const& name, Signature f );
 public:
 	Handler<Object> apply(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& arg){
 		return func_(heap, self,arg);

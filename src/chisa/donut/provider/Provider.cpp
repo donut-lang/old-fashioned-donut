@@ -47,16 +47,6 @@ Handler<NativeClosureEntry> const& Provider::findClosureEntry( std::string const
 	return p.second;
 }
 
-NativeClosureObject* Provider::createNativeClosure( Handler<Heap> const& heap, std::string const& name )
-{
-	auto it = nativeClosures_.find(name);
-	util::VectorMap<std::string, Handler<NativeClosureEntry> >::Pair const& p = *it;
-	if(it == nativeClosures_.end()){
-		throw DonutException(__FILE__, __LINE__, "Closure: \"%s\" not found in \"%s.\"", name.c_str(),this->name_.c_str());
-	}
-	return p.second->createObject(heap, this->name(), name).get();
-}
-
 /******************************************************************************
  * save/load
  ******************************************************************************/

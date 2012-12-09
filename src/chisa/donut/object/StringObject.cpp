@@ -54,8 +54,9 @@ void StringObject::onDiscardFutureNotifyImpl(const Handler<Heap>& heap)
 
 }
 
-void StringObject::bootstrap( std::string const& val )
+void StringObject::bootstrap( Handler<Heap> const& heap, std::string const& val )
 {
+	this->NativeObject::bootstrap(heap);
 	const_cast<std::string&>(this->str_) = val;
 }
 

@@ -119,13 +119,12 @@ namespace donut {
 
 class HeapObject : public Object {
 private:
-	const HandlerW<Heap> heap_;
 	std::string const providerName_;
 	objectid_t id_;
 	bool erased_;
 	int color_;
 public:
-	HeapObject(const Handler<Heap>& heap, const std::string& providerName);
+	HeapObject(const std::string& providerName);
 	virtual ~HeapObject() noexcept = default;
 public:
 	inline std::string providerName() const noexcept { return this->providerName_; }
@@ -171,7 +170,7 @@ class DonutObject : public HeapObject {
 private:
 	std::unordered_map<std::string, Slot> slots_;
 public:
-	DonutObject(const Handler<Heap>& heap, const std::string& providerName);
+	DonutObject(const std::string& providerName);
 	virtual ~DonutObject() noexcept = default;
 protected:
 	virtual std::string toStringImpl(const Handler<Heap>& heap) const override;
@@ -210,7 +209,7 @@ class NativeObject : public HeapObject {
 private:
 	DonutObject* prototype_;
 protected:
-	NativeObject(const Handler<Heap>& heap, const std::string& providerName);
+	NativeObject(const std::string& providerName);
 public:
 	virtual ~NativeObject() noexcept = default;
 protected:
@@ -227,6 +226,7 @@ protected:
 	virtual void markImpl(const Handler<Heap>& heap, int color) override;
 	virtual void onSeekNotifyImpl(const Handler<Heap>& heap) override;
 protected:
+	void bootstrap(Handler<Heap> const& heap);
 	virtual util::XValue save( Handler<Heap> const& heap ) override;
 	virtual void load( Handler<Heap> const& heap, util::XValue const& data ) override;
 };
@@ -242,8 +242,7 @@ class NativeClosureObject : public HeapObject {
 private:
 	std::string const closureName_;
 public:
-	NativeClosureObject(const Handler<Heap>& heap, const std::string& objectProviderName, const std::string& closureName)
-	:HeapObject(heap, objectProviderName),closureName_(closureName) {};
+	NativeClosureObject(std::string const& providerName):HeapObject(providerName){};
 	virtual ~NativeClosureObject() noexcept = default;
 	std::string closureName() const noexcept { return this->closureName_; };
 protected:
@@ -265,6 +264,7 @@ private:
 	virtual util::XValue save( Handler<Heap> const& heap ) override final;
 	virtual void load( Handler<Heap> const& heap, util::XValue const& data ) override final;
 protected:
+	void bootstrap( std::string const& name );
 	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override { return util::XValue(); };
 	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override {};
 };

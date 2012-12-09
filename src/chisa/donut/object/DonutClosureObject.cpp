@@ -25,15 +25,14 @@ namespace donut {
 
 const std::string TAG("DonutClosureObject");
 
-DonutClosureObject::DonutClosureObject(const Handler<Heap>& heap, Handler<Source> const& src, unsigned int const& closureIndex, const Handler<Object>& scope)
-:DonutObject(heap, "chisa::donut::DonutClosureObject")
-,src_(src)
-,asm_(src->getClosure( closureIndex ))
+void DonutClosureObject::bootstrap(const Handler<Heap>& heap, Handler<Source> const& src, unsigned int const& closureIndex, const Handler<Object>& scope)
 {
+	const_cast<Handler<Source>&>(this->src_) = src;
+	const_cast<unsigned int&>(this->index_) = closureIndex;
+	const_cast<Handler<Closure>&>(this->asm_) = src->getClosure(closureIndex);
 	if(scope){
 		this->set(heap, "__scope__", scope);
 	}
 }
-
 
 }}

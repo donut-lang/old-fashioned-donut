@@ -23,10 +23,10 @@
 namespace chisa {
 namespace donut {
 
-NativeObject::NativeObject(const Handler<Heap>& heap, const std::string& providerName)
-:HeapObject(heap, providerName)
+NativeObject::NativeObject(const std::string& providerName)
+:HeapObject(providerName)
+,prototype_(nullptr)
 {
-	this->prototype_ = heap->getProvider(providerName)->prototype().get();
 }
 
 std::string NativeObject::toStringImpl(const Handler<Heap>& heap) const
@@ -72,6 +72,10 @@ Handler<Object> NativeObject::getImpl(const Handler<Heap>& heap, const std::stri
 void NativeObject::onSeekNotifyImpl(const Handler<Heap>& heap)
 {
 
+}
+
+void NativeObject::bootstrap(Handler<Heap> const& heap) {
+	this->prototype_ = heap->getProvider(this->providerName())->prototype().get();
 }
 
 util::XValue NativeObject::save( Handler<Heap> const& heap )

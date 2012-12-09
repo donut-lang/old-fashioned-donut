@@ -47,6 +47,7 @@ private:
 	std::vector<HeapObject*> objectPool_;
 	std::vector<HeapObject*> objectPoolMarked_;
 	Handler<DonutObjectProvider> donutObjectProvider_;
+	Handler<DonutClosureObjectProvider> donutClosureObjectProvider_;
 private:
 	Handler<DonutObject> globalObject_;
 	Handler<DonutObject> objectProto_;
@@ -57,6 +58,7 @@ private:
 
 	Handler<FloatProvider> floatProvider_;
 	Handler<StringProvider> stringProvider_;
+	Handler<PureNativeObjectProvider> pureNativeClosureProvider_;
 
 	Handler<DonutObject> boolProto_;
 	Handler<DonutObject> intProto_;
