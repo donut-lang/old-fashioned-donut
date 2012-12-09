@@ -109,12 +109,6 @@ Slot::Slot( util::XValue const& data)
 						));
 	}
 }
-void Slot::adjustObjectPointers( const Handler<Heap>& heap )
-{
-	for( std::pair<timestamp_t, Object*>& p : rev_ ) {
-		heap->adjustObjectPointer( p.second );
-	}
-}
 /**********************************************************************************
  * from clock
  **********************************************************************************/

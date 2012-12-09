@@ -32,19 +32,4 @@ HeapObject::HeapObject(const Handler<Heap>& heap, const std::string& providerNam
 {
 }
 
-/*
-void HeapObject::bootstrap()
-{
-	this->bootstrapImpl();
-}
-util::XValue HeapObject::save( Handler<Heap> const& heap )
-{
-	return this->saveImpl(heap);
-}
-void HeapObject::load( util::XValue const& data )
-{
-	this->loadImpl(data);
-}
-*/
-
 }}

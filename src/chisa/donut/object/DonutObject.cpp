@@ -66,7 +66,7 @@ bool DonutObject::toBoolImpl(const Handler<Heap>& heap) const
 
 bool DonutObject::haveImpl(const Handler<Heap>& heap, const std::string& name) const
 {
-	return haveOwnImpl(heap, name) || (haveOwnImpl(heap, "__proto__") && loadImpl(heap, "__proto__")->have(heap, name));
+	return haveOwnImpl(heap, name) || (haveOwnImpl(heap, "__proto__") && getImpl(heap, "__proto__")->have(heap, name));
 }
 
 bool DonutObject::haveOwnImpl(const Handler<Heap>& heap, const std::string& name) const
@@ -75,7 +75,7 @@ bool DonutObject::haveOwnImpl(const Handler<Heap>& heap, const std::string& name
 	return it != this->slots_.end() && it->second.have();
 }
 
-Handler<Object> DonutObject::storeImpl(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj)
+Handler<Object> DonutObject::setImpl(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj)
 {
 	auto it = this->slots_.find(name);
 	if(it == this->slots_.end()){
@@ -88,14 +88,14 @@ Handler<Object> DonutObject::storeImpl(const Handler<Heap>& heap, const std::str
 	return obj;
 }
 
-Handler<Object> DonutObject::loadImpl(const Handler<Heap>& heap, const std::string& name) const
+Handler<Object> DonutObject::getImpl(const Handler<Heap>& heap, const std::string& name) const
 {
 	auto it = this->slots_.find(name);
 	if(it != this->slots_.end()){
 		return Handler<Object>::__internal__fromRawPointerWithoutCheck(it->second.load());
 	}
 	if(this->haveOwnImpl(heap,"__proto__")){
-		return loadImpl(heap,"__proto__")->get(heap, name);
+		return getImpl(heap,"__proto__")->get(heap, name);
 	}
 	{
 		std::stringstream ss;
@@ -108,6 +108,36 @@ Handler<Object> DonutObject::loadImpl(const Handler<Heap>& heap, const std::stri
 	}
 }
 
+/**********************************************************************************
+ * save/load
+ **********************************************************************************/
+
+util::XValue DonutObject::save( Handler<Heap> const& heap )
+{
+	using namespace chisa::util;
+	Handler<XObject> obj(new XObject);
+	{
+		Handler<XObject> slots(new XObject);
+		for( std::pair<std::string const, Slot>& p: this->slots_ ){
+			slots->set(p.first, p.second.save());
+		}
+		obj->set("slot", slots);
+	}
+	obj->set("content", this->saveImpl(heap));
+	return obj;
+}
+
+void DonutObject::load( Handler<Heap> const& heap, util::XValue const& data )
+{
+	using namespace chisa::util;
+	Handler<XObject> obj(data.as<XObject>());
+	{
+		for(std::pair<std::string, XValue>& p : *(obj->get<XObject>("slot"))){
+			this->slots_.insert( std::pair<std::string const, Slot>( p.first, Slot(p.second) ));
+		}
+	}
+	this->loadImpl( heap, obj->get<XValue>("content") );
+}
 /**********************************************************************************
  * from clock
  **********************************************************************************/

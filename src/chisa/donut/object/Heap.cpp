@@ -68,19 +68,13 @@ void Heap::registerObject( const Handler<HeapObject>& obj )
 	}
 }
 
-void Heap::adjustObjectPointer( Object*& ref )
-{
-	if(!ref->isObject()){
-		return;
-	}
-	ref = findHeapObjectFromID(Object::castToHeapObjectId(ref));
-}
+
 Handler<Object> Heap::decodeDescriptor( object_desc_t const& desc )
 {
 	if( Object::isPrimitiveDescriptor(desc) ) {
 		return Handler<Object>::__internal__fromRawPointerWithoutCheck( Object::castToPointer(desc) );
 	}
-	return Handler<HeapObject>::__internal__fromRawPointerWithoutCheck( findHeapObjectFromID( Object::castToHeapObjectId( desc) ) );
+	return Handler<HeapObject>::__internal__fromRawPointerWithoutCheck( findHeapObjectFromID( Object::decodeObjectId( desc) ) );
 }
 
 HeapObject* Heap::findHeapObjectFromID( objectid_t const& id )
@@ -96,7 +90,7 @@ HeapObject* Heap::findHeapObjectFromID( objectid_t const& id )
 
 Handler<HeapObject> Heap::decodeHeapDescriptor( object_desc_t const& desc )
 {
-	return Handler<HeapObject>::__internal__fromRawPointerWithoutCheck( findHeapObjectFromID( Object::castToHeapObjectId(desc) ) );
+	return Handler<HeapObject>::__internal__fromRawPointerWithoutCheck( findHeapObjectFromID( Object::decodeObjectId(desc) ) );
 }
 
 Handler<DonutObject> Heap::createDonutObject()
