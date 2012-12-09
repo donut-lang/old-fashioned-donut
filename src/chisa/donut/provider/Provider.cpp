@@ -30,20 +30,20 @@ Provider::Provider( const Handler<Heap>& heap, const std::string& name )
 {
 }
 
-void Provider::addPrototype( const std::string& name, Handler<NativeClosureEntry> clos )
+void Provider::addPrototype( const std::string& name, PureNativeClosureObject::Signature clos )
 {
 	if(Handler<Heap> heap = this->heap().lock()){
-		this->prototype_->set(heap, name, clos->createObject(heap, this->name(), name));
+		this->prototype_->set(heap, name, heap->createPureNativeClosureObject(this->name(), name, clos));
 	}
 }
 
-Handler<NativeClosureEntry> const& Provider::findClosureEntry( std::string const& name )
+PureNativeClosureObject::Signature const& Provider::findClosureEntry( std::string const& name )
 {
-	auto it = nativeClosures_.find(name);
-	if(it == this->nativeClosures_.end()){
+	auto it = pureNativeClosures_.find(name);
+	if(it == this->pureNativeClosures_.end()){
 		throw DonutException(__FILE__, __LINE__, "Closure %s not found in %s!!", name.c_str(), this->name().c_str());
 	}
-	util::VectorMap<std::string, Handler<NativeClosureEntry> >::Pair const& p = *it;
+	util::VectorMap<std::string, PureNativeClosureObject::Signature>::Pair const& p = *it;
 	return p.second;
 }
 
@@ -55,19 +55,28 @@ void Provider::bootstrap()
 {
 	if(Handler<Heap> heap = this->heap().lock()){
 		this->prototype_ = heap->createEmptyDonutObject();
-		for( std::pair<std::string, Handler<NativeClosureEntry>> const& p : this->nativeClosures_ ){
-			this->prototype_->set(heap, p.first, p.second->createObject(heap, this->name(), p.first));
+		for( std::pair<std::string, PureNativeClosureObject::Signature> const& p : this->pureNativeClosures_ ){
+			this->prototype_->set(heap, p.first, heap->createPureNativeClosureObject(this->name(), p.first, p.second));
 		}
 	}
 }
 util::XValue Provider::save()
 {
-
+	using namespace chisa::util;
+	Handler<XObject> xobj(new XObject);
+	xobj->set("prototype", this->prototype_->toDescriptor());
+	xobj->set("content", this->saveImpl());
+	return xobj;
 }
 
 void Provider::load( util::XValue const& data)
 {
-
+	using namespace chisa::util;
+	Handler<XObject> xobj(data.as<XObject>());
+	if(Handler<Heap> heap = this->heap().lock()){
+		this->prototype_ = heap->decodeHeapDescriptor(xobj->get<object_desc_t>("prototype")).cast<DonutObject>();
+	}
+	this->loadImpl(xobj->get<XValue>("content"));
 }
 
 

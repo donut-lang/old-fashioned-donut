@@ -265,8 +265,8 @@ private:
 	virtual void load( Handler<Heap> const& heap, util::XValue const& data ) override final;
 protected:
 	void bootstrap( std::string const& name );
-	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override { return util::XValue(); };
-	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override {};
+	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override = 0;
+	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override = 0;
 };
 
 }}

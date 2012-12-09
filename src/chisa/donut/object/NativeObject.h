@@ -20,7 +20,6 @@
 #include "Object.h"
 #include <functional>
 #include "../native/Bind.h"
-#include "../provider/NativeClosureEntry.h"
 
 namespace chisa {
 namespace donut {
@@ -63,8 +62,9 @@ public:
 
 
 class PureNativeClosureObject : public NativeClosureObject {
+public:
+	typedef std::function<Handler<Object>(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& arg)> Signature;
 private:
-	typedef PureNativeClosureEntry::Signature Signature;
 	Signature func_;
 public:
 	PureNativeClosureObject( std::string const& providerName):NativeClosureObject(providerName){}
@@ -74,6 +74,9 @@ public:
 	Handler<Object> apply(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& arg){
 		return func_(heap, self,arg);
 	}
+private:
+	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override final;
+	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override final;
 };
 
 }}
