@@ -47,11 +47,11 @@ bool Heap::onFree() noexcept
 	return false;
 }
 
-Handler<Provider> Heap::getProvider( const std::string& name ) const
+Handler<HeapObjectProvider> Heap::getProvider( const std::string& name ) const
 {
 	auto it = this->providers_.find(name);
 	if(it != this->providers_.end()){
-		util::VectorMap<std::string, Handler<Provider> >::Pair const& p = *it;
+		util::VectorMap<std::string, Handler<HeapObjectProvider> >::Pair const& p = *it;
 		return p.second;
 	}
 	return Handler<HeapObjectProvider>();
@@ -139,7 +139,7 @@ Handler<DonutClosureObject> Heap::createDonutClosureObject( const Handler<Source
 	return obj;
 }
 
-Handler<PureNativeClosureObject> Heap::createPureNativeClosureObject(const std::string& objectProviderName, const std::string& closureName, PureNativeClosureEntry::Signature f)
+Handler<PureNativeClosureObject> Heap::createPureNativeClosureObject(const std::string& objectProviderName, const std::string& closureName, PureNativeClosureObject::Signature f)
 {
 	Handler<PureNativeClosureObject> obj(this->pureNativeClosureProvider_->createDerived());
 	obj->bootstrap(closureName, f);
@@ -166,7 +166,7 @@ Handler<Object> Heap::createNull()
 /**********************************************************************************
  * 外部との接続
  **********************************************************************************/
-void Heap::registerProvider( Handler<Provider> const& provider )
+void Heap::registerProvider( Handler<HeapObjectProvider> const& provider )
 {
 	this->providers_.insert(provider->name(), provider);
 }
@@ -195,7 +195,10 @@ void Heap::bootstrap()
 	this->initPrimitiveProviders();
 	Handler<Heap> const self = this->self();
 
-	for( std::pair<std::string, Handler<Provider>>& p : this->providers_ ){
+	this->intProvider_->bootstrap();
+	this->boolProvider_->bootstrap();
+	this->nullProvider_->bootstrap();
+	for( std::pair<std::string, Handler<HeapObjectProvider>>& p : this->providers_ ){
 		p.second->bootstrap();
 	}
 
@@ -217,8 +220,7 @@ void Heap::load(util::XValue const& data)
 	this->walkColor_ = xobj->get<int>("walk_color");
 	this->initPrimitiveProviders();
 	using namespace chisa::util;
-
-	for( XValue& val : *(xobj->get<XArray>("pool")) ){ //pool
+	for( XValue& val : *(xobj->get<XArray>("pool")) ){ //プール、ただし生成だけ
 		Handler<XObject> obj ( val.as<XObject>() );
 		std::string const provider = obj->get<XString>("provider");
 		objectid_t id = obj->get<objectid_t>("id");
@@ -226,6 +228,20 @@ void Heap::load(util::XValue const& data)
 		HeapObject* robj ( this->getProvider(provider)->create() );
 		robj->id(id);
 		this->objectPool_.push_back( robj );
+	}
+	{ //やっとプロバイダのロードができる。
+		{
+			Handler<util::XObject> const pobj ( xobj->get<util::XObject>("primitives") );
+			this->intProvider_->load(pobj->get<XValue>(this->intProvider_->name()));
+			this->boolProvider_->load(pobj->get<XValue>(this->boolProvider_->name()));
+			this->nullProvider_->load(pobj->get<XValue>(this->nullProvider_->name()));
+		}
+		{
+			Handler<util::XObject> const hobj ( xobj->get<util::XObject>("heaps") );
+			for(std::pair<std::string, Handler<HeapObjectProvider> >& p : this->providers_){
+				p.second->load(hobj->get<XValue>(p.first));
+			}
+		}
 	}
 	{ //ロード
 		auto it = xobj->get<XArray>("pool")->begin();
@@ -248,11 +264,11 @@ void Heap::load(util::XValue const& data)
 void Heap::initPrimitiveProviders()
 {
 	Handler<Heap> const self = this->self();
+	this->boolProvider_ = Handler<BoolProvider>(new BoolProvider(self));
+	this->intProvider_ = Handler<IntProvider>(new IntProvider(self));
+	this->nullProvider_ = Handler<NullProvider>(new NullProvider(self));
 	this->registerProvider( this->donutObjectProvider_ = Handler<DonutObjectProvider>(new DonutObjectProvider(self)) );
 	this->registerProvider( this->donutClosureObjectProvider_ = Handler<DonutClosureObjectProvider>(new DonutClosureObjectProvider(self)) );
-	this->registerProvider( this->boolProvider_ = Handler<BoolProvider>(new BoolProvider(self)) );
-	this->registerProvider( this->intProvider_ = Handler<IntProvider>(new IntProvider(self)) );
-	this->registerProvider( this->nullProvider_ = Handler<NullProvider>(new NullProvider(self)) );
 	this->registerProvider( this->stringProvider_ = Handler<StringProvider>( new StringProvider(self) ) );
 	this->registerProvider( this->floatProvider_ = Handler<FloatProvider>( new FloatProvider(self) ) );
 	this->registerProvider( this->pureNativeClosureProvider_ = Handler<PureNativeObjectProvider>( new PureNativeObjectProvider(self) ) );
@@ -275,6 +291,21 @@ util::XValue Heap::save()
 	using namespace chisa::util;
 	Handler<XObject> top(new XObject);
 	Handler<Heap> self(this->self());
+	{ //providers
+		{
+			Handler<util::XObject> const pobj ( new XObject );
+			pobj->set(this->intProvider_->name(), this->intProvider_->save());
+			pobj->set(this->boolProvider_->name(), this->boolProvider_->save());
+			pobj->set(this->nullProvider_->name(), this->nullProvider_->save());
+		}
+		{
+			Handler<util::XObject> const hobj ( new XObject );
+			for(std::pair<std::string, Handler<HeapObjectProvider> >& p : this->providers_){
+				hobj->set(p.first, p.second->save());
+			}
+			top->set("heaps", hobj);
+		}
+	}
 	{ //pool
 		Handler<XArray> pool(new XArray);
 		for( HeapObject* const& obj : this->objectPool_ ) {

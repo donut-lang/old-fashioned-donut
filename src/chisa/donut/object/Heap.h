@@ -43,7 +43,7 @@ private:
 	std::size_t gcLimit_;
 	std::size_t gcLimitMax_;
 private:
-	util::VectorMap<std::string, Handler<Provider> > providers_;
+	util::VectorMap<std::string, Handler<HeapObjectProvider> > providers_;
 	std::vector<HeapObject*> objectPool_;
 	std::vector<HeapObject*> objectPoolMarked_;
 	Handler<DonutObjectProvider> donutObjectProvider_;
@@ -80,7 +80,7 @@ public:
 	Handler<Object> intProto() {return intProto_;};
 	Handler<Object> nullProto() {return nullProto_;};
 
-	Handler<Provider> getProvider( const std::string& name ) const;
+	Handler<HeapObjectProvider> getProvider( const std::string& name ) const;
 	Handler<DonutObject> global() { return this->globalObject_; }
 private:
 	void registerObject( const Handler<HeapObject>& obj );
@@ -94,7 +94,7 @@ public: /* オブジェクトを作ってそれをプールに登録し、メモ
 	Handler<Object> createInt(const int& val);
 	Handler<Object> createBool(const bool& val);
 	Handler<Object> createNull();
-	Handler<PureNativeClosureObject> createPureNativeClosureObject(const std::string& objectProviderName, const std::string& closureName, PureNativeClosureEntry::Signature sig);
+	Handler<PureNativeClosureObject> createPureNativeClosureObject(const std::string& objectProviderName, const std::string& closureName, PureNativeClosureObject::Signature sig);
 public: /* ヒープ管理 */
 	void gc();
 	Handler<Object> decodeDescriptor( object_desc_t const& desc );
@@ -102,7 +102,7 @@ public: /* ヒープ管理 */
 private: //内部使用
 	HeapObject* findHeapObjectFromID( objectid_t const& id );
 public: /* 外部との接続 */
-	void registerProvider( Handler<Provider> const& provider );
+	void registerProvider( Handler<HeapObjectProvider> const& provider );
 	void registerGlobalObject( std::string const& name, Handler<Object> const& obj );
 	bool hasGlobalObject( std::string const& name );
 	Handler<Object> loadGlobalObject( std::string const& name );

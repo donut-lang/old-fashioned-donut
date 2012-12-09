@@ -111,6 +111,16 @@ void PureNativeClosureObject::bootstrap( std::string const& name, PureNativeClos
 }
 
 
+util::XValue PureNativeClosureObject::saveImpl( Handler<Heap> const& heap )
+{
+	return util::XValue();
+}
+
+void PureNativeClosureObject::loadImpl( Handler<Heap> const& heap, util::XValue const& data )
+{
+	this->func_ = heap->getProvider(this->closureName())->findClosureEntry("name");
+}
+
 }}
 
 

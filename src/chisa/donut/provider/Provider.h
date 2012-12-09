@@ -28,14 +28,13 @@
 #include "../object/Object.h"
 #include "../object/NativeObject.h"
 #include "../object/DonutObject.h"
-#include "NativeClosureEntry.h"
 
 namespace chisa {
 namespace donut {
 
 class Provider : public HandlerBody<Provider> {
 private:
-	util::VectorMap<std::string, Handler<NativeClosureEntry> > nativeClosures_;
+	util::VectorMap<std::string, PureNativeClosureObject::Signature> pureNativeClosures_;
 	HandlerW<Heap> const heap_;
 	Handler<DonutObject> prototype_;
 	std::string const name_;
@@ -44,24 +43,25 @@ protected:
 	template <typename T>
 	bool registerPureNativeClosure( const std::string& name, T f)
 	{
-		return nativeClosures_.update( name, Handler<NativeClosureEntry>(new PureNativeClosureEntry(f) ) );
+		return pureNativeClosures_.update( name, native::createBind(f) );
 	}
 private:
-	void addPrototype( const std::string& name, Handler<NativeClosureEntry> clos );
+	void addPrototype( const std::string& name, PureNativeClosureObject::Signature clos );
 public:
 	virtual ~Provider() noexcept = default;
 	inline bool onFree() noexcept { return false; };
 	inline std::string name() const noexcept { return this->name_; };
 	inline HandlerW<Heap> heap() const noexcept { return this->heap_; };
 	inline Handler<DonutObject> prototype() const noexcept { return this->prototype_; };
-private:
-	Handler<NativeClosureEntry> const& findClosureEntry( std::string const& name );
+public:
+	PureNativeClosureObject::Signature const& findClosureEntry( std::string const& name );
 public: /* 処理系の保存・復帰をします。 */
 	void bootstrap();
 	util::XValue save();
 	void load( util::XValue const& data);
-public:
-	virtual HeapObject* create() = 0;
+protected:
+	virtual util::XValue saveImpl() { return util::XValue(); };
+	virtual void loadImpl( util::XValue const& data){};
 };
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -71,6 +71,7 @@ protected:
 	HeapObjectProvider( const Handler<Heap>& heap, const std::string& name ):Provider(heap, name){};
 public:
 	virtual ~HeapObjectProvider() noexcept = default;
+	virtual HeapObject* create() = 0;
 };
 
 template <typename T>
@@ -108,9 +109,6 @@ public:
 	bool toBool(const Object* ptr) const;
 public:
 	Handler<Object> create( const int& val );
-	virtual HeapObject* create() override final {
-		throw DonutException(__FILE__, __LINE__, "[BUG] Int Provider does not provide heap object.");
-	}
 };
 
 class BoolProvider : public Provider {
@@ -131,9 +129,6 @@ public:
 	bool toBool(const Object* ptr) const;
 public:
 	Handler<Object> create( const bool& val );
-	virtual HeapObject* create() override final {
-		throw DonutException(__FILE__, __LINE__, "[BUG] Bool Provider does not provide heap object.");
-	}
 };
 
 class NullProvider : public Provider {
@@ -151,9 +146,6 @@ public:
 	bool toBool(const Object* ptr) const;
 public:
 	Handler<Object> createNull();
-	virtual HeapObject* create() override final {
-		throw DonutException(__FILE__, __LINE__, "[BUG] Null Provider does not provide heap object.");
-	}
 };
 
 //---------------------------------------------------------------------------------------------------------------------
