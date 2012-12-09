@@ -73,6 +73,13 @@ Handler<Provider> Heap::getProvider( const std::string& name ) const
 	return Handler<HeapObjectProvider>();
 }
 
+Handler<Source> Heap::registerSource( Handler<Source> const& source )
+{
+	this->sourcePool_.push_back(source.get());
+	source->id(++this->sourceId_);
+	return source;
+}
+
 void Heap::registerObject( const Handler<HeapObject>& obj )
 {
 	obj->id(++this->objectId_);
@@ -103,6 +110,17 @@ HeapObject* Heap::findHeapObjectFromID( objectid_t const& id )
 		throw DonutException(__FILE__, __LINE__, "[BUG] Object id: %d not found. Invalid Object Descriptor.", id);
 	}
 	return obj;
+}
+
+Handler<Source> Heap::decodeSourceID(int const& id)
+{
+	std::vector<Source*>::iterator const it =
+			std::lower_bound( this->sourcePool_.begin(), this->sourcePool_.end(), id, Source::CompareById());
+	Source* src = *it;
+	if( it == this->sourcePool_.end() || src->id() != id ) {
+		throw DonutException(__FILE__, __LINE__, "[BUG] Source id: %d not found. Invalid Source ID.", id);
+	}
+	return Handler<Source>::__internal__fromRawPointerWithoutCheck( src );
 }
 
 Handler<HeapObject> Heap::decodeHeapDescriptor( object_desc_t const& desc )
@@ -174,6 +192,7 @@ Handler<Object> Heap::createBool(const bool& val)
 	return this->boolProvider()->create(val);
 }
 
+
 Handler<Object> Heap::createNull()
 {
 	return this->nullProvider()->createNull();
@@ -236,6 +255,12 @@ void Heap::load(util::XValue const& data)
 	this->walkColor_ = xobj->get<int>("walk_color");
 	this->initPrimitiveProviders();
 	using namespace chisa::util;
+
+	{//ソースのロード
+		for( XValue& sobj : *(xobj->get<XArray>("source")) ){
+			this->sourcePool_.push_back(new Source(sobj));
+		}
+	}
 
 	{ //とりあえず全オブジェクトを生成し、あとで参照できるようにしておかなければならない
 		for( XValue& val : *(xobj->get<XArray>("pool")) ){ //プール、ただし生成だけ
@@ -310,6 +335,13 @@ util::XValue Heap::save()
 	using namespace chisa::util;
 	Handler<XObject> top(new XObject);
 	Handler<Heap> self(this->self());
+	{//ソースコード
+		Handler<XArray> sarray(new XArray);
+		for( Source*& src : this->sourcePool_ ){
+			sarray->append(src->save());
+		}
+		top->set("source",sarray);
+	}
 	{ //providers
 		{ //特殊プロバイダ
 			Handler<util::XObject> const pobj ( new XObject );

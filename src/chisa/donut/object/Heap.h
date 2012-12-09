@@ -39,6 +39,7 @@ class Heap : public HandlerBody<Heap> {
 private:
 	Handler<Clock> clock_;
 	objectid_t objectId_;
+	int sourceId_;
 	int walkColor_;
 	std::size_t gcLimit_;
 	std::size_t gcLimitMax_;
@@ -84,6 +85,8 @@ public:
 	Handler<HeapObjectProvider> getHeapProvider( const std::string& name ) const;
 	Handler<Provider> getProvider( const std::string& name ) const;
 	Handler<DonutObject> global() { return this->globalObject_; }
+public:
+	Handler<Source> registerSource( Handler<Source> const& source );
 private:
 	void registerObject( const Handler<HeapObject>& obj );
 	int nextWalkColor();
@@ -101,6 +104,7 @@ public: /* ヒープ管理 */
 	void gc();
 	Handler<Object> decodeDescriptor( object_desc_t const& desc );
 	Handler<HeapObject> decodeHeapDescriptor( object_desc_t const& desc );
+	Handler<Source> decodeSourceID(int const& id);
 private: //内部使用
 	HeapObject* findHeapObjectFromID( objectid_t const& id );
 public: /* 外部との接続 */
