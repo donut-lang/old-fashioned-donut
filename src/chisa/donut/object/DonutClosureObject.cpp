@@ -31,7 +31,7 @@ DonutClosureObject::DonutClosureObject(const Handler<Heap>& heap, Handler<Source
 ,asm_(src->getClosure( closureIndex ))
 {
 	if(scope){
-		this->store(heap, "__scope__", scope);
+		this->set(heap, "__scope__", scope);
 	}
 }
 

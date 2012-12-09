@@ -33,7 +33,7 @@ Provider::Provider( const Handler<Heap>& heap, const std::string& name )
 void Provider::addPrototype( const std::string& name, Handler<NativeClosureEntry> clos )
 {
 	if(Handler<Heap> heap = this->heap().lock()){
-		this->prototype_->store(heap, name, clos->createObject(heap, this->name(), name));
+		this->prototype_->set(heap, name, clos->createObject(heap, this->name(), name));
 	}
 }
 
@@ -42,7 +42,7 @@ void Provider::bootstrap()
 	if(Handler<Heap> heap = this->heap().lock()){
 		this->prototype_ = heap->createEmptyDonutObject();
 		for( std::pair<std::string, Handler<NativeClosureEntry>> const& p : this->nativeClosures_ ){
-			this->prototype_->store(heap, p.first, p.second->createObject(heap, this->name(), p.first));
+			this->prototype_->set(heap, p.first, p.second->createObject(heap, this->name(), p.first));
 		}
 	}
 }

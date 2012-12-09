@@ -102,7 +102,7 @@ Handler<HeapObject> Heap::decodeHeapDescriptor( object_desc_t const& desc )
 Handler<DonutObject> Heap::createDonutObject()
 {
 	Handler<DonutObject> obj(new DonutObject(self()));
-	obj->store(self(), "__proto__", this->objectProto());
+	obj->set(self(), "__proto__", this->objectProto());
 	this->registerObject(obj);
 
 	return obj;
@@ -173,7 +173,7 @@ void Heap::registerProvider( Handler<Provider> provider )
 
 void Heap::registerGlobalObject( std::string const& name, Handler<Object> const& obj )
 {
-	this->global()->store(self(), name, obj);
+	this->global()->set(self(), name, obj);
 }
 
 bool Heap::hasGlobalObject( std::string const& name )
@@ -182,7 +182,7 @@ bool Heap::hasGlobalObject( std::string const& name )
 }
 Handler<Object> Heap::loadGlobalObject( std::string const& name )
 {
-	return this->global()->load(self(), name);
+	return this->global()->get(self(), name);
 }
 /**********************************************************************************
  * save/load
@@ -201,12 +201,12 @@ void Heap::bootstrap()
 	this->nullProto_ = this->nullProvider()->prototype();
 
 	this->globalObject_ = this->createEmptyDonutObject();
-	this->globalObject_->store(self, "Object", this->objectProto());
-	this->globalObject_->store(self, "Int", this->intProto());
-	this->globalObject_->store(self, "Boolean", this->boolProto());
-	this->globalObject_->store(self, "Null", this->nullProto());
+	this->globalObject_->set(self, "Object", this->objectProto());
+	this->globalObject_->set(self, "Int", this->intProto());
+	this->globalObject_->set(self, "Boolean", this->boolProto());
+	this->globalObject_->set(self, "Null", this->nullProto());
 
-	this->globalObject_->store(self, "Global", this->globalObject_);
+	this->globalObject_->set(self, "Global", this->globalObject_);
 }
 
 void Heap::initPrimitiveProviders()

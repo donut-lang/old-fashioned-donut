@@ -194,13 +194,13 @@ bool Machine::isInterrupted() const noexcept
 void Machine::enterClosure(const Handler<Object>& self, const Handler<DonutClosureObject>& clos, const Handler<Object>& args)
 {
 	Handler<DonutObject> scope ( heap_->createEmptyDonutObject() );
-	scope->store(heap_, "__scope__", clos);
+	scope->set(heap_, "__scope__", clos);
 	{
 		Handler<Closure> c = clos->closureCode();
 		const std::size_t max = c->arglist().size();
 		for(std::size_t i=0;i<max;++i){
 			const std::string arg = c->arglist().at(i);
-			scope->store( heap_, arg, args->load(heap_, i) );
+			scope->set( heap_, arg, args->get(heap_, i) );
 		}
 	}
 	this->callStack().push_back( Callchain(0, this->stack().size(), self, clos, scope) );
@@ -297,7 +297,7 @@ Handler<Object> Machine::run()
 					found = true;
 					break;
 				}else if( obj->have(heap_, "__scope__") ){
-					obj = obj->load(heap_, "__scope__");
+					obj = obj->get(heap_, "__scope__");
 				}else{
 					break;
 				}
@@ -311,14 +311,14 @@ Handler<Object> Machine::run()
 			Handler<Object> storeObj = this->popStack();
 			Handler<Object> nameObj = this->popStack();
 			Handler<Object> destObj = this->popStack();
-			this->pushStack( destObj->store(heap_, nameObj->toString(heap_), storeObj) );
+			this->pushStack( destObj->set(heap_, nameObj->toString(heap_), storeObj) );
 			break;
 		}
 		case Inst::LoadObj: {
 			Handler<Object> nameObj = this->popStack();
 			Handler<Object> destObj = this->popStack();
 
-			this->pushStack( destObj->load(heap_, nameObj->toString(heap_)) );
+			this->pushStack( destObj->get(heap_, nameObj->toString(heap_)) );
 			break;
 		}
 		case Inst::LoadLocal: {
@@ -334,7 +334,7 @@ Handler<Object> Machine::run()
 			Handler<DonutObject> obj(heap_->createEmptyDonutObject());
 			for(unsigned int i=constIndex;i>0;--i){
 				Handler<Object> val = this->popStack();
-				obj->store(heap_, i-1, val);
+				obj->set(heap_, i-1, val);
 			}
 
 			Handler<Object> closureObj = this->popStack();
@@ -357,7 +357,7 @@ Handler<Object> Machine::run()
 			for(unsigned int i=constIndex;i>0;--i){
 				Handler<Object> val = this->popStack();
 
-				obj->store(heap_, util::toString(i-1), val);
+				obj->set(heap_, util::toString(i-1), val);
 			}
 			this->pushStack(obj);
 			break;
@@ -367,7 +367,7 @@ Handler<Object> Machine::run()
 			for(int i=0;i<constIndex;++i){
 				Handler<Object> val = this->popStack();
 				Handler<Object> name = this->popStack();
-				obj->store(heap_, name->toString(heap_), val);
+				obj->set(heap_, name->toString(heap_), val);
 			}
 			this->pushStack(obj);
 			break;

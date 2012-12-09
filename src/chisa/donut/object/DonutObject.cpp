@@ -95,7 +95,7 @@ Handler<Object> DonutObject::loadImpl(const Handler<Heap>& heap, const std::stri
 		return Handler<Object>::__internal__fromRawPointerWithoutCheck(it->second.load());
 	}
 	if(this->haveOwnImpl(heap,"__proto__")){
-		return loadImpl(heap,"__proto__")->load(heap, name);
+		return loadImpl(heap,"__proto__")->get(heap, name);
 	}
 	{
 		std::stringstream ss;

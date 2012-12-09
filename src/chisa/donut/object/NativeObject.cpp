@@ -66,7 +66,7 @@ Handler<Object> NativeObject::storeImpl(const Handler<Heap>& heap, const std::st
 
 Handler<Object> NativeObject::loadImpl(const Handler<Heap>& heap, const std::string& name) const
 {
-	return this->prototype_->load(heap, name);
+	return this->prototype_->get(heap, name);
 }
 
 void NativeObject::onSeekNotifyImpl(const Handler<Heap>& heap)

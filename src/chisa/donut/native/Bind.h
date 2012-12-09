@@ -42,7 +42,7 @@ Handler<Object> callWithBind(const Handler<Heap>& heap, const Handler<Object>& s
 		constexpr int _idx = idx+1;
 		throw DonutException(__FILE__, __LINE__, "oops. args size mismatched. need more than %d arguments.", _idx);
 	}
-	U const val = native::Decoder<U>::exec( heap, args->load(heap, idx) );
+	U const val = native::Decoder<U>::exec( heap, args->get(heap, idx) );
 	std::function<R(T self, Args... args)> const left = [funct, val](T self, Args... args)->R{
 		return funct(self, val, args...);
 	};
