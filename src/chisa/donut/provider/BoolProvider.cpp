@@ -29,17 +29,21 @@ static const std::string TAG("BoolProvider");
 BoolProvider::BoolProvider(const Handler<Heap>& heap)
 :Provider(heap, "Boolean")
 {
-	this->registerPureNativeClosure("opAnd", std::function<Object*(Object*, bool)>(
-			[&](Object* self, bool v)->Object*{
-		return BoolProvider::toPointer(BoolProvider::fromPointer(self) && v);
+	this->registerPureNativeClosure("opAnd", std::function<bool(bool, bool)>(
+			[&](bool self, bool v)->bool{
+		return self && v;
 	}));
-	this->registerPureNativeClosure("opOr", std::function<Object*(Object*, bool)>(
-			[&](Object* self, bool v)->Object*{
-		return BoolProvider::toPointer(BoolProvider::fromPointer(self) || v);
+	this->registerPureNativeClosure("opOr", std::function<bool(bool, bool)>(
+			[&](bool self, bool v)->bool{
+		return self || v;
 	}));
-	this->registerPureNativeClosure("opNot", std::function<Object*(Object*)>(
-			[&](Object* self)->Object*{
-		return BoolProvider::toPointer(!BoolProvider::fromPointer(self));
+	this->registerPureNativeClosure("opNot", std::function<bool(bool)>(
+			[&](bool self)->bool{
+		return !self;
+	}));
+	this->registerPureNativeClosure("toString", std::function<std::string(bool)>(
+			[&](bool self)->std::string{
+		return util::toString(self);
 	}));
 }
 
