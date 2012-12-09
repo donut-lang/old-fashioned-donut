@@ -57,6 +57,9 @@ public: /* 処理系の保存・復帰をします。 */
 	void bootstrap();
 	util::XValue save();
 	void load( util::XValue const& data);
+public:
+	virtual HeapObject* create( Handler<Heap> const& heap ) = 0;
+	NativeClosureObject* createNativeClosure( Handler<Heap> const& heap, std::string const& name );
 };
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -66,7 +69,6 @@ protected:
 	HeapObjectProvider( const Handler<Heap>& heap, const std::string& name ):Provider(heap, name){};
 public:
 	virtual ~HeapObjectProvider() noexcept = default;
-	virtual HeapObject* create( Handler<Heap> const& heap ) = 0;
 };
 
 template <typename T>
@@ -79,6 +81,7 @@ public:
 	T* createDerived( Handler<Heap> const& heap ) {
 		return new T( heap, this->name() );
 	}
+private:
 	virtual HeapObject* create( Handler<Heap> const& heap ) override {
 		return createDerived(heap);
 	}
@@ -103,6 +106,9 @@ public:
 	bool toBool(const Object* ptr) const;
 public:
 	Handler<Object> create( const int& val );
+	virtual HeapObject* create( Handler<Heap> const& heap ) override final {
+		throw DonutException(__FILE__, __LINE__, "[BUG] Int Provider does not provide heap object.");
+	}
 };
 
 class BoolProvider : public Provider {
@@ -123,6 +129,9 @@ public:
 	bool toBool(const Object* ptr) const;
 public:
 	Handler<Object> create( const bool& val );
+	virtual HeapObject* create( Handler<Heap> const& heap ) override final {
+		throw DonutException(__FILE__, __LINE__, "[BUG] Bool Provider does not provide heap object.");
+	}
 };
 
 class NullProvider : public Provider {
@@ -140,7 +149,9 @@ public:
 	bool toBool(const Object* ptr) const;
 public:
 	Handler<Object> create();
-
+	virtual HeapObject* create( Handler<Heap> const& heap ) override final {
+		throw DonutException(__FILE__, __LINE__, "[BUG] Null Provider does not provide heap object.");
+	}
 };
 
 class StringObject;
