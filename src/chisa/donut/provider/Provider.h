@@ -33,18 +33,15 @@ namespace chisa {
 namespace donut {
 
 class Provider : public HandlerBody<Provider> {
-private:
+private: //これは実行前に全て設定される情報
 	util::VectorMap<std::string, PureNativeClosureObject::Signature> pureNativeClosures_;
 	HandlerW<Heap> const heap_;
-	Handler<DonutObject> prototype_;
 	std::string const name_;
+private: //実行時に変化し、セーブ・ロードの対象にするのはこれだけ。
+	Handler<DonutObject> prototype_;
 protected:
 	Provider( const Handler<Heap>& heap, const std::string& name );
-	template <typename T>
-	bool registerPureNativeClosure( const std::string& name, T f)
-	{
-		return pureNativeClosures_.update( name, native::createBind(f) );
-	}
+	template <typename T> bool registerPureNativeClosure( const std::string& name, T f) { return pureNativeClosures_.update( name, native::createBind(f) ); }
 private:
 	void addPrototype( const std::string& name, PureNativeClosureObject::Signature clos );
 public:
@@ -54,7 +51,7 @@ public:
 	inline HandlerW<Heap> heap() const noexcept { return this->heap_; };
 	inline Handler<DonutObject> prototype() const noexcept { return this->prototype_; };
 public:
-	PureNativeClosureObject::Signature const& findClosureEntry( std::string const& name );
+	PureNativeClosureObject::Signature const& findPureNativeClosureEntry( std::string const& name );
 public: /* 処理系の保存・復帰をします。 */
 	void bootstrap();
 	util::XValue save();

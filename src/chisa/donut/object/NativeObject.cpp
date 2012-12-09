@@ -75,7 +75,7 @@ void NativeObject::onSeekNotifyImpl(const Handler<Heap>& heap)
 }
 
 void NativeObject::bootstrap(Handler<Heap> const& heap) {
-	this->prototype_ = heap->getProvider(this->providerName())->prototype().get();
+	this->prototype_ = heap->getHeapProvider(this->providerName())->prototype().get();
 }
 
 util::XValue NativeObject::save( Handler<Heap> const& heap )

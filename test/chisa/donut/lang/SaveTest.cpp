@@ -54,14 +54,25 @@ TEST(SaveTest, ClockSaveTest)
 
 TEST(SaveTest, DonutSaveTest)
 {
-	INIT_DONUT;
-	tinyxml2::XMLDocument doc;
-	Handler<util::XObject> obj = donut->save().as<util::XObject>();
-	doc.InsertEndChild(obj->toXML(&doc));
-	tinyxml2::XMLPrinter printer;
-	doc.Print(&printer);
-	std::string src = printer.CStr();
+	std::string src;
+	{
+		INIT_DONUT;
+		tinyxml2::XMLDocument doc;
+		Handler<util::XObject> obj = donut->save().as<util::XObject>();
+		doc.InsertEndChild(obj->toXML(&doc));
+		tinyxml2::XMLPrinter printer;
+		doc.Print(&printer);
+		src = printer.CStr();
+	}
 	std::cout << src << std::endl;
+	{
+		Handler<Donut> donut(new Donut(log_trace));
+		tinyxml2::XMLDocument doc;
+		doc.Parse(src.c_str());
+		util::XValue v = util::XValue::fromXML(doc.RootElement());
+		donut->load(v);
+	}
+
 }
 
 }}

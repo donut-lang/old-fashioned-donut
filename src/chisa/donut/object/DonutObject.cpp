@@ -39,11 +39,6 @@ std::string DonutObject::toStringImpl(const Handler<Heap>& heap) const
 	return util::format("(DonutObject %p)", this);
 }
 
-std::string DonutObject::providerNameImpl(const Handler<Heap>& heap) const
-{
-	return this->providerName();
-}
-
 int DonutObject::toIntImpl(const Handler<Heap>& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to convert object to int.");

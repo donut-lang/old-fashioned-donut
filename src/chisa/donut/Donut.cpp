@@ -99,11 +99,10 @@ void Donut::load(util::XValue const& data)
 		this->heap_->load(obj->get<util::XObject>("heap"));
 	}
 	{ // 3: マシン
-		Handler<util::XObject> machine ( obj->get<util::XObject>("machine") );
 		this->machines_.clear();
-		for(std::pair<std::string, util::XValue> const& val : *obj){
+		for(std::pair<std::string, util::XValue>& val : *(obj->get<util::XObject>("machine"))){
 			Handler<Machine> machine ( this->queryMachine(val.first) );
-			machine->load( val.second.as<util::XObject>() );
+			machine->load( val.second );
 		}
 	}
 

@@ -143,6 +143,8 @@ protected:
 	void color(const int color) noexcept { this->color_=color; };
 	virtual util::XValue saveImpl( Handler<Heap> const& heap ) = 0;
 	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) = 0;
+private:
+	virtual std::string providerNameImpl(const Handler<Heap>& heap) const override final { return this->providerName_; }
 };
 
 struct CompareHeapById : std::binary_function<HeapObject* const&,HeapObject* const&,bool>{
@@ -174,7 +176,6 @@ public:
 	virtual ~DonutObject() noexcept = default;
 protected:
 	virtual std::string toStringImpl(const Handler<Heap>& heap) const override;
-	virtual std::string providerNameImpl(const Handler<Heap>& heap) const override;
 	virtual int toIntImpl(const Handler<Heap>& heap) const override;
 	virtual float toFloatImpl(const Handler<Heap>& heap) const override;
 	virtual bool toBoolImpl(const Handler<Heap>& heap) const override;
@@ -214,7 +215,6 @@ public:
 	virtual ~NativeObject() noexcept = default;
 protected:
 	virtual std::string toStringImpl(const Handler<Heap>& heap) const override;
-	virtual std::string providerNameImpl(const Handler<Heap>& heap) const override { return this->providerName(); }
 
 	virtual int toIntImpl(const Handler<Heap>& heap) const override;
 	virtual float toFloatImpl(const Handler<Heap>& heap) const override;
@@ -240,14 +240,15 @@ namespace donut {
 
 class NativeClosureObject : public HeapObject {
 private:
+	std::string const objectProviderName_;
 	std::string const closureName_;
 public:
 	NativeClosureObject(std::string const& providerName):HeapObject(providerName){};
 	virtual ~NativeClosureObject() noexcept = default;
+	std::string objectProviderName() const noexcept { return this->objectProviderName_; };
 	std::string closureName() const noexcept { return this->closureName_; };
 protected:
 	virtual std::string toStringImpl(const Handler<Heap>& heap) const override;
-	virtual std::string providerNameImpl(const Handler<Heap>& heap) const override { return this->providerName(); }
 
 	virtual int toIntImpl(const Handler<Heap>& heap) const override;
 	virtual float toFloatImpl(const Handler<Heap>& heap) const override;
@@ -264,7 +265,7 @@ private:
 	virtual util::XValue save( Handler<Heap> const& heap ) override final;
 	virtual void load( Handler<Heap> const& heap, util::XValue const& data ) override final;
 protected:
-	void bootstrap( std::string const& name );
+	void bootstrap( std::string const& objectProviderName, std::string const& closureName );
 	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override = 0;
 	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override = 0;
 };

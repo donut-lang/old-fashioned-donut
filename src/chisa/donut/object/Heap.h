@@ -80,7 +80,8 @@ public:
 	Handler<Object> intProto() {return intProto_;};
 	Handler<Object> nullProto() {return nullProto_;};
 
-	Handler<HeapObjectProvider> getProvider( const std::string& name ) const;
+	Handler<HeapObjectProvider> getHeapProvider( const std::string& name ) const;
+	Handler<Provider> getProvider( const std::string& name ) const;
 	Handler<DonutObject> global() { return this->globalObject_; }
 private:
 	void registerObject( const Handler<HeapObject>& obj );
