@@ -38,20 +38,20 @@ Global.x = interrupt 20;
 		result = machine->start( src_ );
 		ASSERT_TRUE(machine->isInterrupted());
 		ASSERT_EQ(10, result->toInt(heap) );
-		ASSERT_EQ( 0, heap->loadGlobalObject("x")->toInt(heap) );
+		ASSERT_EQ( 0, heap->getGlobalObject("x")->toInt(heap) );
 	}
 	ASSERT_ANY_THROW( machine->start(src_) );
 	{
 		result = machine->startContinue( heap->createInt(1) );
 		ASSERT_TRUE(machine->isInterrupted());
 		ASSERT_EQ(20, result->toInt(heap) );
-		ASSERT_EQ( 1, heap->loadGlobalObject("x")->toInt(heap) );
+		ASSERT_EQ( 1, heap->getGlobalObject("x")->toInt(heap) );
 	}
 	{
 		result = machine->startContinue( heap->createInt(2) );
 		ASSERT_FALSE(machine->isInterrupted());
 		ASSERT_EQ( 2, result->toInt(heap) );
-		ASSERT_EQ( 2, heap->loadGlobalObject("x")->toInt(heap) );
+		ASSERT_EQ( 2, heap->getGlobalObject("x")->toInt(heap) );
 	}
 	ASSERT_ANY_THROW( machine->startContinue( heap->createNull() ) );
 }

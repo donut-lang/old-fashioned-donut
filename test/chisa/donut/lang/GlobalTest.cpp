@@ -46,9 +46,9 @@ TEST(GlobalTest, GlobalSetTest)
 TEST(GlobalTest, GlobalRegisterTest)
 {
 	INIT_DONUT
-	heap->registerGlobalObject( "x", heap->createInt( 1 ) );
+	heap->setGlobalObject( "x", heap->createInt( 1 ) );
 	ASSERT_TRUE( heap->hasGlobalObject( "x" ) );
-	Handler<Object> result = heap->loadGlobalObject( "x" );
+	Handler<Object> result = heap->getGlobalObject( "x" );
 	ASSERT_TRUE( result->isInt() );
 	ASSERT_EQ(1, result->toInt(heap) );
 }
@@ -56,7 +56,7 @@ TEST(GlobalTest, GlobalRegisterTest)
 TEST(GlobalTest, GlobalFromScriptTest)
 {
 	INIT_DONUT
-	heap->registerGlobalObject( "x", heap->createInt( 1 ) );
+	heap->setGlobalObject( "x", heap->createInt( 1 ) );
 
 	Handler<Object> result;
 	ASSERT_NO_THROW( result = machine->start( donut->parse("Global.x;", "<MEM>", 0) ) );

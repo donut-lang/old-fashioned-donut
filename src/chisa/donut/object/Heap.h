@@ -109,9 +109,9 @@ private: //内部使用
 	HeapObject* findHeapObjectFromID( objectid_t const& id );
 public: /* 外部との接続 */
 	void registerProvider( Handler<HeapObjectProvider> const& provider );
-	void registerGlobalObject( std::string const& name, Handler<Object> const& obj );
+	void setGlobalObject( std::string const& name, Handler<Object> const& obj );
 	bool hasGlobalObject( std::string const& name );
-	Handler<Object> loadGlobalObject( std::string const& name );
+	Handler<Object> getGlobalObject( std::string const& name );
 public: /* 処理系の保存・復帰をします。 */
 	void bootstrap();
 	util::XValue save();

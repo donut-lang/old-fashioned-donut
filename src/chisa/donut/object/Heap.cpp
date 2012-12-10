@@ -206,7 +206,7 @@ void Heap::registerProvider( Handler<HeapObjectProvider> const& provider )
 	this->providers_.insert(provider->name(), provider);
 }
 
-void Heap::registerGlobalObject( std::string const& name, Handler<Object> const& obj )
+void Heap::setGlobalObject( std::string const& name, Handler<Object> const& obj )
 {
 	this->global()->set(self(), name, obj);
 }
@@ -215,7 +215,7 @@ bool Heap::hasGlobalObject( std::string const& name )
 {
 	return this->global()->haveOwn( self(), name );
 }
-Handler<Object> Heap::loadGlobalObject( std::string const& name )
+Handler<Object> Heap::getGlobalObject( std::string const& name )
 {
 	return this->global()->get(self(), name);
 }
