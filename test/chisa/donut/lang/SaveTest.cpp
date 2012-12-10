@@ -22,36 +22,6 @@
 namespace chisa {
 namespace donut {
 
-TEST(SaveTest, ClockSaveTest)
-{
-	INIT_DONUT;
-	Handler<Clock> clock(new Clock(donut.get()));
-	std::string src;
-	clock->tick();
-	clock->tick();
-	clock->tick();
-	clock->tick();
-	clock->seek(clock->lastTime()-2);
-	clock->seek(clock->lastTime()-4);
-	{
-		Handler<util::XObject> obj = clock->save().as<util::XObject>();
-		tinyxml2::XMLDocument doc;
-		doc.InsertFirstChild(obj->toXML(&doc));
-		tinyxml2::XMLPrinter printer;
-		doc.Print(&printer);
-		src = printer.CStr();
-	}
-	Handler<Clock> clock2(new Clock(donut.get()));
-	{
-		tinyxml2::XMLDocument doc;
-		doc.Parse(src.c_str());
-		clock2->load(Handler<util::XObject>(new util::XObject(doc.RootElement())));
-	}
-	ASSERT_EQ(clock->now(), clock2->now());
-	ASSERT_EQ(clock->lastTime(), clock2->lastTime());
-	ASSERT_EQ(clock->firstTime(), clock2->firstTime());
-}
-
 TEST(SaveTest, DonutSaveTest)
 {
 	std::string src;
