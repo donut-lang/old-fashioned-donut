@@ -122,6 +122,7 @@ public:
 	inline bool onFree() const noexcept { return false; };
 public:
 	template <typename T> typename _TypeAdapter<T>::return_type get( std::size_t const& idx );
+	template <typename T> bool has( std::size_t const& idx ) const;
 	template <typename T> typename _TypeAdapter<T>::return_type set( const std::size_t& idx, T const& obj );
 	template <typename T> typename _TypeAdapter<T>::return_type append( T const& obj );
 	std::vector<XValue>::iterator begin(){ return this->list_.begin(); };

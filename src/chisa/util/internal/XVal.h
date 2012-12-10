@@ -99,6 +99,14 @@ template <typename T> typename _TypeAdapter<T>::return_type XArray::get( std::si
 	}
 	return val.as<SpiritType>();
 }
+template <typename T> bool XArray::has( std::size_t const& idx ) const {
+	typedef typename _TypeAdapter<T>::spirit_type SpiritType;
+	if( idx < 0 || idx >= list_.size() ){
+		return false;
+	}
+	XValue const& val = list_[idx];
+	return val.is<SpiritType>();
+}
 template <typename T> typename _TypeAdapter<T>::return_type XArray::set( const std::size_t& idx, T const& obj ) {
 	typedef typename _TypeAdapter<T>::spirit_type SpiritType;
 	if( idx < 0 || idx >= list_.size() ){

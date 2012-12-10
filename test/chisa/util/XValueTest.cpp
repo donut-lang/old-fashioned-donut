@@ -291,7 +291,6 @@ TEST(XValueTest, ObjectGetSetTest)
 	obj->set("float", 1.2f);
 	obj->set("str", "test");
 	obj->set("bool", true);
-	/*
 
 	ASSERT_TRUE(obj->has<XSInt>("int"));
 	ASSERT_EQ(1, obj->get<XSInt>("int"));
@@ -301,9 +300,29 @@ TEST(XValueTest, ObjectGetSetTest)
 	ASSERT_EQ("test", obj->get<XString>("str"));
 	ASSERT_TRUE(obj->has<XBool>("bool"));
 	ASSERT_EQ(true, obj->get<XBool>("bool"));
-	*/
 }
 
+TEST(XValueTest, ObjectConversionTest)
+{
+	Handler<XObject> obj(new XObject());
+	obj->set("int", 1) = 10;
+
+	ASSERT_TRUE(obj->has<XSInt>("int"));
+	ASSERT_EQ(10, obj->get<XSInt>("int"));
+}
+
+TEST(XValueTest, ArrayConversionTest)
+{
+	Handler<XArray> obj(new XArray());
+	obj->append(1) = 10;
+
+	ASSERT_TRUE(obj->has<XSInt>(0));
+	ASSERT_EQ(10, obj->get<XSInt>(0));
+
+	obj->set(0, "string") = "foo";
+	ASSERT_TRUE(obj->has<XString>(0));
+	ASSERT_EQ("foo", obj->get<XString>(0));
+}
 TEST(XValueTest,ObjectNotFoundTest)
 {
 	Handler<XObject> obj(new XObject());
