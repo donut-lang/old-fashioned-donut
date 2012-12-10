@@ -76,21 +76,11 @@ public:
 	Handler<BoolProvider>& boolProvider() {return boolProvider_;};
 	Handler<IntProvider>& intProvider() {return intProvider_;};
 	Handler<NullProvider>& nullProvider() {return nullProvider_;};
-
+public:
 	Handler<DonutObject> objectProto() { return this->objectProto_; };
 	Handler<Object> boolProto() {return boolProto_;};
 	Handler<Object> intProto() {return intProto_;};
 	Handler<Object> nullProto() {return nullProto_;};
-
-	Handler<HeapObjectProvider> getHeapProvider( const std::string& name ) const;
-	Handler<Provider> getProvider( const std::string& name ) const;
-	Handler<DonutObject> global() { return this->globalObject_; }
-public:
-	Handler<Source> registerSource( Handler<Source> const& source );
-	void unregisterSource( Source* source );
-private:
-	void registerObject( const Handler<HeapObject>& obj );
-	int nextWalkColor();
 public: /* オブジェクトを作ってそれをプールに登録し、メモリ管理の対象にする。 */
 	Handler<DonutObject> createDonutObject();
 	Handler<DonutObject> createEmptyDonutObject();
@@ -103,27 +93,36 @@ public: /* オブジェクトを作ってそれをプールに登録し、メモ
 	Handler<PureNativeClosureObject> createPureNativeClosureObject(const std::string& objectProviderName, const std::string& closureName, PureNativeClosureObject::Signature sig);
 public: /* ヒープ管理 */
 	void gc();
-	Handler<Object> decodeDescriptor( object_desc_t const& desc );
-	Handler<HeapObject> decodeHeapDescriptor( object_desc_t const& desc );
-	Handler<Source> decodeSourceID(int const& id);
-private: //内部使用
-	HeapObject* findHeapObjectFromID( objectid_t const& id );
-public: /* 外部との接続 */
-	void registerProvider( Handler<HeapObjectProvider> const& provider );
-	void setGlobalObject( std::string const& name, Handler<Object> const& obj );
+public: /* グローバルオブジェクトの管理 */
 	bool hasGlobalObject( std::string const& name );
+	void setGlobalObject( std::string const& name, Handler<Object> const& obj );
 	Handler<Object> getGlobalObject( std::string const& name );
+	Handler<DonutObject> global() { return this->globalObject_; }
+public: /* プロバイダの管理 */
+	void registerProvider( Handler<HeapObjectProvider> const& provider );
+	Handler<HeapObjectProvider> findHeapProvider( const std::string& name ) const;
+	Handler<Provider> findProvider( const std::string& name ) const;
 public: /* 処理系の保存・復帰をします。 */
 	void bootstrap();
 	util::XValue save();
 	void load( util::XValue const& data);
-private:
-	void initPrimitiveProviders();
-	void initPrototypes();
+public: /* 保存・復帰時にのみ使う */
+	Handler<Object> decodeDescriptor( object_desc_t const& desc );
+	Handler<HeapObject> decodeHeapDescriptor( object_desc_t const& desc );
+	Handler<Source> decodeSourceID(int const& id);
 public: /* Clockから呼ばれる */
 	void onDiscardFutureNotify();
 	void onDiscardHistoryNotify();
 	void onSeekNotify();
+public: /* Sourceから呼ばれる */
+	Handler<Source> registerSource( Handler<Source> const& source );
+	void unregisterSource( Source* source );
+private:
+	void initPrimitiveProviders();
+	void initPrototypes();
+	HeapObject* findHeapObjectFromID( objectid_t const& id );
+	void registerObject( const Handler<HeapObject>& obj );
+	int nextWalkColor();
 };
 
 }}
