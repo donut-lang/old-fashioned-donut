@@ -24,7 +24,7 @@
 namespace chisa {
 namespace donut {
 
-class DonutException : public std::exception {
+class DonutException final : public std::exception {
 private:
 	std::string _loc;
 	std::string _msg;

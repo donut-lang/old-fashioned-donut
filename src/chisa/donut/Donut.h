@@ -29,7 +29,7 @@ namespace chisa {
 namespace donut {
 class Provider;
 
-class Donut : public HandlerBody<Donut> {
+class Donut final : public HandlerBody<Donut> {
 	DEFINE_MEMBER_REF(public, logging::Logger, log);
 private:
 	Handler<Clock> clock_;

@@ -33,14 +33,14 @@ T decode(const Handler<Heap>& heap, Handler<chisa::donut::Object> obj);
 //-----------------------------------------------------------------------------
 
 template <typename T, bool = IsBaseOf<T, Object>::result >
-struct PointerDecoder {
+struct PointerDecoder final {
 	static T* exec(const Handler<Heap>& heap, Handler<chisa::donut::Object> obj) {
 		return decode<T*>( heap, obj );
 	}
 };
 
 template <typename T>
-struct PointerDecoder<T, true> {
+struct PointerDecoder<T, true> final {
 	static T* exec(const Handler<Heap>& heap, Handler<chisa::donut::Object> obj)
 	{
 		return obj.cast<T>().get();
@@ -50,7 +50,7 @@ struct PointerDecoder<T, true> {
 //-----------------------------------------------------------------------------
 
 template <typename T, bool = IsBaseOf<T, Object>::result, bool = IsBaseOf<Object, T>::result >
-struct HandlerDecoder {
+struct HandlerDecoder final {
 	static Handler<T> exec(const Handler<Heap>& heap, Handler<chisa::donut::Object> obj)
 	{
 		return decode<Handler<T> >( heap, obj );
@@ -58,7 +58,7 @@ struct HandlerDecoder {
 };
 
 template <typename T>
-struct HandlerDecoder<T, true, false> {
+struct HandlerDecoder<T, true, false> final {
 	static Handler<T> exec(const Handler<Heap>& heap, Handler<chisa::donut::Object> obj)
 	{
 		return obj.cast<T>();
@@ -66,7 +66,7 @@ struct HandlerDecoder<T, true, false> {
 };
 
 template <typename T>
-struct HandlerDecoder<T, true, true> {
+struct HandlerDecoder<T, true, true> final {
 	static Handler<T> exec(const Handler<Heap>& heap, Handler<chisa::donut::Object> obj)
 	{
 		return obj;
@@ -76,7 +76,7 @@ struct HandlerDecoder<T, true, true> {
 //-----------------------------------------------------------------------------
 
 template <typename T>
-struct Decoder {
+struct Decoder final {
 	static T exec(const Handler<Heap>& heap, Handler<Object> obj)
 	{
 		return decode<T>(heap, obj);
@@ -84,7 +84,7 @@ struct Decoder {
 };
 
 template <typename T>
-struct Decoder<T*> {
+struct Decoder<T*> final {
 	static T* exec(const Handler<Heap>& heap, Handler<chisa::donut::Object> obj)
 	{
 		return PointerDecoder<T>::exec(heap, obj);
@@ -92,7 +92,7 @@ struct Decoder<T*> {
 };
 
 template <typename T>
-struct Decoder< Handler<T> > {
+struct Decoder< Handler<T> > final {
 	static Handler<T> exec(const Handler<Heap>& heap, Handler<Object> obj)
 	{
 		return HandlerDecoder<T>::exec(heap, obj);

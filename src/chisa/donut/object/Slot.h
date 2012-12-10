@@ -28,7 +28,7 @@ namespace donut {
 class Heap;
 class Object;
 
-class Slot {
+class Slot final {
 	STACK_OBJECT(Slot);
 private:
 	std::vector<std::pair<timestamp_t, Object*> > rev_;
