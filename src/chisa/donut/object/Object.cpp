@@ -95,33 +95,33 @@ bool Object::toBool(const Handler<Heap>& heap) const
 	}
 }
 
-bool Object::have(const Handler<Heap>& heap, const std::string& name) const
+bool Object::has(const Handler<Heap>& heap, const std::string& name) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
-		return this->haveImpl(heap, name);
+		return this->hasImpl(heap, name);
 	case Tag::Int:
-		return heap->intProto()->haveImpl(heap, name);
+		return heap->intProto()->hasImpl(heap, name);
 	case Tag::Bool:
-		return heap->boolProto()->haveImpl(heap, name);
+		return heap->boolProto()->hasImpl(heap, name);
 	case Tag::Null:
-		return heap->nullProto()->haveImpl(heap, name);
+		return heap->nullProto()->hasImpl(heap, name);
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
 }
 
-bool Object::haveOwn(const Handler<Heap>& heap, const std::string& name) const
+bool Object::hasOwn(const Handler<Heap>& heap, const std::string& name) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
-		return this->haveOwnImpl(heap, name);
+		return this->hasOwnImpl(heap, name);
 	case Tag::Int:
-		return heap->intProto()->haveOwnImpl(heap, name);
+		return heap->intProto()->hasOwnImpl(heap, name);
 	case Tag::Bool:
-		return heap->boolProto()->haveOwnImpl(heap, name);
+		return heap->boolProto()->hasOwnImpl(heap, name);
 	case Tag::Null:
-		return heap->nullProto()->haveOwnImpl(heap, name);
+		return heap->nullProto()->hasOwnImpl(heap, name);
 	default:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
 	}
@@ -196,14 +196,14 @@ Handler<Object> Object::get(const Handler<Heap>& heap, const int& idx) const
 	return this->get(heap, toName(idx));
 }
 
-bool Object::have(const Handler<Heap>& heap, const int& idx) const
+bool Object::has(const Handler<Heap>& heap, const int& idx) const
 {
-	return this->have(heap, toName(idx));
+	return this->has(heap, toName(idx));
 }
 
-bool Object::haveOwn(const Handler<Heap>& heap, const int& idx) const
+bool Object::hasOwn(const Handler<Heap>& heap, const int& idx) const
 {
-	return this->have(heap, toName(idx));
+	return this->has(heap, toName(idx));
 }
 
 }}

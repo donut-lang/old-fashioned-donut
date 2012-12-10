@@ -292,11 +292,11 @@ Handler<Object> Machine::run()
 			bool found = false;
 			Handler<Object> obj = this->scope();
 			while(!found){
-				if(obj->have(heap_, name)){
+				if(obj->has(heap_, name)){
 					this->pushStack( obj );
 					found = true;
 					break;
-				}else if( obj->have(heap_, "__scope__") ){
+				}else if( obj->has(heap_, "__scope__") ){
 					obj = obj->get(heap_, "__scope__");
 				}else{
 					break;

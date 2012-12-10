@@ -45,12 +45,12 @@ bool NativeClosureObject::toBoolImpl(const Handler<Heap>& heap) const
 	throw DonutException(__FILE__, __LINE__, "Failed to convert NativeClosureObject to bool.");
 }
 
-bool NativeClosureObject::haveImpl(const Handler<Heap>& heap, const std::string& name) const
+bool NativeClosureObject::hasImpl(const Handler<Heap>& heap, const std::string& name) const
 {
 	return false;
 }
 
-bool NativeClosureObject::haveOwnImpl(const Handler<Heap>& heap, const std::string& name) const
+bool NativeClosureObject::hasOwnImpl(const Handler<Heap>& heap, const std::string& name) const
 {
 	return false;
 }

@@ -37,7 +37,7 @@ TEST(DonutRunTest, AssignTest)
 TEST(DonutRunTest, ObjectTest)
 {
 	EXECUTE_SRC("{a=>1};");
-	ASSERT_TRUE(result->have(heap, "a"));
+	ASSERT_TRUE(result->has(heap, "a"));
 	ASSERT_TRUE(result->isObject());
 	ASSERT_EQ(1, result->get(heap, "a")->toInt(heap));
 }
@@ -45,15 +45,15 @@ TEST(DonutRunTest, ObjectTest)
 TEST(DonutRunTest, ArrayTest)
 {
 	EXECUTE_SRC("[2,3,1];");
-	ASSERT_TRUE(result->have(heap, "0"));
+	ASSERT_TRUE(result->has(heap, "0"));
 	ASSERT_EQ(2, result->get(heap, "0")->toInt(heap));
 	ASSERT_EQ(2, result->get(heap, 0)->toInt(heap));
 
-	ASSERT_TRUE(result->have(heap, "1"));
+	ASSERT_TRUE(result->has(heap, "1"));
 	ASSERT_EQ(3, result->get(heap, "1")->toInt(heap));
 	ASSERT_EQ(3, result->get(heap, 1)->toInt(heap));
 
-	ASSERT_TRUE(result->have(heap, "2"));
+	ASSERT_TRUE(result->has(heap, "2"));
 	ASSERT_EQ(1, result->get(heap, 2)->toInt(heap));
 }
 

@@ -213,7 +213,7 @@ void Heap::setGlobalObject( std::string const& name, Handler<Object> const& obj 
 
 bool Heap::hasGlobalObject( std::string const& name )
 {
-	return this->global()->haveOwn( self(), name );
+	return this->global()->hasOwn( self(), name );
 }
 Handler<Object> Heap::getGlobalObject( std::string const& name )
 {
