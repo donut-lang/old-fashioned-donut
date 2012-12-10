@@ -55,11 +55,11 @@ std::string formatv(const std::string& fmt, va_list args)
 	return buff;
 }
 
-#define TOSTR_DEF(type, fmtstr0, fmtstr8, fmtstr10, fmtstr16)\
+#define TOSTR_DEF(type, fmtstr8, fmtstr10, fmtstr16)\
 std::string toString(type const& val, int radix) {\
 	switch(radix){\
 	case 0:\
-		return util::format(fmtstr0, val);\
+		return util::format(fmtstr10, val);\
 	case 8:\
 		return util::format(fmtstr8, val);\
 	case 10:\
@@ -71,18 +71,18 @@ std::string toString(type const& val, int radix) {\
 	}\
 }
 
-TOSTR_DEF(int, "%d", "0%o", "%d", "0x%x");
-TOSTR_DEF(unsigned int, "%u", "0%o", "%u", "0x%x");
+TOSTR_DEF(int, "0%o", "%d", "0x%x");
+TOSTR_DEF(unsigned int, "0%o", "%u", "0x%x");
 // メモリモデルによってlong intの値は違う
 #if LONG_MAX > INT_MAX
-TOSTR_DEF(long int, "%" _64INT_FORMAT_ "d", "0%" _64INT_FORMAT_ "o", "%" _64INT_FORMAT_ "d", "0x%" _64INT_FORMAT_ "x");
-TOSTR_DEF(unsigned long int, "%" _64INT_FORMAT_ "u", "0%" _64INT_FORMAT_ "o", "%" _64INT_FORMAT_ "u", "0x%" _64INT_FORMAT_ "x");
+TOSTR_DEF(long int, "0%" _64INT_FORMAT_ "o", "%" _64INT_FORMAT_ "d", "0x%" _64INT_FORMAT_ "x");
+TOSTR_DEF(unsigned long int, "0%" _64INT_FORMAT_ "o", "%" _64INT_FORMAT_ "u", "0x%" _64INT_FORMAT_ "x");
 #else
-TOSTR_DEF(long int, "%d", "0%o", "%d", "0x%x");
-TOSTR_DEF(unsigned long int, "%u", "0%o", "%u", "0x%x");
+TOSTR_DEF(long int, "0%o", "%d", "0x%x");
+TOSTR_DEF(unsigned long int, "0%o", "%u", "0x%x");
 #endif
-TOSTR_DEF(long long int, "%" _64INT_FORMAT_ "d", "0%" _64INT_FORMAT_ "o", "%" _64INT_FORMAT_ "d", "0x%" _64INT_FORMAT_ "x");
-TOSTR_DEF(unsigned long long int, "%" _64INT_FORMAT_ "u", "0%" _64INT_FORMAT_ "o", "%" _64INT_FORMAT_ "u", "0x%" _64INT_FORMAT_ "x");
+TOSTR_DEF(long long int, "0%" _64INT_FORMAT_ "o", "%" _64INT_FORMAT_ "d", "0x%" _64INT_FORMAT_ "x");
+TOSTR_DEF(unsigned long long int, "0%" _64INT_FORMAT_ "o", "%" _64INT_FORMAT_ "u", "0x%" _64INT_FORMAT_ "x");
 
 #undef TOSTR_DEF
 
