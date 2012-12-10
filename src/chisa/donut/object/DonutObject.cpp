@@ -54,12 +54,12 @@ bool DonutObject::toBoolImpl(const Handler<Heap>& heap) const
 	throw DonutException(__FILE__, __LINE__, "Failed to convert to bool.");
 }
 
-bool DonutObject::haveImpl(const Handler<Heap>& heap, const std::string& name) const
+bool DonutObject::hasImpl(const Handler<Heap>& heap, const std::string& name) const
 {
-	return haveOwnImpl(heap, name) || (haveOwnImpl(heap, "__proto__") && getImpl(heap, "__proto__")->have(heap, name));
+	return hasOwnImpl(heap, name) || (hasOwnImpl(heap, "__proto__") && getImpl(heap, "__proto__")->has(heap, name));
 }
 
-bool DonutObject::haveOwnImpl(const Handler<Heap>& heap, const std::string& name) const
+bool DonutObject::hasOwnImpl(const Handler<Heap>& heap, const std::string& name) const
 {
 	auto it = this->slots_.find(name);
 	return it != this->slots_.end() && it->second.have();
@@ -84,7 +84,7 @@ Handler<Object> DonutObject::getImpl(const Handler<Heap>& heap, const std::strin
 	if(it != this->slots_.end()){
 		return Handler<Object>::__internal__fromRawPointerWithoutCheck(it->second.load());
 	}
-	if(this->haveOwnImpl(heap,"__proto__")){
+	if(this->hasOwnImpl(heap,"__proto__")){
 		return getImpl(heap,"__proto__")->get(heap, name);
 	}
 	{

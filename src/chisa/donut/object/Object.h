@@ -51,10 +51,10 @@ public: //すべてのオブジェクトに出来なければならないこと
 	int toInt(const Handler<Heap>& heap) const;
 	float toFloat(const Handler<Heap>& heap) const;
 	bool toBool(const Handler<Heap>& heap) const;
-	bool have(const Handler<Heap>& heap, const std::string& name) const;
-	bool have(const Handler<Heap>& heap, const int& idx) const;
-	bool haveOwn(const Handler<Heap>& heap, const std::string& name) const;
-	bool haveOwn(const Handler<Heap>& heap, const int& idx) const;
+	bool has(const Handler<Heap>& heap, const std::string& name) const;
+	bool has(const Handler<Heap>& heap, const int& idx) const;
+	bool hasOwn(const Handler<Heap>& heap, const std::string& name) const;
+	bool hasOwn(const Handler<Heap>& heap, const int& idx) const;
 	Handler<Object> set(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj);
 	Handler<Object> set(const Handler<Heap>& heap, const int& idx, Handler<Object> obj);
 	Handler<Object> get(const Handler<Heap>& heap, const std::string& name) const;
@@ -79,8 +79,8 @@ protected: /* 実装すべきもの */
 	virtual int toIntImpl(const Handler<Heap>& heap) const = 0;
 	virtual float toFloatImpl(const Handler<Heap>& heap) const = 0;
 	virtual bool toBoolImpl(const Handler<Heap>& heap) const = 0;
-	virtual bool haveImpl(const Handler<Heap>& heap, const std::string& name) const = 0;
-	virtual bool haveOwnImpl(const Handler<Heap>& heap, const std::string& name) const = 0;
+	virtual bool hasImpl(const Handler<Heap>& heap, const std::string& name) const = 0;
+	virtual bool hasOwnImpl(const Handler<Heap>& heap, const std::string& name) const = 0;
 	virtual Handler<Object> setImpl(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj) = 0;
 	virtual Handler<Object> getImpl(const Handler<Heap>& heap, const std::string& name) const = 0;
 	virtual void markImpl(const Handler<Heap>& heap, int color) = 0;
@@ -179,8 +179,8 @@ protected:
 	virtual int toIntImpl(const Handler<Heap>& heap) const override;
 	virtual float toFloatImpl(const Handler<Heap>& heap) const override;
 	virtual bool toBoolImpl(const Handler<Heap>& heap) const override;
-	virtual bool haveImpl(const Handler<Heap>& heap, const std::string& name) const override;
-	virtual bool haveOwnImpl(const Handler<Heap>& heap, const std::string& name) const override;
+	virtual bool hasImpl(const Handler<Heap>& heap, const std::string& name) const override;
+	virtual bool hasOwnImpl(const Handler<Heap>& heap, const std::string& name) const override;
 	virtual Handler<Object> setImpl(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj) override;
 	virtual Handler<Object> getImpl(const Handler<Heap>& heap, const std::string& name) const override;
 	virtual void markImpl(const Handler<Heap>& heap, int color) override;
@@ -219,8 +219,8 @@ protected:
 	virtual int toIntImpl(const Handler<Heap>& heap) const override;
 	virtual float toFloatImpl(const Handler<Heap>& heap) const override;
 	virtual bool toBoolImpl(const Handler<Heap>& heap) const override;
-	virtual bool haveImpl(const Handler<Heap>& heap, const std::string& name) const override;
-	virtual bool haveOwnImpl(const Handler<Heap>& heap, const std::string& name) const override;
+	virtual bool hasImpl(const Handler<Heap>& heap, const std::string& name) const override;
+	virtual bool hasOwnImpl(const Handler<Heap>& heap, const std::string& name) const override;
 	virtual Handler<Object> setImpl(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj) override;
 	virtual Handler<Object> getImpl(const Handler<Heap>& heap, const std::string& name) const override;
 	virtual void markImpl(const Handler<Heap>& heap, int color) override;
@@ -253,8 +253,8 @@ protected:
 	virtual int toIntImpl(const Handler<Heap>& heap) const override;
 	virtual float toFloatImpl(const Handler<Heap>& heap) const override;
 	virtual bool toBoolImpl(const Handler<Heap>& heap) const override;
-	virtual bool haveImpl(const Handler<Heap>& heap, const std::string& name) const override;
-	virtual bool haveOwnImpl(const Handler<Heap>& heap, const std::string& name) const override;
+	virtual bool hasImpl(const Handler<Heap>& heap, const std::string& name) const override;
+	virtual bool hasOwnImpl(const Handler<Heap>& heap, const std::string& name) const override;
 	virtual Handler<Object> setImpl(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj) override;
 	virtual Handler<Object> getImpl(const Handler<Heap>& heap, const std::string& name) const override;
 	virtual void markImpl(const Handler<Heap>& heap, int color) override;

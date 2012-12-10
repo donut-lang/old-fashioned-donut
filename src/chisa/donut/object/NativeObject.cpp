@@ -49,12 +49,12 @@ bool NativeObject::toBoolImpl(const Handler<Heap>& heap) const
 	throw DonutException(__FILE__, __LINE__, "Failed to NativeObject to bool.");
 }
 
-bool NativeObject::haveImpl(const Handler<Heap>& heap, const std::string& name) const
+bool NativeObject::hasImpl(const Handler<Heap>& heap, const std::string& name) const
 {
-	return this->prototype_->have(heap, name);
+	return this->prototype_->has(heap, name);
 }
 
-bool NativeObject::haveOwnImpl(const Handler<Heap>& heap, const std::string& name) const
+bool NativeObject::hasOwnImpl(const Handler<Heap>& heap, const std::string& name) const
 {
 	return false;
 }

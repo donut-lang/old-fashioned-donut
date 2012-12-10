@@ -38,7 +38,7 @@ Handler<Object> callWithBind(const Handler<Heap>& heap, const Handler<Object>& s
 template <size_t idx, typename R, typename T, typename U, typename... Args>
 Handler<Object> callWithBind(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& args, std::function<R(T self, U val, Args... args)> const& funct)
 {
-	if( !args->have(heap, idx) ) {
+	if( !args->has(heap, idx) ) {
 		constexpr int _idx = idx+1;
 		throw DonutException(__FILE__, __LINE__, "oops. args size mismatched. need more than %d arguments.", _idx);
 	}
