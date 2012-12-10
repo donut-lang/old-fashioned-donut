@@ -119,6 +119,46 @@ TEST(SaveTest, ClosureSeekAndSaveLoadTest)
 		}
 	}
 }
+
+TEST(SaveTest, SaveOnInterruptTest)
+{
+	std::string src;
+	{
+		INIT_DONUT;
+		machine->start(donut->parse("Global.x = {}; x.val = 10; x.val=interrupt \"str\"; x.val;"));
+		ASSERT_TRUE(donut->queryMachine()->isInterrupted());
+		tinyxml2::XMLDocument doc;
+		util::XValue v = donut->save().as<util::XObject>();
+		doc.InsertEndChild(v.toXML(&doc));
+		tinyxml2::XMLPrinter printer;
+		doc.Print(&printer);
+		src = printer.CStr();
+	}
+	//std::cout << src << std::endl;
+	{
+		Handler<Donut> donut(new Donut(log_trace));
+		tinyxml2::XMLDocument doc;
+		doc.Parse(src.c_str());
+		util::XValue v = util::XValue::fromXML(doc.RootElement());
+		donut->load(v);
+		ASSERT_TRUE(donut->queryMachine()->isInterrupted());
+		{
+			Handler<Object> obj = donut->heap()->getGlobalObject("x")->get(donut->heap(),"val");
+			ASSERT_TRUE(obj->isInt());
+			ASSERT_EQ(10, obj->toInt(donut->heap()));
+		}
+		{
+			Handler<Object> obj = donut->queryMachine()->startContinue(donut->heap()->createFloatObject(10.123));
+			ASSERT_TRUE(obj->isObject());
+			ASSERT_FLOAT_EQ(10.123, obj->toFloat(donut->heap()));
+		}
+		{
+			Handler<Object> obj = donut->heap()->getGlobalObject("x")->get(donut->heap(),"val");
+			ASSERT_TRUE(obj->isObject());
+			ASSERT_FLOAT_EQ(10.123, obj->toFloat(donut->heap()));
+		}
+	}
+}
 }}
 
 

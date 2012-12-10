@@ -43,6 +43,16 @@ TEST(GlobalTest, GlobalSetTest)
 	ASSERT_EQ(1, result->toInt(heap) );
 }
 
+TEST(GlobalTest, GlobalScopeTest)
+{
+	//グローバルに設定した値は、Globalの修飾なしで見えなければならない
+	INIT_DONUT
+	Handler<Object> result;
+	ASSERT_NO_THROW( result = machine->start( donut->parse("Global.x=1; x;", "<MEM>", 0) ) );
+	ASSERT_TRUE( result->isInt() );
+	ASSERT_EQ(1, result->toInt(heap) );
+}
+
 TEST(GlobalTest, GlobalRegisterTest)
 {
 	INIT_DONUT
