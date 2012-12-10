@@ -32,7 +32,7 @@ TEST(SeekTest, TimeShouldAdvanceTest)
 	{
 		result = machine->start( donut->parse("Global.test = 1;", "<MEM>", 0) );
 		ASSERT_EQ(1, result->toInt(heap));
-		ASSERT_EQ(1, heap->loadGlobalObject("test")->toInt(heap));
+		ASSERT_EQ(1, heap->getGlobalObject("test")->toInt(heap));
 	}
 	ASSERT_TRUE( donut->canBack() );
 	ASSERT_FALSE( donut->canAdvance() );
@@ -40,7 +40,7 @@ TEST(SeekTest, TimeShouldAdvanceTest)
 	{
 		result = machine->start( donut->parse("Global.test = 2;", "<MEM>", 0) );
 		ASSERT_EQ(2, result->toInt(heap));
-		ASSERT_EQ(2, heap->loadGlobalObject("test")->toInt(heap));
+		ASSERT_EQ(2, heap->getGlobalObject("test")->toInt(heap));
 	}
 	unsigned int const time3 = donut->nowTime();
 
@@ -59,13 +59,13 @@ TEST(SeekTest, SeekBefore)
 	{
 		result = machine->start( donut->parse("Global.test = 1;", "<MEM>", 0) );
 		ASSERT_EQ(1, result->toInt(heap));
-		ASSERT_EQ(1, heap->loadGlobalObject("test")->toInt(heap));
+		ASSERT_EQ(1, heap->getGlobalObject("test")->toInt(heap));
 	}
 	unsigned int const time2 = donut->nowTime();
 	{
 		result = machine->start( donut->parse("Global.test = 2;", "<MEM>", 0) );
 		ASSERT_EQ(2, result->toInt(heap));
-		ASSERT_EQ(2, heap->loadGlobalObject("test")->toInt(heap));
+		ASSERT_EQ(2, heap->getGlobalObject("test")->toInt(heap));
 	}
 	unsigned int const time3 = donut->nowTime();
 
@@ -86,7 +86,7 @@ TEST(SeekTest, SeekBefore)
 		ASSERT_TRUE( donut->canBack() );
 		ASSERT_TRUE( donut->canAdvance() );
 		ASSERT_TRUE( heap->hasGlobalObject("test") );
-		ASSERT_EQ(1, heap->loadGlobalObject("test")->toInt(heap) );
+		ASSERT_EQ(1, heap->getGlobalObject("test")->toInt(heap) );
 		ASSERT_TRUE( donut->canBack() );
 		ASSERT_TRUE( donut->canAdvance() );
 	}
@@ -97,7 +97,7 @@ TEST(SeekTest, SeekBefore)
 		ASSERT_FALSE( donut->canAdvance() );
 
 		ASSERT_TRUE( heap->hasGlobalObject("test") );
-		ASSERT_EQ(2, heap->loadGlobalObject("test")->toInt(heap) );
+		ASSERT_EQ(2, heap->getGlobalObject("test")->toInt(heap) );
 	}
 }
 
@@ -111,7 +111,7 @@ TEST(SeekTest, SeekAndExecute)
 	{
 		result = machine->start( donut->parse("Global.test = 1;", "<MEM>", 0) );
 		ASSERT_EQ(1, result->toInt(heap));
-		ASSERT_EQ(1, heap->loadGlobalObject("test")->toInt(heap));
+		ASSERT_EQ(1, heap->getGlobalObject("test")->toInt(heap));
 	}
 	ASSERT_TRUE( donut->canBack() );
 	ASSERT_FALSE( donut->canAdvance() );
@@ -119,7 +119,7 @@ TEST(SeekTest, SeekAndExecute)
 	{
 		result = machine->start( donut->parse("Global.test = 2;", "<MEM>", 0) );
 		ASSERT_EQ(2, result->toInt(heap));
-		ASSERT_EQ(2, heap->loadGlobalObject("test")->toInt(heap));
+		ASSERT_EQ(2, heap->getGlobalObject("test")->toInt(heap));
 	}
 	unsigned int const time3 = donut->nowTime();
 
@@ -134,7 +134,7 @@ TEST(SeekTest, SeekAndExecute)
 		ASSERT_TRUE( donut->canBack() );
 		ASSERT_TRUE( donut->canAdvance() );
 		ASSERT_TRUE( heap->hasGlobalObject("test") );
-		ASSERT_EQ(1, heap->loadGlobalObject("test")->toInt(heap) );
+		ASSERT_EQ(1, heap->getGlobalObject("test")->toInt(heap) );
 		ASSERT_TRUE( donut->canBack() );
 		ASSERT_TRUE( donut->canAdvance() );
 
@@ -142,7 +142,7 @@ TEST(SeekTest, SeekAndExecute)
 		ASSERT_TRUE( donut->canBack() );
 		ASSERT_FALSE( donut->canAdvance() );
 		ASSERT_EQ(1, result->toInt(heap));
-		ASSERT_EQ(1, heap->loadGlobalObject("test")->toInt(heap));
+		ASSERT_EQ(1, heap->getGlobalObject("test")->toInt(heap));
 	}
 }
 
@@ -155,19 +155,19 @@ TEST(SeekTest, SeekWithMultMachineTest)
 	{
 		result = machine->start( donut->parse("Global.test = 1;", "<MEM>", 0) );
 		ASSERT_EQ(1, result->toInt(heap));
-		ASSERT_EQ(1, heap->loadGlobalObject("test")->toInt(heap));
+		ASSERT_EQ(1, heap->getGlobalObject("test")->toInt(heap));
 	}
 	unsigned int const time2 = donut->nowTime();
 	{
 		result = emachine->start( donut->parse("Global.test2 = 10;", "<MEM>", 0) );
 		ASSERT_EQ(10, result->toInt(heap));
-		ASSERT_EQ(10, heap->loadGlobalObject("test2")->toInt(heap));
+		ASSERT_EQ(10, heap->getGlobalObject("test2")->toInt(heap));
 	}
 	unsigned int const time3 = donut->nowTime();
 	{
 		result = machine->start( donut->parse("Global.test = 2;", "<MEM>", 0) );
 		ASSERT_EQ(2, result->toInt(heap));
-		ASSERT_EQ(2, heap->loadGlobalObject("test")->toInt(heap));
+		ASSERT_EQ(2, heap->getGlobalObject("test")->toInt(heap));
 	}
 	unsigned int const time4 = donut->nowTime();
 
@@ -184,21 +184,21 @@ TEST(SeekTest, SeekWithMultMachineTest)
 		donut->seek( time2 );
 		ASSERT_TRUE( heap->hasGlobalObject("test") );
 		ASSERT_FALSE( heap->hasGlobalObject("test2") );
-		ASSERT_EQ(1, heap->loadGlobalObject("test")->toInt(heap) );
+		ASSERT_EQ(1, heap->getGlobalObject("test")->toInt(heap) );
 	}
 	{
 		donut->seek( time3 );
 		ASSERT_TRUE( heap->hasGlobalObject("test") );
 		ASSERT_TRUE( heap->hasGlobalObject("test2") );
-		ASSERT_EQ( 1, heap->loadGlobalObject("test")->toInt(heap) );
-		ASSERT_EQ(10, heap->loadGlobalObject("test2")->toInt(heap) );
+		ASSERT_EQ( 1, heap->getGlobalObject("test")->toInt(heap) );
+		ASSERT_EQ(10, heap->getGlobalObject("test2")->toInt(heap) );
 	}
 	{
 		donut->seek( time4 );
 		ASSERT_TRUE( heap->hasGlobalObject("test") );
 		ASSERT_TRUE( heap->hasGlobalObject("test2") );
-		ASSERT_EQ( 2, heap->loadGlobalObject("test")->toInt(heap) );
-		ASSERT_EQ(10, heap->loadGlobalObject("test2")->toInt(heap) );
+		ASSERT_EQ( 2, heap->getGlobalObject("test")->toInt(heap) );
+		ASSERT_EQ(10, heap->getGlobalObject("test2")->toInt(heap) );
 	}
 }
 
@@ -211,7 +211,7 @@ TEST(SeekTest, SeekWithMultMachineAndInterruptTest)
 	{
 		result = machine->start( donut->parse("Global.test = 1;", "<MEM>", 0) );
 		ASSERT_EQ(1, result->toInt(heap));
-		ASSERT_EQ(1, heap->loadGlobalObject("test")->toInt(heap));
+		ASSERT_EQ(1, heap->getGlobalObject("test")->toInt(heap));
 	}
 	unsigned int const time2 = donut->nowTime();
 	{
@@ -224,13 +224,13 @@ TEST(SeekTest, SeekWithMultMachineAndInterruptTest)
 	{
 		result = machine->start( donut->parse("Global.test = 2;", "<MEM>", 0) );
 		ASSERT_EQ(2, result->toInt(heap));
-		ASSERT_EQ(2, heap->loadGlobalObject("test")->toInt(heap));
+		ASSERT_EQ(2, heap->getGlobalObject("test")->toInt(heap));
 	}
 	unsigned int const time4 = donut->nowTime();
 	{
 		result = emachine->startContinue( heap->createInt(20) );
 		ASSERT_EQ(20, result->toInt(heap));
-		ASSERT_EQ(20, heap->loadGlobalObject("test2")->toInt(heap));
+		ASSERT_EQ(20, heap->getGlobalObject("test2")->toInt(heap));
 		ASSERT_FALSE( emachine->isInterrupted() );
 	}
 	unsigned int const time5 = donut->nowTime();
@@ -251,7 +251,7 @@ TEST(SeekTest, SeekWithMultMachineAndInterruptTest)
 		donut->seek( time2 );
 		ASSERT_TRUE( heap->hasGlobalObject("test") );
 		ASSERT_FALSE( heap->hasGlobalObject("test2") );
-		ASSERT_EQ(1, heap->loadGlobalObject("test")->toInt(heap) );
+		ASSERT_EQ(1, heap->getGlobalObject("test")->toInt(heap) );
 		ASSERT_FALSE(  machine->isInterrupted() );
 		ASSERT_FALSE( emachine->isInterrupted() );
 	}
@@ -259,7 +259,7 @@ TEST(SeekTest, SeekWithMultMachineAndInterruptTest)
 		donut->seek( time3 );
 		ASSERT_TRUE( heap->hasGlobalObject("test") );
 		ASSERT_FALSE( heap->hasGlobalObject("test2") );
-		ASSERT_EQ( 1, heap->loadGlobalObject("test")->toInt(heap) );
+		ASSERT_EQ( 1, heap->getGlobalObject("test")->toInt(heap) );
 		ASSERT_FALSE( machine->isInterrupted() );
 		ASSERT_TRUE( emachine->isInterrupted() );
 	}
@@ -267,7 +267,7 @@ TEST(SeekTest, SeekWithMultMachineAndInterruptTest)
 		donut->seek( time4 );
 		ASSERT_TRUE( heap->hasGlobalObject("test") );
 		ASSERT_FALSE( heap->hasGlobalObject("test2") );
-		ASSERT_EQ( 2, heap->loadGlobalObject("test")->toInt(heap) );
+		ASSERT_EQ( 2, heap->getGlobalObject("test")->toInt(heap) );
 		ASSERT_FALSE( machine->isInterrupted() );
 		ASSERT_TRUE( emachine->isInterrupted() );
 	}
@@ -275,8 +275,8 @@ TEST(SeekTest, SeekWithMultMachineAndInterruptTest)
 		donut->seek( time5 );
 		ASSERT_TRUE( heap->hasGlobalObject("test") );
 		ASSERT_TRUE( heap->hasGlobalObject("test2") );
-		ASSERT_EQ( 2, heap->loadGlobalObject("test")->toInt(heap) );
-		ASSERT_EQ(20, heap->loadGlobalObject("test2")->toInt(heap) );
+		ASSERT_EQ( 2, heap->getGlobalObject("test")->toInt(heap) );
+		ASSERT_EQ(20, heap->getGlobalObject("test2")->toInt(heap) );
 		ASSERT_FALSE(  machine->isInterrupted() );
 		ASSERT_FALSE( emachine->isInterrupted() );
 	}
@@ -302,7 +302,7 @@ TEST(SeekTest, InterruptTest)
 	{
 		result = machine->startContinue( heap->createNull() );
 		ASSERT_TRUE( result->isNull() );
-		ASSERT_TRUE( heap->loadGlobalObject("test")->isNull() );
+		ASSERT_TRUE( heap->getGlobalObject("test")->isNull() );
 		ASSERT_FALSE( machine->isInterrupted() );
 	}
 	ASSERT_TRUE( donut->canBack() );
@@ -332,7 +332,7 @@ TEST(SeekTest, InterruptTest)
 	{
 		donut->seek( time3 );
 		ASSERT_TRUE( heap->hasGlobalObject("test") );
-		ASSERT_EQ( 1, heap->loadGlobalObject("test")->isNull() );
+		ASSERT_EQ( 1, heap->getGlobalObject("test")->isNull() );
 		ASSERT_FALSE( machine->isInterrupted() );
 		ASSERT_TRUE( donut->canBack() );
 		ASSERT_FALSE( donut->canAdvance() );
@@ -343,7 +343,7 @@ TEST(SeekTest, InterruptTest)
 		result = machine->startContinue( heap->createBool( true ) );
 		ASSERT_TRUE( heap->hasGlobalObject("test") );
 		ASSERT_TRUE( result->toBool( heap ) );
-		ASSERT_TRUE( heap->loadGlobalObject("test")->toBool(heap) );
+		ASSERT_TRUE( heap->getGlobalObject("test")->toBool(heap) );
 		ASSERT_FALSE( machine->isInterrupted() );
 
 		ASSERT_TRUE( donut->canBack() );
@@ -360,7 +360,7 @@ TEST(SeekTest, SeekWithMultMachineAndInterruptAndExecuteTest)
 	{
 		result = machine->start( donut->parse("Global.test = 1;", "<MEM>", 0) );
 		ASSERT_EQ(1, result->toInt(heap));
-		ASSERT_EQ(1, heap->loadGlobalObject("test")->toInt(heap));
+		ASSERT_EQ(1, heap->getGlobalObject("test")->toInt(heap));
 	}
 	unsigned int const time2 = donut->nowTime();
 	{
@@ -373,13 +373,13 @@ TEST(SeekTest, SeekWithMultMachineAndInterruptAndExecuteTest)
 	{
 		result = machine->start( donut->parse("Global.test = 2;", "<MEM>", 0) );
 		ASSERT_EQ(2, result->toInt(heap));
-		ASSERT_EQ(2, heap->loadGlobalObject("test")->toInt(heap));
+		ASSERT_EQ(2, heap->getGlobalObject("test")->toInt(heap));
 	}
 	unsigned int const time4 = donut->nowTime();
 	{
 		result = emachine->startContinue( heap->createInt(20) );
 		ASSERT_EQ(20, result->toInt(heap));
-		ASSERT_EQ(20, heap->loadGlobalObject("test2")->toInt(heap));
+		ASSERT_EQ(20, heap->getGlobalObject("test2")->toInt(heap));
 		ASSERT_FALSE( emachine->isInterrupted() );
 	}
 	unsigned int const time5 = donut->nowTime();
@@ -400,7 +400,7 @@ TEST(SeekTest, SeekWithMultMachineAndInterruptAndExecuteTest)
 		donut->seek( time2 );
 		ASSERT_TRUE( heap->hasGlobalObject("test") );
 		ASSERT_FALSE( heap->hasGlobalObject("test2") );
-		ASSERT_EQ(1, heap->loadGlobalObject("test")->toInt(heap) );
+		ASSERT_EQ(1, heap->getGlobalObject("test")->toInt(heap) );
 		ASSERT_FALSE(  machine->isInterrupted() );
 		ASSERT_FALSE( emachine->isInterrupted() );
 	}
@@ -408,7 +408,7 @@ TEST(SeekTest, SeekWithMultMachineAndInterruptAndExecuteTest)
 		donut->seek( time3 );
 		ASSERT_TRUE( heap->hasGlobalObject("test") );
 		ASSERT_FALSE( heap->hasGlobalObject("test2") );
-		ASSERT_EQ( 1, heap->loadGlobalObject("test")->toInt(heap) );
+		ASSERT_EQ( 1, heap->getGlobalObject("test")->toInt(heap) );
 		ASSERT_FALSE( machine->isInterrupted() );
 		ASSERT_TRUE( emachine->isInterrupted() );
 	}
@@ -417,7 +417,7 @@ TEST(SeekTest, SeekWithMultMachineAndInterruptAndExecuteTest)
 		result = emachine->startContinue( heap->createInt(30) );
 		ASSERT_EQ(30, result->toInt(heap));
 		ASSERT_TRUE( heap->hasGlobalObject("test2") );
-		ASSERT_EQ(30, heap->loadGlobalObject("test2")->toInt(heap));
+		ASSERT_EQ(30, heap->getGlobalObject("test2")->toInt(heap));
 		ASSERT_FALSE( emachine->isInterrupted() );
 	}
 	unsigned int const time42 = donut->nowTime();
@@ -425,7 +425,7 @@ TEST(SeekTest, SeekWithMultMachineAndInterruptAndExecuteTest)
 	ASSERT_TRUE( heap->hasGlobalObject("test") );
 	ASSERT_TRUE( heap->hasGlobalObject("test2") );
 	//3-4間の操作が取り消されている事を確認
-	ASSERT_EQ( 1, heap->loadGlobalObject("test")->toInt(heap) );
+	ASSERT_EQ( 1, heap->getGlobalObject("test")->toInt(heap) );
 
 }
 

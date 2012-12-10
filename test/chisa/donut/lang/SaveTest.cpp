@@ -132,7 +132,7 @@ TEST(SaveTest, ClosureSeekAndSaveLoadTest)
 		donut->load(v);
 		ASSERT_EQ(tm1, donut->nowTime());
 		{
-			Handler<Object> obj = donut->heap()->loadGlobalObject("val")->get(donut->heap(),"x");
+			Handler<Object> obj = donut->heap()->getGlobalObject("val")->get(donut->heap(),"x");
 			ASSERT_TRUE(obj->isObject());
 		}
 		donut->seek(tm2);
