@@ -41,8 +41,6 @@ public:
 	Clock( Donut* const donut );
 	virtual ~Clock() noexcept = default;
 	bool onFree() noexcept { return false; };
-public:
-	inline unsigned int now() const noexcept { return this->now_; };
 public: /* 処理系の保存・復帰をします。 */
 	void bootstrap();
 	util::XValue save();
@@ -52,7 +50,8 @@ public: /* time functions */
 	void seek( unsigned int const& time );
 	void discardFuture();
 	void discardHistory();
-public:
+public: /* 各種Getter */
+	inline unsigned int now() const noexcept { return this->now_; };
 	inline unsigned int lastTime() const noexcept { return this->last_; };
 	inline unsigned int firstTime() const noexcept { return this->first_; };
 	inline bool canBack() const noexcept { return this->first_ < this->now_; };

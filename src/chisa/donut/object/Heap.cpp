@@ -47,7 +47,7 @@ bool Heap::onFree() noexcept
 	return false;
 }
 
-Handler<HeapObjectProvider> Heap::getHeapProvider( const std::string& name ) const
+Handler<HeapObjectProvider> Heap::findHeapProvider( const std::string& name ) const
 {
 	auto it = this->providers_.find(name);
 	if(it != this->providers_.end()){
@@ -57,9 +57,9 @@ Handler<HeapObjectProvider> Heap::getHeapProvider( const std::string& name ) con
 	return Handler<HeapObjectProvider>();
 }
 
-Handler<Provider> Heap::getProvider( const std::string& name ) const
+Handler<Provider> Heap::findProvider( const std::string& name ) const
 {
-	auto it = getHeapProvider(name);
+	auto it = findHeapProvider(name);
 	if(it){
 		return it;
 	}
@@ -280,7 +280,7 @@ void Heap::load(util::XValue const& data)
 			std::string const provider = obj->get<XString>("provider");
 			objectid_t id = obj->get<objectid_t>("id");
 			//中身
-			HeapObject* robj ( this->getHeapProvider(provider)->create() );
+			HeapObject* robj ( this->findHeapProvider(provider)->create() );
 			robj->id(id);
 			this->objectPool_.push_back( robj );
 		}
@@ -377,7 +377,7 @@ util::XValue Heap::save()
 			Handler<XObject> xobj(new XObject);
 			xobj->set("provider", obj->providerName().c_str());
 			xobj->set("id", obj->id());
-			Handler<Provider> provider ( this->getHeapProvider(obj->providerName()) );
+			Handler<Provider> provider ( this->findHeapProvider(obj->providerName()) );
 			if(!provider){
 				throw DonutException(__FILE__, __LINE__, "Provider %s not found.", obj->providerName().c_str());
 			}

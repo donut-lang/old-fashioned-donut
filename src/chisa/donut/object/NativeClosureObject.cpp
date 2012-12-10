@@ -121,7 +121,7 @@ util::XValue PureNativeClosureObject::saveImpl( Handler<Heap> const& heap )
 
 void PureNativeClosureObject::loadImpl( Handler<Heap> const& heap, util::XValue const& data )
 {
-	this->func_ = heap->getProvider(this->objectProviderName())->findPureNativeClosureEntry(this->closureName());
+	this->func_ = heap->findProvider(this->objectProviderName())->findPureNativeClosureEntry(this->closureName());
 }
 
 }}
