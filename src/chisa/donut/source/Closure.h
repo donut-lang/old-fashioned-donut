@@ -25,7 +25,7 @@
 namespace chisa {
 namespace donut {
 
-class Closure : public HandlerBody<Closure>{
+class Closure final : public HandlerBody<Closure>{
 	const std::vector<std::string> arglist_;
 	const std::vector<donut::Instruction> instlist_;
 private:

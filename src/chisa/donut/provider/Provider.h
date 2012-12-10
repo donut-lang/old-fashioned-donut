@@ -88,7 +88,7 @@ private:
 };
 
 //---------------------------------------------------------------------------------------------------------------------
-class IntProvider : public Provider {
+class IntProvider final : public Provider {
 public:
 	IntProvider(const Handler<Heap>& heap);
 	virtual ~IntProvider() noexcept = default;
@@ -108,7 +108,7 @@ public:
 	Handler<Object> create( const int& val );
 };
 
-class BoolProvider : public Provider {
+class BoolProvider final : public Provider {
 public:
 	BoolProvider(const Handler<Heap>& heap);
 	virtual ~BoolProvider() noexcept = default;
@@ -128,7 +128,7 @@ public:
 	Handler<Object> create( const bool& val );
 };
 
-class NullProvider : public Provider {
+class NullProvider final : public Provider {
 public:
 	NullProvider(const Handler<Heap>& heap);
 	virtual ~NullProvider() noexcept = default;
@@ -148,14 +148,14 @@ public:
 //---------------------------------------------------------------------------------------------------------------------
 
 class StringObject;
-class StringProvider : public HeapObjectProviderImpl<StringObject> {
+class StringProvider final : public HeapObjectProviderImpl<StringObject> {
 public:
 	StringProvider(const Handler<Heap>& heap);
 	virtual ~StringProvider() noexcept = default;
 };
 
 class FloatObject;
-class FloatProvider : public HeapObjectProviderImpl<FloatObject> {
+class FloatProvider final : public HeapObjectProviderImpl<FloatObject> {
 public:
 	FloatProvider(const Handler<Heap>& heap);
 	virtual ~FloatProvider() noexcept = default;
@@ -164,13 +164,13 @@ public:
 
 class DonutObject;
 class DonutClosureObject;
-class DonutObjectProvider : public HeapObjectProviderImpl<DonutObject> {
+class DonutObjectProvider final : public HeapObjectProviderImpl<DonutObject> {
 public:
 	DonutObjectProvider( const Handler<Heap>& heap )
 	:HeapObjectProviderImpl<DonutObject>(heap, "DonutObject"){};
 	virtual ~DonutObjectProvider() noexcept = default;
 };
-class DonutClosureObjectProvider : public HeapObjectProviderImpl<DonutClosureObject> {
+class DonutClosureObjectProvider final : public HeapObjectProviderImpl<DonutClosureObject> {
 public:
 	DonutClosureObjectProvider( const Handler<Heap>& heap )
 	:HeapObjectProviderImpl<DonutClosureObject>(heap,"DonutClosureObject"){};
@@ -180,7 +180,7 @@ public:
 //---------------------------------------------------------------------------------------------------------------------
 
 class PureNativeClosureObject;
-class PureNativeObjectProvider : public HeapObjectProviderImpl<PureNativeClosureObject> {
+class PureNativeObjectProvider final : public HeapObjectProviderImpl<PureNativeClosureObject> {
 public:
 	PureNativeObjectProvider( const Handler<Heap>& heap )
 	:HeapObjectProviderImpl<PureNativeClosureObject>(heap, "PureNativeClosureObject"){}

@@ -29,7 +29,7 @@ namespace chisa {
 namespace donut {
 
 template <typename T>
-class ConstTable {
+class ConstTable final {
 private:
 	std::vector<T> table_;
 	ConstTable(ConstTable const& other) = delete;
@@ -92,7 +92,7 @@ template<> util::XValue ConstTable<Handler<Closure> >::save();
 template<> bool ConstTable<Handler<Closure> >::operator==( ConstTable<Handler<Closure> > const& other ) const noexcept;
 
 class Heap;
-class Source : public HandlerBody<Source> {
+class Source final : public HandlerBody<Source> {
 private:
 	int id_;
 	HandlerW<Heap> heap_;

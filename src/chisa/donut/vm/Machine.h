@@ -30,7 +30,7 @@ typedef unsigned int pc_t;
 /**
  * クロージャの実行状態
  */
-struct Callchain {
+struct Callchain final {
 	pc_t pc_; // Program counter
 	unsigned int stackBase_;
 	Handler<Object> self_; //このクロージャの対象self
@@ -48,7 +48,7 @@ public:
  * 機械の実行状態。
  * 命令実行とは、このコンテキストの状態が変化していくこと
  */
-struct Context {
+struct Context final {
 	unsigned int time_;
 	std::vector<Handler<Object> > stack_;
 	std::vector<Handler<Object> > local_;
@@ -67,7 +67,7 @@ public:
 	};
 };
 
-class Machine : public HandlerBody<Machine> {
+class Machine final : public HandlerBody<Machine> {
 	DEFINE_MEMBER_REF(private, logging::Logger, log);
 private: /* 何があっても不変なもの。*/
 	const Handler<Clock>& clock_;

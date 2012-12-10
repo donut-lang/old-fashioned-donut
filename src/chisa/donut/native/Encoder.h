@@ -32,14 +32,14 @@ Handler<Object> encode(const Handler<Heap>& heap, T obj);
 //-----------------------------------------------------------------------------
 
 template <typename T, bool = IsBaseOf<T, Object>::result >
-struct PointerEncoder {
+struct PointerEncoder final {
 	static Handler<Object> exec(const Handler<Heap>& heap, T* obj) {
 		return encode<T*>( heap, obj );
 	}
 };
 
 template <typename T>
-struct PointerEncoder<T, true> {
+struct PointerEncoder<T, true> final {
 	static Handler<Object> exec(const Handler<Heap>& heap, T* obj)
 	{
 		return Handler<Object>::__internal__fromRawPointerWithoutCheck( obj );
@@ -49,7 +49,7 @@ struct PointerEncoder<T, true> {
 //-----------------------------------------------------------------------------
 
 template <typename T, bool = IsBaseOf<T, Object>::result >
-struct HandlerEncoder {
+struct HandlerEncoder final {
 	static Handler<Object> exec(const Handler<Heap>& heap, Handler<T> obj)
 	{
 		return encode<Handler<T> >( heap, obj );
@@ -57,7 +57,7 @@ struct HandlerEncoder {
 };
 
 template <typename T>
-struct HandlerEncoder<T, true> {
+struct HandlerEncoder<T, true> final {
 	static Handler<Object> exec(const Handler<Heap>& heap, Handler<T> obj)
 	{
 		return obj;
@@ -67,14 +67,14 @@ struct HandlerEncoder<T, true> {
 //-----------------------------------------------------------------------------
 
 template <typename T>
-struct Encoder{
+struct Encoder final{
 	static Handler<Object> exec(const Handler<Heap>& heap, T obj) {
 		return encode<T>(heap, obj);
 	}
 };
 
 template <typename T>
-struct Encoder<T*> {
+struct Encoder<T*> final {
 	static Handler<Object> exec(const Handler<Heap>& heap, T* obj)
 	{
 		return PointerEncoder<T>::exec(heap, obj);
@@ -82,7 +82,7 @@ struct Encoder<T*> {
 };
 
 template <typename T>
-struct Encoder< Handler<T> > {
+struct Encoder< Handler<T> > final {
 	static Handler<Object> exec(const Handler<Heap>& heap, Handler<T> obj)
 	{
 		return HandlerEncoder<T>::exec( heap, obj );

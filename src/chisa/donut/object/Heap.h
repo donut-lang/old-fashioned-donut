@@ -34,7 +34,7 @@
 namespace chisa {
 namespace donut {
 
-class Heap : public HandlerBody<Heap> {
+class Heap final : public HandlerBody<Heap> {
 	DEFINE_MEMBER_REF(public, logging::Logger, log)
 private:
 	Handler<Clock> clock_;

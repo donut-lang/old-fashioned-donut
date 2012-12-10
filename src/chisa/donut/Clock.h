@@ -28,7 +28,7 @@ namespace donut {
 
 class Donut;
 
-class Clock : public HandlerBody<Clock> {
+class Clock final : public HandlerBody<Clock> {
 	DEFINE_MEMBER_REF(private, logging::Logger, log)
 private:
 	std::vector<unsigned int> clockStack_;

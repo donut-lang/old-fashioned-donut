@@ -23,7 +23,7 @@
 
 namespace chisa {
 namespace donut {
-class DonutClosureObject : public DonutObject {
+class DonutClosureObject final : public DonutObject {
 private:
 	Handler<Source> const src_;
 	unsigned int const index_;
@@ -37,8 +37,8 @@ public:
 	inline Handler<Closure> const& closureCode() const { return this->asm_; };
 public:
 	void bootstrap(Handler<Heap> const& heap, Handler<Source> const& src, unsigned int const& closureIndex, const Handler<Object>& scope);
-	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override;
-	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override;
+	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override final;
+	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override final;
 };
 
 }}

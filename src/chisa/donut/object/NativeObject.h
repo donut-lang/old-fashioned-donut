@@ -24,7 +24,7 @@
 namespace chisa {
 namespace donut {
 
-class StringObject: public NativeObject {
+class StringObject final: public NativeObject {
 private:
 	const std::string str_;
 public:
@@ -42,7 +42,7 @@ public:
 	void bootstrap( Handler<Heap> const& heap, std::string const& val );
 };
 
-class FloatObject: public NativeObject {
+class FloatObject final: public NativeObject {
 private:
 	const float value_;
 public:
@@ -61,7 +61,7 @@ public:
 };
 
 
-class PureNativeClosureObject : public NativeClosureObject {
+class PureNativeClosureObject final : public NativeClosureObject {
 public:
 	typedef std::function<Handler<Object>(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& arg)> Signature;
 private:
