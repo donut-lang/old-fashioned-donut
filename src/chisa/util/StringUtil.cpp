@@ -74,14 +74,12 @@ std::string toString(type const& val, int radix) {\
 TOSTR_DEF(int, "%d", "0%o", "%d", "0x%x");
 TOSTR_DEF(unsigned int, "%u", "0%o", "%u", "0x%x");
 // メモリモデルによってlong intの値は違う
-#if ULONG_MAX == UINT64_MAX
+#if LONG_MAX > INT_MAX
 TOSTR_DEF(long int, "%" _64INT_FORMAT_ "d", "0%" _64INT_FORMAT_ "o", "%" _64INT_FORMAT_ "d", "0x%" _64INT_FORMAT_ "x");
 TOSTR_DEF(unsigned long int, "%" _64INT_FORMAT_ "u", "0%" _64INT_FORMAT_ "o", "%" _64INT_FORMAT_ "u", "0x%" _64INT_FORMAT_ "x");
-#elif ULONG_MAX == UINT32_MAX
+#else
 TOSTR_DEF(long int, "%d", "0%o", "%d", "0x%x");
 TOSTR_DEF(unsigned long int, "%u", "0%o", "%u", "0x%x");
-#else
-#error "Invalid Compiler! sizeof(long int) must be 32 or 64."
 #endif
 TOSTR_DEF(long long int, "%" _64INT_FORMAT_ "d", "0%" _64INT_FORMAT_ "o", "%" _64INT_FORMAT_ "d", "0x%" _64INT_FORMAT_ "x");
 TOSTR_DEF(unsigned long long int, "%" _64INT_FORMAT_ "u", "0%" _64INT_FORMAT_ "o", "%" _64INT_FORMAT_ "u", "0x%" _64INT_FORMAT_ "x");
