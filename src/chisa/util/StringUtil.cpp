@@ -73,6 +73,7 @@ std::string toString(type const& val, int radix) {\
 
 TOSTR_DEF(int, "%d", "0%o", "%d", "0x%x");
 TOSTR_DEF(unsigned int, "%u", "0%o", "%u", "0x%x");
+// メモリモデルによってlong intの値は違う
 #if ULONG_MAX == UINT64_MAX
 TOSTR_DEF(long int, "%" _64INT_FORMAT_ "d", "0%" _64INT_FORMAT_ "o", "%" _64INT_FORMAT_ "d", "0x%" _64INT_FORMAT_ "x");
 TOSTR_DEF(unsigned long int, "%" _64INT_FORMAT_ "u", "0%" _64INT_FORMAT_ "o", "%" _64INT_FORMAT_ "u", "0x%" _64INT_FORMAT_ "x");
