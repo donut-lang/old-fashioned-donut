@@ -156,7 +156,7 @@ template <> inline XValue XValue::decode<XValue::String>(std::string const& str)
 template <> inline XValue XValue::decode<XValue::UInt>(std::string const& str)
 {
 	bool success = false;
-	XValue::UInt val = util::parseInt(str, 0, &success);
+	XValue::UInt val = util::parseAsInt<XValue::UInt>(str, 0, &success);
 	if(!success){
 		throw logging::Exception(__FILE__, __LINE__, "Failed to convert %s to UInt.", str.c_str());
 	}
@@ -165,7 +165,7 @@ template <> inline XValue XValue::decode<XValue::UInt>(std::string const& str)
 template <> inline XValue XValue::decode<XValue::SInt>(std::string const& str)
 {
 	bool success = false;
-	XValue::SInt val = util::parseInt(str, 0, &success);
+	XValue::SInt val = util::parseAsInt<XValue::SInt>(str, 0, &success);
 	if(!success){
 		throw logging::Exception(__FILE__, __LINE__, "Failed to convert %s to SInt.", str.c_str());
 	}
@@ -174,7 +174,7 @@ template <> inline XValue XValue::decode<XValue::SInt>(std::string const& str)
 template <> inline XValue XValue::decode<XValue::Float>(std::string const& str)
 {
 	bool success = false;
-	XValue::Float val = util::parseFloat(str, &success);
+	XValue::Float val = util::parseAs<XValue::Float>(str, &success);
 	if(!success){
 		throw logging::Exception(__FILE__, __LINE__, "Failed to convert %s to Double.", str.c_str());
 	}
@@ -183,7 +183,7 @@ template <> inline XValue XValue::decode<XValue::Float>(std::string const& str)
 template <> inline XValue XValue::decode<XValue::Bool>(std::string const& str)
 {
 	bool success = false;
-	XValue::SInt val = util::parseBool(str, &success);
+	XValue::Bool val = util::parseAs<bool>(str, &success);
 	if(!success){
 		throw logging::Exception(__FILE__, __LINE__, "Failed to convert %s to bool", str.c_str());
 	}
