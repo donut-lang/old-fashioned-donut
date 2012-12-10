@@ -26,50 +26,106 @@ namespace util {
 class XArray;
 class XObject;
 
-template <typename T> struct _GetType {
-	typedef T& type;
-	typedef T const& const_type;
+template <typename T> struct _TypeAdapter {
+	typedef T spirit_type;
+	typedef T init_type;
+	typedef T& return_type;
+	typedef T const& return_const_type;
 };
-template <> struct _GetType<XArray> {
-	typedef Handler<XArray>& type;
-	typedef Handler<XArray> const& const_type;
+template <typename T> struct _TypeAdapter<T&> {
+	typedef T spirit_type;
+	typedef T init_type;
+	typedef T& return_type;
+	typedef T const& return_const_type;
 };
-template <> struct _GetType<XObject> {
-	typedef Handler<XObject>& type;
-	typedef Handler<XObject> const& const_type;
+template <typename T> struct _TypeAdapter<T const&> {
+	typedef T spirit_type;
+	typedef T init_type;
+	typedef T& return_type;
+	typedef T const& return_const_type;
+};
+template <> struct _TypeAdapter<XArray> {
+	typedef XArray spirit_type;
+	typedef Handler<XArray> init_type;
+	typedef Handler<XArray>& return_type;
+	typedef Handler<XArray> const& return_const_type;
+};
+template <> struct _TypeAdapter<Handler<XArray> > {
+	typedef XArray spirit_type;
+	typedef Handler<XArray> init_type;
+	typedef Handler<XArray>& return_type;
+	typedef Handler<XArray> const& return_const_type;
+};
+template <> struct _TypeAdapter<XObject> {
+	typedef XObject spirit_type;
+	typedef Handler<XObject> init_type;
+	typedef Handler<XObject>& return_type;
+	typedef Handler<XObject> const& return_const_type;
+};
+template <> struct _TypeAdapter<Handler<XObject> > {
+	typedef XObject spirit_type;
+	typedef Handler<XObject> init_type;
+	typedef Handler<XObject>& return_type;
+	typedef Handler<XObject> const& return_const_type;
+};
+template <> struct _TypeAdapter<const char*> {
+	typedef XString spirit_type;
+	typedef XString init_type;
+	typedef XString& return_type;
+	typedef XString const& return_const_type;
+};
+template <std::size_t N> struct _TypeAdapter<const char[N]> {
+	typedef XString spirit_type;
+	typedef XString init_type;
+	typedef XString& return_type;
+	typedef XString const& return_const_type;
+};
+template <std::size_t N> struct _TypeAdapter<char[N]> {
+	typedef XString spirit_type;
+	typedef XString init_type;
+	typedef XString& return_type;
+	typedef XString const& return_const_type;
 };
 
-template <typename T> T& XArray::get( std::size_t const& idx ) {
+template <typename T> typename _TypeAdapter<T>::return_type XArray::get( std::size_t const& idx ) {
+	typedef typename _TypeAdapter<T>::spirit_type SpiritType;
 	if( idx < 0 || idx >= list_.size() ){
 		throw logging::Exception(__FILE__, __LINE__, "idx: %d >= size: %d ", idx, list_.size());
 	}
 	XValue& val = list_[idx];
-	if( !val.is<T>() ) {
-		throw logging::Exception(__FILE__, __LINE__, "Array: \"%d\" type mismatch required: %s actual: %s.", idx, typeid(T).name(), val.toString().c_str());
+	if( !val.is<SpiritType>() ) {
+		typename _TypeAdapter<T>::init_type empty;
+		throw logging::Exception(__FILE__, __LINE__, "Array: \"%d\" type mismatch required: %s actual: %s.", idx, XValue(empty).typeString().c_str(), val.typeString().c_str());
 	}
-	return val.as<T>();
+	return val.as<SpiritType>();
 }
-template <typename T> T const& XArray::set( const std::size_t& idx, T const& obj ) {
+template <typename T> typename _TypeAdapter<T>::return_type XArray::set( const std::size_t& idx, T const& obj ) {
+	typedef typename _TypeAdapter<T>::spirit_type SpiritType;
 	if( idx < 0 || idx >= list_.size() ){
 		throw logging::Exception(__FILE__, __LINE__, "idx: %d >= size: %d ", idx, list_.size());
 	}
-	return list_[idx] = XValue(obj);
+	XValue& val = list_[idx];
+	val = XValue(obj);
+	return val.as<SpiritType>();
 }
-template <typename T> T const& XArray::append( T const& obj ) {
+template <typename T> typename _TypeAdapter<T>::return_type XArray::append( T const& obj ) {
+	typedef typename _TypeAdapter<T>::spirit_type SpiritType;
 	this->list_.push_back(XValue(obj));
-	return obj;
+	return this->list_.back().as<SpiritType>();
 }
 
-template<typename T> typename _GetType<T>::type XObject::get( std::string const& name ) {
+template<typename T> typename _TypeAdapter<T>::return_type XObject::get( std::string const& name ) {
+	typedef typename _TypeAdapter<T>::spirit_type SpiritType;
 	auto it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );
 	std::pair<std::string, XValue>& p = *it;
 	if( it == this->map_.end() || p.first != name){
 		throw logging::Exception(__FILE__, __LINE__, "Object: \"%s\" not found.", name.c_str());
 	}
-	if( !p.second.is<T>() ) {
-		throw logging::Exception(__FILE__, __LINE__, "Object: \"%s\" type mismatch required: %s actual: %s.", typeid(T).name(), it->second.toString().c_str());
+	if( !p.second.is<SpiritType>() ) {
+		typename _TypeAdapter<T>::init_type empty;
+		throw logging::Exception(__FILE__, __LINE__, "Object: \"%s\" type mismatch required: %s actual: %s.", XValue(empty).typeString().c_str(), it->second.typeString().c_str());
 	}
-	return p.second.as<T>();
+	return p.second.as<SpiritType>();
 }
 
 template<> inline XValue& XObject::get<XValue>( std::string const& name ) {
@@ -81,14 +137,15 @@ template<> inline XValue& XObject::get<XValue>( std::string const& name ) {
 	return p.second;
 }
 
-template<typename T> typename _GetType<T>::type XObject::opt(std::string const& name)
+template<typename T> typename _TypeAdapter<T>::return_type XObject::opt(std::string const& name)
 {
+	typedef typename _TypeAdapter<T>::spirit_type SpiritType;
 	auto it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );
 	std::pair<std::string, XValue> const& p = *it;
 	if( it == this->map_.end() || p.first != name || !p.second.is<T>()){
 		return T();
 	}
-	return p.second.as<T>();
+	return p.second.as<SpiritType>();
 }
 
 template<typename T> bool XObject::has(std::string const& name)
@@ -100,18 +157,20 @@ template<typename T> bool XObject::has(std::string const& name)
 	}
 	return true;
 }
-template<typename T> T const& XObject::set(std::string const& name, T const& obj)
+template<typename T> typename _TypeAdapter<T>::return_type XObject::set(std::string const& name, T const& obj)
 {
+	typedef typename _TypeAdapter<T>::spirit_type SpiritType;
 	auto it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );
 	std::pair<std::string, XValue>& p = *it;
 	if( it == this->map_.end() || p.first != name) {
 		it = this->map_.insert(it, std::pair<std::string, XValue>(name, XValue(obj)));
+		return it->second.as<SpiritType>();
 	}else{
 		p.second = XValue(obj);
+		return p.second.as<SpiritType>();
 	}
-	return obj;
 }
-template<> inline XValue const& XObject::set<XValue>(std::string const& name, XValue const& obj)
+template<> inline XValue& XObject::set<XValue>(std::string const& name, XValue const& obj)
 {
 	auto it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );
 	std::pair<std::string, XValue>& p = *it;
@@ -126,15 +185,19 @@ template<> inline XValue const& XObject::set<XValue>(std::string const& name, XV
 		template <> inline bool XValue::is<XValue::TYPE>() const noexcept {\
 			return this->type_ == XValue::Type::TYPE##T;\
 		};\
-		template <> inline typename _GetType<XValue::TYPE>::type XValue::as<XValue::TYPE>() {\
+		template <> inline typename _TypeAdapter<XValue::TYPE>::return_type XValue::as<XValue::TYPE>() {\
 			if(this->type_ != XValue::Type::TYPE##T) {\
-				throw logging::Exception(__FILE__, __LINE__, "Type mismatch required: %s actual: %s.", typeid(XValue::TYPE).name(), this->toString().c_str());\
+				typedef typename _TypeAdapter<XValue::TYPE>::init_type Type;\
+				Type empty((Type()));\
+				throw logging::Exception(__FILE__, __LINE__, "Type mismatched! required: %s actual: %s.", XValue(empty).typeString().c_str(), this->typeString().c_str());\
 			}\
 			return VAL;\
 		};\
-		template <> inline typename _GetType<XValue::TYPE>::const_type XValue::as<XValue::TYPE>() const {\
+		template <> inline typename _TypeAdapter<XValue::TYPE>::return_const_type XValue::as<XValue::TYPE>() const {\
 			if(this->type_ != XValue::Type::TYPE##T) {\
-				throw logging::Exception(__FILE__, __LINE__, "Type mismatch required: %s actual: %s.", typeid(XValue::TYPE).name(), this->toString().c_str());\
+				typedef typename _TypeAdapter<XValue::TYPE>::init_type Type;\
+				Type empty((Type()));\
+				throw logging::Exception(__FILE__, __LINE__, "Type mismatched! required: %s actual: %s.", XValue(empty).typeString().c_str(), this->typeString().c_str());\
 			}\
 			return VAL;\
 		};
@@ -146,8 +209,14 @@ FUNCT(UInt, spirit_.uint_);
 FUNCT(SInt, spirit_.int_);
 FUNCT(Float, spirit_.float_);
 FUNCT(Bool, spirit_.bool_);
-
 #undef FUNCT
+
+template <> inline typename _TypeAdapter<XValue>::return_type XValue::as<XValue>() {
+	return *this;
+};
+template <> inline typename _TypeAdapter<XValue>::return_const_type XValue::as<XValue>() const {
+	return *this;
+};
 
 template <> inline XValue XValue::decode<XValue::String>(std::string const& str)
 {
