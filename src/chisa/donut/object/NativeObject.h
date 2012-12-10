@@ -34,6 +34,7 @@ public:
 	virtual int toIntImpl(const Handler<Heap>& heap) const override final;
 	virtual float toFloatImpl(const Handler<Heap>& heap) const override final;
 	virtual bool toBoolImpl(const Handler<Heap>& heap) const override final;
+	virtual void onSeekNotifyImpl(const Handler<Heap>& heap) override;
 	virtual void onDiscardHistoryNotifyImpl(const Handler<Heap>& heap) override final;
 	virtual void onDiscardFutureNotifyImpl(const Handler<Heap>& heap) override final;
 	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override final;
@@ -52,6 +53,7 @@ public:
 	virtual int toIntImpl(const Handler<Heap>& heap) const override final;
 	virtual float toFloatImpl(const Handler<Heap>& heap) const override final;
 	virtual bool toBoolImpl(const Handler<Heap>& heap) const override final;
+	virtual void onSeekNotifyImpl(const Handler<Heap>& heap) override;
 	virtual void onDiscardHistoryNotifyImpl(const Handler<Heap>& heap) override final;
 	virtual void onDiscardFutureNotifyImpl(const Handler<Heap>& heap) override final;
 	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override final;
@@ -60,6 +62,26 @@ public:
 	void bootstrap( Handler<Heap> const& heap, float const& val );
 };
 
+class ReactiveNativeObject : public NativeObject {
+private:
+	std::vector<std::pair<timestamp_t, util::XValue> > reactions_;
+public:
+	ReactiveNativeObject( std::string const& providerName );
+	virtual ~ReactiveNativeObject() noexcept = default;
+public:
+	void bootstrap(Handler<Heap> const& heap);
+	virtual util::XValue save( Handler<Heap> const& heap ) override final;
+	virtual void load( Handler<Heap> const& heap, util::XValue const& data ) override final;
+protected:
+	virtual std::string toStringImpl(const Handler<Heap>& heap) const override final;
+	virtual int toIntImpl(const Handler<Heap>& heap) const override final;
+	virtual float toFloatImpl(const Handler<Heap>& heap) const override final;
+	virtual bool toBoolImpl(const Handler<Heap>& heap) const override final;
+public:
+	virtual void onSeekNotifyImpl(const Handler<Heap>& heap) override;
+	virtual void onDiscardHistoryNotifyImpl(const Handler<Heap>& heap) override;
+	virtual void onDiscardFutureNotifyImpl(const Handler<Heap>& heap) override;
+};
 
 class PureNativeClosureObject final : public NativeClosureObject {
 public:

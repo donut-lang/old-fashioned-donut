@@ -225,7 +225,6 @@ protected:
 	virtual Handler<Object> setImpl(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj) override;
 	virtual Handler<Object> getImpl(const Handler<Heap>& heap, const std::string& name) const override;
 	virtual void markImpl(const Handler<Heap>& heap, int color) override;
-	virtual void onSeekNotifyImpl(const Handler<Heap>& heap) override;
 protected:
 	void bootstrap(Handler<Heap> const& heap);
 	virtual util::XValue save( Handler<Heap> const& heap ) override;
