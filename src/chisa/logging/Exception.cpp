@@ -22,8 +22,10 @@
 namespace chisa {
 namespace logging {
 
-Exception::Exception(const char* file, const size_t line) throw() : _line(0)
+Exception::Exception(const char* file, const size_t line) throw()
 {
+	va_list list;
+	init(file, line, "", list);
 }
 
 Exception::Exception(const char* file, const size_t line, const std::string& fmt, ...) noexcept
