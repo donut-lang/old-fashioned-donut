@@ -105,7 +105,9 @@ void NativeClosureObject::load( Handler<Heap> const& heap, util::XValue const& d
 	this->loadImpl(heap, obj->get<XValue>("content"));
 }
 
-//-----------------------------------------------------------------------------
+/**********************************************************************************************************************
+ * PureNativeClosureObject
+ **********************************************************************************************************************/
 
 void PureNativeClosureObject::bootstrap( std::string const& objectProviderName, std::string const& closureName, PureNativeClosureObject::Signature f )
 {
@@ -113,6 +115,10 @@ void PureNativeClosureObject::bootstrap( std::string const& objectProviderName, 
 	this->func_ = f;
 }
 
+Handler<Object> PureNativeClosureObject::apply(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& arg)
+{
+	return func_(heap, self,arg);
+}
 
 util::XValue PureNativeClosureObject::saveImpl( Handler<Heap> const& heap )
 {
@@ -122,6 +128,31 @@ util::XValue PureNativeClosureObject::saveImpl( Handler<Heap> const& heap )
 void PureNativeClosureObject::loadImpl( Handler<Heap> const& heap, util::XValue const& data )
 {
 	this->func_ = heap->findProvider(this->objectProviderName())->findPureNativeClosureEntry(this->closureName());
+}
+
+/**********************************************************************************************************************
+ * ReactiveNativeClosureObject
+ **********************************************************************************************************************/
+
+void ReactiveNativeClosureObject::bootstrap( std::string const& objectProviderName, std::string const& closureName, ReactiveNativeClosureObject::Signature f )
+{
+	this->NativeClosureObject::bootstrap(objectProviderName, closureName);
+	this->func_ = f;
+}
+
+Handler<Object> ReactiveNativeClosureObject::apply(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& arg)
+{
+	std::pair<Handler<Object>, util::XValue > const result = this->func_(heap, self, arg);
+
+	return result.first;
+}
+util::XValue ReactiveNativeClosureObject::saveImpl(Handler<Heap> const& heap)
+{
+	return util::XValue();
+}
+void ReactiveNativeClosureObject::loadImpl(Handler<Heap> const& heap, util::XValue const& data)
+{
+	this->func_ = heap->findProvider(this->objectProviderName())->findReactiveNativeClosureEntry(this->closureName());
 }
 
 }}

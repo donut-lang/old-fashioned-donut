@@ -61,6 +61,7 @@ private:
 	Handler<FloatProvider> floatProvider_;
 	Handler<StringProvider> stringProvider_;
 	Handler<PureNativeObjectProvider> pureNativeClosureProvider_;
+	Handler<ReactiveNativeObjectProvider> reactiveNativeClosureProvider_;
 
 	Handler<DonutObject> boolProto_;
 	Handler<DonutObject> intProto_;
@@ -91,6 +92,7 @@ public: /* オブジェクトを作ってそれをプールに登録し、メモ
 	Handler<Object> createBool(const bool& val);
 	Handler<Object> createNull();
 	Handler<PureNativeClosureObject> createPureNativeClosureObject(const std::string& objectProviderName, const std::string& closureName, PureNativeClosureObject::Signature sig);
+	Handler<ReactiveNativeClosureObject> createReactiveNativeClosureObject(const std::string& objectProviderName, const std::string& closureName, ReactiveNativeClosureObject::Signature f);
 public: /* ヒープ管理 */
 	void gc();
 public: /* グローバルオブジェクトの管理 */

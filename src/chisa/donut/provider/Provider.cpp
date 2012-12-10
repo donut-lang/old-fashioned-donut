@@ -30,20 +30,22 @@ Provider::Provider( const Handler<Heap>& heap, const std::string& name )
 {
 }
 
-void Provider::addPrototype( const std::string& name, PureNativeClosureObject::Signature clos )
-{
-	if(Handler<Heap> heap = this->heap().lock()){
-		this->prototype_->set(heap, name, heap->createPureNativeClosureObject(this->name(), name, clos));
-	}
-}
-
 PureNativeClosureObject::Signature const& Provider::findPureNativeClosureEntry( std::string const& name )
 {
 	auto it = pureNativeClosures_.find(name);
 	if(it == this->pureNativeClosures_.end()){
-		throw DonutException(__FILE__, __LINE__, "Closure %s not found in %s!!", name.c_str(), this->name().c_str());
+		throw DonutException(__FILE__, __LINE__, "Pure Native Closure \"%s\" not found in \"%s\"!!", name.c_str(), this->name().c_str());
 	}
 	util::VectorMap<std::string, PureNativeClosureObject::Signature>::Pair const& p = *it;
+	return p.second;
+}
+ReactiveNativeClosureObject::Signature const& Provider::findReactiveNativeClosureEntry( std::string const& name )
+{
+	auto it = reactiveNativeClosures_.find(name);
+	if(it == this->reactiveNativeClosures_.end()){
+		throw DonutException(__FILE__, __LINE__, "Reactive Native Closure \"%s\" not found in \"%s\"!!", name.c_str(), this->name().c_str());
+	}
+	util::VectorMap<std::string, ReactiveNativeClosureObject::Signature>::Pair const& p = *it;
 	return p.second;
 }
 
@@ -57,6 +59,9 @@ void Provider::bootstrap()
 		this->prototype_ = heap->createEmptyDonutObject();
 		for( std::pair<std::string, PureNativeClosureObject::Signature> const& p : this->pureNativeClosures_ ){
 			this->prototype_->set(heap, p.first, heap->createPureNativeClosureObject(this->name(), p.first, p.second));
+		}
+		for( std::pair<std::string, ReactiveNativeClosureObject::Signature> const& p : this->reactiveNativeClosures_ ){
+			this->prototype_->set(heap, p.first, heap->createReactiveNativeClosureObject(this->name(), p.first, p.second));
 		}
 	}
 }

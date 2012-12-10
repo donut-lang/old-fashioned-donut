@@ -194,6 +194,14 @@ Handler<PureNativeClosureObject> Heap::createPureNativeClosureObject(const std::
 	return obj;
 }
 
+Handler<ReactiveNativeClosureObject> Heap::createReactiveNativeClosureObject(const std::string& objectProviderName, const std::string& closureName, ReactiveNativeClosureObject::Signature f)
+{
+	Handler<ReactiveNativeClosureObject> obj(this->reactiveNativeClosureProvider_->createDerived());
+	obj->bootstrap(objectProviderName, closureName, f);
+	this->registerObject(obj);
+
+	return obj;
+}
 Handler<Object> Heap::createInt(const int& val)
 {
 	return this->intProvider()->create(val);
@@ -332,6 +340,7 @@ void Heap::initPrimitiveProviders()
 	this->registerProvider( this->stringProvider_ = Handler<StringProvider>( new StringProvider(self) ) );
 	this->registerProvider( this->floatProvider_ = Handler<FloatProvider>( new FloatProvider(self) ) );
 	this->registerProvider( this->pureNativeClosureProvider_ = Handler<PureNativeObjectProvider>( new PureNativeObjectProvider(self) ) );
+	this->registerProvider( this->reactiveNativeClosureProvider_ = Handler<ReactiveNativeObjectProvider>( new ReactiveNativeObjectProvider(self) ) );
 }
 
 void Heap::initPrototypes()
