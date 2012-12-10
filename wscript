@@ -33,6 +33,7 @@ TINYXML2_DIR=os.path.join(os.path.abspath(os.path.dirname(srcdir)), 'external', 
 TINYXML2_SRC=[os.path.join('.', 'external','tinyxml2','tinyxml2.cpp')]
 
 def options(opt):
+	opt.add_option('--coverage', action='store_true', default=False, help='Enabling coverage measuring.')
 	opt.load('compiler_c compiler_cxx')
 	opt.load('eclipse')
 	opt.load('boost')
@@ -43,8 +44,13 @@ def configure(conf):
 	configureLibrary(conf)
 	
 	conf.setenv('debug')
+	denv = conf.env;
 	conf.env.append_value('CXXFLAGS', ['-g','-O0', '-Wall', '-std=c++0x', '-std=c++11', '-D__GXX_EXPERIMENTAL_CXX0X__=1'])
 	configureLibrary(conf)
+	if conf.options.coverage:
+		conf.setenv('coverage', denv)
+		conf.env.append_value('LINKFLAGS', '-fprofile-arcs')
+		conf.env.append_value('CXXFLAGS', ['-fprofile-arcs','-ftest-coverage'])
 
 def configureLibrary(conf):
 	conf.load('compiler_c compiler_cxx')
@@ -104,20 +110,27 @@ def build(bld):
 		bld.fatal('call "waf build_debug" or "waf build_release", and try "waf --help"')
 	srcdir=repr(bld.path)
 	bld(
-			features = 'cxx cprogram',
-			source = DONUT_SRC,
-			target = 'donut',
-			use=['PPROF','PTHREAD','BOOST','ICU','ANTLR'])
+		features = 'cxx cprogram',
+		source = DONUT_SRC,
+		target = 'donut',
+		use=['PPROF','PTHREAD','BOOST','ICU','ANTLR'])	
 	bld(
 			features = 'cxx cprogram',
 			source = MAIN_SRC,
 			target = 'chisa',
 			use=['PPROF','PTHREAD', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU','ANTLR'])
+	
+	test_env = None
+	if "coverage" in bld.all_envs:
+		test_env = bld.all_envs["coverage"]
+	else:
+		test_env = bld.env
 	bld(
-			features = 'cxx cprogram',
-			source = TEST_SRC,
-			target = 'chisa_test',
-			use=['PTHREAD', 'OPENGL','FREETYPE2','CAIRO','GTEST','LIBPNG','BOOST','ICU','ANTLR'])
+		features = 'cxx cprogram',
+		source = TEST_SRC,
+		target = 'chisa_test',
+		env = test_env,
+		use=['PTHREAD', 'OPENGL','FREETYPE2','CAIRO','GTEST','LIBPNG','BOOST','ICU','ANTLR'])
 
 # from http://docs.waf.googlecode.com/git/book_16/single.html#_custom_build_outputs
 from waflib.Build import BuildContext, CleanContext, InstallContext, UninstallContext
