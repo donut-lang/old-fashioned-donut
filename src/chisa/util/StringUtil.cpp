@@ -55,70 +55,37 @@ std::string formatv(const std::string& fmt, va_list args)
 	return buff;
 }
 
-std::string toString(const int32_t val, int radix)
-{
-	switch(radix){
-	case 0:
-		return util::format("%d", val);
-	case 8:
-		return util::format("0%o", val);
-	case 10:
-		return util::format("%d", val);
-	case 16:
-		return util::format("0x%x", val);
-	default:
-		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon radix: %d", radix);
-	}
+#define TOSTR_DEF(type, fmtstr0, fmtstr8, fmtstr10, fmtstr16)\
+std::string toString(type const& val, int radix) {\
+	switch(radix){\
+	case 0:\
+		return util::format(fmtstr0, val);\
+	case 8:\
+		return util::format(fmtstr8, val);\
+	case 10:\
+		return util::format(fmtstr10, val);\
+	case 16:\
+		return util::format(fmtstr16, val);\
+	default:\
+		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon radix: %d", radix);\
+	}\
 }
 
-std::string toString(const uint32_t val, int radix)
-{
-	switch(radix){
-	case 0:
-		return util::format("%u", val);
-	case 8:
-		return util::format("0%o", val);
-	case 10:
-		return util::format("%u", val);
-	case 16:
-		return util::format("0x%x", val);
-	default:
-		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon radix: %d", radix);
-	}
-}
+TOSTR_DEF(int, "%d", "0%o", "%d", "0x%x");
+TOSTR_DEF(unsigned int, "%u", "0%o", "%u", "0x%x");
+#if ULONG_MAX == UINT64_MAX
+TOSTR_DEF(long int, "%" _64INT_FORMAT_ "d", "0%" _64INT_FORMAT_ "o", "%" _64INT_FORMAT_ "d", "0x%" _64INT_FORMAT_ "x");
+TOSTR_DEF(unsigned long int, "%" _64INT_FORMAT_ "u", "0%" _64INT_FORMAT_ "o", "%" _64INT_FORMAT_ "u", "0x%" _64INT_FORMAT_ "x");
+#elif ULONG_MAX == UINT32_MAX
+TOSTR_DEF(long int, "%d", "0%o", "%d", "0x%x");
+TOSTR_DEF(unsigned long int, "%u", "0%o", "%u", "0x%x");
+#else
+#error "Invalid Compiler! sizeof(long int) must be 32 or 64."
+#endif
+TOSTR_DEF(long long int, "%" _64INT_FORMAT_ "d", "0%" _64INT_FORMAT_ "o", "%" _64INT_FORMAT_ "d", "0x%" _64INT_FORMAT_ "x");
+TOSTR_DEF(unsigned long long int, "%" _64INT_FORMAT_ "u", "0%" _64INT_FORMAT_ "o", "%" _64INT_FORMAT_ "u", "0x%" _64INT_FORMAT_ "x");
 
-std::string toString(const int64_t val, int radix)
-{
-	switch(radix){
-	case 0:
-		return util::format("%" _64INT_FORMAT_ "d", val);
-	case 8:
-		return util::format("0%" _64INT_FORMAT_ "o", val);
-	case 10:
-		return util::format("%" _64INT_FORMAT_ "d", val);
-	case 16:
-		return util::format("0x%" _64INT_FORMAT_ "x", val);
-	default:
-		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon radix: %d", radix);
-	}
-}
-
-std::string toString(const uint64_t val, int radix)
-{
-	switch(radix){
-	case 0:
-		return util::format("%" _64INT_FORMAT_ "u", val);
-	case 8:
-		return util::format("0%" _64INT_FORMAT_ "o", val);
-	case 10:
-		return util::format("%" _64INT_FORMAT_ "u", val);
-	case 16:
-		return util::format("0x%" _64INT_FORMAT_ "x", val);
-	default:
-		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon radix: %d", radix);
-	}
-}
-
+#undef TOSTR_DEF
 
 std::string toString(const float val)
 {
@@ -285,7 +252,7 @@ PARSE_STRTO_F(long double, strtold);
 #undef PARSE_STRTO
 
 template <>
-bool parseAs(const std::string& str, bool* succeed)
+bool parseAs<bool>(const std::string& str, bool* succeed)
 {
 	std::string copy = toLower(str);
 	if( copy == "true" || copy == "yes") {
