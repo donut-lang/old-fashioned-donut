@@ -304,6 +304,7 @@ TEST(XValueTest, ObjectGetSetTest)
 
 TEST(XValueTest, ObjectConversionTest)
 {
+	// set時には、入った場所への参照を返さなければならない。それを確かめるために代入する
 	Handler<XObject> obj(new XObject());
 	obj->set("int", 1) = 10;
 
@@ -313,6 +314,7 @@ TEST(XValueTest, ObjectConversionTest)
 
 TEST(XValueTest, ArrayConversionTest)
 {
+	// set時には、入った場所への参照を返さなければならない。それを確かめるために代入する
 	Handler<XArray> obj(new XArray());
 	obj->append(1) = 10;
 
