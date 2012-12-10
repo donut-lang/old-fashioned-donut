@@ -132,24 +132,24 @@ tinyxml2::XMLElement* XValue::toXML( tinyxml2::XMLDocument* doc )
 	}
 }
 
-std::string XValue::toString() const noexcept {
+std::string XValue::typeString() const noexcept {
 	switch ( this->type_ ){
 	case Type::NullT:
-		return "Null";
+		return "XNull";
 	case Type::ArrayT:
-		return "Array";
+		return "XArray";
 	case Type::ObjectT:
-		return "Object";
+		return "XObject";
 	case Type::StringT:
-		return *this->spirit_.str_;
+		return "XString";
 	case Type::UIntT:
-		return util::toString( this->spirit_.uint_ );
+		return "XUInt";
 	case Type::SIntT:
-		return util::toString( this->spirit_.int_ );
+		return "XSInt";
 	case Type::BoolT:
-		return util::toString(this->spirit_.bool_);
+		return "XBool";
 	case Type::FloatT:
-		return util::toString(this->spirit_.float_);
+		return "XFloat";
 	default:
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon type!: %d", type_);
 	}

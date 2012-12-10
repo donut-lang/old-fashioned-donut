@@ -35,7 +35,7 @@ namespace util {
 class XArray;
 class XObject;
 
-template <typename T> struct _GetType;
+template <typename T> struct _TypeAdapter;
 
 class XValue {
 	STACK_OBJECT(XValue);
@@ -101,13 +101,13 @@ public:
 	inline bool onFree() const noexcept { return false; };
 public:
 	template <typename T> bool is() const noexcept;
-	template <typename T> typename _GetType<T>::type as();
-	template <typename T> typename _GetType<T>::const_type as() const;
+	template <typename T> typename _TypeAdapter<T>::return_type as();
+	template <typename T> typename _TypeAdapter<T>::return_const_type as() const;
 	template <typename T> static XValue decode( std::string const& str );
 
 	static XValue fromXML( tinyxml2::XMLElement* elm );
 	tinyxml2::XMLElement* toXML( tinyxml2::XMLDocument* doc );
-	std::string toString() const noexcept;
+	std::string typeString() const noexcept;
 	void swap( XValue& o );
 };
 
@@ -121,9 +121,9 @@ public:
 	~XArray() noexcept = default;
 	inline bool onFree() const noexcept { return false; };
 public:
-	template <typename T> T& get( std::size_t const& idx );
-	template <typename T> T const& set( const std::size_t& idx, T const& obj );
-	template <typename T> T const& append( T const& obj );
+	template <typename T> typename _TypeAdapter<T>::return_type get( std::size_t const& idx );
+	template <typename T> typename _TypeAdapter<T>::return_type set( const std::size_t& idx, T const& obj );
+	template <typename T> typename _TypeAdapter<T>::return_type append( T const& obj );
 	std::vector<XValue>::iterator begin(){ return this->list_.begin(); };
 	std::vector<XValue>::iterator end(){ return this->list_.end(); };
 	std::vector<XValue>::const_iterator cbegin(){ return this->list_.cbegin(); };
@@ -142,10 +142,10 @@ public:
 	~XObject() noexcept = default;
 	inline bool onFree() const noexcept { return false; };
 public:
-	template <typename T> typename _GetType<T>::type get( std::string const& name );
-	template <typename T> typename _GetType<T>::type opt( std::string const& name );
+	template <typename T> typename _TypeAdapter<T>::return_type get( std::string const& name );
+	template <typename T> typename _TypeAdapter<T>::return_type opt( std::string const& name );
 	template <typename T> bool has( std::string const& name );
-	template <typename T> T const& set( std::string const& name, T const& obj );
+	template <typename T> typename _TypeAdapter<T>::return_type set( std::string const& name, T const& obj );
 	std::vector<std::pair<std::string, XValue> >::iterator begin(){ return this->map_.begin(); };
 	std::vector<std::pair<std::string, XValue> >::iterator end(){ return this->map_.end(); };
 	std::vector<std::pair<std::string, XValue> >::const_iterator cbegin(){ return this->map_.cbegin(); };
