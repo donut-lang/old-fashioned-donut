@@ -54,22 +54,10 @@ void Heap::gc()
 	this->objectPool_.swap(this->objectPoolMarked_);
 	const std::size_t newObjectCount = this->objectPool_.size();
 
-	const std::size_t sourceCount = this->sourcePool_.size();
-	//ソースのお掃除
-	for( Source*& src : this->sourcePool_ ){
-		if(!src->used()){
-			src->erase();
-		}
-	}
-	const std::size_t newSourceCount = this->sourcePool_.size();
-
 	if( log().d() ){
 		float const percent = (origObjectCount-newObjectCount)*100.0f/origObjectCount;
-		float const spercent = (sourceCount-newSourceCount)*100.0f/sourceCount;
-		this->log().d(TAG, "<Garbage collected> obj: %d -> %d, %0.2f%% collected; src: %d->%d, %0.2f%% collected",
-				origObjectCount, newObjectCount, percent,
-				sourceCount, newSourceCount, spercent
-				);
+		this->log().d(TAG, "<Garbage collected> obj: %d -> %d, %0.2f%% collected",
+				origObjectCount, newObjectCount, percent);
 	}
 
 	this->objectPoolMarked_.clear();

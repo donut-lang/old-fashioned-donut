@@ -81,7 +81,7 @@ void Clock::seek( unsigned int const& time )
 	this->now_ = time;
 	Handler<Donut> donut = this->donut_.lock();
 	if(!donut){
-		log().e(TAG, "Tried to discard future, but donut was already dead.");
+		log().e(TAG, "Seeked to %d, but donut was already dead.", time);
 		return;
 	}
 	donut->onSeekNotify();

@@ -75,9 +75,21 @@ Handler<Provider> Heap::getProvider( const std::string& name ) const
 
 Handler<Source> Heap::registerSource( Handler<Source> const& source )
 {
+	source->onRegisterToHeap(this, ++this->sourceId_);
 	this->sourcePool_.push_back(source.get());
-	source->id(++this->sourceId_);
 	return source;
+}
+
+void Heap::unregisterSource( Source* source )
+{
+	int const id = source->id();
+	std::vector<Source*>::iterator const it =
+			std::lower_bound( this->sourcePool_.begin(), this->sourcePool_.end(), id, Source::CompareById());
+	Source* src = *it;
+	if( it == this->sourcePool_.end() || src != source) {
+		throw DonutException(__FILE__, __LINE__, "[BUG] source unregistration notified, but there is no source with id: %d", id);
+	}
+	this->sourcePool_.erase(it);
 }
 
 void Heap::registerObject( const Handler<HeapObject>& obj )
@@ -333,6 +345,7 @@ void Heap::initPrototypes()
 util::XValue Heap::save()
 {
 	using namespace chisa::util;
+	this->gc();
 	Handler<XObject> top(new XObject);
 	Handler<Heap> self(this->self());
 	{//ソースコード

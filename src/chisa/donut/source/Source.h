@@ -91,10 +91,11 @@ template<> void ConstTable<Handler<Closure> >::load(util::XValue const& data);
 template<> util::XValue ConstTable<Handler<Closure> >::save();
 template<> bool ConstTable<Handler<Closure> >::operator==( ConstTable<Handler<Closure> > const& other ) const noexcept;
 
+class Heap;
 class Source : public HandlerBody<Source> {
 private:
-	bool erased_;
 	int id_;
+	HandlerW<Heap> heap_;
 private:
 	ConstTable<int> intTable_;
 	ConstTable<float> floatTable_;
@@ -112,10 +113,9 @@ public:
 	util::XValue save();
 	virtual ~Source() noexcept = default;
 	int id() const noexcept{ return this->id_; };
-	void id(int const& id)noexcept{this->id_ = id;};
 public:
-	virtual bool onFree() noexcept { if(this->erased_||this->id_<0){ return false; }else{ return true; } };
-	inline void erase() noexcept { this->erased_ = true; if(refcount() == 0){ delete this; } };
+	void onRegisterToHeap(Heap* const& heap, int const& id) noexcept;
+	bool onFree() noexcept;
 	template <typename T> Instruction constCode(T const& val);
 	inline bool used() const noexcept{ return this->refcount() > 0; };
 public:
