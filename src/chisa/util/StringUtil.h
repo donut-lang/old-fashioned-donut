@@ -28,10 +28,14 @@ namespace util {
 
 std::string format(const std::string& fmt, ...);
 std::string formatv(const std::string& fmt, va_list args);
-std::string toString(const int32_t val, int radix=10);
-std::string toString(const uint32_t val, int radix=10);
-std::string toString(const int64_t val, int radix=10);
-std::string toString(const uint64_t val, int radix=10);
+#define TOSTR_DEF(type) std::string toString(type const& val, int radix=10);
+TOSTR_DEF(int);
+TOSTR_DEF(unsigned int);
+TOSTR_DEF(long int);
+TOSTR_DEF(unsigned long int);
+TOSTR_DEF(long long int);
+TOSTR_DEF(unsigned long long int);
+#undef TOSTR_DEF
 std::string toString(const float val);
 std::string toString(const double val);
 std::string toString(const bool val);
