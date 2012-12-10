@@ -348,6 +348,9 @@ TEST(XValueTest,ObjectNotFoundTest)
 	ASSERT_ANY_THROW(obj->get<XString>("str2"));
 	ASSERT_FALSE(obj->has<XBool>("bool2"));
 	ASSERT_ANY_THROW(obj->get<XBool>("bool2"));
+
+	ASSERT_FALSE(obj->has<XFloat>("int"));
+	ASSERT_ANY_THROW(obj->get<XFloat>("int"));
 	obj.reset();
 }
 
