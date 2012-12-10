@@ -42,14 +42,7 @@ public: /* 生成・破棄 */
 public:
 	Handler<Machine> queryMachine( const std::string& name = "" );
 	void sendMessage( const std::string& name, const Handler<Object>& obj );
-public: /* 外部オブジェクトの管理 */
-	/* プロバイダ */
-	void registerProvider( const Handler<Provider>& provider );
-	/* グローバルオブジェクトの管理 */
-	void registerGlobalObject( const std::string& name, const Handler<Object>& obj );
-	bool existsGlobalObject( const std::string& name );
-	Handler<Object> readGlobalObject( const std::string& name );
-public:
+public: /* Getter */
 	Handler<Clock> clock() const noexcept{ return this->clock_; };
 	Handler<Heap> heap() const noexcept { return this->heap_; };
 	Handler<Source> parse(const std::string& src, const std::string& filename="<DEFAULT>", const int& lineno=0);
