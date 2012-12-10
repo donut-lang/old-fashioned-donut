@@ -83,6 +83,13 @@ TEST(XValueTest, AssignTest)
 	ASSERT_TRUE( x.is<XSInt>() );
 	ASSERT_EQ(20, x.as<XSInt>() );
 }
+TEST(XValueTest, NullTest)
+{
+	XValue x;
+	ASSERT_TRUE(x.is<XNull>() );
+	ASSERT_FALSE( x.is<XSInt>() );
+	ASSERT_EQ( nullptr, x.as<XNull>() );
+}
 
 TEST(XValueTest, AssignObjectTest)
 {
@@ -341,6 +348,7 @@ TEST(XValueTest,ObjectNotFoundTest)
 	ASSERT_ANY_THROW(obj->get<XString>("str2"));
 	ASSERT_FALSE(obj->has<XBool>("bool2"));
 	ASSERT_ANY_THROW(obj->get<XBool>("bool2"));
+	obj.reset();
 }
 
 TEST(XValueTest,ArrayGetSetTest)
@@ -356,6 +364,7 @@ TEST(XValueTest,ArrayGetSetTest)
 	ASSERT_FLOAT_EQ(1.2f,obj->get<XFloat>(1));
 	ASSERT_EQ("test", obj->get<XString>(2));
 	ASSERT_TRUE(obj->get<XBool>(3));
+	obj.reset();
 }
 
 TEST(XValueTest,ArrayUpdateTest)
@@ -369,7 +378,7 @@ TEST(XValueTest,ArrayUpdateTest)
 	ASSERT_EQ(1, obj->size());
 	ASSERT_ANY_THROW(obj->get<XSInt>(0));
 	ASSERT_EQ("test", obj->get<XString>(0));
-
+	obj.reset();
 }
 
 TEST(XValueTest,ArrayInvalidIndexTest)
@@ -388,6 +397,7 @@ TEST(XValueTest,ArrayInvalidIndexTest)
 	ASSERT_ANY_THROW(obj->get<XSInt>(1));
 	ASSERT_ANY_THROW(Handler<XArray> a = obj->get<XArray>(2));
 	ASSERT_ANY_THROW(Handler<XObject> a = obj->get<XObject>(3));
+	obj.reset();
 }
 
 TEST(XValueTest, SerializeDeserializeTest)
