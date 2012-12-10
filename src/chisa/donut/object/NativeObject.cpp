@@ -69,11 +69,6 @@ Handler<Object> NativeObject::getImpl(const Handler<Heap>& heap, const std::stri
 	return this->prototype_->get(heap, name);
 }
 
-void NativeObject::onSeekNotifyImpl(const Handler<Heap>& heap)
-{
-
-}
-
 void NativeObject::bootstrap(Handler<Heap> const& heap) {
 	this->prototype_ = heap->findHeapProvider(this->providerName())->prototype().get();
 }
