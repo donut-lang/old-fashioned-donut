@@ -29,9 +29,9 @@
 #include "Platform.h"
 
 #if CHISA_WINDOWS
-#define _64INT_FORMAT_ "I64"
+#define _LONG_LONG_INT_FORMAT_ "I64"
 #else
-#define _64INT_FORMAT_ "ll"
+#define _LONG_LONG_INT_FORMAT_ "ll"
 #endif
 
 namespace chisa {
@@ -74,15 +74,17 @@ std::string toString(type const& val, int radix) {\
 TOSTR_DEF(int, "0%o", "%d", "0x%x");
 TOSTR_DEF(unsigned int, "0%o", "%u", "0x%x");
 // メモリモデルによってlong intの値は違う
-#if LONG_MAX > INT_MAX
-TOSTR_DEF(long int, "0%" _64INT_FORMAT_ "o", "%" _64INT_FORMAT_ "d", "0x%" _64INT_FORMAT_ "x");
-TOSTR_DEF(unsigned long int, "0%" _64INT_FORMAT_ "o", "%" _64INT_FORMAT_ "u", "0x%" _64INT_FORMAT_ "x");
-#else
+#if LONG_MAX == INT_MAX
 TOSTR_DEF(long int, "0%o", "%d", "0x%x");
 TOSTR_DEF(unsigned long int, "0%o", "%u", "0x%x");
+#elif LONG_MAX > INT_MAX
+TOSTR_DEF(long int, "0%" _LONG_LONG_INT_FORMAT_ "o", "%" _LONG_LONG_INT_FORMAT_ "d", "0x%" _LONG_LONG_INT_FORMAT_ "x");
+TOSTR_DEF(unsigned long int, "0%" _LONG_LONG_INT_FORMAT_ "o", "%" _LONG_LONG_INT_FORMAT_ "u", "0x%" _LONG_LONG_INT_FORMAT_ "x");
+#else
+#error "Unknwon data type."
 #endif
-TOSTR_DEF(long long int, "0%" _64INT_FORMAT_ "o", "%" _64INT_FORMAT_ "d", "0x%" _64INT_FORMAT_ "x");
-TOSTR_DEF(unsigned long long int, "0%" _64INT_FORMAT_ "o", "%" _64INT_FORMAT_ "u", "0x%" _64INT_FORMAT_ "x");
+TOSTR_DEF(long long int, "0%" _LONG_LONG_INT_FORMAT_ "o", "%" _LONG_LONG_INT_FORMAT_ "d", "0x%" _LONG_LONG_INT_FORMAT_ "x");
+TOSTR_DEF(unsigned long long int, "0%" _LONG_LONG_INT_FORMAT_ "o", "%" _LONG_LONG_INT_FORMAT_ "u", "0x%" _LONG_LONG_INT_FORMAT_ "x");
 
 #undef TOSTR_DEF
 
