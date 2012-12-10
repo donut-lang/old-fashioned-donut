@@ -27,6 +27,41 @@ TEST(FloatTest, LiteralTest)
 	SOURCE_TEST_FLOAT(12.34, "12.34;");
 }
 
+TEST(FloatTest, CastTest)
+{
+	INIT_DONUT;
+	Handler<FloatObject> obj( heap->createFloatObject(10.1) );
+	ASSERT_ANY_THROW(obj->toBool(heap));
+	ASSERT_ANY_THROW(obj->toInt(heap));
+	ASSERT_ANY_THROW(obj->toString(heap));
+	ASSERT_FLOAT_EQ(10.1, obj->toFloat(heap));
+}
+
+TEST(FloatTest, SaveLoadTest)
+{
+	INIT_DONUT;
+	std::string providerName;
+	util::XValue data;
+	{
+		Handler<FloatObject> obj( heap->createFloatObject(10.1) );
+		ASSERT_ANY_THROW(obj->toBool(heap));
+		ASSERT_ANY_THROW(obj->toInt(heap));
+		ASSERT_ANY_THROW(obj->toString(heap));
+		ASSERT_FLOAT_EQ(10.1, obj->toFloat(heap));
+		data = Handler<HeapObject>(obj)->save(heap);
+		providerName = obj->providerName();
+	}
+	{
+		Handler<HeapObject> obj(heap->getHeapProvider(providerName)->create());
+		obj->load(heap, data);
+		ASSERT_NO_THROW(obj.cast<FloatObject>());
+		ASSERT_ANY_THROW(obj->toBool(heap));
+		ASSERT_ANY_THROW(obj->toInt(heap));
+		ASSERT_ANY_THROW(obj->toString(heap));
+		ASSERT_FLOAT_EQ(10.1, obj->toFloat(heap));
+	}
+}
+
 TEST(FloatTest, AddTest) { SOURCE_TEST_FLOAT(12.34+123.45, "12.34+123.45;"); }
 TEST(FloatTest, SubTest) { SOURCE_TEST_FLOAT(12.34-123.45, "12.34-123.45;"); }
 TEST(FloatTest, DivTest) { SOURCE_TEST_FLOAT(12.34/123.45, "12.34/123.45;"); }
