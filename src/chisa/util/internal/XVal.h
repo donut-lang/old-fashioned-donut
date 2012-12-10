@@ -130,8 +130,7 @@ template<typename T> typename _TypeAdapter<T>::return_type XObject::get( std::st
 		throw logging::Exception(__FILE__, __LINE__, "Object: \"%s\" not found.", name.c_str());
 	}
 	if( !p.second.is<SpiritType>() ) {
-		typename _TypeAdapter<T>::init_type empty;
-		throw logging::Exception(__FILE__, __LINE__, "Object: \"%s\" type mismatch required: %s actual: %s.", name.c_str(), XValue(empty).typeString().c_str(), it->second.typeString().c_str());
+		throw logging::Exception(__FILE__, __LINE__, "Object: \"%s\" type mismatch required: %s actual: %s.", name.c_str(), XValue(typename _TypeAdapter<T>::init_type()).typeString().c_str(), it->second.typeString().c_str());
 	}
 	return p.second.as<SpiritType>();
 }

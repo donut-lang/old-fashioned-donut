@@ -291,6 +291,22 @@ TEST(XValueTest, TreeTest)
 	}
 }
 
+TEST(XValueTest, InvalidTreeTest)
+{
+	auto tree = parse(R"delimiter(
+		<?xml version="1.0" encoding="UTF-8"?>
+		<xobject_invalid>
+		</xobject_invalid>
+		)delimiter");
+	tree->PrintError();
+	tinyxml2::XMLElement* elm = tree->RootElement();
+	ASSERT_ANY_THROW( XValue::fromXML(elm) );
+
+	Handler<XObject> obj(new XObject);
+	ASSERT_ANY_THROW(obj->accumlate(elm));
+
+}
+
 TEST(XValueTest, ObjectGetSetTest)
 {
 	Handler<XObject> obj(new XObject());
@@ -307,6 +323,11 @@ TEST(XValueTest, ObjectGetSetTest)
 	ASSERT_EQ("test", obj->get<XString>("str"));
 	ASSERT_TRUE(obj->has<XBool>("bool"));
 	ASSERT_EQ(true, obj->get<XBool>("bool"));
+
+	obj->set<XUInt>("int", 12U);
+	ASSERT_FALSE(obj->has<XSInt>("int"));
+	ASSERT_TRUE(obj->has<XUInt>("int"));
+	ASSERT_EQ(12, obj->get<XUInt>("int"));
 }
 
 TEST(XValueTest, ObjectConversionTest)
@@ -332,7 +353,7 @@ TEST(XValueTest, ArrayConversionTest)
 	ASSERT_TRUE(obj->has<XString>(0));
 	ASSERT_EQ("foo", obj->get<XString>(0));
 }
-TEST(XValueTest,ObjectNotFoundTest)
+TEST(XValueTest,ObjectNotFoundOrMismatchedTypeTest)
 {
 	Handler<XObject> obj(new XObject());
 	obj->set("int", 1);
@@ -384,7 +405,7 @@ TEST(XValueTest,ArrayUpdateTest)
 	obj.reset();
 }
 
-TEST(XValueTest,ArrayInvalidIndexTest)
+TEST(XValueTest,ArrayInvalidIndexOrMismatchedTypeTest)
 {
 	Handler<XArray> obj(new XArray);
 	obj->append(1);
