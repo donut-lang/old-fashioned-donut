@@ -104,6 +104,51 @@ TEST(SaveTest, ClosureRestoreTest)
 	}
 }
 
+TEST(SaveTest, ClosureSeekAndSaveLoadTest)
+{
+	std::string src;
+	timestamp_t tm1;
+	timestamp_t tm2;
+	{
+		INIT_DONUT;
+		machine->start(donut->parse("Global.val = {}; Global.val.x=func(x,y){x+y;};"));
+		tm1 = donut->nowTime();
+		machine->start(donut->parse("Global.val = {}; Global.val.x=10;"));
+		tm2 = donut->nowTime();
+		donut->seek(tm1);
+		tinyxml2::XMLDocument doc;
+		Handler<util::XObject> obj = donut->save().as<util::XObject>();
+		doc.InsertEndChild(obj->toXML(&doc));
+		tinyxml2::XMLPrinter printer;
+		doc.Print(&printer);
+		src = printer.CStr();
+	}
+	//std::cout << src << std::endl;
+	{
+		Handler<Donut> donut(new Donut(log_trace));
+		tinyxml2::XMLDocument doc;
+		doc.Parse(src.c_str());
+		util::XValue v = util::XValue::fromXML(doc.RootElement());
+		donut->load(v);
+		ASSERT_EQ(tm1, donut->nowTime());
+		{
+			Handler<Object> obj = donut->heap()->loadGlobalObject("val")->get(donut->heap(),"x");
+			ASSERT_TRUE(obj->isObject());
+		}
+		donut->seek(tm2);
+		{
+			Handler<Object> obj = donut->queryMachine()->start(donut->parse("Global.val.x;"));
+			ASSERT_TRUE(obj->isInt());
+			ASSERT_EQ(10, obj->toInt(donut->heap()));
+		}
+		donut->seek(tm1);
+		{
+			Handler<Object> obj = donut->queryMachine()->start(donut->parse("Global.val.x(1,2);"));
+			ASSERT_TRUE(obj->isInt());
+			ASSERT_EQ(3, obj->toInt(donut->heap()));
+		}
+	}
+}
 }}
 
 
