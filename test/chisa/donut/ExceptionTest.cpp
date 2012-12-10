@@ -29,11 +29,33 @@ TEST(DonutExceptionTest, ThrowingTest)
 
 TEST(DonutExceptionTest, MessageTest)
 {
+	std::string src = __FILE__;
+	std::size_t line = __LINE__;
 	DonutException e(__FILE__, __LINE__, "Hey!");
 	ASSERT_EQ("Hey!", e.msg());
+	ASSERT_EQ(src, e.file());
+	ASSERT_EQ(line+1, e.line());
+	ASSERT_FALSE(std::string(e.what()).empty());
 
+	src = __FILE__;
+	line = __LINE__;
 	DonutException e2(__FILE__, __LINE__, "%d", 12);
 	ASSERT_EQ("12", e2.msg());
+	ASSERT_EQ(src, e2.file());
+	ASSERT_EQ(line+1, e2.line());
+	ASSERT_FALSE(std::string(e2.what()).empty());
+}
+
+TEST(DonutExceptionTest, EmptyTest)
+{
+	std::string src = __FILE__;
+	std::size_t line = __LINE__;
+	DonutException e(__FILE__, __LINE__);
+	ASSERT_TRUE(e.msg().empty());
+	ASSERT_EQ(src, e.file());
+	ASSERT_EQ(line+1, e.line());
+	ASSERT_FALSE(std::string(e.what()).empty());
+
 }
 
 }}

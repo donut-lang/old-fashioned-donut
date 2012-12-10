@@ -22,8 +22,10 @@
 namespace chisa {
 namespace donut {
 
-DonutException::DonutException(const char* file, const size_t line) throw() : _line(0)
+DonutException::DonutException(const char* file, const size_t line) throw()
 {
+	va_list list;
+	init(file, line, "", list);
 }
 
 DonutException::DonutException(const char* file, const size_t line, const std::string& fmt, ...) noexcept
