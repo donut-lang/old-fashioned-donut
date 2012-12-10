@@ -22,18 +22,18 @@
 #include "Closure.h"
 #include "..//Exception.h"
 #include "../../util/StringUtil.h"
+#include "../object/Heap.h"
 
 namespace chisa {
 namespace donut {
 
 Source::Source(int id)
-:erased_(false),id_(id),entrypoint_id_(-1)
+:id_(id),entrypoint_id_(-1)
 {
 
 }
 
 Source::Source(util::XValue const& data)
-:erased_(false)
 {
 	using namespace chisa::util;
 	Handler<XObject> xobj(data.as<XObject>());
@@ -43,6 +43,19 @@ Source::Source(util::XValue const& data)
 	this->floatTable_.load( xobj->get<XValue>("floatTable") );
 	this->stringTable_.load( xobj->get<XValue>("stringTable") );
 	this->closureTable_.load( xobj->get<XValue>("closureTable") );
+}
+
+void Source::onRegisterToHeap(Heap* const& heap, int const& id) noexcept
+{
+	this->id_ = id;
+	this->heap_ = HandlerW<Heap>(heap);
+}
+bool Source::onFree() noexcept
+{
+	if (Handler<Heap> heap = this->heap_.lock()) {
+		heap->unregisterSource(this);
+	}
+	return false;
 }
 
 template<>

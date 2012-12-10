@@ -87,6 +87,7 @@ public:
 	Handler<DonutObject> global() { return this->globalObject_; }
 public:
 	Handler<Source> registerSource( Handler<Source> const& source );
+	void unregisterSource( Source* source );
 private:
 	void registerObject( const Handler<HeapObject>& obj );
 	int nextWalkColor();
