@@ -16,10 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdio.h>
 #include <memory>
 #include <cstring>
 #include <cstdlib>
+#include <climits>
 #include "../logging/Exception.h"
 #include "StringUtil.h"
 #include <cmath>
@@ -74,7 +74,7 @@ std::string toString(type const& val, int radix) {\
 TOSTR_DEF(int, "0%o", "%d", "0x%x");
 TOSTR_DEF(unsigned int, "0%o", "%u", "0x%x");
 // メモリモデルによってlong intの値は違う
-#if LONG_MAX == INT_MAX
+#if INT_MAX == LONG_MAX
 TOSTR_DEF(long int, "0%o", "%d", "0x%x");
 TOSTR_DEF(unsigned long int, "0%o", "%u", "0x%x");
 #elif LONG_MAX > INT_MAX
