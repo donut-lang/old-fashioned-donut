@@ -95,32 +95,32 @@ TEST(StringUtilTest, ToUpperTest)
 
 TEST(StringUtilTest, ParseIntTest)
 {
-	ASSERT_EQ(10, parseInt("10"));
-	ASSERT_EQ(10, parseInt("10",0));
-	ASSERT_EQ(16, parseInt("0x10"));
-	ASSERT_EQ(8, parseInt("010"));
-	ASSERT_EQ(10, parseInt("10",10));
-	ASSERT_EQ(8, parseInt("10",8));
-	ASSERT_EQ(16, parseInt("10",16));
+	ASSERT_EQ(10, parseAsInt<int>("10"));
+	ASSERT_EQ(10, parseAsInt<int>("10",0));
+	ASSERT_EQ(16, parseAsInt<int>("0x10"));
+	ASSERT_EQ(8, parseAsInt<int>("010"));
+	ASSERT_EQ(10, parseAsInt<int>("10",10));
+	ASSERT_EQ(8, parseAsInt<int>("10",8));
+	ASSERT_EQ(16, parseAsInt<int>("10",16));
 }
 
 TEST(StringUtilTest, ParseFloatTest)
 {
-	ASSERT_FLOAT_EQ(10.0f, parseFloat("10"));
-	ASSERT_FLOAT_EQ(10.12f, parseFloat("10.12"));
+	ASSERT_FLOAT_EQ(10.0f, parseAs<float>("10"));
+	ASSERT_FLOAT_EQ(10.12f, parseAs<float>("10.12"));
 }
 
 TEST(StringUtilTest, ParseBoolTest)
 {
-	ASSERT_TRUE(parseBool("true"));
-	ASSERT_TRUE(parseBool("True"));
-	ASSERT_TRUE(parseBool("yes"));
-	ASSERT_TRUE(parseBool("Yes"));
+	ASSERT_TRUE(parseAs<bool>("true"));
+	ASSERT_TRUE(parseAs<bool>("True"));
+	ASSERT_TRUE(parseAs<bool>("yes"));
+	ASSERT_TRUE(parseAs<bool>("Yes"));
 
-	ASSERT_FALSE(parseBool("false"));
-	ASSERT_FALSE(parseBool("False"));
-	ASSERT_FALSE(parseBool("no"));
-	ASSERT_FALSE(parseBool("No"));
+	ASSERT_FALSE(parseAs<bool>("false"));
+	ASSERT_FALSE(parseAs<bool>("False"));
+	ASSERT_FALSE(parseAs<bool>("no"));
+	ASSERT_FALSE(parseAs<bool>("No"));
 }
 
 

@@ -22,8 +22,8 @@ using namespace chisa;
 using namespace chisa::donut;
 using std::string;
 using chisa::donut::unescapeString;
-using chisa::util::parseInt;
-using chisa::util::parseFloat;
+using chisa::util::parseAsInt;
+using chisa::util::parseAs;
 
 typedef pANTLR3_COMMON_TOKEN Token;
 }
@@ -369,25 +369,25 @@ literal [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlis
 	| HEX_LITERAL
 	{
 		std::string str(createStringFromString($HEX_LITERAL.text));
-		int const val = parseInt(str, 16);
+		int const val = parseAsInt<int>(str, 16);
 		$asmlist.push_back(Inst::Push | $code->constCode<int>(val));
 	}
 	| OCT_LITERAL
 	{
 		std::string str(createStringFromString($OCT_LITERAL.text));
-		int const val = parseInt(str, 8);
+		int const val = parseAsInt<int>(str, 8);
 		$asmlist.push_back(Inst::Push | $code->constCode<int>(val));
 	}
 	| INT_LITERAL
 	{
 		std::string str(createStringFromString($INT_LITERAL.text));
-		int const val = parseInt(str, 10);
+		int const val = parseAsInt<int>(str, 10);
 		$asmlist.push_back(Inst::Push | $code->constCode<int>(val));
 	}
 	| FLOAT_LITERAL
 	{
 		std::string str(createStringFromString($FLOAT_LITERAL.text));
-		float const val = parseFloat(str);
+		float const val = parseAs<float>(str);
 		$asmlist.push_back(Inst::Push | $code->constCode<float>(val));
 	}
 	| STRING_SINGLE

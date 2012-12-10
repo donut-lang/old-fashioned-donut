@@ -38,10 +38,10 @@ std::string toString(const bool val);
 std::string toLower(const std::string& str);
 std::string toUpper(const std::string& str);
 
-int parseInt(const std::string& str, int radix=0, bool* succeed=nullptr);
-int64_t parseInt64(const std::string& str, int radix=0, bool* succeed=nullptr);
-double parseFloat(const std::string& str, bool* succeed=nullptr);
-bool parseBool(const std::string& val, bool* succeed=nullptr);
+template <typename T>
+T parseAsInt(const std::string& str, int radix=0, bool* succeed=nullptr);
+template <typename T>
+T parseAs(const std::string& str, bool* succeed=nullptr);
 
 std::string encodeBase64( const std::vector<char>& data );
 std::string encodeBase64( const std::string& data );

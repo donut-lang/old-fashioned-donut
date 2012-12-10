@@ -232,54 +232,60 @@ std::string decodeBase64AsString(const std::string& str){
 	return std::string(dat.data(), dat.size());
 }
 
-int parseInt(const std::string& str, int radix, bool* succeed)
-{
-	char* end;
-	int const result = std::strtol(str.c_str(), &end, radix);
-	if((*end) != '\0'){
-		if(succeed != nullptr){
-			*succeed = false;
-		}else{
-			throw logging::Exception(__FILE__, __LINE__, "Invalid number: %s", str.c_str());
-		}
-	} else {
-		if(succeed) *succeed = true;
-	}
-	return result;
+#define PARSE_STRTO(TYPE, FUNC) \
+template <>\
+TYPE parseAsInt<TYPE>(const std::string& str, int radix, bool* succeed) {\
+	char* end;\
+	TYPE const result = std::FUNC(str.c_str(), &end, radix);\
+	if((*end) != '\0'){\
+		if(succeed != nullptr){\
+			*succeed = false;\
+		}else{\
+			throw logging::Exception(__FILE__, __LINE__, "Invalid number: %s", str.c_str());\
+		}\
+	} else {\
+		if(succeed) *succeed = true;\
+	}\
+	return result;\
 }
 
-int64_t parseInt64(const std::string& str, int radix, bool* succeed)
-{
-	char* end;
-	int64_t const result = std::strtoll(str.c_str(), &end, radix);
-	if((*end) != '\0'){
-		if(succeed != nullptr){
-			*succeed = false;
-		}else{
-			throw logging::Exception(__FILE__, __LINE__, "Invalid number: %s", str.c_str());
-		}
-	} else {
-		if(succeed) *succeed = true;
-	}
-	return result;
-}
-double parseFloat(const std::string& str, bool* succeed)
-{
-	char* end;
-	double const result = std::strtod(str.c_str(), &end);
-	if((*end) != '\0'){
-		if(succeed != nullptr){
-			*succeed = false;
-		}else{
-			throw logging::Exception(__FILE__, __LINE__, "Invalid number: %s", str.c_str());
-		}
-	} else {
-		if(succeed) *succeed = true;
-	}
-	return result;
-}
+PARSE_STRTO(int, strtol);
+PARSE_STRTO(unsigned int, strtoul);
 
-bool parseBool(const std::string& str, bool* succeed)
+PARSE_STRTO(long int, strtol);
+PARSE_STRTO(long unsigned int, strtoul);
+
+PARSE_STRTO(long long int, strtoll);
+PARSE_STRTO(unsigned long long int, strtoull);
+
+
+#define PARSE_STRTO_F(TYPE, FUNC) \
+	template <> TYPE parseAs<TYPE>(const std::string& str, bool* succeed)\
+	{\
+		char* end;\
+		double const result = std::strtod(str.c_str(), &end);\
+		if((*end) != '\0'){\
+			if(succeed != nullptr){\
+				*succeed = false;\
+			}else{\
+				throw logging::Exception(__FILE__, __LINE__, "Invalid number: %s", str.c_str());\
+			}\
+		} else {\
+			if(succeed) *succeed = true;\
+		}\
+		return result;\
+	}
+
+
+PARSE_STRTO_F(float, strtof);
+PARSE_STRTO_F(double, strtod);
+PARSE_STRTO_F(long double, strtold);
+
+#undef PARSE_STRTO_F
+#undef PARSE_STRTO
+
+template <>
+bool parseAs(const std::string& str, bool* succeed)
 {
 	std::string copy = toLower(str);
 	if( copy == "true" || copy == "yes") {

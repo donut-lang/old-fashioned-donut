@@ -189,17 +189,17 @@ TEST(XValueTest, FloatTest)
 	{
 		float val = NAN;
 		XValue p((val));
-		ASSERT_TRUE( isnan( p.as<XFloat>() ) );
+		ASSERT_TRUE( std::isnan( p.as<XFloat>() ) );
 	}
 	{
 		XValue p(XValue::decode<XFloat>("nan"));
 		ASSERT_TRUE( p.is<XFloat>() );
-		ASSERT_TRUE( isnan( p.as<XFloat>() ) );
+		ASSERT_TRUE( std::isnan( p.as<XFloat>() ) );
 	}
 	{
 		XValue p(XValue::decode<XFloat>("NAN"));
 		ASSERT_TRUE( p.is<XFloat>() );
-		ASSERT_TRUE( isnan( p.as<XFloat>() ) );
+		ASSERT_TRUE( std::isnan( p.as<XFloat>() ) );
 	}
 }
 
