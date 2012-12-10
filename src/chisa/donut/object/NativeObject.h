@@ -68,12 +68,26 @@ private:
 	Signature func_;
 public:
 	PureNativeClosureObject( std::string const& providerName):NativeClosureObject(providerName){}
-	virtual ~PureNativeClosureObject() noexcept {}
+	virtual ~PureNativeClosureObject() noexcept {};
 	void bootstrap( std::string const& objectProviderName, std::string const& closureName, Signature f );
 public:
-	Handler<Object> apply(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& arg){
-		return func_(heap, self,arg);
-	}
+	Handler<Object> apply(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& arg);
+private:
+	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override final;
+	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override final;
+};
+
+class ReactiveNativeClosureObject final : public NativeClosureObject {
+public:
+	typedef std::function<std::pair<Handler<Object>, util::XValue>(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& arg)> Signature;
+private:
+	Signature func_;
+public:
+	ReactiveNativeClosureObject( std::string const& providerName):NativeClosureObject(providerName){}
+	virtual ~ReactiveNativeClosureObject() noexcept {};
+	void bootstrap( std::string const& objectProviderName, std::string const& closureName, Signature f );
+public:
+	Handler<Object> apply(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& arg);
 private:
 	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override final;
 	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override final;

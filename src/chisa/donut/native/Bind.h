@@ -57,5 +57,4 @@ std::function<Handler<Object>(const Handler<Heap>& heap, const Handler<Object>& 
 	};
 }
 
-
 }}}

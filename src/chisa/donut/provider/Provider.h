@@ -35,15 +35,19 @@ namespace donut {
 class Provider : public HandlerBody<Provider> {
 private: //これは実行前に全て設定される情報
 	util::VectorMap<std::string, PureNativeClosureObject::Signature> pureNativeClosures_;
+	util::VectorMap<std::string, ReactiveNativeClosureObject::Signature> reactiveNativeClosures_;
 	HandlerW<Heap> const heap_;
 	std::string const name_;
 private: //実行時に変化し、セーブ・ロードの対象にするのはこれだけ。
 	Handler<DonutObject> prototype_;
 protected:
 	Provider( const Handler<Heap>& heap, const std::string& name );
-	template <typename T> bool registerPureNativeClosure( const std::string& name, T f) { return pureNativeClosures_.update( name, native::createBind(f) ); }
-private:
-	void addPrototype( const std::string& name, PureNativeClosureObject::Signature clos );
+	template <typename T> bool registerPureNativeClosure( const std::string& name, T f) {
+		return (!reactiveNativeClosures_.have(name)) && pureNativeClosures_.update( name, native::createBind(f) );
+	}
+	template <typename T> bool registerReactiveNativeClosure( const std::string& name, T f) {
+		return (!pureNativeClosures_.have(name)) && reactiveNativeClosures_.update( name, native::createBind(f) );
+	}
 public:
 	virtual ~Provider() noexcept = default;
 	inline bool onFree() noexcept { return false; };
@@ -52,6 +56,7 @@ public:
 	inline Handler<DonutObject> prototype() const noexcept { return this->prototype_; };
 public:
 	PureNativeClosureObject::Signature const& findPureNativeClosureEntry( std::string const& name );
+	ReactiveNativeClosureObject::Signature const& findReactiveNativeClosureEntry( std::string const& name );
 public: /* 処理系の保存・復帰をします。 */
 	void bootstrap();
 	util::XValue save();
@@ -185,6 +190,14 @@ public:
 	PureNativeObjectProvider( const Handler<Heap>& heap )
 	:HeapObjectProviderImpl<PureNativeClosureObject>(heap, "PureNativeClosureObject"){}
 	virtual ~PureNativeObjectProvider() noexcept = default;
+};
+
+class ReactiveNativeClosureObject;
+class ReactiveNativeObjectProvider final : public HeapObjectProviderImpl<ReactiveNativeClosureObject> {
+public:
+	ReactiveNativeObjectProvider( const Handler<Heap>& heap )
+	:HeapObjectProviderImpl<ReactiveNativeClosureObject>(heap, "ReactiveNativeClosureObject"){}
+	virtual ~ReactiveNativeObjectProvider() noexcept = default;
 };
 
 }}
