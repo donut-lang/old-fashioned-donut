@@ -7,6 +7,7 @@ function filter() {
 	mv cov_tmp cov.info
 }
 
+echo now: `pwd`
 lcov -c -f -b build/debug -d build/debug -o cov.info
 filter "*/usr/*"
 filter "*/external/*"
