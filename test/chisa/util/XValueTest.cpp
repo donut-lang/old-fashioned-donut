@@ -284,7 +284,7 @@ TEST(XValueTest, TreeTest)
 	}
 }
 
-TEST(XValueTest, GetSetTest)
+TEST(XValueTest, ObjectGetSetTest)
 {
 	Handler<XObject> obj(new XObject());
 	obj->set("int", 1);
@@ -292,10 +292,60 @@ TEST(XValueTest, GetSetTest)
 	obj->set("str", "test");
 	obj->set("bool", true);
 
+	ASSERT_TRUE(obj->has<XSInt>("int"));
 	ASSERT_EQ(1, obj->get<XSInt>("int"));
+	ASSERT_TRUE(obj->has<XFloat>("float"));
 	ASSERT_FLOAT_EQ(1.2f, obj->get<XFloat>("float"));
+	ASSERT_TRUE(obj->has<XString>("str"));
 	ASSERT_EQ("test", obj->get<XString>("str"));
+	ASSERT_TRUE(obj->has<XBool>("bool"));
 	ASSERT_EQ(true, obj->get<XBool>("bool"));
+}
+
+TEST(XValueTest,ObjectNotFoundTest)
+{
+	Handler<XObject> obj(new XObject());
+	obj->set("int", 1);
+	obj->set("float", 1.2f);
+	obj->set("str", "test");
+	obj->set("bool", true);
+
+	ASSERT_FALSE(obj->has<XSInt>("int2"));
+	ASSERT_ANY_THROW(obj->get<XSInt>("int2"));
+	ASSERT_FALSE(obj->has<XFloat>("float2"));
+	ASSERT_ANY_THROW( obj->get<XFloat>("float2"));
+	ASSERT_FALSE(obj->has<XString>("str2"));
+	ASSERT_ANY_THROW(obj->get<XString>("str2"));
+	ASSERT_FALSE(obj->has<XBool>("bool2"));
+	ASSERT_ANY_THROW(obj->get<XBool>("bool2"));
+}
+
+TEST(XValueTest,ArrayGetSetTest)
+{
+	Handler<XArray> obj(new XArray);
+	obj->append(1);
+	obj->append(1.2f);
+	obj->append("test");
+	obj->append(true);
+
+	ASSERT_EQ(4, obj->size());
+	ASSERT_EQ(1, obj->get<XSInt>(0));
+	ASSERT_FLOAT_EQ(1.2f,obj->get<XFloat>(1));
+	ASSERT_EQ("test", obj->get<XString>(2));
+	ASSERT_TRUE(obj->get<XBool>(3));
+}
+
+TEST(XValueTest,ArrayInvalidIndexTest)
+{
+	Handler<XArray> obj(new XArray);
+	obj->append(1);
+	obj->append(1.2f);
+	obj->append("test");
+	obj->append(true);
+
+	ASSERT_ANY_THROW(obj->get<XSInt>(-1));
+	ASSERT_ANY_THROW(obj->get<XSInt>(4));
+	ASSERT_ANY_THROW(obj->get<XSInt>(100));
 }
 
 TEST(XValueTest, SerializeDeserializeTest)
