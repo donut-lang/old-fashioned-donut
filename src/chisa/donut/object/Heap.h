@@ -113,9 +113,10 @@ public: /* 保存・復帰時にのみ使う */
 	Handler<HeapObject> decodeHeapDescriptor( object_desc_t const& desc );
 	Handler<Source> decodeSourceID(int const& id);
 public: /* Clockから呼ばれる */
+	void onBackNotify();
+	void onForwardNotify();
 	void onDiscardFutureNotify();
 	void onDiscardHistoryNotify();
-	void onSeekNotify();
 public: /* Sourceから呼ばれる */
 	Handler<Source> registerSource( Handler<Source> const& source );
 	void unregisterSource( Source* source );

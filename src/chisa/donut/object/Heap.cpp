@@ -405,13 +405,24 @@ util::XValue Heap::save()
 /**********************************************************************************
  * time functions
  **********************************************************************************/
-void Heap::onSeekNotify()
+void Heap::onBackNotify()
 {
-	if(this->log().d()){
-		this->log().d(TAG, "Seeking to... %d", this->clock_->now());
+	if(this->log().t()){
+		this->log().t(TAG, "go back to %d...", this->clock_->now());
 	}
+	Handler<Heap> self(this->self());
 	for( Object* const& o : this->objectPool_){
-		o->onSeekNotify(self());
+		o->onBackNotify(self);
+	}
+}
+void Heap::onForwardNotify()
+{
+	if(this->log().t()){
+		this->log().t(TAG, "go forward to %d...", this->clock_->now());
+	}
+	Handler<Heap> self(this->self());
+	for( Object* const& o : this->objectPool_){
+		o->onForwardNotify(self);
 	}
 }
 

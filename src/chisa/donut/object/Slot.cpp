@@ -125,6 +125,14 @@ void Slot::onSeekNotify( Handler<Heap> const& heap )
 		}
 	}
 }
+void Slot::onBackNotify(Handler<Heap> const& heap)
+{
+	this->onSeekNotify(heap);
+}
+void Slot::onForwardNotify(Handler<Heap> const& heap)
+{
+	this->onSeekNotify(heap);
+}
 
 void Slot::onDiscardHistoryNotify( Handler<Heap> const& heap )
 {

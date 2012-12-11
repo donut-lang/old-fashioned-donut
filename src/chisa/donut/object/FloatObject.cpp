@@ -44,7 +44,11 @@ bool FloatObject::toBoolImpl(Handler<Heap> const& heap) const
 	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast Float to Bool implicitly. Use toBoolean()");
 }
 
-void FloatObject::onSeekNotifyImpl(Handler<Heap> const& heap)
+void FloatObject::onBackNotifyImpl(Handler<Heap> const& heap)
+{
+
+}
+void FloatObject::onForwardNotifyImpl(Handler<Heap> const& heap)
 {
 
 }

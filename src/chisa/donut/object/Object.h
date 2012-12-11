@@ -70,7 +70,8 @@ public:
 	inline void incref( bool check ) { if(isObject()) { this->HandlerBody<Object>::incref(check); } }
 	inline void decref() { if(isObject()) { this->HandlerBody<Object>::decref(); } };
 	inline void mark(Handler<Heap> const& heap, int color) { if(isObject()){ this->markImpl(heap, color); } }
-	inline void onSeekNotify(Handler<Heap> const& heap){ if(isObject()){ this->onSeekNotifyImpl(heap); } };
+	inline void onBackNotify(Handler<Heap> const& heap){ if(isObject()){ this->onBackNotifyImpl(heap); } };
+	inline void onForwardNotify(Handler<Heap> const& heap){ if(isObject()){ this->onForwardNotifyImpl(heap); } };
 	inline void onDiscardFutureNotify(Handler<Heap> const& heap){ if(isObject()){ this->onDiscardFutureNotifyImpl(heap); } };
 	inline void onDiscardHistoryNotify(Handler<Heap> const& heap){ if(isObject()){ this->onDiscardHistoryNotifyImpl(heap); } };
 protected: /* 実装すべきもの */
@@ -84,7 +85,8 @@ protected: /* 実装すべきもの */
 	virtual Handler<Object> setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> obj) = 0;
 	virtual Handler<Object> getImpl(Handler<Heap> const& heap, std::string const& name) const = 0;
 	virtual void markImpl(Handler<Heap> const& heap, int color) = 0;
-	virtual void onSeekNotifyImpl(Handler<Heap> const& heap) = 0;
+	virtual void onBackNotifyImpl(Handler<Heap> const& heap) = 0;
+	virtual void onForwardNotifyImpl(Handler<Heap> const& heap) = 0;
 	virtual void onDiscardHistoryNotifyImpl(Handler<Heap> const& heap) = 0;
 	virtual void onDiscardFutureNotifyImpl(Handler<Heap> const& heap) = 0;
 	virtual object_desc_t toDescriptorImpl() const noexcept = 0;
@@ -185,7 +187,8 @@ protected:
 	virtual Handler<Object> getImpl(Handler<Heap> const& heap, std::string const& name) const override;
 	virtual void markImpl(Handler<Heap> const& heap, int color) override;
 public: /* time functions */
-	virtual void onSeekNotifyImpl(Handler<Heap> const& heap) override;
+	virtual void onBackNotifyImpl(Handler<Heap> const& heap) override;
+	virtual void onForwardNotifyImpl(Handler<Heap> const& heap) override;
 	virtual void onDiscardHistoryNotifyImpl(Handler<Heap> const& heap) override;
 	virtual void onDiscardFutureNotifyImpl(Handler<Heap> const& heap) override;
 private:
@@ -258,7 +261,8 @@ protected:
 	virtual Handler<Object> setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> obj) override final;
 	virtual Handler<Object> getImpl(Handler<Heap> const& heap, std::string const& name) const override final;
 	virtual void markImpl(Handler<Heap> const& heap, int color) override final;
-	virtual void onSeekNotifyImpl(Handler<Heap> const& heap) override final;
+	virtual void onBackNotifyImpl(Handler<Heap> const& heap) override final;
+	virtual void onForwardNotifyImpl(Handler<Heap> const& heap) override final;
 	virtual void onDiscardHistoryNotifyImpl(Handler<Heap> const& heap) override final;
 	virtual void onDiscardFutureNotifyImpl(Handler<Heap> const& heap) override final;
 private:

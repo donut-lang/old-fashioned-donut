@@ -131,12 +131,19 @@ void DonutObject::load( Handler<Heap> const& heap, util::XValue const& data )
 /**********************************************************************************
  * from clock
  **********************************************************************************/
-void DonutObject::onSeekNotifyImpl(Handler<Heap> const& heap)
+void DonutObject::onBackNotifyImpl(Handler<Heap> const& heap)
 {
 	for(std::pair<const std::string, Slot>& it : this->slots_){
-		it.second.onSeekNotify(heap);
+		it.second.onBackNotify(heap);
 	}
 }
+void DonutObject::onForwardNotifyImpl(Handler<Heap> const& heap)
+{
+	for(std::pair<const std::string, Slot>& it : this->slots_){
+		it.second.onForwardNotify(heap);
+	}
+}
+
 void DonutObject::onDiscardFutureNotifyImpl(Handler<Heap> const& heap)
 {
 	for(std::pair<const std::string, Slot>& it : this->slots_){

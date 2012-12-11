@@ -55,7 +55,10 @@ public: /* 処理系の保存・復帰をします。 */
 public: /* クロックから呼ばれる */
 	void onDiscardHistoryNotify( Handler<Heap> const& heap );
 	void onDiscardFutureNotify( Handler<Heap> const& heap );
-	void onSeekNotify( Handler<Heap> const& heap );
+	void onBackNotify(Handler<Heap> const& heap);
+	void onForwardNotify(Handler<Heap> const& heap);
+private:
+	void onSeekNotify(Handler<Heap> const& heap);
 };
 
 }}

@@ -76,7 +76,7 @@ TEST_F(DonutSlotTest, SeekTest)
 	ASSERT_EQ(obj100->toInt(heap), slot.load()->toInt(heap));
 
 	clock->tick();
-	slot.onSeekNotify(heap); //FIXME: シークの通知はヒープにぶら下がったオブジェクトのスロットにしか、来ない
+	slot.onForwardNotify(heap);//FIXME: シークの通知はヒープにぶら下がったオブジェクトのスロットにしか、来ない
 	Handler<Object> obj200 = heap->createInt(200);
 	slot.store(heap, obj200.get());
 
@@ -85,14 +85,14 @@ TEST_F(DonutSlotTest, SeekTest)
 	ASSERT_EQ(obj200->toInt(heap), slot.load()->toInt(heap));
 
 	clock->seek(clock->now()-1);
-	slot.onSeekNotify(heap); //FIXME: シークの通知はヒープにぶら下がったオブジェクトのスロットにしか、来ない
+	slot.onBackNotify(heap);//FIXME: シークの通知はヒープにぶら下がったオブジェクトのスロットにしか、来ない
 
 	ASSERT_TRUE(slot.have());
 	ASSERT_NO_THROW(slot.load());
 	ASSERT_EQ(obj100->toInt(heap), slot.load()->toInt(heap));
 
 	clock->seek(clock->firstTime());
-	slot.onSeekNotify(heap); //FIXME: シークの通知はヒープにぶら下がったオブジェクトのスロットにしか、来ない
+	slot.onBackNotify(heap);//FIXME: シークの通知はヒープにぶら下がったオブジェクトのスロットにしか、来ない
 	ASSERT_FALSE(slot.have());
 	ASSERT_ANY_THROW(slot.load());
 }
@@ -111,12 +111,12 @@ TEST_F(DonutSlotTest, SaveTest)
 
 		clock->tick();
 		t3 = clock->now();
-		slot.onSeekNotify(heap);
+		slot.onForwardNotify(heap);
 		Handler<Object> obj200 = heap->createInt(200);
 		slot.store(heap, obj200.get());
 
 		clock->seek(t2);
-		slot.onSeekNotify(heap);
+		slot.onBackNotify(heap);
 		v = slot.save();
 	}
 	{
@@ -124,19 +124,19 @@ TEST_F(DonutSlotTest, SaveTest)
 		ASSERT_EQ(100, slot.load()->toInt(heap));
 
 		clock->seek(t1);
-		slot.onSeekNotify(heap);
+		slot.onBackNotify(heap);
 
 		ASSERT_FALSE(slot.have());
 		ASSERT_ANY_THROW(slot.load());
 
 		clock->seek(t2);
-		slot.onSeekNotify(heap);
+		slot.onForwardNotify(heap);
 		ASSERT_TRUE(slot.have());
 		ASSERT_NO_THROW(slot.load());
 		ASSERT_EQ(100, slot.load()->toInt(heap));
 
 		clock->seek(t3);
-		slot.onSeekNotify(heap);
+		slot.onForwardNotify(heap);
 		ASSERT_TRUE(slot.have());
 		ASSERT_NO_THROW(slot.load());
 		ASSERT_EQ(200, slot.load()->toInt(heap));
