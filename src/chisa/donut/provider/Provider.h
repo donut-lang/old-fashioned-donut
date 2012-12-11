@@ -68,20 +68,20 @@ protected:
 
 //---------------------------------------------------------------------------------------------------------------------
 
-class HeapObjectProvider : public Provider {
+class HeapProvider : public Provider {
 protected:
-	HeapObjectProvider( Handler<Heap> const& heap, std::string const& name ):Provider(heap, name){};
+	HeapProvider( Handler<Heap> const& heap, std::string const& name ):Provider(heap, name){};
 public:
-	virtual ~HeapObjectProvider() noexcept = default;
+	virtual ~HeapProvider() noexcept = default;
 	virtual HeapObject* create() = 0;
 };
 
 template <typename T>
-class HeapObjectProviderImpl : public HeapObjectProvider {
+class HeapProviderImpl : public HeapProvider {
 protected:
-	HeapObjectProviderImpl( Handler<Heap> const& heap, std::string const& name ):HeapObjectProvider(heap, name){};
+	HeapProviderImpl( Handler<Heap> const& heap, std::string const& name ):HeapProvider(heap, name){};
 public:
-	virtual ~HeapObjectProviderImpl() noexcept = default;
+	virtual ~HeapProviderImpl() noexcept = default;
 public:
 	T* createDerived() {
 		return new T( this->name() );
@@ -153,14 +153,14 @@ public:
 //---------------------------------------------------------------------------------------------------------------------
 
 class StringObject;
-class StringProvider final : public HeapObjectProviderImpl<StringObject> {
+class StringProvider final : public HeapProviderImpl<StringObject> {
 public:
 	StringProvider(Handler<Heap> const& heap);
 	virtual ~StringProvider() noexcept = default;
 };
 
 class FloatObject;
-class FloatProvider final : public HeapObjectProviderImpl<FloatObject> {
+class FloatProvider final : public HeapProviderImpl<FloatObject> {
 public:
 	FloatProvider(Handler<Heap> const& heap);
 	virtual ~FloatProvider() noexcept = default;
@@ -169,34 +169,34 @@ public:
 
 class DonutObject;
 class DonutClosureObject;
-class DonutObjectProvider final : public HeapObjectProviderImpl<DonutObject> {
+class DonutObjectProvider final : public HeapProviderImpl<DonutObject> {
 public:
 	DonutObjectProvider( Handler<Heap> const& heap )
-	:HeapObjectProviderImpl<DonutObject>(heap, "DonutObject"){};
+	:HeapProviderImpl<DonutObject>(heap, "DonutObject"){};
 	virtual ~DonutObjectProvider() noexcept = default;
 };
-class DonutClosureObjectProvider final : public HeapObjectProviderImpl<DonutClosureObject> {
+class DonutClosureObjectProvider final : public HeapProviderImpl<DonutClosureObject> {
 public:
 	DonutClosureObjectProvider( Handler<Heap> const& heap )
-	:HeapObjectProviderImpl<DonutClosureObject>(heap,"DonutClosureObject"){};
+	:HeapProviderImpl<DonutClosureObject>(heap,"DonutClosureObject"){};
 	virtual ~DonutClosureObjectProvider() noexcept = default;
 };
 
 //---------------------------------------------------------------------------------------------------------------------
 
 class PureNativeClosureObject;
-class PureNativeObjectProvider final : public HeapObjectProviderImpl<PureNativeClosureObject> {
+class PureNativeObjectProvider final : public HeapProviderImpl<PureNativeClosureObject> {
 public:
 	PureNativeObjectProvider( Handler<Heap> const& heap )
-	:HeapObjectProviderImpl<PureNativeClosureObject>(heap, "PureNativeClosureObject"){}
+	:HeapProviderImpl<PureNativeClosureObject>(heap, "PureNativeClosureObject"){}
 	virtual ~PureNativeObjectProvider() noexcept = default;
 };
 
 class ReactiveNativeClosureObject;
-class ReactiveNativeObjectProvider final : public HeapObjectProviderImpl<ReactiveNativeClosureObject> {
+class ReactiveNativeObjectProvider final : public HeapProviderImpl<ReactiveNativeClosureObject> {
 public:
 	ReactiveNativeObjectProvider( Handler<Heap> const& heap )
-	:HeapObjectProviderImpl<ReactiveNativeClosureObject>(heap, "ReactiveNativeClosureObject"){}
+	:HeapProviderImpl<ReactiveNativeClosureObject>(heap, "ReactiveNativeClosureObject"){}
 	virtual ~ReactiveNativeObjectProvider() noexcept = default;
 };
 

@@ -67,7 +67,7 @@ public:
 class ReactiveNativeObject : public NativeObject {
 private:
 	std::vector<std::pair<timestamp_t, util::XValue> > reactions_;
-	int index_;
+	int index_; //次に順方向で挿入されるべきインデックスを示す。0なら戻るものがないのを示す。
 public:
 	ReactiveNativeObject( std::string const& providerName ):NativeObject(providerName), index_(0){}
 	virtual ~ReactiveNativeObject() noexcept = default;
@@ -76,7 +76,8 @@ public:
 	virtual util::XValue save( Handler<Heap> const& heap ) override final;
 	virtual void load( Handler<Heap> const& heap, util::XValue const& data ) override final;
 private:
-	int findIndex( timestamp_t const& t );
+	int findUpperIndex( timestamp_t const& t );
+	int findLowerIndex( timestamp_t const& t );
 protected:
 	virtual std::string toStringImpl(Handler<Heap> const& heap) const override final;
 	virtual int toIntImpl(Handler<Heap> const& heap) const override final;

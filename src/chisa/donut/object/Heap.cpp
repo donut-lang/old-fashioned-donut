@@ -47,14 +47,14 @@ bool Heap::onFree() noexcept
 	return false;
 }
 
-Handler<HeapObjectProvider> Heap::findHeapProvider( std::string const& name ) const
+Handler<HeapProvider> Heap::findHeapProvider( std::string const& name ) const
 {
 	auto it = this->providers_.find(name);
 	if(it != this->providers_.end()){
-		util::VectorMap<std::string, Handler<HeapObjectProvider> >::Pair const& p = *it;
+		util::VectorMap<std::string, Handler<HeapProvider> >::Pair const& p = *it;
 		return p.second;
 	}
-	return Handler<HeapObjectProvider>();
+	return Handler<HeapProvider>();
 }
 
 Handler<Provider> Heap::findProvider( std::string const& name ) const
@@ -70,7 +70,7 @@ Handler<Provider> Heap::findProvider( std::string const& name ) const
 	}else if(name==this->nullProvider_->name()){
 		return nullProvider_;
 	}
-	return Handler<HeapObjectProvider>();
+	return Handler<HeapProvider>();
 }
 
 Handler<Source> Heap::registerSource( Handler<Source> const& source )
@@ -221,7 +221,7 @@ Handler<Object> Heap::createNull()
 /**********************************************************************************
  * 外部との接続
  **********************************************************************************/
-void Heap::registerProvider( Handler<HeapObjectProvider> const& provider )
+void Heap::registerProvider( Handler<HeapProvider> const& provider )
 {
 	this->providers_.insert(provider->name(), provider);
 }
@@ -259,7 +259,7 @@ void Heap::bootstrap()
 	this->intProvider_->bootstrap();
 	this->boolProvider_->bootstrap();
 	this->nullProvider_->bootstrap();
-	for( std::pair<std::string, Handler<HeapObjectProvider>>& p : this->providers_ ){
+	for( std::pair<std::string, Handler<HeapProvider>>& p : this->providers_ ){
 		p.second->bootstrap();
 	}
 
@@ -309,7 +309,7 @@ void Heap::load(util::XValue const& data)
 		}
 		{ //一般のヒーププロバイダ
 			Handler<util::XObject> const hobj ( xobj->get<util::XObject>("provider-heaps") );
-			for(std::pair<std::string, Handler<HeapObjectProvider> >& p : this->providers_){
+			for(std::pair<std::string, Handler<HeapProvider> >& p : this->providers_){
 				p.second->load(hobj->get<XValue>(p.first));
 			}
 		}
@@ -380,7 +380,7 @@ util::XValue Heap::save()
 		}
 		{ //通常プロバイダ
 			Handler<util::XObject> const hobj ( new XObject );
-			for(std::pair<std::string, Handler<HeapObjectProvider> >& p : this->providers_){
+			for(std::pair<std::string, Handler<HeapProvider> >& p : this->providers_){
 				hobj->set(p.first, p.second->save());
 			}
 			top->set("provider-heaps", hobj);

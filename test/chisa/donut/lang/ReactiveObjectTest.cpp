@@ -24,15 +24,24 @@ namespace donut {
 namespace {
 class SampleObject : public ReactiveNativeObject {
 public:
-	bool futureDiscarded = false;
-	bool historyDiscarded = false;
+	bool futureDiscarded;
+	bool historyDiscarded;
+	bool backable_but_non_fowardable;
 	SampleObject(std::string const& provicerName)
 	:ReactiveNativeObject(provicerName)
 	,futureDiscarded(false)
 	,historyDiscarded(false)
+	,backable_but_non_fowardable(false)
 	{}
 	virtual util::XValue onBack(Handler<Heap> const& heap, util::XValue const& val) override
 	{
+		std::string v(val.as<std::string>());
+		if(v == "backable_but_non_fowardable"){
+			backable_but_non_fowardable = true;
+			return util::XValue(); //non-fowardable
+		}else{
+
+		}
 		return util::XValue(2);
 	}
 	virtual util::XValue onForward(Handler<Heap> const& heap, util::XValue const& val) override
@@ -52,39 +61,91 @@ public:
 
 	}
 };
-class SampleProvider : public HeapObjectProviderImpl<SampleObject>{
+class SampleProvider : public HeapProviderImpl<SampleObject>{
 public:
-	SampleProvider(Handler<Heap> const& heap ):HeapObjectProviderImpl<SampleObject>(heap, "SampleObject"){
-		this->registerReactiveNativeClosure("do", std::function<std::tuple<std::string, util::XValue>(SampleObject*)>([](SampleObject* obj){
+	SampleProvider(Handler<Heap> const& heap ):HeapProviderImpl<SampleObject>(heap, "SampleObject"){
+		this->registerReactiveNativeClosure("unrecoverable", std::function<std::tuple<std::string, util::XValue>(SampleObject*)>([](SampleObject* obj){
 			return std::make_tuple("hey!", util::XValue());
+		}));
+		this->registerReactiveNativeClosure("backable_but_non_fowardable", std::function<std::tuple<std::string, util::XValue>(SampleObject*)>([](SampleObject* obj){
+			return std::make_tuple("hey!", util::XValue("backable_but_non_fowardable"));
 		}));
 	}
 };
 
-TEST(ReactiveObjectTest, RegisterTest)
+class ReactiveObjectTest : public ::testing::Test
 {
-	Handler<Donut> donut(new Donut(log_trace));
-	Handler<Heap> heap( donut->heap() );
-	Handler<Machine> machine = donut->queryMachine();
+protected:
+	Handler<Donut> donut;
+	Handler<Clock> clock;
+	Handler<Heap> heap;
+	Handler<Machine> machine;
+protected:
+	Handler<SampleProvider> provider;
+public:
+	void SetUp(){
+		donut = Handler<Donut>(new Donut(log_trace));
+		machine = donut->queryMachine();
+		clock = donut->clock();
+		heap = donut->heap();
 
-	Handler<SampleProvider> provider(new SampleProvider(heap));
+		provider = Handler<SampleProvider>(new SampleProvider(heap));
+		heap->registerProvider(provider);
 
-	heap->registerProvider( provider );
-	donut->bootstrap();
-
+		donut->bootstrap();
+	}
+	void TearDown(){
+	}
+};
+TEST_F(ReactiveObjectTest, RegisterTest)
+{
 	Handler<SampleObject> obj( provider->createDerived() );
 	obj->bootstrap(heap);
 	heap->setGlobalObject("sample", obj);
 	ASSERT_TRUE( heap->hasGlobalObject("sample") );
 	ASSERT_TRUE( heap->getGlobalObject("sample")->isObject() );
-	Handler<Object> result = machine->start( donut->parse("sample.do();") );
+	Handler<Object> result = machine->start( donut->parse("sample.unrecoverable();") );
 	ASSERT_TRUE(result->isObject());
 	ASSERT_EQ("hey!", result->toString(heap));
 	ASSERT_EQ( donut->nowTime(), donut->firstTime() );
 	ASSERT_FALSE( obj->futureDiscarded );
 	ASSERT_TRUE( obj->historyDiscarded );
+}
+
+
+TEST_F(ReactiveObjectTest, BackTest)
+{
+	Handler<SampleObject> obj( provider->createDerived() );
+	obj->bootstrap(heap);
+	heap->setGlobalObject("sample", obj);
+	ASSERT_TRUE( heap->hasGlobalObject("sample") );
+	ASSERT_TRUE( heap->getGlobalObject("sample")->isObject() );
+	unsigned int const t1 = donut->nowTime();
+	Handler<Object> result = machine->start( donut->parse("sample.backable_but_non_fowardable();") );
+	{ //結果と副作用の確認
+		ASSERT_TRUE(result->isObject());
+		ASSERT_EQ("hey!", result->toString(heap));
+		ASSERT_LT( t1, donut->nowTime() );
+		ASSERT_EQ( t1, donut->firstTime());
+		ASSERT_FALSE( obj->futureDiscarded );
+		ASSERT_FALSE( obj->historyDiscarded );
+	}
+	//シーク
+	ASSERT_FALSE( obj->backable_but_non_fowardable );
+	donut->seek(t1);
+	ASSERT_TRUE( obj->backable_but_non_fowardable ); //副作用の確認
+	{//戻れるけど、先には進めない。
+		ASSERT_EQ( t1, donut->nowTime() );
+		ASSERT_EQ( t1, donut->firstTime());
+		ASSERT_EQ( t1, donut->lastTime() );
+	}
+}
+
+TEST_F(ReactiveObjectTest, ForwardTest)
+{
 
 }
+
 }}}
 
 

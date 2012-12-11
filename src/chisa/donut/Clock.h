@@ -43,7 +43,10 @@ private:
 		SEEK,
 		DISCARD
 	} state;
-	bool discardRequested_;
+	bool discardFutureRequested_;
+	bool discardHistoryRequested_;
+private:
+	void processRequestedDiscard();
 public:
 	Clock( Donut* const donut );
 	virtual ~Clock() noexcept = default;

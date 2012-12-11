@@ -28,7 +28,7 @@ namespace donut {
 static const std::string TAG("FloatProvider");
 
 FloatProvider::FloatProvider(Handler<Heap> const& heap)
-:HeapObjectProviderImpl<FloatObject>(heap, "Float")
+:HeapProviderImpl<FloatObject>(heap, "Float")
 {
 	this->registerPureNativeClosure("opAdd", std::function<float(float, float)>([&](float self, float v) {
 		return self+v;
