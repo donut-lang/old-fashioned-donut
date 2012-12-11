@@ -69,7 +69,7 @@ private:
 	std::vector<std::pair<timestamp_t, util::XValue> > reactions_;
 	int index_;
 public:
-	ReactiveNativeObject( std::string const& providerName ):NativeObject(providerName), index_(-1){}
+	ReactiveNativeObject( std::string const& providerName ):NativeObject(providerName), index_(0){}
 	virtual ~ReactiveNativeObject() noexcept = default;
 public:
 	void bootstrap(Handler<Heap> const& heap);
