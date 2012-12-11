@@ -18,6 +18,8 @@
 
 #include "NativeObject.h"
 #include <algorithm>
+#include "Heap.h"
+#include "../Clock.h"
 
 namespace chisa {
 namespace donut {
@@ -44,19 +46,60 @@ bool ReactiveNativeObject::toBoolImpl(Handler<Heap> const& heap) const
 	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast Reactive Native Object to Bool implicitly. Use toBoolean()");
 }
 
+int ReactiveNativeObject::findIndex( timestamp_t const& t )
+{
+	auto it = std::lower_bound(this->reactions_.begin(), this->reactions_.end(), t, util::PairCompare<timestamp_t, util::XValue>());
+	return std::distance(this->reactions_.begin(), it);
+}
+
 void ReactiveNativeObject::onSeekNotifyImpl(Handler<Heap> const& heap)
 {
-
+	Handler<Clock> clock = heap->clock();
+	int const nowIndex = this->index_;
+	int const newIndex = this->findIndex(clock->now());
+	this->index_ = newIndex;
+	if( newIndex < index_ ) { //戻る
+		auto start = reactions_.begin() + nowIndex;
+		auto end = reactions_.begin() + newIndex;
+		for(auto it = start; it != end; --it) {
+			std::pair<timestamp_t, util::XValue>& p = *it;
+			std::pair<bool, util::XValue> result = this->onBack(heap, p.second);
+			if( !result.first ){ //もうもどれない
+				//XXX: シーク中にこれを起こすのはよくない！
+				//1つずつ進めるようにしないといけないだろう。
+				clock->discardHistory();
+				return;
+			}
+			p.second = result.second;
+		}
+	}else{
+		auto start = reactions_.begin() + nowIndex;
+		auto end = reactions_.begin() + newIndex;
+		for(auto it = start; it != end; ++it) {
+			std::pair<timestamp_t, util::XValue>& p = *it;
+			std::pair<bool, util::XValue> result = this->onForward(heap, p.second);
+			if( !result.first ){ //もうもどれない
+				//XXX: シーク中にこれを起こすのはよくない！
+				//1つずつ進めるようにしないといけないだろう。
+				clock->discardFuture();
+				return;
+			}
+			p.second = result.second;
+		}
+	}
 }
 
 void ReactiveNativeObject::onDiscardHistoryNotifyImpl(Handler<Heap> const& heap)
 {
-
+	this->reactions_.erase(this->reactions_.begin(), this->reactions_.begin()+this->index_);
+	this->index_ = 0;
+	this->onHistoryDiscarded(heap);
 }
 
 void ReactiveNativeObject::onDiscardFutureNotifyImpl(Handler<Heap> const& heap)
 {
-
+	this->reactions_.erase(this->reactions_.begin()+this->index_+1, this->reactions_.end());
+	this->onFutureDiscarded(heap);
 }
 
 void ReactiveNativeObject::bootstrap( Handler<Heap> const& heap )
