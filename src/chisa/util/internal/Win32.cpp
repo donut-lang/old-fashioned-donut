@@ -26,7 +26,7 @@ namespace util {
 namespace internal {
 namespace win32 {
 
-std::wstring toUTF16(const std::string& str)
+std::wstring toUTF16(std::string const& str)
 {
 	int size = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), nullptr, 0);
 	wchar_t* buf = new wchar_t[size+1];
@@ -38,7 +38,7 @@ std::wstring toUTF16(const std::string& str)
 	delete [] buf;
 	return ret;
 }
-std::string toUTF8(const std::wstring& str)
+std::string toUTF8(std::wstring const& str)
 {
 	int size = WideCharToMultiByte(CP_UTF8, 0, str.c_str(), str.length(), nullptr, 0, nullptr, nullptr);
 	char* buf = new char[size+1];

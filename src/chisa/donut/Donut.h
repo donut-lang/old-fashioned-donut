@@ -40,12 +40,12 @@ public: /* 生成・破棄 */
 	virtual ~Donut() noexcept = default;
 	inline bool onFree() noexcept { return false; };
 public:
-	Handler<Machine> queryMachine( const std::string& name = "" );
-	void sendMessage( const std::string& name, const Handler<Object>& obj );
+	Handler<Machine> queryMachine( std::string const& name = "" );
+	void sendMessage( std::string const& name, Handler<Object> const& obj );
 public: /* Getter */
 	Handler<Clock> clock() const noexcept{ return this->clock_; };
 	Handler<Heap> heap() const noexcept { return this->heap_; };
-	Handler<Source> parse(const std::string& src, const std::string& filename="<DEFAULT>", const int& lineno=0);
+	Handler<Source> parse(std::string const& src, std::string const& filename="<DEFAULT>", int const& lineno=0);
 public: /* 処理系の保存・復帰をします。 */
 	void bootstrap();
 	util::XValue save();

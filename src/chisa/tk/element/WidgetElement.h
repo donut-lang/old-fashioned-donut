@@ -53,23 +53,23 @@ public:
 	virtual void idle(const float delta_ms) override;
 	virtual std::string toString() const override;
 private:
-	virtual void renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area) override;
-	virtual geom::Box onMeasure(const geom::Box& constraint) override;
-	virtual void onLayout(const geom::Box& size) override;
+	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override;
+	virtual geom::Box onMeasure(geom::Box const& constraint) override;
+	virtual void onLayout(geom::Box const& size) override;
 	virtual void loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
-	virtual std::weak_ptr<Element> getElementByIdImpl(const std::string& id) override;
+	virtual std::weak_ptr<Element> getElementByIdImpl(std::string const& id) override;
 private:
-	float calcScale(const geom::Box& widget, const geom::Box& constraint);
+	float calcScale(geom::Box const& widget, geom::Box const& constraint);
 private:
-	geom::Point calcPtInWidget(const geom::Point& ptInScreen);
+	geom::Point calcPtInWidget(geom::Point const& ptInScreen);
 public:
-	virtual bool onDownRaw(const float timeMs, const geom::Point& ptInScreen) override;
-	virtual bool onUpRaw(const float timeMs, const geom::Point& ptInScreen) override;
-	virtual bool onMoveRaw(const float timeMs, const geom::Point& ptInScreen) override;
-	virtual bool onSingleTapUp(const float timeMs, const geom::Point& ptInScreen) override;
-	virtual bool onFling(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Velocity& velocity) override;
-	virtual bool onScroll(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Distance& distance) override;
-	virtual bool onZoom(const float timeMs, const geom::Point& center, const float ratio) override;
+	virtual bool onDownRaw(const float timeMs, geom::Point const& ptInScreen) override;
+	virtual bool onUpRaw(const float timeMs, geom::Point const& ptInScreen) override;
+	virtual bool onMoveRaw(const float timeMs, geom::Point const& ptInScreen) override;
+	virtual bool onSingleTapUp(const float timeMs, geom::Point const& ptInScreen) override;
+	virtual bool onFling(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity) override;
+	virtual bool onScroll(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance) override;
+	virtual bool onZoom(const float timeMs, geom::Point const& center, const float ratio) override;
 
 };
 

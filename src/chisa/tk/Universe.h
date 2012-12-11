@@ -50,25 +50,25 @@ private:
 public:
 	void render();
 	void idle(const float delta_ms);
-	void reshape(const geom::Area& area);
+	void reshape(geom::Area const& area);
 public: //worldからの通知
-	void createNewWorld(const std::string& worldName);
+	void createNewWorld(std::string const& worldName);
 	void notifyWorldEnd(std::weak_ptr<World> me);
 	/******************************************************************************
 	 * Hexeへ移譲
 	 ******************************************************************************/
 public:
 	template <typename... Args>
-	constexpr std::string resolveWorldFilepath(const std::string& worldname, const Args&... related_filename) const noexcept
+	constexpr std::string resolveWorldFilepath(std::string const& worldname, Args const&... related_filename) const noexcept
 	{
 		return this->hexe()->resolveFilepath(worldname, related_filename...);
 	}
 	template <typename... Args>
-	constexpr std::string resolveUniverseFilepath(const Args&... related_filename) const
+	constexpr std::string resolveUniverseFilepath(Args const&... related_filename) const
 	{
 		return this->hexe()->resolveFilepath(related_filename...);
 	}
-	std::shared_ptr<chisa::WorldGeist> invokeWorldGeist(std::weak_ptr<tk::World> world, const std::string& nameOfGeist);
+	std::shared_ptr<chisa::WorldGeist> invokeWorldGeist(std::weak_ptr<tk::World> world, std::string const& nameOfGeist);
 	/******************************************************************************
 	 * 画像
 	 ******************************************************************************/
@@ -78,9 +78,9 @@ public:
 	 * タッチイベント
 	 ******************************************************************************/
 public:
-	void onTouchDown(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint);
-	void onTouchUp(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint);
-	void onTouchMove(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint);
+	void onTouchDown(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
+	void onTouchUp(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
+	void onTouchMove(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
 	/******************************************************************************
 	 * 生成
 	 ******************************************************************************/

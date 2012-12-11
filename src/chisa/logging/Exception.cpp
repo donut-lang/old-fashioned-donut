@@ -28,7 +28,7 @@ Exception::Exception(const char* file, const size_t line) throw()
 	init(file, line, "", list);
 }
 
-Exception::Exception(const char* file, const size_t line, const std::string& fmt, ...) noexcept
+Exception::Exception(const char* file, const size_t line, std::string const& fmt, ...) noexcept
 {
 	va_list lst;
 	va_start(lst, fmt);
@@ -36,12 +36,12 @@ Exception::Exception(const char* file, const size_t line, const std::string& fmt
 	va_end(lst);
 }
 
-Exception::Exception(const char* file, const size_t line, const std::string& fmt, va_list lst) noexcept
+Exception::Exception(const char* file, const size_t line, std::string const& fmt, va_list lst) noexcept
 {
 	init(file, line, fmt, lst);
 }
 
-void Exception::init(const char* file, const size_t line, const std::string& fmt, va_list lst) noexcept
+void Exception::init(const char* file, const size_t line, std::string const& fmt, va_list lst) noexcept
 {
 	try{
 		this->_line = line;

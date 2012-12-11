@@ -21,7 +21,7 @@
 namespace chisa {
 namespace donut {
 
-Closure::Closure(const std::vector<std::string>& arglist, const std::vector<donut::Instruction>& instlist)
+Closure::Closure(std::vector<std::string> const& arglist, std::vector<donut::Instruction> const& instlist)
 :arglist_(arglist), instlist_(instlist)
 {
 }

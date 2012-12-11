@@ -29,14 +29,14 @@ namespace donut {
 namespace native {
 
 template <size_t idx, typename R, typename T>
-Handler<Object> callWithBind(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& args, std::function<R(T)> const& funct)
+Handler<Object> callWithBind(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& args, std::function<R(T)> const& funct)
 {
 	T const s = native::Decoder<T>::exec( heap, self );
 	return native::Encoder<R>::exec( heap, funct(s) );
 }
 
 template <size_t idx, typename R, typename T, typename U, typename... Args>
-Handler<Object> callWithBind(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& args, std::function<R(T self, U val, Args... args)> const& funct)
+Handler<Object> callWithBind(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& args, std::function<R(T self, U val, Args... args)> const& funct)
 {
 	if( !args->has(heap, idx) ) {
 		constexpr int _idx = idx+1;
@@ -50,9 +50,9 @@ Handler<Object> callWithBind(const Handler<Heap>& heap, const Handler<Object>& s
 }
 
 template <typename R, typename... Args>
-std::function<Handler<Object>(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& args)> createBind(std::function<R(Args... args)> f)
+std::function<Handler<Object>(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& args)> createBind(std::function<R(Args... args)> f)
 {
-	return [f](const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& args){
+	return [f](Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& args){
 		return callWithBind<0>(heap, self, args, f);
 	};
 }

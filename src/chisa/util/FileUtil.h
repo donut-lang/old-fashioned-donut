@@ -28,11 +28,11 @@ namespace util {
 namespace file {
 
 template <typename T, typename... Args>
-constexpr typename internal::FileConstants<T>::string_type join(const T& a, const Args&... left)
+constexpr typename internal::FileConstants<T>::string_type join(const T& a, Args const&... left)
 {
 	return typename internal::FileConstants<T>::string_type(a)+internal::FileConstants<T>::Sep+join(left...);
 }
 
-std::vector<std::string> enumFiles(const std::string& dir, bool recursive=false);
+std::vector<std::string> enumFiles(std::string const& dir, bool recursive=false);
 
 }}}

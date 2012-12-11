@@ -30,7 +30,7 @@ Donut::Donut(logging::Logger& log)
 
 }
 
-Handler<Machine> Donut::queryMachine( const std::string& name )
+Handler<Machine> Donut::queryMachine( std::string const& name )
 {
 	auto it = this->machines_.find(name);
 	if(it != this->machines_.end()){
@@ -42,7 +42,7 @@ Handler<Machine> Donut::queryMachine( const std::string& name )
 	}
 }
 
-void Donut::sendMessage( const std::string& name, const Handler<Object>& obj )
+void Donut::sendMessage( std::string const& name, Handler<Object> const& obj )
 {
 	auto it = this->machines_.find(name);
 	if(it == this->machines_.end()){
@@ -53,7 +53,7 @@ void Donut::sendMessage( const std::string& name, const Handler<Object>& obj )
 }
 
 
-Handler<Source> Donut::parse(const std::string& src, const std::string& filename, const int& lineno)
+Handler<Source> Donut::parse(std::string const& src, std::string const& filename, int const& lineno)
 {
 	return heap_->registerSource ( Parser::fromString(src, filename, lineno)->parseProgram() );
 }

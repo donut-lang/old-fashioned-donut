@@ -46,20 +46,20 @@ void Canvas::ortho(const float left, const float right, const float bottom, cons
 {
 	glOrtho(left, right, bottom, top, near_val, far_val);
 }
-void Canvas::translate(const geom::Point& pt)
+void Canvas::translate(geom::Point const& pt)
 {
 	glTranslatef(pt.x(),pt.y(),0.0f);
 }
-void Canvas::rotate(const float angle, const geom::Point& pt)
+void Canvas::rotate(const float angle, geom::Point const& pt)
 {
 	glRotatef(angle, pt.x(),pt.y(),0.0f);
 }
-void Canvas::scale(const geom::ScaleVector& scale)
+void Canvas::scale(geom::ScaleVector const& scale)
 {
 	glScalef(scale.x(),scale.y(),1.0f);
 }
 
-void Canvas::resize2d(const geom::Box& box)
+void Canvas::resize2d(geom::Box const& box)
 {
 	this->width_ = box.width();
 	this->height_ = box.height();
@@ -72,7 +72,7 @@ void Canvas::resize2d(const geom::Box& box)
 	glScissor(0,0,box.width(),box.height());
 }
 
-void Canvas::scissor(const geom::Area& area)
+void Canvas::scissor(geom::Area const& area)
 {
 	glScissor(area.x(), this->height_-area.height()-area.y(),area.width(), area.height());
 }
@@ -82,15 +82,15 @@ void Canvas::scissorReset()
 	glScissor(0,0,this->width_,this->height_);
 }
 
-void Canvas::drawSprite(Handler<Sprite> sprite, const geom::Point& pt, const float depth)
+void Canvas::drawSprite(Handler<Sprite> sprite, geom::Point const& pt, const float depth)
 {
 	sprite->drawImpl(this, pt, depth);
 }
-void Canvas::drawSprite(Handler<Sprite> sprite, const geom::Point& pt, const geom::Area& spriteArea, const float depth)
+void Canvas::drawSprite(Handler<Sprite> sprite, geom::Point const& pt, geom::Area const& spriteArea, const float depth)
 {
 	sprite->drawImpl(this, pt, spriteArea, depth);
 }
-void Canvas::drawTexture(unsigned int texId, const geom::Point& pt, const geom::IntBox& texSize, const geom::Area& spriteArea, const float depth)
+void Canvas::drawTexture(unsigned int texId, geom::Point const& pt, geom::IntBox const& texSize, geom::Area const& spriteArea, const float depth)
 {
 	const float width = spriteArea.width();
 	const float height = spriteArea.height();
@@ -110,12 +110,12 @@ void Canvas::drawTexture(unsigned int texId, const geom::Point& pt, const geom::
 	glEnd();
 	glDisable(GL_TEXTURE_2D);
 }
-void Canvas::drawTexture(unsigned int texId, const geom::Point& pt, const geom::IntBox& texSize, const geom::IntBox& spriteSize, const float depth)
+void Canvas::drawTexture(unsigned int texId, geom::Point const& pt, geom::IntBox const& texSize, geom::IntBox const& spriteSize, const float depth)
 {
 	this->drawTexture(texId, pt, texSize, geom::Area(geom::ZERO, spriteSize), depth);
 }
 
-void Canvas::drawLine(const float width, const Color& color, const geom::Point& start, const geom::Point& end, const float depth)
+void Canvas::drawLine(const float width, Color const& color, geom::Point const& start, geom::Point const& end, const float depth)
 {
 	glLineWidth(width);
 	this->setColor(color);
@@ -125,7 +125,7 @@ void Canvas::drawLine(const float width, const Color& color, const geom::Point& 
 	glEnd();
 }
 
-void Canvas::drawRect(const float width, const Color& color, const geom::Area& area, const float depth)
+void Canvas::drawRect(const float width, Color const& color, geom::Area const& area, const float depth)
 {
 	glLineWidth(width);
 	this->setColor(color);
@@ -142,7 +142,7 @@ void Canvas::drawRect(const float width, const Color& color, const geom::Area& a
 	}
 	glEnd();
 }
-void Canvas::fillRect(const Color& color, const geom::Area& area, const float depth)
+void Canvas::fillRect(Color const& color, geom::Area const& area, const float depth)
 {
 	this->setColor(color);
 	float const sx = area.x();
@@ -160,12 +160,12 @@ void Canvas::fillRect(const Color& color, const geom::Area& area, const float de
 }
 
 
-void Canvas::setColor(const Color& color)
+void Canvas::setColor(Color const& color)
 {
 	glColor4f(color.red(), color.green(), color.blue(), color.alpha());
 }
 
-Canvas::ScissorScope::ScissorScope(Canvas& canvas, const geom::Area& area)
+Canvas::ScissorScope::ScissorScope(Canvas& canvas, geom::Area const& area)
 :canvas_(canvas)
 {
 	this->canvas_.scissor(area);

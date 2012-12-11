@@ -32,11 +32,11 @@ private:
 	std::string _what;
 	size_t _line;
 protected:
-	void init(const char* file, const size_t line, const std::string& fmt, va_list lst) noexcept;
+	void init(const char* file, const size_t line, std::string const& fmt, va_list lst) noexcept;
 public:
 	DonutException(const char* file, const size_t line) noexcept;
-	DonutException(const char* file, const size_t line, const std::string& fmt, ...) noexcept;
-	DonutException(const char* file, const size_t line, const std::string& fmt, va_list lst) noexcept;
+	DonutException(const char* file, const size_t line, std::string const& fmt, ...) noexcept;
+	DonutException(const char* file, const size_t line, std::string const& fmt, va_list lst) noexcept;
 	virtual ~DonutException() noexcept = default;
 	virtual const char* what() const noexcept override;
 	std::string msg() const noexcept;

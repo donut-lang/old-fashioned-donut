@@ -47,7 +47,7 @@ public:
 	virtual ~RenderObject() noexcept = default;
 public:
 	bool onFree() noexcept { return false; };
-	void render(gl::Canvas& canvas, const geom::Point& offset, const float depth);
+	void render(gl::Canvas& canvas, geom::Point const& offset, const float depth);
 	void onHidden();
 	HandlerW<RenderTree> parentTree();
 	Node* parentNode();
@@ -65,7 +65,7 @@ private:
 	std::string repl_;
 	geom::Box size_;
 public:
-	NormalDrawableObject(HandlerW<RenderTree> parentTree, Node* parentNode, const float relDepth, const std::string& repl, const geom::Box& size);
+	NormalDrawableObject(HandlerW<RenderTree> parentTree, Node* parentNode, const float relDepth, std::string const& repl, geom::Box const& size);
 	virtual ~NormalDrawableObject() noexcept = default;
 	virtual Handler<gl::Drawable> realize() override;
 };
@@ -80,7 +80,7 @@ private:
 	gl::Color color_;
 	gl::Color backColor_;
 public:
-	TextDrawableObject(HandlerW<RenderTree> parentTree, Node* parentNode, const float relDepth, const std::string& str, const float size, Handler<gl::Font> font, gl::TextDrawable::Style style, gl::TextDrawable::Decoration deco, const gl::Color& color, const gl::Color& backColor);
+	TextDrawableObject(HandlerW<RenderTree> parentTree, Node* parentNode, const float relDepth, std::string const& str, const float size, Handler<gl::Font> font, gl::TextDrawable::Style style, gl::TextDrawable::Decoration deco, gl::Color const& color, gl::Color const& backColor);
 	virtual ~TextDrawableObject() noexcept = default;
 	virtual Handler<gl::Drawable> realize() override;
 };

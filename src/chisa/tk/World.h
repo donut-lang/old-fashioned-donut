@@ -69,17 +69,17 @@ private:
 public:
 	void render(gl::Canvas& canvas);
 	void idle(const float delta_ms);
-	void reshape(const geom::Area& area);
+	void reshape(geom::Area const& area);
 private:
 	void popElement();
-	void pushElement(const std::string& filename);
+	void pushElement(std::string const& filename);
 public:
-	element::WidgetElement* getWidgetById(const std::string& name);
-	bool replaceWidget(const std::string& widgetId, element::WidgetElement* const newHandler);
-	bool deleteWidget(const std::string& widgetId, element::WidgetElement* const handler);
-	Widget* createWidget(const std::string& klass, tinyxml2::XMLElement* elem);
+	element::WidgetElement* getWidgetById(std::string const& name);
+	bool replaceWidget(std::string const& widgetId, element::WidgetElement* const newHandler);
+	bool deleteWidget(std::string const& widgetId, element::WidgetElement* const handler);
+	Widget* createWidget(std::string const& klass, tinyxml2::XMLElement* elem);
 public:
-	std::weak_ptr<Element> getElementByPoint(const geom::Point& screenVector);
+	std::weak_ptr<Element> getElementByPoint(geom::Point const& screenVector);
 	/******************************************************************************
 	 * タスク管理
 	 ******************************************************************************/
@@ -92,7 +92,7 @@ public:
 public:
 	Handler<gl::DrawableManager> drawableManager() const;
 	template <typename... Args>
-	std::string resolveWorldFilepath(const Args&... related_filename) const
+	std::string resolveWorldFilepath(Args const&... related_filename) const
 	{
 		if(std::shared_ptr<Universe> universe = this->universe_.lock()){
 			return universe->resolveWorldFilepath(this->name(), related_filename...);
@@ -101,7 +101,7 @@ public:
 		}
 	}
 	template <typename... Args>
-	std::string resolveUniverseFilepath(const Args&... related_filename) const
+	std::string resolveUniverseFilepath(Args const&... related_filename) const
 	{
 		if(std::shared_ptr<Universe> universe = this->universe_.lock()){
 			return universe->resolveUniverseFilepath(related_filename...);
@@ -113,18 +113,18 @@ public:
 	 * タッチイベント。Universeから移譲されてくる
 	 ******************************************************************************/
 public:
-	void onTouchDown(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenVector);
-	void onTouchUp(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenVector);
-	void onTouchMove(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenVector);
+	void onTouchDown(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenVector);
+	void onTouchUp(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenVector);
+	void onTouchMove(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenVector);
 
 	/******************************************************************************
 	 * 生成
 	 ******************************************************************************/
 private:
-	World(logging::Logger& log, std::weak_ptr<Universe> _universe, const std::string& worldname);
+	World(logging::Logger& log, std::weak_ptr<Universe> _universe, std::string const& worldname);
 	void init(std::weak_ptr<World> _self);
 public:
-	static std::shared_ptr<World> create(logging::Logger& log, std::weak_ptr<Universe> _universe, const std::string& worldname)
+	static std::shared_ptr<World> create(logging::Logger& log, std::weak_ptr<Universe> _universe, std::string const& worldname)
 	{
 		std::shared_ptr<World> ptr(new World(log, _universe, worldname));
 		ptr->init(ptr);

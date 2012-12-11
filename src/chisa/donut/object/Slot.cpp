@@ -54,7 +54,7 @@ Object* Slot::load() const
 	return p.second;
 }
 
-Object* Slot::store(const Handler<Heap>& heap, Object* obj)
+Object* Slot::store(Handler<Heap> const& heap, Object* obj)
 {
 	unsigned int now = heap->clock()->now();
 	if( static_cast<int>(this->rev_.size())-1 != this->index_ ){
@@ -113,7 +113,7 @@ Slot::Slot( Handler<Heap> const& heap, util::XValue const& data)
  * from clock
  **********************************************************************************/
 
-void Slot::onSeekNotify( const Handler<Heap>& heap )
+void Slot::onSeekNotify( Handler<Heap> const& heap )
 {
 	unsigned int const timestamp = heap->clock()->now();
 	this->index_ = -1;
@@ -126,7 +126,7 @@ void Slot::onSeekNotify( const Handler<Heap>& heap )
 	}
 }
 
-void Slot::onDiscardHistoryNotify( const Handler<Heap>& heap )
+void Slot::onDiscardHistoryNotify( Handler<Heap> const& heap )
 {
 	if(this->rev_.size() <= 0){
 		return;
@@ -136,7 +136,7 @@ void Slot::onDiscardHistoryNotify( const Handler<Heap>& heap )
 	this->index_ = this->rev_.size()-1;
 }
 
-void Slot::onDiscardFutureNotify( const Handler<Heap>& heap )
+void Slot::onDiscardFutureNotify( Handler<Heap> const& heap )
 {
 	if(this->rev_.size() <= 0){
 		return;

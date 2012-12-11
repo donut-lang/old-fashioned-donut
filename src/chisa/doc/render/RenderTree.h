@@ -46,7 +46,7 @@ public:
 	RenderTree(logging::Logger& log, Handler<gl::DrawableManager> drawableManager, const std::size_t maxDrawable=100);
 	virtual ~RenderTree() noexcept = default;
 public:
-	void render(gl::Canvas& canvas, const geom::Area& area, float depth);
+	void render(gl::Canvas& canvas, geom::Area const& area, float depth);
 	Handler<gl::DrawableManager> drawableManager();
 public:
 	void registerDrawable(Handler<gl::Drawable> d) noexcept;

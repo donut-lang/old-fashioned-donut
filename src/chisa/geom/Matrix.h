@@ -29,7 +29,7 @@ public:
 	inline float& operator() (const size_t x, const size_t y) noexcept{
 		return mat_[x<<2|y];
 	}
-	inline const float& operator()(const size_t x, const size_t y) const noexcept{
+	inline float const& operator()(const size_t x, const size_t y) const noexcept{
 		return mat_[x<<2|y];
 	}
 	inline const float* raw() const noexcept
@@ -48,7 +48,7 @@ public:
 		(*this)(2,2)=1.0f;
 		(*this)(3,3)=1.0f;
 	}
-	Matrix(const Matrix& other)
+	Matrix(Matrix const& other)
 	:mat_(new float[16])
 	{
 		memcpy(this->mat_, other.mat_, sizeof(other));
@@ -89,7 +89,7 @@ public:
 			this->mat_ = nullptr;
 		}
 	}
-	Matrix& operator=(const Matrix& o)
+	Matrix& operator=(Matrix const& o)
 	{
 		memcpy(this->mat_, o.mat_, sizeof(float)*16);
 		return *this;
@@ -127,7 +127,7 @@ public:
 	{
 		return this->operator *=(1/f);
 	}
-	inline Matrix operator*(const Matrix& other) const noexcept
+	inline Matrix operator*(Matrix const& other) const noexcept
 	{
 		Matrix mat;
 		for(size_t x=0;x<4;++x){
@@ -141,7 +141,7 @@ public:
 		}
 		return mat;
 	}
-	inline Matrix& operator*=(const Matrix& other) noexcept
+	inline Matrix& operator*=(Matrix const& other) noexcept
 	{
 		(*this)=(*this)*other;
 		return *this;

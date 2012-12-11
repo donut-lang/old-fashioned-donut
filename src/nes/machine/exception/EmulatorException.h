@@ -18,8 +18,8 @@ class EmulatorException
 	public:
 		EmulatorException();
 		EmulatorException(const char* fmsg);
-		EmulatorException(const std::string& fmsg);
-		EmulatorException(const EmulatorException& src);
+		EmulatorException(std::string const& fmsg);
+		EmulatorException(EmulatorException const& src);
 		~EmulatorException();
 	private:
 		std::stringstream msg;

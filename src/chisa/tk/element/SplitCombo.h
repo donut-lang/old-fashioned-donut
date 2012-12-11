@@ -46,7 +46,7 @@ struct SplitCtx
 	std::shared_ptr<Element> element;
 	float size;
 	float weight;
-	SplitCtx(const SplitDef& def)
+	SplitCtx(SplitDef const& def)
 	:def(def)
 	,element(nullptr)
 	,size(NAN)
@@ -74,7 +74,7 @@ private:
 	float totalSize_;
 	void setMode(enum SplitMode mode);
 private:
-	inline float wrapSize(float changedSize, const SplitDef& def) const
+	inline float wrapSize(float changedSize, SplitDef const& def) const
 	{
 		if(geom::isUnspecified(changedSize)){
 			return def.min;
@@ -91,7 +91,7 @@ private:
 	float (geom::Point::*point_getter)(void) const;
 	void (geom::Point::*point_setter)(float);
 private:
-	void addChild(const SplitDef& def, std::shared_ptr<Element> element);
+	void addChild(SplitDef const& def, std::shared_ptr<Element> element);
 private:
 	void resetChildren();
 	float calcTotalSize();
@@ -101,11 +101,11 @@ public:
 	virtual std::weak_ptr<Element> getChildAt(const std::size_t index) const override;
 	virtual std::size_t getChildCount() const override;
 private:
-	virtual void renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area) override;
-	virtual geom::Box onMeasure(const geom::Box& constraint) override;
-	virtual void onLayout(const geom::Box& size) override;
+	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override;
+	virtual geom::Box onMeasure(geom::Box const& constraint) override;
+	virtual void onLayout(geom::Box const& size) override;
 	virtual void loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
-	virtual std::weak_ptr<Element> getElementByIdImpl(const std::string& id) override;
+	virtual std::weak_ptr<Element> getElementByIdImpl(std::string const& id) override;
 };
 
 }}}

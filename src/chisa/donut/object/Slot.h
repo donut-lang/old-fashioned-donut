@@ -37,25 +37,25 @@ public:
 	Slot();
 	~Slot() noexcept = default;
 public:
-	Slot(const Slot& other):rev_(other.rev_),index_(other.index_){}
+	Slot(Slot const& other):rev_(other.rev_),index_(other.index_){}
 	Slot(Slot&& other):index_(other.index_){ other.rev_.swap(rev_); }
-	Slot& operator=(const Slot& other) { rev_=other.rev_;index_=other.index_;return *this; }
+	Slot& operator=(Slot const& other) { rev_=other.rev_;index_=other.index_;return *this; }
 	Slot& operator=(Slot&& other) { rev_.swap(other.rev_);index_=other.index_;return *this; }
 private:
 	timestamp_t firstGen() const noexcept;
 	timestamp_t lastGen() const noexcept;
 public:
-	void mark(const Handler<Heap>& heap, int color);
+	void mark(Handler<Heap> const& heap, int color);
 	Object* load() const;
-	Object* store( const Handler<Heap>& heap, Object* obj );
+	Object* store( Handler<Heap> const& heap, Object* obj );
 	bool have() const;
 public: /* 処理系の保存・復帰をします。 */
 	util::XValue save();
 	Slot( Handler<Heap> const& heap, util::XValue const& data );
 public: /* クロックから呼ばれる */
-	void onDiscardHistoryNotify( const Handler<Heap>& heap );
-	void onDiscardFutureNotify( const Handler<Heap>& heap );
-	void onSeekNotify( const Handler<Heap>& heap );
+	void onDiscardHistoryNotify( Handler<Heap> const& heap );
+	void onDiscardFutureNotify( Handler<Heap> const& heap );
+	void onSeekNotify( Handler<Heap> const& heap );
 };
 
 }}

@@ -39,7 +39,7 @@ FreeType::~FreeType() noexcept
 
 static std::string TAG("Font");
 
-FontManager::FontManager(logging::Logger& log, const std::string& fontdir)
+FontManager::FontManager(logging::Logger& log, std::string const& fontdir)
 :log_(log)
 ,fontdir_(fontdir)
 ,freetype_( new FreeType )
@@ -53,7 +53,7 @@ FontManager::~FontManager() noexcept
 	this->defaultFont_.reset();
 }
 
-Handler<Font> FontManager::queryFont(const std::string& name)
+Handler<Font> FontManager::queryFont(std::string const& name)
 {
 	if(name.empty()){
 		return this->defaultFont_;
@@ -76,7 +76,7 @@ Handler<Font> FontManager::queryFont(const std::string& name)
 	return this->defaultFont_;
 }
 
-Font* FontManager::searchFont( const std::string& name )
+Font* FontManager::searchFont( std::string const& name )
 {
 	if(name.empty()){
 		return nullptr;
@@ -86,7 +86,7 @@ Font* FontManager::searchFont( const std::string& name )
 	std::string style;
 	Font::analyzeFontName(name, family, style);
 	std::vector<std::string> files(util::file::enumFiles(this->fontdir_));
-	for(const std::string& fname : files){
+	for(std::string const& fname : files){
 		int face_idx=0;
 		while(FT_New_Face(this->freetype_->raw(), fname.c_str(), (face_idx++), &face) == 0){
 			if(face->family_name && family == std::string(face->family_name) &&
@@ -103,7 +103,7 @@ Font* FontManager::seachDefaultFont()
 {
 	FT_Face face;
 	std::vector<std::string> files(util::file::enumFiles(this->fontdir_));
-	for(const std::string& fname : files){
+	for(std::string const& fname : files){
 		if(FT_New_Face(this->freetype_->raw(), fname.c_str(), 0, &face) == 0){
 			return new Font(this, this->freetype_, face);
 		}else{

@@ -32,7 +32,7 @@ ImageManager::ImageManager(logging::Logger& log, Handler<SpriteManager> spriteMa
 {
 }
 
-Handler<Sprite> ImageManager::queryImage(const std::string& filename)
+Handler<Sprite> ImageManager::queryImage(std::string const& filename)
 {
 	for(auto it = this->imageCache_.begin(); it != this->imageCache_.end(); ++it){
 		if(it->first == filename){
@@ -56,7 +56,7 @@ Handler<Sprite> ImageManager::queryImage(const std::string& filename)
 	return img;
 }
 
-Handler<Sprite> ImageManager::loadPNG(const std::string& filename)
+Handler<Sprite> ImageManager::loadPNG(std::string const& filename)
 {
 	FILE* fp = fopen(filename.c_str(), "rb");
 	if(!fp){

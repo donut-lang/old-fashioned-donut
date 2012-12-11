@@ -6,7 +6,7 @@
 
 namespace nes {
 
-NesFile::NesFile(const uint8_t* data, const uint32_t size, const std::string& name) :
+NesFile::NesFile(const uint8_t* data, const uint32_t size, std::string const& name) :
 filename(name),
 mapperNo(0),
 prgRom(NULL),

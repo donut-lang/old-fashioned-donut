@@ -27,45 +27,45 @@ namespace donut {
 
 static const std::string TAG("DonutObject");
 
-DonutObject::DonutObject(const std::string& providerName)
+DonutObject::DonutObject(std::string const& providerName)
 :HeapObject(providerName)
 {
 
 }
 
 
-std::string DonutObject::toStringImpl(const Handler<Heap>& heap) const
+std::string DonutObject::toStringImpl(Handler<Heap> const& heap) const
 {
 	return util::format("(DonutObject %p)", this);
 }
 
-int DonutObject::toIntImpl(const Handler<Heap>& heap) const
+int DonutObject::toIntImpl(Handler<Heap> const& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to convert object to int.");
 }
 
-float DonutObject::toFloatImpl(const Handler<Heap>& heap) const
+float DonutObject::toFloatImpl(Handler<Heap> const& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to convert to float.");
 }
 
-bool DonutObject::toBoolImpl(const Handler<Heap>& heap) const
+bool DonutObject::toBoolImpl(Handler<Heap> const& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to convert to bool.");
 }
 
-bool DonutObject::hasImpl(const Handler<Heap>& heap, const std::string& name) const
+bool DonutObject::hasImpl(Handler<Heap> const& heap, std::string const& name) const
 {
 	return hasOwnImpl(heap, name) || (hasOwnImpl(heap, "__proto__") && getImpl(heap, "__proto__")->has(heap, name));
 }
 
-bool DonutObject::hasOwnImpl(const Handler<Heap>& heap, const std::string& name) const
+bool DonutObject::hasOwnImpl(Handler<Heap> const& heap, std::string const& name) const
 {
 	auto it = this->slots_.find(name);
 	return it != this->slots_.end() && it->second.have();
 }
 
-Handler<Object> DonutObject::setImpl(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj)
+Handler<Object> DonutObject::setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> obj)
 {
 	auto it = this->slots_.find(name);
 	if(it == this->slots_.end()){
@@ -78,7 +78,7 @@ Handler<Object> DonutObject::setImpl(const Handler<Heap>& heap, const std::strin
 	return obj;
 }
 
-Handler<Object> DonutObject::getImpl(const Handler<Heap>& heap, const std::string& name) const
+Handler<Object> DonutObject::getImpl(Handler<Heap> const& heap, std::string const& name) const
 {
 	auto it = this->slots_.find(name);
 	if(it != this->slots_.end()){
@@ -131,20 +131,20 @@ void DonutObject::load( Handler<Heap> const& heap, util::XValue const& data )
 /**********************************************************************************
  * from clock
  **********************************************************************************/
-void DonutObject::onSeekNotifyImpl(const Handler<Heap>& heap)
+void DonutObject::onSeekNotifyImpl(Handler<Heap> const& heap)
 {
 	for(std::pair<const std::string, Slot>& it : this->slots_){
 		it.second.onSeekNotify(heap);
 	}
 }
-void DonutObject::onDiscardFutureNotifyImpl(const Handler<Heap>& heap)
+void DonutObject::onDiscardFutureNotifyImpl(Handler<Heap> const& heap)
 {
 	for(std::pair<const std::string, Slot>& it : this->slots_){
 		it.second.onDiscardFutureNotify( heap );
 	}
 }
 
-void DonutObject::onDiscardHistoryNotifyImpl(const Handler<Heap>& heap)
+void DonutObject::onDiscardHistoryNotifyImpl(Handler<Heap> const& heap)
 {
 	for(std::pair<const std::string, Slot>& it : this->slots_){
 		it.second.onDiscardHistoryNotify( heap );

@@ -28,8 +28,8 @@ namespace util {
 namespace internal {
 namespace win32 {
 
-std::wstring toUTF16(const std::string& str);
-std::string toUTF8(const std::wstring& str);
+std::wstring toUTF16(std::string const& str);
+std::string toUTF8(std::wstring const& str);
 
 }}}}
 

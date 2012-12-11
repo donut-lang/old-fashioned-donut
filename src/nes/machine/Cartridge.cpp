@@ -141,7 +141,7 @@ void Cartridge::releaseIRQ()
 	VM.releaseIRQ(VirtualMachine::DEVICE_CARTRIDGE);
 }
 
-Cartridge* Cartridge::loadCartridge(VirtualMachine& vm, const uint8_t* data, const uint32_t size, const std::string& name)
+Cartridge* Cartridge::loadCartridge(VirtualMachine& vm, const uint8_t* data, const uint32_t size, std::string const& name)
 {
 	NesFile* nesFile = NULL;
 	try{

@@ -33,12 +33,12 @@ class ImageManager : public HandlerBody<ImageManager> {
 	DEFINE_MEMBER_REF(private, logging::Logger, log);
 private:
 	std::deque<std::pair<std::string, Handler<Sprite> > > imageCache_;
-	Handler<Sprite> loadPNG(const std::string& filename);
+	Handler<Sprite> loadPNG(std::string const& filename);
 	HandlerW<SpriteManager> spriteManager_;
 public:
 	ImageManager(logging::Logger& log, Handler<SpriteManager> spriteManager);
 	virtual ~ImageManager() noexcept = default;
-	Handler<Sprite> queryImage(const std::string& filename);
+	Handler<Sprite> queryImage(std::string const& filename);
 public:
 	inline bool onFree() noexcept { return false; };
 };

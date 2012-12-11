@@ -49,7 +49,7 @@ std::string MarginCombo::toString() const
 	return util::format("(MarginCombo %p)", this);
 }
 
-void MarginCombo::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
+void MarginCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
 {
 	if( std::shared_ptr<Element> child = this->child_.lock() ){
 		child->render(
@@ -60,7 +60,7 @@ void MarginCombo::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, c
 	}
 }
 
-geom::Box MarginCombo::onMeasure(const geom::Box& constraint)
+geom::Box MarginCombo::onMeasure(geom::Box const& constraint)
 {
 	if( std::shared_ptr<Element> child = this->child_.lock() ){
 		return child->measure( constraint-this->margin_.totalSpace() ) + this->margin_.totalSpace();
@@ -68,7 +68,7 @@ geom::Box MarginCombo::onMeasure(const geom::Box& constraint)
 	return constraint;
 }
 
-void MarginCombo::onLayout(const geom::Box& size)
+void MarginCombo::onLayout(geom::Box const& size)
 {
 	if( std::shared_ptr<Element> child = this->child_.lock() ){
 		child->layout( size-this->margin_.totalSpace() );
@@ -82,7 +82,7 @@ void MarginCombo::loadXMLimpl(element::ElementFactory* const factory, tinyxml2::
 	factory->parseTree(this->root(), this->self(), element->FirstChildElement());
 }
 
-std::weak_ptr<Element> MarginCombo::getElementByIdImpl(const std::string& id)
+std::weak_ptr<Element> MarginCombo::getElementByIdImpl(std::string const& id)
 {
 	if( std::shared_ptr<Element> child = this->child_.lock() ){
 		return child->getElementById(id);

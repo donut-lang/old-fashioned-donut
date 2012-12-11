@@ -26,12 +26,12 @@ namespace donut {
 
 static const std::string TAG("Object");
 static const std::string INDEX_STR[]={"0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50"};
-static std::string toName( const int& id){
+static std::string toName( int const& id){
 	return id >= 0 && static_cast<unsigned int>(id) < (sizeof(INDEX_STR)/sizeof(std::string)) ? INDEX_STR[id] : util::format("%d", id);
 }
 
 
-std::string Object::toString(const Handler<Heap>& heap) const
+std::string Object::toString(Handler<Heap> const& heap) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
@@ -47,7 +47,7 @@ std::string Object::toString(const Handler<Heap>& heap) const
 	}
 }
 
-int Object::toInt(const Handler<Heap>& heap) const
+int Object::toInt(Handler<Heap> const& heap) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
@@ -63,7 +63,7 @@ int Object::toInt(const Handler<Heap>& heap) const
 	}
 }
 
-float Object::toFloat(const Handler<Heap>& heap) const
+float Object::toFloat(Handler<Heap> const& heap) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
@@ -79,7 +79,7 @@ float Object::toFloat(const Handler<Heap>& heap) const
 	}
 }
 
-bool Object::toBool(const Handler<Heap>& heap) const
+bool Object::toBool(Handler<Heap> const& heap) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
@@ -95,7 +95,7 @@ bool Object::toBool(const Handler<Heap>& heap) const
 	}
 }
 
-bool Object::has(const Handler<Heap>& heap, const std::string& name) const
+bool Object::has(Handler<Heap> const& heap, std::string const& name) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
@@ -111,7 +111,7 @@ bool Object::has(const Handler<Heap>& heap, const std::string& name) const
 	}
 }
 
-bool Object::hasOwn(const Handler<Heap>& heap, const std::string& name) const
+bool Object::hasOwn(Handler<Heap> const& heap, std::string const& name) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
@@ -127,7 +127,7 @@ bool Object::hasOwn(const Handler<Heap>& heap, const std::string& name) const
 	}
 }
 
-Handler<Object> Object::set(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj)
+Handler<Object> Object::set(Handler<Heap> const& heap, std::string const& name, Handler<Object> obj)
 {
 	switch(this->tag()){
 	case Tag::Obj:
@@ -146,7 +146,7 @@ Handler<Object> Object::set(const Handler<Heap>& heap, const std::string& name, 
 	}
 }
 
-Handler<Object> Object::get(const Handler<Heap>& heap, const std::string& name) const
+Handler<Object> Object::get(Handler<Heap> const& heap, std::string const& name) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
@@ -162,7 +162,7 @@ Handler<Object> Object::get(const Handler<Heap>& heap, const std::string& name) 
 	}
 }
 
-std::string Object::providerName(const Handler<Heap>& heap) const
+std::string Object::providerName(Handler<Heap> const& heap) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
@@ -187,21 +187,21 @@ object_desc_t Object::toDescriptor() const noexcept
 	}
 }
 
-Handler<Object> Object::set(const Handler<Heap>& heap, const int& idx, Handler<Object> obj)
+Handler<Object> Object::set(Handler<Heap> const& heap, int const& idx, Handler<Object> obj)
 {
 	return this->set(heap, toName(idx), obj);
 }
-Handler<Object> Object::get(const Handler<Heap>& heap, const int& idx) const
+Handler<Object> Object::get(Handler<Heap> const& heap, int const& idx) const
 {
 	return this->get(heap, toName(idx));
 }
 
-bool Object::has(const Handler<Heap>& heap, const int& idx) const
+bool Object::has(Handler<Heap> const& heap, int const& idx) const
 {
 	return this->has(heap, toName(idx));
 }
 
-bool Object::hasOwn(const Handler<Heap>& heap, const int& idx) const
+bool Object::hasOwn(Handler<Heap> const& heap, int const& idx) const
 {
 	return this->has(heap, toName(idx));
 }

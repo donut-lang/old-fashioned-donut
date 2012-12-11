@@ -21,10 +21,10 @@ public:
 	NesMemoryWidget(chisa::logging::Logger& log, std::weak_ptr<chisa::tk::World> _world, tinyxml2::XMLElement* element);
 	virtual ~NesMemoryWidget();
 public:
-	virtual void render(chisa::gl::Canvas& cv, const chisa::geom::Area& area) override;
+	virtual void render(chisa::gl::Canvas& cv, chisa::geom::Area const& area) override;
 	virtual void idle(const float delta_ms) override;
-	virtual void reshape(const chisa::geom::Box& areaSize) override;
-	virtual chisa::geom::Box measure(const chisa::geom::Box& constraintSize) override;
+	virtual void reshape(chisa::geom::Box const& areaSize) override;
+	virtual chisa::geom::Box measure(chisa::geom::Box const& constraintSize) override;
 };
 
 }}

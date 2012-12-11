@@ -21,13 +21,13 @@
 #include <tinyxml2.h>
 
 #define DEF_OVERLOD(Klass)\
-template <> void parseAttr(const std::string& name, Klass& ptr, const Klass& def, tinyxml2::XMLElement* elm)
+template <> void parseAttr(std::string const& name, Klass& ptr, Klass const& def, tinyxml2::XMLElement* elm)
 
 namespace chisa {
 namespace util {
 namespace xml {
 
-template <typename T> void parseAttr(const std::string& name, T& ptr, const T& def, tinyxml2::XMLElement* elm);
+template <typename T> void parseAttr(std::string const& name, T& ptr, const T& def, tinyxml2::XMLElement* elm);
 DEF_OVERLOD(std::string);
 DEF_OVERLOD(float);
 DEF_OVERLOD(int);

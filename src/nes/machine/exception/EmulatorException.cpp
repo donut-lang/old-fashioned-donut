@@ -9,12 +9,12 @@ EmulatorException::EmulatorException(const char* fmsg)
 {
 	this->msg << fmsg;
 }
-EmulatorException::EmulatorException(const std::string& fmsg)
+EmulatorException::EmulatorException(std::string const& fmsg)
 {
 	this->msg << fmsg;
 }
 
-EmulatorException::EmulatorException(const EmulatorException& src)
+EmulatorException::EmulatorException(EmulatorException const& src)
 {
 	this->msg << src.msg.str();
 }

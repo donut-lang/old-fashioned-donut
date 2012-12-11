@@ -24,37 +24,37 @@ namespace donut {
 
 const std::string TAG("StringObject");
 
-std::string StringObject::toStringImpl(const Handler<Heap>& heap) const
+std::string StringObject::toStringImpl(Handler<Heap> const& heap) const
 {
 	return this->str_;
 }
 
-int StringObject::toIntImpl(const Handler<Heap>& heap) const
+int StringObject::toIntImpl(Handler<Heap> const& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast String to Integer implicitly. Use toInteger()");
 }
 
-float StringObject::toFloatImpl(const Handler<Heap>& heap) const
+float StringObject::toFloatImpl(Handler<Heap> const& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast String to Float implicitly. Use toFloat()");
 }
 
-bool StringObject::toBoolImpl(const Handler<Heap>& heap) const
+bool StringObject::toBoolImpl(Handler<Heap> const& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast String to Bool implicitly. Use toBoolean()");
 }
 
-void StringObject::onSeekNotifyImpl(const Handler<Heap>& heap)
+void StringObject::onSeekNotifyImpl(Handler<Heap> const& heap)
 {
 
 }
 
-void StringObject::onDiscardHistoryNotifyImpl(const Handler<Heap>& heap)
+void StringObject::onDiscardHistoryNotifyImpl(Handler<Heap> const& heap)
 {
 
 }
 
-void StringObject::onDiscardFutureNotifyImpl(const Handler<Heap>& heap)
+void StringObject::onDiscardFutureNotifyImpl(Handler<Heap> const& heap)
 {
 
 }

@@ -45,7 +45,7 @@ ContentWidget::~ContentWidget()
 {
 }
 
-void ContentWidget::render(gl::Canvas& cv, const geom::Area& area)
+void ContentWidget::render(gl::Canvas& cv, geom::Area const& area)
 {
 	this->renderTree_->render(cv, area, 0.0f);
 }
@@ -54,12 +54,12 @@ void ContentWidget::idle(const float delta_ms)
 {
 }
 
-void ContentWidget::reshape(const geom::Box& areaSize)
+void ContentWidget::reshape(geom::Box const& areaSize)
 {
 	this->measure(areaSize);
 }
 
-geom::Box ContentWidget::measure(const geom::Box& constraintSize)
+geom::Box ContentWidget::measure(geom::Box const& constraintSize)
 {
 	if(geom::isUnspecified(this->lastWidth()) || std::fabs(constraintSize.width()-this->lastWidth()) >= geom::VerySmall){
 		this->lastWidth(constraintSize.width());
@@ -70,22 +70,22 @@ geom::Box ContentWidget::measure(const geom::Box& constraintSize)
 	return geom::Box(geom::max(constraintSize.width(), this->lastSize().width()), geom::max(constraintSize.height(), this->lastSize().height()));
 }
 
-bool ContentWidget::onDownRaw(const float timeMs, const geom::Point& ptInWidget)
+bool ContentWidget::onDownRaw(const float timeMs, geom::Point const& ptInWidget)
 {
 	return true;
 }
 
-bool ContentWidget::onUpRaw(const float timeMs, const geom::Point& ptInWidget)
+bool ContentWidget::onUpRaw(const float timeMs, geom::Point const& ptInWidget)
 {
 	return true;
 }
 
-bool ContentWidget::onSingleTapUp(const float timeMs, const geom::Point& ptInWidget)
+bool ContentWidget::onSingleTapUp(const float timeMs, geom::Point const& ptInWidget)
 {
 	return true;
 }
 
-bool ContentWidget::onZoom(const float timeMs, const geom::Point& center, const float ratio)
+bool ContentWidget::onZoom(const float timeMs, geom::Point const& center, const float ratio)
 {
 	return true;
 }

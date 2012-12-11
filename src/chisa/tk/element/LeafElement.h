@@ -29,13 +29,13 @@ class LeafElement: public chisa::tk::Element {
 public:
 	virtual std::weak_ptr<Element> getChildAt(const std::size_t index) const override;
 	virtual std::size_t getChildCount() const override;
-	virtual std::weak_ptr<Element> getElementByIdImpl(const std::string& id) override;
+	virtual std::weak_ptr<Element> getElementByIdImpl(std::string const& id) override;
 public:
 	virtual std::string toString() const override = 0;
 private:
-	virtual void renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area) override = 0;
-	virtual geom::Box onMeasure(const geom::Box& constraint) override = 0;
-	virtual void onLayout(const geom::Box& size) override = 0;
+	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override = 0;
+	virtual geom::Box onMeasure(geom::Box const& constraint) override = 0;
+	virtual void onLayout(geom::Box const& size) override = 0;
 	virtual void loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override = 0;
 };
 

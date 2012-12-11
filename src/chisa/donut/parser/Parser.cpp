@@ -82,7 +82,7 @@ public:
 		}
 	}
 
-	ParserImpl& fromFile(const std::string& filename)
+	ParserImpl& fromFile(std::string const& filename)
 	{
 		this->filename_ = filename;
 		stream = antlr3FileStreamNew((ANTLR3_UINT8*)filename.c_str(), ANTLR3_ENC_UTF8);
@@ -92,7 +92,7 @@ public:
 		setup();
 		return *this;
 	}
-	ParserImpl& fromString(const std::string& src, const std::string& filename, int line)
+	ParserImpl& fromString(std::string const& src, std::string const& filename, int line)
 	{
 		this->src = src;
 		this->filename_ = filename;
@@ -139,7 +139,7 @@ private:
 	pANTLR3_COMMON_TREE_NODE_STREAM stream;
 	pCompiler compiler;
 public:
-	CompilerImpl(const std::string& filename, pANTLR3_BASE_TREE tree)
+	CompilerImpl(std::string const& filename, pANTLR3_BASE_TREE tree)
 	:filename(filename), tree(tree), stream(nullptr), compiler(nullptr){
 		stream = antlr3CommonTreeNodeStreamNewTree(tree, 0);
 		compiler = CompilerNew(stream);
@@ -187,21 +187,21 @@ Parser::~Parser()
 	delete this->compilerImpl;
 	delete this->parserImpl;
 }
-std::shared_ptr<Parser> Parser::fromFile(const std::string& filename)
+std::shared_ptr<Parser> Parser::fromFile(std::string const& filename)
 {
 	ParserImpl* pimpl = new ParserImpl();
 	pimpl->fromFile(filename);
 	std::shared_ptr<Parser> parser(new Parser(pimpl));
 	return parser;
 }
-std::shared_ptr<Parser> Parser::fromString(const std::string& src, const std::string& filename, int line)
+std::shared_ptr<Parser> Parser::fromString(std::string const& src, std::string const& filename, int line)
 {
 	ParserImpl* impl = new ParserImpl();
 	impl->fromString(src, filename, line);
 	std::shared_ptr<Parser> parser(new Parser(impl));
 	return parser;
 }
-std::shared_ptr<Parser> Parser::fromStream(std::istream& stream_, const std::string& filename)
+std::shared_ptr<Parser> Parser::fromStream(std::istream& stream_, std::string const& filename)
 {
 	ParserImpl* impl = new ParserImpl();
 	impl->fromStream(stream_, filename);

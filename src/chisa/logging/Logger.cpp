@@ -31,7 +31,7 @@ Logger::Logger(std::ostream& stream, enum Level level) noexcept
 {
 }
 
-void Logger::msg(enum Level level, const std::string& tag, const std::string& fmt, std::va_list args)
+void Logger::msg(enum Level level, std::string const& tag, std::string const& fmt, std::va_list args)
 {
 	std::stringstream ss;
 	if(level < this->level){
@@ -69,7 +69,7 @@ bool Logger::t() const noexcept
 {
 	return this->level <= TRACE_;
 }
-void Logger::t(const std::string& tag, const std::string& fmt, ...)
+void Logger::t(std::string const& tag, std::string const& fmt, ...)
 {
 	std::va_list lst;
 	va_start(lst, fmt);
@@ -82,7 +82,7 @@ bool Logger::v() const noexcept
 	return this->level <= VERBOSE_;
 }
 
-void Logger::v(const std::string& tag, const std::string& fmt, ...)
+void Logger::v(std::string const& tag, std::string const& fmt, ...)
 {
 	std::va_list lst;
 	va_start(lst, fmt);
@@ -93,7 +93,7 @@ bool Logger::d() const noexcept
 {
 	return this->level <= DEBUG_;
 }
-void Logger::d(const std::string& tag, const std::string& fmt, ...)
+void Logger::d(std::string const& tag, std::string const& fmt, ...)
 {
 	std::va_list lst;
 	va_start(lst, fmt);
@@ -104,21 +104,21 @@ bool Logger::i() const noexcept
 {
 	return this->level <= INFO_;
 }
-void Logger::i(const std::string& tag, const std::string& fmt, ...)
+void Logger::i(std::string const& tag, std::string const& fmt, ...)
 {
 	std::va_list lst;
 	va_start(lst, fmt);
 	msg(INFO_, tag, fmt, lst);
 	va_end(lst);
 }
-void Logger::w(const std::string& tag, const std::string& fmt, ...)
+void Logger::w(std::string const& tag, std::string const& fmt, ...)
 {
 	std::va_list lst;
 	va_start(lst, fmt);
 	msg(WARN_, tag, fmt, lst);
 	va_end(lst);
 }
-void Logger::e(const std::string& tag, const std::string& fmt, ...)
+void Logger::e(std::string const& tag, std::string const& fmt, ...)
 {
 	std::va_list lst;
 	va_start(lst, fmt);

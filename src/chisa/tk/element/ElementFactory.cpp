@@ -45,7 +45,7 @@ const std::string ElementFactory::ElemName::Tab("tab");
 
 const std::string ElementFactory::AttrName::Id("id");
 
-ElementFactory::ElementFactory(logging::Logger& log, std::weak_ptr<World> world, const std::string& filename)
+ElementFactory::ElementFactory(logging::Logger& log, std::weak_ptr<World> world, std::string const& filename)
 :log_(log)
 ,world_(world)
 ,filename_(filename)
@@ -63,7 +63,7 @@ ElementFactory::ElementFactory(logging::Logger& log, std::weak_ptr<World> world,
 	}
 }
 
-ElementFactory::ElementFactory(logging::Logger& log, std::weak_ptr<World> world, const std::string& filename, XMLDocument* document, bool doc_free_by_me)
+ElementFactory::ElementFactory(logging::Logger& log, std::weak_ptr<World> world, std::string const& filename, XMLDocument* document, bool doc_free_by_me)
 :log_(log)
 ,world_(world)
 ,filename_(filename)
@@ -77,7 +77,7 @@ ElementFactory::ElementFactory(logging::Logger& log, std::weak_ptr<World> world,
 	}
 }
 
-ElementFactory::ElementFactory(logging::Logger& log, std::weak_ptr<World> world, const std::string& filename, const char* buffer, size_t lenb)
+ElementFactory::ElementFactory(logging::Logger& log, std::weak_ptr<World> world, std::string const& filename, const char* buffer, size_t lenb)
 :log_(log)
 ,world_(world)
 ,doc_()
@@ -109,7 +109,7 @@ ElementFactory::~ElementFactory()
 	this->doc_ = nullptr;
 }
 
-void ElementFactory::registerElement(const std::string& elementName, std::function<std::shared_ptr<Element>(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent)> constructor)
+void ElementFactory::registerElement(std::string const& elementName, std::function<std::shared_ptr<Element>(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent)> constructor)
 {
 	this->elementMap_.update(elementName, constructor);
 }
@@ -126,7 +126,7 @@ std::shared_ptr<Element> ElementFactory::parseTree(std::weak_ptr<Element> root, 
 	return elm;
 }
 
-std::shared_ptr<Element> ElementFactory::parseTree(const std::string& elementId)
+std::shared_ptr<Element> ElementFactory::parseTree(std::string const& elementId)
 {
 	for(XMLElement* elem = this->root_->FirstChildElement(); elem; elem = elem->NextSiblingElement()){
 		const char* id = elem->Attribute(AttrName::Id.c_str(), nullptr);

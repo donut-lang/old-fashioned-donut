@@ -28,7 +28,7 @@ DonutException::DonutException(const char* file, const size_t line) throw()
 	init(file, line, "", list);
 }
 
-DonutException::DonutException(const char* file, const size_t line, const std::string& fmt, ...) noexcept
+DonutException::DonutException(const char* file, const size_t line, std::string const& fmt, ...) noexcept
 {
 	va_list lst;
 	va_start(lst, fmt);
@@ -36,12 +36,12 @@ DonutException::DonutException(const char* file, const size_t line, const std::s
 	va_end(lst);
 }
 
-DonutException::DonutException(const char* file, const size_t line, const std::string& fmt, va_list lst) noexcept
+DonutException::DonutException(const char* file, const size_t line, std::string const& fmt, va_list lst) noexcept
 {
 	init(file, line, fmt, lst);
 }
 
-void DonutException::init(const char* file, const size_t line, const std::string& fmt, va_list lst) noexcept
+void DonutException::init(const char* file, const size_t line, std::string const& fmt, va_list lst) noexcept
 {
 	try{
 		this->_line = line;

@@ -18,7 +18,7 @@
 
 #include "TestCommon.h"
 
-std::shared_ptr<tinyxml2::XMLDocument> parse(const std::string& str)
+std::shared_ptr<tinyxml2::XMLDocument> parse(std::string const& str)
 {
 	std::shared_ptr<tinyxml2::XMLDocument> d(new tinyxml2::XMLDocument);
 	d->Parse(str.c_str(), str.size());

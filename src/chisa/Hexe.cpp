@@ -20,7 +20,7 @@
 
 namespace chisa {
 
-Hexe::Hexe(logging::Logger& log, const std::string& basepath)
+Hexe::Hexe(logging::Logger& log, std::string const& basepath)
 :log_(log)
 ,basepath_(basepath)
 {

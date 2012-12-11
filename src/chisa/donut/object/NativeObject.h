@@ -30,13 +30,13 @@ private:
 public:
 	StringObject(std::string const& providerName):NativeObject(providerName){};
 	virtual ~StringObject() noexcept = default;
-	virtual std::string toStringImpl(const Handler<Heap>& heap) const override final;
-	virtual int toIntImpl(const Handler<Heap>& heap) const override final;
-	virtual float toFloatImpl(const Handler<Heap>& heap) const override final;
-	virtual bool toBoolImpl(const Handler<Heap>& heap) const override final;
-	virtual void onSeekNotifyImpl(const Handler<Heap>& heap) override;
-	virtual void onDiscardHistoryNotifyImpl(const Handler<Heap>& heap) override final;
-	virtual void onDiscardFutureNotifyImpl(const Handler<Heap>& heap) override final;
+	virtual std::string toStringImpl(Handler<Heap> const& heap) const override final;
+	virtual int toIntImpl(Handler<Heap> const& heap) const override final;
+	virtual float toFloatImpl(Handler<Heap> const& heap) const override final;
+	virtual bool toBoolImpl(Handler<Heap> const& heap) const override final;
+	virtual void onSeekNotifyImpl(Handler<Heap> const& heap) override;
+	virtual void onDiscardHistoryNotifyImpl(Handler<Heap> const& heap) override final;
+	virtual void onDiscardFutureNotifyImpl(Handler<Heap> const& heap) override final;
 	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override final;
 	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override final;
 public:
@@ -49,13 +49,13 @@ private:
 public:
 	FloatObject(std::string const& providerName):NativeObject(providerName),value_(NAN){};
 	virtual ~FloatObject() noexcept = default;
-	virtual std::string toStringImpl(const Handler<Heap>& heap) const override final;
-	virtual int toIntImpl(const Handler<Heap>& heap) const override final;
-	virtual float toFloatImpl(const Handler<Heap>& heap) const override final;
-	virtual bool toBoolImpl(const Handler<Heap>& heap) const override final;
-	virtual void onSeekNotifyImpl(const Handler<Heap>& heap) override;
-	virtual void onDiscardHistoryNotifyImpl(const Handler<Heap>& heap) override final;
-	virtual void onDiscardFutureNotifyImpl(const Handler<Heap>& heap) override final;
+	virtual std::string toStringImpl(Handler<Heap> const& heap) const override final;
+	virtual int toIntImpl(Handler<Heap> const& heap) const override final;
+	virtual float toFloatImpl(Handler<Heap> const& heap) const override final;
+	virtual bool toBoolImpl(Handler<Heap> const& heap) const override final;
+	virtual void onSeekNotifyImpl(Handler<Heap> const& heap) override;
+	virtual void onDiscardHistoryNotifyImpl(Handler<Heap> const& heap) override final;
+	virtual void onDiscardFutureNotifyImpl(Handler<Heap> const& heap) override final;
 	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override final;
 	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override final;
 public:
@@ -73,19 +73,19 @@ public:
 	virtual util::XValue save( Handler<Heap> const& heap ) override final;
 	virtual void load( Handler<Heap> const& heap, util::XValue const& data ) override final;
 protected:
-	virtual std::string toStringImpl(const Handler<Heap>& heap) const override final;
-	virtual int toIntImpl(const Handler<Heap>& heap) const override final;
-	virtual float toFloatImpl(const Handler<Heap>& heap) const override final;
-	virtual bool toBoolImpl(const Handler<Heap>& heap) const override final;
+	virtual std::string toStringImpl(Handler<Heap> const& heap) const override final;
+	virtual int toIntImpl(Handler<Heap> const& heap) const override final;
+	virtual float toFloatImpl(Handler<Heap> const& heap) const override final;
+	virtual bool toBoolImpl(Handler<Heap> const& heap) const override final;
 public:
-	virtual void onSeekNotifyImpl(const Handler<Heap>& heap) override;
-	virtual void onDiscardHistoryNotifyImpl(const Handler<Heap>& heap) override;
-	virtual void onDiscardFutureNotifyImpl(const Handler<Heap>& heap) override;
+	virtual void onSeekNotifyImpl(Handler<Heap> const& heap) override;
+	virtual void onDiscardHistoryNotifyImpl(Handler<Heap> const& heap) override;
+	virtual void onDiscardFutureNotifyImpl(Handler<Heap> const& heap) override;
 };
 
 class PureNativeClosureObject final : public NativeClosureObject {
 public:
-	typedef std::function<Handler<Object>(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& arg)> Signature;
+	typedef std::function<Handler<Object>(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& arg)> Signature;
 private:
 	Signature func_;
 public:
@@ -93,7 +93,7 @@ public:
 	virtual ~PureNativeClosureObject() noexcept {};
 	void bootstrap( std::string const& objectProviderName, std::string const& closureName, Signature f );
 public:
-	Handler<Object> apply(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& arg);
+	Handler<Object> apply(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& arg);
 private:
 	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override final;
 	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override final;
@@ -101,7 +101,7 @@ private:
 
 class ReactiveNativeClosureObject final : public NativeClosureObject {
 public:
-	typedef std::function<std::pair<Handler<Object>, util::XValue>(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& arg)> Signature;
+	typedef std::function<std::pair<Handler<Object>, util::XValue>(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& arg)> Signature;
 private:
 	Signature func_;
 public:
@@ -109,7 +109,7 @@ public:
 	virtual ~ReactiveNativeClosureObject() noexcept {};
 	void bootstrap( std::string const& objectProviderName, std::string const& closureName, Signature f );
 public:
-	Handler<Object> apply(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& arg);
+	Handler<Object> apply(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& arg);
 private:
 	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override final;
 	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override final;

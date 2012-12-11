@@ -30,7 +30,7 @@ namespace tk {
 
 const static std::string& TAG("World");
 
-World::World(logging::Logger& log, std::weak_ptr<Universe> _universe, const std::string& worldname)
+World::World(logging::Logger& log, std::weak_ptr<Universe> _universe, std::string const& worldname)
 :log_(log)
 ,universe_(_universe)
 ,name_(worldname)
@@ -101,7 +101,7 @@ void World::idle(const float delta_ms)
 	}
 	this->taskHandler_.run(delta_ms);
 }
-void World::reshape(const geom::Area& area)
+void World::reshape(geom::Area const& area)
 {
 	if(std::shared_ptr<Element> elm = this->elementStack_.top()){
 		elm->measure(area.box());
@@ -110,7 +110,7 @@ void World::reshape(const geom::Area& area)
 	this->area(area);
 }
 
-void World::pushElement(const std::string& filename)
+void World::pushElement(std::string const& filename)
 {
 	std::shared_ptr<Element> l = this->elementFactory_->parseTree(filename);
 	this->elementStack_.push(l);
@@ -134,7 +134,7 @@ void World::unregisterTask(Task* task)
 	this->taskHandler_.unregisterTask(task);
 }
 
-std::weak_ptr<Element> World::getElementByPoint(const geom::Point& screenPoint)
+std::weak_ptr<Element> World::getElementByPoint(geom::Point const& screenPoint)
 {
 	if(std::shared_ptr<Element> elm = this->elementStack_.top()){
 		return elm->getElementByPoint(screenPoint);
@@ -142,7 +142,7 @@ std::weak_ptr<Element> World::getElementByPoint(const geom::Point& screenPoint)
 	return std::weak_ptr<Element>();
 }
 
-element::WidgetElement* World::getWidgetById(const std::string& name)
+element::WidgetElement* World::getWidgetById(std::string const& name)
 {
 	auto it = this->widgetMap_.find(name);
 	if(it == this->widgetMap_.end()){
@@ -151,7 +151,7 @@ element::WidgetElement* World::getWidgetById(const std::string& name)
 	return it->second;
 }
 
-bool World::replaceWidget(const std::string& widgetId, element::WidgetElement* const newHandler)
+bool World::replaceWidget(std::string const& widgetId, element::WidgetElement* const newHandler)
 {
 	std::unordered_map<std::string, element::WidgetElement*>::iterator it = this->widgetMap_.find(widgetId);
 	if(it != widgetMap_.end()) {
@@ -160,7 +160,7 @@ bool World::replaceWidget(const std::string& widgetId, element::WidgetElement* c
 	this->widgetMap_.insert(std::pair<std::string, element::WidgetElement*>(widgetId, newHandler));
 	return true;
 }
-bool World::deleteWidget(const std::string& widgetId, element::WidgetElement* const handler)
+bool World::deleteWidget(std::string const& widgetId, element::WidgetElement* const handler)
 {
 	std::unordered_map<std::string, element::WidgetElement*>::iterator it = this->widgetMap_.find(widgetId);
 	if(it != widgetMap_.end()) {
@@ -175,7 +175,7 @@ bool World::deleteWidget(const std::string& widgetId, element::WidgetElement* co
 	return true;
 }
 
-Widget* World::createWidget(const std::string& klass, tinyxml2::XMLElement* elem)
+Widget* World::createWidget(std::string const& klass, tinyxml2::XMLElement* elem)
 {
 	return this->widgetFactory_->createWidget(klass, elem);
 }
@@ -189,21 +189,21 @@ Handler<gl::DrawableManager> World::drawableManager() const
 	}
 }
 
-void World::onTouchDown(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint)
+void World::onTouchDown(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
 {
 	if(this->gestureMediator_){
 		this->gestureMediator_->onTouchDown(timeMs, pointerIndex, screenPoint);
 	}
 }
 
-void World::onTouchUp(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint)
+void World::onTouchUp(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
 {
 	if(this->gestureMediator_){
 		this->gestureMediator_->onTouchUp(timeMs, pointerIndex, screenPoint);
 	}
 }
 
-void World::onTouchMove(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint)
+void World::onTouchMove(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
 {
 	if(this->gestureMediator_){
 		this->gestureMediator_->onTouchMove(timeMs, pointerIndex, screenPoint);

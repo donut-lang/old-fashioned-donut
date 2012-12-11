@@ -130,7 +130,7 @@ void Disposer::walk(Text* text)
 {
 	text->clearObjects();
 	std::vector<std::string> lines(breakLine(shrinkSpace(text->text())));
-	for(const std::string& str : lines){
+	for(std::string const& str : lines){
 		Handler<TextDrawableObject> obj = this->textContext_.create(str, text, this->nowDepth_);
 		//文字分のエリアを確保し、その位置とレンダリングコマンドを記録
 		this->extendInline(obj);

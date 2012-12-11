@@ -54,20 +54,20 @@ public:
 	virtual std::weak_ptr<Element> getChildAt(const size_t index) const = 0;
 	virtual size_t getChildCount() const = 0;
 public:
-	void render(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area);
-	geom::Box measure(const geom::Box& constraint);
-	void layout(const geom::Box& size);
+	void render(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area);
+	geom::Box measure(geom::Box const& constraint);
+	void layout(geom::Box const& size);
 	virtual std::string toString() const = 0;
 	void loadXML(element::ElementFactory* const factory, tinyxml2::XMLElement* const element);
-	std::weak_ptr<Element> getElementById(const std::string& id);
-	std::weak_ptr<Element> getElementByPoint(const geom::Vector& screenPoint);
+	std::weak_ptr<Element> getElementById(std::string const& id);
+	std::weak_ptr<Element> getElementByPoint(geom::Vector const& screenPoint);
 	virtual void idle(const float delta_ms);
 private:
-	virtual void renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area) = 0;
-	virtual geom::Box onMeasure(const geom::Box& constraint) = 0;
-	virtual void onLayout(const geom::Box& size) = 0;
+	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) = 0;
+	virtual geom::Box onMeasure(geom::Box const& constraint) = 0;
+	virtual void onLayout(geom::Box const& size) = 0;
 	virtual void loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) = 0;
-	virtual std::weak_ptr<Element> getElementByIdImpl(const std::string& id) = 0;
+	virtual std::weak_ptr<Element> getElementByIdImpl(std::string const& id) = 0;
 protected:
 	Element(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent);
 private:

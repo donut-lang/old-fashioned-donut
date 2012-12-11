@@ -27,7 +27,7 @@ namespace donut {
 
 static const std::string TAG("IntProvider");
 
-IntProvider::IntProvider(const Handler<Heap>& heap)
+IntProvider::IntProvider(Handler<Heap> const& heap)
 :Provider(heap, "Integer")
 {
 	this->registerPureNativeClosure("opAdd", std::function<int(int, int)>([&](int self, int v) {
@@ -104,7 +104,7 @@ bool IntProvider::toBool(const Object* ptr) const
 	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast Integer to Boolean.");
 }
 
-Handler<Object> IntProvider::create( const int& val )
+Handler<Object> IntProvider::create( int const& val )
 {
 	return Handler<Object>::__internal__fromRawPointerWithoutCheck( IntProvider::toPointer(val) );
 }

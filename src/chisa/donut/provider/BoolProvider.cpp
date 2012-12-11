@@ -26,7 +26,7 @@ namespace chisa {
 namespace donut {
 static const std::string TAG("BoolProvider");
 
-BoolProvider::BoolProvider(const Handler<Heap>& heap)
+BoolProvider::BoolProvider(Handler<Heap> const& heap)
 :Provider(heap, "Boolean")
 {
 	this->registerPureNativeClosure("opAnd", std::function<bool(bool, bool)>(
@@ -67,7 +67,7 @@ bool BoolProvider::toBool(const Object* ptr) const
 	return BoolProvider::fromPointer(ptr);
 }
 
-Handler<Object> BoolProvider::create( const bool& val )
+Handler<Object> BoolProvider::create( bool const& val )
 {
 	return Handler<Object>::__internal__fromRawPointerWithoutCheck( BoolProvider::toPointer(val) );
 }

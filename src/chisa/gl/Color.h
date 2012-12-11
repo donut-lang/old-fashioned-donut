@@ -35,10 +35,10 @@ public:
 public:
 	constexpr Color() noexcept:red_(0), green_(0), blue_(0), alpha_(0){};
 	constexpr Color(float r, float g, float b, float a) noexcept:red_(r), green_(g), blue_(b), alpha_(a){};
-	constexpr Color(const Color& other) = default;
+	constexpr Color(Color const& other) = default;
 	constexpr Color(Color&& other) = default;
-	static Color fromString( const std::string& name );
-	Color& operator=(const Color& other) = default;
+	static Color fromString( std::string const& name );
+	Color& operator=(Color const& other) = default;
 	Color& operator=(Color&& other) = default;
 	~Color() noexcept = default;
 	std::string toString() const noexcept;
@@ -55,13 +55,13 @@ public:
 				std::isnan(green_) ||
 				std::isnan(alpha_);
 	}
-	constexpr bool operator==(const Color& o) const noexcept{
+	constexpr bool operator==(Color const& o) const noexcept{
 		return std::fabs(this->red_ - o.red_) < DELTA &&
 				std::fabs(this->blue_ - o.blue_) < DELTA &&
 				std::fabs(this->green_ - o.green_) < DELTA &&
 				std::fabs(this->alpha_ - o.alpha_) < DELTA;
 	}
-	constexpr bool operator!=(const Color& o) const noexcept{
+	constexpr bool operator!=(Color const& o) const noexcept{
 		return std::fabs(this->red_ - o.red_) >= DELTA ||
 				std::fabs(this->blue_ - o.blue_) >= DELTA ||
 				std::fabs(this->green_ - o.green_) >= DELTA ||

@@ -28,7 +28,7 @@ using namespace chisa::gl;
 
 
 template <>
-void parseAttr<Color>(const std::string& name, Color& v, const Color& def, tinyxml2::XMLElement* elm)
+void parseAttr<Color>(std::string const& name, Color& v, Color const& def, tinyxml2::XMLElement* elm)
 {
 	if( const char* attr = elm->Attribute(name.c_str()) ) {
 		Color const c = Color::fromString(attr);

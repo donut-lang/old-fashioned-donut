@@ -23,13 +23,13 @@ namespace nes {
 
 class Hexe: public chisa::Hexe {
 public:
-	Hexe(chisa::logging::Logger& log, const std::string& basepath);
+	Hexe(chisa::logging::Logger& log, std::string const& basepath);
 	virtual ~Hexe();
 public:
 	virtual void registerWidgets(chisa::tk::widget::WidgetFactory& factory) override;
 	virtual void registerElements(chisa::tk::element::ElementFactory& factory) override;
 public:
-	virtual std::shared_ptr<chisa::WorldGeist> invokeWorldGeist(std::weak_ptr<chisa::tk::World> world, const std::string& nameOfGeist) override;
+	virtual std::shared_ptr<chisa::WorldGeist> invokeWorldGeist(std::weak_ptr<chisa::tk::World> world, std::string const& nameOfGeist) override;
 };
 
 }

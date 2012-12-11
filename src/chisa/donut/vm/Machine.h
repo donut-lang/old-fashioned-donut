@@ -37,7 +37,7 @@ struct Callchain final {
 	Handler<DonutClosureObject> closure_; //クロージャ本体
 	Handler<DonutObject> scope_; //ローカル変数の格納されるオブジェクト
 public:
-	Callchain(pc_t pc, unsigned int const& stackBase, const Handler<Object>& self, const Handler<DonutClosureObject>& closure, const Handler<DonutObject>& scope)
+	Callchain(pc_t pc, unsigned int const& stackBase, Handler<Object> const& self, Handler<DonutClosureObject> const& closure, Handler<DonutObject> const& scope)
 	:pc_(pc), stackBase_(stackBase), self_(self), closure_(closure), scope_(scope){
 	}
 	Callchain(Handler<Heap> const& heap, util::XValue const& data);
@@ -53,8 +53,8 @@ struct Context final {
 	std::vector<Handler<Object> > stack_;
 	std::vector<Handler<Object> > local_;
 	std::vector<Callchain> callStack_;
-	Context(const Handler<Clock>& clk);
-	Context(const Handler<Clock>& clk, const Context& other);
+	Context(Handler<Clock> const& clk);
+	Context(Handler<Clock> const& clk, Context const& other);
 	Context(Handler<Heap> const& heap, util::XValue const& data);
 	~Context() noexcept = default;
 	util::XValue save();
@@ -70,7 +70,7 @@ public:
 class Machine final : public HandlerBody<Machine> {
 	DEFINE_MEMBER_REF(private, logging::Logger, log);
 private: /* 何があっても不変なもの。*/
-	const Handler<Clock>& clock_;
+	Handler<Clock> const& clock_;
 	Handler<Heap> const heap_;
 private: /* 時とともに変わっていくもの */
 	std::vector<Context> contextRevs_;
@@ -86,19 +86,19 @@ private: /* それへのアクセス手段の提供。 */
 	std::vector<Callchain>& callStack();
 	pc_t& pc();
 public: /* 生成 */
-	Machine(logging::Logger& log, const Handler<Clock>& clock, const Handler<Heap>& heap);
+	Machine(logging::Logger& log, Handler<Clock> const& clock, Handler<Heap> const& heap);
 	virtual ~Machine() noexcept = default;
 	bool onFree() noexcept { return false; };
 public: /* 外部からの実行指示 */
-	Handler<Object> start( const Handler<Source>& src );
-	Handler<Object> startContinue( const Handler<Object>& obj );
+	Handler<Object> start( Handler<Source> const& src );
+	Handler<Object> startContinue( Handler<Object> const& obj );
 	bool isInterrupted() const noexcept;
 private: /* スタック操作 */
-	void pushStack( const Handler<Object>& obj );
+	void pushStack( Handler<Object> const& obj );
 	Handler<Object> popStack();
 	Handler<Object> topStack();
 private: /* 実行 */
-	void enterClosure(const Handler<Object>& self, const Handler<DonutClosureObject>& clos, const Handler<Object>& args);
+	void enterClosure(Handler<Object> const& self, Handler<DonutClosureObject> const& clos, Handler<Object> const& args);
 	bool leaveClosure();
 	bool fetchPC( Instruction& inst );
 	Handler<Object> run();

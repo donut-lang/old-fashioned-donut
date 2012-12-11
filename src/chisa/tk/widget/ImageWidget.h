@@ -39,10 +39,10 @@ public:
 	ImageWidget(logging::Logger& log, std::weak_ptr<World> world, tinyxml2::XMLElement* element);
 	virtual ~ImageWidget();
 public:
-	virtual void render(gl::Canvas& cv, const geom::Area& area) override;
+	virtual void render(gl::Canvas& cv, geom::Area const& area) override;
 	virtual void idle(const float delta_ms) override;
-	virtual void reshape(const geom::Box& area) override;
-	virtual geom::Box measure(const geom::Box& constraint) override;
+	virtual void reshape(geom::Box const& area) override;
+	virtual geom::Box measure(geom::Box const& constraint) override;
 };
 
 }}}

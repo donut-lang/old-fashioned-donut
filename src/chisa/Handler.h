@@ -50,7 +50,7 @@ public:
 			this->sprite->incref( true );
 		}
 	}
-	Handler(const Handler<S>& other) noexcept
+	Handler(Handler<S> const& other) noexcept
 	:sprite(other.sprite)
 	{
 		if(this->sprite){
@@ -63,14 +63,14 @@ public:
 		other.sprite = nullptr;
 	}
 	template <class T>
-	Handler(const Handler<T>& other) noexcept
+	Handler(Handler<T> const& other) noexcept
 	:sprite(other.get())
 	{
 		if(this->sprite){
 			this->sprite->incref( false );
 		}
 	}
-	inline Handler<S>& operator=(const Handler<S>& other) noexcept
+	inline Handler<S>& operator=(Handler<S> const& other) noexcept
 	{
 		if(other.sprite){
 			other.sprite->incref( false );
@@ -92,7 +92,7 @@ public:
 		return *this;
 	}
 	template <class T>
-	Handler<S>& operator=(const Handler<T>& other) noexcept
+	Handler<S>& operator=(Handler<T> const& other) noexcept
 	{
 		if(other.get()){
 			other.get()->incref( false );
@@ -162,9 +162,9 @@ private:
 	~WeakHandlerEntity() { this->sprite = nullptr; }
 	WeakHandlerEntity(S* spr):sprite(spr), refcount_(0){}
 private:
-	WeakHandlerEntity(const WeakHandlerEntity<S>& other) = delete;
+	WeakHandlerEntity(WeakHandlerEntity<S> const& other) = delete;
 	WeakHandlerEntity(WeakHandlerEntity<S>&& other) = delete;
-	WeakHandlerEntity<S>& operator=(const WeakHandlerEntity<S>& other) = delete;
+	WeakHandlerEntity<S>& operator=(WeakHandlerEntity<S> const& other) = delete;
 	WeakHandlerEntity<S>& operator=(WeakHandlerEntity<S>&& other) = delete;
 public:
 	inline void notifyDead(){
@@ -214,7 +214,7 @@ private:
 	internal::WeakHandlerEntity<S>* entity;
 public:
 	HandlerW():entity(nullptr){};
-	HandlerW(const Handler<S>& hand)
+	HandlerW(Handler<S> const& hand)
 	:entity(internal::WeakHandlerEntity<S>::create(hand.get()))
 	{
 		if(this->entity){
@@ -228,7 +228,7 @@ public:
 			this->entity->incref();
 		}
 	}
-	HandlerW(const HandlerW<S>& other):entity(other.entity)
+	HandlerW(HandlerW<S> const& other):entity(other.entity)
 	{
 		if(this->entity){
 			this->entity->incref();
@@ -237,7 +237,7 @@ public:
 	HandlerW(HandlerW<S>&& other):entity(other.entity) {
 		other.entity = nullptr;
 	}
-	inline HandlerW& operator=(const HandlerW<S>& other)
+	inline HandlerW& operator=(HandlerW<S> const& other)
 	{
 		if(other.entity){
 			other.entity->incref();
@@ -292,13 +292,13 @@ void swap(Handler<T>& a, Handler<T>& b) noexcept
 }
 
 template<class T, class U>
-bool operator==(const Handler<T>& a, const Handler<U>& b) noexcept
+bool operator==(Handler<T> const& a, Handler<U> const& b) noexcept
 {
 	return a.get() == b.get();
 }
 
 template<class T, class U>
-bool operator!=(const Handler<T>& a, const Handler<U>& b) noexcept
+bool operator!=(Handler<T> const& a, Handler<U> const& b) noexcept
 {
 	return a.get() != b.get();
 }

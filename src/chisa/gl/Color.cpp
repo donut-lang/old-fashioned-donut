@@ -22,7 +22,7 @@
 
 namespace chisa {
 namespace gl {
-float __atof(const std::string& str, bool& failed)
+float __atof(std::string const& str, bool& failed)
 {
 	char* c = nullptr;
 	int val = std::strtol(str.c_str(), &c, 16);
@@ -33,7 +33,7 @@ float __atof(const std::string& str, bool& failed)
 	return (val & 0xff)/255.0f;
 }
 
-Color Color::fromString(const std::string& name)
+Color Color::fromString(std::string const& name)
 {
 	if( name.empty() ){
 		return InvalidColor;

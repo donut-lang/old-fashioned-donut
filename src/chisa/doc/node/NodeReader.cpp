@@ -32,7 +32,7 @@ private:
 	NodeReader::TreeConstructor c;
 public:
 	template <typename... Args>
-	Proxy(const Args&... args)
+	Proxy(Args const&... args)
 	:c( std::bind(Node::create<T, Args...>, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, args...) )
 	{
 	}
@@ -48,7 +48,7 @@ private:
 	NodeReader::BlockConstructor c;
 public:
 	template <typename... Args>
-	Proxy(const Args&... args)
+	Proxy(Args const&... args)
 	:c( std::bind(Node::create<T, Args...>, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, args...) )
 	{
 	}

@@ -26,7 +26,7 @@ class Sample {
 	DEFINE_MEMBER(public, public, int, val)
 	DEFINE_MEMBER(public, public, std::string, str)
 public:
-	Sample(int v, const std::string& str):val_(v), str_(str){}
+	Sample(int v, std::string const& str):val_(v), str_(str){}
 };
 
 TEST(ClassUtilTest, DefineMemberLiteralGetterSetterTest)
@@ -49,14 +49,14 @@ TEST(ClassUtilTest, DefineMemberLiteralReferenceTest)
 {
 	Sample s(0,"");
 	ASSERT_EQ(0, s.val());
-	static_assert(std::is_same<decltype(s.val()), const int&>::value, "oops. overload failed.");
+	static_assert(std::is_same<decltype(s.val()), int const&>::value, "oops. overload failed.");
 }
 
 TEST(ClassUtilTest, ConstDefineMemberLiteralReferenceTest)
 {
 	const Sample s(0,"");
 	ASSERT_EQ(0, s.val());
-	static_assert(std::is_same<decltype(s.val()), const int&>::value, "oops. overload failed.");
+	static_assert(std::is_same<decltype(s.val()), int const&>::value, "oops. overload failed.");
 }
 
 }}

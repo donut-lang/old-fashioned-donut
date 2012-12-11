@@ -52,7 +52,7 @@ ImageWidget::~ImageWidget()
 {
 }
 
-void ImageWidget::render(gl::Canvas& cv, const geom::Area& area)
+void ImageWidget::render(gl::Canvas& cv, geom::Area const& area)
 {
 	if(this->imageSprite_){
 		cv.drawSprite(this->imageSprite_, -area.point());
@@ -63,11 +63,11 @@ void ImageWidget::idle(const float delta_ms)
 {
 }
 
-void ImageWidget::reshape(const geom::Box& area)
+void ImageWidget::reshape(geom::Box const& area)
 {
 }
 
-geom::Box ImageWidget::measure(const geom::Box& constraint)
+geom::Box ImageWidget::measure(geom::Box const& constraint)
 {
 	if(imageSprite_){
 		return geom::Box(imageSprite_->width(), imageSprite_->height());

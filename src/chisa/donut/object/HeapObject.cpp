@@ -23,7 +23,7 @@
 namespace chisa {
 namespace donut {
 
-HeapObject::HeapObject(const std::string& providerName)
+HeapObject::HeapObject(std::string const& providerName)
 :providerName_(providerName)
 ,id_(0)
 ,erased_(0)

@@ -71,7 +71,7 @@ void WidgetElement::idle(const float delta_ms)
 	}
 	this->widget()->idle(delta_ms);
 }
-void WidgetElement::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
+void WidgetElement::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
 {
 	if(!widget()){
 		return;
@@ -91,7 +91,7 @@ void WidgetElement::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea,
 	widget()->render(canvas, this->widgetDrawnArea());
 }
 
-geom::Box WidgetElement::onMeasure(const geom::Box& constraint)
+geom::Box WidgetElement::onMeasure(geom::Box const& constraint)
 {
 	if(!widget()){
 		return geom::Box(0,0);
@@ -139,7 +139,7 @@ geom::Box WidgetElement::onMeasure(const geom::Box& constraint)
 	}
 }
 
-float WidgetElement::calcScale(const geom::Box& widget, const geom::Box& constraint)
+float WidgetElement::calcScale(geom::Box const& widget, geom::Box const& constraint)
 {
 	//はみ出ないスケール
 	return std::min(
@@ -148,7 +148,7 @@ float WidgetElement::calcScale(const geom::Box& widget, const geom::Box& constra
 	);
 }
 
-void WidgetElement::onLayout(const geom::Box& size)
+void WidgetElement::onLayout(geom::Box const& size)
 {
 	if(!widget()){
 		return;
@@ -215,48 +215,48 @@ void WidgetElement::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElem
 	}
 }
 
-std::weak_ptr<Element> WidgetElement::getElementByIdImpl(const std::string& id)
+std::weak_ptr<Element> WidgetElement::getElementByIdImpl(std::string const& id)
 {
 	return std::weak_ptr<Element>();
 }
 
-geom::Point WidgetElement::calcPtInWidget(const geom::Point& ptInScreen)
+geom::Point WidgetElement::calcPtInWidget(geom::Point const& ptInScreen)
 {
 	const geom::Point delta = ptInScreen - this->screenArea().point();
 	return geom::Point(this->widgetDrawnArea().point() + delta / this->widgetScale());
 }
 
-bool WidgetElement::onDownRaw(const float timeMs, const geom::Point& ptInScreen)
+bool WidgetElement::onDownRaw(const float timeMs, geom::Point const& ptInScreen)
 {
 	return widget_->onDownRaw(timeMs, calcPtInWidget(ptInScreen));
 }
 
-bool WidgetElement::onUpRaw(const float timeMs, const geom::Point& ptInScreen)
+bool WidgetElement::onUpRaw(const float timeMs, geom::Point const& ptInScreen)
 {
 	return widget_->onUpRaw(timeMs, calcPtInWidget(ptInScreen));
 }
 
-bool WidgetElement::onMoveRaw(const float timeMs, const geom::Point& ptInScreen)
+bool WidgetElement::onMoveRaw(const float timeMs, geom::Point const& ptInScreen)
 {
 	return widget_->onMoveRaw(timeMs, calcPtInWidget(ptInScreen));
 }
 
-bool WidgetElement::onSingleTapUp(const float timeMs, const geom::Point& ptInScreen)
+bool WidgetElement::onSingleTapUp(const float timeMs, geom::Point const& ptInScreen)
 {
 	return widget_->onSingleTapUp(timeMs, calcPtInWidget(ptInScreen));
 }
 
-bool WidgetElement::onFling(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Velocity& velocity)
+bool WidgetElement::onFling(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity)
 {
 	return widget_->onFling(timeMs, calcPtInWidget(start), calcPtInWidget(end), velocity / this->widgetScale());
 }
 
-bool WidgetElement::onScroll(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Distance& distance)
+bool WidgetElement::onScroll(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance)
 {
 	return widget_->onScroll(timeMs, calcPtInWidget(start), calcPtInWidget(end), distance / this->widgetScale());
 }
 
-bool WidgetElement::onZoom(const float timeMs, const geom::Point& center, const float ratio)
+bool WidgetElement::onZoom(const float timeMs, geom::Point const& center, const float ratio)
 {
 	return widget_->onZoom(timeMs, calcPtInWidget(center), ratio);
 }

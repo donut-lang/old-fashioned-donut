@@ -81,7 +81,7 @@ bool NesGeist::isPressed(uint8_t keyIdx)
 	return false;
 }
 
-void NesGeist::loadNES(const std::string& abs_filename)
+void NesGeist::loadNES(std::string const& abs_filename)
 {
 	this->stopNES();
 	this->machine_->loadCartridge(abs_filename.c_str());

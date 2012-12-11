@@ -46,27 +46,27 @@ public:
 	virtual ~Canvas();
 public:
 	void ortho(const float left, const float right, const float bottom, const float top, const float near_val, const float far_val);
-	void resize2d(const geom::Box& box);
-	void translate(const geom::Point& pt);
-	void rotate(const float angle, const geom::Point& pt);
-	void scale(const geom::ScaleVector& scale);
-	void drawSprite(Handler<Sprite> sprite, const geom::Point& pt, const float depth = 0.0f);
-	void drawSprite(Handler<Sprite> sprite, const geom::Point& pt, const geom::Area& spriteArea, const float depth = 0.0f);
-	void drawLine(const float width, const Color& color, const geom::Point& start, const geom::Point& end, const float depth=0.0f);
-	void drawRect(const float width, const Color& color, const geom::Area& area, const float depth=0.0f);
-	void fillRect(const Color& color, const geom::Area& area, const float depth=0.0f);
-	void drawTexture(unsigned int texId, const geom::Point& pt, const geom::IntBox& texSize, const geom::Area& spriteArea, const float depth);
-	void drawTexture(unsigned int texId, const geom::Point& pt, const geom::IntBox& texSize, const geom::IntBox& spriteSize, const float depth);
+	void resize2d(geom::Box const& box);
+	void translate(geom::Point const& pt);
+	void rotate(const float angle, geom::Point const& pt);
+	void scale(geom::ScaleVector const& scale);
+	void drawSprite(Handler<Sprite> sprite, geom::Point const& pt, const float depth = 0.0f);
+	void drawSprite(Handler<Sprite> sprite, geom::Point const& pt, geom::Area const& spriteArea, const float depth = 0.0f);
+	void drawLine(const float width, Color const& color, geom::Point const& start, geom::Point const& end, const float depth=0.0f);
+	void drawRect(const float width, Color const& color, geom::Area const& area, const float depth=0.0f);
+	void fillRect(Color const& color, geom::Area const& area, const float depth=0.0f);
+	void drawTexture(unsigned int texId, geom::Point const& pt, geom::IntBox const& texSize, geom::Area const& spriteArea, const float depth);
+	void drawTexture(unsigned int texId, geom::Point const& pt, geom::IntBox const& texSize, geom::IntBox const& spriteSize, const float depth);
 private:
-	void scissor(const geom::Area& area);
+	void scissor(geom::Area const& area);
 	void scissorReset();
-	void setColor(const Color& color);
+	void setColor(Color const& color);
 public:
 	class ScissorScope {
 	private:
 		Canvas& canvas_;
 	public:
-		ScissorScope(Canvas& canvas, const geom::Area& area);
+		ScissorScope(Canvas& canvas, geom::Area const& area);
 		virtual ~ScissorScope();
 	};
 	class AffineScope {

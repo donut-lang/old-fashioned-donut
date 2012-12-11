@@ -34,28 +34,28 @@ public:
 	GestureListener() = default;
 	virtual ~GestureListener() noexcept = default;
 public:
-	virtual bool onDownRaw(const float timeMs, const geom::Point& ptInScreen){return false;};
-	virtual bool onUpRaw(const float timeMs, const geom::Point& ptInScreen){return false;};
-	virtual bool onMoveRaw(const float timeMs, const geom::Point& ptInScreen){return false;};
-	virtual bool onSingleTapUp(const float timeMs, const geom::Point& ptInScreen){return false;};
-	virtual bool onFling(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Velocity& velocity){return false;};
-	virtual bool onScroll(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Distance& distance){return false;};
-	virtual bool onZoom(const float timeMs, const geom::Point& center, const float ratio){return false;};
+	virtual bool onDownRaw(const float timeMs, geom::Point const& ptInScreen){return false;};
+	virtual bool onUpRaw(const float timeMs, geom::Point const& ptInScreen){return false;};
+	virtual bool onMoveRaw(const float timeMs, geom::Point const& ptInScreen){return false;};
+	virtual bool onSingleTapUp(const float timeMs, geom::Point const& ptInScreen){return false;};
+	virtual bool onFling(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity){return false;};
+	virtual bool onScroll(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance){return false;};
+	virtual bool onZoom(const float timeMs, geom::Point const& center, const float ratio){return false;};
 	// 実装用
-	//	virtual bool onDownRaw(const float timeMs, const geom::Point& ptInScreen) override;
-	//	virtual bool onUpRaw(const float timeMs, const geom::Point& ptInScreen) override;
-	//	virtual bool onMoveRaw(const float timeMs, const geom::Point& ptInScreen) override;
-	//	virtual bool onSingleTapUp(const float timeMs, const geom::Point& ptInScreen) override;
-	//	virtual bool onFling(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Velocity& velocity) override;
-	//	virtual bool onScroll(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Distance& distance) override;
-	//	virtual bool onZoom(const float timeMs, const geom::Point& center, const float ratio) override;
+	//	virtual bool onDownRaw(const float timeMs, geom::Point const& ptInScreen) override;
+	//	virtual bool onUpRaw(const float timeMs, geom::Point const& ptInScreen) override;
+	//	virtual bool onMoveRaw(const float timeMs, geom::Point const& ptInScreen) override;
+	//	virtual bool onSingleTapUp(const float timeMs, geom::Point const& ptInScreen) override;
+	//	virtual bool onFling(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity) override;
+	//	virtual bool onScroll(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance) override;
+	//	virtual bool onZoom(const float timeMs, geom::Point const& center, const float ratio) override;
 };
 
 class GestureSession {
 	DISABLE_COPY_AND_ASSIGN(GestureSession);
 	DEFINE_MEMBER_REF(private, logging::Logger, log)
 public:
-	GestureSession(logging::Logger& log, const unsigned int pointerIndex, std::weak_ptr<Element> targetElement, const geom::Point& startPoint, const float startTimeMs);
+	GestureSession(logging::Logger& log, const unsigned int pointerIndex, std::weak_ptr<Element> targetElement, geom::Point const& startPoint, const float startTimeMs);
 	virtual ~GestureSession();
 private:
 	//static constexpr float MaxFlingVelocity=4000;
@@ -72,15 +72,15 @@ private:
 private:
 	geom::Distance totalMoved_;
 public:
-	void onTouchUp(const float timeMs, const geom::Point& pt);
-	void onTouchMove(const float timeMs, const geom::Point& pt);
+	void onTouchUp(const float timeMs, geom::Point const& pt);
+	void onTouchMove(const float timeMs, geom::Point const& pt);
 private:
-	void invokeDownRaw(const float timeMs, const geom::Point& pt);
-	void invokeUpRaw(const float timeMs, const geom::Point& pt);
-	void invokeMoveRaw(const float timeMs, const geom::Point& pt);
-	void invokeFling(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Velocity& velocity);
-	void invokeScroll(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Distance& distance);
-	void invokeZoom(const float timeMs, const geom::Point& center, const float ratio);
+	void invokeDownRaw(const float timeMs, geom::Point const& pt);
+	void invokeUpRaw(const float timeMs, geom::Point const& pt);
+	void invokeMoveRaw(const float timeMs, geom::Point const& pt);
+	void invokeFling(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity);
+	void invokeScroll(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance);
+	void invokeZoom(const float timeMs, geom::Point const& center, const float ratio);
 };
 
 class GestureMediator {
@@ -94,9 +94,9 @@ public:
 	GestureMediator(logging::Logger& log, const std::weak_ptr<World> world);
 	virtual ~GestureMediator();
 public:
-	void onTouchDown(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint);
-	void onTouchUp(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint);
-	void onTouchMove(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint);
+	void onTouchDown(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
+	void onTouchUp(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
+	void onTouchMove(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
 };
 
 }}

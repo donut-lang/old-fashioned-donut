@@ -27,20 +27,20 @@ class Heap;
 namespace native {
 
 template <typename T>
-Handler<Object> encode(const Handler<Heap>& heap, T obj);
+Handler<Object> encode(Handler<Heap> const& heap, T obj);
 
 //-----------------------------------------------------------------------------
 
 template <typename T, bool = IsBaseOf<T, Object>::result >
 struct PointerEncoder final {
-	static Handler<Object> exec(const Handler<Heap>& heap, T* obj) {
+	static Handler<Object> exec(Handler<Heap> const& heap, T* obj) {
 		return encode<T*>( heap, obj );
 	}
 };
 
 template <typename T>
 struct PointerEncoder<T, true> final {
-	static Handler<Object> exec(const Handler<Heap>& heap, T* obj)
+	static Handler<Object> exec(Handler<Heap> const& heap, T* obj)
 	{
 		return Handler<Object>::__internal__fromRawPointerWithoutCheck( obj );
 	}
@@ -50,7 +50,7 @@ struct PointerEncoder<T, true> final {
 
 template <typename T, bool = IsBaseOf<T, Object>::result >
 struct HandlerEncoder final {
-	static Handler<Object> exec(const Handler<Heap>& heap, Handler<T> obj)
+	static Handler<Object> exec(Handler<Heap> const& heap, Handler<T> obj)
 	{
 		return encode<Handler<T> >( heap, obj );
 	}
@@ -58,7 +58,7 @@ struct HandlerEncoder final {
 
 template <typename T>
 struct HandlerEncoder<T, true> final {
-	static Handler<Object> exec(const Handler<Heap>& heap, Handler<T> obj)
+	static Handler<Object> exec(Handler<Heap> const& heap, Handler<T> obj)
 	{
 		return obj;
 	}
@@ -68,14 +68,14 @@ struct HandlerEncoder<T, true> final {
 
 template <typename T>
 struct Encoder final{
-	static Handler<Object> exec(const Handler<Heap>& heap, T obj) {
+	static Handler<Object> exec(Handler<Heap> const& heap, T obj) {
 		return encode<T>(heap, obj);
 	}
 };
 
 template <typename T>
 struct Encoder<T*> final {
-	static Handler<Object> exec(const Handler<Heap>& heap, T* obj)
+	static Handler<Object> exec(Handler<Heap> const& heap, T* obj)
 	{
 		return PointerEncoder<T>::exec(heap, obj);
 	}
@@ -83,7 +83,7 @@ struct Encoder<T*> final {
 
 template <typename T>
 struct Encoder< Handler<T> > final {
-	static Handler<Object> exec(const Handler<Heap>& heap, Handler<T> obj)
+	static Handler<Object> exec(Handler<Heap> const& heap, Handler<T> obj)
 	{
 		return HandlerEncoder<T>::exec( heap, obj );
 	}

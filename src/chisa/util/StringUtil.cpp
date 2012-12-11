@@ -37,7 +37,7 @@
 namespace chisa {
 namespace util {
 
-std::string format(const std::string& fmt, ...)
+std::string format(std::string const& fmt, ...)
 {
 	va_list lst;
 	va_start(lst, fmt);
@@ -45,7 +45,7 @@ std::string format(const std::string& fmt, ...)
 	va_end(lst);
 	return res;
 }
-std::string formatv(const std::string& fmt, va_list args)
+std::string formatv(std::string const& fmt, va_list args)
 {
 	char buff[8192];
 	size_t len = vsnprintf(buff, 8192, fmt.c_str(), args);
@@ -150,17 +150,17 @@ std::string encodeBase64( const char* data, const std::size_t length)
 	return ss.str();
 }
 
-std::string encodeBase64( const std::string& data )
+std::string encodeBase64( std::string const& data )
 {
 	return encodeBase64( data.c_str(), data.size() );
 }
 
-std::string encodeBase64( const std::vector<char>& data )
+std::string encodeBase64( std::vector<char> const& data )
 {
 	return encodeBase64( data.data(), data.size() );
 }
 
-std::vector<char> decodeBase64(const std::string& str)
+std::vector<char> decodeBase64(std::string const& str)
 {
 	std::vector<char> dat;
 
@@ -195,14 +195,14 @@ std::vector<char> decodeBase64(const std::string& str)
 	return dat;
 }
 
-std::string decodeBase64AsString(const std::string& str){
+std::string decodeBase64AsString(std::string const& str){
 	const std::vector<char> dat(decodeBase64(str));
 	return std::string(dat.data(), dat.size());
 }
 
 #define PARSE_STRTO(TYPE, FUNC) \
 template <>\
-TYPE parseAsInt<TYPE>(const std::string& str, int radix, bool* succeed) {\
+TYPE parseAsInt<TYPE>(std::string const& str, int radix, bool* succeed) {\
 	char* end;\
 	TYPE const result = std::FUNC(str.c_str(), &end, radix);\
 	if((*end) != '\0'){\
@@ -228,7 +228,7 @@ PARSE_STRTO(unsigned long long int, strtoull);
 
 
 #define PARSE_STRTO_F(TYPE, FUNC) \
-	template <> TYPE parseAs<TYPE>(const std::string& str, bool* succeed)\
+	template <> TYPE parseAs<TYPE>(std::string const& str, bool* succeed)\
 	{\
 		char* end;\
 		double const result = std::strtod(str.c_str(), &end);\
@@ -253,7 +253,7 @@ PARSE_STRTO_F(long double, strtold);
 #undef PARSE_STRTO
 
 template <>
-bool parseAs<bool>(const std::string& str, bool* succeed)
+bool parseAs<bool>(std::string const& str, bool* succeed)
 {
 	std::string copy = toLower(str);
 	if( copy == "true" || copy == "yes") {
@@ -270,7 +270,7 @@ bool parseAs<bool>(const std::string& str, bool* succeed)
 	return false;
 }
 
-std::string decodePercent(const std::string& str)
+std::string decodePercent(std::string const& str)
 {
 	char* from(new char[str.length()+1]);
 	char* to(new char[str.length()+1]);
@@ -305,30 +305,30 @@ std::string decodePercent(const std::string& str)
 	return res;
 }
 
-std::string toLower(const std::string& str)
+std::string toLower(std::string const& str)
 {
 	std::string copy(str);
 	std::transform(copy.begin(), copy.end(), copy.begin(), (int (*)(int))std::tolower);
 	return copy;
 }
 
-std::string toUpper(const std::string& str)
+std::string toUpper(std::string const& str)
 {
 	std::string copy(str);
 	std::transform(copy.begin(), copy.end(), copy.begin(), (int (*)(int))std::toupper);
 	return copy;
 }
 
-bool startsWith(const std::string& target, const std::string& prefix)
+bool startsWith(std::string const& target, std::string const& prefix)
 {
 	return target.compare(0, prefix.size(), prefix) == 0;
 }
-bool endsWith(const std::string& target, const std::string& suffix)
+bool endsWith(std::string const& target, std::string const& suffix)
 {
 	return target.compare(target.size()-suffix.size(), suffix.size(), suffix) == 0;
 }
 
-void split(const std::string& str, const std::string& sep, std::vector<std::string>& list)
+void split(std::string const& str, std::string const& sep, std::vector<std::string>& list)
 {
 	if(sep.size() <= 0){
 		return;
@@ -346,7 +346,7 @@ void split(const std::string& str, const std::string& sep, std::vector<std::stri
 	}
 }
 
-static size_t findFirstOf(const std::string& str, const std::string* sep, size_t n, size_t from, size_t* offset, size_t* seplen)
+static size_t findFirstOf(std::string const& str, const std::string* sep, size_t n, size_t from, size_t* offset, size_t* seplen)
 {
 	*offset = std::string::npos;
 	for(size_t i = 0;i<n;++i){
@@ -359,7 +359,7 @@ static size_t findFirstOf(const std::string& str, const std::string* sep, size_t
 	return *offset;
 }
 
-void split(const std::string& str, const std::string* sep, size_t n, std::vector<std::string>& list)
+void split(std::string const& str, const std::string* sep, size_t n, std::vector<std::string>& list)
 {
 	size_t i = 0;
 	size_t found = std::string::npos;
@@ -374,7 +374,7 @@ void split(const std::string& str, const std::string* sep, size_t n, std::vector
 		list.push_back(str.substr(i));
 	}
 }
-void splitLine(const std::string& str, std::vector<std::string>& list)
+void splitLine(std::string const& str, std::vector<std::string>& list)
 {
 	static const std::string lineSep[] = {
 			"\n",
@@ -382,7 +382,7 @@ void splitLine(const std::string& str, std::vector<std::string>& list)
 	};
 	split(str, lineSep, list);
 }
-void splitSpace(const std::string& str, std::vector<std::string>& list)
+void splitSpace(std::string const& str, std::vector<std::string>& list)
 {
 	static const std::string spaces[] = {
 			" ",

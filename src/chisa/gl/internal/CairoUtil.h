@@ -24,7 +24,7 @@ class Color;
 
 namespace cairo{
 
-void setColor(cairo_t* cairo, const gl::Color& c);
+void setColor(cairo_t* cairo, gl::Color const& c);
 
 }
 }}

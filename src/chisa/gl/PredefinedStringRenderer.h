@@ -37,8 +37,8 @@ public:
 	PredefinedStringRenderer(logging::Logger& log, Handler<DrawableManager> drawableManager);
 	virtual ~PredefinedStringRenderer() noexcept = default;
 public:
-	void registerCharacter( unsigned int symbol, const std::string& str );
-	geom::Area renderString( Canvas& cv, const geom::Point& point, const String& str, float depth );
+	void registerCharacter( unsigned int symbol, std::string const& str );
+	geom::Area renderString( Canvas& cv, geom::Point const& point, String const& str, float depth );
 };
 
 }}

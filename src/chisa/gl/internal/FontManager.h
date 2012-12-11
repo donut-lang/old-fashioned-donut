@@ -51,12 +51,12 @@ private:
 	std::deque<Handler<Font> > unusedFonts_;
 	Handler<Font> defaultFont_;
 public:
-	FontManager(logging::Logger& log, const std::string& fontdir);
-	Handler<Font> queryFont(const std::string& name = std::string());
+	FontManager(logging::Logger& log, std::string const& fontdir);
+	Handler<Font> queryFont(std::string const& name = std::string());
 private:
 	~FontManager() noexcept;
 private:
-	Font* searchFont( const std::string& name );
+	Font* searchFont( std::string const& name );
 	Font* seachDefaultFont();
 public:
 	inline bool onFree() noexcept { return false; };

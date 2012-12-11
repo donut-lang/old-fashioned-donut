@@ -26,7 +26,7 @@ namespace donut {
 
 static const std::string TAG("NullProvider");
 
-NullProvider::NullProvider(const Handler<Heap>& heap)
+NullProvider::NullProvider(Handler<Heap> const& heap)
 :Provider(heap, "Null")
 {
 }

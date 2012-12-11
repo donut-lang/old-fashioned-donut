@@ -39,7 +39,7 @@ float Drawable::height()
 
 //-----------------------------------------------------------------------------
 
-ColorDrawable::ColorDrawable(HandlerW<DrawableManager> manager, const geom::Box size, const Color& c)
+ColorDrawable::ColorDrawable(HandlerW<DrawableManager> manager, const geom::Box size, Color const& c)
 :Drawable(manager)
 ,size_(size)
 ,color_(c)
@@ -52,12 +52,12 @@ Color ColorDrawable::color() const noexcept
 	return this->color_;
 }
 
-void ColorDrawable::draw(Canvas& canvas, const geom::Area& area, const float depth)
+void ColorDrawable::draw(Canvas& canvas, geom::Area const& area, const float depth)
 {
 	canvas.fillRect(this->color_, area.intersect(geom::Area(area.point(), geom::min(area.box(), size_))), depth);
 }
 
-Handler<Drawable> ColorDrawable::create( HandlerW<DrawableManager> manager, const geom::Box& size, const std::string& repl )
+Handler<Drawable> ColorDrawable::create( HandlerW<DrawableManager> manager, geom::Box const& size, std::string const& repl )
 {
 	return Handler<Drawable>(new ColorDrawable(manager, size, Color::fromString( repl )));
 }
@@ -69,7 +69,7 @@ std::string ColorDrawable::toString() const
 
 //-----------------------------------------------------------------------------
 
-ImageDrawable::ImageDrawable( HandlerW<DrawableManager> manager, const geom::Box& size, const std::string& filename )
+ImageDrawable::ImageDrawable( HandlerW<DrawableManager> manager, geom::Box const& size, std::string const& filename )
 :Drawable(manager)
 ,size_(size)
 ,filename_(filename)
@@ -92,14 +92,14 @@ geom::Box ImageDrawable::size()
 	return spr ? geom::min(geom::Box(spr->size()), this->size_) : size_;
 }
 
-void ImageDrawable::draw(Canvas& canvas, const geom::Area& area, const float depth)
+void ImageDrawable::draw(Canvas& canvas, geom::Area const& area, const float depth)
 {
 	if(this->sprite_){
 		canvas.drawSprite(this->sprite_, area.point(), geom::Area(geom::ZERO, geom::min(area.box(), this->size())), depth);
 	}
 }
 
-Handler<Drawable> ImageDrawable::create( HandlerW<DrawableManager> manager, const geom::Box& size, const std::string& repl )
+Handler<Drawable> ImageDrawable::create( HandlerW<DrawableManager> manager, geom::Box const& size, std::string const& repl )
 {
 	return Handler<Drawable>(new ImageDrawable(manager, size, repl));
 }
@@ -111,7 +111,7 @@ std::string ImageDrawable::toString() const
 
 //-----------------------------------------------------------------------------
 
-RepeatDrawable::RepeatDrawable(HandlerW<DrawableManager> manager, const geom::Box& size, Handler<Drawable> child)
+RepeatDrawable::RepeatDrawable(HandlerW<DrawableManager> manager, geom::Box const& size, Handler<Drawable> child)
 :Drawable(manager)
 ,size_(size)
 ,child_(child)
@@ -129,7 +129,7 @@ geom::Box RepeatDrawable::size()
 	return this->size_;
 }
 
-void RepeatDrawable::draw(Canvas& canvas, const geom::Area& area, const float depth)
+void RepeatDrawable::draw(Canvas& canvas, geom::Area const& area, const float depth)
 {
 	geom::Area rendered(area.intersect(geom::Area(area.point(), geom::min(size_, area.box()))));
 	float y=rendered.y();
@@ -147,7 +147,7 @@ void RepeatDrawable::draw(Canvas& canvas, const geom::Area& area, const float de
 	}
 }
 
-Handler<Drawable> RepeatDrawable::create( HandlerW<DrawableManager> manager, const geom::Box& size, const std::string& repl )
+Handler<Drawable> RepeatDrawable::create( HandlerW<DrawableManager> manager, geom::Box const& size, std::string const& repl )
 {
 	return Handler<Drawable>(new RepeatDrawable(manager, size, manager.lock()->queryDrawable(repl, size)));
 }
@@ -178,7 +178,7 @@ geom::Box StretchDrawable::size()
 	return this->size_;
 }
 
-void StretchDrawable::draw(Canvas& canvas, const geom::Area& area, const float depth)
+void StretchDrawable::draw(Canvas& canvas, geom::Area const& area, const float depth)
 {
 	geom::Area rendered(area.intersect(geom::Area(area.point(), geom::min(area.box(), size_))));
 	Canvas::AffineScope as(canvas);
@@ -190,7 +190,7 @@ void StretchDrawable::draw(Canvas& canvas, const geom::Area& area, const float d
 		this->child_->draw(canvas, geom::Area(geom::ZERO, this->child_->size()), depth);
 	}
 }
-Handler<Drawable> StretchDrawable::create( HandlerW<DrawableManager> manager, const geom::Box& size, const std::string& repl )
+Handler<Drawable> StretchDrawable::create( HandlerW<DrawableManager> manager, geom::Box const& size, std::string const& repl )
 {
 	return Handler<Drawable>(new StretchDrawable(manager, size, manager.lock()->queryDrawable(repl, size)));
 }
@@ -203,7 +203,7 @@ std::string StretchDrawable::toString() const
 
 //-----------------------------------------------------------------------------
 
-Handler<Drawable> NullDrawable::create( HandlerW<DrawableManager> manager, const geom::Box& size, const std::string& repl )
+Handler<Drawable> NullDrawable::create( HandlerW<DrawableManager> manager, geom::Box const& size, std::string const& repl )
 {
 	return Handler<Drawable>(new NullDrawable(manager, size));
 }
@@ -216,7 +216,7 @@ std::string NullDrawable::toString() const
 //-----------------------------------------------------------------------------
 const float TextDrawable::DefaultFontSize=16.0f;
 
-TextDrawable::TextDrawable(HandlerW<DrawableManager> manager, const std::string& str, bool vertical, const float size, Handler<Font> font, Style style, Decoration deco, const gl::Color& color, const gl::Color& backColor)
+TextDrawable::TextDrawable(HandlerW<DrawableManager> manager, std::string const& str, bool vertical, const float size, Handler<Font> font, Style style, Decoration deco, gl::Color const& color, gl::Color const& backColor)
 :Drawable(manager)
 ,str_(str)
 ,vertical_(vertical)
@@ -328,7 +328,7 @@ Handler<gl::Sprite> TextDrawable::sprite()
 	return this->sprite_;
 }
 
-Handler<TextDrawable> TextDrawable::create(HandlerW<DrawableManager> manager, const std::string& str, bool vertical, const float size, Handler<Font> font, TextDrawable::Style style, TextDrawable::Decoration deco, const gl::Color& color, const gl::Color& backColor)
+Handler<TextDrawable> TextDrawable::create(HandlerW<DrawableManager> manager, std::string const& str, bool vertical, const float size, Handler<Font> font, TextDrawable::Style style, TextDrawable::Decoration deco, gl::Color const& color, gl::Color const& backColor)
 {
 	return Handler<TextDrawable>(new TextDrawable(manager, str, vertical, size, font, style, deco, color, backColor));
 }
@@ -338,7 +338,7 @@ geom::Box TextDrawable::size()
 	return this->renderInfo_.box();
 }
 
-void TextDrawable::draw(Canvas& canvas, const geom::Area& area, const float depth)
+void TextDrawable::draw(Canvas& canvas, geom::Area const& area, const float depth)
 {
 	canvas.drawSprite(this->sprite(), area.point(), depth);
 }

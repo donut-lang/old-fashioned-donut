@@ -26,7 +26,7 @@ namespace xml {
 using namespace chisa::geom;
 
 template <>
-void parseAttr<Margin>(const std::string& name, Margin& v, const Margin& def, tinyxml2::XMLElement* elm)
+void parseAttr<Margin>(std::string const& name, Margin& v, Margin const& def, tinyxml2::XMLElement* elm)
 {
 	float margin=0.0f;
 	v=def;

@@ -25,7 +25,7 @@
 namespace chisa {
 namespace donut {
 
-Provider::Provider( const Handler<Heap>& heap, const std::string& name )
+Provider::Provider( Handler<Heap> const& heap, std::string const& name )
 :heap_(heap), name_(name)
 {
 }

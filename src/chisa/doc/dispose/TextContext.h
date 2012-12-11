@@ -57,20 +57,20 @@ public:
 	float nowSize() const;
 	void popSize();
 
-	void pushColor(const gl::Color& c);
+	void pushColor(gl::Color const& c);
 	gl::Color nowColor() const;
 	void popColor();
 
-	void pushBackColor(const gl::Color& c);
+	void pushBackColor(gl::Color const& c);
 	gl::Color nowBackColor() const;
 	void popBackColor();
 
-	void pushFont( const std::string& name );
+	void pushFont( std::string const& name );
 	std::string nowFont() const;
 	void popFont();
 public:
-	geom::Box measure(const std::string& strUtf8);
-	Handler<TextDrawableObject> create(const std::string& strUtf8, Node* parentNode, const float relDepth );
+	geom::Box measure(std::string const& strUtf8);
+	Handler<TextDrawableObject> create(std::string const& strUtf8, Node* parentNode, const float relDepth );
 public:
 	TextContext(logging::Logger& log, Handler<RenderTree> renderTree);
 	virtual ~TextContext() noexcept;

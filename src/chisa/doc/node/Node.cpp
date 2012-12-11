@@ -48,7 +48,7 @@ TreeNode::~TreeNode() noexcept
 	decltype(this->children_)().swap(this->children_);
 }
 
-TreeNode* TreeNode::findTreeNodeById(const std::string& name) noexcept
+TreeNode* TreeNode::findTreeNodeById(std::string const& name) noexcept
 {
 	if(!(this->id().empty()) && name == this->id()){
 		return this;
@@ -101,7 +101,7 @@ Handler<RenderObject> BlockNode::background() const
 	return this->background_;
 }
 
-void BlockNode::background(const Handler<RenderObject>& handler)
+void BlockNode::background(Handler<RenderObject> const& handler)
 {
 	this->background_ = handler;
 }
@@ -174,7 +174,7 @@ void Text::clearObjects() {
 	Text::ListType().swap(this->objects_);
 }
 
-void Text::appendObject( const Text::DataType& d ) {
+void Text::appendObject( Text::DataType const& d ) {
 	this->objects_.push_back( d );
 }
 

@@ -46,7 +46,7 @@ TEST(ContentMeasurerTest, TextWrapTest)
 
 	Handler<RenderCommand> set = text->objectAt(0);
 	float width = 0;
-	for(const chisa::Handler<chisa::tk::widget::RenderCommand>& o : text->objects()){
+	for(chisa::Handler<chisa::tk::widget::RenderCommand> const& o : text->objects()){
 		std::cout << o->toString() << std::endl;
 		width += o->area().width();
 	}
