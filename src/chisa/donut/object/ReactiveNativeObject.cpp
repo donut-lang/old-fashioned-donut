@@ -64,7 +64,7 @@ void ReactiveNativeObject::onBackNotifyImpl(Handler<Heap> const& heap)
 	for(auto it = start; it != end; --it) {
 		std::pair<timestamp_t, util::XValue>& p = *it;
 		util::XValue val ( this->onBack(heap, p.second) );
-		failed |= !(val.is<util::XNull>());
+		failed |= (val.is<util::XNull>());
 		p.second = val;
 	}
 	if( failed ){ //もうもどれない
@@ -84,7 +84,7 @@ void ReactiveNativeObject::onForwardNotifyImpl(Handler<Heap> const& heap)
 	for(auto it = start; it != end; ++it) {
 		std::pair<timestamp_t, util::XValue>& p = *it;
 		util::XValue val ( this->onForward(heap, p.second) );
-		failed |= !(val.is<util::XNull>());
+		failed |= (val.is<util::XNull>());
 		p.second = val;
 	}
 	if( failed ){ //もうもどれない
