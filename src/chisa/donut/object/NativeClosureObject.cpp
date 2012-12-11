@@ -151,13 +151,13 @@ Handler<Object> ReactiveNativeClosureObject::apply(Handler<Heap> const& heap, Ha
 		throw DonutException(__FILE__, __LINE__, "[BUG] ReactiveNativeClosure must be applied only to ReactiveNativeObject.");
 	}
 	Handler<Object> result;
-	bool discard;
 	util::XValue value;
-	std::tie(result, discard, value) = this->func_(heap, obj, arg);
-	if(discard) {
+	std::tie(result, value) = this->func_(heap, obj, arg);
+	if(value.is<util::XNull>()) {
 		heap->clock()->discardHistory();
+	}else{
+		obj->registerReaction(heap->clock()->now(), value);
 	}
-	obj->registerReaction(heap->clock()->now(), value);
 	return result;
 }
 util::XValue ReactiveNativeClosureObject::saveImpl(Handler<Heap> const& heap)

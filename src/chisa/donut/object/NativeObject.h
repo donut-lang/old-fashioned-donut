@@ -90,8 +90,8 @@ public:
 public:
 	void registerReaction( timestamp_t time, util::XValue const& v );
 protected:
-	virtual std::tuple<bool, util::XValue> onBack(Handler<Heap> const& heap, util::XValue const& val) = 0;
-	virtual std::tuple<bool, util::XValue> onForward(Handler<Heap> const& heap, util::XValue const& val) = 0;
+	virtual util::XValue onBack(Handler<Heap> const& heap, util::XValue const& val) = 0;
+	virtual util::XValue onForward(Handler<Heap> const& heap, util::XValue const& val) = 0;
 	virtual void onFutureDiscarded(Handler<Heap> const& heap) = 0;
 	virtual void onHistoryDiscarded(Handler<Heap> const& heap) = 0;
 	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override = 0;
@@ -116,7 +116,7 @@ private:
 
 class ReactiveNativeClosureObject final : public NativeClosureObject {
 public:
-	typedef std::function<std::tuple<Handler<Object>, bool, util::XValue>(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& arg)> Signature;
+	typedef std::function<std::tuple<Handler<Object>, util::XValue>(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& arg)> Signature;
 private:
 	Signature func_;
 public:
