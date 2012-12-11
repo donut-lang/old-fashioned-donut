@@ -31,7 +31,8 @@ Clock::Clock( Donut* const donut)
 ,now_(1)
 ,donut_(donut)
 ,state(State::NORMAL)
-,discardRequested_(false)
+,discardFutureRequested_(false)
+,discardHistoryRequested_(false)
 {
 }
 
@@ -89,6 +90,15 @@ void Clock::seek( unsigned int const& time )
 	}
 }
 
+void Clock::processRequestedDiscard()
+{
+	if( this->discardFutureRequested_ ){
+		this->discardFuture();
+	}else if(this->discardHistoryRequested_ ){
+		this->discardHistory();
+	}
+}
+
 void Clock::back()
 {
 	switch(this->state){
@@ -113,9 +123,7 @@ void Clock::back()
 		log().e(TAG, "Seeked to %d, but donut was already dead.", time);
 	}
 	this->state = State::NORMAL;
-	if( this->discardRequested_ ){
-		this->discardHistory();
-	}
+	this->processRequestedDiscard();
 }
 void Clock::forward()
 {
@@ -141,9 +149,7 @@ void Clock::forward()
 		log().e(TAG, "Seeked to %d, but donut was already dead.", time);
 	}
 	this->state = State::NORMAL;
-	if( this->discardRequested_ ){
-		this->discardFuture();
-	}
+	this->processRequestedDiscard();
 }
 
 void Clock::discardFuture()
@@ -153,7 +159,7 @@ void Clock::discardFuture()
 		break;
 	case State::SEEK:
 		this->log().i(TAG, "Discarding future reserved");
-		this->discardRequested_ = true;
+		this->discardFutureRequested_ = true;
 		return;
 	case State::DISCARD:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Discarding function is not reentrant");
@@ -172,7 +178,7 @@ void Clock::discardFuture()
 			log().e(TAG, "Tried to discard future, but donut was already dead.");
 		}
 		this->last_ = this->now_;
-		this->discardRequested_ = false;
+		this->discardFutureRequested_ = false;
 	}
 	this->state = State::NORMAL;
 }
@@ -183,7 +189,7 @@ void Clock::discardHistory()
 		break;
 	case State::SEEK:
 		this->log().i(TAG, "Discarding future reserved");
-		this->discardRequested_ = true;
+		this->discardHistoryRequested_ = true;
 		return;
 	case State::DISCARD:
 		throw DonutException(__FILE__, __LINE__, "[BUG] Discarding function is not reentrant");
@@ -202,7 +208,7 @@ void Clock::discardHistory()
 			log().e(TAG, "Tried to discard future, but donut was already dead.");
 		}
 		this->first_ = this->now_;
-		this->discardRequested_ = false;
+		this->discardHistoryRequested_ = false;
 	}
 	this->state = State::NORMAL;
 }

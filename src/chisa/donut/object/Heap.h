@@ -44,7 +44,7 @@ private:
 	std::size_t gcLimit_;
 	std::size_t gcLimitMax_;
 private:
-	util::VectorMap<std::string, Handler<HeapObjectProvider> > providers_;
+	util::VectorMap<std::string, Handler<HeapProvider> > providers_;
 	std::vector<HeapObject*> objectPool_;
 	std::vector<HeapObject*> objectPoolMarked_;
 	std::vector<Source*> sourcePool_;
@@ -101,8 +101,8 @@ public: /* グローバルオブジェクトの管理 */
 	Handler<Object> getGlobalObject( std::string const& name );
 	Handler<DonutObject> global() { return this->globalObject_; }
 public: /* プロバイダの管理 */
-	void registerProvider( Handler<HeapObjectProvider> const& provider );
-	Handler<HeapObjectProvider> findHeapProvider( std::string const& name ) const;
+	void registerProvider( Handler<HeapProvider> const& provider );
+	Handler<HeapProvider> findHeapProvider( std::string const& name ) const;
 	Handler<Provider> findProvider( std::string const& name ) const;
 public: /* 処理系の保存・復帰をします。 */
 	void bootstrap();

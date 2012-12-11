@@ -29,7 +29,7 @@ namespace donut {
 static const std::string TAG("StringProvider");
 
 StringProvider::StringProvider(Handler<Heap> const& heap )
-:HeapObjectProviderImpl<StringObject>(heap, "String")
+:HeapProviderImpl<StringObject>(heap, "String")
 {
 	this->registerPureNativeClosure("toInteger", std::function<int(StringObject*)>([&](StringObject* self) {
 		return util::parseAsInt<int>(self->toString(this->heap().lock()), 0);

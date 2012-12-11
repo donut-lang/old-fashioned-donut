@@ -46,9 +46,14 @@ bool ReactiveNativeObject::toBoolImpl(Handler<Heap> const& heap) const
 	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast Reactive Native Object to Bool implicitly. Use toBoolean()");
 }
 
-int ReactiveNativeObject::findIndex( timestamp_t const& t )
+int ReactiveNativeObject::findLowerIndex( timestamp_t const& t )
 {
 	auto it = std::lower_bound(this->reactions_.begin(), this->reactions_.end(), t, util::PairCompare<timestamp_t, util::XValue>());
+	return std::distance(this->reactions_.begin(), it);
+}
+int ReactiveNativeObject::findUpperIndex( timestamp_t const& t )
+{
+	auto it = std::upper_bound(this->reactions_.begin(), this->reactions_.end(), t, util::PairCompare<timestamp_t, util::XValue>());
 	return std::distance(this->reactions_.begin(), it);
 }
 
@@ -56,19 +61,17 @@ void ReactiveNativeObject::onBackNotifyImpl(Handler<Heap> const& heap)
 {
 	Handler<Clock> clock = heap->clock();
 	int const nowIndex = this->index_;
-	int const newIndex = this->findIndex(clock->now());
+	int const newIndex = this->findLowerIndex(clock->now());
 	this->index_ = newIndex;
-	auto start = reactions_.begin() + nowIndex;
-	auto end = reactions_.begin() + newIndex;
 	bool failed = false;
-	for(auto it = start; it != end; --it) {
-		std::pair<timestamp_t, util::XValue>& p = *it;
+	for(int i=nowIndex-1; i>=newIndex;--i){
+		std::pair<timestamp_t, util::XValue>& p = reactions_[i];
 		util::XValue val ( this->onBack(heap, p.second) );
 		failed |= (val.is<util::XNull>());
 		p.second = val;
 	}
 	if( failed ){ //もうもどれない
-		clock->discardHistory();
+		clock->discardFuture();
 	}
 }
 
@@ -76,7 +79,7 @@ void ReactiveNativeObject::onForwardNotifyImpl(Handler<Heap> const& heap)
 {
 	Handler<Clock> clock = heap->clock();
 	int const nowIndex = this->index_;
-	int const newIndex = this->findIndex(clock->now());
+	int const newIndex = this->findUpperIndex(clock->now());
 	this->index_ = newIndex;
 	auto start = reactions_.begin() + nowIndex;
 	auto end = reactions_.begin() + newIndex;
@@ -88,14 +91,14 @@ void ReactiveNativeObject::onForwardNotifyImpl(Handler<Heap> const& heap)
 		p.second = val;
 	}
 	if( failed ){ //もうもどれない
-		clock->discardFuture();
+		clock->discardHistory();
 	}
 }
 
 void ReactiveNativeObject::onDiscardHistoryNotifyImpl(Handler<Heap> const& heap)
 {
 	if(this->reactions_.size() > 0){
-		this->reactions_.erase(this->reactions_.begin(), this->reactions_.begin()+findIndex(heap->clock()->now()));
+		this->reactions_.erase(this->reactions_.begin(), this->reactions_.begin()+findLowerIndex(heap->clock()->now()));
 		this->index_ = 0;
 	}
 	this->onHistoryDiscarded(heap);
@@ -104,8 +107,8 @@ void ReactiveNativeObject::onDiscardHistoryNotifyImpl(Handler<Heap> const& heap)
 void ReactiveNativeObject::onDiscardFutureNotifyImpl(Handler<Heap> const& heap)
 {
 	if(this->reactions_.size() > 0){
-		this->index_ = findIndex(heap->clock()->now());
-		this->reactions_.erase(this->reactions_.begin()+this->index_+1, this->reactions_.end());
+		this->index_ = findUpperIndex(heap->clock()->now());
+		this->reactions_.erase(this->reactions_.begin()+this->index_, this->reactions_.end());
 	}
 	this->onFutureDiscarded(heap);
 }
@@ -122,6 +125,7 @@ void ReactiveNativeObject::registerReaction( timestamp_t time, util::XValue cons
 		throw DonutException(__FILE__, __LINE__, "[BUG] Reaction table was broken!!");
 	}
 	this->reactions_.push_back(std::pair<timestamp_t, util::XValue>(time, v));
+	this->index_ = this->reactions_.size();
 }
 
 /**********************************************************************************
