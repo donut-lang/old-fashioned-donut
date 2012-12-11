@@ -1,0 +1,466 @@
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Param
+   ioctl(generic)
+   fun:ioctl
+   fun:ukiCreateContext
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:*
+   obj:*
+   obj:/usr/lib64/dri/fglrx_dri.so
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   fun:malloc
+   fun:_XlcSetConverter
+   fun:_XlcDefaultLoader
+   fun:_XOpenLC
+   fun:_XrmInitParseInfo
+   fun:NewDatabase
+   fun:XrmGetStringDatabase
+   fun:InitDefaults
+   fun:XGetDefault
+   fun:_XcursorGetDisplayInfo
+   fun:XcursorSupportsARGB
+   fun:XcursorNoticeCreateBitmap
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   fun:malloc
+   fun:_ZN6icu_487UMemorynwEm
+   fun:_ZN6icu_4810UnicodeSet13getInclusionsEiR10UErrorCode
+   fun:_ZN6icu_4810UnicodeSet11applyFilterEPFaiPvES1_iR10UErrorCode
+   fun:_ZN6icu_4810UnicodeSet21applyIntPropertyValueE9UPropertyiR10UErrorCode
+   fun:_ZN6icu_4810UnicodeSet18applyPropertyAliasERKNS_13UnicodeStringES3_R10UErrorCode
+   fun:_ZN6icu_4810UnicodeSet20applyPropertyPatternERKNS_13UnicodeStringERNS_13ParsePositionER10UErrorCode
+   fun:_ZN6icu_4810UnicodeSet20applyPropertyPatternERNS_21RuleCharacterIteratorERNS_13UnicodeStringER10UErrorCode
+   fun:_ZN6icu_4810UnicodeSet12applyPatternERNS_21RuleCharacterIteratorEPKNS_11SymbolTableERNS_13UnicodeStringEjR10UErrorCode
+   fun:_ZN6icu_4810UnicodeSet12applyPatternERKNS_13UnicodeStringERNS_13ParsePositionEjPKNS_11SymbolTableER10UErrorCode
+   fun:_ZN6icu_4810UnicodeSet12applyPatternERKNS_13UnicodeStringEjPKNS_11SymbolTableER10UErrorCode
+   fun:_ZN6icu_4810UnicodeSetC1ERKNS_13UnicodeStringER10UErrorCode
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   fun:malloc
+   fun:ukiMalloc
+   fun:ukiHashCreate
+   fun:ukiGetEntry
+   fun:ukiClose
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   fun:malloc
+   fun:uki_firegl_SetPCSSectionHW
+   fun:uki_firegl_SetPCSSection
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Param
+   msync(start)
+   fun:__msync_nocancel
+   obj:/usr/lib64/libunwind.so.8.0.0
+   obj:/usr/lib64/libunwind.so.8.0.0
+   obj:/usr/lib64/libunwind.so.8.0.0
+   obj:/usr/lib64/libunwind.so.8.0.0
+   fun:_ULx86_64_step
+   fun:_Z13GetStackTracePPvii
+   fun:_ZN8tcmalloc8PageHeap8GrowHeapEm
+   fun:_ZN8tcmalloc8PageHeap3NewEm
+   fun:_ZN8tcmalloc15CentralFreeList8PopulateEv
+   fun:_ZN8tcmalloc15CentralFreeList18FetchFromSpansSafeEv
+   fun:_ZN8tcmalloc15CentralFreeList11RemoveRangeEPPvS2_i
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   fun:memcpy@GLIBC_2.2.5
+   obj:/usr/lib64/dri/fglrx_dri.so
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   fun:memcpy@GLIBC_2.2.5
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   fun:memcpy@GLIBC_2.2.5
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr1
+   fun:memcpy@GLIBC_2.2.5
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr1
+   fun:memcpy@GLIBC_2.2.5
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr1
+   fun:memcpy@GLIBC_2.2.5
+   obj:/usr/lib64/dri/fglrx_dri.so
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr1
+   fun:memcpy@GLIBC_2.2.5
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:/usr/lib64/dri/fglrx_dri.so
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Param
+   ioctl(generic)
+   fun:ioctl
+   fun:uki_firegl_MapLockPageTableNew
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:*
+   obj:*
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:*
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:*
+   obj:*
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib64/dri/fglrx_dri.so
+   fun:_ZN5chisa2gl6Canvas11drawTextureEjRKNS_4geom6VectorERKNS2_9IntVectorES8_f
+   fun:_ZN5chisa2gl6Sprite8drawImplEPNS0_6CanvasERKNS_4geom6VectorEf
+   fun:_ZN5chisa2gl6Canvas10drawSpriteENS_7HandlerINS0_6SpriteEEERKNS_4geom6VectorEf
+   fun:_ZN3nes6widget15NesScreenWidget6renderERN5chisa2gl6CanvasERKNS2_4geom4AreaE
+   fun:_ZN5chisa2tk7element13WidgetElement10renderImplERNS_2gl6CanvasERKNS_4geom4AreaES9_
+   fun:_ZN5chisa2tk7Element6renderERNS_2gl6CanvasERKNS_4geom4AreaES8_
+   fun:_ZN5chisa2tk7element10SplitCombo10renderImplERNS_2gl6CanvasERKNS_4geom4AreaES9_
+   fun:_ZN5chisa2tk7Element6renderERNS_2gl6CanvasERKNS_4geom4AreaES8_
+   fun:_ZN5chisa2tk7element10SplitCombo10renderImplERNS_2gl6CanvasERKNS_4geom4AreaES9_
+   fun:_ZN5chisa2tk7Element6renderERNS_2gl6CanvasERKNS_4geom4AreaES8_
+   fun:_ZN5chisa2tk5World6renderERNS_2gl6CanvasE
+}
+
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   fun:_ZN5chisa2gl12TextDrawable4sizeEv
+   obj:*
+}
+
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Param
+   ioctl(generic)
+   fun:ioctl
+   fun:uki_firegl_ClearDirtyPagesNew
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+}
+
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:*
+   obj:*
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Param
+   ioctl(generic)
+   fun:ioctl
+   fun:uki_firegl_UnMapLockPageTableNew
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   fun:malloc
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:/usr/lib64/dri/fglrx_dri.so
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib64/dri/fglrx_dri.so
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr1
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr8
+   obj:/usr/lib64/dri/fglrx_dri.so
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr4
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:*
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr1
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr1
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Param
+   msync(start)
+   obj:/usr/lib64/libpthread-2.15.so
+   obj:/usr/lib64/libunwind.so.8.0.0
+   obj:/usr/lib64/libunwind.so.8.0.0
+   obj:/usr/lib64/libunwind.so.8.0.0
+   obj:/usr/lib64/libunwind.so.8.0.0
+   fun:_ULx86_64_step
+   fun:_Z13GetStackTracePPvii
+   fun:_ZN8tcmalloc8PageHeap8GrowHeapEm
+   fun:_ZN8tcmalloc8PageHeap3NewEm
+   fun:calloc
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Param
+   msync(start)
+   obj:/usr/lib64/libpthread-2.15.so
+   obj:/usr/lib64/libunwind.so.8.0.0
+   obj:/usr/lib64/libunwind.so.8.0.0
+   obj:/usr/lib64/libunwind.so.8.0.0
+   obj:/usr/lib64/libunwind.so.8.0.0
+   fun:_ULx86_64_step
+   fun:_Z13GetStackTracePPvii
+   fun:_ZN8tcmalloc8PageHeap8GrowHeapEm
+   fun:_ZN8tcmalloc8PageHeap3NewEm
+   fun:calloc
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Cond
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:/usr/lib64/dri/fglrx_dri.so
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Param
+   ioctl(generic)
+   fun:ioctl
+   fun:uki_firegl_UnMapLockPageTableNew
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   fun:malloc
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:/usr/lib64/dri/fglrx_dri.so
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   fun:malloc
+   obj:/usr/lib64/dri/fglrx_dri.so
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   fun:malloc
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:*
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   fun:malloc
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
+   obj:*
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   fun:malloc
+   fun:permalloc
+   fun:_XrmInternalStringToQuark
+   fun:XrmInitialize
+   fun:InitDefaults
+   fun:XGetDefault
+   fun:_XcursorGetDisplayInfo
+   fun:XcursorSupportsARGB
+   fun:XcursorNoticeCreateBitmap
+   fun:XCreatePixmap
+   fun:_glfwPlatformOpenWindow
+   fun:glfwOpenWindow
+}
+
