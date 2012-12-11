@@ -63,9 +63,11 @@ void ReactiveNativeObject::onBackNotifyImpl(Handler<Heap> const& heap)
 	bool failed = false;
 	for(auto it = start; it != end; --it) {
 		std::pair<timestamp_t, util::XValue>& p = *it;
-		std::pair<bool, util::XValue> result = this->onBack(heap, p.second);
-		failed |= result.first;
-		p.second = result.second;
+		bool discard;
+		util::XValue val;
+		std::tie(discard, val) = this->onBack(heap, p.second);
+		failed |= !discard;
+		p.second = val;
 	}
 	if( failed ){ //もうもどれない
 		clock->discardHistory();
@@ -83,9 +85,11 @@ void ReactiveNativeObject::onForwardNotifyImpl(Handler<Heap> const& heap)
 	bool failed = false;
 	for(auto it = start; it != end; ++it) {
 		std::pair<timestamp_t, util::XValue>& p = *it;
-		std::pair<bool, util::XValue> result = this->onForward(heap, p.second);
-		failed |= result.first;
-		p.second = result.second;
+		bool discard;
+		util::XValue val;
+		std::tie(discard, val) = this->onForward(heap, p.second);
+		failed |= !discard;
+		p.second = val;
 	}
 	if( failed ){ //もうもどれない
 		clock->discardFuture();
@@ -110,6 +114,14 @@ void ReactiveNativeObject::bootstrap( Handler<Heap> const& heap )
 	this->NativeObject::bootstrap(heap);
 }
 
+
+void ReactiveNativeObject::registerReaction( timestamp_t time, util::XValue const& v )
+{
+	if( this->reactions_.size() > 0 && this->reactions_.back().first > time ){
+		throw DonutException(__FILE__, __LINE__, "[BUG] Reaction table was broken!!");
+	}
+	this->reactions_.push_back(std::pair<timestamp_t, util::XValue>(time, v));
+}
 
 /**********************************************************************************
  * save/load

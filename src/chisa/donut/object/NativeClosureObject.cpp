@@ -146,9 +146,19 @@ void ReactiveNativeClosureObject::bootstrap( std::string const& objectProviderNa
 
 Handler<Object> ReactiveNativeClosureObject::apply(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& arg)
 {
-	std::pair<Handler<Object>, util::XValue > const result = this->func_(heap, self, arg);
-
-	return result.first;
+	Handler<ReactiveNativeObject> obj;
+	if(!self->isObject() || (obj = self.tryCast<ReactiveNativeObject>())){
+		throw DonutException(__FILE__, __LINE__, "[BUG] ReactiveNativeClosure must be applied only to ReactiveNativeObject.");
+	}
+	Handler<Object> result;
+	bool discard;
+	util::XValue value;
+	std::tie(result, discard, value) = this->func_(heap, obj, arg);
+	if(discard) {
+		heap->clock()->discardHistory();
+	}
+	obj->registerReaction(heap->clock()->now(), value);
+	return result;
 }
 util::XValue ReactiveNativeClosureObject::saveImpl(Handler<Heap> const& heap)
 {

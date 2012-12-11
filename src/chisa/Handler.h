@@ -115,8 +115,7 @@ public:
 	template<class T>
 	Handler<T> tryCast() const
 	{
-		T* spr = dynamic_cast<T*>(this->sprite);
-		return Handler<T>::__internal__fromRawPointerWithoutCheck(spr);
+		return Handler<T>::__internal__fromRawPointerWithoutCheck( dynamic_cast<T*>(this->sprite) );
 	}
 	~Handler() noexcept
 	{
