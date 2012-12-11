@@ -107,7 +107,7 @@ template <typename T> bool XArray::has( std::size_t const& idx ) const {
 	XValue const& val = list_[idx];
 	return val.is<SpiritType>();
 }
-template <typename T> typename _TypeAdapter<T>::return_type XArray::set( const std::size_t& idx, T const& obj ) {
+template <typename T> typename _TypeAdapter<T>::return_type XArray::set( std::size_t const& idx, T const& obj ) {
 	typedef typename _TypeAdapter<T>::spirit_type SpiritType;
 	if( idx < 0 || idx >= list_.size() ){
 		throw logging::Exception(__FILE__, __LINE__, "idx: %d >= size: %d ", idx, list_.size());
