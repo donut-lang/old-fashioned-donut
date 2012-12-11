@@ -113,25 +113,30 @@ Slot::Slot( Handler<Heap> const& heap, util::XValue const& data)
  * from clock
  **********************************************************************************/
 
-void Slot::onSeekNotify( Handler<Heap> const& heap )
+void Slot::onBackNotify(Handler<Heap> const& heap)
 {
 	unsigned int const timestamp = heap->clock()->now();
-	this->index_ = -1;
-	for(int i=this->rev_.size()-1; i>=0; --i){
-		std::pair<timestamp_t, Object*> const& p = this->rev_.at(i);
+	for(int i=this->index_; i>=0; --i){
+		std::pair<timestamp_t, Object*> const& p = this->rev_[i];
 		if(p.first <= timestamp){
 			this->index_ = i;
 			return;
 		}
 	}
-}
-void Slot::onBackNotify(Handler<Heap> const& heap)
-{
-	this->onSeekNotify(heap);
+	this->index_ = -1; //見つからないとここが呼ばれる
 }
 void Slot::onForwardNotify(Handler<Heap> const& heap)
 {
-	this->onSeekNotify(heap);
+	unsigned int const timestamp = heap->clock()->now();
+	int const max = this->rev_.size();
+	for(int i=this->index_+1; i<max; ++i){
+		std::pair<timestamp_t, Object*> const& p = this->rev_[i];
+		if(p.first > timestamp){
+			this->index_ = i-1;
+			return;
+		}
+	}
+	this->index_ = max-1; //見つからないとここが呼ばれる
 }
 
 void Slot::onDiscardHistoryNotify( Handler<Heap> const& heap )
