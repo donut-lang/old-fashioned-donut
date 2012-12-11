@@ -228,6 +228,12 @@ void Heap::registerProvider( Handler<HeapObjectProvider> const& provider )
 
 void Heap::setGlobalObject( std::string const& name, Handler<Object> const& obj )
 {
+	if(obj->isObject()){
+		Handler<HeapObject> heapObj(Handler<HeapObject>::__internal__fromRawPointerWithoutCheck(static_cast<HeapObject*>(obj.get())));
+		if(heapObj->id() == 0){
+			this->registerObject(heapObj);
+		}
+	}
 	this->global()->set(self(), name, obj);
 }
 

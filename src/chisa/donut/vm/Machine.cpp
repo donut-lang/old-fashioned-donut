@@ -345,7 +345,7 @@ Handler<Object> Machine::run()
 				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. \"%s\" is not callable.", closureObj->toString(heap_).c_str());
 			} else if ( Handler<DonutClosureObject> closObj = closureObj.tryCast<DonutClosureObject>() ) {
 				this->enterClosure(destObj, closObj, obj);
-			} else if ( Handler<PureNativeClosureObject> clos = closureObj.tryCast<PureNativeClosureObject>() ) {
+			} else if ( Handler<NativeClosureObject> clos = closureObj.tryCast<NativeClosureObject>() ) {
 				this->pushStack( clos->apply(heap_, destObj, obj) );
 			}else{
 				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. \"%s\" is not callable.", closureObj->toString(heap_).c_str());

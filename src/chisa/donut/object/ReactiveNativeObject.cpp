@@ -94,14 +94,19 @@ void ReactiveNativeObject::onForwardNotifyImpl(Handler<Heap> const& heap)
 
 void ReactiveNativeObject::onDiscardHistoryNotifyImpl(Handler<Heap> const& heap)
 {
-	this->reactions_.erase(this->reactions_.begin(), this->reactions_.begin()+this->index_);
-	this->index_ = 0;
+	if(this->reactions_.size() > 0){
+		this->reactions_.erase(this->reactions_.begin(), this->reactions_.begin()+findIndex(heap->clock()->now()));
+		this->index_ = 0;
+	}
 	this->onHistoryDiscarded(heap);
 }
 
 void ReactiveNativeObject::onDiscardFutureNotifyImpl(Handler<Heap> const& heap)
 {
-	this->reactions_.erase(this->reactions_.begin()+this->index_+1, this->reactions_.end());
+	if(this->reactions_.size() > 0){
+		this->index_ = findIndex(heap->clock()->now());
+		this->reactions_.erase(this->reactions_.begin()+this->index_+1, this->reactions_.end());
+	}
 	this->onFutureDiscarded(heap);
 }
 
