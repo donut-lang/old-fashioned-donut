@@ -30,7 +30,7 @@ namespace donut {
 
 const static std::string TAG("Machine");
 
-Context::Context(const Handler<Clock>& clk)
+Context::Context(Handler<Clock> const& clk)
 :time_(clk->now())
 ,stack_()
 ,local_(32)
@@ -39,7 +39,7 @@ Context::Context(const Handler<Clock>& clk)
 
 }
 
-Context::Context(const Handler<Clock>& clk, const Context& other)
+Context::Context(Handler<Clock> const& clk, Context const& other)
 :time_(clk->now())
 ,stack_(other.stack_)
 ,local_(other.local_)
@@ -49,7 +49,7 @@ Context::Context(const Handler<Clock>& clk, const Context& other)
 }
 
 
-Machine::Machine(logging::Logger& log, const Handler<Clock>& clock, const Handler<Heap>& heap)
+Machine::Machine(logging::Logger& log, Handler<Clock> const& clock, Handler<Heap> const& heap)
 :log_(log)
 ,clock_(clock)
 ,heap_(heap)
@@ -137,7 +137,7 @@ unsigned int Machine::stackBase()
 	return chain.stackBase_;
 }
 
-Handler<Object> Machine::start( const Handler<Source>& src )
+Handler<Object> Machine::start( Handler<Source> const& src )
 {
 	if( this->isInterrupted() ){
 		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. This machine is interrupted now. Call #startContinue instead.");
@@ -153,7 +153,7 @@ Handler<Object> Machine::start( const Handler<Source>& src )
 	return this->run();
 }
 
-Handler<Object> Machine::startContinue(const Handler<Object>& obj)
+Handler<Object> Machine::startContinue(Handler<Object> const& obj)
 {
 	if( !this->isInterrupted() ){
 		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. This machine is not interrupted now. Call #start instead.");
@@ -191,7 +191,7 @@ bool Machine::isInterrupted() const noexcept
 	return !ctx.callStack_.empty();
 }
 
-void Machine::enterClosure(const Handler<Object>& self, const Handler<DonutClosureObject>& clos, const Handler<Object>& args)
+void Machine::enterClosure(Handler<Object> const& self, Handler<DonutClosureObject> const& clos, Handler<Object> const& args)
 {
 	Handler<DonutObject> scope ( heap_->createEmptyDonutObject() );
 	scope->set(heap_, "__scope__", clos);
@@ -213,7 +213,7 @@ bool Machine::leaveClosure()
 }
 
 
-void Machine::pushStack( const Handler<Object>& obj )
+void Machine::pushStack( Handler<Object> const& obj )
 {
 	this->stack().push_back( obj );
 }

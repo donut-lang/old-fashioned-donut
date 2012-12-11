@@ -29,21 +29,21 @@ private:
 	Vector point_;
 	Box box_;
 private:
-	inline constexpr Area intersectImpl(const Area& other, const Point& thisEnd, const Point& otherEnd) const noexcept{
+	inline constexpr Area intersectImpl(Area const& other, Point const& thisEnd, Point const& otherEnd) const noexcept{
 		return
 			thisEnd.x() <= other.x() || thisEnd.y() <= other.y() || otherEnd.x() <= this->x() || otherEnd.y() <= this->y() ?
 			Area(0,0,0,0) :
 			intersectImpl2(geom::max(this->point(), other.point()), geom::min(thisEnd, otherEnd));
 	}
-	inline constexpr Area intersectImpl2(const Point& startPoint, const Point& endPoint) const noexcept{
+	inline constexpr Area intersectImpl2(Point const& startPoint, Point const& endPoint) const noexcept{
 		return Area(startPoint, (endPoint-startPoint));
 	}
 public:
 	constexpr Area(const float x, const float y, const float width, const float height) noexcept:point_(x,y), box_(width, height){}
-	constexpr Area(const Area& other) noexcept = default;
+	constexpr Area(Area const& other) noexcept = default;
 	constexpr Area(Area&& other) noexcept = default;
-	constexpr Area(const Vector& point, const Box& box) noexcept:point_(point), box_(box){};
-	inline Area& operator=(const Area& other) noexcept = default;
+	constexpr Area(Vector const& point, Box const& box) noexcept:point_(point), box_(box){};
+	inline Area& operator=(Area const& other) noexcept = default;
 	inline Area& operator=(Area&& other) noexcept = default;
 	constexpr inline Area() noexcept:point_(), box_(){};
 	inline ~Area() noexcept = default;
@@ -53,13 +53,13 @@ public:
 #ifdef near
 #undef near
 #endif
-	inline bool near(const Area& other, const float precision) const noexcept{
+	inline bool near(Area const& other, const float precision) const noexcept{
 		return this->box_.near(other.box_, precision) && point_.near(other.point_, precision);
 	}
 	inline Vector& point() noexcept {return point_;};
 	inline Box& box() noexcept {return box_;};
-	inline constexpr const Vector& point() const noexcept{return point_;};
-	inline constexpr const Box& box() const noexcept{return box_;};
+	inline constexpr Vector const& point() const noexcept{return point_;};
+	inline constexpr Box const& box() const noexcept{return box_;};
 	inline constexpr float x() const noexcept{ return point_.x(); };
 	inline constexpr float y() const noexcept{ return point_.y(); };
 	inline constexpr float width() const noexcept{ return box_.width(); };
@@ -72,7 +72,7 @@ public:
 		return util::format("(Area %f %f %f %f)", x(), y(), width(), height());
 	}
 	inline constexpr bool empty() const noexcept { return this->box_.empty(); }
-	//	inline Area intersect(const Area& other) const noexcept
+	//	inline Area intersect(Area const& other) const noexcept
 	//	{
 	//		using namespace chisa::geom;
 	//		const Point thisEnd = this->point()+this->box();
@@ -88,11 +88,11 @@ public:
 	//		const Vector endPoint(min(thisEnd, otherEnd));
 	//		return Area(startPoint, (endPoint-startPoint));
 	//	}
-	inline constexpr Area intersect(const Area& other) const noexcept
+	inline constexpr Area intersect(Area const& other) const noexcept
 	{
 		return intersectImpl(other, this->point()+this->box(), other.point()+other.box());
 	}
-	inline constexpr bool contain(const Point& pt) const noexcept{
+	inline constexpr bool contain(Point const& pt) const noexcept{
 		return x() <= pt.x() && y() <= pt.y() && pt.x() <= (x()+width()) && pt.y() <= (y()+height());
 	}
 	inline constexpr Area flip() const noexcept {
@@ -110,23 +110,23 @@ public:
 	constexpr Margin() noexcept :top_(0),bottom_(0),left_(0),right_(0){};
 	constexpr Margin(float const m) noexcept :top_(m),bottom_(m),left_(m),right_(m){};
 	constexpr Margin(float const top,float const bottom,float const left,float const right) noexcept :top_(top),bottom_(bottom),left_(left),right_(right){};
-	constexpr Margin(const Margin& other) noexcept:
+	constexpr Margin(Margin const& other) noexcept:
 		top_(other.top_),bottom_(other.bottom_),left_(other.left_),right_(other.right_){};
-	Margin& operator=(const Margin& other) noexcept{
+	Margin& operator=(Margin const& other) noexcept{
 		this->top_ = other.top_;
 		this->bottom_ = other.bottom_;
 		this->left_ = other.left_;
 		this->right_ = other.right_;
 		return *this;
 	};
-	Margin& operator=(const float& other) noexcept{
+	Margin& operator=(float const& other) noexcept{
 		this->top_ = other;
 		this->bottom_ = other;
 		this->left_ = other;
 		this->right_ = other;
 		return *this;
 	};
-	void margin(const float& other) noexcept{
+	void margin(float const& other) noexcept{
 		(*this) = other;
 	};
 	inline constexpr geom::Area apply(const geom::Area other)

@@ -35,7 +35,7 @@ class Sprite : public HandlerBody<Sprite, true> {
 	unsigned int texId_;
 	std::atomic<bool> locked_;
 public:
-	Sprite(HandlerW<internal::SpriteManager> mgr, const geom::IntVector& size);
+	Sprite(HandlerW<internal::SpriteManager> mgr, geom::IntVector const& size);
 	virtual ~Sprite() noexcept(true);
 	enum BufferType {
 		Invalid = 0,
@@ -73,8 +73,8 @@ public:
 public: /* from Handler */
 	bool onFree() noexcept;
 public: /* from Canvas */
-	void drawImpl(Canvas* const canvas, const geom::Point& pt, const geom::Area& renderArea, const float depth);
-	void drawImpl(Canvas* const canvas, const geom::Point& pt, const float depth);
+	void drawImpl(Canvas* const canvas, geom::Point const& pt, geom::Area const& renderArea, const float depth);
+	void drawImpl(Canvas* const canvas, geom::Point const& pt, const float depth);
 };
 
 }}

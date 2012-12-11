@@ -30,7 +30,7 @@ namespace gl {
 
 static constexpr unsigned int MAGIC=0xDEADBEEF;
 
-Sprite::Sprite(HandlerW<internal::SpriteManager> mgr, const geom::IntVector& size)
+Sprite::Sprite(HandlerW<internal::SpriteManager> mgr, geom::IntVector const& size)
 :mgr_(mgr)
 ,origSize_(geom::IntBox(getPower2Of(size.width()), getPower2Of(size.height())))
 ,size_(origSize_)
@@ -67,12 +67,12 @@ Sprite::~Sprite() noexcept (true)
 	}
 }
 
-void Sprite::drawImpl(Canvas* const canvas, const geom::Point& pt, const geom::Area& renderArea, const float depth)
+void Sprite::drawImpl(Canvas* const canvas, geom::Point const& pt, geom::Area const& renderArea, const float depth)
 {
 	this->flushBuffer();
 	canvas->drawTexture(this->texId_, pt, this->origSize(), renderArea, depth);
 }
-void Sprite::drawImpl(Canvas* const canvas, const geom::Point& pt, const float depth)
+void Sprite::drawImpl(Canvas* const canvas, geom::Point const& pt, const float depth)
 {
 	this->flushBuffer();
 	canvas->drawTexture(this->texId_, pt, this->origSize(), this->size(), depth);

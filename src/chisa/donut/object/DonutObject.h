@@ -36,7 +36,7 @@ public:
 	inline Handler<Source> const& source() const { return this->src_; };
 	inline Handler<Closure> const& closureCode() const { return this->asm_; };
 public:
-	void bootstrap(Handler<Heap> const& heap, Handler<Source> const& src, unsigned int const& closureIndex, const Handler<Object>& scope);
+	void bootstrap(Handler<Heap> const& heap, Handler<Source> const& src, unsigned int const& closureIndex, Handler<Object> const& scope);
 	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override final;
 	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override final;
 };

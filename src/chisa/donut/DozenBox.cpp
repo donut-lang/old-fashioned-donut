@@ -26,7 +26,7 @@ DozenBox::DozenBox(logging::Logger& log)
 {
 }
 
-Handler<Object> DozenBox::execute( const std::string& src )
+Handler<Object> DozenBox::execute( std::string const& src )
 {
 	Handler<Machine> const machine(this->mainDonut_->queryMachine());
 	Handler<Object> const obj(machine->start(this->mainDonut_->parse(src)));

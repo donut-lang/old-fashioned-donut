@@ -67,7 +67,7 @@ private:
 	Handler<DonutObject> intProto_;
 	Handler<DonutObject> nullProto_;
 public:
-	Heap(logging::Logger& log, const Handler<Clock>& clock);
+	Heap(logging::Logger& log, Handler<Clock> const& clock);
 	virtual ~Heap() noexcept = default;
 	bool onFree() noexcept;
 public:
@@ -85,14 +85,14 @@ public:
 public: /* オブジェクトを作ってそれをプールに登録し、メモリ管理の対象にする。 */
 	Handler<DonutObject> createDonutObject();
 	Handler<DonutObject> createEmptyDonutObject();
-	Handler<DonutClosureObject> createDonutClosureObject( const Handler<Source>& src, unsigned int const& closureIndex, const Handler<Object>& scope );
-	Handler<StringObject> createStringObject(const std::string& val);
-	Handler<FloatObject> createFloatObject(const float& val);
-	Handler<Object> createInt(const int& val);
-	Handler<Object> createBool(const bool& val);
+	Handler<DonutClosureObject> createDonutClosureObject( Handler<Source> const& src, unsigned int const& closureIndex, Handler<Object> const& scope );
+	Handler<StringObject> createStringObject(std::string const& val);
+	Handler<FloatObject> createFloatObject(float const& val);
+	Handler<Object> createInt(int const& val);
+	Handler<Object> createBool(bool const& val);
 	Handler<Object> createNull();
-	Handler<PureNativeClosureObject> createPureNativeClosureObject(const std::string& objectProviderName, const std::string& closureName, PureNativeClosureObject::Signature sig);
-	Handler<ReactiveNativeClosureObject> createReactiveNativeClosureObject(const std::string& objectProviderName, const std::string& closureName, ReactiveNativeClosureObject::Signature f);
+	Handler<PureNativeClosureObject> createPureNativeClosureObject(std::string const& objectProviderName, std::string const& closureName, PureNativeClosureObject::Signature sig);
+	Handler<ReactiveNativeClosureObject> createReactiveNativeClosureObject(std::string const& objectProviderName, std::string const& closureName, ReactiveNativeClosureObject::Signature f);
 public: /* ヒープ管理 */
 	void gc();
 public: /* グローバルオブジェクトの管理 */
@@ -102,8 +102,8 @@ public: /* グローバルオブジェクトの管理 */
 	Handler<DonutObject> global() { return this->globalObject_; }
 public: /* プロバイダの管理 */
 	void registerProvider( Handler<HeapObjectProvider> const& provider );
-	Handler<HeapObjectProvider> findHeapProvider( const std::string& name ) const;
-	Handler<Provider> findProvider( const std::string& name ) const;
+	Handler<HeapObjectProvider> findHeapProvider( std::string const& name ) const;
+	Handler<Provider> findProvider( std::string const& name ) const;
 public: /* 処理系の保存・復帰をします。 */
 	void bootstrap();
 	util::XValue save();
@@ -123,7 +123,7 @@ private:
 	void initPrimitiveProviders();
 	void initPrototypes();
 	HeapObject* findHeapObjectFromID( objectid_t const& id );
-	void registerObject( const Handler<HeapObject>& obj );
+	void registerObject( Handler<HeapObject> const& obj );
 	int nextWalkColor();
 };
 

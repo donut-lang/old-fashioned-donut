@@ -42,7 +42,7 @@ public:
 	float width();
 	float height();
 	virtual geom::Box size() = 0;
-	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) = 0;
+	virtual void draw(Canvas& canvas, geom::Area const& area, const float depth=0.0f) = 0;
 	virtual std::string toString() const = 0;
 };
 
@@ -50,27 +50,27 @@ class NullDrawable : public Drawable {
 private:
 	geom::Box size_;
 protected:
-	NullDrawable( HandlerW<DrawableManager> manager, const geom::Box& size ):Drawable(manager), size_(size){};
+	NullDrawable( HandlerW<DrawableManager> manager, geom::Box const& size ):Drawable(manager), size_(size){};
 public:
 	virtual ~NullDrawable() noexcept = default;
 	virtual geom::Box size() override { return this->size_; };
-	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) override {};
+	virtual void draw(Canvas& canvas, geom::Area const& area, const float depth=0.0f) override {};
 	virtual std::string toString() const override;
-	static Handler<Drawable> create( HandlerW<DrawableManager> manager, const geom::Box& size, const std::string& repl );
+	static Handler<Drawable> create( HandlerW<DrawableManager> manager, geom::Box const& size, std::string const& repl );
 };
 
 class ColorDrawable : public Drawable {
 private:
 	geom::Box size_;
 	Color color_;
-	ColorDrawable( HandlerW<DrawableManager> manager, const geom::Box size, const gl::Color& c);
+	ColorDrawable( HandlerW<DrawableManager> manager, const geom::Box size, gl::Color const& c);
 public:
-	static Handler<Drawable> create( HandlerW<DrawableManager> manager, const geom::Box& size, const std::string& repl );
+	static Handler<Drawable> create( HandlerW<DrawableManager> manager, geom::Box const& size, std::string const& repl );
 	virtual ~ColorDrawable() noexcept = default;
 public:
 	Color color() const noexcept;
 	virtual geom::Box size() override { return this->size_; };
-	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) override;
+	virtual void draw(Canvas& canvas, geom::Area const& area, const float depth=0.0f) override;
 	virtual std::string toString() const override;
 };
 
@@ -80,13 +80,13 @@ private:
 	Handler<gl::Sprite> sprite_;
 	std::string filename_;
 protected:
-	ImageDrawable( HandlerW<DrawableManager> manager, const geom::Box& size, const std::string& filename);
+	ImageDrawable( HandlerW<DrawableManager> manager, geom::Box const& size, std::string const& filename);
 	virtual ~ImageDrawable() noexcept = default;
 public:
-	static Handler<Drawable> create(  HandlerW<DrawableManager> manager, const geom::Box& size, const std::string& repl );
+	static Handler<Drawable> create(  HandlerW<DrawableManager> manager, geom::Box const& size, std::string const& repl );
 	Handler<gl::Sprite> sprite();
 	virtual geom::Box size() override;
-	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) override;
+	virtual void draw(Canvas& canvas, geom::Area const& area, const float depth=0.0f) override;
 	virtual std::string toString() const override;
 };
 
@@ -94,13 +94,13 @@ class RepeatDrawable : public Drawable {
 private:
 	geom::Box size_;
 	Handler<Drawable> child_;
-	RepeatDrawable(HandlerW<DrawableManager> manager, const geom::Box& size, Handler<Drawable> child);
+	RepeatDrawable(HandlerW<DrawableManager> manager, geom::Box const& size, Handler<Drawable> child);
 public:
-	static Handler<Drawable> create( HandlerW<DrawableManager> manager, const geom::Box& size, const std::string& repl );
+	static Handler<Drawable> create( HandlerW<DrawableManager> manager, geom::Box const& size, std::string const& repl );
 	virtual ~RepeatDrawable() noexcept = default;
 	Handler<Drawable> child() const;
 	virtual geom::Box size() override;
-	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) override;
+	virtual void draw(Canvas& canvas, geom::Area const& area, const float depth=0.0f) override;
 	virtual std::string toString() const override;
 };
 
@@ -110,11 +110,11 @@ private:
 	Handler<Drawable> child_;
 	StretchDrawable(HandlerW<DrawableManager> manager, const geom::Box size, Handler<Drawable> child);
 public:
-	static Handler<Drawable> create( HandlerW<DrawableManager> manager, const geom::Box& size, const std::string& repl );
+	static Handler<Drawable> create( HandlerW<DrawableManager> manager, geom::Box const& size, std::string const& repl );
 	virtual ~StretchDrawable() noexcept = default;
 	Handler<Drawable> child() const;
 	virtual geom::Box size() override;
-	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) override;
+	virtual void draw(Canvas& canvas, geom::Area const& area, const float depth=0.0f) override;
 	virtual std::string toString() const override;
 };
 
@@ -143,14 +143,14 @@ private:
 	gl::Color color_;
 	gl::Color backColor_;
 private:
-	TextDrawable( HandlerW<DrawableManager> manager, const std::string& str, bool vertical, const float size, Handler<Font> font, TextDrawable::Style style, TextDrawable::Decoration deco, const gl::Color& color, const gl::Color& backColor);
+	TextDrawable( HandlerW<DrawableManager> manager, std::string const& str, bool vertical, const float size, Handler<Font> font, TextDrawable::Style style, TextDrawable::Decoration deco, gl::Color const& color, gl::Color const& backColor);
 	void revalidate();
 public:
 	virtual ~TextDrawable() noexcept = default;
 	static void setupCairo(cairo_t* cairo, cairo_font_face_t* face, cairo_font_options_t* opt, float size, Style style);
-	static Handler<TextDrawable> create(HandlerW<DrawableManager> manager, const std::string& str, bool vertical, const float size, Handler<Font> font, TextDrawable::Style style, TextDrawable::Decoration deco, const gl::Color& color, const gl::Color& backColor);
+	static Handler<TextDrawable> create(HandlerW<DrawableManager> manager, std::string const& str, bool vertical, const float size, Handler<Font> font, TextDrawable::Style style, TextDrawable::Decoration deco, gl::Color const& color, gl::Color const& backColor);
 	virtual geom::Box size() override;
-	virtual void draw(Canvas& canvas, const geom::Area& area, const float depth=0.0f) override;
+	virtual void draw(Canvas& canvas, geom::Area const& area, const float depth=0.0f) override;
 	virtual std::string toString() const override;
 	Handler<gl::Sprite> sprite();
 };

@@ -31,7 +31,7 @@ PredefinedStringRenderer::PredefinedStringRenderer(logging::Logger& log, Handler
 
 }
 
-void PredefinedStringRenderer::registerCharacter( unsigned int symbol, const std::string& str )
+void PredefinedStringRenderer::registerCharacter( unsigned int symbol, std::string const& str )
 {
 	auto it = this->spriteTable_.find(symbol);
 	if(it != this->spriteTable_.end()){
@@ -41,7 +41,7 @@ void PredefinedStringRenderer::registerCharacter( unsigned int symbol, const std
 	this->spriteTable_.insert( std::pair<unsigned int, Handler<Sprite> >( symbol, drawableManager_->queryText(str)->sprite() ) );
 }
 
-geom::Area PredefinedStringRenderer::renderString( Canvas& cv, const geom::Point& point, const String& str, float depth)
+geom::Area PredefinedStringRenderer::renderString( Canvas& cv, geom::Point const& point, String const& str, float depth)
 {
 	float x=0.0f;
 	float y=0.0f;

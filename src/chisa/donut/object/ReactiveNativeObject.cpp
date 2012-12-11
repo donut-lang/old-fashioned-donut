@@ -24,37 +24,37 @@ namespace donut {
 
 const std::string TAG("ReactiveNativeObject");
 
-std::string ReactiveNativeObject::toStringImpl(const Handler<Heap>& heap) const
+std::string ReactiveNativeObject::toStringImpl(Handler<Heap> const& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast Reactive Native Object to String implicitly. Use toString()");
 }
 
-int ReactiveNativeObject::toIntImpl(const Handler<Heap>& heap) const
+int ReactiveNativeObject::toIntImpl(Handler<Heap> const& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast Reactive Native Object to Integer implicitly. Use toInteger()");
 }
 
-float ReactiveNativeObject::toFloatImpl(const Handler<Heap>& heap) const
+float ReactiveNativeObject::toFloatImpl(Handler<Heap> const& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast Reactive Native Object to Float implicitly. Use toFloat()");
 }
 
-bool ReactiveNativeObject::toBoolImpl(const Handler<Heap>& heap) const
+bool ReactiveNativeObject::toBoolImpl(Handler<Heap> const& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast Reactive Native Object to Bool implicitly. Use toBoolean()");
 }
 
-void ReactiveNativeObject::onSeekNotifyImpl(const Handler<Heap>& heap)
+void ReactiveNativeObject::onSeekNotifyImpl(Handler<Heap> const& heap)
 {
 
 }
 
-void ReactiveNativeObject::onDiscardHistoryNotifyImpl(const Handler<Heap>& heap)
+void ReactiveNativeObject::onDiscardHistoryNotifyImpl(Handler<Heap> const& heap)
 {
 
 }
 
-void ReactiveNativeObject::onDiscardFutureNotifyImpl(const Handler<Heap>& heap)
+void ReactiveNativeObject::onDiscardFutureNotifyImpl(Handler<Heap> const& heap)
 {
 
 }

@@ -37,7 +37,7 @@ public: /* 生成・破棄 */
 	virtual ~DozenBox() noexcept = default;
 	inline bool onFree() const noexcept{ return false; };
 private: /* メインドーナツの実行 */
-	Handler<Object> execute( const std::string& src );
+	Handler<Object> execute( std::string const& src );
 	Handler<Heap> heap() const noexcept;
 public: /* コンボでの実行 */
 	Handler<Object> startCombo(std::string const& comboname, std::string const& src);

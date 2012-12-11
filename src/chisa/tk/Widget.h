@@ -53,33 +53,33 @@ public:
 public:
 	geom::Vector calcAbsolutePosition();
 public:
-	virtual void render(gl::Canvas& cv, const geom::Area& area) = 0;
+	virtual void render(gl::Canvas& cv, geom::Area const& area) = 0;
 	virtual void idle(const float delta_ms) = 0;
-	virtual void reshape(const geom::Box& areaSize) = 0;
-	virtual geom::Box measure(const geom::Box& constraintSize) = 0;
+	virtual void reshape(geom::Box const& areaSize) = 0;
+	virtual geom::Box measure(geom::Box const& constraintSize) = 0;
 public:
-	virtual bool onDownRaw(const float timeMs, const geom::Point& ptInWidget){return false;};
-	virtual bool onUpRaw(const float timeMs, const geom::Point& ptInWidget){return false;};
-	virtual bool onMoveRaw(const float timeMs, const geom::Point& ptInWidget){return false;};
-	virtual bool onSingleTapUp(const float timeMs, const geom::Point& ptInWidget){return false;};
-	virtual bool onFling(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Velocity& velocity){return false;};
-	virtual bool onScroll(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Distance& distance){return false;};
-	virtual bool onZoom(const float timeMs, const geom::Point& center, const float ratio){return false;};
+	virtual bool onDownRaw(const float timeMs, geom::Point const& ptInWidget){return false;};
+	virtual bool onUpRaw(const float timeMs, geom::Point const& ptInWidget){return false;};
+	virtual bool onMoveRaw(const float timeMs, geom::Point const& ptInWidget){return false;};
+	virtual bool onSingleTapUp(const float timeMs, geom::Point const& ptInWidget){return false;};
+	virtual bool onFling(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity){return false;};
+	virtual bool onScroll(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance){return false;};
+	virtual bool onZoom(const float timeMs, geom::Point const& center, const float ratio){return false;};
 
 //	実装用
 //public:
-//	virtual void render(gl::Canvas& cv, const geom::Area& area) override;
+//	virtual void render(gl::Canvas& cv, geom::Area const& area) override;
 //	virtual void idle(const float delta_ms) override;
-//	virtual void reshape(const geom::Box& areaSize) override;
-//	virtual geom::Box measure(const geom::Box& constraintSize) override;
+//	virtual void reshape(geom::Box const& areaSize) override;
+//	virtual geom::Box measure(geom::Box const& constraintSize) override;
 //public:
-//	virtual bool onDownRaw(const float timeMs, const geom::Point& ptInWidget) override;
-//	virtual bool onUpRaw(const float timeMs, const geom::Point& ptInWidget) override;
-//	virtual bool onMoveRaw(const float timeMs, const geom::Point& ptInWidget) override;
-//	virtual bool onSingleTapUp(const float timeMs, const geom::Point& ptInWidget) override;
-//	virtual bool onFling(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Velocity& velocity) override;
-//	virtual bool onScroll(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Distance& distance) override;
-//	virtual bool onZoom(const float timeMs, const geom::Point& center, const float ratio) override;
+//	virtual bool onDownRaw(const float timeMs, geom::Point const& ptInWidget) override;
+//	virtual bool onUpRaw(const float timeMs, geom::Point const& ptInWidget) override;
+//	virtual bool onMoveRaw(const float timeMs, geom::Point const& ptInWidget) override;
+//	virtual bool onSingleTapUp(const float timeMs, geom::Point const& ptInWidget) override;
+//	virtual bool onFling(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity) override;
+//	virtual bool onScroll(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance) override;
+//	virtual bool onZoom(const float timeMs, geom::Point const& center, const float ratio) override;
 
 };
 

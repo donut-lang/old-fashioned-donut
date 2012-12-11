@@ -45,12 +45,12 @@ class Node {
 protected:
 	Node();
 public:
-	virtual TreeNode* findTreeNodeById(const std::string& name) noexcept{ return nullptr; };
+	virtual TreeNode* findTreeNodeById(std::string const& name) noexcept{ return nullptr; };
 	virtual Text* findFirstTextNode() noexcept { return nullptr; };
 public: //オブジェクトの生成
 	virtual void walk(NodeWalker& walker) = 0;
 	template <typename Derived, typename... Args>
-	static Derived* create(Document* root, BlockNode* block, TreeNode* parent, const Args&... args)
+	static Derived* create(Document* root, BlockNode* block, TreeNode* parent, Args const&... args)
 	{
 		Derived* const node = new Derived(args...);
 		node->root(root);
@@ -74,7 +74,7 @@ NODE_SUBKLASS_DESTRUCTOR(Klass);
 NODE_SUBKLASS_WALK(Klass);\
 NODE_SUBKLASS_DESTRUCTOR(Klass);\
 template <typename Derived, typename... Args>\
-friend Derived* Node::create(Document* root, BlockNode* block, TreeNode* parent, const Args&... args)
+friend Derived* Node::create(Document* root, BlockNode* block, TreeNode* parent, Args const&... args)
 
 /******************************************************************************
  * カテゴライズするためのノード
@@ -99,10 +99,10 @@ public:
 	inline size_t count() const { return this->children_.size(); };
 	inline Node* at(size_t idx) const { return this->children_.at(idx); };
 	void parseAttribute(tinyxml2::XMLElement* elm);
-	virtual TreeNode* findTreeNodeById(const std::string& name) noexcept override;
+	virtual TreeNode* findTreeNodeById(std::string const& name) noexcept override;
 	virtual Text* findFirstTextNode() noexcept override;
 protected:
-	template <typename T> void addAttribute(const std::string& name, T& ptr)
+	template <typename T> void addAttribute(std::string const& name, T& ptr)
 	{
 		this->attrMap_.insert(std::make_pair(name, std::bind(chisa::util::xml::parseAttr<T>, std::string(name), std::ref(ptr), std::ref(ptr), std::placeholders::_1)));
 	}
@@ -131,7 +131,7 @@ private:
 	Handler<RenderObject> background_;
 public:
 	Handler<RenderObject> background() const;
-	void background(const Handler<RenderObject>& handler);
+	void background(Handler<RenderObject> const& handler);
 private:
 	NODE_SUBKLASS(BlockNode);
 };
@@ -198,7 +198,7 @@ private:
 	Text(std::string text);
 public:
 	void clearObjects();
-	void appendObject( const DataType& d );
+	void appendObject( DataType const& d );
 	DataType objectAt(std::size_t idx) const noexcept;
 	inline std::size_t objectCount() const noexcept{ return this->objects_.size(); };
 	inline ListType const& objects() const noexcept { return this->objects_; }

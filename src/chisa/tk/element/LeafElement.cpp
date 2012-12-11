@@ -40,7 +40,7 @@ std::size_t LeafElement::getChildCount() const
 {
 	return 0;
 }
-std::weak_ptr<Element> LeafElement::getElementByIdImpl(const std::string& id)
+std::weak_ptr<Element> LeafElement::getElementByIdImpl(std::string const& id)
 {
 	return std::weak_ptr<Element>();
 }

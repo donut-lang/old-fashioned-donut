@@ -25,57 +25,57 @@ namespace chisa {
 namespace donut {
 static const std::string TAG("NativeClosureObject");
 
-std::string NativeClosureObject::toStringImpl(const Handler<Heap>& heap) const
+std::string NativeClosureObject::toStringImpl(Handler<Heap> const& heap) const
 {
 	return util::format("(NativeClosureObject %p)", this);
 }
 
-int NativeClosureObject::toIntImpl(const Handler<Heap>& heap) const
+int NativeClosureObject::toIntImpl(Handler<Heap> const& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to convert NativeClosureObject to int.");
 }
 
-float NativeClosureObject::toFloatImpl(const Handler<Heap>& heap) const
+float NativeClosureObject::toFloatImpl(Handler<Heap> const& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to convert NativeClosureObject to float.");
 }
 
-bool NativeClosureObject::toBoolImpl(const Handler<Heap>& heap) const
+bool NativeClosureObject::toBoolImpl(Handler<Heap> const& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to convert NativeClosureObject to bool.");
 }
 
-bool NativeClosureObject::hasImpl(const Handler<Heap>& heap, const std::string& name) const
+bool NativeClosureObject::hasImpl(Handler<Heap> const& heap, std::string const& name) const
 {
 	return false;
 }
 
-bool NativeClosureObject::hasOwnImpl(const Handler<Heap>& heap, const std::string& name) const
+bool NativeClosureObject::hasOwnImpl(Handler<Heap> const& heap, std::string const& name) const
 {
 	return false;
 }
 
-Handler<Object> NativeClosureObject::setImpl(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj)
+Handler<Object> NativeClosureObject::setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> obj)
 {
 	heap->log().w(TAG, "NativeClosureObject cannot have any property.");
 	return obj;
 }
 
-Handler<Object> NativeClosureObject::getImpl(const Handler<Heap>& heap, const std::string& name) const
+Handler<Object> NativeClosureObject::getImpl(Handler<Heap> const& heap, std::string const& name) const
 {
 	throw DonutException(__FILE__, __LINE__, "Native Closure does not have any properety.");
 }
 
-void NativeClosureObject::onSeekNotifyImpl(const Handler<Heap>& heap)
+void NativeClosureObject::onSeekNotifyImpl(Handler<Heap> const& heap)
 {
 
 }
-void NativeClosureObject::onDiscardHistoryNotifyImpl(const Handler<Heap>& heap)
+void NativeClosureObject::onDiscardHistoryNotifyImpl(Handler<Heap> const& heap)
 {
 
 }
 
-void NativeClosureObject::onDiscardFutureNotifyImpl(const Handler<Heap>& heap)
+void NativeClosureObject::onDiscardFutureNotifyImpl(Handler<Heap> const& heap)
 {
 
 }
@@ -115,7 +115,7 @@ void PureNativeClosureObject::bootstrap( std::string const& objectProviderName, 
 	this->func_ = f;
 }
 
-Handler<Object> PureNativeClosureObject::apply(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& arg)
+Handler<Object> PureNativeClosureObject::apply(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& arg)
 {
 	return func_(heap, self,arg);
 }
@@ -140,7 +140,7 @@ void ReactiveNativeClosureObject::bootstrap( std::string const& objectProviderNa
 	this->func_ = f;
 }
 
-Handler<Object> ReactiveNativeClosureObject::apply(const Handler<Heap>& heap, const Handler<Object>& self, const Handler<DonutObject>& arg)
+Handler<Object> ReactiveNativeClosureObject::apply(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& arg)
 {
 	std::pair<Handler<Object>, util::XValue > const result = this->func_(heap, self, arg);
 

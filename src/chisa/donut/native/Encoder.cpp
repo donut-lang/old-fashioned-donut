@@ -24,25 +24,25 @@ namespace donut {
 namespace native {
 
 template <>
-Handler<Object> encode<int>(const Handler<Heap>& heap, int val)
+Handler<Object> encode<int>(Handler<Heap> const& heap, int val)
 {
 	return heap->createInt(val);
 }
 
 template <>
-Handler<Object> encode<float>(const Handler<Heap>& heap, float val)
+Handler<Object> encode<float>(Handler<Heap> const& heap, float val)
 {
 	return heap->createFloatObject(val);
 }
 
 template <>
-Handler<Object> encode<bool>(const Handler<Heap>& heap, bool val)
+Handler<Object> encode<bool>(Handler<Heap> const& heap, bool val)
 {
 	return heap->createBool(val);
 }
 
 template <>
-Handler<Object> encode<std::string>(const Handler<Heap>& heap, std::string val)
+Handler<Object> encode<std::string>(Handler<Heap> const& heap, std::string val)
 {
 	return heap->createStringObject(val);
 }

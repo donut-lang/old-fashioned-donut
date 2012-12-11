@@ -35,10 +35,10 @@ public:
 	NesScreenWidget(chisa::logging::Logger& log, std::weak_ptr<chisa::tk::World> world, tinyxml2::XMLElement* element);
 	virtual ~NesScreenWidget();
 public:
-	virtual void render(chisa::gl::Canvas& cv, const chisa::geom::Area& area) override;
+	virtual void render(chisa::gl::Canvas& cv, chisa::geom::Area const& area) override;
 	virtual void idle(const float delta_ms) override;
-	virtual void reshape(const chisa::geom::Box& areaSize) override;
-	virtual chisa::geom::Box measure(const chisa::geom::Box& constraintSize) override;
+	virtual void reshape(chisa::geom::Box const& areaSize) override;
+	virtual chisa::geom::Box measure(chisa::geom::Box const& constraintSize) override;
 };
 
 }}

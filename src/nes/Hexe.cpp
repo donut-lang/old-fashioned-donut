@@ -23,7 +23,7 @@
 
 namespace nes {
 
-Hexe::Hexe(chisa::logging::Logger& log, const std::string& basepath)
+Hexe::Hexe(chisa::logging::Logger& log, std::string const& basepath)
 :chisa::Hexe(log, basepath)
 {
 
@@ -43,7 +43,7 @@ void Hexe::registerElements(chisa::tk::element::ElementFactory& factory)
 {
 }
 
-std::shared_ptr<chisa::WorldGeist> Hexe::invokeWorldGeist(std::weak_ptr<chisa::tk::World> world, const std::string& nameOfGeist)
+std::shared_ptr<chisa::WorldGeist> Hexe::invokeWorldGeist(std::weak_ptr<chisa::tk::World> world, std::string const& nameOfGeist)
 {
 	if(nameOfGeist == "nes"){
 		return std::shared_ptr<chisa::WorldGeist>(new NesGeist(log(), world));

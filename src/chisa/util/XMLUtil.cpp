@@ -23,21 +23,21 @@ namespace chisa {
 namespace util {
 namespace xml {
 
-template <> void parseAttr<int>(const std::string& name, int& v, const int& def, tinyxml2::XMLElement* elm)
+template <> void parseAttr<int>(std::string const& name, int& v, int const& def, tinyxml2::XMLElement* elm)
 {
 	if(elm->QueryIntAttribute(name.c_str(), &v) != tinyxml2::XML_SUCCESS){
 		v = def;
 	}
 }
 
-template <> void parseAttr<float>(const std::string& name, float& v, const float& def, tinyxml2::XMLElement* elm)
+template <> void parseAttr<float>(std::string const& name, float& v, float const& def, tinyxml2::XMLElement* elm)
 {
 	if(elm->QueryFloatAttribute(name.c_str(), &v) != tinyxml2::XML_SUCCESS){
 		v = def;
 	}
 }
 
-template <> void parseAttr<std::string>(const std::string& name, std::string& v, const std::string& def, tinyxml2::XMLElement* elm)
+template <> void parseAttr<std::string>(std::string const& name, std::string& v, std::string const& def, tinyxml2::XMLElement* elm)
 {
 	if(const char* attr = elm->Attribute(name.c_str())){
 		v = attr;
@@ -46,14 +46,14 @@ template <> void parseAttr<std::string>(const std::string& name, std::string& v,
 	}
 }
 
-template <> void parseAttr<unsigned int>(const std::string& name, unsigned int& v, const unsigned int& def, tinyxml2::XMLElement* elm)
+template <> void parseAttr<unsigned int>(std::string const& name, unsigned int& v, const unsigned int& def, tinyxml2::XMLElement* elm)
 {
 	if(elm->QueryUnsignedAttribute(name.c_str(), &v) != tinyxml2::XML_SUCCESS){
 		v = def;
 	}
 }
 
-template <> void parseAttr<bool>(const std::string& name, bool& v, const bool& def, tinyxml2::XMLElement* elm)
+template <> void parseAttr<bool>(std::string const& name, bool& v, bool const& def, tinyxml2::XMLElement* elm)
 {
 	if(elm->QueryBoolAttribute(name.c_str(), &v) != tinyxml2::XML_SUCCESS){
 		v = def;

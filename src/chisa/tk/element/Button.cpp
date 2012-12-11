@@ -44,7 +44,7 @@ std::string Button::toString() const
 	return util::format("(Button text:\"%s\")", this->text_.c_str());
 }
 
-void Button::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
+void Button::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
 {
 	this->textImage_->draw(canvas, geom::Area(screenArea.point()+this->renderOffset_, area.box()));
 }
@@ -62,12 +62,12 @@ Handler<gl::TextDrawable> Button::textImage()
 	}
 	return this->textImage_;
 }
-geom::Box Button::onMeasure(const geom::Box& constraint)
+geom::Box Button::onMeasure(geom::Box const& constraint)
 {
 	return this->textImage()->size();
 }
 
-void Button::onLayout(const geom::Box& size)
+void Button::onLayout(geom::Box const& size)
 {
 	this->renderOffset_ = (size-this->textImage_->size())/2;
 }
@@ -79,7 +79,7 @@ void Button::loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLEl
 	}
 }
 
-void Button::text(const std::string& text)
+void Button::text(std::string const& text)
 {
 	this->text_ = text;
 	this->textImage_.reset();
@@ -90,20 +90,20 @@ void Button::onClick()
 
 }
 
-bool Button::onDownRaw(const float timeMs, const geom::Point& ptInScreen)
+bool Button::onDownRaw(const float timeMs, geom::Point const& ptInScreen)
 {
 	++this->pushedCnt_;
 	return false;
 }
 
-bool Button::onUpRaw(const float timeMs, const geom::Point& ptInScreen)
+bool Button::onUpRaw(const float timeMs, geom::Point const& ptInScreen)
 {
 	--this->pushedCnt_;
 	return false;
 }
 
 
-bool Button::onSingleTapUp(const float timeMs, const geom::Point& ptInScreen)
+bool Button::onSingleTapUp(const float timeMs, geom::Point const& ptInScreen)
 {
 	geom::Area a(this->drawnArea().point()+this->renderOffset_, this->textImage()->size());
 	if(a.contain(ptInScreen)){

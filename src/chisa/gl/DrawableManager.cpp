@@ -21,7 +21,7 @@
 namespace chisa {
 namespace gl {
 
-DrawableManager::DrawableManager(logging::Logger& log, const DrawableSetting& setting)
+DrawableManager::DrawableManager(logging::Logger& log, DrawableSetting const& setting)
 :log_(log)
 ,spriteManager_(new gl::internal::SpriteManager(log))
 ,imageManager_(new gl::internal::ImageManager(log, this->spriteManager_))
@@ -39,12 +39,12 @@ Handler<Sprite> DrawableManager::queryRawSprite(const int width, const int heigh
 	return this->spriteManager_->queryRawSprite(width, height);
 }
 
-Handler<Sprite> DrawableManager::queryImage(const std::string& filename)
+Handler<Sprite> DrawableManager::queryImage(std::string const& filename)
 {
 	return this->imageManager_->queryImage(filename);
 }
 
-Handler<Drawable> DrawableManager::queryDrawable(const std::string& repl, const geom::Box& box)
+Handler<Drawable> DrawableManager::queryDrawable(std::string const& repl, geom::Box const& box)
 {
 	for(std::pair<std::string, constructor> p : this->factories_){
 		if(util::startsWith(repl, p.first)){
@@ -56,12 +56,12 @@ Handler<Drawable> DrawableManager::queryDrawable(const std::string& repl, const 
 	return NullDrawable::create(this->self(), box, repl);
 }
 
-Handler<Font> DrawableManager::queryFont(const std::string& name)
+Handler<Font> DrawableManager::queryFont(std::string const& name)
 {
 	return this->fontManager_->queryFont(name);
 }
 
-Handler<TextDrawable> DrawableManager::queryText(const std::string& str, const float size, Handler<Font> font, TextDrawable::Style style, TextDrawable::Decoration deco, const gl::Color& color, const gl::Color& backColor)
+Handler<TextDrawable> DrawableManager::queryText(std::string const& str, const float size, Handler<Font> font, TextDrawable::Style style, TextDrawable::Decoration deco, gl::Color const& color, gl::Color const& backColor)
 {
 	if(font){
 		font = this->fontManager_->queryFont();
@@ -69,7 +69,7 @@ Handler<TextDrawable> DrawableManager::queryText(const std::string& str, const f
 	return TextDrawable::create(this->self(), str, false, size, font, style, deco, color, backColor);
 }
 
-Handler<TextDrawable> DrawableManager::queryVerticalText(const std::string& str, const float size, Handler<Font> font, TextDrawable::Style style, TextDrawable::Decoration deco, const gl::Color& color, const gl::Color& backColor)
+Handler<TextDrawable> DrawableManager::queryVerticalText(std::string const& str, const float size, Handler<Font> font, TextDrawable::Style style, TextDrawable::Decoration deco, gl::Color const& color, gl::Color const& backColor)
 {
 	if(font){
 		font = this->fontManager_->queryFont();

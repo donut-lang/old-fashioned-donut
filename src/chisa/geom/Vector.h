@@ -23,9 +23,9 @@
 
 #define SETUP(Klass)\
 public:\
-	constexpr Klass(const Klass& o) noexcept = default;\
+	constexpr Klass(Klass const& o) noexcept = default;\
 	constexpr Klass(Klass&& o) noexcept = default;\
-	Klass& operator=(const Klass& o) noexcept = default;\
+	Klass& operator=(Klass const& o) noexcept = default;\
 	Klass& operator=(Klass&& o) noexcept = default;\
 	Klass() noexcept = default;\
 	constexpr explicit Klass(const float x, const float y) noexcept:BaseVector<Klass, Klass::ValType>(x,y){};\
@@ -34,7 +34,7 @@ public:\
 	void operator delete(void* pv) = delete;
 
 #define ENABLE_CAST(Klass, From)\
-	implicit constexpr Klass(const From& o) noexcept:BaseVector<Klass>(o){};
+	implicit constexpr Klass(From const& o) noexcept:BaseVector<Klass>(o){};
 
 #define ENABLE_UNARY_OP(Klass)\
 	inline constexpr Klass operator-() const noexcept{\
@@ -50,52 +50,52 @@ public:\
 
 #define ENABLE_PLUS(Klass,OtherKlass,Result) \
 public:\
-	inline constexpr Result operator+(const OtherKlass& b) const noexcept{\
+	inline constexpr Result operator+(OtherKlass const& b) const noexcept{\
 		return this->operator_add<Result, OtherKlass>(b);\
 	};\
 
 #define ENABLE_MINUS(Klass,OtherKlass,Result) \
 public:\
-	inline constexpr Result operator-(const OtherKlass& b) const noexcept{\
+	inline constexpr Result operator-(OtherKlass const& b) const noexcept{\
 		return this->operator_minus<Result, OtherKlass>(b);\
 	};
 
 #define ENABLE_PM_ASSIGN(Klass,OtherKlass)\
 	public:\
-	inline Klass& operator+=(const OtherKlass& b) noexcept {\
+	inline Klass& operator+=(OtherKlass const& b) noexcept {\
 			return operator_add_assign(*this, b);\
 	};\
-	inline Klass& operator-=(const OtherKlass& b) noexcept {\
+	inline Klass& operator-=(OtherKlass const& b) noexcept {\
 			return operator_minus_assign(*this, b);\
 	};
 #define ENABLE_MD(Klass,OtherKlass,Result)\
 	public:\
-	inline constexpr Result operator*(const OtherKlass& b) const noexcept{\
+	inline constexpr Result operator*(OtherKlass const& b) const noexcept{\
 		return this->operator_mult<Result, OtherKlass>(b);\
 	};\
-	inline Result operator/(const OtherKlass& b) const noexcept{\
+	inline Result operator/(OtherKlass const& b) const noexcept{\
 		return this->operator_div<Result, OtherKlass>(b);\
 	};
 #define ENABLE_MD_ASSIGN(Klass,OtherKlass)\
 	public:\
-	inline Klass& operator*=(const OtherKlass& b) noexcept {\
+	inline Klass& operator*=(OtherKlass const& b) noexcept {\
 		return Klass::operator_mult_assign(*this, b);\
 	};\
-	inline Klass& operator/=(const OtherKlass& b) noexcept {\
+	inline Klass& operator/=(OtherKlass const& b) noexcept {\
 		return Klass::operator_div_assign(*this, b);\
 	};
 #define ENABLE_MD_FLOAT(Klass)\
 	public:\
-	inline constexpr Klass operator*(const float& b) const noexcept{\
+	inline constexpr Klass operator*(float const& b) const noexcept{\
 		return this->operator_mult(b);\
 	};\
-	inline constexpr Klass operator/(const float& b) const noexcept{\
+	inline constexpr Klass operator/(float const& b) const noexcept{\
 		return this->operator_div(b);\
 	};\
-	inline Klass& operator*=(const float& b) noexcept {\
+	inline Klass& operator*=(float const& b) noexcept {\
 		return Klass::operator_mult_assign(*this, b);\
 	};\
-	inline Klass& operator/=(const float& b) noexcept {\
+	inline Klass& operator/=(float const& b) noexcept {\
 		return Klass::operator_div_assign(*this, b);\
 	};
 
@@ -142,21 +142,21 @@ protected:
 	~BaseVector() noexcept = default;
 	typedef Val ValType;
 public:
-	inline Self& operator=(const Self& other) noexcept {
+	inline Self& operator=(Self const& other) noexcept {
 		this->x_ = other.x_;
 		this->y_ = other.y_;
 		return *this;
 	}
-	inline constexpr bool operator==(const Self& other) const noexcept{
+	inline constexpr bool operator==(Self const& other) const noexcept{
 		return this->x_ == other.x_ && this->y_ == other.y_;
 	}
-	inline constexpr bool operator!=(const Self& other) const noexcept{
+	inline constexpr bool operator!=(Self const& other) const noexcept{
 		return !(*this==other);
 	}
 #ifdef near
 #undef near
 #endif
-	inline constexpr bool near(const Self& other, const float precision) const noexcept{
+	inline constexpr bool near(Self const& other, const float precision) const noexcept{
 		return
 				std::fabs(this->x_ - other.x_) < precision &&
 				std::fabs(this->y_ - other.y_) < precision;
@@ -201,7 +201,7 @@ protected:
 	inline constexpr R operator_mult(const BaseVector<T, U>& other) const noexcept {
 		return R(this->x_*other.x_, this->y_*other.y_);
 	}
-	inline constexpr Self operator_mult(const float& other) const noexcept {
+	inline constexpr Self operator_mult(float const& other) const noexcept {
 		return Self(this->x_*other, this->y_*other);
 	}
 	template <typename T, typename U>
@@ -214,7 +214,7 @@ protected:
 	inline constexpr R operator_mult(float const ratio) const noexcept {
 		return R(this->x_*ratio, this->y_*ratio);
 	}
-	static inline Self& operator_mult_assign(Self& self, const float& ratio) noexcept {
+	static inline Self& operator_mult_assign(Self& self, float const& ratio) noexcept {
 		self.x_*=ratio;
 		self.y_*=ratio;
 		return self;
@@ -232,7 +232,7 @@ protected:
 		self.y_/=other.y_;
 		return self;
 	}
-	static inline Self& operator_div_assign(Self& self, const float& ratio) noexcept {
+	static inline Self& operator_div_assign(Self& self, float const& ratio) noexcept {
 		self.x_/=ratio;
 		self.y_/=ratio;
 		return self;
@@ -264,7 +264,7 @@ public:
 	ENABLE_MD(Vector, ScaleVector, Vector);
 	ENABLE_MD_ASSIGN(Vector, ScaleVector);
 	ENABLE_MD_FLOAT(Vector);
-	inline constexpr bool near(const Vector& other, const ValType precision) const noexcept{
+	inline constexpr bool near(Vector const& other, const ValType precision) const noexcept{
 		return
 				std::fabs(this->x() - other.x()) < precision &&
 				std::fabs(this->y() - other.y()) < precision;
@@ -309,7 +309,7 @@ public:
 	inline std::string toString() const{
 		return util::format("(Velocity %f %f)", this->x(), this->y());
 	}
-	inline constexpr Velocity(const Vector& dist, const float time):BaseVector<Velocity, float>(dist/time){}
+	inline constexpr Velocity(Vector const& dist, const float time):BaseVector<Velocity, float>(dist/time){}
 	ENABLE_UNARY_OP(Velocity);
 	ENABLE_PM(Velocity, Velocity, Velocity);
 	ENABLE_PM_ASSIGN(Velocity, Velocity);

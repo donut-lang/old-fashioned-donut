@@ -30,11 +30,11 @@ class Hexe {
 	DEFINE_MEMBER_REF(protected, logging::Logger, log);
 	DEFINE_MEMBER_CONST(protected, std::string, basepath);
 public:
-	Hexe(logging::Logger& log, const std::string& basepath);
+	Hexe(logging::Logger& log, std::string const& basepath);
 	virtual ~Hexe();
 	virtual std::string toString() const;
 	template <typename... Args>
-	constexpr std::string resolveFilepath(const Args&... path) const noexcept
+	constexpr std::string resolveFilepath(Args const&... path) const noexcept
 	{
 		return util::file::join(this->basepath(), path...);
 	}
@@ -43,7 +43,7 @@ public:
 	virtual void registerWidgets(tk::widget::WidgetFactory& factory){};
 	virtual void registerElements(tk::element::ElementFactory& factory){};
 public:
-	virtual std::shared_ptr<WorldGeist> invokeWorldGeist(std::weak_ptr<chisa::tk::World> world, const std::string& nameOfGeist) = 0;
+	virtual std::shared_ptr<WorldGeist> invokeWorldGeist(std::weak_ptr<chisa::tk::World> world, std::string const& nameOfGeist) = 0;
 };
 
 class WorldGeist {

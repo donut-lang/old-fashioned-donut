@@ -44,17 +44,17 @@ std::string Empty::toString() const
 	return util::format("(Empty %p)",this);
 }
 
-void Empty::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
+void Empty::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
 {
 	//何も描画しない
 }
 
-geom::Box Empty::onMeasure(const geom::Box& constraint)
+geom::Box Empty::onMeasure(geom::Box const& constraint)
 {
 	return geom::Box(geom::Unspecified, geom::Unspecified);
 }
 
-void Empty::onLayout(const geom::Box& size)
+void Empty::onLayout(geom::Box const& size)
 {
 	//何もしない
 }

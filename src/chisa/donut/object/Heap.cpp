@@ -23,7 +23,7 @@ namespace donut {
 
 const static std::string TAG("Heap");
 
-Heap::Heap(logging::Logger& log, const Handler<Clock>& clock)
+Heap::Heap(logging::Logger& log, Handler<Clock> const& clock)
 :log_(log)
 ,clock_(clock)
 ,objectId_(0)
@@ -47,7 +47,7 @@ bool Heap::onFree() noexcept
 	return false;
 }
 
-Handler<HeapObjectProvider> Heap::findHeapProvider( const std::string& name ) const
+Handler<HeapObjectProvider> Heap::findHeapProvider( std::string const& name ) const
 {
 	auto it = this->providers_.find(name);
 	if(it != this->providers_.end()){
@@ -57,7 +57,7 @@ Handler<HeapObjectProvider> Heap::findHeapProvider( const std::string& name ) co
 	return Handler<HeapObjectProvider>();
 }
 
-Handler<Provider> Heap::findProvider( const std::string& name ) const
+Handler<Provider> Heap::findProvider( std::string const& name ) const
 {
 	auto it = findHeapProvider(name);
 	if(it){
@@ -92,7 +92,7 @@ void Heap::unregisterSource( Source* source )
 	this->sourcePool_.erase(it);
 }
 
-void Heap::registerObject( const Handler<HeapObject>& obj )
+void Heap::registerObject( Handler<HeapObject> const& obj )
 {
 	obj->id(++this->objectId_);
 	this->objectPool_.push_back(obj.get());
@@ -158,7 +158,7 @@ Handler<DonutObject> Heap::createEmptyDonutObject()
 }
 class DonutObject;
 
-Handler<StringObject> Heap::createStringObject(const std::string& val)
+Handler<StringObject> Heap::createStringObject(std::string const& val)
 {
 	Handler<StringObject> obj(this->stringProvider_->createDerived());
 	obj->bootstrap(self(), val);
@@ -167,7 +167,7 @@ Handler<StringObject> Heap::createStringObject(const std::string& val)
 	return obj;
 }
 
-Handler<FloatObject> Heap::createFloatObject(const float& val)
+Handler<FloatObject> Heap::createFloatObject(float const& val)
 {
 	Handler<FloatObject> obj(this->floatProvider_->createDerived());
 	obj->bootstrap(self(), val);
@@ -176,7 +176,7 @@ Handler<FloatObject> Heap::createFloatObject(const float& val)
 	return obj;
 }
 
-Handler<DonutClosureObject> Heap::createDonutClosureObject( const Handler<Source>& src, unsigned int const& closureIndex, const Handler<Object>& scope )
+Handler<DonutClosureObject> Heap::createDonutClosureObject( Handler<Source> const& src, unsigned int const& closureIndex, Handler<Object> const& scope )
 {
 	Handler<DonutClosureObject> obj(this->donutClosureObjectProvider_->createDerived());
 	obj->bootstrap(self(), src, closureIndex, scope);
@@ -185,7 +185,7 @@ Handler<DonutClosureObject> Heap::createDonutClosureObject( const Handler<Source
 	return obj;
 }
 
-Handler<PureNativeClosureObject> Heap::createPureNativeClosureObject(const std::string& objectProviderName, const std::string& closureName, PureNativeClosureObject::Signature f)
+Handler<PureNativeClosureObject> Heap::createPureNativeClosureObject(std::string const& objectProviderName, std::string const& closureName, PureNativeClosureObject::Signature f)
 {
 	Handler<PureNativeClosureObject> obj(this->pureNativeClosureProvider_->createDerived());
 	obj->bootstrap(objectProviderName, closureName, f);
@@ -194,7 +194,7 @@ Handler<PureNativeClosureObject> Heap::createPureNativeClosureObject(const std::
 	return obj;
 }
 
-Handler<ReactiveNativeClosureObject> Heap::createReactiveNativeClosureObject(const std::string& objectProviderName, const std::string& closureName, ReactiveNativeClosureObject::Signature f)
+Handler<ReactiveNativeClosureObject> Heap::createReactiveNativeClosureObject(std::string const& objectProviderName, std::string const& closureName, ReactiveNativeClosureObject::Signature f)
 {
 	Handler<ReactiveNativeClosureObject> obj(this->reactiveNativeClosureProvider_->createDerived());
 	obj->bootstrap(objectProviderName, closureName, f);
@@ -202,12 +202,12 @@ Handler<ReactiveNativeClosureObject> Heap::createReactiveNativeClosureObject(con
 
 	return obj;
 }
-Handler<Object> Heap::createInt(const int& val)
+Handler<Object> Heap::createInt(int const& val)
 {
 	return this->intProvider()->create(val);
 }
 
-Handler<Object> Heap::createBool(const bool& val)
+Handler<Object> Heap::createBool(bool const& val)
 {
 	return this->boolProvider()->create(val);
 }

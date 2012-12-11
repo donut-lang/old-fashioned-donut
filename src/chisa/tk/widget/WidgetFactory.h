@@ -51,13 +51,13 @@ public:
 	WidgetFactory(logging::Logger& log, std::weak_ptr<World> world);
 	virtual ~WidgetFactory();
 public:
-	void registerWidget(const std::string& klass, std::function<Widget*(logging::Logger& log, std::weak_ptr<World> world, tinyxml2::XMLElement* elem)> func);
+	void registerWidget(std::string const& klass, std::function<Widget*(logging::Logger& log, std::weak_ptr<World> world, tinyxml2::XMLElement* elem)> func);
 	template <typename WidgetKlass>
-	void registerWidget(const std::string& klass) {
+	void registerWidget(std::string const& klass) {
 		this->registerWidget(klass, widgetConstructor<WidgetKlass>);
 	}
 
-	Widget* createWidget(const std::string& klass, tinyxml2::XMLElement* elem);
+	Widget* createWidget(std::string const& klass, tinyxml2::XMLElement* elem);
 };
 
 }}}

@@ -37,9 +37,9 @@ public:
 
 #define DISABLE_COPY_AND_ASSIGN(klass)\
 private:\
-	klass(const klass& other) = delete;\
+	klass(klass const& other) = delete;\
 	klass(klass&& other) = delete;\
-	klass& operator=(const klass& other) = delete;\
+	klass& operator=(klass const& other) = delete;\
 	klass& operator=(klass&& other) = delete;
 
 #define STACK_OBJECT(Klass)\

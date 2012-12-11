@@ -34,9 +34,9 @@ private:
 	explicit Parser(ParserImpl* impl);
 public:
 	~Parser();
-	static std::shared_ptr<Parser> fromFile(const std::string& filename);
-	static std::shared_ptr<Parser> fromString(const std::string& src, const std::string& filename="<ON MEMORY>", int line=0);
-	static std::shared_ptr<Parser> fromStream(std::istream& stream_, const std::string& filename);
+	static std::shared_ptr<Parser> fromFile(std::string const& filename);
+	static std::shared_ptr<Parser> fromString(std::string const& src, std::string const& filename="<ON MEMORY>", int line=0);
+	static std::shared_ptr<Parser> fromStream(std::istream& stream_, std::string const& filename);
 	Handler<donut::Source> parseProgram();
 };
 

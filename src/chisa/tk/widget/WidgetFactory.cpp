@@ -38,12 +38,12 @@ WidgetFactory::~WidgetFactory()
 {
 }
 
-void WidgetFactory::registerWidget(const std::string& klass, std::function<Widget*(logging::Logger& log, std::weak_ptr<World> world, tinyxml2::XMLElement* elem)> func)
+void WidgetFactory::registerWidget(std::string const& klass, std::function<Widget*(logging::Logger& log, std::weak_ptr<World> world, tinyxml2::XMLElement* elem)> func)
 {
 	this->widgetMap_.update(klass, func);
 }
 
-Widget* WidgetFactory::createWidget(const std::string& klass, tinyxml2::XMLElement* elem)
+Widget* WidgetFactory::createWidget(std::string const& klass, tinyxml2::XMLElement* elem)
 {
 	auto it = this->widgetMap_.find(klass);
 	if(it == this->widgetMap_.end()){

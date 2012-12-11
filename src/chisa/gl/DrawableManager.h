@@ -39,12 +39,12 @@ namespace gl {
 class DrawableSetting {
 	DEFINE_MEMBER(public, public, std::string, fontdir);
 public:
-	DrawableSetting( const DrawableSetting& other) = default;
+	DrawableSetting( DrawableSetting const& other) = default;
 	DrawableSetting( DrawableSetting&& other) = default;
-	DrawableSetting& operator=( const DrawableSetting& other) = default;
+	DrawableSetting& operator=( DrawableSetting const& other) = default;
 	DrawableSetting& operator=( DrawableSetting&& other) = default;
 	~DrawableSetting() noexcept = default;
-	DrawableSetting( const std::string& fontdir ):fontdir_(fontdir){};
+	DrawableSetting( std::string const& fontdir ):fontdir_(fontdir){};
 };
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -52,37 +52,37 @@ public:
 class DrawableManager : public HandlerBody<DrawableManager> {
 	DEFINE_MEMBER_REF(private, logging::Logger, log);
 private:
-	typedef std::function<Handler<Drawable>(HandlerW<DrawableManager>, const geom::Box&, const std::string&)> constructor;
+	typedef std::function<Handler<Drawable>(HandlerW<DrawableManager>, geom::Box const&, std::string const&)> constructor;
 	util::VectorMap<std::string, constructor> factories_;
 private:
 	Handler<internal::SpriteManager> spriteManager_;
 	Handler<internal::ImageManager> imageManager_;
 	Handler<internal::FontManager> fontManager_;
 public:
-	DrawableManager(logging::Logger& log, const DrawableSetting& setting);
+	DrawableManager(logging::Logger& log, DrawableSetting const& setting);
 	virtual ~DrawableManager() noexcept = default;
 public:
 	Handler<Sprite> queryRawSprite(const int width, const int height);
-	Handler<Sprite> queryImage(const std::string& filename);
-	Handler<Drawable> queryDrawable(const std::string& repl, const geom::Box& box=geom::Box());
-	Handler<Font> queryFont( const std::string& name = std::string() );
+	Handler<Sprite> queryImage(std::string const& filename);
+	Handler<Drawable> queryDrawable(std::string const& repl, geom::Box const& box=geom::Box());
+	Handler<Font> queryFont( std::string const& name = std::string() );
 	Handler<TextDrawable> queryText(
-			const std::string& str,
+			std::string const& str,
 			const float size=TextDrawable::DefaultFontSize,
 			Handler<Font> font=Handler<Font>(),
 			TextDrawable::Style style=TextDrawable::Style::Regular,
 			TextDrawable::Decoration deco=TextDrawable::Decoration::None,
-			const gl::Color& color=gl::Black,
-			const gl::Color& backColor=gl::Transparent
+			gl::Color const& color=gl::Black,
+			gl::Color const& backColor=gl::Transparent
 		);
 	Handler<TextDrawable> queryVerticalText(
-			const std::string& str,
+			std::string const& str,
 			const float size=TextDrawable::DefaultFontSize,
 			Handler<Font> font=Handler<Font>(),
 			TextDrawable::Style style=TextDrawable::Style::Regular,
 			TextDrawable::Decoration deco=TextDrawable::Decoration::None,
-			const gl::Color& color=gl::Black,
-			const gl::Color& backColor=gl::Transparent
+			gl::Color const& color=gl::Black,
+			gl::Color const& backColor=gl::Transparent
 		);
 public:
 	bool onFree() noexcept { return false; };

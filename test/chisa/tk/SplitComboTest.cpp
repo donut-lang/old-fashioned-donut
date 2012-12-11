@@ -41,7 +41,7 @@ public:
 	}
 };
 
-static XMLElement* addHorizontalChild(XMLDocument& doc, XMLElement* horizontal, const string& elemname, float weight=geom::Unspecified, float min=geom::Unspecified, float max=geom::Unspecified)
+static XMLElement* addHorizontalChild(XMLDocument& doc, XMLElement* horizontal, string const& elemname, float weight=geom::Unspecified, float min=geom::Unspecified, float max=geom::Unspecified)
 {
 	XMLElement* elem = doc.NewElement(elemname.c_str());
 	elem->SetAttribute("split-weight", weight);
@@ -55,7 +55,7 @@ static XMLElement* addHorizontalChild(XMLDocument& doc, XMLElement* horizontal, 
 	return elem;
 }
 
-static XMLElement* newHorizontalChild(XMLDocument& doc, const std::string& id)
+static XMLElement* newHorizontalChild(XMLDocument& doc, std::string const& id)
 {
 	XMLElement* elem = doc.NewElement("horizontal");
 	elem->SetAttribute("id", id.c_str());

@@ -34,7 +34,7 @@ private:
 	Closure& operator=(Closure const& other) = delete;
 	Closure& operator=(Closure&& other) = delete;
 public:
-	Closure(const std::vector<std::string>& arglist, const std::vector<donut::Instruction>& instlist);
+	Closure(std::vector<std::string> const& arglist, std::vector<donut::Instruction> const& instlist);
 	Closure(util::XValue const& data);
 	util::XValue save();
 	virtual ~Closure() noexcept = default;

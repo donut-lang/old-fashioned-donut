@@ -48,7 +48,7 @@ public:
 private:
 	std::ostream& _stream;
 	enum Level level;
-	void msg(enum Level level, const std::string& tag, const std::string& fmt, std::va_list args);
+	void msg(enum Level level, std::string const& tag, std::string const& fmt, std::va_list args);
 public:
 	Logger(std::ostream& stream, enum Level level) noexcept;
 	~Logger() noexcept = default;
@@ -56,15 +56,15 @@ public:
 	std::ostream& stream() const noexcept{ return _stream; };
 public:
 	bool t() const noexcept;
-	void t(const std::string& tag, const std::string& fmt, ...);
+	void t(std::string const& tag, std::string const& fmt, ...);
 	bool v() const noexcept;
-	void v(const std::string& tag, const std::string& fmt, ...);
+	void v(std::string const& tag, std::string const& fmt, ...);
 	bool d() const noexcept;
-	void d(const std::string& tag, const std::string& fmt, ...);
+	void d(std::string const& tag, std::string const& fmt, ...);
 	bool i() const noexcept;
-	void i(const std::string& tag, const std::string& fmt, ...);
-	void w(const std::string& tag, const std::string& fmt, ...);
-	void e(const std::string& tag, const std::string& fmt, ...);
+	void i(std::string const& tag, std::string const& fmt, ...);
+	void w(std::string const& tag, std::string const& fmt, ...);
+	void e(std::string const& tag, std::string const& fmt, ...);
 };
 
 }}

@@ -23,19 +23,19 @@ namespace donut {
 namespace native {
 
 template <>
-int decode<int>(const Handler<Heap>& heap, Handler<Object> obj)
+int decode<int>(Handler<Heap> const& heap, Handler<Object> obj)
 {
 	return obj->toInt(heap);
 }
 
 template <>
-float decode<float>(const Handler<Heap>& heap, Handler<Object> obj)
+float decode<float>(Handler<Heap> const& heap, Handler<Object> obj)
 {
 	return obj->toFloat(heap);
 }
 
 template <>
-bool decode<bool>(const Handler<Heap>& heap, Handler<Object> obj)
+bool decode<bool>(Handler<Heap> const& heap, Handler<Object> obj)
 {
 	return obj->toBool(heap);
 }

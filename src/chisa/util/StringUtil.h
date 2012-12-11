@@ -26,8 +26,8 @@
 namespace chisa {
 namespace util {
 
-std::string format(const std::string& fmt, ...);
-std::string formatv(const std::string& fmt, va_list args);
+std::string format(std::string const& fmt, ...);
+std::string formatv(std::string const& fmt, va_list args);
 #define TOSTR_DEF(type) std::string toString(type const& val, int radix=10);
 TOSTR_DEF(int);
 TOSTR_DEF(unsigned int);
@@ -39,31 +39,31 @@ TOSTR_DEF(unsigned long long int);
 std::string toString(const float val);
 std::string toString(const double val);
 std::string toString(const bool val);
-std::string toLower(const std::string& str);
-std::string toUpper(const std::string& str);
+std::string toLower(std::string const& str);
+std::string toUpper(std::string const& str);
 
 template <typename T>
-T parseAsInt(const std::string& str, int radix=0, bool* succeed=nullptr);
+T parseAsInt(std::string const& str, int radix=0, bool* succeed=nullptr);
 template <typename T>
-T parseAs(const std::string& str, bool* succeed=nullptr);
+T parseAs(std::string const& str, bool* succeed=nullptr);
 
-std::string encodeBase64( const std::vector<char>& data );
-std::string encodeBase64( const std::string& data );
+std::string encodeBase64( std::vector<char> const& data );
+std::string encodeBase64( std::string const& data );
 std::string encodeBase64( const char* data, const std::size_t length);
-std::vector<char> decodeBase64( const std::string& str );
-std::string decodeBase64AsString( const std::string& str );
+std::vector<char> decodeBase64( std::string const& str );
+std::string decodeBase64AsString( std::string const& str );
 
-std::string decodePercent(const std::string& str);
-void split(const std::string& str, const std::string& sep, std::vector<std::string>& list);
-void split(const std::string& str, const std::string* sep, size_t n, std::vector<std::string>& list);
+std::string decodePercent(std::string const& str);
+void split(std::string const& str, std::string const& sep, std::vector<std::string>& list);
+void split(std::string const& str, const std::string* sep, size_t n, std::vector<std::string>& list);
 template <size_t N>
-void split(const std::string& str, const std::string (&sep)[N], std::vector<std::string>& list)
+void split(std::string const& str, const std::string (&sep)[N], std::vector<std::string>& list)
 {
 	split(str, sep, N, list);
 }
-void splitSpace(const std::string& str, std::vector<std::string>& list);
-void splitLine(const std::string& str, std::vector<std::string>& list);
-bool startsWith(const std::string& target, const std::string& prefix);
-bool endsWith(const std::string& target, const std::string& suffix);
+void splitSpace(std::string const& str, std::vector<std::string>& list);
+void splitLine(std::string const& str, std::vector<std::string>& list);
+bool startsWith(std::string const& target, std::string const& prefix);
+bool endsWith(std::string const& target, std::string const& suffix);
 
 }}

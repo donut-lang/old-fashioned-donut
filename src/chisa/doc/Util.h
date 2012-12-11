@@ -23,7 +23,7 @@
 namespace chisa {
 namespace doc {
 
-std::string shrinkSpace(const std::string& str);
-std::vector<std::string> breakLine(const std::string& str_);
+std::string shrinkSpace(std::string const& str);
+std::vector<std::string> breakLine(std::string const& str_);
 
 }}

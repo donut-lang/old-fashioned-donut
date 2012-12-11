@@ -26,7 +26,7 @@ namespace tk {
 
 static const std::string TAG("GestureSession");
 
-GestureSession::GestureSession(logging::Logger& log, const unsigned int pointerIndex, std::weak_ptr<Element> targetElement, const geom::Point& startPoint, const float startTimeMs)
+GestureSession::GestureSession(logging::Logger& log, const unsigned int pointerIndex, std::weak_ptr<Element> targetElement, geom::Point const& startPoint, const float startTimeMs)
 :log_(log)
 ,target_(targetElement)
 ,pointerIndex_(pointerIndex)
@@ -67,7 +67,7 @@ GestureSession::~GestureSession()
 {
 }
 
-void GestureSession::onTouchUp(const float timeMs, const geom::Point& pt)
+void GestureSession::onTouchUp(const float timeMs, geom::Point const& pt)
 {
 	this->lastTimeMs_ = timeMs;
 	this->lastPoint_ = pt;
@@ -89,7 +89,7 @@ void GestureSession::onTouchUp(const float timeMs, const geom::Point& pt)
 	}
 }
 
-void GestureSession::onTouchMove(const float timeMs, const geom::Point& pt)
+void GestureSession::onTouchMove(const float timeMs, geom::Point const& pt)
 {
 	this->invokeMoveRaw(timeMs, pt);
 	this->invokeScroll(timeMs, this->lastPoint_, pt, pt-this->lastPoint_);
@@ -98,7 +98,7 @@ void GestureSession::onTouchMove(const float timeMs, const geom::Point& pt)
 	this->lastPoint_ = pt;
 }
 
-void GestureSession::invokeDownRaw(const float timeMs, const geom::Point& pt)
+void GestureSession::invokeDownRaw(const float timeMs, geom::Point const& pt)
 {
 	for(std::weak_ptr<Element> const& it : this->elementChain_) {
 		if(std::shared_ptr<Element> target = it.lock()){
@@ -112,7 +112,7 @@ void GestureSession::invokeDownRaw(const float timeMs, const geom::Point& pt)
 	}
 }
 
-void GestureSession::invokeUpRaw(const float timeMs, const geom::Point& pt)
+void GestureSession::invokeUpRaw(const float timeMs, geom::Point const& pt)
 {
 	for(std::weak_ptr<Element> const& it : this->elementChain_) {
 		if(std::shared_ptr<Element> target = it.lock()){
@@ -126,7 +126,7 @@ void GestureSession::invokeUpRaw(const float timeMs, const geom::Point& pt)
 	}
 }
 
-void GestureSession::invokeMoveRaw(const float timeMs, const geom::Point& pt)
+void GestureSession::invokeMoveRaw(const float timeMs, geom::Point const& pt)
 {
 	for(std::weak_ptr<Element> const& it : this->elementChain_) {
 		if(std::shared_ptr<Element> target = it.lock()){
@@ -137,7 +137,7 @@ void GestureSession::invokeMoveRaw(const float timeMs, const geom::Point& pt)
 	}
 }
 
-void GestureSession::invokeFling(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Velocity& velocity)
+void GestureSession::invokeFling(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity)
 {
 	for(std::weak_ptr<Element> const& it : this->elementChain_) {
 		if(std::shared_ptr<Element> target = it.lock()){
@@ -148,7 +148,7 @@ void GestureSession::invokeFling(const float timeMs, const geom::Point& start, c
 	}
 }
 
-void GestureSession::invokeScroll(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Distance& distance)
+void GestureSession::invokeScroll(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance)
 {
 	for(std::weak_ptr<Element> const& it : this->elementChain_) {
 		if(std::shared_ptr<Element> target = it.lock()){
@@ -159,7 +159,7 @@ void GestureSession::invokeScroll(const float timeMs, const geom::Point& start, 
 	}
 }
 
-void GestureSession::invokeZoom(const float timeMs, const geom::Point& center, const float ratio)
+void GestureSession::invokeZoom(const float timeMs, geom::Point const& center, const float ratio)
 {
 	for(std::weak_ptr<Element> const& it : this->elementChain_) {
 		if(std::shared_ptr<Element> target = it.lock()){

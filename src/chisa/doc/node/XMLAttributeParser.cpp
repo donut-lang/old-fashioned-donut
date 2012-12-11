@@ -23,7 +23,7 @@ namespace util {
 namespace xml {
 
 using namespace chisa::doc;
-template <> void parseAttr<BlockNode::Direction>(const std::string& name, BlockNode::Direction& v, const BlockNode::Direction& def, tinyxml2::XMLElement* elm)
+template <> void parseAttr<BlockNode::Direction>(std::string const& name, BlockNode::Direction& v, BlockNode::Direction const& def, tinyxml2::XMLElement* elm)
 {
 	if(const char* c = elm->Attribute(name.c_str())){
 		std::string val(c);

@@ -30,7 +30,7 @@ NesMemoryWidget::~NesMemoryWidget()
 {
 }
 
-void NesMemoryWidget::render(chisa::gl::Canvas& cv, const chisa::geom::Area& area)
+void NesMemoryWidget::render(chisa::gl::Canvas& cv, chisa::geom::Area const& area)
 {
 }
 
@@ -38,11 +38,11 @@ void NesMemoryWidget::idle(const float delta_ms)
 {
 }
 
-void NesMemoryWidget::reshape(const chisa::geom::Box& areaSize)
+void NesMemoryWidget::reshape(chisa::geom::Box const& areaSize)
 {
 }
 
-chisa::geom::Box NesMemoryWidget::measure(const chisa::geom::Box& constraintSize)
+chisa::geom::Box NesMemoryWidget::measure(chisa::geom::Box const& constraintSize)
 {
 	return constraintSize;
 }

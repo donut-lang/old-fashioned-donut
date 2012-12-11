@@ -24,7 +24,7 @@
 namespace chisa {
 namespace doc {
 
-std::string shrinkSpace(const std::string& str_)
+std::string shrinkSpace(std::string const& str_)
 {
 	UErrorCode st = U_ZERO_ERROR;
 	UnicodeString str = UnicodeString::fromUTF8(str_);
@@ -36,7 +36,7 @@ std::string shrinkSpace(const std::string& str_)
 	return ret;
 }
 
-std::vector<std::string> breakLine(const std::string& str_)
+std::vector<std::string> breakLine(std::string const& str_)
 {
 	UErrorCode st = U_ZERO_ERROR;
 	BreakIterator* bi = BreakIterator::createLineInstance(Locale::getUS(), st);

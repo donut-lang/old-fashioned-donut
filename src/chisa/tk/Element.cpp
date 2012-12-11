@@ -55,12 +55,12 @@ void Element::loadXML(element::ElementFactory* const factory, tinyxml2::XMLEleme
 	this->loadXMLimpl(factory, element);
 }
 
-std::weak_ptr<Element> Element::getElementById(const std::string& id)
+std::weak_ptr<Element> Element::getElementById(std::string const& id)
 {
 	return id == this->id() ? this->self() : this->getElementByIdImpl(id);
 }
 
-std::weak_ptr<Element> Element::getElementByPoint(const geom::Vector& screenPoint)
+std::weak_ptr<Element> Element::getElementByPoint(geom::Vector const& screenPoint)
 {
 	if(!this->screenArea().contain(screenPoint)){
 		return std::weak_ptr<Element>();
@@ -82,11 +82,11 @@ std::string Element::toString() const
 	return util::format("(Layout %p)", this);
 }
 
-geom::Box Element::measure(const geom::Box& constraint)
+geom::Box Element::measure(geom::Box const& constraint)
 {
 	return this->onMeasure(constraint);
 }
-void Element::render(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
+void Element::render(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
 {
 	this->screenArea(screenArea);
 	this->drawnArea(area);
@@ -100,7 +100,7 @@ void Element::render(gl::Canvas& canvas, const geom::Area& screenArea, const geo
 	this->renderImpl(canvas, screenArea, area);
 }
 
-void Element::layout(const geom::Box& size)
+void Element::layout(geom::Box const& size)
 {
 	this->onLayout(size);
 	this->size(size);

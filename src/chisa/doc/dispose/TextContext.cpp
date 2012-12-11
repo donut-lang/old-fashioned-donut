@@ -99,7 +99,7 @@ void TextContext::popSize()
 	this->sizeStack_.pop_back();
 }
 
-void TextContext::pushColor(const gl::Color& c)
+void TextContext::pushColor(gl::Color const& c)
 {
 	this->colorStack_.push_back(c);
 }
@@ -113,7 +113,7 @@ void TextContext::popColor()
 }
 
 
-void TextContext::pushBackColor(const gl::Color& c)
+void TextContext::pushBackColor(gl::Color const& c)
 {
 	this->backColorStack_.push_back(c);
 }
@@ -139,7 +139,7 @@ void TextContext::popDeco()
 	this->decoStack_.pop_back();
 }
 
-void TextContext::pushFont( const std::string& name )
+void TextContext::pushFont( std::string const& name )
 {
 	this->fontStack_.push_back(name);
 	this->font_ = this->renderTree_->drawableManager()->queryFont(name);
@@ -172,7 +172,7 @@ void TextContext::popFont()
 	this->face_ = cairo_ft_font_face_create_for_ft_face(rfs.face(),0);
 }
 
-geom::Box TextContext::measure(const std::string& strUtf8)
+geom::Box TextContext::measure(std::string const& strUtf8)
 {
 	gl::TextDrawable::setupCairo(this->cairo_, this->face_, this->nullOption_, this->nowSize(), this->nowStyle());
 	cairo_text_extents_t ext;
@@ -182,7 +182,7 @@ geom::Box TextContext::measure(const std::string& strUtf8)
 	return size;
 }
 
-Handler<TextDrawableObject> TextContext::create(const std::string& strUtf8, Node* parentNode, const float relDepth )
+Handler<TextDrawableObject> TextContext::create(std::string const& strUtf8, Node* parentNode, const float relDepth )
 {
 	return Handler<TextDrawableObject> ( new TextDrawableObject (
 			this->renderTree_,

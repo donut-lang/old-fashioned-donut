@@ -76,7 +76,7 @@ std::string ScrollCombo::toString() const
 	return util::format("(ScrollCombo %p)", this);
 }
 
-void ScrollCombo::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
+void ScrollCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
 {
 	const geom::Area clipArea(this->scrollOffset_, this->size());
 	const geom::Area logicalArea(area.point()+this->scrollOffset_, area.box());
@@ -103,12 +103,12 @@ void ScrollCombo::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, c
 	}
 }
 
-geom::Box ScrollCombo::onMeasure(const geom::Box& constraint)
+geom::Box ScrollCombo::onMeasure(geom::Box const& constraint)
 {
 	return geom::Box(geom::Unspecified, geom::Unspecified);
 }
 
-void ScrollCombo::onLayout(const geom::Box& size)
+void ScrollCombo::onLayout(geom::Box const& size)
 {
 	if(this->child_){
 		geom::Box childBox((this->scrollMode_ & Horizontal) == Horizontal ? geom::Unspecified : size.width(), (this->scrollMode_ & Vertical) == Vertical ? geom::Unspecified : size.height());
@@ -140,7 +140,7 @@ void ScrollCombo::idle(const float delta_ms)
 	this->lastMovedFrom_ += delta_ms;
 }
 
-bool ScrollCombo::onScroll(const float timeMs, const geom::Point& start, const geom::Point& end, const geom::Distance& distance)
+bool ScrollCombo::onScroll(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance)
 {
 	if(this->scrollMode_ == Both){
 		this->scrollOffset_ -= distance;
@@ -154,7 +154,7 @@ bool ScrollCombo::onScroll(const float timeMs, const geom::Point& start, const g
 }
 
 
-std::weak_ptr<Element> ScrollCombo::getElementByIdImpl(const std::string& id)
+std::weak_ptr<Element> ScrollCombo::getElementByIdImpl(std::string const& id)
 {
 	if(this->child_){
 		return this->child_->getElementById(id);

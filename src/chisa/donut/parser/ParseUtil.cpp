@@ -37,7 +37,7 @@ const std::string createStringFromToken(pANTLR3_COMMON_TOKEN tok){
 	return createStringFromString(tok->getText(tok));
 }
 
-const std::string unescapeString(const std::string& str){
+const std::string unescapeString(std::string const& str){
 	std::stringstream ss;
 	size_t last = 0;
 	size_t idx;

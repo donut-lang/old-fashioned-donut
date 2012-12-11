@@ -23,48 +23,48 @@
 namespace chisa {
 namespace donut {
 
-NativeObject::NativeObject(const std::string& providerName)
+NativeObject::NativeObject(std::string const& providerName)
 :HeapObject(providerName)
 ,prototype_(nullptr)
 {
 }
 
-std::string NativeObject::toStringImpl(const Handler<Heap>& heap) const
+std::string NativeObject::toStringImpl(Handler<Heap> const& heap) const
 {
 	return util::format("(NativeObject %p)", this);
 }
 
-int NativeObject::toIntImpl(const Handler<Heap>& heap) const
+int NativeObject::toIntImpl(Handler<Heap> const& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to NativeObject to int.");
 }
 
-float NativeObject::toFloatImpl(const Handler<Heap>& heap) const
+float NativeObject::toFloatImpl(Handler<Heap> const& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to NativeObject to float.");
 }
 
-bool NativeObject::toBoolImpl(const Handler<Heap>& heap) const
+bool NativeObject::toBoolImpl(Handler<Heap> const& heap) const
 {
 	throw DonutException(__FILE__, __LINE__, "Failed to NativeObject to bool.");
 }
 
-bool NativeObject::hasImpl(const Handler<Heap>& heap, const std::string& name) const
+bool NativeObject::hasImpl(Handler<Heap> const& heap, std::string const& name) const
 {
 	return this->prototype_->has(heap, name);
 }
 
-bool NativeObject::hasOwnImpl(const Handler<Heap>& heap, const std::string& name) const
+bool NativeObject::hasOwnImpl(Handler<Heap> const& heap, std::string const& name) const
 {
 	return false;
 }
 
-Handler<Object> NativeObject::setImpl(const Handler<Heap>& heap, const std::string& name, Handler<Object> obj)
+Handler<Object> NativeObject::setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> obj)
 {
 	return obj;
 }
 
-Handler<Object> NativeObject::getImpl(const Handler<Heap>& heap, const std::string& name) const
+Handler<Object> NativeObject::getImpl(Handler<Heap> const& heap, std::string const& name) const
 {
 	return this->prototype_->get(heap, name);
 }

@@ -136,7 +136,7 @@ void VirtualMachine::loadCartridge(const char* filename)
 		throw;
 	}
 }
-void VirtualMachine::loadCartridge(const uint8_t* data, const uint32_t size,  const std::string& name)
+void VirtualMachine::loadCartridge(const uint8_t* data, const uint32_t size,  std::string const& name)
 {
 	if(this->cartridge){
 		delete this->cartridge;

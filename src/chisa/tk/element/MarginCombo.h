@@ -33,11 +33,11 @@ public:
 	virtual std::size_t getChildCount() const override;
 	virtual std::string toString() const override;
 private:
-	virtual void renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area) override;
-	virtual geom::Box onMeasure(const geom::Box& constraint) override;
-	virtual void onLayout(const geom::Box& size) override;
+	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override;
+	virtual geom::Box onMeasure(geom::Box const& constraint) override;
+	virtual void onLayout(geom::Box const& size) override;
 	virtual void loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
-	virtual std::weak_ptr<Element> getElementByIdImpl(const std::string& id) override;
+	virtual std::weak_ptr<Element> getElementByIdImpl(std::string const& id) override;
 };
 
 }}}

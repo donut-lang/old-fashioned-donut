@@ -35,7 +35,7 @@ namespace internal {
 }
 
 #if CHISA_WINDOWS
-static void enumFilesImpl(const std::wstring& dir, std::vector<std::string>& list, bool recursive)
+static void enumFilesImpl(std::wstring const& dir, std::vector<std::string>& list, bool recursive)
 {
 	using namespace internal;
 	using namespace util::internal::win32;
@@ -59,7 +59,7 @@ static void enumFilesImpl(const std::wstring& dir, std::vector<std::string>& lis
 	}while(FindNextFileW(h, &findFileData) != 0);
 	FindClose(h);
 }
-std::vector<std::string> enumFiles(const std::string& dir, bool recursive)
+std::vector<std::string> enumFiles(std::string const& dir, bool recursive)
 {
 	using namespace util::internal::win32;
 	std::vector<std::string> list;
@@ -67,7 +67,7 @@ std::vector<std::string> enumFiles(const std::string& dir, bool recursive)
 	return list;
 }
 #else
-static void enumFilesImpl(const std::string& dir, std::vector<std::string>& list, bool recursive)
+static void enumFilesImpl(std::string const& dir, std::vector<std::string>& list, bool recursive)
 {
 	typedef internal::FileConstants<std::string> ftype;
 	struct dirent* de;
@@ -94,7 +94,7 @@ static void enumFilesImpl(const std::string& dir, std::vector<std::string>& list
 	closedir(d);
 }
 
-std::vector<std::string> enumFiles(const std::string& dir, bool recursive)
+std::vector<std::string> enumFiles(std::string const& dir, bool recursive)
 {
 	std::vector<std::string> list;
 	enumFilesImpl(dir, list, recursive);

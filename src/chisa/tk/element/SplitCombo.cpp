@@ -69,7 +69,7 @@ std::string SplitCombo::toString() const
 	}
 }
 
-void SplitCombo::addChild(const SplitDef& def, std::shared_ptr<Element> element)
+void SplitCombo::addChild(SplitDef const& def, std::shared_ptr<Element> element)
 {
 	std::shared_ptr<SplitCtx> ctx(new SplitCtx(def));
 	ctx->element = element;
@@ -138,7 +138,7 @@ std::size_t SplitCombo::getChildCount() const
 	return this->children().size();
 }
 
-void SplitCombo::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, const geom::Area& area)
+void SplitCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
 {
 	const float boxSize = (area.box().*changed_getter)();
 	const float drawnStartOffset = (area.point().*point_getter)();
@@ -170,7 +170,7 @@ void SplitCombo::renderImpl(gl::Canvas& canvas, const geom::Area& screenArea, co
 	}
 }
 
-geom::Box SplitCombo::onMeasure(const geom::Box& constraint)
+geom::Box SplitCombo::onMeasure(geom::Box const& constraint)
 {
 	const bool changedSpecified = geom::isSpecified((constraint.*changed_getter)());
 	const bool fixedSpecified = geom::isSpecified((constraint.*fixed_getter)());
@@ -279,7 +279,7 @@ geom::Box SplitCombo::onMeasure(const geom::Box& constraint)
 	}
 }
 
-void SplitCombo::onLayout(const geom::Box& size)
+void SplitCombo::onLayout(geom::Box const& size)
 {
 	for(std::shared_ptr<SplitCtx> ctx : this->children()){
 		geom::Box box;
@@ -289,7 +289,7 @@ void SplitCombo::onLayout(const geom::Box& size)
 	}
 }
 
-std::weak_ptr<Element> SplitCombo::getElementByIdImpl(const std::string& id)
+std::weak_ptr<Element> SplitCombo::getElementByIdImpl(std::string const& id)
 {
 	for(std::shared_ptr<SplitCtx> childCtx : this->children()){
 		std::weak_ptr<Element> res = childCtx->element->getElementById(id);

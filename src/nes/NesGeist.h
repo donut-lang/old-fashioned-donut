@@ -67,7 +67,7 @@ public:
 	virtual bool exec(const float delta_ms) override;
 public:
 	void stopNES();
-	void loadNES(const std::string& abs_filename);
+	void loadNES(std::string const& abs_filename);
 	void startNES();
 };
 

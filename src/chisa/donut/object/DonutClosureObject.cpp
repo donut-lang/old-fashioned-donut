@@ -25,7 +25,7 @@ namespace donut {
 
 const std::string TAG("DonutClosureObject");
 
-void DonutClosureObject::bootstrap(const Handler<Heap>& heap, Handler<Source> const& src, unsigned int const& closureIndex, const Handler<Object>& scope)
+void DonutClosureObject::bootstrap(Handler<Heap> const& heap, Handler<Source> const& src, unsigned int const& closureIndex, Handler<Object> const& scope)
 {
 	const_cast<Handler<Source>&>(this->src_) = src;
 	const_cast<unsigned int&>(this->index_) = closureIndex;

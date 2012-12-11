@@ -54,7 +54,7 @@ void Universe::idle(const float delta_ms)
 		topWorld->idle(delta_ms);
 	}
 }
-void Universe::reshape(const geom::Area& area)
+void Universe::reshape(geom::Area const& area)
 {
 	if(log().t()){
 		log().t(TAG, "reshaped: %s", area.toString().c_str());
@@ -66,7 +66,7 @@ void Universe::reshape(const geom::Area& area)
 	this->area(area);
 }
 
-void Universe::createNewWorld(const std::string& worldName)
+void Universe::createNewWorld(std::string const& worldName)
 {
 	std::shared_ptr<World> newWorld(World::create(log(),this->self_, worldName));
 	this->worldStack.push(newWorld);
@@ -90,27 +90,27 @@ void Universe::notifyWorldEnd(std::weak_ptr<World> me)
 		log().w(TAG, "notified world end, but world was already dead.");
 	}
 }
-void Universe::onTouchDown(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint)
+void Universe::onTouchDown(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
 {
 	if(std::shared_ptr<World> topWorld = this->worldStack.top()){
 		topWorld->onTouchDown(timeMs, pointerIndex, screenPoint);
 	}
 }
 
-void Universe::onTouchUp(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint)
+void Universe::onTouchUp(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
 {
 	if(std::shared_ptr<World> topWorld = this->worldStack.top()){
 		topWorld->onTouchUp(timeMs, pointerIndex, screenPoint);
 	}
 }
 
-void Universe::onTouchMove(const float timeMs, const unsigned int pointerIndex, const geom::Point& screenPoint)
+void Universe::onTouchMove(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
 {
 	if(std::shared_ptr<World> topWorld = this->worldStack.top()){
 		topWorld->onTouchMove(timeMs, pointerIndex, screenPoint);
 	}
 }
-std::shared_ptr<chisa::WorldGeist> Universe::invokeWorldGeist(std::weak_ptr<tk::World> world, const std::string& nameOfGeist)
+std::shared_ptr<chisa::WorldGeist> Universe::invokeWorldGeist(std::weak_ptr<tk::World> world, std::string const& nameOfGeist)
 {
 	if(log().t()){
 		log().t(TAG, "Invoking: %s",nameOfGeist.c_str());

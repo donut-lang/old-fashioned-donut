@@ -68,7 +68,7 @@ std::string Font::style() const noexcept
 	}
 }
 
-void Font::analyzeFontName(const std::string& name, std::string& family, std::string& style) noexcept
+void Font::analyzeFontName(std::string const& name, std::string& family, std::string& style) noexcept
 {
 	std::string::size_type const idx = name.find(':');
 	if(idx == std::string::npos){

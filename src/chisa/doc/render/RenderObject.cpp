@@ -32,7 +32,7 @@ RenderObject::RenderObject(HandlerW<RenderTree> parentTree, Node* parentNode, co
 {
 }
 
-void RenderObject::render(gl::Canvas& canvas, const geom::Point& offset, const float depth)
+void RenderObject::render(gl::Canvas& canvas, geom::Point const& offset, const float depth)
 {
 	this->drawable()->draw(canvas, geom::Area(this->area_.point()-offset, this->area_.box()), depth+this->relDepth_);
 }
@@ -96,7 +96,7 @@ float RenderObject::height()
 }
 
 //-----------------------------------------------------------------------------
-NormalDrawableObject::NormalDrawableObject(HandlerW<RenderTree> parentTree, Node* parentNode, const float relDepth, const std::string& repl, const geom::Box& size)
+NormalDrawableObject::NormalDrawableObject(HandlerW<RenderTree> parentTree, Node* parentNode, const float relDepth, std::string const& repl, geom::Box const& size)
 :RenderObject(parentTree, parentNode, relDepth),repl_(repl),size_(size)
 {
 
@@ -112,7 +112,7 @@ Handler<gl::Drawable> NormalDrawableObject::realize()
 
 //-----------------------------------------------------------------------------
 
-TextDrawableObject::TextDrawableObject(HandlerW<RenderTree> parentTree, Node* parentNode, const float relDepth, const std::string& str, const float size, Handler<gl::Font> font, gl::TextDrawable::Style style, gl::TextDrawable::Decoration deco, const gl::Color& color, const gl::Color& backColor)
+TextDrawableObject::TextDrawableObject(HandlerW<RenderTree> parentTree, Node* parentNode, const float relDepth, std::string const& str, const float size, Handler<gl::Font> font, gl::TextDrawable::Style style, gl::TextDrawable::Decoration deco, gl::Color const& color, gl::Color const& backColor)
 :RenderObject(parentTree, parentNode, relDepth)
 ,str_(str)
 ,size_(size)

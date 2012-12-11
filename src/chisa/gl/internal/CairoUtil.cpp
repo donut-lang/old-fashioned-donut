@@ -25,7 +25,7 @@ namespace gl {
 
 namespace cairo{
 
-void setColor(cairo_t* cairo, const gl::Color& c)
+void setColor(cairo_t* cairo, gl::Color const& c)
 {
 	cairo_set_source_rgba(cairo, c.red(), c.green(), c.blue(), c.alpha());
 }
