@@ -28,32 +28,32 @@ namespace chisa {
 namespace donut {
 namespace native {
 
-template <size_t idx, typename R, typename T>
-Handler<Object> callWithBind(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& args, std::function<R(T)> const& funct)
+template <size_t idx, typename R>
+Handler<Object> bindArgument(Handler<Heap> const& heap, Handler<DonutObject> const& args, std::function<R()> const& funct)
 {
-	T const s = native::Decoder<T>::exec( heap, self );
-	return native::Encoder<R>::exec( heap, funct(s) );
+	return native::Encoder<R>::exec( heap, funct() );
 }
 
-template <size_t idx, typename R, typename T, typename U, typename... Args>
-Handler<Object> callWithBind(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& args, std::function<R(T self, U val, Args... args)> const& funct)
+template <size_t idx, typename R, typename U, typename... Args>
+Handler<Object> bindArgument(Handler<Heap> const& heap, Handler<DonutObject> const& args, std::function<R(U val, Args... args)> const& funct)
 {
 	if( !args->has(heap, idx) ) {
 		constexpr int _idx = idx+1;
 		throw DonutException(__FILE__, __LINE__, "oops. args size mismatched. need more than %d arguments.", _idx);
 	}
 	U const val = native::Decoder<U>::exec( heap, args->get(heap, idx) );
-	std::function<R(T self, Args... args)> const left = [funct, val](T self, Args... args)->R{
-		return funct(self, val, args...);
+	std::function<R(Args ... args)> const left = [funct, val](Args... args)->R {
+		return funct(val, args...);
 	};
-	return callWithBind<idx+1>(heap, self, args, left);
+	return bindArgument<idx + 1, R> (heap, args, left);
 }
 
-template <typename R, typename... Args>
-std::function<Handler<Object>(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& args)> createBind(std::function<R(Args... args)> f)
+template <typename R, typename S, typename... Args>
+std::function<Handler<Object>(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& args)> createBind(std::function<R(S self, Args... args)> f)
 {
 	return [f](Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& args){
-		return callWithBind<0>(heap, self, args, f);
+		std::function<R(Args...)> self_applied ( [f, heap, self ](Args... args_){ return f(native::Decoder<S>::exec( heap, self ), args_...); } );
+		return bindArgument<0>(heap, args, self_applied);
 	};
 }
 
