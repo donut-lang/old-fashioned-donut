@@ -197,7 +197,7 @@ void Clock::discardHistory()
 	this->state = State::DISCARD;
 	{
 		if(Handler<Donut> donut = this->donut_.lock()){
-			donut->onDiscardFutureNotify();
+			donut->onDiscardHistoryNotify();
 		}else{
 			log().e(TAG, "Tried to discard future, but donut was already dead.");
 		}

@@ -69,7 +69,7 @@ private:
 	std::vector<std::pair<timestamp_t, util::XValue> > reactions_;
 	int index_;
 public:
-	ReactiveNativeObject( std::string const& providerName );
+	ReactiveNativeObject( std::string const& providerName ):NativeObject(providerName), index_(-1){}
 	virtual ~ReactiveNativeObject() noexcept = default;
 public:
 	void bootstrap(Handler<Heap> const& heap);
@@ -107,11 +107,11 @@ public:
 	PureNativeClosureObject( std::string const& providerName):NativeClosureObject(providerName){}
 	virtual ~PureNativeClosureObject() noexcept {};
 	void bootstrap( std::string const& objectProviderName, std::string const& closureName, Signature f );
-public:
-	Handler<Object> apply(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& arg);
 private:
 	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override final;
 	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override final;
+private:
+	virtual Handler<Object> apply(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& arg) override final;
 };
 
 class ReactiveNativeClosureObject final : public NativeClosureObject {
@@ -123,11 +123,11 @@ public:
 	ReactiveNativeClosureObject( std::string const& providerName):NativeClosureObject(providerName){}
 	virtual ~ReactiveNativeClosureObject() noexcept {};
 	void bootstrap( std::string const& objectProviderName, std::string const& closureName, Signature f );
-public:
-	Handler<Object> apply(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& arg);
 private:
 	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override final;
 	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override final;
+private:
+	virtual Handler<Object> apply(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& arg) override final;
 };
 
 }}

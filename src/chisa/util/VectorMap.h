@@ -89,8 +89,7 @@ public:
 		return this->end() != find(key);
 	}
 	inline bool insert( T const& key, U const& val ) {
-		Comparator cmp;
-		auto it = std::lower_bound( data_.begin(), data_.end(), key, cmp );
+		auto it = std::lower_bound( data_.begin(), data_.end(), key, Comparator() );
 		if( it == data_.end() || !eq(key, *it) ) {
 			data_.insert(it, Pair(key, val));
 			return true;

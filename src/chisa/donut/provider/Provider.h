@@ -43,10 +43,10 @@ private: //実行時に変化し、セーブ・ロードの対象にするのは
 protected:
 	Provider( Handler<Heap> const& heap, std::string const& name );
 	template <typename T> bool registerPureNativeClosure( std::string const& name, T f) {
-		return (!reactiveNativeClosures_.have(name)) && pureNativeClosures_.update( name, native::createBind(f) );
+		return (!reactiveNativeClosures_.have(name)) && pureNativeClosures_.update( name, native::createBindPure(f) );
 	}
 	template <typename T> bool registerReactiveNativeClosure( std::string const& name, T f) {
-		return (!pureNativeClosures_.have(name)) && reactiveNativeClosures_.update( name, native::createBind(f) );
+		return (!pureNativeClosures_.have(name)) && reactiveNativeClosures_.update( name, native::createBindReactive(f) );
 	}
 public:
 	virtual ~Provider() noexcept = default;
