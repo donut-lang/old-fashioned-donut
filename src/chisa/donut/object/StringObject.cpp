@@ -44,7 +44,11 @@ bool StringObject::toBoolImpl(Handler<Heap> const& heap) const
 	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast String to Bool implicitly. Use toBoolean()");
 }
 
-void StringObject::onSeekNotifyImpl(Handler<Heap> const& heap)
+void StringObject::onBackNotifyImpl(Handler<Heap> const& heap)
+{
+
+}
+void StringObject::onForwardNotifyImpl(Handler<Heap> const& heap)
 {
 
 }

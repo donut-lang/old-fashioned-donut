@@ -37,6 +37,13 @@ private:
 	unsigned int now_;
 private:
 	HandlerW<Donut> donut_;
+private:
+	enum State{
+		NORMAL,
+		SEEK,
+		DISCARD
+	} state;
+	bool discardRequested_;
 public:
 	Clock( Donut* const donut );
 	virtual ~Clock() noexcept = default;
@@ -48,6 +55,8 @@ public: /* 処理系の保存・復帰をします。 */
 public: /* time functions */
 	void tick();
 	void seek( unsigned int const& time );
+	void back();
+	void forward();
 	void discardFuture();
 	void discardHistory();
 public: /* 各種Getter */

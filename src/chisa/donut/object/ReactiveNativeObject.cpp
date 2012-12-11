@@ -52,40 +52,41 @@ int ReactiveNativeObject::findIndex( timestamp_t const& t )
 	return std::distance(this->reactions_.begin(), it);
 }
 
-void ReactiveNativeObject::onSeekNotifyImpl(Handler<Heap> const& heap)
+void ReactiveNativeObject::onBackNotifyImpl(Handler<Heap> const& heap)
 {
 	Handler<Clock> clock = heap->clock();
 	int const nowIndex = this->index_;
 	int const newIndex = this->findIndex(clock->now());
 	this->index_ = newIndex;
-	if( newIndex < index_ ) { //戻る
-		auto start = reactions_.begin() + nowIndex;
-		auto end = reactions_.begin() + newIndex;
-		for(auto it = start; it != end; --it) {
-			std::pair<timestamp_t, util::XValue>& p = *it;
-			std::pair<bool, util::XValue> result = this->onBack(heap, p.second);
-			if( !result.first ){ //もうもどれない
-				//XXX: シーク中にこれを起こすのはよくない！
-				//1つずつ進めるようにしないといけないだろう。
-				clock->discardHistory();
-				return;
-			}
-			p.second = result.second;
+	auto start = reactions_.begin() + nowIndex;
+	auto end = reactions_.begin() + newIndex;
+	for(auto it = start; it != end; --it) {
+		std::pair<timestamp_t, util::XValue>& p = *it;
+		std::pair<bool, util::XValue> result = this->onBack(heap, p.second);
+		if( !result.first ){ //もうもどれない
+			clock->discardHistory();
+			return;
 		}
-	}else{
-		auto start = reactions_.begin() + nowIndex;
-		auto end = reactions_.begin() + newIndex;
-		for(auto it = start; it != end; ++it) {
-			std::pair<timestamp_t, util::XValue>& p = *it;
-			std::pair<bool, util::XValue> result = this->onForward(heap, p.second);
-			if( !result.first ){ //もうもどれない
-				//XXX: シーク中にこれを起こすのはよくない！
-				//1つずつ進めるようにしないといけないだろう。
-				clock->discardFuture();
-				return;
-			}
-			p.second = result.second;
+		p.second = result.second;
+	}
+}
+
+void ReactiveNativeObject::onForwardNotifyImpl(Handler<Heap> const& heap)
+{
+	Handler<Clock> clock = heap->clock();
+	int const nowIndex = this->index_;
+	int const newIndex = this->findIndex(clock->now());
+	this->index_ = newIndex;
+	auto start = reactions_.begin() + nowIndex;
+	auto end = reactions_.begin() + newIndex;
+	for(auto it = start; it != end; ++it) {
+		std::pair<timestamp_t, util::XValue>& p = *it;
+		std::pair<bool, util::XValue> result = this->onForward(heap, p.second);
+		if( !result.first ){ //もうもどれない
+			clock->discardFuture();
+			return;
 		}
+		p.second = result.second;
 	}
 }
 

@@ -34,7 +34,8 @@ public:
 	virtual int toIntImpl(Handler<Heap> const& heap) const override final;
 	virtual float toFloatImpl(Handler<Heap> const& heap) const override final;
 	virtual bool toBoolImpl(Handler<Heap> const& heap) const override final;
-	virtual void onSeekNotifyImpl(Handler<Heap> const& heap) override;
+	virtual void onBackNotifyImpl(Handler<Heap> const& heap) override final;
+	virtual void onForwardNotifyImpl(Handler<Heap> const& heap) override final;
 	virtual void onDiscardHistoryNotifyImpl(Handler<Heap> const& heap) override final;
 	virtual void onDiscardFutureNotifyImpl(Handler<Heap> const& heap) override final;
 	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override final;
@@ -53,7 +54,8 @@ public:
 	virtual int toIntImpl(Handler<Heap> const& heap) const override final;
 	virtual float toFloatImpl(Handler<Heap> const& heap) const override final;
 	virtual bool toBoolImpl(Handler<Heap> const& heap) const override final;
-	virtual void onSeekNotifyImpl(Handler<Heap> const& heap) override;
+	virtual void onBackNotifyImpl(Handler<Heap> const& heap) override final;
+	virtual void onForwardNotifyImpl(Handler<Heap> const& heap) override final;
 	virtual void onDiscardHistoryNotifyImpl(Handler<Heap> const& heap) override final;
 	virtual void onDiscardFutureNotifyImpl(Handler<Heap> const& heap) override final;
 	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override final;
@@ -81,7 +83,8 @@ protected:
 	virtual float toFloatImpl(Handler<Heap> const& heap) const override final;
 	virtual bool toBoolImpl(Handler<Heap> const& heap) const override final;
 public:
-	virtual void onSeekNotifyImpl(Handler<Heap> const& heap) override final;
+	virtual void onBackNotifyImpl(Handler<Heap> const& heap) override final;
+	virtual void onForwardNotifyImpl(Handler<Heap> const& heap) override final;
 	virtual void onDiscardHistoryNotifyImpl(Handler<Heap> const& heap) override final;
 	virtual void onDiscardFutureNotifyImpl(Handler<Heap> const& heap) override final;
 protected:

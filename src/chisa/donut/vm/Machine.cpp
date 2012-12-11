@@ -510,11 +510,10 @@ void Machine::load( util::XValue const& obj)
  * time functions
  **********************************************************************************/
 
-void Machine::onSeekNotify()
-{
-	// 特に何もしない　問題ないはず
-	// 実行時にdiscardFuture/discardHistoryされるので実行時に駄目になることはないはず
-}
+// 特に何もしない　問題ないはず
+// 実行時にdiscardFuture/discardHistoryされるので実行時に駄目になることはないはず
+void Machine::onBackNotify(){}
+void Machine::onForwardNotify(){}
 
 /**
  * 現在の時刻以降のコンテキストを消し去る。

@@ -66,7 +66,11 @@ Handler<Object> NativeClosureObject::getImpl(Handler<Heap> const& heap, std::str
 	throw DonutException(__FILE__, __LINE__, "Native Closure does not have any properety.");
 }
 
-void NativeClosureObject::onSeekNotifyImpl(Handler<Heap> const& heap)
+void NativeClosureObject::onBackNotifyImpl(Handler<Heap> const& heap)
+{
+
+}
+void NativeClosureObject::onForwardNotifyImpl(Handler<Heap> const& heap)
 {
 
 }

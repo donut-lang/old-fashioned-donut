@@ -60,7 +60,8 @@ public: /* seekとかをします。外部から呼びます */
 	bool canBack() const noexcept;
 	bool canAdvance() const noexcept;
 public: /* clockから呼ばれます */
-	void onSeekNotify();
+	void onBackNotify();
+	void onForwardNotify();
 	void onDiscardFutureNotify();
 	void onDiscardHistoryNotify();
 };
