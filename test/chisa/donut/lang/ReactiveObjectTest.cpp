@@ -28,12 +28,14 @@ public:
 	bool historyDiscarded;
 	bool backable_but_non_fowardable;
 	int backable_and_forwardable;
+	int backable_only_once;
 	SampleObject(std::string const& provicerName)
 	:ReactiveNativeObject(provicerName)
 	,futureDiscarded(false)
 	,historyDiscarded(false)
 	,backable_but_non_fowardable(false)
 	,backable_and_forwardable(0)
+	,backable_only_once(0)
 	{}
 	virtual util::XValue onBack(Handler<Heap> const& heap, util::XValue const& val) override
 	{
@@ -44,6 +46,8 @@ public:
 		}else if(v == "backable_and_forwardable"){
 			++backable_and_forwardable;
 			return util::XValue("backable_and_forwardable");
+		}else if(v == "backable_only_once") {
+			return util::XValue("backable_only_once");
 		}
 		return util::XValue(2);
 	}
@@ -53,6 +57,8 @@ public:
 		if(v == "backable_and_forwardable"){
 			++backable_and_forwardable;
 			return util::XValue("backable_and_forwardable");
+		}else if(v == "backable_only_once"){
+			return util::XValue();
 		}
 		return util::XValue(1);
 	}
@@ -80,6 +86,9 @@ public:
 		}));
 		this->registerReactiveNativeClosure("backable_and_forwardable", std::function<std::tuple<std::string, util::XValue>(SampleObject*)>([](SampleObject* obj){
 			return std::make_tuple("hey!", util::XValue("backable_and_forwardable"));
+		}));
+		this->registerReactiveNativeClosure("backable_only_once", std::function<std::tuple<std::string, util::XValue>(SampleObject*)>([](SampleObject* obj){
+			return std::make_tuple("hey!", util::XValue("backable_only_once"));
 		}));
 	}
 };
@@ -192,6 +201,48 @@ TEST_F(ReactiveObjectTest, BackAndForwardTest)
 	//打ち消しは起こらない。
 	ASSERT_FALSE( obj->futureDiscarded );
 	ASSERT_FALSE( obj->historyDiscarded );
+}
+
+TEST_F(ReactiveObjectTest, BackableOnlyOnceTest)
+{
+	Handler<SampleObject> obj( provider->createDerived() );
+	obj->bootstrap(heap);
+	heap->setGlobalObject("sample", obj);
+	unsigned int const t1 = donut->nowTime();
+	Handler<Object> result = machine->start( donut->parse("sample.backable_only_once();") );
+	unsigned int const t2 = donut->nowTime();
+	{ //結果と副作用の確認
+		ASSERT_LT( t1, donut->nowTime() );
+		ASSERT_EQ( t1, donut->firstTime());
+		ASSERT_FALSE( obj->futureDiscarded );
+		ASSERT_FALSE( obj->historyDiscarded );
+	}
+	//シーク
+	donut->seek(t1);
+	{//戻れる
+		ASSERT_EQ( t1, donut->nowTime() );
+		ASSERT_EQ( t1, donut->firstTime());
+		ASSERT_EQ( t2, donut->lastTime() );
+		ASSERT_FALSE( obj->futureDiscarded );
+		ASSERT_FALSE( obj->historyDiscarded );
+	}
+	donut->seek(t2);
+	{//先に進める
+		ASSERT_EQ( t2, donut->nowTime() );
+		ASSERT_EQ( t2, donut->firstTime()); //もう戻れなくなる
+		ASSERT_EQ( t2, donut->lastTime() );
+		ASSERT_FALSE( obj->futureDiscarded );
+		ASSERT_TRUE( obj->historyDiscarded );
+	}
+	ASSERT_ANY_THROW(donut->seek(t1)); //しかし、戻れない
+	{
+		ASSERT_EQ( t2, donut->nowTime() );
+		ASSERT_EQ( t2, donut->firstTime());
+		ASSERT_EQ( t2, donut->lastTime() );
+	}
+	//往復するとDiscardされる
+	ASSERT_FALSE( obj->futureDiscarded );
+	ASSERT_TRUE( obj->historyDiscarded );
 }
 
 }}}
