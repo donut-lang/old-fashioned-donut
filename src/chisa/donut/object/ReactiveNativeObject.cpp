@@ -60,14 +60,15 @@ void ReactiveNativeObject::onBackNotifyImpl(Handler<Heap> const& heap)
 	this->index_ = newIndex;
 	auto start = reactions_.begin() + nowIndex;
 	auto end = reactions_.begin() + newIndex;
+	bool failed = false;
 	for(auto it = start; it != end; --it) {
 		std::pair<timestamp_t, util::XValue>& p = *it;
 		std::pair<bool, util::XValue> result = this->onBack(heap, p.second);
-		if( !result.first ){ //もうもどれない
-			clock->discardHistory();
-			return;
-		}
+		failed |= result.first;
 		p.second = result.second;
+	}
+	if( failed ){ //もうもどれない
+		clock->discardHistory();
 	}
 }
 
@@ -79,14 +80,15 @@ void ReactiveNativeObject::onForwardNotifyImpl(Handler<Heap> const& heap)
 	this->index_ = newIndex;
 	auto start = reactions_.begin() + nowIndex;
 	auto end = reactions_.begin() + newIndex;
+	bool failed = false;
 	for(auto it = start; it != end; ++it) {
 		std::pair<timestamp_t, util::XValue>& p = *it;
 		std::pair<bool, util::XValue> result = this->onForward(heap, p.second);
-		if( !result.first ){ //もうもどれない
-			clock->discardFuture();
-			return;
-		}
+		failed |= result.first;
 		p.second = result.second;
+	}
+	if( failed ){ //もうもどれない
+		clock->discardFuture();
 	}
 }
 
