@@ -27,11 +27,13 @@ public:
 	bool futureDiscarded;
 	bool historyDiscarded;
 	bool backable_but_non_fowardable;
+	int backable_and_forwardable;
 	SampleObject(std::string const& provicerName)
 	:ReactiveNativeObject(provicerName)
 	,futureDiscarded(false)
 	,historyDiscarded(false)
 	,backable_but_non_fowardable(false)
+	,backable_and_forwardable(0)
 	{}
 	virtual util::XValue onBack(Handler<Heap> const& heap, util::XValue const& val) override
 	{
@@ -39,13 +41,19 @@ public:
 		if(v == "backable_but_non_fowardable"){
 			backable_but_non_fowardable = true;
 			return util::XValue(); //non-fowardable
-		}else{
-
+		}else if(v == "backable_and_forwardable"){
+			++backable_and_forwardable;
+			return util::XValue("backable_and_forwardable");
 		}
 		return util::XValue(2);
 	}
 	virtual util::XValue onForward(Handler<Heap> const& heap, util::XValue const& val) override
 	{
+		std::string v(val.as<std::string>());
+		if(v == "backable_and_forwardable"){
+			++backable_and_forwardable;
+			return util::XValue("backable_and_forwardable");
+		}
 		return util::XValue(1);
 	}
 	virtual void onFutureDiscarded(Handler<Heap> const& heap) {
@@ -69,6 +77,9 @@ public:
 		}));
 		this->registerReactiveNativeClosure("backable_but_non_fowardable", std::function<std::tuple<std::string, util::XValue>(SampleObject*)>([](SampleObject* obj){
 			return std::make_tuple("hey!", util::XValue("backable_but_non_fowardable"));
+		}));
+		this->registerReactiveNativeClosure("backable_and_forwardable", std::function<std::tuple<std::string, util::XValue>(SampleObject*)>([](SampleObject* obj){
+			return std::make_tuple("hey!", util::XValue("backable_and_forwardable"));
 		}));
 	}
 };
@@ -118,8 +129,6 @@ TEST_F(ReactiveObjectTest, BackTest)
 	Handler<SampleObject> obj( provider->createDerived() );
 	obj->bootstrap(heap);
 	heap->setGlobalObject("sample", obj);
-	ASSERT_TRUE( heap->hasGlobalObject("sample") );
-	ASSERT_TRUE( heap->getGlobalObject("sample")->isObject() );
 	unsigned int const t1 = donut->nowTime();
 	Handler<Object> result = machine->start( donut->parse("sample.backable_but_non_fowardable();") );
 	{ //結果と副作用の確認
@@ -141,9 +150,48 @@ TEST_F(ReactiveObjectTest, BackTest)
 	}
 }
 
-TEST_F(ReactiveObjectTest, ForwardTest)
+TEST_F(ReactiveObjectTest, BackAndForwardTest)
 {
-
+	Handler<SampleObject> obj( provider->createDerived() );
+	obj->bootstrap(heap);
+	heap->setGlobalObject("sample", obj);
+	unsigned int const t1 = donut->nowTime();
+	ASSERT_EQ(0, obj->backable_and_forwardable);
+	Handler<Object> result = machine->start( donut->parse("sample.backable_and_forwardable();") );
+	ASSERT_EQ(0, obj->backable_and_forwardable);
+	unsigned int const t2 = donut->nowTime();
+	{ //結果と副作用の確認
+		ASSERT_LT( t1, donut->nowTime() );
+		ASSERT_EQ( t1, donut->firstTime());
+		ASSERT_FALSE( obj->futureDiscarded );
+		ASSERT_FALSE( obj->historyDiscarded );
+	}
+	//シーク
+	ASSERT_EQ(0, obj->backable_and_forwardable);
+	donut->seek(t1);
+	{//戻れるし、先に進める
+		ASSERT_EQ(1, obj->backable_and_forwardable);
+		ASSERT_EQ( t1, donut->nowTime() );
+		ASSERT_EQ( t1, donut->firstTime());
+		ASSERT_EQ( t2, donut->lastTime() );
+	}
+	donut->seek(t2);
+	{//戻れるし、先に進める
+		ASSERT_EQ(2, obj->backable_and_forwardable);
+		ASSERT_EQ( t2, donut->nowTime() );
+		ASSERT_EQ( t1, donut->firstTime());
+		ASSERT_EQ( t2, donut->lastTime() );
+	}
+	donut->seek(t1);
+	{//戻れるし、先に進める
+		ASSERT_EQ(3, obj->backable_and_forwardable);
+		ASSERT_EQ( t1, donut->nowTime() );
+		ASSERT_EQ( t1, donut->firstTime());
+		ASSERT_EQ( t2, donut->lastTime() );
+	}
+	//打ち消しは起こらない。
+	ASSERT_FALSE( obj->futureDiscarded );
+	ASSERT_FALSE( obj->historyDiscarded );
 }
 
 }}}
