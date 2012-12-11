@@ -65,6 +65,7 @@ public:
 class ReactiveNativeObject : public NativeObject {
 private:
 	std::vector<std::pair<timestamp_t, util::XValue> > reactions_;
+	int index_;
 public:
 	ReactiveNativeObject( std::string const& providerName );
 	virtual ~ReactiveNativeObject() noexcept = default;
@@ -72,15 +73,24 @@ public:
 	void bootstrap(Handler<Heap> const& heap);
 	virtual util::XValue save( Handler<Heap> const& heap ) override final;
 	virtual void load( Handler<Heap> const& heap, util::XValue const& data ) override final;
+private:
+	int findIndex( timestamp_t const& t );
 protected:
 	virtual std::string toStringImpl(Handler<Heap> const& heap) const override final;
 	virtual int toIntImpl(Handler<Heap> const& heap) const override final;
 	virtual float toFloatImpl(Handler<Heap> const& heap) const override final;
 	virtual bool toBoolImpl(Handler<Heap> const& heap) const override final;
 public:
-	virtual void onSeekNotifyImpl(Handler<Heap> const& heap) override;
-	virtual void onDiscardHistoryNotifyImpl(Handler<Heap> const& heap) override;
-	virtual void onDiscardFutureNotifyImpl(Handler<Heap> const& heap) override;
+	virtual void onSeekNotifyImpl(Handler<Heap> const& heap) override final;
+	virtual void onDiscardHistoryNotifyImpl(Handler<Heap> const& heap) override final;
+	virtual void onDiscardFutureNotifyImpl(Handler<Heap> const& heap) override final;
+protected:
+	virtual std::pair<bool, util::XValue> onBack(Handler<Heap> const& heap, util::XValue const& val) = 0;
+	virtual std::pair<bool, util::XValue> onForward(Handler<Heap> const& heap, util::XValue const& val) = 0;
+	virtual void onFutureDiscarded(Handler<Heap> const& heap) = 0;
+	virtual void onHistoryDiscarded(Handler<Heap> const& heap) = 0;
+	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override = 0;
+	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override = 0;
 };
 
 class PureNativeClosureObject final : public NativeClosureObject {
