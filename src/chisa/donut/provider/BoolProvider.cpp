@@ -19,6 +19,7 @@
 #include "BoolProvider.h"
 #include "../Exception.h"
 #include "../object/Heap.h"
+#include "../../util/StringUtil.h"
 
 namespace chisa {
 namespace donut {

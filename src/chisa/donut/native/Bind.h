@@ -20,7 +20,6 @@
 #include <functional>
 #include "Decoder.h"
 #include "Encoder.h"
-#include "../../util/StringUtil.h"
 #include "../Exception.h"
 #include "../object/Object.h"
 
