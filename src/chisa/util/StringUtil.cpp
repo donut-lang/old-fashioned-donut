@@ -231,7 +231,7 @@ PARSE_STRTO(unsigned long long int, strtoull);
 	template <> TYPE parseAs<TYPE>(std::string const& str, bool* succeed)\
 	{\
 		char* end;\
-		double const result = std::strtod(str.c_str(), &end);\
+		TYPE const result = FUNC(str.c_str(), &end);\
 		if((*end) != '\0'){\
 			if(succeed != nullptr){\
 				*succeed = false;\

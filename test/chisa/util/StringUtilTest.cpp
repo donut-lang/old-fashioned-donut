@@ -110,6 +110,13 @@ TEST(StringUtilTest, ParseFloatTest)
 	ASSERT_FLOAT_EQ(10.12f, parseAs<float>("10.12"));
 }
 
+TEST(StringUtilTest, ParseFloatMaximumTest)
+{
+	ASSERT_FLOAT_EQ(3.402823466e+38, parseAs<float>("3.402823466e+38"));
+	ASSERT_FLOAT_EQ(1.7976931348623158e+308, parseAs<double>("1.7976931348623158e+308"));
+	ASSERT_FLOAT_EQ(1.18973e+4932L, parseAs<long double>("1.18973e+4932"));
+}
+
 TEST(StringUtilTest, ParseBoolTest)
 {
 	ASSERT_TRUE(parseAs<bool>("true"));
