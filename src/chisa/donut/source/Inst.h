@@ -17,7 +17,6 @@
  */
 
 #pragma once
-#include <string>
 
 namespace chisa {
 namespace donut {

@@ -17,14 +17,16 @@
  */
 
 #pragma once
-#include "../Decl.h"
-#include "../../Handler.h"
-#include "../Exception.h"
-#include "Closure.h"
 #include <vector>
 #include <algorithm>
-#include "Inst.h"
+
+#include "../Decl.h"
+#include "../../Handler.h"
 #include "../../util/XVal.h"
+
+#include "../Exception.h"
+#include "Closure.h"
+#include "Inst.h"
 
 namespace chisa {
 namespace donut {
