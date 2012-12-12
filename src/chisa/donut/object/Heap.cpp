@@ -142,7 +142,7 @@ Handler<HeapObject> Heap::decodeHeapDescriptor( object_desc_t const& desc )
 
 Handler<DonutObject> Heap::createDonutObject()
 {
-	Handler<DonutObject> obj(donutObjectProvider_->createDerived());
+	Handler<DonutObject> obj(donutObjectProvider_->newInstance());
 	obj->set(self(), "__proto__", this->objectProto());
 	this->registerObject(obj);
 
@@ -151,7 +151,7 @@ Handler<DonutObject> Heap::createDonutObject()
 
 Handler<DonutObject> Heap::createEmptyDonutObject()
 {
-	Handler<DonutObject> obj(donutObjectProvider_->createDerived());
+	Handler<DonutObject> obj(donutObjectProvider_->newInstance());
 	this->registerObject(obj);
 
 	return obj;
@@ -160,8 +160,7 @@ class DonutObject;
 
 Handler<StringObject> Heap::createStringObject(std::string const& val)
 {
-	Handler<StringObject> obj(this->stringProvider_->createDerived());
-	obj->bootstrap(self(), val);
+	Handler<StringObject> obj(this->stringProvider_->newInstance(self(), val));
 	this->registerObject(obj);
 
 	return obj;
@@ -169,8 +168,7 @@ Handler<StringObject> Heap::createStringObject(std::string const& val)
 
 Handler<FloatObject> Heap::createFloatObject(float const& val)
 {
-	Handler<FloatObject> obj(this->floatProvider_->createDerived());
-	obj->bootstrap(self(), val);
+	Handler<FloatObject> obj(this->floatProvider_->newInstance(self(), val));
 	this->registerObject(obj);
 
 	return obj;
@@ -178,8 +176,7 @@ Handler<FloatObject> Heap::createFloatObject(float const& val)
 
 Handler<DonutClosureObject> Heap::createDonutClosureObject( Handler<Source> const& src, unsigned int const& closureIndex, Handler<Object> const& scope )
 {
-	Handler<DonutClosureObject> obj(this->donutClosureObjectProvider_->createDerived());
-	obj->bootstrap(self(), src, closureIndex, scope);
+	Handler<DonutClosureObject> obj(this->donutClosureObjectProvider_->newInstance(self(), src, closureIndex, scope));
 	this->registerObject(obj);
 
 	return obj;
@@ -187,8 +184,7 @@ Handler<DonutClosureObject> Heap::createDonutClosureObject( Handler<Source> cons
 
 Handler<PureNativeClosureObject> Heap::createPureNativeClosureObject(std::string const& objectProviderName, std::string const& closureName, PureNativeClosureObject::Signature f)
 {
-	Handler<PureNativeClosureObject> obj(this->pureNativeClosureProvider_->createDerived());
-	obj->bootstrap(objectProviderName, closureName, f);
+	Handler<PureNativeClosureObject> obj(this->pureNativeClosureProvider_->newInstance(objectProviderName, closureName, f));
 	this->registerObject(obj);
 
 	return obj;
@@ -196,8 +192,7 @@ Handler<PureNativeClosureObject> Heap::createPureNativeClosureObject(std::string
 
 Handler<ReactiveNativeClosureObject> Heap::createReactiveNativeClosureObject(std::string const& objectProviderName, std::string const& closureName, ReactiveNativeClosureObject::Signature f)
 {
-	Handler<ReactiveNativeClosureObject> obj(this->reactiveNativeClosureProvider_->createDerived());
-	obj->bootstrap(objectProviderName, closureName, f);
+	Handler<ReactiveNativeClosureObject> obj(this->reactiveNativeClosureProvider_->newInstance(objectProviderName, closureName, f));
 	this->registerObject(obj);
 
 	return obj;
@@ -294,7 +289,7 @@ void Heap::load(util::XValue const& data)
 			std::string const provider = obj->get<XString>("provider");
 			objectid_t id = obj->get<objectid_t>("id");
 			//中身
-			HeapObject* robj ( this->findHeapProvider(provider)->create() );
+			HeapObject* robj ( this->findHeapProvider(provider)->createEmptyObject() );
 			robj->id(id);
 			this->objectPool_.push_back( robj );
 		}

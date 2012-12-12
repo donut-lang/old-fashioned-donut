@@ -73,7 +73,7 @@ protected:
 	HeapProvider( Handler<Heap> const& heap, std::string const& name ):Provider(heap, name){};
 public:
 	virtual ~HeapProvider() noexcept = default;
-	virtual HeapObject* create() = 0;
+	virtual HeapObject* createEmptyObject() = 0;
 };
 
 template <typename T>
@@ -83,12 +83,15 @@ protected:
 public:
 	virtual ~HeapProviderImpl() noexcept = default;
 public:
-	T* createDerived() {
-		return new T( this->name() );
+	template <typename... Args> inline
+	T* newInstance(Args... args) {
+		T* t = new T( this->name() );
+		t->bootstrap(args...);
+		return t;
 	}
 private:
-	virtual HeapObject* create() override {
-		return createDerived();
+	virtual HeapObject* createEmptyObject() override {
+		return new T( this->name() );
 	}
 };
 

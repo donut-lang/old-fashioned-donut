@@ -94,8 +94,7 @@ template <typename T> typename _TypeAdapter<T>::return_type XArray::get( std::si
 	}
 	XValue& val = list_[idx];
 	if( !val.is<SpiritType>() ) {
-		typename _TypeAdapter<T>::init_type empty;
-		throw logging::Exception(__FILE__, __LINE__, "Array: \"%d\" type mismatch required: %s actual: %s.", idx, XValue(empty).typeString().c_str(), val.typeString().c_str());
+		throw logging::Exception(__FILE__, __LINE__, "Array: \"%d\" type mismatch required: %s actual: %s.", idx, XValue(typename _TypeAdapter<T>::init_type()).typeString().c_str(), val.typeString().c_str());
 	}
 	return val.as<SpiritType>();
 }
@@ -195,16 +194,14 @@ template<> inline XValue& XObject::set<XValue>(std::string const& name, XValue c
 		template <> inline typename _TypeAdapter<XValue::TYPE>::return_type XValue::as<XValue::TYPE>() {\
 			if(this->type_ != XValue::Type::TYPE##T) {\
 				typedef typename _TypeAdapter<XValue::TYPE>::init_type Type;\
-				Type empty((Type()));\
-				throw logging::Exception(__FILE__, __LINE__, "Type mismatched! required: %s actual: %s.", XValue(empty).typeString().c_str(), this->typeString().c_str());\
+				throw logging::Exception(__FILE__, __LINE__, "Type mismatched! required: %s actual: %s.", XValue((Type())).typeString().c_str(), this->typeString().c_str());\
 			}\
 			return VAL;\
 		};\
 		template <> inline typename _TypeAdapter<XValue::TYPE>::return_const_type XValue::as<XValue::TYPE>() const {\
 			if(this->type_ != XValue::Type::TYPE##T) {\
 				typedef typename _TypeAdapter<XValue::TYPE>::init_type Type;\
-				Type empty((Type()));\
-				throw logging::Exception(__FILE__, __LINE__, "Type mismatched! required: %s actual: %s.", XValue(empty).typeString().c_str(), this->typeString().c_str());\
+				throw logging::Exception(__FILE__, __LINE__, "Type mismatched! required: %s actual: %s.", XValue((Type())).typeString().c_str(), this->typeString().c_str());\
 			}\
 			return VAL;\
 		};
