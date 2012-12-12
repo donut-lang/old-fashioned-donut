@@ -19,6 +19,8 @@
 #pragma once
 
 #include <string>
+#include <vector>
+#include <cstddef>
 #include "../Handler.h"
 #include "ClassUtil.h"
 #include "PairUtil.h"
