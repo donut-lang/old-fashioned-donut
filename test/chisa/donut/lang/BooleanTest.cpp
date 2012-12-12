@@ -22,6 +22,15 @@
 namespace chisa {
 namespace donut {
 
+TEST(DonutBoolTest, ImplicitConvertTest)
+{
+	INIT_DONUT;
+	ASSERT_NO_THROW( heap->createBool(true)->toBool(heap) );
+	ASSERT_ANY_THROW( heap->createBool(true)->toFloat(heap) );
+	ASSERT_ANY_THROW( heap->createBool(true)->toInt(heap) );
+	ASSERT_ANY_THROW( heap->createBool(true)->toString(heap) );
+}
+
 TEST(DonutBooleanTest, LiteralTest)
 {
 	SOURCE_TEST_TRUE("true");

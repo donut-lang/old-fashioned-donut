@@ -31,7 +31,7 @@ NullProvider::NullProvider(Handler<Heap> const& heap)
 
 std::string NullProvider::toString(const Object* ptr) const
 {
-	return "(null)";
+	throw DonutException(__FILE__, __LINE__, "Failed to convert null to string.");
 }
 
 int NullProvider::toInt(const Object* ptr) const
@@ -46,7 +46,7 @@ float NullProvider::toFloat(const Object* ptr) const
 
 bool NullProvider::toBool(const Object* ptr) const
 {
-	return false;
+	throw DonutException(__FILE__, __LINE__, "Failed to convert null to bool.");
 }
 
 Handler<Object> NullProvider::createNull()

@@ -47,7 +47,7 @@ BoolProvider::BoolProvider(Handler<Heap> const& heap)
 
 std::string BoolProvider::toString(const Object* ptr) const
 {
-	return util::toString(fromPointer(ptr));
+	throw DonutException(__FILE__, __LINE__, "Ccannot convert from boolean to string.");
 }
 
 int BoolProvider::toInt(const Object* ptr) const

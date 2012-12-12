@@ -61,6 +61,15 @@
 	ASSERT_FALSE(result->toBool(heap));\
 }
 
+#define SOURCE_TEST_NULL(expr)\
+{\
+	EXECUTE_SRC(expr);\
+	ASSERT_TRUE(result->isNull());\
+	ASSERT_FALSE(result->isObject());\
+	ASSERT_FALSE(result->isInt());\
+	ASSERT_FALSE(result->isBool());\
+}
+
 #define SOURCE_TEST_INT(num, expr)\
 {\
 	EXECUTE_SRC(expr);\
