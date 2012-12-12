@@ -20,6 +20,7 @@
 #include "../../../src/chisa/util/StringUtil.h"
 using namespace chisa::util;
 
+#include <cfloat>
 #include <cmath>
 
 namespace chisa {
@@ -112,9 +113,22 @@ TEST(StringUtilTest, ParseFloatTest)
 
 TEST(StringUtilTest, ParseFloatMaximumTest)
 {
+
 	ASSERT_FLOAT_EQ(3.402823466e+38, parseAs<float>("3.402823466e+38"));
+	ASSERT_FLOAT_EQ(1.17549e-38, parseAs<float>("1.17549e-38"));
+	ASSERT_FLOAT_EQ(33554431, parseAs<float>("33554431"));
+	ASSERT_NE(33554433, static_cast<unsigned long long>(parseAs<float>("33554433.0")));
+
 	ASSERT_FLOAT_EQ(1.7976931348623158e+308, parseAs<double>("1.7976931348623158e+308"));
+	ASSERT_FLOAT_EQ(2.2250738585072014e-308, parseAs<double>("2.2250738585072014e-308"));
+	ASSERT_FLOAT_EQ(18014398509481983.0, parseAs<double>("18014398509481983.0"));
+	ASSERT_NE(18014398509481985, static_cast<unsigned long long>(parseAs<double>("18014398509481985.0")));
+
+
 	ASSERT_FLOAT_EQ(1.18973e+4932L, parseAs<long double>("1.18973e+4932"));
+	ASSERT_FLOAT_EQ(3.3621e-4932L, parseAs<long double>("3.3621e-4932"));
+
+	ASSERT_FLOAT_EQ(10384593717069655257060992658440191.0L, parseAs<long double>("10384593717069655257060992658440191.0"));
 }
 
 TEST(StringUtilTest, ParseBoolTest)
