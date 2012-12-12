@@ -16,11 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Provider.h"
+#include "StringProvider.h"
 #include "../../util/StringUtil.h"
 #include "../object/Heap.h"
-#include "../Exception.h"
-#include <tinyxml2.h>
 #include <sstream>
 
 namespace chisa {

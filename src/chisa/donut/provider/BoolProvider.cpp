@@ -18,9 +18,7 @@
 
 #include "Provider.h"
 #include "../Exception.h"
-#include <tinyxml2.h>
 #include "../object/Heap.h"
-#include "../native/Bind.h"
 
 namespace chisa {
 namespace donut {

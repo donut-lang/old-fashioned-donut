@@ -16,42 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "NullProvider.h"
-#include "../Exception.h"
+#include "NativeClosureProvider.h"
+#include "../object/NativeObject.h"
 
 namespace chisa {
 namespace donut {
 
-static const std::string TAG("NullProvider");
-
-NullProvider::NullProvider(Handler<Heap> const& heap)
-:Provider(heap, "Null")
+PureNativeObjectProvider::PureNativeObjectProvider( Handler<Heap> const& heap )
+:HeapProviderImpl<PureNativeClosureObject>(heap, "PureNativeClosureObject")
 {
 }
 
-std::string NullProvider::toString(const Object* ptr) const
+ReactiveNativeObjectProvider::ReactiveNativeObjectProvider( Handler<Heap> const& heap )
+:HeapProviderImpl<ReactiveNativeClosureObject>(heap, "ReactiveNativeClosureObject")
 {
-	return "(null)";
-}
-
-int NullProvider::toInt(const Object* ptr) const
-{
-	throw DonutException(__FILE__, __LINE__, "Failed to convert null to int.");
-}
-
-float NullProvider::toFloat(const Object* ptr) const
-{
-	throw DonutException(__FILE__, __LINE__, "Failed to convert null to float.");
-}
-
-bool NullProvider::toBool(const Object* ptr) const
-{
-	return false;
-}
-
-Handler<Object> NullProvider::createNull()
-{
-	return Handler<Object>::__internal__fromRawPointerWithoutCheck( NullProvider::toPointer() );
 }
 
 }}

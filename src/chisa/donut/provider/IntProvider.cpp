@@ -20,7 +20,6 @@
 #include "../../util/StringUtil.h"
 #include "../object/Heap.h"
 #include "../Exception.h"
-#include <tinyxml2.h>
 
 namespace chisa {
 namespace donut {

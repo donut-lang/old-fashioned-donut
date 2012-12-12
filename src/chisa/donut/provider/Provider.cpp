@@ -20,7 +20,6 @@
 #include "../object/NativeObject.h"
 #include "../object/Heap.h"
 #include "../Exception.h"
-#include <tinyxml2.h>
 
 namespace chisa {
 namespace donut {
@@ -84,5 +83,14 @@ void Provider::load( util::XValue const& data)
 	this->loadImpl(xobj->get<XValue>("content"));
 }
 
+/******************************************************************************
+ * default implementation
+ ******************************************************************************/
+util::XValue Provider::saveImpl() {
+	return util::XValue();
+}
+void Provider::loadImpl( util::XValue const& data){
+
+}
 
 }}

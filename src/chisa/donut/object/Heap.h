@@ -25,6 +25,13 @@
 #include "../source/Source.h"
 
 #include "../provider/Provider.h"
+#include "../provider/BoolProvider.h"
+#include "../provider/IntProvider.h"
+#include "../provider/NullProvider.h"
+#include "../provider/DonutObjectProvider.h"
+#include "../provider/FloatProvider.h"
+#include "../provider/StringProvider.h"
+#include "../provider/NativeClosureProvider.h"
 #include "../Clock.h"
 
 #include "Object.h"
