@@ -27,7 +27,7 @@ namespace tk {
 namespace element {
 
 class Button: public LeafElement {
-	CHISA_ELEMENT_SUBKLASS(Button);
+	CHISA_ELEMENT_SUBKLASS_FINAL(Button);
 private:
 	std::string text_;
 	Handler<gl::TextDrawable> textImage_;
