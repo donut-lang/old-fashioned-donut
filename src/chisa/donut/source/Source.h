@@ -17,6 +17,7 @@
  */
 
 #pragma once
+#include "../Decl.h"
 #include "../../Handler.h"
 #include "../Exception.h"
 #include "Closure.h"
@@ -91,7 +92,6 @@ template<> void ConstTable<Handler<Closure> >::load(util::XValue const& data);
 template<> util::XValue ConstTable<Handler<Closure> >::save();
 template<> bool ConstTable<Handler<Closure> >::operator==( ConstTable<Handler<Closure> > const& other ) const noexcept;
 
-class Heap;
 class Source final : public HandlerBody<Source> {
 private:
 	int id_;

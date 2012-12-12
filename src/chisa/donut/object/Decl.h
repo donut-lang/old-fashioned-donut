@@ -21,9 +21,23 @@
 namespace chisa {
 namespace donut {
 
-typedef unsigned int timestamp_t;
-
 typedef int objectid_t;
 typedef int object_desc_t;
+
+class Heap;
+
+class Object;
+class HeapObject;
+class NativeObject;
+class NativeClosureObject;
+
+class DonutObject;
+class DonutClosureObject;
+
+class PureNativeClosureObject;
+class ReactiveNativeClosureObject;
+
+class StringObject;
+class FloatObject;
 
 }}

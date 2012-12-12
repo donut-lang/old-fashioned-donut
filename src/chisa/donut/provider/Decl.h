@@ -16,40 +16,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Encoder.h"
-
-#include "../object/Heap.h"
-#include "../object/StringObject.h"
-#include "../object/FloatObject.h"
+#pragma once
 
 namespace chisa {
 namespace donut {
-namespace native {
 
-template <>
-Handler<Object> encode<int>(Handler<Heap> const& heap, int val)
-{
-	return heap->createInt(val);
-}
+class Provider;
+class HeapProvider;
 
-template <>
-Handler<Object> encode<float>(Handler<Heap> const& heap, float val)
-{
-	return heap->createFloatObject(val);
-}
+class BoolProvider;
+class IntProvider;
+class NullProvider;
 
-template <>
-Handler<Object> encode<bool>(Handler<Heap> const& heap, bool val)
-{
-	return heap->createBool(val);
-}
+class DonutObjectProvider;
+class DonutClosureObjectProvider;
 
-template <>
-Handler<Object> encode<std::string>(Handler<Heap> const& heap, std::string val)
-{
-	return heap->createStringObject(val);
-}
+class StringProvider;
+class FloatProvider;
 
-}}}
+class PureNativeClosureProvider;
+class ReactiveNativeClosureProvider;
 
+}}
 

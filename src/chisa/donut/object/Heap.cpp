@@ -17,6 +17,17 @@
  */
 
 #include "Heap.h"
+#include "../source/Source.h"
+#include "../provider/BoolProvider.h"
+#include "../provider/IntProvider.h"
+#include "../provider/NullProvider.h"
+#include "../provider/DonutObjectProvider.h"
+#include "../provider/FloatProvider.h"
+#include "../provider/StringProvider.h"
+#include "../provider/NativeClosureProvider.h"
+
+#include "StringObject.h"
+#include "FloatObject.h"
 
 namespace chisa {
 namespace donut {
@@ -27,6 +38,7 @@ Heap::Heap(logging::Logger& log, Handler<Clock> const& clock)
 :log_(log)
 ,clock_(clock)
 ,objectId_(0)
+,sourceId_(0)
 ,walkColor_(0)
 ,gcLimit_(1024)
 ,gcLimitMax_(65536)

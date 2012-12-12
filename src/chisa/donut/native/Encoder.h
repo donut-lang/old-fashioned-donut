@@ -19,7 +19,6 @@
 #pragma once
 #include "../object/Object.h"
 
-
 namespace chisa {
 namespace donut {
 class Heap;

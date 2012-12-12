@@ -18,12 +18,21 @@
 
 #include "Heap.h"
 #include "DonutClosureObject.h"
+#include "../source/Source.h"
 #include "../Exception.h"
 
 namespace chisa {
 namespace donut {
 
 const std::string TAG("DonutClosureObject");
+
+DonutClosureObject::DonutClosureObject(std::string const& providerName)
+:DonutObject(providerName)
+,src_(nullptr)
+,index_(-1)
+,asm_(nullptr)
+{
+}
 
 void DonutClosureObject::bootstrap(Handler<Heap> const& heap, Handler<Source> const& src, unsigned int const& closureIndex, Handler<Object> const& scope)
 {

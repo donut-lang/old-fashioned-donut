@@ -19,7 +19,6 @@
 #pragma once
 
 #include "Object.h"
-#include "../source/Source.h"
 
 namespace chisa {
 namespace donut {
@@ -29,8 +28,7 @@ private:
 	unsigned int const index_;
 	Handler<Closure> const asm_;
 public:
-	DonutClosureObject(std::string const& providerName):DonutObject(providerName)
-	,src_(nullptr),index_(-1),asm_(nullptr){};
+	DonutClosureObject(std::string const& providerName);
 	virtual ~DonutClosureObject() noexcept = default;
 public:
 	inline Handler<Source> const& source() const { return this->src_; };

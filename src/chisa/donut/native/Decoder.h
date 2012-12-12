@@ -18,8 +18,6 @@
 
 #pragma once
 #include "../object/Object.h"
-#include "../Exception.h"
-
 
 namespace chisa {
 namespace donut {

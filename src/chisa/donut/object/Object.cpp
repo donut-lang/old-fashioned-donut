@@ -18,6 +18,9 @@
 
 #include "Heap.h"
 #include "Object.h"
+#include "../provider/IntProvider.h"
+#include "../provider/BoolProvider.h"
+#include "../provider/NullProvider.h"
 #include "../Exception.h"
 #include "../../util/StringUtil.h"
 
