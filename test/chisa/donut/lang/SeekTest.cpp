@@ -38,9 +38,9 @@ TEST(SeekTest, TimeShouldAdvanceTest)
 	ASSERT_FALSE( donut->canAdvance() );
 	unsigned int const time2 = donut->nowTime();
 	{
-		result = machine->start( donut->parse("Global.test = 2;", "<MEM>", 0) );
-		ASSERT_EQ(2, result->toInt(heap));
-		ASSERT_EQ(2, heap->getGlobalObject("test")->toInt(heap));
+		result = machine->start( donut->parse("Global.test = 2.0;", "<MEM>", 0) );
+		ASSERT_FLOAT_EQ(2, result->toFloat(heap));
+		ASSERT_FLOAT_EQ(2, heap->getGlobalObject("test")->toFloat(heap));
 	}
 	unsigned int const time3 = donut->nowTime();
 
@@ -57,9 +57,9 @@ TEST(SeekTest, SeekBefore)
 	Handler<Object> result;
 	unsigned int const time1 = donut->nowTime();
 	{
-		result = machine->start( donut->parse("Global.test = 1;", "<MEM>", 0) );
-		ASSERT_EQ(1, result->toInt(heap));
-		ASSERT_EQ(1, heap->getGlobalObject("test")->toInt(heap));
+		result = machine->start( donut->parse("Global.test = 1.0;", "<MEM>", 0) );
+		ASSERT_FLOAT_EQ(1.0, result->toFloat(heap));
+		ASSERT_FLOAT_EQ(1.0, heap->getGlobalObject("test")->toFloat(heap));
 	}
 	unsigned int const time2 = donut->nowTime();
 	{
@@ -86,7 +86,7 @@ TEST(SeekTest, SeekBefore)
 		ASSERT_TRUE( donut->canBack() );
 		ASSERT_TRUE( donut->canAdvance() );
 		ASSERT_TRUE( heap->hasGlobalObject("test") );
-		ASSERT_EQ(1, heap->getGlobalObject("test")->toInt(heap) );
+		ASSERT_FLOAT_EQ(1.0, heap->getGlobalObject("test")->toFloat(heap) );
 		ASSERT_TRUE( donut->canBack() );
 		ASSERT_TRUE( donut->canAdvance() );
 	}
