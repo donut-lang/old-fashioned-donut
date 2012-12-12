@@ -237,6 +237,36 @@ TEST_F(ReactiveObjectTest, BackAndForwardTest)
 	ASSERT_FALSE( obj->historyDiscarded );
 }
 
+TEST_F(ReactiveObjectTest, CombinedTest)
+{
+	Handler<SampleObject> obj( provider->newInstance(heap) );
+	heap->setGlobalObject("sample", obj);
+	unsigned int const t1 = donut->nowTime();
+	ASSERT_EQ(0, obj->backable_and_forwardable);
+	Handler<Object> result = machine->start( donut->parse("sample.backable_but_non_fowardable();sample.backable_and_forwardable();") );
+	ASSERT_EQ(0, obj->backable_and_forwardable);
+	{ //結果と副作用の確認
+		ASSERT_LT( t1, donut->nowTime() );
+		ASSERT_EQ( t1, donut->firstTime());
+		ASSERT_FALSE( obj->futureDiscarded );
+		ASSERT_FALSE( obj->historyDiscarded );
+	}
+	//シーク
+	ASSERT_EQ(0, obj->backable_and_forwardable);
+	ASSERT_FALSE( obj->backable_but_non_fowardable );
+	donut->seek(t1);
+	ASSERT_TRUE( obj->backable_but_non_fowardable ); //副作用の確認
+	ASSERT_EQ(1, obj->backable_and_forwardable);
+	{//戻れるけど、先には進めない。
+		ASSERT_EQ( t1, donut->nowTime() );
+		ASSERT_EQ( t1, donut->firstTime());
+		ASSERT_EQ( t1, donut->lastTime() );
+	}
+	//未来の打ち消しが起こる
+	ASSERT_TRUE( obj->futureDiscarded );
+	ASSERT_FALSE( obj->historyDiscarded );
+}
+
 TEST_F(ReactiveObjectTest, BackableOnlyOnceTest)
 {
 	Handler<SampleObject> obj( provider->newInstance(heap) );
