@@ -78,8 +78,8 @@ public:
 	virtual ~HeapProviderImpl() noexcept = default;
 public:
 	template <typename... Args> inline
-	T* newInstance(Args... args) {
-		T* t = new T( this->name() );
+	Handler<T> newInstance(Args... args) {
+		 Handler<T> t ( new T( this->name() ) );
 		t->bootstrap(args...);
 		return t;
 	}
