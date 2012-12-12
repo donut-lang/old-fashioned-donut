@@ -133,12 +133,13 @@ int main(int argc, char* argv[]){
 	std::cout << source << std::endl;
 
 	{
-		Donut donut(log);
-		Handler<Machine> machine = donut.queryMachine();
-		Handler<Source> src = donut.parse( source, "<CIN>" );
+		Handler<Donut> donut(new Donut(log));
+		donut->bootstrap();
+		Handler<Machine> machine = donut->queryMachine();
+		Handler<Source> src = donut->parse( source, "<CIN>" );
 		Handler<Object> obj = machine->start( src );
 
-		std::cout << obj->toString( donut.heap() ) << std::endl;
+		std::cout << obj->toString( donut->heap() ) << std::endl;
 	}
 
 	return 0;

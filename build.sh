@@ -17,10 +17,20 @@ else
 	echo "already configured"
 fi
 
-VAR=$1
-if [ -z $VAR ] ; then
-VAR="build"
+MODE=$1
+if [ "$MODE" = "debug" ] ; then
+	shift
+elif [ "$MODE" = "release" ] ; then
+	shift
+else
+	MODE="debug"
+fi
+
+TARGET=$1
+if [ -z $TARGET ] ; then
+TARGET="build"
 fi
 shift
-python waf --out $BUILDDIR --progress ${VAR}_debug $* 2>&1
+
+python waf --out $BUILDDIR --progress ${TARGET}_${MODE} $* 2>&1
 exit $?
