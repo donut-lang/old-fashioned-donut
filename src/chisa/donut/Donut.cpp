@@ -37,7 +37,7 @@ Handler<Machine> Donut::queryMachine( std::string const& name )
 		return it->second;
 	}else{
 		Handler<Machine> m( new Machine(this->log(), this->clock_, this->heap_) );
-		this->machines_.insert( std::pair<std::string, Handler<Machine> >(name, m) );
+		this->machines_.insert( name, m );
 		return m;
 	}
 }

@@ -17,13 +17,17 @@
  */
 
 #pragma once
+
 #include "source/Source.h"
 #include "object/Heap.h"
 #include "vm/Machine.h"
+
+#include "Clock.h"
+
 #include "../logging/Logger.h"
 #include "../Handler.h"
-#include "Clock.h"
 #include "../util/XVal.h"
+#include "../util/VectorMap.h"
 
 namespace chisa {
 namespace donut {
@@ -34,7 +38,7 @@ class Donut final : public HandlerBody<Donut> {
 private:
 	Handler<Clock> clock_;
 	Handler<Heap> heap_;
-	std::map<std::string, Handler<Machine> > machines_;
+	util::VectorMap<std::string, Handler<Machine> > machines_;
 public: /* 生成・破棄 */
 	Donut(logging::Logger& log);
 	virtual ~Donut() noexcept = default;
