@@ -10,6 +10,7 @@ function conf() {
 		export set CXX='ccache g++'
 		CONFIGURE_CMD="python waf configure --out $BUILDDIR"
 	fi
+	echo $CONFIGURE_CMD
 	$CONFIGURE_CMD
 }
 
@@ -29,10 +30,12 @@ fi
 shift
 
 BLD_WAF_CMD="python waf --out $BUILDDIR --progress ${TARGET}_${MODE} $*"
+echo $BLD_WAF_CMD
 $BLD_WAF_CMD 2>&1
 if [ $? -ne 0 ] ; then
 	echo "not configured"
 	conf
+	echo $BLD_WAF_CMD
 	$BLD_WAF_CMD 2>&1
 fi
 exit $?
