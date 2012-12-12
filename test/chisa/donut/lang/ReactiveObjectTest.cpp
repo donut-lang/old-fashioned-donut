@@ -156,10 +156,10 @@ TEST_F(ReactiveObjectTest, UnrecoverableTest)
 
 TEST_F(ReactiveObjectTest, SaveLoadTest)
 {
-	Handler<SampleObject> obj( provider->newInstance(heap) );
-	heap->setGlobalObject("sample", obj);
+	heap->setGlobalObject("sample", provider->newInstance(heap));
 
 	reload(donut->save());
+	Handler<SampleObject> obj( heap->getGlobalObject("sample").cast<SampleObject>() );
 
 	Handler<Object> result = machine->start( donut->parse("sample.unrecoverable();") );
 	ASSERT_EQ( donut->nowTime(), donut->firstTime() );
