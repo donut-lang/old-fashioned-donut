@@ -176,91 +176,29 @@ template<typename T> typename _TypeAdapter<T>::return_type XObject::set(std::str
 		return p.second.as<SpiritType>();
 	}
 }
-template<> inline XValue& XObject::set<XValue>(std::string const& name, XValue const& obj)
-{
-	auto it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );
-	std::pair<std::string, XValue>& p = *it;
-	if( it == this->map_.end() || p.first != name) {
-		it = this->map_.insert(it, std::pair<std::string, XValue>(name, obj));
-		return it->second;
-	}else{
-		return p.second = obj;
-	}
-}
-#define FUNCT(TYPE, VAL) \
-		template <> inline bool XValue::is<XValue::TYPE>() const noexcept {\
-			return this->type_ == XValue::Type::TYPE##T;\
-		};\
-		template <> inline typename _TypeAdapter<XValue::TYPE>::return_type XValue::as<XValue::TYPE>() {\
-			if(this->type_ != XValue::Type::TYPE##T) {\
-				typedef typename _TypeAdapter<XValue::TYPE>::init_type Type;\
-				throw logging::Exception(__FILE__, __LINE__, "Type mismatched! required: %s actual: %s.", XValue((Type())).typeString().c_str(), this->typeString().c_str());\
-			}\
-			return VAL;\
-		};\
-		template <> inline typename _TypeAdapter<XValue::TYPE>::return_const_type XValue::as<XValue::TYPE>() const {\
-			if(this->type_ != XValue::Type::TYPE##T) {\
-				typedef typename _TypeAdapter<XValue::TYPE>::init_type Type;\
-				throw logging::Exception(__FILE__, __LINE__, "Type mismatched! required: %s actual: %s.", XValue((Type())).typeString().c_str(), this->typeString().c_str());\
-			}\
-			return VAL;\
-		};
-FUNCT(Null, spirit_.null_);
-FUNCT(Array, *spirit_.array_);
-FUNCT(Object, *spirit_.object_);
-FUNCT(String, *spirit_.str_);
-FUNCT(UInt, spirit_.uint_);
-FUNCT(SInt, spirit_.int_);
-FUNCT(Float, spirit_.float_);
-FUNCT(Bool, spirit_.bool_);
+
+#define FUNCT(TYPE) \
+template <> bool XValue::is<XValue::TYPE>() const noexcept;\
+template <> typename _TypeAdapter<XValue::TYPE>::return_type XValue::as<XValue::TYPE>();\
+template <> typename _TypeAdapter<XValue::TYPE>::return_const_type XValue::as<XValue::TYPE>() const;
+
+FUNCT(Null);
+FUNCT(Array);
+FUNCT(Object);
+FUNCT(String);
+FUNCT(UInt);
+FUNCT(SInt);
+FUNCT(Float);
+FUNCT(Bool);
 #undef FUNCT
 
-template <> inline typename _TypeAdapter<XValue>::return_type XValue::as<XValue>() {
-	return *this;
-};
-template <> inline typename _TypeAdapter<XValue>::return_const_type XValue::as<XValue>() const {
-	return *this;
-};
-
-template <> inline XValue XValue::decode<XValue::String>(std::string const& str)
-{
-	return XValue((String)str);
-}
-template <> inline XValue XValue::decode<XValue::UInt>(std::string const& str)
-{
-	bool success = false;
-	XValue::UInt val = util::parseAsInt<XValue::UInt>(str, 0, &success);
-	if(!success){
-		throw logging::Exception(__FILE__, __LINE__, "Failed to convert %s to UInt.", str.c_str());
-	}
-	return XValue((UInt)val);
-}
-template <> inline XValue XValue::decode<XValue::SInt>(std::string const& str)
-{
-	bool success = false;
-	XValue::SInt val = util::parseAsInt<XValue::SInt>(str, 0, &success);
-	if(!success){
-		throw logging::Exception(__FILE__, __LINE__, "Failed to convert %s to SInt.", str.c_str());
-	}
-	return XValue((SInt)val);
-}
-template <> inline XValue XValue::decode<XValue::Float>(std::string const& str)
-{
-	bool success = false;
-	XValue::Float val = util::parseAs<XValue::Float>(str, &success);
-	if(!success){
-		throw logging::Exception(__FILE__, __LINE__, "Failed to convert %s to Double.", str.c_str());
-	}
-	return XValue((Float)val);
-}
-template <> inline XValue XValue::decode<XValue::Bool>(std::string const& str)
-{
-	bool success = false;
-	XValue::Bool val = util::parseAs<bool>(str, &success);
-	if(!success){
-		throw logging::Exception(__FILE__, __LINE__, "Failed to convert %s to bool", str.c_str());
-	}
-	return XValue((Bool)val);
-}
+template <> XValue& XObject::set<XValue>(std::string const& name, XValue const& obj);
+template <> typename _TypeAdapter<XValue>::return_type XValue::as<XValue>();
+template <> typename _TypeAdapter<XValue>::return_const_type XValue::as<XValue>() const;
+template <> XValue XValue::decode<XValue::String>(std::string const& str);
+template <> XValue XValue::decode<XValue::UInt>(std::string const& str);
+template <> XValue XValue::decode<XValue::SInt>(std::string const& str);
+template <> XValue XValue::decode<XValue::Float>(std::string const& str);
+template <> XValue XValue::decode<XValue::Bool>(std::string const& str);
 
 }}

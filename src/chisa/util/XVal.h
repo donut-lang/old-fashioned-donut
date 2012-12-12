@@ -18,16 +18,15 @@
 
 #pragma once
 
-#include <tinyxml2.h>
-#include <map>
-#include <unordered_map>
 #include <string>
-#include <memory>
-#include <vector>
-#include "ClassUtil.h"
-#include "StringUtil.h"
 #include "../Handler.h"
+#include "ClassUtil.h"
 #include "VectorMap.h"
+
+namespace tinyxml2 {
+class XMLDocument;
+class XMLElement;
+}
 
 namespace chisa {
 namespace util {

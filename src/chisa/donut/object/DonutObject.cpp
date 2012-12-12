@@ -18,7 +18,7 @@
 
 #include <sstream>
 #include "Heap.h"
-#include "Object.h"
+#include "DonutObject.h"
 #include "../Exception.h"
 #include "../../util/StringUtil.h"
 
