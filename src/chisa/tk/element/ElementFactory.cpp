@@ -19,10 +19,12 @@
 #include "ElementFactory.h"
 #include "../Element.h"
 #include "../../logging/Exception.h"
+
 #include "SplitCombo.h"
 #include "Empty.h"
 #include "ScrollCombo.h"
 #include "WidgetElement.h"
+#include "Button.h"
 
 #include <algorithm>
 #include <memory>
@@ -42,6 +44,7 @@ const std::string ElementFactory::ElemName::Empty("empty");
 const std::string ElementFactory::ElemName::WidgetWrapper("widget");
 const std::string ElementFactory::ElemName::Scroll("scroll");
 const std::string ElementFactory::ElemName::Tab("tab");
+const std::string ElementFactory::ElemName::Button("button");
 
 const std::string ElementFactory::AttrName::Id("id");
 
@@ -98,6 +101,7 @@ void ElementFactory::init()
 	this->registerElement<Empty>(ElemName::Empty);
 	this->registerElement<ScrollCombo>(ElemName::Scroll);
 	this->registerElement<WidgetElement>(ElemName::WidgetWrapper);
+	this->registerElement<Button>(ElemName::Button);
 	//this->registerElement<TabElement>(ElemName::Tab);
 }
 
