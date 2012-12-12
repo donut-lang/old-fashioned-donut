@@ -17,17 +17,17 @@
  */
 
 #include "NativeClosureProvider.h"
-#include "../object/NativeObject.h"
+#include "../object/NativeClosureObject.h"
 
 namespace chisa {
 namespace donut {
 
-PureNativeObjectProvider::PureNativeObjectProvider( Handler<Heap> const& heap )
+PureNativeClosureProvider::PureNativeClosureProvider( Handler<Heap> const& heap )
 :HeapProviderImpl<PureNativeClosureObject>(heap, "PureNativeClosureObject")
 {
 }
 
-ReactiveNativeObjectProvider::ReactiveNativeObjectProvider( Handler<Heap> const& heap )
+ReactiveNativeClosureProvider::ReactiveNativeClosureProvider( Handler<Heap> const& heap )
 :HeapProviderImpl<ReactiveNativeClosureObject>(heap, "ReactiveNativeClosureObject")
 {
 }

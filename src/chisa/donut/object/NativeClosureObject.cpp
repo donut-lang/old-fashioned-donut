@@ -16,7 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "NativeObject.h"
+#include "NativeClosureObject.h"
+#include "ReactiveNativeObject.h"
 #include "../../util/StringUtil.h"
 #include "../Exception.h"
 #include "Heap.h"

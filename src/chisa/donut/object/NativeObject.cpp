@@ -16,10 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "NativeObject.h"
+#include "Object.h"
 #include "../../util/StringUtil.h"
 #include "../Exception.h"
 #include "Heap.h"
+
 namespace chisa {
 namespace donut {
 

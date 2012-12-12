@@ -17,7 +17,8 @@
  */
 
 #include "DonutObjectProvider.h"
-#include "../object/DonutObject.h"
+#include "../object/Object.h"
+#include "../object/DonutClosureObject.h"
 
 namespace chisa {
 namespace donut {

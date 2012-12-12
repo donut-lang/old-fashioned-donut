@@ -23,17 +23,17 @@ namespace chisa {
 namespace donut {
 
 class PureNativeClosureObject;
-class PureNativeObjectProvider final : public HeapProviderImpl<PureNativeClosureObject> {
+class PureNativeClosureProvider final : public HeapProviderImpl<PureNativeClosureObject> {
 public:
-	PureNativeObjectProvider( Handler<Heap> const& heap );
-	virtual ~PureNativeObjectProvider() noexcept = default;
+	PureNativeClosureProvider( Handler<Heap> const& heap );
+	virtual ~PureNativeClosureProvider() noexcept = default;
 };
 
 class ReactiveNativeClosureObject;
-class ReactiveNativeObjectProvider final : public HeapProviderImpl<ReactiveNativeClosureObject> {
+class ReactiveNativeClosureProvider final : public HeapProviderImpl<ReactiveNativeClosureObject> {
 public:
-	ReactiveNativeObjectProvider( Handler<Heap> const& heap );
-	virtual ~ReactiveNativeObjectProvider() noexcept = default;
+	ReactiveNativeClosureProvider( Handler<Heap> const& heap );
+	virtual ~ReactiveNativeClosureProvider() noexcept = default;
 };
 
 }}
