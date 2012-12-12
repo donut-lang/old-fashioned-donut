@@ -22,6 +22,15 @@
 namespace chisa {
 namespace donut {
 
+TEST(FloatTest, ImplicitConvertTest)
+{
+	INIT_DONUT;
+	ASSERT_ANY_THROW( heap->createFloatObject(10)->toBool(heap) );
+	ASSERT_NO_THROW( heap->createFloatObject(10)->toFloat(heap) );
+	ASSERT_ANY_THROW( heap->createFloatObject(10)->toInt(heap) );
+	ASSERT_ANY_THROW( heap->createFloatObject(10)->toString(heap) );
+}
+
 TEST(FloatTest, LiteralTest)
 {
 	SOURCE_TEST_FLOAT(12.34, "12.34;");

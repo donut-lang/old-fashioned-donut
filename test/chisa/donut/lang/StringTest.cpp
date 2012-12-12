@@ -22,6 +22,15 @@
 namespace chisa {
 namespace donut {
 
+TEST(StringTest, ImplicitConvertTest)
+{
+	INIT_DONUT;
+	ASSERT_ANY_THROW( heap->createStringObject("test")->toBool(heap) );
+	ASSERT_ANY_THROW( heap->createStringObject("test")->toFloat(heap) );
+	ASSERT_ANY_THROW( heap->createStringObject("test")->toInt(heap) );
+	ASSERT_NO_THROW( heap->createStringObject("test")->toString(heap) );
+}
+
 TEST(StringTest, SingleLiteralTest)
 {
 	SOURCE_TEST_STR("abc", "'abc';");
