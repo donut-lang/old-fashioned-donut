@@ -113,7 +113,7 @@ TEST(StringUtilTest, ParseFloatTest)
 
 TEST(StringUtilTest, ParseFloatMaximumTest)
 {
-
+	// マクロを展開すると、どうしてもドーナッツのリテラルと整合性が取れるかがわからないので、手打ち。悲しい。
 	ASSERT_FLOAT_EQ(3.402823466e+38, parseAs<float>("3.402823466e+38"));
 	ASSERT_FLOAT_EQ(1.17549e-38, parseAs<float>("1.17549e-38"));
 	ASSERT_FLOAT_EQ(33554431, parseAs<float>("33554431"));
