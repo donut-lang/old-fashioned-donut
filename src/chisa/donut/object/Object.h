@@ -94,7 +94,7 @@ protected: /* 実装すべきもの */
 public:
 	virtual bool onFree() noexcept = 0;
 public:
-	static inline bool isPrimitiveDescriptor( object_desc_t const& desc ) noexcept {
+	static inline constexpr bool isPrimitiveDescriptor( object_desc_t const& desc ) noexcept {
 		return (desc & Object::Tag::Mask) != Object::Tag::Obj;
 	};
 	static inline objectid_t decodeObjectId( object_desc_t const& desc ) noexcept {
@@ -103,13 +103,13 @@ public:
 		}
 		return desc >> TagShift;
 	};
-	static inline object_desc_t encodeObjectId( objectid_t const& id ) {
+	static inline constexpr object_desc_t encodeObjectId( objectid_t const& id ) {
 		return (id << Object::TagShift) | Object::Tag::Obj;
 	}
-	static inline Object* castToPointer(object_desc_t const& desc) noexcept {
+	static inline constexpr Object* castToPointer(object_desc_t const& desc) noexcept {
 		return reinterpret_cast<Object*>(static_cast<intptr_t>(desc));
 	};
-	static inline object_desc_t castToDescriptor(Object* const& desc) noexcept {
+	static inline constexpr object_desc_t castToDescriptor(Object* const& desc) noexcept {
 		return static_cast<object_desc_t>(reinterpret_cast<intptr_t>(desc));
 	};
 };

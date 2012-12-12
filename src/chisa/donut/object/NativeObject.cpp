@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Object.h"
+#include "NativeObject.h"
 #include "../../util/StringUtil.h"
 #include "../Exception.h"
 #include "Heap.h"
