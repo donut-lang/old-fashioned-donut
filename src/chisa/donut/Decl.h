@@ -20,22 +20,9 @@
 
 namespace chisa {
 namespace donut {
-
-class Provider;
-class HeapProvider;
-
-class BoolProvider;
-class IntProvider;
-class NullProvider;
-
-class DonutProvider;
-class DonutClosureProvider;
-
-class StringProvider;
-class FloatProvider;
-
-class PureNativeClosureProvider;
-class ReactiveNativeClosureProvider;
-
+typedef unsigned int timestamp_t;
 }}
 
+#include "object/Decl.h"
+#include "provider/Decl.h"
+#include "source/Decl.h"

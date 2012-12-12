@@ -21,7 +21,7 @@
 #include "../provider/BoolProvider.h"
 #include "../provider/IntProvider.h"
 #include "../provider/NullProvider.h"
-#include "../provider/DonutObjectProvider.h"
+#include "../provider/DonutProvider.h"
 #include "../provider/FloatProvider.h"
 #include "../provider/StringProvider.h"
 #include "../provider/NativeClosureProvider.h"
@@ -348,8 +348,8 @@ void Heap::initPrimitiveProviders()
 	this->boolProvider_ = Handler<BoolProvider>(new BoolProvider(self));
 	this->intProvider_ = Handler<IntProvider>(new IntProvider(self));
 	this->nullProvider_ = Handler<NullProvider>(new NullProvider(self));
-	this->registerProvider( this->donutObjectProvider_ = Handler<DonutObjectProvider>(new DonutObjectProvider(self)) );
-	this->registerProvider( this->donutClosureObjectProvider_ = Handler<DonutClosureObjectProvider>(new DonutClosureObjectProvider(self)) );
+	this->registerProvider( this->donutObjectProvider_ = Handler<DonutProvider>(new DonutProvider(self)) );
+	this->registerProvider( this->donutClosureObjectProvider_ = Handler<DonutClosureProvider>(new DonutClosureProvider(self)) );
 	this->registerProvider( this->stringProvider_ = Handler<StringProvider>( new StringProvider(self) ) );
 	this->registerProvider( this->floatProvider_ = Handler<FloatProvider>( new FloatProvider(self) ) );
 	this->registerProvider( this->pureNativeClosureProvider_ = Handler<PureNativeClosureProvider>( new PureNativeClosureProvider(self) ) );

@@ -24,15 +24,15 @@ namespace donut {
 
 class DonutObject;
 class DonutClosureObject;
-class DonutObjectProvider final : public HeapProviderImpl<DonutObject> {
+class DonutProvider final : public HeapProviderImpl<DonutObject> {
 public:
-	DonutObjectProvider( Handler<Heap> const& heap );
-	virtual ~DonutObjectProvider() noexcept = default;
+	DonutProvider( Handler<Heap> const& heap );
+	virtual ~DonutProvider() noexcept = default;
 };
-class DonutClosureObjectProvider final : public HeapProviderImpl<DonutClosureObject> {
+class DonutClosureProvider final : public HeapProviderImpl<DonutClosureObject> {
 public:
-	DonutClosureObjectProvider( Handler<Heap> const& heap );
-	virtual ~DonutClosureObjectProvider() noexcept = default;
+	DonutClosureProvider( Handler<Heap> const& heap );
+	virtual ~DonutClosureProvider() noexcept = default;
 };
 
 }}
