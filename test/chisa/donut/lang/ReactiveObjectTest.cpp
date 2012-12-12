@@ -105,6 +105,15 @@ protected:
 	Handler<SampleProvider> provider;
 public:
 	void SetUp(){
+		init();
+		boot();
+	}
+	void init(){
+		donut.reset();
+		machine.reset();
+		clock.reset();
+		heap.reset();
+		provider.reset();
 		donut = Handler<Donut>(new Donut(log_trace));
 		machine = donut->queryMachine();
 		clock = donut->clock();
@@ -112,8 +121,13 @@ public:
 
 		provider = Handler<SampleProvider>(new SampleProvider(heap));
 		heap->registerProvider(provider);
-
+	}
+	void boot(){
 		donut->bootstrap();
+	}
+	void reload(util::XValue const& v){
+		init();
+		donut->load(v);
 	}
 	void TearDown(){
 	}
@@ -127,11 +141,33 @@ TEST_F(ReactiveObjectTest, RegisterTest)
 	Handler<Object> result = machine->start( donut->parse("sample.unrecoverable();") );
 	ASSERT_TRUE(result->isObject());
 	ASSERT_EQ("hey!", result->toString(heap));
+}
+
+
+TEST_F(ReactiveObjectTest, UnrecoverableTest)
+{
+	Handler<SampleObject> obj( provider->newInstance(heap) );
+	heap->setGlobalObject("sample", obj);
+	Handler<Object> result = machine->start( donut->parse("sample.unrecoverable();") );
 	ASSERT_EQ( donut->nowTime(), donut->firstTime() );
 	ASSERT_FALSE( obj->futureDiscarded );
 	ASSERT_TRUE( obj->historyDiscarded );
 }
 
+TEST_F(ReactiveObjectTest, SaveLoadTest)
+{
+	Handler<SampleObject> obj( provider->newInstance(heap) );
+	heap->setGlobalObject("sample", obj);
+
+	reload(donut->save());
+
+	Handler<Object> result = machine->start( donut->parse("sample.unrecoverable();") );
+	ASSERT_EQ( donut->nowTime(), donut->firstTime() );
+	ASSERT_FALSE( obj->futureDiscarded );
+	ASSERT_TRUE( obj->historyDiscarded );
+
+	reload(donut->save());
+}
 
 TEST_F(ReactiveObjectTest, BackTest)
 {

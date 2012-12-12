@@ -254,17 +254,6 @@ template<> XValue& XObject::set<XValue>(std::string const& name, XValue const& o
 		return p.second = obj;
 	}
 }
-template <> typename _TypeAdapter<XValue>::return_type XValue::as<XValue>() {
-	return *this;
-};
-template <> typename _TypeAdapter<XValue>::return_const_type XValue::as<XValue>() const {
-	return *this;
-};
-
-template <> XValue XValue::decode<XValue::String>(std::string const& str)
-{
-	return XValue((String)str);
-}
 template <> XValue XValue::decode<XValue::UInt>(std::string const& str)
 {
 	bool success = false;
@@ -301,34 +290,6 @@ template <> XValue XValue::decode<XValue::Bool>(std::string const& str)
 	}
 	return XValue((Bool)val);
 }
-
-#define FUNCT(TYPE, VAL) \
-		template <> bool XValue::is<XValue::TYPE>() const noexcept {\
-			return this->type_ == XValue::Type::TYPE##T;\
-		};\
-		template <> typename _TypeAdapter<XValue::TYPE>::return_type XValue::as<XValue::TYPE>() {\
-			if(this->type_ != XValue::Type::TYPE##T) {\
-				typedef typename _TypeAdapter<XValue::TYPE>::init_type Type;\
-				throw logging::Exception(__FILE__, __LINE__, "Type mismatched! required: %s actual: %s.", XValue((Type())).typeString().c_str(), this->typeString().c_str());\
-			}\
-			return VAL;\
-		};\
-		template <> typename _TypeAdapter<XValue::TYPE>::return_const_type XValue::as<XValue::TYPE>() const {\
-			if(this->type_ != XValue::Type::TYPE##T) {\
-				typedef typename _TypeAdapter<XValue::TYPE>::init_type Type;\
-				throw logging::Exception(__FILE__, __LINE__, "Type mismatched! required: %s actual: %s.", XValue((Type())).typeString().c_str(), this->typeString().c_str());\
-			}\
-			return VAL;\
-		};
-FUNCT(Null, spirit_.null_);
-FUNCT(Array, *spirit_.array_);
-FUNCT(Object, *spirit_.object_);
-FUNCT(String, *spirit_.str_);
-FUNCT(UInt, spirit_.uint_);
-FUNCT(SInt, spirit_.int_);
-FUNCT(Float, spirit_.float_);
-FUNCT(Bool, spirit_.bool_);
-#undef FUNCT
 
 }}
 

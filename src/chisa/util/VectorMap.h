@@ -95,7 +95,7 @@ public:
 			return true;
 		}
 	}
-	inline bool remove(T const& key){
+	inline bool remove(T const& key) {
 		Comparator cmp;
 		auto it = find(key);
 		if( it == end() ) {
@@ -105,8 +105,12 @@ public:
 			return true;
 		}
 	}
-	inline Iterator erase(Iterator it){
+	inline Iterator erase(Iterator it)
+{
 		return data_.erase(it);
+	}
+	inline void clear() noexcept {
+		this->data_.clear();
 	}
 	inline SizeType size() const noexcept{ return data_.size(); };
 	inline bool empty() const noexcept{ return data_.empty(); };
