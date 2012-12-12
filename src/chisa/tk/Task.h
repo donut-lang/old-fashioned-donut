@@ -17,8 +17,7 @@
  */
 
 #pragma once
-#include <set>
-#include <memory>
+#include <unordered_set>
 #include "../logging/Logger.h"
 
 namespace chisa {
@@ -42,7 +41,7 @@ class TaskHandler {
 private:
 	logging::Logger& log;
 private:
-	std::set<Task*> taskPool;
+	std::unordered_set<Task*> taskPool;
 public:
 	TaskHandler(logging::Logger& log);
 	virtual ~TaskHandler();

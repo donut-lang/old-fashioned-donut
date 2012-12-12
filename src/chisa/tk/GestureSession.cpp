@@ -44,9 +44,10 @@ GestureSession::GestureSession(logging::Logger& log, const unsigned int pointerI
 	//このセッションに関わるレイアウトを列挙
 	std::shared_ptr<Element> _it = orig_target;
 	while( _it ) {
-		this->elementChain_.push_front( _it );
+		this->elementChain_.push_back( _it );
 		_it = _it->parent().lock();
 	}
+	std::reverse(this->elementChain_.begin(), this->elementChain_.end());
 	for(ElementIterator it = this->elementChain_.begin(); it != this->elementChain_.end(); ++it){
 		std::shared_ptr<Element> target = it->lock();
 		if(log.t()){

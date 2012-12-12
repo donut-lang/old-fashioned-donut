@@ -22,7 +22,6 @@
 #include "../util/ClassUtil.h"
 #include "../geom/Vector.h"
 #include "../geom/Area.h"
-#include <memory>
 #include <string>
 #include <cmath>
 

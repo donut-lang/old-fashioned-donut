@@ -17,9 +17,8 @@
  */
 
 #pragma once
-#include <deque>
+#include <vector>
 #include <string>
-#include <memory>
 
 namespace chisa {
 namespace tk {
@@ -28,7 +27,7 @@ template <typename T>
 class Stack
 {
 private:
-	std::deque<T> stack;
+	std::vector<T> stack;
 public:
 	T push(const T elm)
 	{
@@ -72,8 +71,8 @@ public:
 	{
 		return stack.size();
 	}
-	typedef typename std::deque<T >::const_iterator Iterator;
-	typedef typename std::deque<T >::reverse_iterator ReverseIterator;
+	typedef typename std::vector<T>::const_iterator Iterator;
+	typedef typename std::vector<T>::reverse_iterator ReverseIterator;
 	Iterator begin(){
 		return stack.begin();
 	}

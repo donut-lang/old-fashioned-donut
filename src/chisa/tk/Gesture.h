@@ -18,7 +18,6 @@
 
 #pragma once
 #include <memory>
-#include <deque>
 #include "../util/ClassUtil.h"
 #include "../logging/Logger.h"
 #include "../geom/Vector.h"
@@ -62,8 +61,8 @@ private:
 	static constexpr float MinFlingVelocity=5/1000;
 private:
 	std::weak_ptr<Element> target_;
-	std::deque<std::weak_ptr<Element> > elementChain_;
-	typedef std::deque<std::weak_ptr<Element> >::iterator ElementIterator;
+	std::vector<std::weak_ptr<Element> > elementChain_;
+	typedef std::vector<std::weak_ptr<Element> >::iterator ElementIterator;
 	const unsigned int pointerIndex_;
 	const geom::Point startPoint_;
 	const float startTimeMs_;
