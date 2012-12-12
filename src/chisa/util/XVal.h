@@ -21,7 +21,7 @@
 #include <string>
 #include "../Handler.h"
 #include "ClassUtil.h"
-#include "VectorMap.h"
+#include "PairUtil.h"
 
 namespace tinyxml2 {
 class XMLDocument;

@@ -20,6 +20,7 @@
 #include <algorithm>
 #include "Heap.h"
 #include "../Clock.h"
+#include "../../util/PairUtil.h"
 
 namespace chisa {
 namespace donut {

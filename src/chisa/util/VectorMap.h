@@ -17,25 +17,12 @@
  */
 
 #pragma once
-#include <utility>
 #include <vector>
 #include <algorithm>
+#include "PairUtil.h"
 
 namespace chisa {
 namespace util {
-
-template <typename T, typename U>
-struct PairCompare : public std::binary_function<std::pair<T,U>,std::pair<T,U>,bool>{
-	bool operator()(T const& a, std::pair<T,U> const& b){
-		return std::less<T>()(a, b.first);
-	}
-	bool operator()(std::pair<T,U> const& a, std::pair<T,U> const& b){
-		return std::less<T>()(a.first, b.first);
-	}
-	bool operator()(std::pair<T,U> const& a, T const& b){
-		return std::less<T>()(a.first, b);
-	}
-};
 
 template <typename T, typename U>
 class VectorMap {
