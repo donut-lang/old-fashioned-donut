@@ -119,8 +119,7 @@ public:
 };
 TEST_F(ReactiveObjectTest, RegisterTest)
 {
-	Handler<SampleObject> obj( provider->createDerived() );
-	obj->bootstrap(heap);
+	Handler<SampleObject> obj( provider->newInstance(heap) );
 	heap->setGlobalObject("sample", obj);
 	ASSERT_TRUE( heap->hasGlobalObject("sample") );
 	ASSERT_TRUE( heap->getGlobalObject("sample")->isObject() );
@@ -135,8 +134,7 @@ TEST_F(ReactiveObjectTest, RegisterTest)
 
 TEST_F(ReactiveObjectTest, BackTest)
 {
-	Handler<SampleObject> obj( provider->createDerived() );
-	obj->bootstrap(heap);
+	Handler<SampleObject> obj( provider->newInstance(heap) );
 	heap->setGlobalObject("sample", obj);
 	unsigned int const t1 = donut->nowTime();
 	Handler<Object> result = machine->start( donut->parse("sample.backable_but_non_fowardable();") );
@@ -161,8 +159,7 @@ TEST_F(ReactiveObjectTest, BackTest)
 
 TEST_F(ReactiveObjectTest, BackAndForwardTest)
 {
-	Handler<SampleObject> obj( provider->createDerived() );
-	obj->bootstrap(heap);
+	Handler<SampleObject> obj( provider->newInstance(heap) );
 	heap->setGlobalObject("sample", obj);
 	unsigned int const t1 = donut->nowTime();
 	ASSERT_EQ(0, obj->backable_and_forwardable);
@@ -205,8 +202,7 @@ TEST_F(ReactiveObjectTest, BackAndForwardTest)
 
 TEST_F(ReactiveObjectTest, BackableOnlyOnceTest)
 {
-	Handler<SampleObject> obj( provider->createDerived() );
-	obj->bootstrap(heap);
+	Handler<SampleObject> obj( provider->newInstance(heap) );
 	heap->setGlobalObject("sample", obj);
 	unsigned int const t1 = donut->nowTime();
 	Handler<Object> result = machine->start( donut->parse("sample.backable_only_once();") );

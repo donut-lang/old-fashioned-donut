@@ -191,6 +191,8 @@ public: /* time functions */
 	virtual void onForwardNotifyImpl(Handler<Heap> const& heap) override;
 	virtual void onDiscardHistoryNotifyImpl(Handler<Heap> const& heap) override;
 	virtual void onDiscardFutureNotifyImpl(Handler<Heap> const& heap) override;
+public:
+	void bootstrap();
 private:
 	virtual util::XValue save( Handler<Heap> const& heap ) override;
 	virtual void load( Handler<Heap> const& heap, util::XValue const& data ) override;

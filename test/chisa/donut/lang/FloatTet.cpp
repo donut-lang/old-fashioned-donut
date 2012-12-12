@@ -52,7 +52,7 @@ TEST(FloatTest, SaveLoadTest)
 		providerName = obj->providerName();
 	}
 	{
-		Handler<HeapObject> obj(heap->findHeapProvider(providerName)->create());
+		Handler<HeapObject> obj(heap->findHeapProvider(providerName)->createEmptyObject());
 		obj->load(heap, data);
 		ASSERT_NO_THROW(obj.cast<FloatObject>());
 		ASSERT_ANY_THROW(obj->toBool(heap));

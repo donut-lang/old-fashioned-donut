@@ -102,6 +102,10 @@ Handler<Object> DonutObject::getImpl(Handler<Heap> const& heap, std::string cons
  * save/load
  **********************************************************************************/
 
+void DonutObject::bootstrap()
+{
+	this->slots_.clear();
+}
 util::XValue DonutObject::save( Handler<Heap> const& heap )
 {
 	using namespace chisa::util;
