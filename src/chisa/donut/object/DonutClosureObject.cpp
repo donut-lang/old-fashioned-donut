@@ -17,7 +17,7 @@
  */
 
 #include "Heap.h"
-#include "Object.h"
+#include "DonutClosureObject.h"
 #include "../Exception.h"
 
 namespace chisa {

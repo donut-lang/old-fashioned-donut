@@ -16,13 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "NativeObject.h"
+#include "StringObject.h"
 #include <algorithm>
 
 namespace chisa {
 namespace donut {
 
 const std::string TAG("StringObject");
+
+StringObject::StringObject(std::string const& providerName)
+:NativeObject(providerName)
+{
+
+}
 
 std::string StringObject::toStringImpl(Handler<Heap> const& heap) const
 {

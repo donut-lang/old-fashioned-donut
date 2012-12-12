@@ -340,8 +340,8 @@ void Heap::initPrimitiveProviders()
 	this->registerProvider( this->donutClosureObjectProvider_ = Handler<DonutClosureObjectProvider>(new DonutClosureObjectProvider(self)) );
 	this->registerProvider( this->stringProvider_ = Handler<StringProvider>( new StringProvider(self) ) );
 	this->registerProvider( this->floatProvider_ = Handler<FloatProvider>( new FloatProvider(self) ) );
-	this->registerProvider( this->pureNativeClosureProvider_ = Handler<PureNativeObjectProvider>( new PureNativeObjectProvider(self) ) );
-	this->registerProvider( this->reactiveNativeClosureProvider_ = Handler<ReactiveNativeObjectProvider>( new ReactiveNativeObjectProvider(self) ) );
+	this->registerProvider( this->pureNativeClosureProvider_ = Handler<PureNativeClosureProvider>( new PureNativeClosureProvider(self) ) );
+	this->registerProvider( this->reactiveNativeClosureProvider_ = Handler<ReactiveNativeClosureProvider>( new ReactiveNativeClosureProvider(self) ) );
 }
 
 void Heap::initPrototypes()

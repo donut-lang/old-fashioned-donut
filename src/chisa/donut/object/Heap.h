@@ -35,8 +35,10 @@
 #include "../Clock.h"
 
 #include "Object.h"
-#include "DonutObject.h"
-#include "NativeObject.h"
+#include "StringObject.h"
+#include "FloatObject.h"
+#include "DonutClosureObject.h"
+#include "NativeClosureObject.h"
 
 namespace chisa {
 namespace donut {
@@ -67,8 +69,8 @@ private:
 
 	Handler<FloatProvider> floatProvider_;
 	Handler<StringProvider> stringProvider_;
-	Handler<PureNativeObjectProvider> pureNativeClosureProvider_;
-	Handler<ReactiveNativeObjectProvider> reactiveNativeClosureProvider_;
+	Handler<PureNativeClosureProvider> pureNativeClosureProvider_;
+	Handler<ReactiveNativeClosureProvider> reactiveNativeClosureProvider_;
 
 	Handler<DonutObject> boolProto_;
 	Handler<DonutObject> intProto_;

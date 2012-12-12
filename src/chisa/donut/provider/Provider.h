@@ -18,7 +18,7 @@
 
 #pragma once
 #include <string>
-#include "../object/NativeObject.h"
+#include "../object/NativeClosureObject.h"
 #include "../../Handler.h"
 #include "../../util/XVal.h"
 #include "../../util/VectorMap.h"

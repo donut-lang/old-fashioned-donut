@@ -17,6 +17,7 @@
  */
 
 #include "DonutHelper.h"
+#include "../../../../src/chisa/donut/object/ReactiveNativeObject.h"
 #include <math.h>
 
 namespace chisa {

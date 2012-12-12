@@ -16,13 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "NativeObject.h"
+#include "FloatObject.h"
 #include <algorithm>
 
 namespace chisa {
 namespace donut {
 
 const std::string TAG("FloatObject");
+
+FloatObject::FloatObject(std::string const& providerName)
+:NativeObject(providerName)
+,value_(NAN)
+{
+}
 
 std::string FloatObject::toStringImpl(Handler<Heap> const& heap) const
 {

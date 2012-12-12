@@ -17,7 +17,6 @@
  */
 
 #include "Provider.h"
-#include "../object/NativeObject.h"
 #include "../object/Heap.h"
 #include "../Exception.h"
 

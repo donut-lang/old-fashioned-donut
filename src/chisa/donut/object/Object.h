@@ -21,6 +21,7 @@
 #include <unordered_map>
 #include "../../Handler.h"
 #include "../../util/ClassUtil.h"
+#include "../../util/XVal.h"
 #include "../Exception.h"
 #include "Slot.h"
 

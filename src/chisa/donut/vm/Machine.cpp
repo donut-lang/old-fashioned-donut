@@ -19,9 +19,8 @@
 #include "Machine.h"
 #include "../Exception.h"
 #include "../../util/StringUtil.h"
-#include "../object/NativeObject.h"
-#include "../object/DonutObject.h"
-#include "../source/Source.h"
+#include "../object/NativeClosureObject.h"
+#include "../object/DonutClosureObject.h"
 
 #include <algorithm>
 

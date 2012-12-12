@@ -33,7 +33,6 @@ DonutObject::DonutObject(std::string const& providerName)
 
 }
 
-
 std::string DonutObject::toStringImpl(Handler<Heap> const& heap) const
 {
 	return util::format("(DonutObject %p)", this);
