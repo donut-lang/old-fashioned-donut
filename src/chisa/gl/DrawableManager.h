@@ -17,7 +17,6 @@
  */
 
 #pragma once
-#include <deque>
 #include "../util/ClassUtil.h"
 #include "../logging/Logger.h"
 #include "../util/VectorMap.h"

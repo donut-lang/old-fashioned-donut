@@ -18,8 +18,6 @@
 
 #pragma once
 #include <vector>
-#include <deque>
-#include <map>
 #include "../logging/Exception.h"
 #include "../logging/Logger.h"
 #include "../util/ClassUtil.h"

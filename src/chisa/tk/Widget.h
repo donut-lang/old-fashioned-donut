@@ -18,7 +18,6 @@
 
 #pragma once
 #include <memory>
-#include <unicode/unistr.h>
 #include "../util/ClassUtil.h"
 #include "../logging/Logger.h"
 #include "../geom/Decl.h"
