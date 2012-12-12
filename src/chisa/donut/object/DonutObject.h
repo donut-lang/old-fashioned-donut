@@ -19,7 +19,7 @@
 #pragma once
 
 #include "Object.h"
-#include "../source/Closure.h"
+#include "../source/Source.h"
 
 namespace chisa {
 namespace donut {

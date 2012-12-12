@@ -16,42 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "NullProvider.h"
-#include "../Exception.h"
+#include "DonutObjectProvider.h"
+#include "../object/DonutObject.h"
 
 namespace chisa {
 namespace donut {
 
-static const std::string TAG("NullProvider");
 
-NullProvider::NullProvider(Handler<Heap> const& heap)
-:Provider(heap, "Null")
+DonutObjectProvider::DonutObjectProvider( Handler<Heap> const& heap )
+:HeapProviderImpl<DonutObject>(heap, "DonutObject")
 {
+
 }
-
-std::string NullProvider::toString(const Object* ptr) const
+DonutClosureObjectProvider::DonutClosureObjectProvider( Handler<Heap> const& heap )
+:HeapProviderImpl<DonutClosureObject>(heap,"DonutClosureObject")
 {
-	return "(null)";
-}
 
-int NullProvider::toInt(const Object* ptr) const
-{
-	throw DonutException(__FILE__, __LINE__, "Failed to convert null to int.");
-}
-
-float NullProvider::toFloat(const Object* ptr) const
-{
-	throw DonutException(__FILE__, __LINE__, "Failed to convert null to float.");
-}
-
-bool NullProvider::toBool(const Object* ptr) const
-{
-	return false;
-}
-
-Handler<Object> NullProvider::createNull()
-{
-	return Handler<Object>::__internal__fromRawPointerWithoutCheck( NullProvider::toPointer() );
 }
 
 }}
