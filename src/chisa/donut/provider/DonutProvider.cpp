@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "DonutObjectProvider.h"
+#include "DonutProvider.h"
 #include "../object/Object.h"
 #include "../object/DonutClosureObject.h"
 
@@ -24,12 +24,12 @@ namespace chisa {
 namespace donut {
 
 
-DonutObjectProvider::DonutObjectProvider( Handler<Heap> const& heap )
+DonutProvider::DonutProvider( Handler<Heap> const& heap )
 :HeapProviderImpl<DonutObject>(heap, "DonutObject")
 {
 
 }
-DonutClosureObjectProvider::DonutClosureObjectProvider( Handler<Heap> const& heap )
+DonutClosureProvider::DonutClosureProvider( Handler<Heap> const& heap )
 :HeapProviderImpl<DonutClosureObject>(heap,"DonutClosureObject")
 {
 

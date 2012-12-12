@@ -48,8 +48,8 @@ private:
 	std::vector<HeapObject*> objectPool_;
 	std::vector<HeapObject*> objectPoolMarked_;
 	std::vector<Source*> sourcePool_;
-	Handler<DonutObjectProvider> donutObjectProvider_;
-	Handler<DonutClosureObjectProvider> donutClosureObjectProvider_;
+	Handler<DonutProvider> donutObjectProvider_;
+	Handler<DonutClosureProvider> donutClosureObjectProvider_;
 private:
 	Handler<DonutObject> globalObject_;
 	Handler<DonutObject> objectProto_;
@@ -73,7 +73,7 @@ public:
 public:
 	Handler<Clock> clock() const noexcept { return this->clock_; };
 public:
-	Handler<DonutObjectProvider>& donutObjectProvider() { return donutObjectProvider_; };
+	Handler<DonutProvider>& donutObjectProvider() { return donutObjectProvider_; };
 	Handler<BoolProvider>& boolProvider() {return boolProvider_;};
 	Handler<IntProvider>& intProvider() {return intProvider_;};
 	Handler<NullProvider>& nullProvider() {return nullProvider_;};

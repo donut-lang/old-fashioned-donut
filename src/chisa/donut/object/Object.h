@@ -171,7 +171,7 @@ namespace donut {
  * ドーナツ言語内でのクロージャやオブジェクトなどのクラス
  */
 class DonutObject : public HeapObject {
-	friend class DonutObjectProvider;
+	friend class DonutProvider;
 private:
 	std::unordered_map<std::string, Slot> slots_;
 public:
