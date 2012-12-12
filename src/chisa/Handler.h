@@ -43,14 +43,14 @@ public:
 		return spr;
 	}
 	Handler() noexcept:sprite(nullptr){};
-	explicit Handler(S* const sprite)
+	inline explicit Handler(S* const sprite)
 	:sprite(sprite)
 	{
 		if(this->sprite){
 			this->sprite->incref( true );
 		}
 	}
-	Handler(Handler<S> const& other) noexcept
+	inline Handler(Handler<S> const& other) noexcept
 	:sprite(other.sprite)
 	{
 		if(this->sprite){
@@ -63,7 +63,7 @@ public:
 		other.sprite = nullptr;
 	}
 	template <class T>
-	Handler(Handler<T> const& other) noexcept
+	inline Handler(Handler<T> const& other) noexcept
 	:sprite(other.get())
 	{
 		if(this->sprite){
@@ -117,7 +117,7 @@ public:
 	{
 		return Handler<T>::__internal__fromRawPointerWithoutCheck( dynamic_cast<T*>(this->sprite) );
 	}
-	~Handler() noexcept
+	inline ~Handler() noexcept
 	{
 		if(this->sprite){
 			this->sprite->decref();
