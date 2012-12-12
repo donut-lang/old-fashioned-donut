@@ -24,10 +24,11 @@
 #include "../../util/ClassUtil.h"
 #include "../../util/VectorMap.h"
 
-#include "../provider/Provider.h"
 #include "../Clock.h"
 
 #include "Object.h"
+#include "../provider/Provider.h"
+
 #include "DonutClosureObject.h"
 #include "NativeClosureObject.h"
 
