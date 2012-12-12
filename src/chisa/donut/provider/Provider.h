@@ -17,9 +17,7 @@
  */
 
 #pragma once
-#include <vector>
 #include <string>
-#include <algorithm>
 
 #include "../../Handler.h"
 #include "../../util/XVal.h"
