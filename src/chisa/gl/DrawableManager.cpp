@@ -63,7 +63,7 @@ Handler<Font> DrawableManager::queryFont(std::string const& name)
 
 Handler<TextDrawable> DrawableManager::queryText(std::string const& str, const float size, Handler<Font> font, TextDrawable::Style style, TextDrawable::Decoration deco, gl::Color const& color, gl::Color const& backColor)
 {
-	if(font){
+	if(!font){
 		font = this->fontManager_->queryFont();
 	}
 	return TextDrawable::create(this->self(), str, false, size, font, style, deco, color, backColor);
