@@ -19,6 +19,7 @@
 #include "FloatProvider.h"
 #include "../../util/StringUtil.h"
 #include "../object/Heap.h"
+#include "../object/FloatObject.h"
 
 namespace chisa {
 namespace donut {

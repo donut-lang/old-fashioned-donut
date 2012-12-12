@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include "Decl.h"
+#include "../Decl.h"
 #include "../../Handler.h"
 #include "../../util/ClassUtil.h"
 #include "../../util/XVal.h"

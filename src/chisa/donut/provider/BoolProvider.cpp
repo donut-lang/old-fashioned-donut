@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Provider.h"
+#include "BoolProvider.h"
 #include "../Exception.h"
 #include "../object/Heap.h"
 

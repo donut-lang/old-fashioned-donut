@@ -19,6 +19,7 @@
 #include "StringProvider.h"
 #include "../../util/StringUtil.h"
 #include "../object/Heap.h"
+#include "../object/StringObject.h"
 #include <sstream>
 
 namespace chisa {

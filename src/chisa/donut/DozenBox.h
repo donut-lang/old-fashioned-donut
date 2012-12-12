@@ -20,6 +20,7 @@
 #include "../util/ClassUtil.h"
 #include "../Handler.h"
 #include "Donut.h"
+#include "../util/VectorMap.h"
 
 namespace chisa {
 namespace donut {
@@ -31,7 +32,7 @@ class DozenBox : public HandlerBody<DozenBox> {
 	DEFINE_MEMBER_REF(public, logging::Logger, log);
 private: /* ドーナツの実体 */
 	Handler<Donut> mainDonut_; //メイン
-	std::map<std::string, Handler<Donut> > combos_; //サブとしてのコンボ・メニュー
+	util::VectorMap<std::string, Handler<Donut> > combos_; //サブとしてのコンボ・メニュー
 public: /* 生成・破棄 */
 	DozenBox(logging::Logger& log);
 	virtual ~DozenBox() noexcept = default;
