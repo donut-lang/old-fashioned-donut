@@ -92,7 +92,7 @@ protected: /* 実装すべきもの */
 	virtual void onDiscardFutureNotifyImpl(Handler<Heap> const& heap) = 0;
 	virtual object_desc_t toDescriptorImpl() const noexcept = 0;
 public:
-	virtual bool onFree() noexcept = 0;
+	virtual bool onFree() noexcept = 0; //increfとdecrefの関係で、プリミティブの時にこれが呼ばれることはない
 public:
 	static inline constexpr bool isPrimitiveDescriptor( object_desc_t const& desc ) noexcept {
 		return (desc & Object::Tag::Mask) != Object::Tag::Obj;
@@ -135,7 +135,7 @@ public:
 	virtual object_desc_t toDescriptorImpl() const noexcept override final { return Object::encodeObjectId(this->id_); };
 	inline void id(objectid_t const& nid) noexcept { this->id_ = nid; }
 public:
-	virtual bool onFree() noexcept override { if(this->erased_){ return false; }else{ return true; } };
+	virtual bool onFree() noexcept override { if(this->erased_||this->id_ <= 0){ return false; }else{ return true; } };
 	inline void erase() noexcept { this->erased_ = true; if(refcount() == 0){ delete this; } };
 	int color() noexcept { return this->color_; };
 	inline bool used() { return this->refcount() > 0; };
