@@ -19,6 +19,7 @@
 #pragma once
 #include <map>
 #include <cairo/cairo.h>
+#include <cmath>
 #include "../geom/Area.h"
 #include "Color.h"
 #include "../Handler.h"
@@ -30,6 +31,8 @@ namespace gl {
 class Canvas;
 class Sprite;
 class DrawableManager;
+
+constexpr const double PI = std::acos(-1.0);
 
 class Drawable : public HandlerBody<Drawable> {
 	HandlerW<DrawableManager> manager_;

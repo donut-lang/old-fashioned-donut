@@ -286,9 +286,11 @@ Handler<gl::Sprite> TextDrawable::sprite()
 		TextDrawable::setupCairo(cr, face, opt, this->size_, this->style_);
 
 		cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
-		cairo_move_to(cr, this->renderInfo_.x(), this->renderInfo_.y());
 		if(this->vertical_){
-			cairo_rotate(cr, 90.0f);
+			cairo_move_to(cr, 0.0f, 0.0f);
+			cairo_rotate(cr, PI/2.0f);
+		}else{
+			cairo_move_to(cr, this->renderInfo_.x(), this->renderInfo_.y());
 		}
 
 		cairo::setColor(cr, this->color_);
@@ -296,19 +298,35 @@ Handler<gl::Sprite> TextDrawable::sprite()
 		cairo_text_path(cr, this->str_.c_str());
 		cairo_fill(cr);
 
+		cairo_identity_matrix(cr);
+		cairo_set_antialias(cr, CAIRO_ANTIALIAS_NONE);
 		switch( this->deco_ ){
 		case Strike:{
-			const float hh = this->renderInfo_.height()/2;
-			cairo_move_to(cr, 0, hh);
-			cairo_move_to(cr, this->renderInfo_.width(), hh);
-			cairo_stroke(cr);
+			if(this->vertical_){
+				const float hw = this->renderInfo_.width()/2;
+				cairo_move_to(cr, hw, 0);
+				cairo_line_to(cr, hw, this->renderInfo_.height());
+				cairo_stroke(cr);
+			}else{
+				const float hh = this->renderInfo_.height()/2;
+				cairo_move_to(cr, 0, hh);
+				cairo_line_to(cr, this->renderInfo_.width(), hh);
+				cairo_stroke(cr);
+			}
 			break;
 		}
 		case Underline: {
-			const float h = this->renderInfo_.height();
-			cairo_move_to(cr, 0, h);
-			cairo_line_to(cr, this->renderInfo_.width(), h);
-			cairo_stroke(cr);
+			const float width = cairo_get_line_width(cr)/2;
+			if(this->vertical_){
+				cairo_move_to(cr, width, 0);
+				cairo_line_to(cr, width, this->renderInfo_.height()-width);
+				cairo_stroke(cr);
+			}else{
+				const float h = this->renderInfo_.height()-width;
+				cairo_move_to(cr, 0, h);
+				cairo_line_to(cr, this->renderInfo_.width(), h);
+				cairo_stroke(cr);
+			}
 			break;
 		}
 		case None: {
@@ -349,14 +367,10 @@ std::string TextDrawable::toString() const
 
 void TextDrawable::setupCairo(cairo_t* cairo, cairo_font_face_t* face, cairo_font_options_t* opt, float size, Style style)
 {
-	cairo_font_options_set_subpixel_order(opt, CAIRO_SUBPIXEL_ORDER_RGB);
+	cairo_font_options_set_subpixel_order(opt, CAIRO_SUBPIXEL_ORDER_DEFAULT);
 	cairo_font_options_set_antialias(opt, CAIRO_ANTIALIAS_DEFAULT);
-	cairo_font_options_set_hint_metrics(opt, CAIRO_HINT_METRICS_ON);
-	cairo_font_options_set_hint_style(opt, CAIRO_HINT_STYLE_MEDIUM);
-//	cairo_font_options_set_subpixel_order(opt, CAIRO_SUBPIXEL_ORDER_DEFAULT);
-//	cairo_font_options_set_antialias(opt, CAIRO_ANTIALIAS_NONE);
-//	cairo_font_options_set_hint_metrics(opt, CAIRO_HINT_METRICS_OFF);
-//	cairo_font_options_set_hint_style(opt, CAIRO_HINT_STYLE_NONE);
+	cairo_font_options_set_hint_metrics(opt, CAIRO_HINT_METRICS_DEFAULT);
+	cairo_font_options_set_hint_style(opt, CAIRO_HINT_STYLE_DEFAULT);
 	cairo_set_font_options(cairo, opt);
 	cairo_set_font_face(cairo, face);
 	cairo_set_font_size(cairo, size);
