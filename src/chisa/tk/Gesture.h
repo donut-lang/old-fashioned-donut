@@ -58,7 +58,7 @@ public:
 	virtual ~GestureSession();
 private:
 	//static constexpr float MaxFlingVelocity=4000;
-	static constexpr float MinFlingVelocity=5/1000;
+	static constexpr float MinFlingVelocity=500.0f/1000;
 private:
 	std::weak_ptr<Element> target_;
 	std::vector<std::weak_ptr<Element> > elementChain_;

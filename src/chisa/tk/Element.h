@@ -20,6 +20,8 @@
 #include "Widget.h"
 #include "Gesture.h"
 #include "../util/ClassUtil.h"
+#include "../util/VectorMap.h"
+#include "../util/XMLUtil.h"
 #include "../geom/Vector.h"
 #include "../geom/Area.h"
 #include <string>
@@ -39,6 +41,8 @@ class World;
 
 class Element : public GestureListener {
 	DISABLE_COPY_AND_ASSIGN(Element);
+private: /* 時間にともなって変化しないデータ（＝シリアライズしなくてよい） */
+	util::VectorMap<std::string, std::function<void(tinyxml2::XMLElement*)> > attrMap_; //コンストラクタでセット
 private:
 	DEFINE_MEMBER_REF(protected, logging::Logger, log);
 	DEFINE_MEMBER(protected, private, std::weak_ptr<World>, world);
@@ -80,6 +84,11 @@ public:
 		return ptr;
 	}
 	virtual ~Element() noexcept = default;
+protected:
+	template <typename T> void addAttribute(std::string const& name, T& ptr)
+	{
+		this->attrMap_.insert(name, std::bind(chisa::util::xml::parseAttr<T>, std::string(name), std::ref(ptr), std::ref(ptr), std::placeholders::_1));
+	}
 };
 
 
