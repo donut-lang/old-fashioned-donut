@@ -76,6 +76,8 @@ constexpr Color Red(1,0,0,1);
 constexpr Color Blue(0,0,1,1);
 constexpr Color Green(0,1,0,1);
 constexpr Color Gray(.5,.5,.5,1);
+constexpr Color LightGray(.9,.9,.9,1);
+constexpr Color DarkGray(.3,.3,.3,1);
 constexpr Color Transparent(0.0f,0.0f,0.0f,0.0f);
 
 const std::pair<std::string, gl::Color> COLOR_TABLE[] = {
@@ -85,6 +87,8 @@ const std::pair<std::string, gl::Color> COLOR_TABLE[] = {
 		std::pair<std::string, gl::Color>("blue", gl::Blue),
 		std::pair<std::string, gl::Color>("green", gl::Green),
 		std::pair<std::string, gl::Color>("gray", gl::Gray),
+		std::pair<std::string, gl::Color>("lightgray", gl::LightGray),
+		std::pair<std::string, gl::Color>("darkgray", gl::DarkGray),
 		std::pair<std::string, gl::Color>("transparent", gl::Transparent)
 };
 }}

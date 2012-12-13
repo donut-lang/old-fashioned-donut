@@ -26,7 +26,8 @@ namespace element {
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(MarginCombo)
 {
-
+	this->margin_ = geom::Margin(0,0,0,0);
+	this->addAttribute("margin", this->margin_);
 }
 
 MarginCombo::~MarginCombo() noexcept
@@ -77,8 +78,6 @@ void MarginCombo::onLayout(geom::Box const& size)
 
 void MarginCombo::loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
-	chisa::util::xml::parseAttr("margin", this->margin_, geom::Margin(0,0,0,0), element);
-
 	factory->parseTree(this->root(), this->self(), element->FirstChildElement());
 }
 

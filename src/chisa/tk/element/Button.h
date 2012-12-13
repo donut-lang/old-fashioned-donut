@@ -31,14 +31,23 @@ class Button: public LeafElement {
 public:
 	struct AttrName{
 		const static std::string Text;
+		const static std::string TextSize;
 		const static std::string ForegroundColor;
 		const static std::string BackgroundColor;
 		const static std::string ShadowColor;
+		const static std::string ShadowDepth;
 	};
 private:
 	std::string text_;
-	Handler<gl::TextDrawable> textImage_;
+	float textSize_;
+	geom::Margin margin_;
 	bool vertical_;
+	gl::Color foregroundColor_;
+	gl::Color backgroundColor_;
+	gl::Color shadowColor_;
+	float shadowDepth_;
+private:
+	Handler<gl::TextDrawable> textImage_;
 private:
 	geom::Box renderOffset_;
 	int pushedCnt_;
@@ -58,6 +67,7 @@ private:
 public:
 	virtual bool onDownRaw(const float timeMs, geom::Point const& ptInScreen) override;
 	virtual bool onUpRaw(const float timeMs, geom::Point const& ptInScreen) override;
+	virtual bool onMoveRaw(const float timeMs, geom::Point const& ptInScreen) override;
 	virtual bool onSingleTapUp(const float timeMs, geom::Point const& ptInScreen) override;
 };
 

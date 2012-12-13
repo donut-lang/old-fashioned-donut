@@ -28,7 +28,7 @@ Element::Element(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr
 ,root_(root)
 ,parent_(parent)
 {
-
+	this->addAttribute("id", this->id_);
 }
 
 void Element::init(std::weak_ptr<Element> _self)
@@ -48,9 +48,9 @@ void Element::idle(const float delta_ms)
 
 void Element::loadXML(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
-
-	if(const char* id = element->Attribute("id", nullptr)){
-		this->id(id);
+	for(auto it : this->attrMap_){
+		//firstには要素名が、secondにはnodeをパースして設定する関数オブジェクトが入ってる
+		it.second(element);
 	}
 	this->loadXMLimpl(factory, element);
 }
