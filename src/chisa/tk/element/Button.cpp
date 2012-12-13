@@ -38,7 +38,8 @@ const std::string Button::AttrName::ShadowDepth("shadow-depth");
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(Button, LeafElement)
 ,text_()
 ,textSize_(32.0f)
-,margin_(2.0f)
+,margin_(2.5f)
+,padding_(2.0f)
 ,vertical_(false)
 ,foregroundColor_(gl::Black)
 ,backgroundColor_(gl::Color(0.9,0.9,0.9,1))
@@ -62,15 +63,16 @@ std::string Button::toString() const
 
 void Button::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
 {
-	canvas.fillRect(this->backgroundColor_, screenArea);
+	geom::Area marginedArea(this->margin_.apply(screenArea));
+	canvas.fillRect(this->backgroundColor_, marginedArea);
 	if( this->pushedCnt_ > 0 ){
-		canvas.fillRect(this->shadowColor_, geom::Area(screenArea.point(), geom::Box(screenArea.width(), shadowDepth_)),.001);
-		canvas.fillRect(this->shadowColor_, geom::Area(screenArea.point(), geom::Box(shadowDepth_, screenArea.height())),.001);
-		this->textImage()->draw(canvas, geom::Area(screenArea.point()+this->renderOffset_+geom::Distance(shadowDepth_, shadowDepth_), area.box()), .001);
+		canvas.fillRect(this->shadowColor_, geom::Area(marginedArea.point(), geom::Box(marginedArea.width(), shadowDepth_)),.001);
+		canvas.fillRect(this->shadowColor_, geom::Area(marginedArea.point(), geom::Box(shadowDepth_, marginedArea.height())),.001);
+		this->textImage()->draw(canvas, geom::Area(marginedArea.point()+this->renderOffset_+geom::Distance(shadowDepth_, shadowDepth_), area.box()), .001);
 	}else{
-		canvas.fillRect(this->shadowColor_, geom::Area(screenArea.point()+geom::Distance(0, screenArea.height()-shadowDepth_), geom::Box(screenArea.width(), shadowDepth_)),.001);
-		canvas.fillRect(this->shadowColor_, geom::Area(screenArea.point()+geom::Distance(screenArea.width()-shadowDepth_, 0), geom::Box(shadowDepth_, screenArea.height())),.001);
-		this->textImage()->draw(canvas, geom::Area(screenArea.point()+this->renderOffset_, area.box()), .001);
+		canvas.fillRect(this->shadowColor_, geom::Area(marginedArea.point()+geom::Distance(0, marginedArea.height()-shadowDepth_), geom::Box(marginedArea.width(), shadowDepth_)),.001);
+		canvas.fillRect(this->shadowColor_, geom::Area(marginedArea.point()+geom::Distance(marginedArea.width()-shadowDepth_, 0), geom::Box(shadowDepth_, marginedArea.height())),.001);
+		this->textImage()->draw(canvas, geom::Area(marginedArea.point()+this->renderOffset_, area.box()), .001);
 	}
 }
 Handler<gl::TextDrawable> Button::textImage()
@@ -104,13 +106,13 @@ Handler<gl::TextDrawable> Button::textImage()
 }
 geom::Box Button::onMeasure(geom::Box const& constraint)
 {
-	return this->textImage()->size()+this->margin_.totalSpace()+geom::Distance(shadowDepth_,shadowDepth_);
+	return this->textImage()->size()+this->padding_.totalSpace()+this->margin_.totalSpace()+geom::Distance(shadowDepth_,shadowDepth_);
 }
 
 void Button::onLayout(geom::Box const& size)
 {
 	//中心になるようにオフセットを設定する。
-	this->renderOffset_ = ((size-this->margin_.totalSpace()-this->textImage_->size()-geom::Distance(shadowDepth_,shadowDepth_))/2)+this->margin_.offset();
+	this->renderOffset_ = ((size-this->margin_.totalSpace()-this->padding_.totalSpace()-this->textImage_->size()-geom::Distance(shadowDepth_,shadowDepth_))/2)+this->padding_.offset();
 }
 
 void Button::loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
