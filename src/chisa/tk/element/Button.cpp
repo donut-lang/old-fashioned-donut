@@ -58,7 +58,7 @@ Button::~Button() noexcept
 
 std::string Button::toString() const
 {
-	return util::format("(Button text:\"%s\")", this->text_.c_str());
+	return util::format("(Button text:\"%s\" %p)", this->text_.c_str(), this);
 }
 
 void Button::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
