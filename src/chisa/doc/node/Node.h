@@ -18,11 +18,11 @@
 #pragma once
 #include <memory>
 #include <vector>
-#include <map>
 #include <tinyxml2.h>
 #include "../../Handler.h"
 #include "../../util/ClassUtil.h"
 #include "../../util/XMLUtil.h"
+#include "../../util/VectorMap.h"
 #include "../../geom/Area.h"
 #include "../../gl/Color.h"
 #include "../../gl/Drawable.h"
@@ -89,8 +89,8 @@ private:
 	DEFINE_MEMBER(public, private, std::string, id);
 private:
 	DEFINE_MEMBER(public, private, ChildrenType, children);
-	std::map<std::string, std::function<void(tinyxml2::XMLElement*)> > attrMap_;
-public:
+	util::VectorMap<std::string, std::function<void(tinyxml2::XMLElement*)> > attrMap_;
+public: /* as component */
 	inline Iterator begin() { return this->children_.begin(); };
 	inline Iterator end() { return this->children_.end(); };
 	inline ConstIterator cbegin() const { return this->children_.cbegin(); };
@@ -98,13 +98,14 @@ public:
 	inline void add(Node* child) { this->children_.push_back(child); };
 	inline size_t count() const { return this->children_.size(); };
 	inline Node* at(size_t idx) const { return this->children_.at(idx); };
+public:
 	void parseAttribute(tinyxml2::XMLElement* elm);
 	virtual TreeNode* findTreeNodeById(std::string const& name) noexcept override;
 	virtual Text* findFirstTextNode() noexcept override;
 protected:
 	template <typename T> void addAttribute(std::string const& name, T& ptr)
 	{
-		this->attrMap_.insert(std::make_pair(name, std::bind(chisa::util::xml::parseAttr<T>, std::string(name), std::ref(ptr), std::ref(ptr), std::placeholders::_1)));
+		this->attrMap_.insert(name, std::bind(chisa::util::xml::parseAttr<T>, std::string(name), std::ref(ptr), std::ref(ptr), std::placeholders::_1));
 	}
 protected:
 	TreeNode();
