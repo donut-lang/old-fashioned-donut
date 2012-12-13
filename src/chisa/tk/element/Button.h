@@ -41,6 +41,7 @@ private:
 	std::string text_;
 	float textSize_;
 	geom::Space margin_;
+	geom::Space padding_;
 	bool vertical_;
 	gl::Color foregroundColor_;
 	gl::Color backgroundColor_;
