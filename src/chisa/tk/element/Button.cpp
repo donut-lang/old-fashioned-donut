@@ -66,11 +66,11 @@ void Button::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::
 	if( this->pushedCnt_ > 0 ){
 		canvas.fillRect(this->shadowColor_, geom::Area(screenArea.point(), geom::Box(screenArea.width(), shadowDepth_)),.001);
 		canvas.fillRect(this->shadowColor_, geom::Area(screenArea.point(), geom::Box(shadowDepth_, screenArea.height())),.001);
-		this->textImage_->draw(canvas, geom::Area(screenArea.point()+this->renderOffset_+geom::Distance(shadowDepth_, shadowDepth_), area.box()), .001);
+		this->textImage()->draw(canvas, geom::Area(screenArea.point()+this->renderOffset_+geom::Distance(shadowDepth_, shadowDepth_), area.box()), .001);
 	}else{
 		canvas.fillRect(this->shadowColor_, geom::Area(screenArea.point()+geom::Distance(0, screenArea.height()-shadowDepth_), geom::Box(screenArea.width(), shadowDepth_)),.001);
 		canvas.fillRect(this->shadowColor_, geom::Area(screenArea.point()+geom::Distance(screenArea.width()-shadowDepth_, 0), geom::Box(shadowDepth_, screenArea.height())),.001);
-		this->textImage_->draw(canvas, geom::Area(screenArea.point()+this->renderOffset_, area.box()), .001);
+		this->textImage()->draw(canvas, geom::Area(screenArea.point()+this->renderOffset_, area.box()), .001);
 	}
 }
 Handler<gl::TextDrawable> Button::textImage()
@@ -84,7 +84,7 @@ Handler<gl::TextDrawable> Button::textImage()
 						this->textSize_,
 						Handler<gl::Font>(),
 						gl::TextDrawable::Style::Bold,
-						gl::TextDrawable::Decoration::Underline,
+						gl::TextDrawable::Decoration::None,
 						this->foregroundColor_,
 						gl::Transparent
 						);
@@ -94,7 +94,7 @@ Handler<gl::TextDrawable> Button::textImage()
 						this->textSize_,
 						Handler<gl::Font>(),
 						gl::TextDrawable::Style::Bold,
-						gl::TextDrawable::Decoration::Underline,
+						gl::TextDrawable::Decoration::None,
 						this->foregroundColor_,
 						gl::Transparent
 						);
@@ -122,6 +122,7 @@ void Button::text(std::string const& text)
 {
 	this->text_ = text;
 	this->textImage_.reset();
+	//TODO: レイアウトの再設定が必要
 }
 
 void Button::onClick()
