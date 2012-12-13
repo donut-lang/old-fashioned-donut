@@ -77,7 +77,6 @@ Handler<gl::TextDrawable> Button::textImage()
 {
 	if(!this->textImage_){
 		if( std::shared_ptr<World> w = this->world().lock()){
-			//TODO: 色とか
 			if(vertical_){
 				this->textImage_ = w->drawableManager()->queryVerticalText(
 						this->text(),
