@@ -27,6 +27,11 @@ namespace chisa {
 namespace tk {
 namespace element {
 
+const std::string Button::AttrName::Text("text");
+const std::string Button::AttrName::ForegroundColor("foreground-color");
+const std::string Button::AttrName::BackgroundColor("background-color");
+const std::string Button::AttrName::ShadowColor("shadow-color");
+
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(Button, LeafElement)
 ,text_()
 ,textImage_()
@@ -69,12 +74,13 @@ geom::Box Button::onMeasure(geom::Box const& constraint)
 
 void Button::onLayout(geom::Box const& size)
 {
+	//中心になるようにオフセットを設定する。
 	this->renderOffset_ = (size-this->textImage_->size())/2;
 }
 
 void Button::loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
-	if(const char* text = element->Attribute("text")){
+	if(const char* text = element->Attribute(AttrName::Text.c_str())){
 		this->text(text);
 	}
 }

@@ -28,6 +28,13 @@ namespace element {
 
 class Button: public LeafElement {
 	CHISA_ELEMENT_SUBKLASS_FINAL(Button);
+public:
+	struct AttrName{
+		const static std::string Text;
+		const static std::string ForegroundColor;
+		const static std::string BackgroundColor;
+		const static std::string ShadowColor;
+	};
 private:
 	std::string text_;
 	Handler<gl::TextDrawable> textImage_;
