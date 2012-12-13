@@ -80,15 +80,6 @@ public:
 		return ptr;
 	}
 	virtual ~Element() noexcept = default;
-public:
-	inline static float updateMax(const float a, const float b)
-	{
-		return std::isnan(b) ? a : (a > b ? a : b);
-	}
-	inline static float updateMin(const float a, const float b)
-	{
-		return std::isnan(a) ? b : (a > b ? b : a);
-	}
 };
 
 
