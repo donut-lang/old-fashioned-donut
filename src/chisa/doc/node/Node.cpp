@@ -78,6 +78,7 @@ Text* TreeNode::findFirstTextNode() noexcept
 void TreeNode::parseAttribute(tinyxml2::XMLElement* node)
 {
 	for(auto it : this->attrMap_){
+		//firstには要素名が、secondにはnodeをパースして設定する関数オブジェクトが入ってる
 		it.second(node);
 	}
 }
@@ -124,6 +125,7 @@ Paragraph::Paragraph()
 Heading::Heading(int const level)
 :level_(level)
 {
+	//デフォルトマージンの設定
 	switch(this->level()){
 	case 1:
 		this->margin(geom::Margin(gl::TextDrawable::DefaultFontSize*1.5, gl::TextDrawable::DefaultFontSize, 0.0f,0.0f));
