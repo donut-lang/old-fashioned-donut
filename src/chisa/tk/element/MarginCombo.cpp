@@ -26,7 +26,7 @@ namespace element {
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(MarginCombo)
 {
-	this->margin_ = geom::Margin(0,0,0,0);
+	this->margin_ = geom::Space(0,0,0,0);
 	this->addAttribute("margin", this->margin_);
 }
 

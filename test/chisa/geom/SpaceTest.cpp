@@ -28,99 +28,99 @@ namespace geom {
 	var.name(value);\
 	ASSERT_FLOAT_EQ(var.name(), value);
 
-TEST(MarginTest, BasicTest)
+TEST(SpaceTest, BasicTest)
 {
-	Margin m;
+	Space m;
 	TEST_GETTER_SETTER(m, top, 1);
 	TEST_GETTER_SETTER(m, bottom, 2);
 	TEST_GETTER_SETTER(m, right, 3);
 	TEST_GETTER_SETTER(m, left, 4);
 }
 
-TEST(MarginTest, ConstructorTest)
+TEST(SpaceTest, ConstructorTest)
 {
-	Margin m(1,2,10,20);
+	Space m(1,2,10,20);
 	ASSERT_FLOAT_EQ(1,m.top());
 	ASSERT_FLOAT_EQ(2,m.bottom());
 	ASSERT_FLOAT_EQ(10,m.left());
 	ASSERT_FLOAT_EQ(20,m.right());
 }
 
-TEST(MarginTest, OffsetTest)
+TEST(SpaceTest, OffsetTest)
 {
-	Margin m(1,2,10,20);
+	Space m(1,2,10,20);
 	ASSERT_FLOAT_EQ(10, m.offset().x());
 	ASSERT_FLOAT_EQ(1, m.offset().y());
 }
 
-TEST(MarginTest, TotalSpaceTest)
+TEST(SpaceTest, TotalSpaceTest)
 {
-	Margin m(1,2,10,20);
+	Space m(1,2,10,20);
 	ASSERT_FLOAT_EQ(10+20, m.totalSpace().x());
 	ASSERT_FLOAT_EQ(10+20, m.totalWidth());
 	ASSERT_FLOAT_EQ(1+2, m.totalSpace().y());
 	ASSERT_FLOAT_EQ(1+2, m.totalHeight());
 }
 
-TEST(MarginTest, XMLParseNotFoundTest)
+TEST(SpaceTest, XMLParseNotFoundTest)
 {
-	Margin m(1,2,10,20);
+	Space m(1,2,10,20);
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc/>
 	)delimiter");
-	util::xml::parseAttr<Margin>("margin", std::ref(m), std::ref(m), doc->RootElement());
+	util::xml::parseAttr<Space>("margin", std::ref(m), std::ref(m), doc->RootElement());
 	ASSERT_FLOAT_EQ(1,m.top());
 	ASSERT_FLOAT_EQ(2,m.bottom());
 	ASSERT_FLOAT_EQ(10,m.left());
 	ASSERT_FLOAT_EQ(20,m.right());
 }
 
-TEST(MarginTest, XMLParseInvalidTest)
+TEST(SpaceTest, XMLParseInvalidTest)
 {
-	Margin m(1,2,10,20);
+	Space m(1,2,10,20);
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc margin="string!!" />
 	)delimiter");
-	util::xml::parseAttr<Margin>("margin", std::ref(m), std::ref(m), doc->RootElement());
+	util::xml::parseAttr<Space>("margin", std::ref(m), std::ref(m), doc->RootElement());
 	ASSERT_FLOAT_EQ(1,m.top());
 	ASSERT_FLOAT_EQ(2,m.bottom());
 	ASSERT_FLOAT_EQ(10,m.left());
 	ASSERT_FLOAT_EQ(20,m.right());
 }
 
-TEST(MarginTest, XMLParseOnlyMarginTest)
+TEST(SpaceTest, XMLParseOnlySpaceTest)
 {
-	Margin m(1,2,10,20);
+	Space m(1,2,10,20);
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc margin="100" />
 	)delimiter");
-	util::xml::parseAttr<Margin>("margin", std::ref(m), std::ref(m), doc->RootElement());
+	util::xml::parseAttr<Space>("margin", std::ref(m), std::ref(m), doc->RootElement());
 	ASSERT_FLOAT_EQ(100,m.top());
 	ASSERT_FLOAT_EQ(100,m.bottom());
 	ASSERT_FLOAT_EQ(100,m.left());
 	ASSERT_FLOAT_EQ(100,m.right());
 }
 
-TEST(MarginTest, XMLParseAllMarginTest)
+TEST(SpaceTest, XMLParseAllSpaceTest)
 {
-	Margin m(1,2,10,20);
+	Space m(1,2,10,20);
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc margin-top="100" margin-bottom="200" margin-left="1000" margin-right="2000" />
 	)delimiter");
-	util::xml::parseAttr<Margin>("margin", std::ref(m), std::ref(m), doc->RootElement());
+	util::xml::parseAttr<Space>("margin", std::ref(m), std::ref(m), doc->RootElement());
 	ASSERT_FLOAT_EQ(100,m.top());
 	ASSERT_FLOAT_EQ(200,m.bottom());
 	ASSERT_FLOAT_EQ(1000,m.left());
 	ASSERT_FLOAT_EQ(2000,m.right());
 }
 
-TEST(MarginTest, XMLParseAllMarginOverrideTest)
+TEST(SpaceTest, XMLParseAllMarginOverrideTest)
 {
-	Margin m(1,2,10,20);
+	Space m(1,2,10,20);
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc margin="0" margin-top="100" margin-bottom="200" margin-left="1000" margin-right="2000" />
 	)delimiter");
-	util::xml::parseAttr<Margin>("margin", std::ref(m), std::ref(m), doc->RootElement());
+	util::xml::parseAttr<Space>("margin", std::ref(m), std::ref(m), doc->RootElement());
 	ASSERT_FLOAT_EQ(100,m.top());
 	ASSERT_FLOAT_EQ(200,m.bottom());
 	ASSERT_FLOAT_EQ(1000,m.left());
