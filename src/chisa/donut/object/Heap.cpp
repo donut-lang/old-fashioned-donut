@@ -128,7 +128,7 @@ Handler<Object> Heap::decodeDescriptor( object_desc_t const& desc )
 HeapObject* Heap::findHeapObjectFromID( objectid_t const& id )
 {
 	std::vector<HeapObject*>::iterator const it =
-			std::lower_bound( this->objectPool_.begin(), this->objectPool_.end(), id, CompareHeapById());
+			std::lower_bound( this->objectPool_.begin(), this->objectPool_.end(), id, HeapObject::CompareById());
 	HeapObject* obj = *it;
 	if( it == this->objectPool_.end() || obj->id() != id ) {
 		throw DonutException(__FILE__, __LINE__, "[BUG] Object id: %d not found. Invalid Object Descriptor.", id);

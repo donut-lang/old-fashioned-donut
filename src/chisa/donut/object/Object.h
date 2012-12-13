@@ -148,18 +148,18 @@ protected:
 	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) = 0;
 private:
 	virtual std::string providerNameImpl(Handler<Heap> const& heap) const override final { return this->providerName_; }
-};
-
-struct CompareHeapById : std::binary_function<HeapObject* const&,HeapObject* const&,bool>{
-	bool operator()(HeapObject* const& a, HeapObject* const& b){
-		return a->id() < b->id();
-	}
-	bool operator()(HeapObject* const& a, objectid_t const& b){
-		return a->id() < b;
-	}
-	bool operator()(objectid_t const& a, HeapObject* const& b){
-		return a < b->id();
-	}
+public:
+	struct CompareById : std::binary_function<HeapObject* const&,HeapObject* const&,bool>{
+		bool operator()(HeapObject* const& a, HeapObject* const& b){
+			return a->id() < b->id();
+		}
+		bool operator()(HeapObject* const& a, objectid_t const& b){
+			return a->id() < b;
+		}
+		bool operator()(objectid_t const& a, HeapObject* const& b){
+			return a < b->id();
+		}
+	};
 };
 
 }}

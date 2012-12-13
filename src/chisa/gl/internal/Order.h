@@ -24,16 +24,16 @@ namespace gl {
 namespace internal {
 
 template <class T>
-struct WidthOrder {
-	inline bool operator()(const T* const a, const T* const b) const noexcept
+struct WidthOrder : public std::binary_function<T const*, T const*, bool> {
+	inline bool operator()(T const* const& a, T const* const& b) const noexcept
 	{
 		return a->width() == b->width() ? a->height() < b->height() : a->width() < b->width();
 	}
-	inline bool operator() (const T* a, const std::pair<int,int>& b) const noexcept
+	inline bool operator() (T const* const& a, const std::pair<int,int>& b) const noexcept
 	{
 		return a->width() == b.first ? a->height() < b.second : a->width() < b.first;
 	}
-	inline bool operator() (const std::pair<int,int>& a, const T* b) const noexcept
+	inline bool operator() (const std::pair<int,int>& a, T const* const& b) const noexcept
 	{
 		return a.first == b->width() ? a.second < b->height() : a.first < b->width();
 	}
@@ -44,17 +44,17 @@ struct WidthOrder {
 };
 
 template <class T>
-struct SizeOrder {
-	inline bool operator()(const T* a, std::size_t b) const noexcept {
+struct SizeOrder : std::binary_function<const T*, const T*, bool> {
+	inline bool operator()(T const* const& a, std::size_t const& b) const noexcept {
 		return a->size() < b;
 	}
-	inline bool operator()(std::size_t a, std::size_t b) const noexcept {
+	inline bool operator()(std::size_t const& a, std::size_t const& b) const noexcept {
 		return a < b;
 	}
-	inline bool operator()(const T* a, const T* b) const noexcept {
+	inline bool operator()(T const* const& a, T const* const& b) const noexcept {
 		return a->size() < b->size();
 	}
-	inline bool operator()(std::size_t a, const T* b) const noexcept {
+	inline bool operator()(std::size_t const& a, T const* const& b) const noexcept {
 		return a < b->size();
 	}
 };
