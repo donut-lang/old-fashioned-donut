@@ -73,7 +73,11 @@ void ScrollCombo::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElemen
 
 std::string ScrollCombo::toString() const
 {
-	return util::format("(ScrollCombo %p)", this);
+	return util::format("(ScrollCombo %s %p)",
+					(this->scrollMode_ == Vertical) ? "vertical":
+					(this->scrollMode_ == Horizontal) ? "horizontal":
+					(this->scrollMode_ == Both) ? "both" : "???",
+					this);
 }
 
 void ScrollCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
