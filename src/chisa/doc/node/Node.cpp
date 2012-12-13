@@ -85,7 +85,7 @@ void TreeNode::parseAttribute(tinyxml2::XMLElement* node)
 
 BlockNode::BlockNode()
 {
-	this->margin(geom::Margin(0,0,0,0));
+	this->margin(geom::Space(0,0,0,0));
 	this->addAttribute("margin", this->margin_);
 	this->direction(Direction::None);
 	this->addAttribute("float", this->direction_);
@@ -128,13 +128,13 @@ Heading::Heading(int const level)
 	//デフォルトマージンの設定
 	switch(this->level()){
 	case 1:
-		this->margin(geom::Margin(gl::TextDrawable::DefaultFontSize*1.5, gl::TextDrawable::DefaultFontSize, 0.0f,0.0f));
+		this->margin(geom::Space(gl::TextDrawable::DefaultFontSize*1.5, gl::TextDrawable::DefaultFontSize, 0.0f,0.0f));
 		break;
 	case 2:
-		this->margin(geom::Margin(gl::TextDrawable::DefaultFontSize*1.25, gl::TextDrawable::DefaultFontSize*0.75, 0.0f,0.0f));
+		this->margin(geom::Space(gl::TextDrawable::DefaultFontSize*1.25, gl::TextDrawable::DefaultFontSize*0.75, 0.0f,0.0f));
 		break;
 	case 3:
-		this->margin(geom::Margin(gl::TextDrawable::DefaultFontSize*1, gl::TextDrawable::DefaultFontSize*0.5, 0.0f,0.0f));
+		this->margin(geom::Space(gl::TextDrawable::DefaultFontSize*1, gl::TextDrawable::DefaultFontSize*0.5, 0.0f,0.0f));
 		break;
 	default:
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon heading level: %d", this->level());

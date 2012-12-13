@@ -27,7 +27,7 @@ namespace element {
 class MarginCombo : public Element {
 	CHISA_ELEMENT_SUBKLASS(MarginCombo);
 	std::weak_ptr<Element> child_;
-	geom::Margin margin_;
+	geom::Space margin_;
 public:
 	virtual std::weak_ptr<Element> getChildAt(const size_t index) const override;
 	virtual std::size_t getChildCount() const override;

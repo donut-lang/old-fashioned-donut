@@ -40,7 +40,7 @@ public:
 private:
 	std::string text_;
 	float textSize_;
-	geom::Margin margin_;
+	geom::Space margin_;
 	bool vertical_;
 	gl::Color foregroundColor_;
 	gl::Color backgroundColor_;

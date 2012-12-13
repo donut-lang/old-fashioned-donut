@@ -33,7 +33,7 @@ class IntVector;
 typedef IntVector IntPoint;
 typedef IntVector IntBox;
 
-class Margin;
+class Space;
 
 class Matrix;
 
