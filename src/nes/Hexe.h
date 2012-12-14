@@ -24,12 +24,12 @@ namespace nes {
 class Hexe: public chisa::Hexe {
 public:
 	Hexe(chisa::logging::Logger& log, std::string const& basepath);
-	virtual ~Hexe();
+	virtual ~Hexe() noexcept;
 public:
 	virtual void registerWidgets(chisa::tk::widget::WidgetFactory& factory) override;
 	virtual void registerElements(chisa::tk::element::ElementFactory& factory) override;
 public:
-	virtual std::shared_ptr<chisa::WorldGeist> invokeWorldGeist(chisa::HandlerW<chisa::tk::World> world, std::string const& nameOfGeist) override;
+	virtual chisa::Handler<chisa::WorldGeist> invokeWorldGeist(chisa::HandlerW<chisa::tk::World> world, std::string const& nameOfGeist) override;
 };
 
 }

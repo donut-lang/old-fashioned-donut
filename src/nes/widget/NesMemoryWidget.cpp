@@ -19,7 +19,7 @@ NesMemoryWidget::NesMemoryWidget(chisa::logging::Logger& log, chisa::HandlerW<ch
 :Widget(log, _world, element)
 {
 	chisa::Handler<chisa::tk::World> world(_world.lock());
-	std::shared_ptr<nes::NesGeist> geist(std::dynamic_pointer_cast<nes::NesGeist>(world->geist()));
+	chisa::Handler<nes::NesGeist> geist(world->geist().cast<nes::NesGeist>());
 	this->geist_ = geist;
 	chisa::Handler<chisa::gl::DrawableManager> mgr = world->drawableManager();
 	chisa::Handler<chisa::gl::Font> font = mgr->queryFont();

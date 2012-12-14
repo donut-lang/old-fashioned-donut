@@ -29,7 +29,7 @@ namespace widget {
 
 class NesScreenWidget: public ::chisa::tk::Widget {
 private:
-	std::weak_ptr<nes::NesGeist> geist_;
+	chisa::HandlerW<nes::NesGeist> geist_;
 	chisa::Handler<chisa::util::XObject> conf_;
 public:
 	NesScreenWidget(chisa::logging::Logger& log, chisa::HandlerW<chisa::tk::World> world, tinyxml2::XMLElement* element);

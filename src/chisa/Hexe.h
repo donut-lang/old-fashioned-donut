@@ -21,17 +21,20 @@
 #include "tk/element/ElementFactory.h"
 #include "tk/widget/WidgetFactory.h"
 #include "util/FileUtil.h"
+#include "Handler.h"
 
 namespace chisa {
 class WorldGeist;
 
-class Hexe {
+class Hexe : public HandlerBody<Hexe> {
 	DISABLE_COPY_AND_ASSIGN(Hexe);
 	DEFINE_MEMBER_REF(protected, logging::Logger, log);
 	DEFINE_MEMBER_CONST(protected, std::string, basepath);
 public:
 	Hexe(logging::Logger& log, std::string const& basepath);
-	virtual ~Hexe();
+	virtual ~Hexe() noexcept;
+	inline bool onFree() noexcept { return false; };
+public:
 	virtual std::string toString() const;
 	template <typename... Args>
 	constexpr std::string resolveFilepath(Args const&... path) const noexcept
@@ -43,10 +46,10 @@ public:
 	virtual void registerWidgets(tk::widget::WidgetFactory& factory){};
 	virtual void registerElements(tk::element::ElementFactory& factory){};
 public:
-	virtual std::shared_ptr<WorldGeist> invokeWorldGeist(HandlerW<chisa::tk::World> world, std::string const& nameOfGeist) = 0;
+	virtual Handler<WorldGeist> invokeWorldGeist(HandlerW<chisa::tk::World> world, std::string const& nameOfGeist) = 0;
 };
 
-class WorldGeist {
+class WorldGeist : public HandlerBody<WorldGeist> {
 	DISABLE_COPY_AND_ASSIGN(WorldGeist);
 	DEFINE_MEMBER_REF(protected, logging::Logger, log);
 	HandlerW<chisa::tk::World> world_;
@@ -54,7 +57,8 @@ public:
 	virtual std::string toString() const;
 public:
 	WorldGeist(logging::Logger& log, HandlerW<chisa::tk::World> world);
-	virtual ~WorldGeist();
+	virtual ~WorldGeist() noexcept;
+	inline bool onFree() noexcept { return false; };
 public:
 	Handler<chisa::tk::World> world();
 };

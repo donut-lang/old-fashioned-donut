@@ -36,7 +36,7 @@ NesGeist::NesGeist(chisa::logging::Logger& log, chisa::HandlerW<chisa::tk::World
 	}
 }
 
-NesGeist::~NesGeist()
+NesGeist::~NesGeist() noexcept
 {
 	this->stopNES();
 	delete this->machine_;

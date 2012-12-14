@@ -27,7 +27,7 @@ Hexe::Hexe(logging::Logger& log, std::string const& basepath)
 {
 }
 
-Hexe::~Hexe()
+Hexe::~Hexe() noexcept
 {
 }
 
@@ -42,7 +42,7 @@ WorldGeist::WorldGeist(logging::Logger& log, HandlerW<chisa::tk::World> world)
 {
 
 }
-WorldGeist::~WorldGeist()
+WorldGeist::~WorldGeist() noexcept
 {
 
 }
