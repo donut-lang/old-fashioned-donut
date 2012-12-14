@@ -69,7 +69,7 @@ std::string SplitCombo::toString() const
 	}
 }
 
-void SplitCombo::addChild(SplitDef const& def, std::shared_ptr<Element> element)
+void SplitCombo::addChild(SplitDef const& def, Handler<Element> element)
 {
 	std::shared_ptr<SplitCtx> ctx(new SplitCtx(def));
 	ctx->element = element;
@@ -125,13 +125,13 @@ void SplitCombo::resetChildren()
 	this->totalSize_ = geom::Unspecified;
 }
 
-std::weak_ptr<Element> SplitCombo::getChildAt(const std::size_t index) const
+HandlerW<Element> SplitCombo::getChildAt(const std::size_t index) const
 {
 	if(index < this->children().size()){
 		std::shared_ptr<SplitCtx> ctx = this->children_.at(index);
-		return std::weak_ptr<Element>(ctx->element);
+		return HandlerW<Element>(ctx->element);
 	}
-	return std::weak_ptr<Element>();
+	return HandlerW<Element>();
 }
 std::size_t SplitCombo::getChildCount() const
 {
@@ -246,7 +246,7 @@ geom::Box SplitCombo::onMeasure(geom::Box const& constraint)
 			float leftWeight = totalWeight;
 			float leftSize = limitChangedSize - nonWeightedSizeTotal;
 			for(std::shared_ptr<SplitCtx> childCtx : this->children()){
-				std::shared_ptr<Element> child;
+				Handler<Element> child;
 				const bool weightSpecified = geom::isSpecified(childCtx->weight);
 				if(weightSpecified){
 					//ウェイトがかかっている
@@ -289,15 +289,15 @@ void SplitCombo::onLayout(geom::Box const& size)
 	}
 }
 
-std::weak_ptr<Element> SplitCombo::getElementByIdImpl(std::string const& id)
+HandlerW<Element> SplitCombo::getElementByIdImpl(std::string const& id)
 {
 	for(std::shared_ptr<SplitCtx> childCtx : this->children()){
-		std::weak_ptr<Element> res = childCtx->element->getElementById(id);
+		HandlerW<Element> res = childCtx->element->getElementById(id);
 		if(!res.expired()){
 			return res;
 		}
 	}
-	return std::weak_ptr<Element>();
+	return HandlerW<Element>();
 }
 
 

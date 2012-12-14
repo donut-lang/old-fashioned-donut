@@ -43,7 +43,7 @@ public:
 struct SplitCtx
 {
 	const SplitDef def;
-	std::shared_ptr<Element> element;
+	Handler<Element> element;
 	float size;
 	float weight;
 	SplitCtx(SplitDef const& def)
@@ -91,21 +91,21 @@ private:
 	float (geom::Point::*point_getter)(void) const;
 	void (geom::Point::*point_setter)(float);
 private:
-	void addChild(SplitDef const& def, std::shared_ptr<Element> element);
+	void addChild(SplitDef const& def, Handler<Element> element);
 private:
 	void resetChildren();
 	float calcTotalSize();
 public:
 	virtual std::string toString() const override;
 	virtual void idle(const float delta_ms) override;
-	virtual std::weak_ptr<Element> getChildAt(const std::size_t index) const override;
+	virtual HandlerW<Element> getChildAt(const std::size_t index) const override;
 	virtual std::size_t getChildCount() const override;
 private:
 	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override;
 	virtual geom::Box onMeasure(geom::Box const& constraint) override;
 	virtual void onLayout(geom::Box const& size) override;
 	virtual void loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
-	virtual std::weak_ptr<Element> getElementByIdImpl(std::string const& id) override;
+	virtual HandlerW<Element> getElementByIdImpl(std::string const& id) override;
 };
 
 }}}

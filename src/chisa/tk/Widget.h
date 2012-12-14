@@ -18,6 +18,7 @@
 
 #pragma once
 #include <memory>
+#include "../Handler.h"
 #include "../util/ClassUtil.h"
 #include "../logging/Logger.h"
 #include "../geom/Decl.h"
@@ -43,12 +44,12 @@ class Widget {
 	DISABLE_COPY_AND_ASSIGN(Widget);
 	DEFINE_MEMBER_REF(protected, logging::Logger, log);
 	DEFINE_MEMBER(protected, private, std::weak_ptr<World>, world)
-	DEFINE_MEMBER(private, private, std::weak_ptr<element::WidgetElement>, wrapper);
+	DEFINE_MEMBER(private, private, HandlerW<element::WidgetElement>, wrapper);
 public:
 	Widget(logging::Logger& log, std::weak_ptr<World> world, tinyxml2::XMLElement* element);
 	virtual ~Widget();
 public:
-	void updateWrapper(std::weak_ptr<element::WidgetElement> wrapper) { this->wrapper_ = wrapper; };
+	void updateWrapper(HandlerW<element::WidgetElement> wrapper) { this->wrapper_ = wrapper; };
 public:
 	geom::Vector calcAbsolutePosition();
 public:

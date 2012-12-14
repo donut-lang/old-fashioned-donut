@@ -22,7 +22,7 @@
 namespace chisa {
 namespace tk {
 
-Element::Element(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent)
+Element::Element(logging::Logger& log, std::weak_ptr<World> world, HandlerW<Element> root, HandlerW<Element> parent)
 :log_(log)
 ,world_(world)
 ,root_(root)
@@ -31,16 +31,11 @@ Element::Element(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr
 	this->addAttribute("id", this->id_);
 }
 
-void Element::init(std::weak_ptr<Element> _self)
-{
-	this->self_.swap(_self);
-}
-
 void Element::idle(const float delta_ms)
 {
 	const size_t max = this->getChildCount();
 	for(size_t i=0;i<max;++i){
-		if( std::shared_ptr<Element> child = this->getChildAt(i).lock()){
+		if( Handler<Element> child = this->getChildAt(i).lock()){
 			child->idle(delta_ms);
 		}
 	}
@@ -55,19 +50,19 @@ void Element::loadXML(element::ElementFactory* const factory, tinyxml2::XMLEleme
 	this->loadXMLimpl(factory, element);
 }
 
-std::weak_ptr<Element> Element::getElementById(std::string const& id)
+HandlerW<Element> Element::getElementById(std::string const& id)
 {
 	return id == this->id() ? this->self() : this->getElementByIdImpl(id);
 }
 
-std::weak_ptr<Element> Element::getElementByPoint(geom::Vector const& screenPoint)
+HandlerW<Element> Element::getElementByPoint(geom::Vector const& screenPoint)
 {
 	if(!this->screenArea().contain(screenPoint)){
-		return std::weak_ptr<Element>();
+		return HandlerW<Element>();
 	}
 	const size_t max = this->getChildCount();
 	for(size_t i=0;i<max;++i){
-		if(std::shared_ptr<Element> child = this->getChildAt(i).lock()){
+		if(Handler<Element> child = this->getChildAt(i).lock()){
 			if(child->screenArea().contain(screenPoint)){
 				return child->getElementByPoint(screenPoint);
 			}

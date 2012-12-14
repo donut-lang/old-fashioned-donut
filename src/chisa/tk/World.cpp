@@ -90,20 +90,20 @@ void World::init(std::weak_ptr<World> _self)
 
 void World::render(gl::Canvas& canvas)
 {
-	if(std::shared_ptr<Element> elm = this->elementStack_.top()){
+	if(Handler<Element> elm = this->elementStack_.top()){
 		elm->render(canvas, this->area(), geom::Area(0,0,this->area().width(), this->area().height()));
 	}
 }
 void World::idle(const float delta_ms)
 {
-	if(std::shared_ptr<Element> elm = this->elementStack_.top()){
+	if(Handler<Element> elm = this->elementStack_.top()){
 		elm->idle(delta_ms);
 	}
 	this->taskHandler_.run(delta_ms);
 }
 void World::reshape(geom::Area const& area)
 {
-	if(std::shared_ptr<Element> elm = this->elementStack_.top()){
+	if(Handler<Element> elm = this->elementStack_.top()){
 		elm->measure(area.box());
 		elm->layout(area.box());
 	}
@@ -112,14 +112,14 @@ void World::reshape(geom::Area const& area)
 
 void World::pushElement(std::string const& filename)
 {
-	std::shared_ptr<Element> l = this->elementFactory_->parseTree(filename);
+	Handler<Element> l = this->elementFactory_->parseTree(filename);
 	this->elementStack_.push(l);
 }
 
 void World::popElement()
 {
 	this->elementStack_.pop();
-	if(std::shared_ptr<Element> elm = this->elementStack_.top()){
+	if(Handler<Element> elm = this->elementStack_.top()){
 		this->reshape(this->area());
 	}
 }
@@ -134,12 +134,12 @@ void World::unregisterTask(Task* task)
 	this->taskHandler_.unregisterTask(task);
 }
 
-std::weak_ptr<Element> World::getElementByPoint(geom::Point const& screenPoint)
+HandlerW<Element> World::getElementByPoint(geom::Point const& screenPoint)
 {
-	if(std::shared_ptr<Element> elm = this->elementStack_.top()){
+	if(Handler<Element> elm = this->elementStack_.top()){
 		return elm->getElementByPoint(screenPoint);
 	}
-	return std::weak_ptr<Element>();
+	return HandlerW<Element>();
 }
 
 element::WidgetElement* World::getWidgetById(std::string const& name)

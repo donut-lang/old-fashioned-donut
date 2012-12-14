@@ -35,9 +35,9 @@ MarginCombo::~MarginCombo() noexcept
 
 }
 
-std::weak_ptr<Element> MarginCombo::getChildAt(const std::size_t index) const
+HandlerW<Element> MarginCombo::getChildAt(const std::size_t index) const
 {
-	return index == 0 ? this->child_ : std::weak_ptr<Element>();
+	return index == 0 ? this->child_ : HandlerW<Element>();
 }
 
 std::size_t MarginCombo::getChildCount() const
@@ -52,7 +52,7 @@ std::string MarginCombo::toString() const
 
 void MarginCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
 {
-	if( std::shared_ptr<Element> child = this->child_.lock() ){
+	if( Handler<Element> child = this->child_.lock() ){
 		child->render(
 			canvas,
 			geom::Area(screenArea.point()+this->margin_.offset(), screenArea.box()-this->margin_.totalSpace()),
@@ -63,7 +63,7 @@ void MarginCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, g
 
 geom::Box MarginCombo::onMeasure(geom::Box const& constraint)
 {
-	if( std::shared_ptr<Element> child = this->child_.lock() ){
+	if( Handler<Element> child = this->child_.lock() ){
 		return child->measure( constraint-this->margin_.totalSpace() ) + this->margin_.totalSpace();
 	}
 	return constraint;
@@ -71,7 +71,7 @@ geom::Box MarginCombo::onMeasure(geom::Box const& constraint)
 
 void MarginCombo::onLayout(geom::Box const& size)
 {
-	if( std::shared_ptr<Element> child = this->child_.lock() ){
+	if( Handler<Element> child = this->child_.lock() ){
 		child->layout( size-this->margin_.totalSpace() );
 	}
 }
@@ -81,12 +81,12 @@ void MarginCombo::loadXMLimpl(element::ElementFactory* const factory, tinyxml2::
 	factory->parseTree(this->root(), this->self(), element->FirstChildElement());
 }
 
-std::weak_ptr<Element> MarginCombo::getElementByIdImpl(std::string const& id)
+HandlerW<Element> MarginCombo::getElementByIdImpl(std::string const& id)
 {
-	if( std::shared_ptr<Element> child = this->child_.lock() ){
+	if( Handler<Element> child = this->child_.lock() ){
 		return child->getElementById(id);
 	}
-	return std::weak_ptr<Element>();
+	return HandlerW<Element>();
 }
 
 }}}

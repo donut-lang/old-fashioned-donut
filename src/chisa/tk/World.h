@@ -55,7 +55,7 @@ private:
 	DEFINE_MEMBER_CONST(public, std::string, name);
 	TaskHandler taskHandler_;
 	Handler<donut::DozenBox> dozenBox_;
-	Stack<std::shared_ptr<Element> > elementStack_;
+	Stack<Handler<Element> > elementStack_;
 	std::unordered_map<std::string, element::WidgetElement*> widgetMap_;
 	DEFINE_MEMBER(private, private, geom::Area, area);
 private:
@@ -78,7 +78,7 @@ public:
 	bool deleteWidget(std::string const& widgetId, element::WidgetElement* const handler);
 	Widget* createWidget(std::string const& klass, tinyxml2::XMLElement* elem);
 public:
-	std::weak_ptr<Element> getElementByPoint(geom::Point const& screenVector);
+	HandlerW<Element> getElementByPoint(geom::Point const& screenVector);
 	/******************************************************************************
 	 * タスク管理
 	 ******************************************************************************/

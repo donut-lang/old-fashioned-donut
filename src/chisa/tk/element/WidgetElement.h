@@ -47,7 +47,7 @@ private:
 	DEFINE_MEMBER(private, private, geom::Box, widgetSizeReal);
 	DEFINE_MEMBER(private, private, geom::Area, widgetDrawnArea);
 public:
-	virtual std::weak_ptr<Element> getChildAt(const std::size_t index) const override;
+	virtual HandlerW<Element> getChildAt(const std::size_t index) const override;
 	virtual std::size_t getChildCount() const override;
 public:
 	virtual void idle(const float delta_ms) override;
@@ -57,7 +57,7 @@ private:
 	virtual geom::Box onMeasure(geom::Box const& constraint) override;
 	virtual void onLayout(geom::Box const& size) override;
 	virtual void loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
-	virtual std::weak_ptr<Element> getElementByIdImpl(std::string const& id) override;
+	virtual HandlerW<Element> getElementByIdImpl(std::string const& id) override;
 private:
 	float calcScale(geom::Box const& widget, geom::Box const& constraint);
 private:

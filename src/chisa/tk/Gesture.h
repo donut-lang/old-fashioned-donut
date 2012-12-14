@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include <memory>
+#include "../Handler.h"
 #include "../util/ClassUtil.h"
 #include "../logging/Logger.h"
 #include "../geom/Vector.h"
@@ -54,15 +54,15 @@ class GestureSession {
 	DISABLE_COPY_AND_ASSIGN(GestureSession);
 	DEFINE_MEMBER_REF(private, logging::Logger, log)
 public:
-	GestureSession(logging::Logger& log, const unsigned int pointerIndex, std::weak_ptr<Element> targetElement, geom::Point const& startPoint, const float startTimeMs);
+	GestureSession(logging::Logger& log, const unsigned int pointerIndex, HandlerW<Element> targetElement, geom::Point const& startPoint, const float startTimeMs);
 	virtual ~GestureSession();
 private:
 	//static constexpr float MaxFlingVelocity=4000;
 	static constexpr float MinFlingVelocity=500.0f/1000;
 private:
-	std::weak_ptr<Element> target_;
-	std::vector<std::weak_ptr<Element> > elementChain_;
-	typedef std::vector<std::weak_ptr<Element> >::iterator ElementIterator;
+	HandlerW<Element> target_;
+	std::vector<HandlerW<Element> > elementChain_;
+	typedef std::vector<HandlerW<Element> >::iterator ElementIterator;
 	const unsigned int pointerIndex_;
 	const geom::Point startPoint_;
 	const float startTimeMs_;
