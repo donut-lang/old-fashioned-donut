@@ -22,7 +22,7 @@
 namespace chisa {
 namespace tk {
 
-Element::Element(logging::Logger& log, std::weak_ptr<World> world, HandlerW<Element> root, HandlerW<Element> parent)
+Element::Element(logging::Logger& log, HandlerW<World> world, HandlerW<Element> root, HandlerW<Element> parent)
 :log_(log)
 ,world_(world)
 ,root_(root)

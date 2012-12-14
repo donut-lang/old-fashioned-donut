@@ -78,7 +78,7 @@ void Button::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::
 Handler<gl::TextDrawable> Button::textImage()
 {
 	if(!this->textImage_){
-		if( std::shared_ptr<World> w = this->world().lock()){
+		if( Handler<World> w = this->world().lock()){
 			if(vertical_){
 				this->textImage_ = w->drawableManager()->queryVerticalText(
 						this->text(),

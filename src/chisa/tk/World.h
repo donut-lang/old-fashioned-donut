@@ -48,10 +48,10 @@ namespace widget{
 class WidgetFactory;
 }
 
-class World {
+class World : public HandlerBody<World> {
 private:
 	DEFINE_MEMBER_REF(public, logging::Logger, log);
-	const std::weak_ptr<Universe> universe_;
+	HandlerW<Universe> const universe_;
 	DEFINE_MEMBER_CONST(public, std::string, name);
 	TaskHandler taskHandler_;
 	Handler<donut::DozenBox> dozenBox_;
@@ -93,7 +93,7 @@ public:
 	template <typename... Args>
 	std::string resolveWorldFilepath(Args const&... related_filename) const
 	{
-		if(std::shared_ptr<Universe> universe = this->universe_.lock()){
+		if(Handler<Universe> universe = this->universe_.lock()){
 			return universe->resolveWorldFilepath(this->name(), related_filename...);
 		}else{
 			throw logging::Exception(__FILE__, __LINE__, "Oops. Universe already removed.");
@@ -102,7 +102,7 @@ public:
 	template <typename... Args>
 	std::string resolveUniverseFilepath(Args const&... related_filename) const
 	{
-		if(std::shared_ptr<Universe> universe = this->universe_.lock()){
+		if(Handler<Universe> universe = this->universe_.lock()){
 			return universe->resolveUniverseFilepath(related_filename...);
 		}else{
 			throw logging::Exception(__FILE__, __LINE__, "Oops. Universe already removed.");
@@ -120,16 +120,17 @@ public:
 	 * 生成
 	 ******************************************************************************/
 private:
-	World(logging::Logger& log, std::weak_ptr<Universe> _universe, std::string const& worldname);
-	void init(std::weak_ptr<World> _self);
+	World(logging::Logger& log, HandlerW<Universe> _universe, std::string const& worldname);
+	void init();
 public:
-	static std::shared_ptr<World> create(logging::Logger& log, std::weak_ptr<Universe> _universe, std::string const& worldname)
+	static Handler<World> create(logging::Logger& log, HandlerW<Universe> _universe, std::string const& worldname)
 	{
-		std::shared_ptr<World> ptr(new World(log, _universe, worldname));
-		ptr->init(ptr);
+		Handler<World> ptr(new World(log, _universe, worldname));
+		ptr->init();
 		return ptr;
 	}
-	virtual ~World();
+	virtual ~World() noexcept;
+	inline bool onFree() noexcept { return false; };
 };
 
 }}

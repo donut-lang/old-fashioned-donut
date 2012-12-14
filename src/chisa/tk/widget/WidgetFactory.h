@@ -17,10 +17,10 @@
  */
 
 #pragma once
-#include <memory>
 #include <functional>
 #include <tinyxml2.h>
 #include <vector>
+#include "../../Handler.h"
 #include "../../logging/Logger.h"
 #include "../../util/ClassUtil.h"
 #include "../../util/VectorMap.h"
@@ -36,7 +36,7 @@ class Widget;
 namespace widget {
 
 template <typename WidgetKlass>
-WidgetKlass* widgetConstructor(logging::Logger& log, std::weak_ptr<World> world, tinyxml2::XMLElement* elem){
+WidgetKlass* widgetConstructor(logging::Logger& log, HandlerW<World> world, tinyxml2::XMLElement* elem){
 	return new WidgetKlass(log, world, elem);
 }
 
@@ -44,14 +44,14 @@ class WidgetFactory {
 	DISABLE_COPY_AND_ASSIGN(WidgetFactory);
 private:
 	logging::Logger& log_;
-	std::weak_ptr<World> world_;
-	typedef std::function<Widget*(logging::Logger& log, std::weak_ptr<World> world, tinyxml2::XMLElement* elem)> ConstructorType;
+	HandlerW<World> world_;
+	typedef std::function<Widget*(logging::Logger& log, HandlerW<World> world, tinyxml2::XMLElement* elem)> ConstructorType;
 	util::VectorMap<std::string, ConstructorType> widgetMap_;
 public:
-	WidgetFactory(logging::Logger& log, std::weak_ptr<World> world);
+	WidgetFactory(logging::Logger& log, HandlerW<World> world);
 	virtual ~WidgetFactory();
 public:
-	void registerWidget(std::string const& klass, std::function<Widget*(logging::Logger& log, std::weak_ptr<World> world, tinyxml2::XMLElement* elem)> func);
+	void registerWidget(std::string const& klass, std::function<Widget*(logging::Logger& log, HandlerW<World> world, tinyxml2::XMLElement* elem)> func);
 	template <typename WidgetKlass>
 	void registerWidget(std::string const& klass) {
 		this->registerWidget(klass, widgetConstructor<WidgetKlass>);

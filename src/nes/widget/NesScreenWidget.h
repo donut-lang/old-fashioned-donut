@@ -32,7 +32,7 @@ private:
 	std::weak_ptr<nes::NesGeist> geist_;
 	chisa::Handler<chisa::util::XObject> conf_;
 public:
-	NesScreenWidget(chisa::logging::Logger& log, std::weak_ptr<chisa::tk::World> world, tinyxml2::XMLElement* element);
+	NesScreenWidget(chisa::logging::Logger& log, chisa::HandlerW<chisa::tk::World> world, tinyxml2::XMLElement* element);
 	virtual ~NesScreenWidget();
 public:
 	virtual void render(chisa::gl::Canvas& cv, chisa::geom::Area const& area) override;

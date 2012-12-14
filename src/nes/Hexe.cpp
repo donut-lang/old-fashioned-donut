@@ -43,7 +43,7 @@ void Hexe::registerElements(chisa::tk::element::ElementFactory& factory)
 {
 }
 
-std::shared_ptr<chisa::WorldGeist> Hexe::invokeWorldGeist(std::weak_ptr<chisa::tk::World> world, std::string const& nameOfGeist)
+std::shared_ptr<chisa::WorldGeist> Hexe::invokeWorldGeist(chisa::HandlerW<chisa::tk::World> world, std::string const& nameOfGeist)
 {
 	if(nameOfGeist == "nes"){
 		return std::shared_ptr<chisa::WorldGeist>(new NesGeist(log(), world));

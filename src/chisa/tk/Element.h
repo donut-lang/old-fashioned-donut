@@ -46,7 +46,7 @@ private: /* クラス固定 */
 	DEFINE_MEMBER_REF(protected, logging::Logger, log); //ロガー
 	util::VectorMap<std::string, std::function<void(tinyxml2::XMLElement*)> > attrMap_; //コンストラクタでセット
 public: /* ツリー */
-	DEFINE_MEMBER(protected, private, std::weak_ptr<World>, world); // 属する世界
+	DEFINE_MEMBER(protected, private, HandlerW<World>, world); // 属する世界
 	DEFINE_MEMBER(public, private, HandlerW<Element>, root); //Rootエレメント
 	DEFINE_MEMBER(public, private, HandlerW<Element>, parent); //親
 	DEFINE_MEMBER(public, private, std::string, id); //要素に付けられたID
@@ -75,7 +75,7 @@ public: /* 実装メソッド */
 	virtual void loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) = 0;
 	virtual HandlerW<Element> getElementByIdImpl(std::string const& id) = 0;
 protected:
-	Element(logging::Logger& log, std::weak_ptr<World> world, HandlerW<Element> root, HandlerW<Element> parent);
+	Element(logging::Logger& log, HandlerW<World> world, HandlerW<Element> root, HandlerW<Element> parent);
 	template <typename T> void addAttribute(std::string const& name, T& ptr)
 	{
 		this->attrMap_.insert(name, std::bind(chisa::util::xml::parseAttr<T>, std::string(name), std::ref(ptr), std::ref(ptr), std::placeholders::_1));
@@ -86,7 +86,7 @@ public:
 };
 
 
-#define CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST logging::Logger& log, std::weak_ptr<World> world, HandlerW<Element> root, HandlerW<Element> parent
+#define CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST logging::Logger& log, HandlerW<World> world, HandlerW<Element> root, HandlerW<Element> parent
 #define CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_APPLY log, world, root, parent
 
 #define CHISA_ELEMENT_SUBKLASS_FINAL(Klass) \

@@ -30,7 +30,7 @@ namespace tk {
 
 const static std::string& TAG("World");
 
-World::World(logging::Logger& log, std::weak_ptr<Universe> _universe, std::string const& worldname)
+World::World(logging::Logger& log, HandlerW<Universe> _universe, std::string const& worldname)
 :log_(log)
 ,universe_(_universe)
 ,name_(worldname)
@@ -44,7 +44,7 @@ World::World(logging::Logger& log, std::weak_ptr<Universe> _universe, std::strin
 
 }
 
-World::~World()
+World::~World() noexcept
 {
 	if(this->doc_){
 		delete this->doc_;
@@ -65,26 +65,26 @@ World::~World()
 }
 
 
-void World::init(std::weak_ptr<World> _self)
+void World::init()
 {
-	if(std::shared_ptr<Universe> universe = this->universe_.lock()){
+	if(Handler<Universe> universe = this->universe_.lock()){
 		const std::string filename(universe->resolveWorldFilepath(this->name_, "layout.xml"));
 		this->doc_ = new tinyxml2::XMLDocument();
 		this->doc_->LoadFile(filename.c_str());
-		this->elementFactory_ = new element::ElementFactory(this->log_, _self, filename, this->doc_, false);
+		this->elementFactory_ = new element::ElementFactory(this->log_, self(), filename, this->doc_, false);
 
 		if( const char* geistName = this->doc_->RootElement()->Attribute("geist", nullptr)){
 			universe->hexe()->registerElements(*this->elementFactory_);
-			this->geist(universe->invokeWorldGeist(_self, geistName));
+			this->geist(universe->invokeWorldGeist(this->self(), geistName));
 		}else{
 			if(log().t()){
 				log().t(TAG, "Geist not specified for: %s", this->name().c_str());
 			}
 		}
-		this->widgetFactory_ = new widget::WidgetFactory(this->log_, _self);
+		this->widgetFactory_ = new widget::WidgetFactory(this->log_, self());
 		universe->hexe()->registerWidgets(*this->widgetFactory_);
 	}
-	this->gestureMediator_ = new GestureMediator(this->log_, _self);
+	this->gestureMediator_ = new GestureMediator(this->log_, self());
 	this->pushElement("main");
 }
 
@@ -182,7 +182,7 @@ Widget* World::createWidget(std::string const& klass, tinyxml2::XMLElement* elem
 
 Handler<gl::DrawableManager> World::drawableManager() const
 {
-	if(std::shared_ptr<Universe> uni = this->universe_.lock()){
+	if(Handler<Universe> uni = this->universe_.lock()){
 		return uni->drawableManager();
 	}else{
 		return Handler<gl::DrawableManager>();

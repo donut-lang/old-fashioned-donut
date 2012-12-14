@@ -17,6 +17,7 @@
  */
 
 #include "Hexe.h"
+#include "tk/World.h"
 
 namespace chisa {
 
@@ -35,7 +36,7 @@ std::string Hexe::toString() const
 	return util::format("(Hexe %p)", this);
 }
 
-WorldGeist::WorldGeist(logging::Logger& log, std::weak_ptr<chisa::tk::World> world)
+WorldGeist::WorldGeist(logging::Logger& log, HandlerW<chisa::tk::World> world)
 :log_(log)
 ,world_(world)
 {
@@ -44,6 +45,11 @@ WorldGeist::WorldGeist(logging::Logger& log, std::weak_ptr<chisa::tk::World> wor
 WorldGeist::~WorldGeist()
 {
 
+}
+
+Handler<chisa::tk::World> WorldGeist::world()
+{
+	return world_.lock();
 }
 
 std::string WorldGeist::toString() const{

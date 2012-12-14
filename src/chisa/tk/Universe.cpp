@@ -33,24 +33,23 @@ Universe::Universe(logging::Logger& log, Hexe* hexe)
 ,drawableManager_( new gl::DrawableManager(log, gl::DrawableSetting(this->resolveUniverseFilepath("__font__"))) )
 {
 }
-Universe::~Universe() {
+Universe::~Universe() noexcept{
 }
 
-void Universe::init(std::weak_ptr<Universe> _self)
+void Universe::init()
 {
-	this->self_=_self;
 }
 
 void Universe::render()
 {
 	//TODO: 下のスタックについて、オフスクリーンレンダリングしたほうがいい？？
-	if(std::shared_ptr<World> topWorld = this->worldStack.top()){
+	if(Handler<World> topWorld = this->worldStack.top()){
 		topWorld->render(this->canvas_);
 	}
 }
 void Universe::idle(const float delta_ms)
 {
-	if(std::shared_ptr<World> topWorld = this->worldStack.top()){
+	if(Handler<World> topWorld = this->worldStack.top()){
 		topWorld->idle(delta_ms);
 	}
 }
@@ -60,7 +59,7 @@ void Universe::reshape(geom::Area const& area)
 		log().t(TAG, "reshaped: %s", area.toString().c_str());
 	}
 	this->canvas_.resize2d(area.box());
-	if(std::shared_ptr<World> topWorld = this->worldStack.top()){
+	if(Handler<World> topWorld = this->worldStack.top()){
 		topWorld->reshape(geom::Area(0,0, area.width(), area.height()));
 	}
 	this->area(area);
@@ -68,13 +67,13 @@ void Universe::reshape(geom::Area const& area)
 
 void Universe::createNewWorld(std::string const& worldName)
 {
-	std::shared_ptr<World> newWorld(World::create(log(),this->self_, worldName));
+	Handler<World> newWorld(World::create(log(),this->self(), worldName));
 	this->worldStack.push(newWorld);
 }
 
-void Universe::notifyWorldEnd(std::weak_ptr<World> me)
+void Universe::notifyWorldEnd(HandlerW<World> me)
 {
-	if(std::shared_ptr<World> world = me.lock()){
+	if(Handler<World> world = me.lock()){
 		const int idx = this->worldStack.indexOf(world);
 		if(idx < 0){
 			log().w(TAG, "oops. notified unknown world.");
@@ -82,7 +81,7 @@ void Universe::notifyWorldEnd(std::weak_ptr<World> me)
 		}
 		this->worldStack.erase(idx);
 
-		if(std::shared_ptr<World> topWorld = this->worldStack.top()){
+		if(Handler<World> topWorld = this->worldStack.top()){
 			// FIXME: 下の画面について、以前よりサイズが変わってるようならreshape
 			topWorld->reshape(this->area());
 		}
@@ -92,25 +91,25 @@ void Universe::notifyWorldEnd(std::weak_ptr<World> me)
 }
 void Universe::onTouchDown(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
 {
-	if(std::shared_ptr<World> topWorld = this->worldStack.top()){
+	if(Handler<World> topWorld = this->worldStack.top()){
 		topWorld->onTouchDown(timeMs, pointerIndex, screenPoint);
 	}
 }
 
 void Universe::onTouchUp(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
 {
-	if(std::shared_ptr<World> topWorld = this->worldStack.top()){
+	if(Handler<World> topWorld = this->worldStack.top()){
 		topWorld->onTouchUp(timeMs, pointerIndex, screenPoint);
 	}
 }
 
 void Universe::onTouchMove(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
 {
-	if(std::shared_ptr<World> topWorld = this->worldStack.top()){
+	if(Handler<World> topWorld = this->worldStack.top()){
 		topWorld->onTouchMove(timeMs, pointerIndex, screenPoint);
 	}
 }
-std::shared_ptr<chisa::WorldGeist> Universe::invokeWorldGeist(std::weak_ptr<tk::World> world, std::string const& nameOfGeist)
+std::shared_ptr<chisa::WorldGeist> Universe::invokeWorldGeist(HandlerW<World> world, std::string const& nameOfGeist)
 {
 	if(log().t()){
 		log().t(TAG, "Invoking: %s",nameOfGeist.c_str());

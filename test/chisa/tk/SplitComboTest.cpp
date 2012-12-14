@@ -66,7 +66,7 @@ TEST_F(HorizontalComboTest, EmptyTest)
 {
 	XMLElement* hor = newHorizontalChild(doc, "test");
 	world->InsertFirstChild(hor);
-	ElementFactory factory(log_trace, weak_ptr<World>(), fname, &doc, false);
+	ElementFactory factory(log_trace, chisa::HandlerW<World>(), fname, &doc, false);
 	Handler<Element> root = factory.parseTree("test");
 	ASSERT_EQ(root->getChildCount(), 0);
 	ASSERT_TRUE(util::startsWith(root->toString(), "(HorizontalCombo"));
@@ -80,7 +80,7 @@ TEST_F(HorizontalComboTest, BasicLayoutTest)
 	addHorizontalChild(doc, hor, "empty", 3);
 	addHorizontalChild(doc, hor, "empty", 1);
 
-	ElementFactory factory(log_trace, weak_ptr<World>(), fname, &doc, false);
+	ElementFactory factory(log_trace, chisa::HandlerW<World>(), fname, &doc, false);
 	Handler<Element> root = factory.parseTree("test");
 
 	root->measure(geom::Box(100, 100));
@@ -109,7 +109,7 @@ TEST_F(HorizontalComboTest, MixedTest)
 	addHorizontalChild(doc, hor, "empty", geom::Unspecified, 10, 50);
 	addHorizontalChild(doc, hor, "empty", 1);
 
-	ElementFactory factory(log_trace, weak_ptr<World>(), fname, &doc, false);
+	ElementFactory factory(log_trace, chisa::HandlerW<World>(), fname, &doc, false);
 	Handler<Element> root = factory.parseTree("test");
 
 	root->measure(geom::Box(100, 100));
