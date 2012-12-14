@@ -85,12 +85,12 @@ private:
 class GestureMediator {
 	DISABLE_COPY_AND_ASSIGN(GestureMediator);
 	DEFINE_MEMBER_REF(private, logging::Logger, log)
-	DEFINE_MEMBER_CONST(private, std::weak_ptr<World>, world)
+	DEFINE_MEMBER_CONST(private, HandlerW<World>, world)
 private:
 	static constexpr std::size_t MaxTouxhPoint = 5;
 	GestureSession* session_[MaxTouxhPoint];
 public:
-	GestureMediator(logging::Logger& log, const std::weak_ptr<World> world);
+	GestureMediator(logging::Logger& log, const HandlerW<World> world);
 	virtual ~GestureMediator();
 public:
 	void onTouchDown(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);

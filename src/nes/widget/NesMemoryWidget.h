@@ -18,7 +18,7 @@ class NesMemoryWidget: public chisa::tk::Widget {
 private:
 	std::weak_ptr<nes::NesGeist> geist_;
 public:
-	NesMemoryWidget(chisa::logging::Logger& log, std::weak_ptr<chisa::tk::World> _world, tinyxml2::XMLElement* element);
+	NesMemoryWidget(chisa::logging::Logger& log, chisa::HandlerW<chisa::tk::World> _world, tinyxml2::XMLElement* element);
 	virtual ~NesMemoryWidget();
 public:
 	virtual void render(chisa::gl::Canvas& cv, chisa::geom::Area const& area) override;

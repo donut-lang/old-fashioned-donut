@@ -57,7 +57,7 @@ private:
 	float time_ms_;
 	std::condition_variable cond_;
 public:
-	NesGeist(chisa::logging::Logger& log, std::weak_ptr<chisa::tk::World> world);
+	NesGeist(chisa::logging::Logger& log, chisa::HandlerW<chisa::tk::World> world);
 	virtual ~NesGeist();
 	virtual std::string toString() const override;
 public:

@@ -15,10 +15,10 @@
 namespace nes {
 namespace widget {
 
-NesMemoryWidget::NesMemoryWidget(chisa::logging::Logger& log, std::weak_ptr<chisa::tk::World> _world, tinyxml2::XMLElement* element)
+NesMemoryWidget::NesMemoryWidget(chisa::logging::Logger& log, chisa::HandlerW<chisa::tk::World> _world, tinyxml2::XMLElement* element)
 :Widget(log, _world, element)
 {
-	std::shared_ptr<chisa::tk::World> world(_world.lock());
+	chisa::Handler<chisa::tk::World> world(_world.lock());
 	std::shared_ptr<nes::NesGeist> geist(std::dynamic_pointer_cast<nes::NesGeist>(world->geist()));
 	this->geist_ = geist;
 	chisa::Handler<chisa::gl::DrawableManager> mgr = world->drawableManager();

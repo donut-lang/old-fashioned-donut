@@ -22,7 +22,7 @@
 
 namespace nes {
 
-NesGeist::NesGeist(chisa::logging::Logger& log, std::weak_ptr<chisa::tk::World> world)
+NesGeist::NesGeist(chisa::logging::Logger& log, chisa::HandlerW<chisa::tk::World> world)
 :chisa::WorldGeist(log, world)
 ,chisa::tk::Task(log)
 ,machine_(nullptr)
@@ -31,7 +31,7 @@ NesGeist::NesGeist(chisa::logging::Logger& log, std::weak_ptr<chisa::tk::World> 
 ,time_ms_(0.0f)
 {
 	this->machine_ = new VirtualMachine(*this, *this, this, nullptr);
-	if( std::shared_ptr<chisa::tk::World> world = this->world_.lock() ){
+	if( chisa::Handler<chisa::tk::World> world = this->world_.lock() ){
 		this->spr_ = world->drawableManager()->queryRawSprite(256, 240);
 	}
 }
@@ -96,7 +96,7 @@ void NesGeist::stopNES()
 		delete this->runner_;
 		this->runner_t_ = nullptr;
 		this->runner_ = nullptr;
-		if( std::shared_ptr<chisa::tk::World> world = this->world() ) {
+		if( chisa::Handler<chisa::tk::World> world = this->world() ) {
 			world->unregisterTask(this);
 		}
 	}
@@ -119,7 +119,7 @@ void NesGeist::startNES()
 	this->runner_ = new Runner(*this);
 	this->runner_t_ = new std::thread(std::ref(*this->runner_));
 	this->time_ms_ = 0.0f;
-	if( std::shared_ptr<chisa::tk::World> world = this->world() ) {
+	if( chisa::Handler<chisa::tk::World> world = this->world() ) {
 		world->registerTask(this);
 	}
 }

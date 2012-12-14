@@ -37,7 +37,7 @@ namespace element {
 
 
 template <typename T>
-Handler<T> elementConstructor(logging::Logger& log, std::weak_ptr<World> world, HandlerW<Element> root, HandlerW<Element> parent)
+Handler<T> elementConstructor(logging::Logger& log, HandlerW<World> world, HandlerW<Element> root, HandlerW<Element> parent)
 {
 	return Handler<T>(new T(log, world, root, parent));
 }
@@ -58,23 +58,23 @@ public:
 	struct AttrName {
 		static const std::string Id;
 	};
-	typedef std::function<Handler<Element>(logging::Logger& log, std::weak_ptr<World> world, HandlerW<Element> root, HandlerW<Element> parent)> ConstructorType;
+	typedef std::function<Handler<Element>(logging::Logger& log, HandlerW<World> world, HandlerW<Element> root, HandlerW<Element> parent)> ConstructorType;
 private:
 	logging::Logger& log_;
-	std::weak_ptr<World> world_;
+	HandlerW<World> world_;
 	util::VectorMap<std::string, ConstructorType> elementMap_;
 public:
 	inline logging::Logger& log() const { return log_; }
-	inline std::weak_ptr<World> world() const { return world_; }
+	inline HandlerW<World> world() const { return world_; }
 private:
 	std::string filename_;
 	tinyxml2::XMLDocument* doc_;
 	const bool doc_free_by_me_;
 	tinyxml2::XMLElement* root_;
 public:
-	ElementFactory(logging::Logger& log, std::weak_ptr<World> world, std::string const& filename);
-	ElementFactory(logging::Logger& log, std::weak_ptr<World> world, std::string const& filename, tinyxml2::XMLDocument* document, bool doc_free_by_me);
-	ElementFactory(logging::Logger& log, std::weak_ptr<World> world, std::string const& filename, const char* buffer, std::size_t lenb);
+	ElementFactory(logging::Logger& log, HandlerW<World> world, std::string const& filename);
+	ElementFactory(logging::Logger& log, HandlerW<World> world, std::string const& filename, tinyxml2::XMLDocument* document, bool doc_free_by_me);
+	ElementFactory(logging::Logger& log, HandlerW<World> world, std::string const& filename, const char* buffer, std::size_t lenb);
 	virtual ~ElementFactory();
 private:
 	void init();

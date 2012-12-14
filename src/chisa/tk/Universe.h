@@ -17,6 +17,7 @@
  */
 
 #pragma once
+#include "../Handler.h"
 #include "../logging/Logger.h"
 #include "../gl/Canvas.h"
 #include "../gl/Font.h"
@@ -37,14 +38,13 @@ class World;
 /**
  * アプリケーションウィンドウ全体を表すクラス
  */
-class Universe {
+class Universe : public HandlerBody<Universe> {
 	DISABLE_COPY_AND_ASSIGN(Universe);
 private:
 	DEFINE_MEMBER_REF(private, logging::Logger, log);
 	DEFINE_MEMBER_CONST(public, Hexe*, hexe);
-	Stack<std::shared_ptr<World> > worldStack;
+	Stack<Handler<World> > worldStack;
 	DEFINE_MEMBER(public, private, geom::Area, area);
-	std::weak_ptr<Universe> self_;
 	gl::Canvas canvas_;
 	Handler<gl::DrawableManager> drawableManager_;
 public:
@@ -53,7 +53,7 @@ public:
 	void reshape(geom::Area const& area);
 public: //worldからの通知
 	void createNewWorld(std::string const& worldName);
-	void notifyWorldEnd(std::weak_ptr<World> me);
+	void notifyWorldEnd(HandlerW<World> me);
 	/******************************************************************************
 	 * Hexeへ移譲
 	 ******************************************************************************/
@@ -68,7 +68,7 @@ public:
 	{
 		return this->hexe()->resolveFilepath(related_filename...);
 	}
-	std::shared_ptr<chisa::WorldGeist> invokeWorldGeist(std::weak_ptr<tk::World> world, std::string const& nameOfGeist);
+	std::shared_ptr<chisa::WorldGeist> invokeWorldGeist(HandlerW<World> world, std::string const& nameOfGeist);
 	/******************************************************************************
 	 * 画像
 	 ******************************************************************************/
@@ -86,15 +86,16 @@ public:
 	 ******************************************************************************/
 private:
 	Universe(logging::Logger& log, Hexe* hexe);
-	void init(std::weak_ptr<Universe> _self);
+	void init();
 public:
-	static std::shared_ptr<Universe> create(logging::Logger& log, Hexe* hexe)
+	static Handler<Universe> create(logging::Logger& log, Hexe* hexe)
 	{
-		std::shared_ptr<Universe> ptr(new Universe(log, hexe));
-		ptr->init(ptr);
+		Handler<Universe> ptr(new Universe(log, hexe));
+		ptr->init();
 		return ptr;
 	}
-	virtual ~Universe();
+	virtual ~Universe() noexcept;
+	inline bool onFree() noexcept { return false; };
 };
 
 }}

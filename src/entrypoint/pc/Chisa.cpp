@@ -29,14 +29,14 @@ namespace entrypoint {
 namespace pc {
 
 logging::Logger log(std::cout, logging::Logger::TRACE_);
-shared_ptr<tk::Universe> gUniverse;
+chisa::Handler<tk::Universe> gUniverse;
 
 Hexe* gHexe = nullptr;
 
 void tempInit()
 {
 	gHexe = new nes::Hexe(log, "./universe");
-	std::shared_ptr<tk::Universe>(tk::Universe::create(log, gHexe)).swap(gUniverse);
+	chisa::Handler<tk::Universe>(tk::Universe::create(log, gHexe)).swap(gUniverse);
 	//暫定で接続コードとかおいてみる
 	gUniverse->createNewWorld("test");
 }

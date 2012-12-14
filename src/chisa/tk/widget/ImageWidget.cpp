@@ -26,11 +26,11 @@ namespace widget {
 
 const static std::string TAG("ImageWidget");
 
-ImageWidget::ImageWidget(logging::Logger& log, std::weak_ptr<World> world, tinyxml2::XMLElement* element)
+ImageWidget::ImageWidget(logging::Logger& log, HandlerW<World> world, tinyxml2::XMLElement* element)
 :Widget(log, world, element)
 ,conf_(new util::XObject( element->FirstChildElement() ))
 {
-	if( std::shared_ptr<World> w = world.lock() ) {
+	if( Handler<World> w = world.lock() ) {
 		if(this->conf_->has<util::XString>("src")){
 			std::string src = this->conf_->get<util::XString>("src");
 			std::string fpath = w->resolveUniverseFilepath(src);

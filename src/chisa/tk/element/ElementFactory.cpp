@@ -48,7 +48,7 @@ const std::string ElementFactory::ElemName::Button("button");
 
 const std::string ElementFactory::AttrName::Id("id");
 
-ElementFactory::ElementFactory(logging::Logger& log, std::weak_ptr<World> world, std::string const& filename)
+ElementFactory::ElementFactory(logging::Logger& log, HandlerW<World> world, std::string const& filename)
 :log_(log)
 ,world_(world)
 ,filename_(filename)
@@ -66,7 +66,7 @@ ElementFactory::ElementFactory(logging::Logger& log, std::weak_ptr<World> world,
 	}
 }
 
-ElementFactory::ElementFactory(logging::Logger& log, std::weak_ptr<World> world, std::string const& filename, XMLDocument* document, bool doc_free_by_me)
+ElementFactory::ElementFactory(logging::Logger& log, HandlerW<World> world, std::string const& filename, XMLDocument* document, bool doc_free_by_me)
 :log_(log)
 ,world_(world)
 ,filename_(filename)
@@ -80,7 +80,7 @@ ElementFactory::ElementFactory(logging::Logger& log, std::weak_ptr<World> world,
 	}
 }
 
-ElementFactory::ElementFactory(logging::Logger& log, std::weak_ptr<World> world, std::string const& filename, const char* buffer, size_t lenb)
+ElementFactory::ElementFactory(logging::Logger& log, HandlerW<World> world, std::string const& filename, const char* buffer, size_t lenb)
 :log_(log)
 ,world_(world)
 ,doc_()

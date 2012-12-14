@@ -24,7 +24,7 @@ namespace tk {
 
 static const std::string TAG("GestureMediator");
 
-GestureMediator::GestureMediator(logging::Logger& log, const std::weak_ptr<World> world)
+GestureMediator::GestureMediator(logging::Logger& log, const HandlerW<World> world)
 :log_(log)
 ,world_(world)
 {
@@ -44,7 +44,7 @@ void GestureMediator::onTouchDown(const float timeMs, const unsigned int pointer
 		delete this->session_[pointerIndex];
 		this->session_[pointerIndex] = nullptr;
 	}
-	if(std::shared_ptr<World> world = this->world().lock()){
+	if(Handler<World> world = this->world().lock()){
 		GestureSession* const session = new GestureSession(this->log(), pointerIndex, world->getElementByPoint(screenPoint), screenPoint, timeMs);
 		this->session_[pointerIndex] = session;
 	}
