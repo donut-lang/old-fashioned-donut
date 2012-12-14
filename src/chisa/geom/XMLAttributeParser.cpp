@@ -17,7 +17,7 @@
  */
 
 #include "Area.h"
-#include "../util/XMLUtil.h"
+#include "../util/XMLAttrParser.h"
 
 namespace chisa {
 namespace util {

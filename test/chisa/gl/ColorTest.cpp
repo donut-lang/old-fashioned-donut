@@ -18,7 +18,7 @@
 
 #include "../../TestCommon.h"
 #include "../../../src/chisa/gl/Color.h"
-#include "../../../src/chisa/util/XMLUtil.h"
+#include "../../../src/chisa/util/XMLAttrParser.h"
 
 namespace chisa {
 namespace gl {

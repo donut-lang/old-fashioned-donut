@@ -17,7 +17,7 @@
  */
 
 #include <string>
-#include "XMLUtil.h"
+#include "XMLAttrParser.h"
 
 namespace chisa {
 namespace util {

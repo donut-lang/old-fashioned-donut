@@ -21,7 +21,7 @@
 #include "Gesture.h"
 #include "../util/ClassUtil.h"
 #include "../util/VectorMap.h"
-#include "../util/XMLUtil.h"
+#include "../util/XMLAttrParser.h"
 #include "../geom/Vector.h"
 #include "../geom/Area.h"
 #include "../Handler.h"
