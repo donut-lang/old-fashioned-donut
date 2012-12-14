@@ -74,13 +74,14 @@ HandlerW<Element> Element::getElementByPoint(geom::Vector const& screenPoint)
 
 std::string Element::toString() const
 {
-	return util::format("(Layout %p)", this);
+	return util::format("(Element %p)", this);
 }
 
 geom::Box Element::measure(geom::Box const& constraint)
 {
 	return this->onMeasure(constraint);
 }
+
 void Element::render(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
 {
 	this->screenArea(screenArea);
