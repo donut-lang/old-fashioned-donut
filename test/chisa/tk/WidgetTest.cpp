@@ -27,7 +27,7 @@ namespace tk {
 class WidgetTest : public ::testing::Test
 {
 protected:
-	shared_ptr<Universe> universe;
+	Handler<Universe> universe;
 public:
 	void SetUp(){
 	}
