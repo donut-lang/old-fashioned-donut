@@ -32,9 +32,9 @@ class ElementFactory;
 struct SplitDef
 {
 public:
-	const float weight;
-	const float min;
-	const float max;
+	float weight;
+	float min;
+	float max;
 	SplitDef(const float weight, const float min=NAN, const float max=NAN)
 	:weight(weight), min(min), max(max)
 	{
@@ -42,13 +42,20 @@ public:
 };
 struct SplitCtx
 {
-	const SplitDef def;
+	SplitDef def;
 	Handler<Element> element;
 	float size;
 	float weight;
 	SplitCtx(SplitDef const& def)
 	:def(def)
 	,element(nullptr)
+	,size(NAN)
+	,weight(def.weight)
+	{
+	}
+	SplitCtx(SplitDef const& def, Handler<Element> const& elm)
+	:def(def)
+	,element(elm)
 	,size(NAN)
 	,weight(def.weight)
 	{
@@ -70,7 +77,7 @@ public:
 	};
 private:
 	DEFINE_MEMBER(private, private, enum SplitMode, splitMode);
-	DEFINE_CONTAINER(private, private, std::vector<std::shared_ptr<SplitCtx> >, children)
+	DEFINE_CONTAINER(private, private, std::vector<SplitCtx>, children)
 	float totalSize_;
 	void setMode(enum SplitMode mode);
 private:
