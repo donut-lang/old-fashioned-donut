@@ -152,22 +152,20 @@ public:
 };
 
 namespace internal {
-template<class S>
 class WeakHandlerEntity {
 private:
-	S* sprite;
+	bool dead_;
 	int refcount_;
-	WeakHandlerEntity() = delete;
-	~WeakHandlerEntity() { this->sprite = nullptr; }
-	WeakHandlerEntity(S* spr):sprite(spr), refcount_(0){}
+	WeakHandlerEntity():dead_(false), refcount_(0){}
+	~WeakHandlerEntity() noexcept = default;
 private:
-	WeakHandlerEntity(WeakHandlerEntity<S> const& other) = delete;
-	WeakHandlerEntity(WeakHandlerEntity<S>&& other) = delete;
-	WeakHandlerEntity<S>& operator=(WeakHandlerEntity<S> const& other) = delete;
-	WeakHandlerEntity<S>& operator=(WeakHandlerEntity<S>&& other) = delete;
+	WeakHandlerEntity(WeakHandlerEntity const& other) = delete;
+	WeakHandlerEntity(WeakHandlerEntity&& other) = delete;
+	WeakHandlerEntity& operator=(WeakHandlerEntity const& other) = delete;
+	WeakHandlerEntity& operator=(WeakHandlerEntity&& other) = delete;
 public:
 	inline void notifyDead(){
-		this->sprite = nullptr;
+		this->dead_ = true;
 		if(this->refcount_ == 0){
 			delete this;
 		}
@@ -176,10 +174,7 @@ public:
 		return !(this->expired());
 	}
 	inline bool expired () const noexcept {
-		return !(this->sprite);
-	}
-	inline S* read() const noexcept {
-		return this->sprite;
+		return (this->dead_);
 	}
 	inline void incref() noexcept {
 		this->refcount_++;
@@ -194,12 +189,13 @@ public:
 		return this->refcount_;
 	}
 public:
-	inline static WeakHandlerEntity<S>* create(S* self){
+	template <typename S>
+	inline static WeakHandlerEntity* create(S* self){
 		if(!self){
 			return nullptr;
 		}
 		if(!self->weakEntity_){
-			self->weakEntity_ = new WeakHandlerEntity<S>(self);
+			self->weakEntity_ = new WeakHandlerEntity;
 		}
 		return self->weakEntity_;
 	}
@@ -210,30 +206,53 @@ template<class S>
 class HandlerW
 {
 private:
-	internal::WeakHandlerEntity<S>* entity;
+	S* sprite;
+	internal::WeakHandlerEntity* entity;
 public:
-	HandlerW():entity(nullptr){};
+	HandlerW()
+	:sprite(nullptr)
+	,entity(nullptr)
+	{
+	}
 	HandlerW(Handler<S> const& hand)
-	:entity(internal::WeakHandlerEntity<S>::create(hand.get()))
+	:sprite(nullptr)
+	,entity(internal::WeakHandlerEntity::create<S>(hand.get()))
 	{
 		if(this->entity){
 			this->entity->incref();
+			this->sprite = hand.get();
+		}
+	}
+	template <typename T>
+	HandlerW(Handler<T> const& hand)
+	:sprite(nullptr)
+	 ,entity(internal::WeakHandlerEntity::create<T>(hand.get()))
+	{
+		if(this->entity){
+			this->entity->incref();
+			this->sprite = hand.get();
 		}
 	}
 	HandlerW(S* spr)
-	:entity(internal::WeakHandlerEntity<S>::create(spr))
+	:sprite(nullptr)
+	,entity(internal::WeakHandlerEntity::create<S>(spr))
 	{
 		if(this->entity){
 			this->entity->incref();
+			this->sprite = spr;
 		}
 	}
-	HandlerW(HandlerW<S> const& other):entity(other.entity)
+	HandlerW(HandlerW<S> const& other)
+	:sprite(nullptr)
+	,entity(other.entity)
 	{
 		if(this->entity){
 			this->entity->incref();
+			this->sprite = other.sprite;
 		}
 	}
-	HandlerW(HandlerW<S>&& other):entity(other.entity) {
+	HandlerW(HandlerW<S>&& other):sprite(other.sprite),entity(other.entity) {
+		other.sprite = nullptr;
 		other.entity = nullptr;
 	}
 	inline HandlerW& operator=(HandlerW<S> const& other)
@@ -244,6 +263,20 @@ public:
 		if(this->entity){
 			this->entity->decref();
 		}
+		this->sprite = other.sprite;
+		this->entity = other.entity;
+		return *this;
+	}
+	template <typename T>
+	inline HandlerW& operator=(HandlerW<T> const& other)
+	{
+		if(other.entity){
+			other.entity->incref();
+		}
+		if(this->entity){
+			this->entity->decref();
+		}
+		this->sprite = other.sprite;
 		this->entity = other.entity;
 		return *this;
 	}
@@ -251,23 +284,41 @@ public:
 	{
 		if(this->entity){
 			this->entity->decref();
+			this->sprite = nullptr;
 			this->entity = nullptr;
 		}
+		this->sprite = other.sprite;
 		this->entity = other.entity;
 		other.entity = nullptr;
+		other.sprite = nullptr;
+		return *this;
+	}
+	template <typename T>
+	inline HandlerW& operator=(HandlerW<T>&& other)
+	{
+		if(this->entity){
+			this->entity->decref();
+			this->sprite = nullptr;
+			this->entity = nullptr;
+		}
+		this->sprite = other.sprite;
+		this->entity = other.entity;
+		other.entity = nullptr;
+		other.sprite = nullptr;
 		return *this;
 	}
 	~HandlerW() noexcept{
 		if(this->entity){
 			this->entity->decref();
-			this->entity=nullptr;
 		}
+		this->entity=nullptr;
+		this->sprite=nullptr;
 	}
 	inline Handler<S> lock() const noexcept {
 		if(expired()){
 			return Handler<S>();
 		}
-		return Handler<S>::__internal__fromRawPointerWithoutCheck(entity->read());
+		return Handler<S>::__internal__fromRawPointerWithoutCheck(sprite);
 	}
 	inline bool expired() const noexcept {
 		return (!this->entity) || this->entity->expired();
@@ -276,6 +327,7 @@ public:
 	{
 		using std::swap;
 		swap(other.entity, this->entity);
+		swap(other.sprite, this->sprite);
 	}
 	inline void reset() noexcept
 	{
@@ -311,11 +363,11 @@ private:
 	const HandlerBody<Derived, atomic>& operator=(const HandlerBody<Derived, atomic>&& other) = delete;
 	template <typename T> friend class chisa::Handler;
 	template <typename T> friend class chisa::HandlerW;
-	template <typename T> friend class chisa::internal::WeakHandlerEntity;
+	friend class chisa::internal::WeakHandlerEntity;
 private:
 	int refcount_;
 	bool deleted;
-	chisa::internal::WeakHandlerEntity<Derived>* weakEntity_;
+	chisa::internal::WeakHandlerEntity* weakEntity_;
 protected:
 	HandlerBody()
 	:refcount_(0), deleted(false), weakEntity_(nullptr) {}
@@ -362,11 +414,11 @@ private:
 	const HandlerBody<Derived, true>& operator=(const HandlerBody<Derived, true>&& other) = delete;
 	template <typename T> friend class chisa::Handler;
 	template <typename T> friend class chisa::HandlerW;
-	template <typename T> friend class chisa::internal::WeakHandlerEntity;
+	friend class chisa::internal::WeakHandlerEntity;
 private:
 	std::atomic<int> refcount_;
 	bool onDestroy_;
-	chisa::internal::WeakHandlerEntity<Derived>* weakEntity_;
+	chisa::internal::WeakHandlerEntity* weakEntity_;
 protected:
 	HandlerBody()
 	:refcount_(0), onDestroy_(false), weakEntity_(nullptr) {}
