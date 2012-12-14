@@ -44,7 +44,7 @@ WidgetElement::~WidgetElement() noexcept
 		if(std::shared_ptr<World> world = this->world().lock()){
 			//ワールドの書き換えと、ウィジットへの現親レイアウトの通知
 			if(world->replaceWidget(this->widgetId_, this->borrowed_)) {
-				this->widget()->updateWrapper(std::dynamic_pointer_cast<WidgetElement>(this->self().lock()));
+				this->widget()->updateWrapper(this->self().cast<WidgetElement>());
 			}
 			// TODO　ウィジットにレイアウト通知入れたほうがいい？？
 		}
@@ -56,9 +56,9 @@ WidgetElement::~WidgetElement() noexcept
 	}
 }
 
-std::weak_ptr<Element> WidgetElement::getChildAt(const std::size_t index) const
+HandlerW<Element> WidgetElement::getChildAt(const std::size_t index) const
 {
-	return std::weak_ptr<Element>();
+	return HandlerW<Element>();
 }
 std::size_t WidgetElement::getChildCount() const
 {
@@ -205,7 +205,7 @@ void WidgetElement::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElem
 		if(widgetId && (this->borrowed_ = world->getWidgetById(widgetId))){
 			world->replaceWidget(widgetId, this);
 			this->widget(this->borrowed_->widget());
-			this->widget()->updateWrapper(std::dynamic_pointer_cast<WidgetElement>(this->self().lock()));
+			this->widget()->updateWrapper(this->self().cast<WidgetElement>());
 		}else{
 			this->widget(world->createWidget(widgetKlass, element));
 			if(!this->widget()){
@@ -215,9 +215,9 @@ void WidgetElement::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElem
 	}
 }
 
-std::weak_ptr<Element> WidgetElement::getElementByIdImpl(std::string const& id)
+HandlerW<Element> WidgetElement::getElementByIdImpl(std::string const& id)
 {
-	return std::weak_ptr<Element>();
+	return HandlerW<Element>();
 }
 
 geom::Point WidgetElement::calcPtInWidget(geom::Point const& ptInScreen)

@@ -32,17 +32,17 @@ LeafElement::~LeafElement() noexcept
 
 }
 
-std::weak_ptr<Element> LeafElement::getChildAt(const std::size_t index) const
+HandlerW<Element> LeafElement::getChildAt(const std::size_t index) const
 {
-	return std::weak_ptr<Element>();
+	return HandlerW<Element>();
 }
 std::size_t LeafElement::getChildCount() const
 {
 	return 0;
 }
-std::weak_ptr<Element> LeafElement::getElementByIdImpl(std::string const& id)
+HandlerW<Element> LeafElement::getElementByIdImpl(std::string const& id)
 {
-	return std::weak_ptr<Element>();
+	return HandlerW<Element>();
 }
 
 

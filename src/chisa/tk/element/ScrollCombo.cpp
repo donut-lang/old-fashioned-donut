@@ -35,12 +35,12 @@ ScrollCombo::~ScrollCombo() noexcept
 {
 }
 
-std::weak_ptr<Element> ScrollCombo::getChildAt(const size_t index) const
+HandlerW<Element> ScrollCombo::getChildAt(const size_t index) const
 {
 	if(index == 0 && this->child_){
 		return this->child_;
 	}else{
-		return std::weak_ptr<Element>();
+		return HandlerW<Element>();
 	}
 }
 
@@ -158,12 +158,12 @@ bool ScrollCombo::onScroll(const float timeMs, geom::Point const& start, geom::P
 }
 
 
-std::weak_ptr<Element> ScrollCombo::getElementByIdImpl(std::string const& id)
+HandlerW<Element> ScrollCombo::getElementByIdImpl(std::string const& id)
 {
 	if(this->child_){
 		return this->child_->getElementById(id);
 	}else{
-		return std::weak_ptr<Element>();
+		return HandlerW<Element>();
 	}
 }
 

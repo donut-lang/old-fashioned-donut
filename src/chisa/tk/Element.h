@@ -24,6 +24,7 @@
 #include "../util/XMLUtil.h"
 #include "../geom/Vector.h"
 #include "../geom/Area.h"
+#include "../Handler.h"
 #include <string>
 #include <cmath>
 
@@ -39,76 +40,67 @@ class ElementFactory;
 
 class World;
 
-class Element : public GestureListener {
+class Element : public HandlerBody<Element>, public GestureListener {
 	DISABLE_COPY_AND_ASSIGN(Element);
-private: /* 時間にともなって変化しないデータ（＝シリアライズしなくてよい） */
+private: /* クラス固定 */
+	DEFINE_MEMBER_REF(protected, logging::Logger, log); //ロガー
 	util::VectorMap<std::string, std::function<void(tinyxml2::XMLElement*)> > attrMap_; //コンストラクタでセット
-private:
-	DEFINE_MEMBER_REF(protected, logging::Logger, log);
-	DEFINE_MEMBER(protected, private, std::weak_ptr<World>, world);
-	DEFINE_MEMBER(public, private, std::weak_ptr<Element>, root);
-	DEFINE_MEMBER(public, private, std::weak_ptr<Element>, parent);
-	DEFINE_MEMBER(protected, private, std::weak_ptr<Element>, self);
-	DEFINE_MEMBER(public, private, geom::Box, size);
-	DEFINE_MEMBER(public, private, geom::Area, screenArea);
-	DEFINE_MEMBER(protected, private, geom::Area, drawnArea);
-	DEFINE_MEMBER(public, private, std::string, id);
-public:
-	virtual std::weak_ptr<Element> getChildAt(const size_t index) const = 0;
-	virtual size_t getChildCount() const = 0;
-public:
+public: /* ツリー */
+	DEFINE_MEMBER(protected, private, std::weak_ptr<World>, world); // 属する世界
+	DEFINE_MEMBER(public, private, HandlerW<Element>, root); //Rootエレメント
+	DEFINE_MEMBER(public, private, HandlerW<Element>, parent); //親
+	DEFINE_MEMBER(public, private, std::string, id); //要素に付けられたID
+public: /* 画面描画情報 */
+	DEFINE_MEMBER(public, private, geom::Box, size); //現在の大きさ
+	DEFINE_MEMBER(public, private, geom::Area, screenArea); //画面上の占める位置
+	DEFINE_MEMBER(protected, private, geom::Area, drawnArea); //大きさの中で、レンダリングされている部分
+public: /* レンダリング */
 	void render(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area);
 	geom::Box measure(geom::Box const& constraint);
 	void layout(geom::Box const& size);
-	virtual std::string toString() const = 0;
+public: /* ツリー操作 */
+	HandlerW<Element> getElementById(std::string const& id);
+	HandlerW<Element> getElementByPoint(geom::Vector const& screenPoint);
+	virtual HandlerW<Element> getChildAt(const size_t index) const = 0;
+	virtual size_t getChildCount() const = 0;
+public: /* 木の生成 */
 	void loadXML(element::ElementFactory* const factory, tinyxml2::XMLElement* const element);
-	std::weak_ptr<Element> getElementById(std::string const& id);
-	std::weak_ptr<Element> getElementByPoint(geom::Vector const& screenPoint);
+public: /* バックグラウンドタスク */
 	virtual void idle(const float delta_ms);
-private:
+public: /* 実装メソッド */
+	virtual std::string toString() const = 0;
 	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) = 0;
 	virtual geom::Box onMeasure(geom::Box const& constraint) = 0;
 	virtual void onLayout(geom::Box const& size) = 0;
 	virtual void loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) = 0;
-	virtual std::weak_ptr<Element> getElementByIdImpl(std::string const& id) = 0;
+	virtual HandlerW<Element> getElementByIdImpl(std::string const& id) = 0;
 protected:
-	Element(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent);
-private:
-	void init(std::weak_ptr<Element> _self);
-public:
-	template <typename SubKlass>
-	static std::shared_ptr<SubKlass> create(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent)
-	{
-		std::shared_ptr<SubKlass> ptr(new SubKlass(log, world, root, parent));
-		ptr->init(ptr);
-		return ptr;
-	}
-	virtual ~Element() noexcept = default;
-protected:
+	Element(logging::Logger& log, std::weak_ptr<World> world, HandlerW<Element> root, HandlerW<Element> parent);
 	template <typename T> void addAttribute(std::string const& name, T& ptr)
 	{
 		this->attrMap_.insert(name, std::bind(chisa::util::xml::parseAttr<T>, std::string(name), std::ref(ptr), std::ref(ptr), std::placeholders::_1));
 	}
+public:
+	inline bool onFree() noexcept { return false; };
+	virtual ~Element() noexcept = default;
 };
 
 
-#define CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent
+#define CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST logging::Logger& log, std::weak_ptr<World> world, HandlerW<Element> root, HandlerW<Element> parent
 #define CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_APPLY log, world, root, parent
 
 #define CHISA_ELEMENT_SUBKLASS_FINAL(Klass) \
-friend std::shared_ptr<Klass> Element::create<Klass>(CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST);\
-private:\
-	Klass(CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST);\
 public:\
+	Klass(CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST);\
 	virtual ~Klass() noexcept;
 
 #define CHISA_ELEMENT_SUBKLASS(Klass) \
-protected:\
-	Klass(CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST);\
 public:\
+	Klass(CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST);\
 	virtual ~Klass() noexcept;
 
-#define CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_SETUP_BASE(Derived) Derived(CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_APPLY)
+#define CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_SETUP_BASE(Derived)\
+Derived(CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_APPLY)
 
 #define CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(Klass, Derived) \
 Klass::Klass(CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST)\

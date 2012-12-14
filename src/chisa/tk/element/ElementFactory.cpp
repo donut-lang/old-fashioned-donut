@@ -113,29 +113,29 @@ ElementFactory::~ElementFactory()
 	this->doc_ = nullptr;
 }
 
-void ElementFactory::registerElement(std::string const& elementName, std::function<std::shared_ptr<Element>(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent)> constructor)
+void ElementFactory::registerElement(std::string const& elementName, ElementFactory::ConstructorType constructor)
 {
 	this->elementMap_.update(elementName, constructor);
 }
 
-std::shared_ptr<Element> ElementFactory::parseTree(std::weak_ptr<Element> root, std::weak_ptr<Element> parent, XMLElement* top)
+Handler<Element> ElementFactory::parseTree(HandlerW<Element> root, HandlerW<Element> parent, XMLElement* top)
 {
 	const char* name = top->Name();
 	auto it = this->elementMap_.find(name);
 	if(this->elementMap_.end() == it){
 		throw logging::Exception(__FILE__,__LINE__, "Unknwon Element: %s", name);
 	}
-	std::shared_ptr<Element> elm(it->second(this->log(), this->world(), root, parent));
+	Handler<Element> elm(it->second(this->log(), this->world(), root, parent));
 	elm->loadXML(this, top);
 	return elm;
 }
 
-std::shared_ptr<Element> ElementFactory::parseTree(std::string const& elementId)
+Handler<Element> ElementFactory::parseTree(std::string const& elementId)
 {
 	for(XMLElement* elem = this->root_->FirstChildElement(); elem; elem = elem->NextSiblingElement()){
 		const char* id = elem->Attribute(AttrName::Id.c_str(), nullptr);
 		if(id && elementId == id){
-			return this->parseTree(std::weak_ptr<Element>(), std::weak_ptr<Element>(), elem);
+			return this->parseTree(HandlerW<Element>(), HandlerW<Element>(), elem);
 		}
 	}
 	throw logging::Exception(__FILE__, __LINE__, "Element ID \"%s\" not found in %s", elementId.c_str(), this->filename_.c_str());

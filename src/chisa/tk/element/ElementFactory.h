@@ -35,10 +35,11 @@ class World;
 
 namespace element {
 
+
 template <typename T>
-std::shared_ptr<T> elementConstructor(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent)
+Handler<T> elementConstructor(logging::Logger& log, std::weak_ptr<World> world, HandlerW<Element> root, HandlerW<Element> parent)
 {
-	return Element::create<T>(log, world, root, parent);
+	return Handler<T>(new T(log, world, root, parent));
 }
 
 class ElementFactory {
@@ -57,10 +58,10 @@ public:
 	struct AttrName {
 		static const std::string Id;
 	};
+	typedef std::function<Handler<Element>(logging::Logger& log, std::weak_ptr<World> world, HandlerW<Element> root, HandlerW<Element> parent)> ConstructorType;
 private:
 	logging::Logger& log_;
 	std::weak_ptr<World> world_;
-	typedef std::function<std::shared_ptr<Element>(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent)> ConstructorType;
 	util::VectorMap<std::string, ConstructorType> elementMap_;
 public:
 	inline logging::Logger& log() const { return log_; }
@@ -78,9 +79,9 @@ public:
 private:
 	void init();
 public:
-	std::shared_ptr<Element> parseTree(std::string const& layoutId);
-	std::shared_ptr<Element> parseTree(std::weak_ptr<Element> root, std::weak_ptr<Element> parent, tinyxml2::XMLElement* top);
-	void registerElement(std::string const& elementName, std::function<std::shared_ptr<Element>(logging::Logger& log, std::weak_ptr<World> world, std::weak_ptr<Element> root, std::weak_ptr<Element> parent)> constructor);
+	Handler<Element> parseTree(std::string const& layoutId);
+	Handler<Element> parseTree(HandlerW<Element> root, HandlerW<Element> parent, tinyxml2::XMLElement* top);
+	void registerElement(std::string const& elementName, ConstructorType constructor);
 	template <typename T>
 	void registerElement(std::string const& elementName)
 	{

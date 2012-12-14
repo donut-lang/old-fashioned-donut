@@ -37,11 +37,11 @@ private:
 	};
 	enum Mode scrollMode_;
 	geom::Point scrollOffset_;
-	std::shared_ptr<Element> child_;
+	Handler<Element> child_;
 	geom::Box childSize_;
 	float lastMovedFrom_;
 public:
-	virtual std::weak_ptr<Element> getChildAt(const std::size_t index) const override;
+	virtual HandlerW<Element> getChildAt(const std::size_t index) const override;
 	virtual std::size_t getChildCount() const override;
 	virtual std::string toString() const override;
 	virtual void idle(const float delta_ms) override;
@@ -50,7 +50,7 @@ private:
 	virtual geom::Box onMeasure(geom::Box const& constraint) override;
 	virtual void onLayout(geom::Box const& size) override;
 	virtual void loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
-	virtual std::weak_ptr<Element> getElementByIdImpl(std::string const& id) override;
+	virtual HandlerW<Element> getElementByIdImpl(std::string const& id) override;
 public:
 	virtual bool onScroll(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance) override;
 };

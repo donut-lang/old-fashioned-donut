@@ -246,6 +246,27 @@ TEST(HandlerTest, WeakHandlerTest)
 	ASSERT_EQ(1, d);
 }
 
+TEST(HandlerTest, WeakHandlerUpCastTest)
+{
+	int e = 0;
+	int d = 0;
+	HandlerW<TestFix> weak;
+	{
+		Handler<TestFixDerived> handler( new TestFixDerived(&e, &d) );
+		weak = handler;
+		ASSERT_FALSE(weak.expired());
+		handler->setDestroyCallback([&weak](){
+			SCOPED_TRACE("in lambda");
+			ASSERT_FALSE(weak.lock());
+			ASSERT_TRUE(weak.expired());
+		});
+	}
+	ASSERT_EQ(1, e);
+	ASSERT_EQ(1, d);
+	ASSERT_FALSE(weak.lock());
+	ASSERT_TRUE(weak.expired());
+}
+
 TEST(HandlerTest, TouchWeakHandlerOnDestroyTest)
 {
 	int e = 0;
