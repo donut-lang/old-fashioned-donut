@@ -17,7 +17,7 @@
  */
 
 #include "../Color.h"
-#include "../../util/XMLUtil.h"
+#include "../../util/XMLAttrParser.h"
 #include "../../util/StringUtil.h"
 
 namespace chisa {

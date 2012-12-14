@@ -21,7 +21,7 @@
 #include <tinyxml2.h>
 #include "../../Handler.h"
 #include "../../util/ClassUtil.h"
-#include "../../util/XMLUtil.h"
+#include "../../util/XMLAttrParser.h"
 #include "../../util/VectorMap.h"
 #include "../../geom/Area.h"
 #include "../../gl/Color.h"

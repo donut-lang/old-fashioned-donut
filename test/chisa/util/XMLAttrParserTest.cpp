@@ -17,7 +17,7 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../src/chisa/util/XMLUtil.h"
+#include "../../src/chisa/util/XMLAttrParser.h"
 
 #include <typeinfo>
 #include <cmath>
@@ -25,7 +25,7 @@
 namespace chisa {
 namespace util {
 
-TEST(XMLUtilTest, StringNotFoundTest)
+TEST(XMLAttrParser, StringNotFoundTest)
 {
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc />
@@ -35,7 +35,7 @@ TEST(XMLUtilTest, StringNotFoundTest)
 	ASSERT_EQ("TEST2", str);
 }
 
-TEST(XMLUtilTest, StringFoundTest)
+TEST(XMLAttrParser, StringFoundTest)
 {
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc str="str" float="int" margin="1" />
@@ -47,7 +47,7 @@ TEST(XMLUtilTest, StringFoundTest)
 
 #define PARSE(type, first, def) type v = first; util::xml::parseAttr<type>("val", std::ref(v), def, doc->RootElement());
 
-TEST(XMLUtilTest, FloatNotFoundTest)
+TEST(XMLAttrParser, FloatNotFoundTest)
 {
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc />
@@ -56,7 +56,7 @@ TEST(XMLUtilTest, FloatNotFoundTest)
 	ASSERT_FLOAT_EQ(10, v);
 }
 
-TEST(XMLUtilTest, FloatFoundTest)
+TEST(XMLAttrParser, FloatFoundTest)
 {
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc val="1.12" />
@@ -65,7 +65,7 @@ TEST(XMLUtilTest, FloatFoundTest)
 	ASSERT_FLOAT_EQ(1.12, v);
 }
 
-TEST(XMLUtilTest, FloatInvalidTest)
+TEST(XMLAttrParser, FloatInvalidTest)
 {
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc val="string!!" />
@@ -74,7 +74,7 @@ TEST(XMLUtilTest, FloatInvalidTest)
 	ASSERT_FLOAT_EQ(10, v);
 }
 
-TEST(XMLUtilTest, FloatNANTest)
+TEST(XMLAttrParser, FloatNANTest)
 {
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc val="nan" />
@@ -83,7 +83,7 @@ TEST(XMLUtilTest, FloatNANTest)
 	ASSERT_TRUE(std::isnan(v));
 }
 
-TEST(XMLUtilTest, IntNotFoundTest)
+TEST(XMLAttrParser, IntNotFoundTest)
 {
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc />
@@ -92,7 +92,7 @@ TEST(XMLUtilTest, IntNotFoundTest)
 	ASSERT_EQ(10, v);
 }
 
-TEST(XMLUtilTest, IntFoundTest)
+TEST(XMLAttrParser, IntFoundTest)
 {
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc val="5" />
@@ -101,7 +101,7 @@ TEST(XMLUtilTest, IntFoundTest)
 	ASSERT_EQ(5, v);
 }
 
-TEST(XMLUtilTest, IntMinusFoundTest)
+TEST(XMLAttrParser, IntMinusFoundTest)
 {
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc val="-5" />
@@ -110,7 +110,7 @@ TEST(XMLUtilTest, IntMinusFoundTest)
 	ASSERT_EQ(-5, v);
 }
 
-TEST(XMLUtilTest, IntInvalidTest)
+TEST(XMLAttrParser, IntInvalidTest)
 {
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc val="string!!" />
@@ -120,7 +120,7 @@ TEST(XMLUtilTest, IntInvalidTest)
 }
 
 
-TEST(XMLUtilTest, UnsignedIntNotFoundTest)
+TEST(XMLAttrParser, UnsignedIntNotFoundTest)
 {
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc />
@@ -129,7 +129,7 @@ TEST(XMLUtilTest, UnsignedIntNotFoundTest)
 	ASSERT_EQ(10, v);
 }
 
-TEST(XMLUtilTest, UnsignedIntFoundTest)
+TEST(XMLAttrParser, UnsignedIntFoundTest)
 {
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc val="5" />
@@ -138,7 +138,7 @@ TEST(XMLUtilTest, UnsignedIntFoundTest)
 	ASSERT_EQ(5, v);
 }
 
-TEST(XMLUtilTest, UnsignedIntMinusTest)
+TEST(XMLAttrParser, UnsignedIntMinusTest)
 {
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc val="-5" />
@@ -148,7 +148,7 @@ TEST(XMLUtilTest, UnsignedIntMinusTest)
 	ASSERT_EQ(-5, v);
 }
 
-TEST(XMLUtilTest, UnsignedIntInvalidTest)
+TEST(XMLAttrParser, UnsignedIntInvalidTest)
 {
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc val="string!!" />
@@ -157,7 +157,7 @@ TEST(XMLUtilTest, UnsignedIntInvalidTest)
 	ASSERT_EQ(10, v);
 }
 
-TEST(XMLUtilTest, BoolNotFoundTest)
+TEST(XMLAttrParser, BoolNotFoundTest)
 {
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc />
@@ -166,7 +166,7 @@ TEST(XMLUtilTest, BoolNotFoundTest)
 	ASSERT_FALSE(v);
 }
 
-TEST(XMLUtilTest, BoolFoundTrueTest)
+TEST(XMLAttrParser, BoolFoundTrueTest)
 {
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc val="true" />
@@ -175,7 +175,7 @@ TEST(XMLUtilTest, BoolFoundTrueTest)
 	ASSERT_TRUE(v);
 }
 
-TEST(XMLUtilTest, BoolFoundCapitalTest)
+TEST(XMLAttrParser, BoolFoundCapitalTest)
 {
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc val="True" />
@@ -184,7 +184,7 @@ TEST(XMLUtilTest, BoolFoundCapitalTest)
 	ASSERT_FALSE(v);
 }
 
-TEST(XMLUtilTest, BoolFoundYesTest)
+TEST(XMLAttrParser, BoolFoundYesTest)
 {
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc val="yes" />
@@ -193,7 +193,7 @@ TEST(XMLUtilTest, BoolFoundYesTest)
 	ASSERT_FALSE(v);
 }
 
-TEST(XMLUtilTest, BoolFoundFalseTest)
+TEST(XMLAttrParser, BoolFoundFalseTest)
 {
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc val="false" />
@@ -202,7 +202,7 @@ TEST(XMLUtilTest, BoolFoundFalseTest)
 	ASSERT_FALSE(v);
 }
 
-TEST(XMLUtilTest, BoolFoundNoTest)
+TEST(XMLAttrParser, BoolFoundNoTest)
 {
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc val="no" />
@@ -211,7 +211,7 @@ TEST(XMLUtilTest, BoolFoundNoTest)
 	ASSERT_FALSE(v);
 }
 
-TEST(XMLUtilTest, BoolNumTrueTest)
+TEST(XMLAttrParser, BoolNumTrueTest)
 {
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc val="5" />
@@ -220,7 +220,7 @@ TEST(XMLUtilTest, BoolNumTrueTest)
 	ASSERT_TRUE(v);
 }
 
-TEST(XMLUtilTest, BoolNumFalseTest)
+TEST(XMLAttrParser, BoolNumFalseTest)
 {
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc val="0" />
@@ -229,7 +229,7 @@ TEST(XMLUtilTest, BoolNumFalseTest)
 	ASSERT_FALSE(v);
 }
 
-TEST(XMLUtilTest, BoolInvalidTest)
+TEST(XMLAttrParser, BoolInvalidTest)
 {
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc val="string!!" />

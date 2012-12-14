@@ -18,7 +18,7 @@
 
 #include "../../TestCommon.h"
 #include "../../../src/chisa/geom/Area.h"
-#include "../../../src/chisa/util/XMLUtil.h"
+#include "../../../src/chisa/util/XMLAttrParser.h"
 #include <math.h>
 
 namespace chisa {
