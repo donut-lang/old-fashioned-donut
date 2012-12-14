@@ -60,7 +60,7 @@ private:
 	DEFINE_MEMBER(private, private, geom::Area, area);
 private:
 	tinyxml2::XMLDocument* doc_;
-	DEFINE_MEMBER(public, private, std::shared_ptr<WorldGeist>, geist);
+	DEFINE_MEMBER(public, private, Handler<WorldGeist>, geist);
 private:
 	element::ElementFactory* elementFactory_;
 	widget::WidgetFactory* widgetFactory_;

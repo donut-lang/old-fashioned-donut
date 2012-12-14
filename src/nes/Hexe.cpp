@@ -29,7 +29,7 @@ Hexe::Hexe(chisa::logging::Logger& log, std::string const& basepath)
 
 }
 
-Hexe::~Hexe()
+Hexe::~Hexe() noexcept
 {
 }
 
@@ -43,12 +43,12 @@ void Hexe::registerElements(chisa::tk::element::ElementFactory& factory)
 {
 }
 
-std::shared_ptr<chisa::WorldGeist> Hexe::invokeWorldGeist(chisa::HandlerW<chisa::tk::World> world, std::string const& nameOfGeist)
+chisa::Handler<chisa::WorldGeist> Hexe::invokeWorldGeist(chisa::HandlerW<chisa::tk::World> world, std::string const& nameOfGeist)
 {
 	if(nameOfGeist == "nes"){
-		return std::shared_ptr<chisa::WorldGeist>(new NesGeist(log(), world));
+		return chisa::Handler<chisa::WorldGeist>(new NesGeist(log(), world));
 	}
-	return std::shared_ptr<chisa::WorldGeist>();
+	return chisa::Handler<chisa::WorldGeist>();
 }
 
 }

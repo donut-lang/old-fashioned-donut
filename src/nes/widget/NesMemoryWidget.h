@@ -16,7 +16,7 @@ namespace widget {
 
 class NesMemoryWidget: public chisa::tk::Widget {
 private:
-	std::weak_ptr<nes::NesGeist> geist_;
+	chisa::HandlerW<nes::NesGeist> geist_;
 public:
 	NesMemoryWidget(chisa::logging::Logger& log, chisa::HandlerW<chisa::tk::World> _world, tinyxml2::XMLElement* element);
 	virtual ~NesMemoryWidget();

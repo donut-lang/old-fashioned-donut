@@ -58,7 +58,7 @@ private:
 	std::condition_variable cond_;
 public:
 	NesGeist(chisa::logging::Logger& log, chisa::HandlerW<chisa::tk::World> world);
-	virtual ~NesGeist();
+	virtual ~NesGeist() noexcept;
 	virtual std::string toString() const override;
 public:
 	virtual void dispatchRendering(const uint8_t nesBuffer[screenHeight][screenWidth], const uint8_t paletteMask) override;

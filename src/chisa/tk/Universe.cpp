@@ -109,7 +109,7 @@ void Universe::onTouchMove(const float timeMs, const unsigned int pointerIndex, 
 		topWorld->onTouchMove(timeMs, pointerIndex, screenPoint);
 	}
 }
-std::shared_ptr<chisa::WorldGeist> Universe::invokeWorldGeist(HandlerW<World> world, std::string const& nameOfGeist)
+Handler<chisa::WorldGeist> Universe::invokeWorldGeist(HandlerW<World> world, std::string const& nameOfGeist)
 {
 	if(log().t()){
 		log().t(TAG, "Invoking: %s",nameOfGeist.c_str());

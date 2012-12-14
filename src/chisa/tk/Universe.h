@@ -68,7 +68,7 @@ public:
 	{
 		return this->hexe()->resolveFilepath(related_filename...);
 	}
-	std::shared_ptr<chisa::WorldGeist> invokeWorldGeist(HandlerW<World> world, std::string const& nameOfGeist);
+	Handler<chisa::WorldGeist> invokeWorldGeist(HandlerW<World> world, std::string const& nameOfGeist);
 	/******************************************************************************
 	 * 画像
 	 ******************************************************************************/

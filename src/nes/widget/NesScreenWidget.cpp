@@ -30,7 +30,7 @@ NesScreenWidget::NesScreenWidget(chisa::logging::Logger& log, chisa::HandlerW<ch
 ,conf_(new chisa::util::XObject)
 {
 	chisa::Handler<chisa::tk::World> world(_world.lock());
-	std::shared_ptr<nes::NesGeist> geist(std::dynamic_pointer_cast<nes::NesGeist>(world->geist()));
+	chisa::Handler<nes::NesGeist> geist(world->geist().cast<nes::NesGeist>());
 	this->geist_ = geist;
 	this->conf_->accumlate(element->FirstChildElement());
 
@@ -46,7 +46,7 @@ NesScreenWidget::~NesScreenWidget()
 
 void NesScreenWidget::render(chisa::gl::Canvas& cv, chisa::geom::Area const& area)
 {
-	std::shared_ptr<nes::NesGeist> geist = this->geist_.lock();
+	chisa::Handler<nes::NesGeist> geist = this->geist_.lock();
 	if(!geist){
 		return;
 	}
