@@ -165,10 +165,10 @@ public:
 		return geom::isSpecified(this->x_) && geom::isSpecified(this->y_);
 	}
 public:
-	inline constexpr float x() const noexcept{return x_;};
-	inline constexpr float y() const noexcept{return y_;};
-	inline void x(const float x) noexcept { x_=x; };
-	inline void y(const float y) noexcept { y_=y; };
+	inline constexpr Val x() const noexcept{return x_;};
+	inline constexpr Val y() const noexcept{return y_;};
+	inline void x(const Val x) noexcept { x_=x; };
+	inline void y(const Val y) noexcept { y_=y; };
 	inline constexpr Self flip() const noexcept { return Self(y_, x_); };
 	inline constexpr Self operator-() const noexcept{
 		return Self(-x_,-y_);
