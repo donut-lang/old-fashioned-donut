@@ -79,6 +79,7 @@ TEST(XArchiveTest, ComplexStructTest)
 		XArchiverOut arc;
 		arc << t;
 		arc >> v;
+		ASSERT_ANY_THROW(arc >> v); //二回同じ操作はできない
 	}
 	{
 		ComplexTest t;
@@ -87,6 +88,7 @@ TEST(XArchiveTest, ComplexStructTest)
 		t.z=0;
 		XArchiverIn arc(v);
 		arc >> t;
+		ASSERT_ANY_THROW(arc >> t); //二回同じ操作はできない
 		ASSERT_EQ(t.x, 1);
 		ASSERT_EQ(t.y, 2);
 		ASSERT_EQ(t.z, 3);

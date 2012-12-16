@@ -58,7 +58,10 @@ public:
 		if( !this->array() ){
 			throw logging::Exception(__FILE__, __LINE__, "[BUG] Please load xvalue first.");
 		}
-		return this->operator &(t);
+		this->operator &(t);
+		this->array(Handler<XArray>());
+		this->index(0);
+		return *this;
 	}
 };
 
@@ -71,6 +74,8 @@ public:
 			throw logging::Exception(__FILE__, __LINE__, "[BUG] Please serialize objects first.");
 		}
 		val = this->array();
+		this->array(Handler<XArray>());
+		this->index(0);
 		return *this;
 	}
 	template <typename T> inline XArchiver& operator<<(T& t){
