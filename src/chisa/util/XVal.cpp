@@ -291,24 +291,5 @@ template <> XValue XValue::fromString<XValue::Bool>(std::string const& str)
 	return XValue((Bool)val);
 }
 
-//-------------------------------------------------------------------------------------------------
-
-
-XArchiver::XArchiver()
-:array_(new XArray)
-,decode_now_(false)
-,count_(0)
-{
-}
-
-XArchiver::XArchiver(XValue const& val)
-:array_(val.as<XArray>())
-,decode_now_(true)
-,count_(0)
-{
-
-}
-
-
 }}
 
