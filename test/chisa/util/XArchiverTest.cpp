@@ -17,22 +17,13 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../../src/chisa/util/XVal.h"
+#include "../../../src/chisa/util/XArchiver.h"
 #include <math.h>
 using namespace chisa::util;
 
 namespace chisa {
 namespace util {
 namespace {
-
-struct BasicTestInner {
-	int a,b,c;
-	void serialize(XArchiver& arc){
-		arc & a;
-		arc & b;
-		arc & c;
-	}
-};
 
 struct BasicTest{
 	int x,y,z;
@@ -43,13 +34,11 @@ struct BasicTest{
 
 struct ComplexTest{
 	int x,y,z;
-	BasicTestInner inner;
+	BasicTest inner;
 	void serialize(XArchiver& arc){
 		arc & x & y & z & inner;
 	}
 };
-
-static_assert( HasSerializer<BasicTest>::value, "Test Material Does not have serialize function." );
 
 TEST(XArchiveTest, BasicStructTest)
 {
@@ -84,9 +73,9 @@ TEST(XArchiveTest, ComplexStructTest)
 		t.x=1;
 		t.y=2;
 		t.z=3;
-		t.inner.a=4;
-		t.inner.b=5;
-		t.inner.c=6;
+		t.inner.x=4;
+		t.inner.y=5;
+		t.inner.z=6;
 		XArchiver arc;
 		arc << t;
 		v = arc.data();
@@ -101,11 +90,10 @@ TEST(XArchiveTest, ComplexStructTest)
 		ASSERT_EQ(t.x, 1);
 		ASSERT_EQ(t.y, 2);
 		ASSERT_EQ(t.z, 3);
-		ASSERT_EQ(t.inner.a, 4);
-		ASSERT_EQ(t.inner.b, 5);
-		ASSERT_EQ(t.inner.c, 6);
+		ASSERT_EQ(t.inner.x, 4);
+		ASSERT_EQ(t.inner.y, 5);
+		ASSERT_EQ(t.inner.z, 6);
 	}
-
 }
 
 }}}

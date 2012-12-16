@@ -177,17 +177,6 @@ template<typename T> typename _TypeAdapter<T>::return_type XObject::set(std::str
 	}
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-
-
-template <typename T> XArchiver& XArchiver::operator &(T& val) {
-	if(decode_now_){
-		XArchiver::decode( val, array_->get<XValue>(count_++) );
-	}else{
-		array_->append( XArchiver::encode( val ) );
-	}
-	return *this;
-}
 
 #define FUNCT(TYPE, VAL) \
 		template <> inline bool XValue::is<XValue::TYPE>() const noexcept {\
@@ -207,14 +196,6 @@ template <typename T> XArchiver& XArchiver::operator &(T& val) {
 			}\
 			return VAL;\
 		};\
-		template <> inline void XArchiver::decode<typename _TypeAdapter<XValue::TYPE>::init_type>(typename _TypeAdapter<XValue::TYPE>::init_type& val, XValue const& xval)\
-		{\
-			val = xval.as<XValue::TYPE>();\
-		}\
-		template <> inline XValue XArchiver::encode<typename _TypeAdapter<XValue::TYPE>::init_type>(typename _TypeAdapter<XValue::TYPE>::init_type& val)\
-		{\
-			return XValue(val);\
-		}
 
 FUNCT(Null, spirit_.null_);
 FUNCT(Array, *spirit_.array_);
