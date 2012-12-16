@@ -23,24 +23,19 @@
 namespace chisa {
 namespace util {
 
+template <typename T, bool has_serializer> struct XSerializer;
+template <typename T, bool has_serializer> struct XDeserializer;
+
 class XArchiver {
 	DISABLE_COPY_AND_ASSIGN(XArchiver);
-private:
-	template <typename T>
-	class HasSerializer {
-		template <typename U>
-		static auto check(U u) -> decltype(u.serialize(std::declval<XArchiver&>()), std::true_type());
-		static auto check(...) -> decltype( std::false_type() );
-	public:
-		typedef decltype(check(std::declval<T>())) check_func_decl;
-		static const bool value = check_func_decl::value;
-	};
 private:
 	Handler<XArray> array_;
 	bool decode_now_;
 	size_t count_;
 private:
 	explicit XArchiver(Handler<XArray> const& a):array_(a), decode_now_(true), count_(0){}
+	template <typename T, bool n> friend struct XDeserializer;
+	template <typename T, bool n> friend struct XSerializer;
 public:
 	explicit XArchiver();
 	explicit XArchiver(XValue const& val);
@@ -56,11 +51,40 @@ public:
 	template <typename T> XArchiver& operator<<(T& t){
 		return this->operator &(t);
 	}
+};
+
+template <typename T>
+class HasSerializer {
+	template <typename U>
+	static auto check(U u) -> decltype(u.serialize(std::declval<XArchiver&>()), std::true_type());
+	static auto check(...) -> decltype( std::false_type() );
 public:
-	template <typename T> inline static auto deserialize(T& val, XValue const& xval) -> typename std::enable_if< HasSerializer<T>::value, void >::type;
-	template <typename T> inline static auto serialize(T& val) -> typename std::enable_if< HasSerializer<T>::value, XValue >::type;
-	template <typename T> static auto deserialize(T& val, XValue const& xval) -> typename std::enable_if<!HasSerializer<T>::value, void >::type;
-	template <typename T> static auto serialize(T& val) -> typename std::enable_if<!HasSerializer<T>::value, XValue >::type;
+	typedef decltype(check(std::declval<T>())) check_func_decl;
+	static const bool value = check_func_decl::value;
+};
+template <typename T, bool has_serializer=HasSerializer<T>::value >
+struct XSerializer {
+	static XValue exec(T& val){
+		XArchiver a;
+		val.serialize(a);
+		return a.array_;
+	}
+};
+template <typename T, bool has_serializer=HasSerializer<T>::value >
+struct XDeserializer {
+	static void exec(T& val, XValue const& xval){
+		XArchiver arc(xval.as<XArray>());
+		val.serialize(arc);
+	}
+};
+
+template <typename T>
+struct XSerializer<T,false > {
+	static XValue exec(T& val);
+};
+template <typename T>
+struct XDeserializer<T, false> {
+	static void exec(T& val, XValue const& xval);
 };
 
 }}
