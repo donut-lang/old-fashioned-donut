@@ -21,6 +21,7 @@
 #include "../../logging/Exception.h"
 
 #include "SplitCombo.h"
+#include "FrameCombo.h"
 #include "Empty.h"
 #include "ScrollCombo.h"
 #include "WidgetElement.h"
@@ -40,6 +41,7 @@ using namespace logging;
 const std::string ElementFactory::ElemName::World("world");
 const std::string ElementFactory::ElemName::Vertical("vertical");
 const std::string ElementFactory::ElemName::Horizontal("horizontal");
+const std::string ElementFactory::ElemName::Frame("frame");
 const std::string ElementFactory::ElemName::Empty("empty");
 const std::string ElementFactory::ElemName::WidgetWrapper("widget");
 const std::string ElementFactory::ElemName::Scroll("scroll");
@@ -98,6 +100,7 @@ void ElementFactory::init()
 {
 	this->registerElement<SplitCombo>(ElemName::Horizontal);
 	this->registerElement<SplitCombo>(ElemName::Vertical);
+	this->registerElement<FrameCombo>(ElemName::Frame);
 	this->registerElement<Empty>(ElemName::Empty);
 	this->registerElement<ScrollCombo>(ElemName::Scroll);
 	this->registerElement<WidgetElement>(ElemName::WidgetWrapper);
