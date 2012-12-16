@@ -24,7 +24,8 @@ namespace chisa {
 namespace util {
 
 using namespace chisa::geom;
-template <> inline void XArchiver::deserialize<Area>(Area& val, XValue const& xval)
+template <>
+void XDeserializer<Area>::exec(Area& val, XValue const& xval)
 {
 	Handler<XObject> obj(xval.as<XObject>());
 	val.x(obj->get<decltype(val.x())>("x"));
@@ -32,7 +33,8 @@ template <> inline void XArchiver::deserialize<Area>(Area& val, XValue const& xv
 	val.width(obj->get<decltype(val.width())>("width"));
 	val.height(obj->get<decltype(val.height())>("height"));
 }
-template <> inline XValue XArchiver::serialize<Area>(Area& val)
+template <>
+XValue XSerializer<Area>::exec(Area& val)
 {
 	Handler<XObject> obj(new XObject);
 	obj->set("x", val.x());
@@ -42,7 +44,8 @@ template <> inline XValue XArchiver::serialize<Area>(Area& val)
 	return obj;
 }
 
-template <> inline XValue XArchiver::serialize<Vector>(Vector& val)
+template <>
+XValue XSerializer<Vector>::exec(Vector& val)
 {
 	Handler<XObject> obj(new XObject);
 	obj->set("x", val.x());
@@ -50,14 +53,16 @@ template <> inline XValue XArchiver::serialize<Vector>(Vector& val)
 	return obj;
 }
 
-template <> inline void XArchiver::deserialize<Vector>(Vector& val, XValue const& xval)
+template <>
+void XDeserializer<Vector>::exec(Vector& val, XValue const& xval)
 {
 	Handler<XObject> obj(xval.as<XObject>());
 	val.x(obj->get<decltype(val.x())>("x"));
 	val.y(obj->get<decltype(val.y())>("y"));
 }
 
-template <> inline XValue XArchiver::serialize<IntVector>(IntVector& val)
+template <>
+XValue XSerializer<IntVector>::exec(IntVector& val)
 {
 	Handler<XObject> obj(new XObject);
 	obj->set("x", val.x());
@@ -65,14 +70,16 @@ template <> inline XValue XArchiver::serialize<IntVector>(IntVector& val)
 	return obj;
 }
 
-template <> inline void XArchiver::deserialize<IntVector>(IntVector& val, XValue const& xval)
+template <>
+void XDeserializer<IntVector>::exec(IntVector& val, XValue const& xval)
 {
 	Handler<XObject> obj(xval.as<XObject>());
 	val.x(obj->get<decltype(val.x())>("x"));
 	val.y(obj->get<decltype(val.y())>("y"));
 }
 
-template <> inline void XArchiver::deserialize<Space>(Space& val, XValue const& xval)
+template <>
+void XDeserializer<Space>::exec(Space& val, XValue const& xval)
 {
 	Handler<XObject> obj(xval.as<XObject>());
 	val.top(obj->get<decltype(val.top())>("top"));
@@ -80,7 +87,9 @@ template <> inline void XArchiver::deserialize<Space>(Space& val, XValue const& 
 	val.right(obj->get<decltype(val.right())>("right"));
 	val.bottom(obj->get<decltype(val.bottom())>("bottom"));
 }
-template <> inline XValue XArchiver::serialize<Space>(Space& val)
+
+template <>
+XValue XSerializer<Space>::exec(Space& val)
 {
 	Handler<XObject> obj(new XObject);
 	obj->set("right", val.right());
