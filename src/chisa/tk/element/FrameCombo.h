@@ -24,8 +24,8 @@ namespace chisa {
 namespace tk {
 namespace element {
 
-class SlideCombo : public Element {
-	CHISA_ELEMENT_SUBKLASS(SlideCombo);
+class FrameCombo : public Element {
+	CHISA_ELEMENT_SUBKLASS(FrameCombo);
 	std::vector<Handler<Element> > elements_;
 public:
 	virtual HandlerW<Element> getChildAt(const size_t index) const override;
