@@ -88,14 +88,14 @@ TEST_F(HorizontalComboTest, BasicLayoutTest)
 
 	ASSERT_EQ(3, root->getChildCount());
 
-	ASSERT_NEAR(200.0/6, root->getChildAt(0).lock()->size().width(), 1.0/10);
-	ASSERT_NEAR(100.0, root->getChildAt(0).lock()->size().height(), 1.0/10);
+	ASSERT_NEAR(200.0/6, root->getChildAt(0)->size().width(), 1.0/10);
+	ASSERT_NEAR(100.0, root->getChildAt(0)->size().height(), 1.0/10);
 
-	ASSERT_NEAR(300.0/6, root->getChildAt(1).lock()->size().width(), 1.0/10);
-	ASSERT_NEAR(100.0, root->getChildAt(1).lock()->size().height(), 1.0/10);
+	ASSERT_NEAR(300.0/6, root->getChildAt(1)->size().width(), 1.0/10);
+	ASSERT_NEAR(100.0, root->getChildAt(1)->size().height(), 1.0/10);
 
-	ASSERT_NEAR(100.0/6, root->getChildAt(2).lock()->size().width(), 1.0/10);
-	ASSERT_NEAR(100.0, root->getChildAt(2).lock()->size().height(), 1.0/10);
+	ASSERT_NEAR(100.0/6, root->getChildAt(2)->size().width(), 1.0/10);
+	ASSERT_NEAR(100.0, root->getChildAt(2)->size().height(), 1.0/10);
 
 	ASSERT_NEAR(100, root->size().width(), 1.0/10);
 	ASSERT_NEAR(100, root->size().height(), 1.0/10);
@@ -117,14 +117,14 @@ TEST_F(HorizontalComboTest, MixedTest)
 
 	ASSERT_EQ(3, root->getChildCount());
 
-	ASSERT_NEAR(50.0, root->getChildAt(0).lock()->size().width(), 1.0/10);
-	ASSERT_NEAR(100.0, root->getChildAt(0).lock()->size().height(), 1.0/10);
+	ASSERT_NEAR(50.0, root->getChildAt(0)->size().width(), 1.0/10);
+	ASSERT_NEAR(100.0, root->getChildAt(0)->size().height(), 1.0/10);
 
-	ASSERT_NEAR(25.0, root->getChildAt(1).lock()->size().width(), 1.0/10);
-	ASSERT_NEAR(100.0, root->getChildAt(1).lock()->size().height(), 1.0/10);
+	ASSERT_NEAR(25.0, root->getChildAt(1)->size().width(), 1.0/10);
+	ASSERT_NEAR(100.0, root->getChildAt(1)->size().height(), 1.0/10);
 
-	ASSERT_NEAR(25.0, root->getChildAt(2).lock()->size().width(), 1.0/10);
-	ASSERT_NEAR(100.0, root->getChildAt(2).lock()->size().height(), 1.0/10);
+	ASSERT_NEAR(25.0, root->getChildAt(2)->size().width(), 1.0/10);
+	ASSERT_NEAR(100.0, root->getChildAt(2)->size().height(), 1.0/10);
 
 	ASSERT_NEAR(100, root->size().width(), 1.0/10);
 	ASSERT_NEAR(100, root->size().height(), 1.0/10);
