@@ -25,7 +25,7 @@ namespace util {
 
 using namespace chisa::geom;
 template <>
-void XDeserializer<Area>::exec(Area& val, XValue const& xval)
+void XSerializer<Area>::deserialize(Area& val, XValue const& xval)
 {
 	Handler<XObject> obj(xval.as<XObject>());
 	val.x(obj->get<decltype(val.x())>("x"));
@@ -34,7 +34,7 @@ void XDeserializer<Area>::exec(Area& val, XValue const& xval)
 	val.height(obj->get<decltype(val.height())>("height"));
 }
 template <>
-XValue XSerializer<Area>::exec(Area& val)
+XValue XSerializer<Area>::serialize(Area& val)
 {
 	Handler<XObject> obj(new XObject);
 	obj->set("x", val.x());
@@ -45,7 +45,7 @@ XValue XSerializer<Area>::exec(Area& val)
 }
 
 template <>
-XValue XSerializer<Vector>::exec(Vector& val)
+XValue XSerializer<Vector>::serialize(Vector& val)
 {
 	Handler<XObject> obj(new XObject);
 	obj->set("x", val.x());
@@ -54,7 +54,7 @@ XValue XSerializer<Vector>::exec(Vector& val)
 }
 
 template <>
-void XDeserializer<Vector>::exec(Vector& val, XValue const& xval)
+void XSerializer<Vector>::deserialize(Vector& val, XValue const& xval)
 {
 	Handler<XObject> obj(xval.as<XObject>());
 	val.x(obj->get<decltype(val.x())>("x"));
@@ -62,7 +62,7 @@ void XDeserializer<Vector>::exec(Vector& val, XValue const& xval)
 }
 
 template <>
-XValue XSerializer<IntVector>::exec(IntVector& val)
+XValue XSerializer<IntVector>::serialize(IntVector& val)
 {
 	Handler<XObject> obj(new XObject);
 	obj->set("x", val.x());
@@ -71,7 +71,7 @@ XValue XSerializer<IntVector>::exec(IntVector& val)
 }
 
 template <>
-void XDeserializer<IntVector>::exec(IntVector& val, XValue const& xval)
+void XSerializer<IntVector>::deserialize(IntVector& val, XValue const& xval)
 {
 	Handler<XObject> obj(xval.as<XObject>());
 	val.x(obj->get<decltype(val.x())>("x"));
@@ -79,7 +79,7 @@ void XDeserializer<IntVector>::exec(IntVector& val, XValue const& xval)
 }
 
 template <>
-void XDeserializer<Space>::exec(Space& val, XValue const& xval)
+void XSerializer<Space>::deserialize(Space& val, XValue const& xval)
 {
 	Handler<XObject> obj(xval.as<XObject>());
 	val.top(obj->get<decltype(val.top())>("top"));
@@ -89,7 +89,7 @@ void XDeserializer<Space>::exec(Space& val, XValue const& xval)
 }
 
 template <>
-XValue XSerializer<Space>::exec(Space& val)
+XValue XSerializer<Space>::serialize(Space& val)
 {
 	Handler<XObject> obj(new XObject);
 	obj->set("right", val.right());

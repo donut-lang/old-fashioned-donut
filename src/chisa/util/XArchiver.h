@@ -24,7 +24,6 @@ namespace chisa {
 namespace util {
 
 template <typename T, bool has_serializer> struct XSerializer;
-template <typename T, bool has_serializer> struct XDeserializer;
 
 class XArchiver {
 	DISABLE_COPY_AND_ASSIGN(XArchiver);
@@ -34,7 +33,6 @@ private:
 	size_t count_;
 private:
 	explicit XArchiver(Handler<XArray> const& a):array_(a), decode_now_(true), count_(0){}
-	template <typename T, bool n> friend struct XDeserializer;
 	template <typename T, bool n> friend struct XSerializer;
 public:
 	explicit XArchiver();
@@ -62,17 +60,15 @@ public:
 	typedef decltype(check(std::declval<T>())) check_func_decl;
 	static const bool value = check_func_decl::value;
 };
+
 template <typename T, bool has_serializer=HasSerializer<T>::value >
 struct XSerializer {
-	static XValue exec(T& val){
+	static XValue serialize(T& val){
 		XArchiver a;
 		val.serialize(a);
 		return a.array_;
 	}
-};
-template <typename T, bool has_serializer=HasSerializer<T>::value >
-struct XDeserializer {
-	static void exec(T& val, XValue const& xval){
+	static void deserialize(T& val, XValue const& xval){
 		XArchiver arc(xval.as<XArray>());
 		val.serialize(arc);
 	}
@@ -80,11 +76,8 @@ struct XDeserializer {
 
 template <typename T>
 struct XSerializer<T,false > {
-	static XValue exec(T& val);
-};
-template <typename T>
-struct XDeserializer<T, false> {
-	static void exec(T& val, XValue const& xval);
+	static XValue serialize(T& val);
+	static void deserialize(T& val, XValue const& xval);
 };
 
 }}
