@@ -41,9 +41,10 @@ void FrameCombo::bringToFront(Handler<Element>& e)
 	}
 	elements_.erase(it, elements_.end());
 	elements_.push_back(e);
+	this->layout(this->screenArea().box());
 }
 
-HandlerW<Element> FrameCombo::getChildAt(const std::size_t index) const
+Handler<Element> FrameCombo::getChildAt(const std::size_t index) const
 {
 	return elements_.at(index);
 }
@@ -85,18 +86,19 @@ void FrameCombo::onLayout(geom::Box const& size)
 
 void FrameCombo::loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
-	factory->parseTree(this->root(), this->self(), element->FirstChildElement());
+	for( tinyxml2::XMLElement* e = element->FirstChildElement(); e; e=e->NextSiblingElement() ){
+		this->elements_.push_back( factory->parseTree(this->root(), this->self(), e) );
+	}
 }
 
-HandlerW<Element> FrameCombo::getElementByIdImpl(std::string const& id)
+Handler<Element> FrameCombo::getElementByIdImpl(std::string const& id)
 {
 	for( Handler<Element>& e : this->elements_ ){
-		HandlerW<Element> w = e->getElementById(id);
-		if(!w.expired()){
+		if(Handler<Element> w = e->getElementById(id)){
 			return w;
 		}
 	}
-	return HandlerW<Element>();
+	return Handler<Element>();
 }
 
 }}}

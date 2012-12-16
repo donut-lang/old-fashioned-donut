@@ -28,7 +28,7 @@ class FrameCombo : public Element {
 	CHISA_ELEMENT_SUBKLASS(FrameCombo);
 	std::vector<Handler<Element> > elements_;
 public:
-	virtual HandlerW<Element> getChildAt(const size_t index) const override;
+	virtual Handler<Element> getChildAt(const size_t index) const override;
 	virtual std::size_t getChildCount() const override;
 	virtual std::string toString() const override;
 public:
@@ -38,7 +38,7 @@ private:
 	virtual geom::Box onMeasure(geom::Box const& constraint) override;
 	virtual void onLayout(geom::Box const& size) override;
 	virtual void loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
-	virtual HandlerW<Element> getElementByIdImpl(std::string const& id) override;
+	virtual Handler<Element> getElementByIdImpl(std::string const& id) override;
 };
 
 }}}

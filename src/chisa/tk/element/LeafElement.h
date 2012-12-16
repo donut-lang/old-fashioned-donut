@@ -27,9 +27,9 @@ namespace element {
 class LeafElement: public chisa::tk::Element {
 	CHISA_ELEMENT_SUBKLASS(LeafElement);
 public:
-	virtual HandlerW<Element> getChildAt(const std::size_t index) const override;
-	virtual std::size_t getChildCount() const override;
-	virtual HandlerW<Element> getElementByIdImpl(std::string const& id) override;
+	virtual Handler<Element> getChildAt(const std::size_t index) const override final;
+	virtual std::size_t getChildCount() const override final;
+	virtual Handler<Element> getElementByIdImpl(std::string const& id) override final;
 public:
 	virtual std::string toString() const override = 0;
 private:

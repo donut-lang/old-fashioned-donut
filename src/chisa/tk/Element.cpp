@@ -35,7 +35,7 @@ void Element::idle(const float delta_ms)
 {
 	const size_t max = this->getChildCount();
 	for(size_t i=0;i<max;++i){
-		if( Handler<Element> child = this->getChildAt(i).lock()){
+		if( Handler<Element> child = this->getChildAt(i) ){
 			child->idle(delta_ms);
 		}
 	}
@@ -50,19 +50,19 @@ void Element::loadXML(element::ElementFactory* const factory, tinyxml2::XMLEleme
 	this->loadXMLimpl(factory, element);
 }
 
-HandlerW<Element> Element::getElementById(std::string const& id)
+Handler<Element> Element::getElementById(std::string const& id)
 {
 	return id == this->id() ? this->self() : this->getElementByIdImpl(id);
 }
 
-HandlerW<Element> Element::getElementByPoint(geom::Vector const& screenPoint)
+Handler<Element> Element::getElementByPoint(geom::Vector const& screenPoint)
 {
 	if(!this->screenArea().contain(screenPoint)){
-		return HandlerW<Element>();
+		return Handler<Element>();
 	}
 	const size_t max = this->getChildCount();
 	for(size_t i=0;i<max;++i){
-		if(Handler<Element> child = this->getChildAt(i).lock()){
+		if(Handler<Element> child = this->getChildAt(i) ){
 			if(child->screenArea().contain(screenPoint)){
 				return child->getElementByPoint(screenPoint);
 			}

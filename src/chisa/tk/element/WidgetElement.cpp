@@ -56,14 +56,6 @@ WidgetElement::~WidgetElement() noexcept
 	}
 }
 
-HandlerW<Element> WidgetElement::getChildAt(const std::size_t index) const
-{
-	return HandlerW<Element>();
-}
-std::size_t WidgetElement::getChildCount() const
-{
-	return 0;
-}
 void WidgetElement::idle(const float delta_ms)
 {
 	if(!widget()) {
@@ -213,11 +205,6 @@ void WidgetElement::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElem
 			}
 		}
 	}
-}
-
-HandlerW<Element> WidgetElement::getElementByIdImpl(std::string const& id)
-{
-	return HandlerW<Element>();
 }
 
 geom::Point WidgetElement::calcPtInWidget(geom::Point const& ptInScreen)

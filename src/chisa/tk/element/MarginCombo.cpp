@@ -35,9 +35,9 @@ MarginCombo::~MarginCombo() noexcept
 
 }
 
-HandlerW<Element> MarginCombo::getChildAt(const std::size_t index) const
+Handler<Element> MarginCombo::getChildAt(const std::size_t index) const
 {
-	return index == 0 ? this->child_ : HandlerW<Element>();
+	return index == 0 ? this->child_ : Handler<Element>();
 }
 
 std::size_t MarginCombo::getChildCount() const
@@ -81,9 +81,9 @@ void MarginCombo::loadXMLimpl(element::ElementFactory* const factory, tinyxml2::
 	factory->parseTree(this->root(), this->self(), element->FirstChildElement());
 }
 
-HandlerW<Element> MarginCombo::getElementByIdImpl(std::string const& id)
+Handler<Element> MarginCombo::getElementByIdImpl(std::string const& id)
 {
-	return child_ ? child_->getElementById(id) : HandlerW<Element>();
+	return child_ ? child_->getElementById(id) : Handler<Element>();
 }
 
 }}}
