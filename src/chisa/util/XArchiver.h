@@ -23,34 +23,66 @@
 namespace chisa {
 namespace util {
 
-template <typename T, bool has_serializer> struct XSerializer;
-
 class XArchiver {
 	DISABLE_COPY_AND_ASSIGN(XArchiver);
 private:
+	const bool decode_now_;
 	Handler<XArray> array_;
-	bool decode_now_;
-	size_t count_;
-private:
-	explicit XArchiver(Handler<XArray> const& a):array_(a), decode_now_(true), count_(0){}
-	template <typename T, bool n> friend struct XSerializer;
-public:
-	explicit XArchiver();
-	explicit XArchiver(XValue const& val);
-public:
-	XValue data() {
-		return array_;
-	}
+	size_t array_index_;
+protected:
+	explicit XArchiver(bool decode_now);
+	explicit XArchiver(Handler<XArray> const& a);
+	explicit XArchiver() = delete;
+	virtual ~XArchiver() noexcept = default;
+protected:
+	inline size_t index() const noexcept { return this->array_index_; };
+	inline void index( size_t const& s ) noexcept { this->array_index_ = s; };
+	inline Handler<XArray>& array() noexcept { return this->array_; };
+	inline Handler<XArray>& array( Handler<XArray> const& a ) noexcept { return this->array_ = a; };
 public:
 	template <typename T> XArchiver& operator &(T& val);
-	template <typename T> XArchiver& operator>>(T& t){
-		return this->operator &(t);
+};
+
+class XArchiverIn : public XArchiver {
+public:
+	explicit XArchiverIn();
+	explicit XArchiverIn(XValue const& v);
+	explicit XArchiverIn(Handler<XArray> const& a):XArchiver(a){}
+public:
+	inline XArchiver& operator<<(XValue const& val){
+		this->array(val.as<XArray>());
+		this->index(0);
+		return *this;
 	}
-	template <typename T> XArchiver& operator<<(T& t){
+	template <typename T> inline XArchiver& operator>>(T& t){
+		if( !this->array() ){
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] Please load xvalue first.");
+		}
 		return this->operator &(t);
 	}
 };
 
+class XArchiverOut : public XArchiver {
+public:
+	explicit XArchiverOut();
+public:
+	inline XArchiver& operator>>(XValue& val){
+		if( !this->array() ){
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] Please serialize objects first.");
+		}
+		val = this->array();
+		return *this;
+	}
+	template <typename T> inline XArchiver& operator<<(T& t){
+		if( !this->array() ){
+			this->array(Handler<XArray>(new XArray));
+			this->index(0);
+		}
+		return this->operator &(t);
+	}
+};
+
+// シリアライズするオブジェクトが、serializeメソッドを持っているかどうかチェックする
 template <typename T>
 class HasSerializer {
 	template <typename U>
@@ -61,19 +93,23 @@ public:
 	static const bool value = check_func_decl::value;
 };
 
+//持っている場合は再帰的に適用する
 template <typename T, bool has_serializer=HasSerializer<T>::value >
 struct XSerializer {
 	static XValue serialize(T& val){
-		XArchiver a;
+		XArchiverOut a;
+		XValue v;
 		val.serialize(a);
-		return a.array_;
+		a >> v;
+		return v;
 	}
 	static void deserialize(T& val, XValue const& xval){
-		XArchiver arc(xval.as<XArray>());
+		XArchiverIn arc(xval.as<XArray>());
 		val.serialize(arc);
 	}
 };
 
+//持ってない場合は…誰かが定義する
 template <typename T>
 struct XSerializer<T,false > {
 	static XValue serialize(T& val);
