@@ -32,17 +32,17 @@ LeafElement::~LeafElement() noexcept
 
 }
 
-HandlerW<Element> LeafElement::getChildAt(const std::size_t index) const
+Handler<Element> LeafElement::getChildAt(const std::size_t index) const
 {
-	return HandlerW<Element>();
+	return Handler<Element>();
 }
 std::size_t LeafElement::getChildCount() const
 {
 	return 0;
 }
-HandlerW<Element> LeafElement::getElementByIdImpl(std::string const& id)
+Handler<Element> LeafElement::getElementByIdImpl(std::string const& id)
 {
-	return HandlerW<Element>();
+	return Handler<Element>();
 }
 
 

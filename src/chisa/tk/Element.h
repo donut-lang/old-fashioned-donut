@@ -59,9 +59,9 @@ public: /* レンダリング */
 	geom::Box measure(geom::Box const& constraint);
 	void layout(geom::Box const& size);
 public: /* ツリー操作 */
-	HandlerW<Element> getElementById(std::string const& id);
-	HandlerW<Element> getElementByPoint(geom::Vector const& screenPoint);
-	virtual HandlerW<Element> getChildAt(const size_t index) const = 0;
+	Handler<Element> getElementById(std::string const& id);
+	Handler<Element> getElementByPoint(geom::Vector const& screenPoint);
+	virtual Handler<Element> getChildAt(const size_t index) const = 0;
 	virtual size_t getChildCount() const = 0;
 public: /* 木の生成 */
 	void loadXML(element::ElementFactory* const factory, tinyxml2::XMLElement* const element);
@@ -73,7 +73,7 @@ public: /* 実装メソッド */
 	virtual geom::Box onMeasure(geom::Box const& constraint) = 0;
 	virtual void onLayout(geom::Box const& size) = 0;
 	virtual void loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) = 0;
-	virtual HandlerW<Element> getElementByIdImpl(std::string const& id) = 0;
+	virtual Handler<Element> getElementByIdImpl(std::string const& id) = 0;
 protected:
 	Element(logging::Logger& log, HandlerW<World> world, HandlerW<Element> root, HandlerW<Element> parent);
 	template <typename T> void addAttribute(std::string const& name, T& ptr)

@@ -35,13 +35,9 @@ ScrollCombo::~ScrollCombo() noexcept
 {
 }
 
-HandlerW<Element> ScrollCombo::getChildAt(const size_t index) const
+Handler<Element> ScrollCombo::getChildAt(const size_t index) const
 {
-	if(index == 0 && this->child_){
-		return this->child_;
-	}else{
-		return HandlerW<Element>();
-	}
+	return index == 0 ? this->child_ : Handler<Element>();
 }
 
 size_t ScrollCombo::getChildCount() const
@@ -158,13 +154,9 @@ bool ScrollCombo::onScroll(const float timeMs, geom::Point const& start, geom::P
 }
 
 
-HandlerW<Element> ScrollCombo::getElementByIdImpl(std::string const& id)
+Handler<Element> ScrollCombo::getElementByIdImpl(std::string const& id)
 {
-	if(this->child_){
-		return this->child_->getElementById(id);
-	}else{
-		return HandlerW<Element>();
-	}
+	return this->child_ ? this->child_->getElementById(id) : Handler<Element>();
 }
 
 }}}

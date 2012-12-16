@@ -123,13 +123,13 @@ void SplitCombo::resetChildren()
 	this->totalSize_ = geom::Unspecified;
 }
 
-HandlerW<Element> SplitCombo::getChildAt(const std::size_t index) const
+Handler<Element> SplitCombo::getChildAt(const std::size_t index) const
 {
 	if(index < this->children().size()){
 		SplitCtx const& ctx = this->children()[index];
-		return HandlerW<Element>(ctx.element);
+		return ctx.element;
 	}
-	return HandlerW<Element>();
+	return Handler<Element>();
 }
 std::size_t SplitCombo::getChildCount() const
 {
@@ -287,15 +287,14 @@ void SplitCombo::onLayout(geom::Box const& size)
 	}
 }
 
-HandlerW<Element> SplitCombo::getElementByIdImpl(std::string const& id)
+Handler<Element> SplitCombo::getElementByIdImpl(std::string const& id)
 {
 	for(SplitCtx& childCtx : this->children()){
-		HandlerW<Element> res = childCtx.element->getElementById(id);
-		if(!res.expired()){
+		if(Handler<Element> res = childCtx.element->getElementById(id)) {
 			return res;
 		}
 	}
-	return HandlerW<Element>();
+	return Handler<Element>();
 }
 
 
