@@ -78,7 +78,8 @@ public:
 	bool deleteWidget(std::string const& widgetId, element::WidgetElement* const handler);
 	Widget* createWidget(std::string const& klass, tinyxml2::XMLElement* elem);
 public:
-	HandlerW<Element> getElementByPoint(geom::Point const& screenVector);
+	Handler<Element> getElementByPoint(geom::Point const& screenVector);
+	Handler<Element> getElementById(std::string const& id);
 	/******************************************************************************
 	 * タスク管理
 	 ******************************************************************************/
