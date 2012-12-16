@@ -23,9 +23,9 @@ namespace util {
 
 template <typename T> XArchiver& XArchiver::operator &(T& val) {
 	if(decode_now_){
-		XDeserializer<T>::exec(val, array_->get<XValue>(count_++));
+		XSerializer<T>::deserialize(val, array_->get<XValue>(count_++));
 	}else{
-		array_->append(  XSerializer<T>::exec(val) );
+		array_->append(  XSerializer<T>::serialize(val) );
 	}
 	return *this;
 }
@@ -34,14 +34,10 @@ template <typename T> XArchiver& XArchiver::operator &(T& val) {
 template <>\
 struct XSerializer<TYPE, false> {\
 	typedef typename _TypeAdapter<TYPE>::init_type Type;\
-	static XValue exec(Type& val){\
+	static XValue serialize(Type& val){\
 		return XValue(val);\
 	}\
-};\
-template <>\
-struct XDeserializer<TYPE, false> {\
-	typedef typename _TypeAdapter<TYPE>::init_type Type;\
-	static void exec(Type& val, XValue const& xval){\
+	static void deserialize(Type& val, XValue const& xval){\
 		val=xval.as<Type>();\
 	}\
 };
