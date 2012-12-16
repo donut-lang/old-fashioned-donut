@@ -33,15 +33,17 @@ FrameCombo::~FrameCombo() noexcept
 
 }
 
-void FrameCombo::bringToFront(Handler<Element>& e)
+std::size_t FrameCombo::bringToFront(Handler<Element> const& e)
 {
 	auto it = std::find(elements_.begin(), elements_.end(), e);
+	std::size_t s = std::distance(elements_.begin(), it);
 	if(it == this->elements_.end()){
 		throw logging::Exception(__FILE__, __LINE__, "Element: %s is not contained in this combo.", e->toString().c_str());
 	}
-	elements_.erase(it, elements_.end());
+	elements_.erase(it);
 	elements_.push_back(e);
 	this->layout(this->screenArea().box());
+	return s;
 }
 
 Handler<Element> FrameCombo::getChildAt(const std::size_t index) const
@@ -87,7 +89,7 @@ void FrameCombo::onLayout(geom::Box const& size)
 void FrameCombo::loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
 	for( tinyxml2::XMLElement* e = element->FirstChildElement(); e; e=e->NextSiblingElement() ){
-		this->elements_.push_back( factory->parseTree(this->root(), this->self(), e) );
+		this->elements_.push_back( factory->parseTree(this->self(), e) );
 	}
 }
 

@@ -37,9 +37,9 @@ namespace element {
 
 
 template <typename T>
-Handler<T> elementConstructor(logging::Logger& log, HandlerW<World> world, HandlerW<Element> root, HandlerW<Element> parent)
+Handler<T> elementConstructor(CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST)
 {
-	return Handler<T>(new T(log, world, root, parent));
+	return Handler<T>(new T(CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_APPLY));
 }
 
 class ElementFactory {
@@ -59,7 +59,7 @@ public:
 	struct AttrName {
 		static const std::string Id;
 	};
-	typedef std::function<Handler<Element>(logging::Logger& log, HandlerW<World> world, HandlerW<Element> root, HandlerW<Element> parent)> ConstructorType;
+	typedef std::function<Handler<Element>(CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST)> ConstructorType;
 private:
 	logging::Logger& log_;
 	HandlerW<World> world_;
@@ -81,7 +81,7 @@ private:
 	void init();
 public:
 	Handler<Element> parseTree(std::string const& layoutId);
-	Handler<Element> parseTree(HandlerW<Element> root, HandlerW<Element> parent, tinyxml2::XMLElement* top);
+	Handler<Element> parseTree(HandlerW<Element> parent, tinyxml2::XMLElement* top);
 	void registerElement(std::string const& elementName, ConstructorType constructor);
 	template <typename T>
 	void registerElement(std::string const& elementName)

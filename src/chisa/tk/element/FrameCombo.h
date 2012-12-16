@@ -32,7 +32,7 @@ public:
 	virtual std::size_t getChildCount() const override;
 	virtual std::string toString() const override;
 public:
-	void bringToFront(Handler<Element>& e);
+	std::size_t bringToFront(Handler<Element> const& e);
 private:
 	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override;
 	virtual geom::Box onMeasure(geom::Box const& constraint) override;

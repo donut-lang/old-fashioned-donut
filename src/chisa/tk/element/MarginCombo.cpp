@@ -78,7 +78,7 @@ void MarginCombo::onLayout(geom::Box const& size)
 
 void MarginCombo::loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
-	factory->parseTree(this->root(), this->self(), element->FirstChildElement());
+	this->child_=factory->parseTree(this->self(), element->FirstChildElement());
 }
 
 Handler<Element> MarginCombo::getElementByIdImpl(std::string const& id)
