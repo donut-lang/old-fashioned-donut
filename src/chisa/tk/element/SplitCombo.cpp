@@ -104,7 +104,7 @@ void SplitCombo::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElement
 			max = geom::Unspecified;
 		}
 		const SplitDef def(weight, min, max);
-		this->addChild(def, factory->parseTree(this->root(), this->self(), elem));
+		this->addChild(def, factory->parseTree(this->self(), elem));
 	}
 }
 

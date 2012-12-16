@@ -59,6 +59,7 @@ public: /* レンダリング */
 	geom::Box measure(geom::Box const& constraint);
 	void layout(geom::Box const& size);
 public: /* ツリー操作 */
+	Handler<Element> findRootElement();
 	Handler<Element> getElementById(std::string const& id);
 	Handler<Element> getElementByPoint(geom::Vector const& screenPoint);
 	virtual Handler<Element> getChildAt(const size_t index) const = 0;
@@ -75,7 +76,7 @@ public: /* 実装メソッド */
 	virtual void loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) = 0;
 	virtual Handler<Element> getElementByIdImpl(std::string const& id) = 0;
 protected:
-	Element(logging::Logger& log, HandlerW<World> world, HandlerW<Element> root, HandlerW<Element> parent);
+	Element(logging::Logger& log, HandlerW<World> world, HandlerW<Element> parent);
 	template <typename T> void addAttribute(std::string const& name, T& ptr)
 	{
 		this->attrMap_.insert(name, std::bind(chisa::util::xml::parseAttr<T>, std::string(name), std::ref(ptr), std::ref(ptr), std::placeholders::_1));
@@ -86,8 +87,8 @@ public:
 };
 
 
-#define CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST logging::Logger& log, HandlerW<World> world, HandlerW<Element> root, HandlerW<Element> parent
-#define CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_APPLY log, world, root, parent
+#define CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST logging::Logger& log, HandlerW<World> world, HandlerW<Element> parent
+#define CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_APPLY log, world, parent
 
 #define CHISA_ELEMENT_SUBKLASS_FINAL(Klass) \
 public:\

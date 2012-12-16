@@ -22,10 +22,9 @@
 namespace chisa {
 namespace tk {
 
-Element::Element(logging::Logger& log, HandlerW<World> world, HandlerW<Element> root, HandlerW<Element> parent)
+Element::Element(logging::Logger& log, HandlerW<World> world, HandlerW<Element> parent)
 :log_(log)
 ,world_(world)
-,root_(root)
 ,parent_(parent)
 {
 	this->addAttribute("id", this->id_);
@@ -48,6 +47,15 @@ void Element::loadXML(element::ElementFactory* const factory, tinyxml2::XMLEleme
 		it.second(element);
 	}
 	this->loadXMLimpl(factory, element);
+}
+
+Handler<Element> Element::findRootElement()
+{
+	Handler<Element> root(self());
+	for(Handler<Element> element=parent().lock(); element; element=element->parent().lock()){
+		root=element;
+	}
+	return root;
 }
 
 Handler<Element> Element::getElementById(std::string const& id)

@@ -18,10 +18,10 @@
 
 #include "Button.h"
 #include <tinyxml2.h>
-#include "../../gl/Canvas.h"
-#include "../World.h"
 #include "../../logging/Exception.h"
+#include "../../gl/Canvas.h"
 #include "../../gl/DrawableManager.h"
+#include "../World.h"
 
 #include <iostream>
 namespace chisa {

@@ -63,7 +63,7 @@ void ScrollCombo::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElemen
 	}
 	tinyxml2::XMLElement* const childElement = element->FirstChildElement();
 	if(childElement) {
-		this->child_ = factory->parseTree(root(), self(), childElement);
+		this->child_ = factory->parseTree(this->self(), childElement);
 	}
 }
 
