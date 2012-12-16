@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SlideCombo.h"
+#include "FrameCombo.h"
 #include "ElementFactory.h"
 #include "../../util/XMLAttrParser.h"
 
@@ -24,16 +24,16 @@ namespace chisa {
 namespace tk {
 namespace element {
 
-CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(SlideCombo)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(FrameCombo)
 {
 }
 
-SlideCombo::~SlideCombo() noexcept
+FrameCombo::~FrameCombo() noexcept
 {
 
 }
 
-void SlideCombo::bringToFront(Handler<Element>& e)
+void FrameCombo::bringToFront(Handler<Element>& e)
 {
 	auto it = std::find(elements_.begin(), elements_.end(), e);
 	if(it == this->elements_.end()){
@@ -43,22 +43,22 @@ void SlideCombo::bringToFront(Handler<Element>& e)
 	elements_.push_back(e);
 }
 
-HandlerW<Element> SlideCombo::getChildAt(const std::size_t index) const
+HandlerW<Element> FrameCombo::getChildAt(const std::size_t index) const
 {
 	return elements_.at(index);
 }
 
-std::size_t SlideCombo::getChildCount() const
+std::size_t FrameCombo::getChildCount() const
 {
 	return elements_.size();
 }
 
-std::string SlideCombo::toString() const
+std::string FrameCombo::toString() const
 {
-	return util::format("(SlideCombo %p with %d elements)", this, getChildCount());
+	return util::format("(FrameCombo %p with %d elements)", this, getChildCount());
 }
 
-void SlideCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
+void FrameCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
 {
 	if( this->getChildCount() > 0 ){
 		Handler<Element>& elm = this->elements_.back();
@@ -66,7 +66,7 @@ void SlideCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, ge
 	}
 }
 
-geom::Box SlideCombo::onMeasure(geom::Box const& constraint)
+geom::Box FrameCombo::onMeasure(geom::Box const& constraint)
 {
 	if( this->getChildCount() > 0 ){
 		Handler<Element>& elm = this->elements_.back();
@@ -75,7 +75,7 @@ geom::Box SlideCombo::onMeasure(geom::Box const& constraint)
 	return constraint;
 }
 
-void SlideCombo::onLayout(geom::Box const& size)
+void FrameCombo::onLayout(geom::Box const& size)
 {
 	if( this->getChildCount() > 0 ){
 		Handler<Element>& elm = this->elements_.back();
@@ -83,12 +83,12 @@ void SlideCombo::onLayout(geom::Box const& size)
 	}
 }
 
-void SlideCombo::loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
+void FrameCombo::loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
 	factory->parseTree(this->root(), this->self(), element->FirstChildElement());
 }
 
-HandlerW<Element> SlideCombo::getElementByIdImpl(std::string const& id)
+HandlerW<Element> FrameCombo::getElementByIdImpl(std::string const& id)
 {
 	for( Handler<Element>& e : this->elements_ ){
 		HandlerW<Element> w = e->getElementById(id);
