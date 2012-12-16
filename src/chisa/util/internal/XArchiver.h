@@ -23,7 +23,7 @@ namespace util {
 
 template <typename T> XArchiver& XArchiver::operator &(T& val) {
 	if(decode_now_){
-		XSerializer<T>::deserialize(val, array_->get<XValue>(count_++));
+		XSerializer<T>::deserialize(val, array_->get<XValue>(this->array_index_++));
 	}else{
 		array_->append(  XSerializer<T>::serialize(val) );
 	}

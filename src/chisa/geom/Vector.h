@@ -137,7 +137,7 @@ protected:
 	inline Self& operator=(BaseVector<O, V>&& o) noexcept{ x_ = o.x_; y_ = o.y_; return *this; }
 	template <typename O, typename V>
 	inline Self& operator=(const BaseVector<O, V>& o) noexcept{ x_ = o.x_; y_ = o.y_; return *this; }
-	constexpr BaseVector(const float x, const float y) noexcept:x_(x),y_(y){}
+	constexpr BaseVector(const Val x, const Val y) noexcept:x_(x),y_(y){}
 	constexpr BaseVector() noexcept:x_(NAN),y_(NAN){}
 	~BaseVector() noexcept = default;
 	typedef Val ValType;
@@ -282,7 +282,16 @@ public:
 constexpr Vector ZERO = Vector(0,0);
 
 class IntVector : public BaseVector<IntVector, int> {
-	SETUP(IntVector);
+public:
+	constexpr IntVector(IntVector const& o) noexcept = default;
+	constexpr IntVector(IntVector&& o) noexcept = default;
+	IntVector& operator=(IntVector const& o) noexcept = default;
+	IntVector& operator=(IntVector&& o) noexcept = default;
+	IntVector() noexcept:BaseVector<IntVector, IntVector::ValType>(0,0){};
+	constexpr explicit IntVector(const float x, const float y) noexcept:BaseVector<IntVector, IntVector::ValType>(x,y){};
+	~IntVector() noexcept(true) = default;
+	void *operator new(std::size_t) = delete;
+	void operator delete(void* pv) = delete;
 public:
 	inline std::string toString() const{
 		return util::format("(IntVector %f %f)", this->x(), this->y());

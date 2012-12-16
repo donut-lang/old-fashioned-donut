@@ -48,16 +48,16 @@ TEST(XArchiveTest, BasicStructTest)
 		t.x=1;
 		t.y=2;
 		t.z=3;
-		XArchiver arc;
+		XArchiverOut arc;
 		arc << t;
-		v = arc.data();
+		arc >> v;
 	}
 	{
 		BasicTest t;
 		t.x=0;
 		t.y=0;
 		t.z=0;
-		XArchiver arc(v);
+		XArchiverIn arc(v);
 		arc >> t;
 		ASSERT_EQ(t.x, 1);
 		ASSERT_EQ(t.y, 2);
@@ -76,16 +76,16 @@ TEST(XArchiveTest, ComplexStructTest)
 		t.inner.x=4;
 		t.inner.y=5;
 		t.inner.z=6;
-		XArchiver arc;
+		XArchiverOut arc;
 		arc << t;
-		v = arc.data();
+		arc >> v;
 	}
 	{
 		ComplexTest t;
 		t.x=0;
 		t.y=0;
 		t.z=0;
-		XArchiver arc(v);
+		XArchiverIn arc(v);
 		arc >> t;
 		ASSERT_EQ(t.x, 1);
 		ASSERT_EQ(t.y, 2);
