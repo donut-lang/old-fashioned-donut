@@ -19,57 +19,16 @@
 #pragma once
 
 #include "../Element.h"
-#include "LeafElement.h"
-#include "../../gl/Drawable.h"
+#include "AbstractButton.h"
 
 namespace chisa {
 namespace tk {
 namespace element {
 
-class Button: public LeafElement {
+class Button: public AbstractButton {
 	CHISA_ELEMENT_SUBKLASS_FINAL(Button);
 public:
-	struct AttrName{
-		const static std::string Text;
-		const static std::string TextSize;
-		const static std::string ForegroundColor;
-		const static std::string BackgroundColor;
-		const static std::string ShadowColor;
-		const static std::string ShadowDepth;
-	};
-private:
-	std::string text_;
-	float textSize_;
-	geom::Space margin_;
-	geom::Space padding_;
-	bool vertical_;
-	gl::Color foregroundColor_;
-	gl::Color backgroundColor_;
-	gl::Color shadowColor_;
-	float shadowDepth_;
-private:
-	Handler<gl::TextDrawable> textImage_;
-private:
-	geom::Box renderOffset_;
-	int pushedCnt_;
-private:
-	void text(std::string const& text);
-	std::string text() const{ return this->text_; };
-private:
-	Handler<gl::TextDrawable> textImage();
-	void onClick();
-public:
-	virtual std::string toString() const override;
-private:
-	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override;
-	virtual geom::Box onMeasure(geom::Box const& constraint) override;
-	virtual void onLayout(geom::Box const& size) override;
-	virtual void loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
-public:
-	virtual bool onDownRaw(const float timeMs, geom::Point const& ptInScreen) override;
-	virtual bool onUpRaw(const float timeMs, geom::Point const& ptInScreen) override;
-	virtual bool onMoveRaw(const float timeMs, geom::Point const& ptInScreen) override;
-	virtual bool onSingleTapUp(const float timeMs, geom::Point const& ptInScreen) override;
+	virtual std::string toString() const override final;
 };
 
 }}}
