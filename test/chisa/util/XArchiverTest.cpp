@@ -1,0 +1,111 @@
+/**
+ * Chisa
+ * Copyright (C) 2012 psi
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include "../../TestCommon.h"
+#include "../../../src/chisa/util/XVal.h"
+#include <math.h>
+using namespace chisa::util;
+
+namespace chisa {
+namespace util {
+namespace {
+
+struct BasicTestInner {
+	int a,b,c;
+	void serialize(XArchiver& arc){
+		arc & a;
+		arc & b;
+		arc & c;
+	}
+};
+
+struct BasicTest{
+	int x,y,z;
+	void serialize(XArchiver& arc){
+		arc & x & y & z;
+	}
+};
+
+struct ComplexTest{
+	int x,y,z;
+	BasicTestInner inner;
+	void serialize(XArchiver& arc){
+		arc & x & y & z & inner;
+	}
+};
+
+static_assert( HasSerializer<BasicTest>::value, "Test Material Does not have serialize function." );
+
+TEST(XArchiveTest, BasicStructTest)
+{
+	XValue v;
+	{
+		BasicTest t;
+		t.x=1;
+		t.y=2;
+		t.z=3;
+		XArchiver arc;
+		arc << t;
+		v = arc.data();
+	}
+	{
+		BasicTest t;
+		t.x=0;
+		t.y=0;
+		t.z=0;
+		XArchiver arc(v);
+		arc >> t;
+		ASSERT_EQ(t.x, 1);
+		ASSERT_EQ(t.y, 2);
+		ASSERT_EQ(t.z, 3);
+	}
+}
+
+TEST(XArchiveTest, ComplexStructTest)
+{
+	XValue v;
+	{
+		ComplexTest t;
+		t.x=1;
+		t.y=2;
+		t.z=3;
+		t.inner.a=4;
+		t.inner.b=5;
+		t.inner.c=6;
+		XArchiver arc;
+		arc << t;
+		v = arc.data();
+	}
+	{
+		ComplexTest t;
+		t.x=0;
+		t.y=0;
+		t.z=0;
+		XArchiver arc(v);
+		arc >> t;
+		ASSERT_EQ(t.x, 1);
+		ASSERT_EQ(t.y, 2);
+		ASSERT_EQ(t.z, 3);
+		ASSERT_EQ(t.inner.a, 4);
+		ASSERT_EQ(t.inner.b, 5);
+		ASSERT_EQ(t.inner.c, 6);
+	}
+
+}
+
+}}}

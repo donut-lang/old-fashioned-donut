@@ -21,6 +21,7 @@
 #include <string>
 #include <vector>
 #include <cstddef>
+#include <type_traits>
 #include "../Handler.h"
 #include "ClassUtil.h"
 #include "PairUtil.h"
@@ -104,12 +105,14 @@ public:
 	template <typename T> bool is() const noexcept;
 	template <typename T> typename _TypeAdapter<T>::return_type as();
 	template <typename T> typename _TypeAdapter<T>::return_const_type as() const;
-	template <typename T> static XValue decode( std::string const& str );
 
-	static XValue fromXML( tinyxml2::XMLElement* elm );
-	tinyxml2::XMLElement* toXML( tinyxml2::XMLDocument* doc );
 	std::string typeString() const noexcept;
 	void swap( XValue& o );
+public:
+	tinyxml2::XMLElement* toXML( tinyxml2::XMLDocument* doc );
+	static XValue fromXML( tinyxml2::XMLElement* elm );
+public:
+	template <typename T> static XValue fromString( std::string const& str );
 };
 
 class XArray : public HandlerBody<XArray> {
@@ -155,7 +158,6 @@ public:
 	std::vector<std::pair<std::string, XValue> >::size_type size(){ return this->map_.size(); };
 };
 
-
 inline void swap(XValue& a, XValue& b) {
 	a.swap(b);
 }
@@ -167,7 +169,63 @@ typedef XValue::SInt XSInt;
 typedef XValue::Float XFloat;
 typedef XValue::Bool XBool;
 
+class XArchiver;
+template <typename T>
+class HasSerializer {
+	template <typename U>
+	static auto check(U u) -> decltype(u.serialize(std::declval<XArchiver&>()), std::true_type());
+	static auto check(...) -> decltype( std::false_type() );
+public:
+	typedef decltype( check( std::declval<T>() ) ) type;
+	static const bool value = type::value;
+};
+
+class XArchiver {
+	DISABLE_COPY_AND_ASSIGN(XArchiver);
+private:
+	Handler<XArray> array_;
+	bool decode_now_;
+	size_t count_;
+private:
+	explicit XArchiver(Handler<XArray> const& a):array_(a), decode_now_(true), count_(0){}
+public:
+	explicit XArchiver();
+	explicit XArchiver(XValue const& val);
+public:
+	XValue data() {
+		return array_;
+	}
+public:
+	template <typename T> XArchiver& operator &(T& val);
+	template <typename T> XArchiver& operator>>(T& t){
+		return this->operator &(t);
+	}
+	template <typename T> XArchiver& operator<<(T& t){
+		return this->operator &(t);
+	}
+public:
+	template <typename T> inline static auto decode(T& val, XValue const& xval) -> typename std::enable_if< HasSerializer<T>::value, void >::type;
+	template <typename T> inline static auto encode(T& val) -> typename std::enable_if< HasSerializer<T>::value, XValue >::type
+	{
+		XArchiver a;
+		val.serialize(a);
+		return a.array_;
+	}
+	template <typename T> static auto decode(T& val, XValue const& xval) -> typename std::enable_if<!HasSerializer<T>::value, void >::type;
+	template <typename T> static auto encode(T& val) -> typename std::enable_if<!HasSerializer<T>::value, XValue >::type;
+};
 
 }}
 
 #include "internal/XVal.h"
+
+namespace chisa {
+namespace util {
+
+template <typename T> inline auto XArchiver::decode(T& val, XValue const& xval) -> typename std::enable_if< HasSerializer<T>::value, void >::type
+{
+	XArchiver arc(xval.as<XArray>());
+	val.serialize(arc);
+}
+
+}}

@@ -177,6 +177,18 @@ template<typename T> typename _TypeAdapter<T>::return_type XObject::set(std::str
 	}
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+
+
+template <typename T> XArchiver& XArchiver::operator &(T& val) {
+	if(decode_now_){
+		XArchiver::decode( val, array_->get<XValue>(count_++) );
+	}else{
+		array_->append( XArchiver::encode( val ) );
+	}
+	return *this;
+}
+
 #define FUNCT(TYPE, VAL) \
 		template <> inline bool XValue::is<XValue::TYPE>() const noexcept {\
 			return this->type_ == XValue::Type::TYPE##T;\
@@ -194,7 +206,16 @@ template<typename T> typename _TypeAdapter<T>::return_type XObject::set(std::str
 				throw logging::Exception(__FILE__, __LINE__, "Type mismatched! required: %s actual: %s.", XValue((Type())).typeString().c_str(), this->typeString().c_str());\
 			}\
 			return VAL;\
-		};
+		};\
+		template <> inline void XArchiver::decode<typename _TypeAdapter<XValue::TYPE>::init_type>(typename _TypeAdapter<XValue::TYPE>::init_type& val, XValue const& xval)\
+		{\
+			val = xval.as<XValue::TYPE>();\
+		}\
+		template <> inline XValue XArchiver::encode<typename _TypeAdapter<XValue::TYPE>::init_type>(typename _TypeAdapter<XValue::TYPE>::init_type& val)\
+		{\
+			return XValue(val);\
+		}
+
 FUNCT(Null, spirit_.null_);
 FUNCT(Array, *spirit_.array_);
 FUNCT(Object, *spirit_.object_);
@@ -205,6 +226,9 @@ FUNCT(Float, spirit_.float_);
 FUNCT(Bool, spirit_.bool_);
 #undef FUNCT
 
+template <> inline bool XValue::is<XValue>() const noexcept {
+	return true;
+};
 template <> inline typename _TypeAdapter<XValue>::return_type XValue::as<XValue>() {
 	return *this;
 };
@@ -212,15 +236,15 @@ template <> inline typename _TypeAdapter<XValue>::return_const_type XValue::as<X
 	return *this;
 };
 
-template <> inline XValue XValue::decode<XValue::String>(std::string const& str)
+template <> inline XValue XValue::fromString<XValue::String>(std::string const& str)
 {
 	return XValue((String)str);
 }
 
 template <> XValue& XObject::set<XValue>(std::string const& name, XValue const& obj);
-template <> XValue XValue::decode<XValue::UInt>(std::string const& str);
-template <> XValue XValue::decode<XValue::SInt>(std::string const& str);
-template <> XValue XValue::decode<XValue::Float>(std::string const& str);
-template <> XValue XValue::decode<XValue::Bool>(std::string const& str);
+template <> XValue XValue::fromString<XValue::UInt>(std::string const& str);
+template <> XValue XValue::fromString<XValue::SInt>(std::string const& str);
+template <> XValue XValue::fromString<XValue::Float>(std::string const& str);
+template <> XValue XValue::fromString<XValue::Bool>(std::string const& str);
 
 }}

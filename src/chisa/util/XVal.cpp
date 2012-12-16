@@ -81,15 +81,15 @@ XValue XValue::fromXML( tinyxml2::XMLElement* elm ) {
 	}else if(name=="xobject") {
 		return XValue(Handler<XObject>( new XObject(elm)) );
 	}else if(name=="xstring") {
-		return XValue::decode<String>( elm->GetText() );
+		return XValue::fromString<String>( elm->GetText() );
 	}else if(name=="xuint") {
-		return XValue::decode<UInt>( elm->GetText() );
+		return XValue::fromString<UInt>( elm->GetText() );
 	}else if(name=="xsint") {
-		return XValue::decode<SInt>( elm->GetText() );
+		return XValue::fromString<SInt>( elm->GetText() );
 	}else if(name=="xbool") {
-		return XValue::decode<Bool>( elm->GetText() );
+		return XValue::fromString<Bool>( elm->GetText() );
 	}else if(name=="xfloat") {
-		return XValue::decode<Float>( elm->GetText() );
+		return XValue::fromString<Float>( elm->GetText() );
 	}else{
 		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknwon type!: %s", name.c_str());
 	}
@@ -254,7 +254,7 @@ template<> XValue& XObject::set<XValue>(std::string const& name, XValue const& o
 		return p.second = obj;
 	}
 }
-template <> XValue XValue::decode<XValue::UInt>(std::string const& str)
+template <> XValue XValue::fromString<XValue::UInt>(std::string const& str)
 {
 	bool success = false;
 	XValue::UInt val = util::parseAsInt<XValue::UInt>(str, 0, &success);
@@ -263,7 +263,7 @@ template <> XValue XValue::decode<XValue::UInt>(std::string const& str)
 	}
 	return XValue((UInt)val);
 }
-template <> XValue XValue::decode<XValue::SInt>(std::string const& str)
+template <> XValue XValue::fromString<XValue::SInt>(std::string const& str)
 {
 	bool success = false;
 	XValue::SInt val = util::parseAsInt<XValue::SInt>(str, 0, &success);
@@ -272,7 +272,7 @@ template <> XValue XValue::decode<XValue::SInt>(std::string const& str)
 	}
 	return XValue((SInt)val);
 }
-template <> XValue XValue::decode<XValue::Float>(std::string const& str)
+template <> XValue XValue::fromString<XValue::Float>(std::string const& str)
 {
 	bool success = false;
 	XValue::Float val = util::parseAs<XValue::Float>(str, &success);
@@ -281,7 +281,7 @@ template <> XValue XValue::decode<XValue::Float>(std::string const& str)
 	}
 	return XValue((Float)val);
 }
-template <> XValue XValue::decode<XValue::Bool>(std::string const& str)
+template <> XValue XValue::fromString<XValue::Bool>(std::string const& str)
 {
 	bool success = false;
 	XValue::Bool val = util::parseAs<bool>(str, &success);
@@ -290,6 +290,25 @@ template <> XValue XValue::decode<XValue::Bool>(std::string const& str)
 	}
 	return XValue((Bool)val);
 }
+
+//-------------------------------------------------------------------------------------------------
+
+
+XArchiver::XArchiver()
+:array_(new XArray)
+,decode_now_(false)
+,count_(0)
+{
+}
+
+XArchiver::XArchiver(XValue const& val)
+:array_(val.as<XArray>())
+,decode_now_(true)
+,count_(0)
+{
+
+}
+
 
 }}
 

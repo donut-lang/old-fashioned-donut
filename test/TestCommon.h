@@ -41,6 +41,11 @@ void static_debug(){
 	static_assert(sizeof...(Args) < 0, "see type for compiler");
 }
 
+template <bool... Args>
+void static_debug(){
+	static_assert(sizeof...(Args) < 0, "see type for compiler");
+}
+
 template <typename... Args>
 void static_debug(){
 	static_assert(sizeof...(Args) < 0, "see type for compiler");
