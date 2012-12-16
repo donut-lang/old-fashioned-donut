@@ -42,7 +42,7 @@ HandlerW<Element> MarginCombo::getChildAt(const std::size_t index) const
 
 std::size_t MarginCombo::getChildCount() const
 {
-	return this->child_.expired() ? 0 : 1;
+	return this->child_ ? 0 : 1;
 }
 
 std::string MarginCombo::toString() const
@@ -52,8 +52,8 @@ std::string MarginCombo::toString() const
 
 void MarginCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
 {
-	if( Handler<Element> child = this->child_.lock() ){
-		child->render(
+	if(this->child_){
+		this->child_->render(
 			canvas,
 			geom::Area(screenArea.point()+this->margin_.offset(), screenArea.box()-this->margin_.totalSpace()),
 			geom::Area(area.point(), area.box()-this->margin_.totalSpace())
@@ -63,16 +63,16 @@ void MarginCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, g
 
 geom::Box MarginCombo::onMeasure(geom::Box const& constraint)
 {
-	if( Handler<Element> child = this->child_.lock() ){
-		return child->measure( constraint-this->margin_.totalSpace() ) + this->margin_.totalSpace();
+	if(this->child_){
+		return this->child_->measure( constraint-this->margin_.totalSpace() ) + this->margin_.totalSpace();
 	}
 	return constraint;
 }
 
 void MarginCombo::onLayout(geom::Box const& size)
 {
-	if( Handler<Element> child = this->child_.lock() ){
-		child->layout( size-this->margin_.totalSpace() );
+	if(this->child_){
+		this->child_->layout( size-this->margin_.totalSpace() );
 	}
 }
 
@@ -83,10 +83,7 @@ void MarginCombo::loadXMLimpl(element::ElementFactory* const factory, tinyxml2::
 
 HandlerW<Element> MarginCombo::getElementByIdImpl(std::string const& id)
 {
-	if( Handler<Element> child = this->child_.lock() ){
-		return child->getElementById(id);
-	}
-	return HandlerW<Element>();
+	return child_ ? child_->getElementById(id) : HandlerW<Element>();
 }
 
 }}}

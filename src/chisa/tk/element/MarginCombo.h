@@ -26,7 +26,7 @@ namespace element {
 
 class MarginCombo : public Element {
 	CHISA_ELEMENT_SUBKLASS(MarginCombo);
-	HandlerW<Element> child_;
+	Handler<Element> child_;
 	geom::Space margin_;
 public:
 	virtual HandlerW<Element> getChildAt(const size_t index) const override;
