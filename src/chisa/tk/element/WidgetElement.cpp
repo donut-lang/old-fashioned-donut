@@ -27,7 +27,7 @@ namespace element {
 
 static const std::string TAG("WidgetElement");
 
-CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(WidgetElement, LeafElement)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(WidgetElement, Element)
 ,borrowed_(nullptr)
 ,widget_(nullptr)
 ,fitMode_(Center)

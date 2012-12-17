@@ -137,14 +137,14 @@ void World::unregisterTask(Task* task)
 Handler<Element> World::getElementByPoint(geom::Point const& screenPoint)
 {
 	if(Handler<Element> elm = this->elementStack_.top()){
-		return elm->getElementByPoint(screenPoint);
+		return elm->findElementByPoint(screenPoint);
 	}
 	return Handler<Element>();
 }
 Handler<Element> World::getElementById(std::string const& id)
 {
 	if(Handler<Element> elm = this->elementStack_.top()){
-		return elm->getElementById(id);
+		return elm->findElementById(id);
 	}
 	return Handler<Element>();
 }

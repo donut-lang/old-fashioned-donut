@@ -19,14 +19,13 @@
 #pragma once
 
 #include "../Element.h"
-#include "LeafElement.h"
 #include "../../gl/Drawable.h"
 
 namespace chisa {
 namespace tk {
 namespace element {
 
-class AbstractButton: public LeafElement {
+class AbstractButton: public Element {
 	CHISA_ELEMENT_SUBKLASS_FINAL(AbstractButton);
 public:
 	struct AttrName{

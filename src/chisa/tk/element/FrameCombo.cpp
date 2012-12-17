@@ -24,7 +24,7 @@ namespace chisa {
 namespace tk {
 namespace element {
 
-CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(FrameCombo)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(FrameCombo, ElementGroup)
 {
 }
 
@@ -35,25 +35,7 @@ FrameCombo::~FrameCombo() noexcept
 
 std::size_t FrameCombo::bringToFront(Handler<Element> const& e)
 {
-	auto it = std::find(elements_.begin(), elements_.end(), e);
-	std::size_t s = std::distance(elements_.begin(), it);
-	if(it == this->elements_.end()){
-		throw logging::Exception(__FILE__, __LINE__, "Element: %s is not contained in this combo.", e->toString().c_str());
-	}
-	elements_.erase(it);
-	elements_.push_back(e);
-	this->layout(this->screenArea().box());
-	return s;
-}
-
-Handler<Element> FrameCombo::getChildAt(const std::size_t index) const
-{
-	return elements_.at(index);
-}
-
-std::size_t FrameCombo::getChildCount() const
-{
-	return elements_.size();
+	return this->bringChildToLast(e);
 }
 
 std::string FrameCombo::toString() const
@@ -63,16 +45,14 @@ std::string FrameCombo::toString() const
 
 void FrameCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
 {
-	if( this->getChildCount() > 0 ){
-		Handler<Element>& elm = this->elements_.back();
+	if( Handler<Element> elm = this->lastChild() ){
 		elm->render(	canvas,screenArea,area);
 	}
 }
 
 geom::Box FrameCombo::measureImpl(geom::Box const& constraint)
 {
-	if( this->getChildCount() > 0 ){
-		Handler<Element>& elm = this->elements_.back();
+	if( Handler<Element> elm = this->lastChild() ){
 		return elm->measure( constraint );
 	}
 	return constraint;
@@ -80,8 +60,7 @@ geom::Box FrameCombo::measureImpl(geom::Box const& constraint)
 
 void FrameCombo::layoutImpl(geom::Box const& size)
 {
-	if( this->getChildCount() > 0 ){
-		Handler<Element>& elm = this->elements_.back();
+	if( Handler<Element> elm = this->lastChild() ){
 		elm->layout( size );
 	}
 }
@@ -89,18 +68,8 @@ void FrameCombo::layoutImpl(geom::Box const& size)
 void FrameCombo::loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
 	for( tinyxml2::XMLElement* e = element->FirstChildElement(); e; e=e->NextSiblingElement() ){
-		this->elements_.push_back( factory->parseTree(this->self(), e) );
+		this->addChild( factory->parseTree(this->self(), e) );
 	}
-}
-
-Handler<Element> FrameCombo::getElementByIdImpl(std::string const& id)
-{
-	for( Handler<Element>& e : this->elements_ ){
-		if(Handler<Element> w = e->getElementById(id)){
-			return w;
-		}
-	}
-	return Handler<Element>();
 }
 
 }}}

@@ -23,7 +23,7 @@ namespace tk {
 namespace element {
 
 
-CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(ScrollCombo)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(ScrollCombo, ElementGroup)
 ,scrollMode_(None)
 ,scrollOffset_(0,0)
 ,lastMovedFrom_(0)
@@ -33,20 +33,6 @@ CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(ScrollCombo)
 
 ScrollCombo::~ScrollCombo() noexcept
 {
-}
-
-Handler<Element> ScrollCombo::getChildAt(const size_t index) const
-{
-	return index == 0 ? this->child_ : Handler<Element>();
-}
-
-size_t ScrollCombo::getChildCount() const
-{
-	if(this->child_){
-		return 1;
-	}else{
-		return 0;
-	}
 }
 
 void ScrollCombo::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* element)
@@ -154,9 +140,5 @@ bool ScrollCombo::onScroll(const float timeMs, geom::Point const& start, geom::P
 }
 
 
-Handler<Element> ScrollCombo::getElementByIdImpl(std::string const& id)
-{
-	return this->child_ ? this->child_->getElementById(id) : Handler<Element>();
-}
 
 }}}

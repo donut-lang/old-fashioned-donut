@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "../Element.h"
+#include "ElementGroup.h"
 #include <tinyxml2.h>
 #include <vector>
 #include <memory>
@@ -63,7 +63,7 @@ struct SplitCtx
 };
 
 
-class SplitCombo: public chisa::tk::Element {
+class SplitCombo: public ElementGroup {
 	CHISA_ELEMENT_SUBKLASS_FINAL(SplitCombo);
 public:
 	enum SplitMode {
@@ -77,7 +77,7 @@ public:
 	};
 private:
 	DEFINE_MEMBER(private, private, enum SplitMode, splitMode);
-	DEFINE_CONTAINER(private, private, std::vector<SplitCtx>, children)
+	DEFINE_CONTAINER(private, private, std::vector<SplitCtx>, layoutContext)
 	float totalSize_;
 	void setMode(enum SplitMode mode);
 private:
@@ -98,21 +98,15 @@ private:
 	float (geom::Point::*point_getter)(void) const;
 	void (geom::Point::*point_setter)(float);
 private:
-	void addChild(SplitDef const& def, Handler<Element> element);
-private:
 	void resetChildren();
 	float calcTotalSize();
 public:
 	virtual std::string toString() const override;
-	virtual void idle(const float delta_ms) override;
-	virtual Handler<Element> getChildAt(const std::size_t index) const override;
-	virtual std::size_t getChildCount() const override;
 private:
 	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override;
 	virtual geom::Box measureImpl(geom::Box const& constraint) override;
 	virtual void layoutImpl(geom::Box const& size) override;
 	virtual void loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
-	virtual Handler<Element> getElementByIdImpl(std::string const& id) override;
 };
 
 }}}

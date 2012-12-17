@@ -35,7 +35,7 @@ const std::string AbstractButton::AttrName::BackgroundColor("background-color");
 const std::string AbstractButton::AttrName::ShadowColor("shadow-color");
 const std::string AbstractButton::AttrName::ShadowDepth("shadow-depth");
 
-CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(AbstractButton, LeafElement)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(AbstractButton, Element)
 ,text_()
 ,textSize_(32.0f)
 ,margin_(2.5f)

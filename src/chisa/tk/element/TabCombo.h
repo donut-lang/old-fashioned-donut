@@ -17,27 +17,36 @@
  */
 
 #pragma once
-
-#include "../Element.h"
+#include "ElementGroup.h"
+#include "../../geom/Area.h"
 
 namespace chisa {
 namespace tk {
 namespace element {
 
-class LeafElement: public chisa::tk::Element {
-	CHISA_ELEMENT_SUBKLASS(LeafElement);
+class FrameCombo;
+class SplitCombo;
+class TabCombo : public ElementGroup {
+	CHISA_ELEMENT_SUBKLASS(TabCombo);
 public:
-	virtual Handler<Element> getChildAt(const std::size_t index) const override final;
-	virtual std::size_t getChildCount() const override final;
-	virtual Handler<Element> getElementByIdImpl(std::string const& id) override final;
-public:
-	virtual std::string toString() const override = 0;
+	enum ButtonPosition{
+		Top,
+		Left,
+		Bottom,
+		Right
+	};
 private:
-	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override = 0;
-	virtual geom::Box measureImpl(geom::Box const& constraint) override = 0;
-	virtual void layoutImpl(geom::Box const& size) override = 0;
-	virtual void loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override = 0;
+	Handler<SplitCombo> top_;
+	Handler<FrameCombo> frame_;
+	Handler<SplitCombo> buttons_;
+	ButtonPosition buttonPosition_;
+public:
+	virtual std::string toString() const override;
+private:
+	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override;
+	virtual geom::Box measureImpl(geom::Box const& constraint) override;
+	virtual void layoutImpl(geom::Box const& size) override;
+	virtual void loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
 };
 
 }}}
-

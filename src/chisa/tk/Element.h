@@ -59,10 +59,8 @@ public: /* レンダリング(非virtual) */
 	void layout(geom::Box const& size);
 public: /* ツリー操作 */
 	Handler<Element> findRootElement();
-	Handler<Element> getElementById(std::string const& id);
-	Handler<Element> getElementByPoint(geom::Vector const& screenPoint);
-	virtual Handler<Element> getChildAt(const size_t index) const = 0;
-	virtual size_t getChildCount() const = 0;
+	virtual Handler<Element> findElementById(std::string const& id);
+	virtual Handler<Element> findElementByPoint(geom::Vector const& screenPoint);
 public: /* 木の生成 */
 	void loadXml(element::ElementFactory* const factory, tinyxml2::XMLElement* const element);
 public: /* バックグラウンドタスク */
@@ -73,12 +71,14 @@ public: /* 実装メソッド */
 	virtual geom::Box measureImpl(geom::Box const& constraint) = 0;
 	virtual void layoutImpl(geom::Box const& size) = 0;
 	virtual void loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) = 0;
-	virtual Handler<Element> getElementByIdImpl(std::string const& id) = 0;
 protected:
 	Element(logging::Logger& log, HandlerW<World> world, HandlerW<Element> parent);
 	template <typename T> void addAttribute(std::string const& name, T& ptr)
 	{
 		this->attrMap_.insert(name, std::bind(chisa::util::xml::parseAttr<T>, std::string(name), std::ref(ptr), std::ref(ptr), std::placeholders::_1));
+	}
+	template <typename T> Handler<T> createChild(){
+		return Handler<T>(new T(this->log(), this->world(), this->self()));
 	}
 public:
 	inline bool onFree() noexcept { return false; };
