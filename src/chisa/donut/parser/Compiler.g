@@ -153,7 +153,7 @@ preop [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist 
 		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
 			//演算オブジェクト
 			$asmlist.push_back(Inst::PushCopy | 1); //Scope
-			$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
+			$asmlist.push_back(Inst::PushCopy | 1); //name
 			$asmlist.push_back(Inst::LoadObj);
 			//操作を実行
 			$asmlist.push_back(Inst::PushCopy | 0);
@@ -192,7 +192,7 @@ postop [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist
 		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
 			//演算オブジェクト
 			$asmlist.push_back(Inst::PushCopy | 1); //scope
-			$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
+			$asmlist.push_back(Inst::PushCopy | 1); //name
 			$asmlist.push_back(Inst::LoadObj);
 			$asmlist.push_back(Inst::ReplaceCopy | 3);
 			//操作を実行
@@ -236,8 +236,8 @@ assignop [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmli
 		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
 		//名前
 			//操作先のオブジェクトを取得
-			$asmlist.push_back(Inst::PushCopy | 1);
-			$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
+			$asmlist.push_back(Inst::PushCopy | 1); //scope
+			$asmlist.push_back(Inst::PushCopy | 1); //name
 			$asmlist.push_back(Inst::LoadObj);
 			//メソッドを取得
 			$asmlist.push_back(Inst::PushCopy | 0);
