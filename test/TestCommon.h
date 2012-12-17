@@ -51,15 +51,14 @@ void static_debug(){
 	static_assert(sizeof...(Args) < 0, "see type for compiler");
 }
 
-template<typename T, size_t size>
-::testing::AssertionResult ArraysMatch(const T (&expected)[size], const T (&actual)[size])
+template<typename T, size_t N>
+::testing::AssertionResult ArraysMatch(const T (&expected)[N], const T (&actual)[N])
 {
-	for (size_t i(0); i < size; ++i) {
+	for (size_t i(0); i < N; ++i) {
 		if (expected[i] != actual[i]) {
 			return ::testing::AssertionFailure() << "array[" << i << "] (" << actual[i] << ") != expected[" << i << "] (" << expected[i] << ")";
 		}
 	}
-
 	return ::testing::AssertionSuccess();
 }
 
