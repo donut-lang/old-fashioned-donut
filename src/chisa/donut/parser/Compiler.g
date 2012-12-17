@@ -105,7 +105,85 @@ expr [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	| branch[$code] { $asmlist.swap($branch.asmlist); }
 	| return_[$code] { $asmlist.swap($return_.asmlist); }
 	| interrupt[$code] { $asmlist.swap($interrupt.asmlist); }
-	| ^(POST_OP postop=operation ^(DOT SCOPE IDENT) {
+	| preop[$code] {$asmlist.swap($preop.asmlist);}
+	| postop[$code] {$asmlist.swap($postop.asmlist);}
+	| assignop[$code] {$asmlist.swap($assignop.asmlist);}
+	| assign[$code] {$asmlist.swap($assign.asmlist);}
+	| ^(unary_operation uobj=expr[$code] {
+		$asmlist.insert($asmlist.end(), $uobj.asmlist.begin(), $uobj.asmlist.end());
+		//メソッドの解決
+		$asmlist.push_back(Inst::PushCopy | 0);
+		$asmlist.push_back(Inst::Push | $code->constCode<string>($unary_operation.sym));
+		$asmlist.push_back(Inst::LoadObj);
+		//実行：引数：０
+		$asmlist.push_back(Inst::Apply | 0);
+	})
+	| ^(biop=operation blhs=expr[$code] brhs=expr[$code] {
+		//適用先：lhs
+		$asmlist.insert($asmlist.end(), $blhs.asmlist.begin(), $blhs.asmlist.end());
+		//メソッド解決
+		$asmlist.push_back(Inst::PushCopy);
+		$asmlist.push_back(Inst::Push | $code->constCode<string>($biop.sym));
+		$asmlist.push_back(Inst::LoadObj);
+		//第１引数：rhsオブジェクト
+		$asmlist.insert($asmlist.end(), $brhs.asmlist.begin(), $brhs.asmlist.end());
+		//実行：引数：１
+		$asmlist.push_back(Inst::Apply | 1);
+	})
+	| ^(DOT dexpr=expr[$code] ac=accessor[$code])
+	{
+		$asmlist.insert($asmlist.end(), $dexpr.asmlist.begin(), $dexpr.asmlist.end());
+		$asmlist.insert($asmlist.end(), $ac.asmlist.begin(), $ac.asmlist.end());
+		$asmlist.push_back(Inst::LoadObj);
+	}
+	| ^(DOT SCOPE IDENT)
+	{
+		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
+		$asmlist.push_back(Inst::SearchScope);
+		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
+		$asmlist.push_back(Inst::LoadObj);
+	}
+	;
+
+preop [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
+	: ^(PRE_OP operation ^(DOT SCOPE IDENT) {
+		//設定先を取得
+		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
+		$asmlist.push_back(Inst::SearchScope);
+		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
+			//演算オブジェクト
+			$asmlist.push_back(Inst::PushCopy | 1); //Scope
+			$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
+			$asmlist.push_back(Inst::LoadObj);
+			//操作を実行
+			$asmlist.push_back(Inst::PushCopy | 0);
+			$asmlist.push_back(Inst::Push | $code->constCode<string>($operation.sym));
+			$asmlist.push_back(Inst::LoadObj);
+			$asmlist.push_back(Inst::Push | $code->constCode<int>(1));
+			$asmlist.push_back(Inst::Apply | 1);
+		//設定
+		$asmlist.push_back(Inst::StoreObj);
+	})
+	| ^(PRE_OP operation ^(DOT preexpr=expr[$code] ac=accessor[$code]) {
+		//設定先を取得
+		$asmlist.insert($asmlist.end(), $preexpr.asmlist.begin(), $preexpr.asmlist.end());
+		$asmlist.insert($asmlist.end(), $ac.asmlist.begin(), $ac.asmlist.end());
+			//演算オブジェクト
+			$asmlist.push_back(Inst::PushCopy | 1); //Scope
+			$asmlist.push_back(Inst::PushCopy | 1); //name
+			$asmlist.push_back(Inst::LoadObj);
+			//操作を実行
+			$asmlist.push_back(Inst::PushCopy | 0);
+			$asmlist.push_back(Inst::Push | $code->constCode<string>($operation.sym));
+			$asmlist.push_back(Inst::LoadObj);
+			$asmlist.push_back(Inst::Push | $code->constCode<int>(1));
+			$asmlist.push_back(Inst::Apply | 1);
+		//設定
+		$asmlist.push_back(Inst::StoreObj);
+	});
+
+postop [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
+	: ^(POST_OP operation ^(DOT SCOPE IDENT) {
 		//あとで値になる部分のnullを設定する
 		$asmlist.push_back(Inst::Push | $code->constCode<nullptr_t>(0));
 		//設定先を取得
@@ -119,7 +197,7 @@ expr [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
 			$asmlist.push_back(Inst::ReplaceCopy | 3);
 			//操作を実行
 			$asmlist.push_back(Inst::PushCopy | 0);
-			$asmlist.push_back(Inst::Push | $code->constCode<string>($postop.sym));
+			$asmlist.push_back(Inst::Push | $code->constCode<string>($operation.sym));
 			$asmlist.push_back(Inst::LoadObj);
 			$asmlist.push_back(Inst::Push | $code->constCode<int>(1));
 			$asmlist.push_back(Inst::Apply | 1);
@@ -127,7 +205,7 @@ expr [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
 		$asmlist.push_back(Inst::StoreObj);
 		$asmlist.push_back(Inst::Pop | 0);
 	})
-	| ^(POST_OP postop=operation ^(DOT postexpr=expr[$code] ac=accessor[$code]) {
+	| ^(POST_OP operation ^(DOT postexpr=expr[$code] ac=accessor[$code]) {
 		//あとで値になる部分のnullを設定する
 		$asmlist.push_back(Inst::Push | $code->constCode<nullptr_t>(0));
 		//設定先を取得
@@ -140,7 +218,7 @@ expr [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
 			$asmlist.push_back(Inst::ReplaceCopy | 3);
 			//操作を実行
 			$asmlist.push_back(Inst::PushCopy | 0);
-			$asmlist.push_back(Inst::Push | $code->constCode<string>($postop.sym));
+			$asmlist.push_back(Inst::Push | $code->constCode<string>($operation.sym));
 			$asmlist.push_back(Inst::LoadObj);
 			$asmlist.push_back(Inst::Push | $code->constCode<int>(1));
 			$asmlist.push_back(Inst::Apply | 1);
@@ -148,63 +226,10 @@ expr [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
 		$asmlist.push_back(Inst::StoreObj);
 		$asmlist.push_back(Inst::Pop | 0);
 	})
-	| ^(PRE_OP preop=operation ^(DOT SCOPE IDENT) {
-		//設定先を取得
-		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
-		$asmlist.push_back(Inst::SearchScope);
-		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
-			//演算オブジェクト
-			$asmlist.push_back(Inst::PushCopy | 1); //Scope
-			$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
-			$asmlist.push_back(Inst::LoadObj);
-			//操作を実行
-			$asmlist.push_back(Inst::PushCopy | 0);
-			$asmlist.push_back(Inst::Push | $code->constCode<string>($preop.sym));
-			$asmlist.push_back(Inst::LoadObj);
-			$asmlist.push_back(Inst::Push | $code->constCode<int>(1));
-			$asmlist.push_back(Inst::Apply | 1);
-		//設定
-		$asmlist.push_back(Inst::StoreObj);
-	})
-	| ^(PRE_OP preop=operation ^(DOT preexpr=expr[$code] ac=accessor[$code]) {
-		//設定先を取得
-		$asmlist.insert($asmlist.end(), $preexpr.asmlist.begin(), $preexpr.asmlist.end());
-		$asmlist.insert($asmlist.end(), $ac.asmlist.begin(), $ac.asmlist.end());
-			//演算オブジェクト
-			$asmlist.push_back(Inst::PushCopy | 1); //Scope
-			$asmlist.push_back(Inst::PushCopy | 1); //name
-			$asmlist.push_back(Inst::LoadObj);
-			//操作を実行
-			$asmlist.push_back(Inst::PushCopy | 0);
-			$asmlist.push_back(Inst::Push | $code->constCode<string>($preop.sym));
-			$asmlist.push_back(Inst::LoadObj);
-			$asmlist.push_back(Inst::Push | $code->constCode<int>(1));
-			$asmlist.push_back(Inst::Apply | 1);
-		//設定
-		$asmlist.push_back(Inst::StoreObj);
-	})
-	| ^(ASSIGN ^(DOT SCOPE IDENT) asrhs=expr[$code] {
-		//適用先：解決されたスコープの先
-		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
-		$asmlist.push_back(Inst::SearchScope);
-		//第一引数：名前
-		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
-		//第二引数：rhsオブジェクト
-		$asmlist.insert($asmlist.end(), $asrhs.asmlist.begin(), $asrhs.asmlist.end());
-		//設定
-		$asmlist.push_back(Inst::StoreObj);
-	})
-	| ^(ASSIGN ^(DOT asscope=expr[$code] ac=accessor[$code]) asrhs=expr[$code] { //
-		//適用先：scopeオブジェクト
-		$asmlist.insert($asmlist.end(), $asscope.asmlist.begin(), $asscope.asmlist.end());
-		//第一引数：名前
-		$asmlist.insert($asmlist.end(), $ac.asmlist.begin(), $ac.asmlist.end());
-		//第二引数：rhsオブジェクト
-		$asmlist.insert($asmlist.end(), $asrhs.asmlist.begin(), $asrhs.asmlist.end());
-		//設定
-		$asmlist.push_back(Inst::StoreObj);
-	})
-	| ^(ASSIGN_OP asopoperation=operation ^(DOT SCOPE IDENT) asoprhs=expr[$code] {
+	;
+
+assignop [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
+	: ^(ASSIGN_OP asopoperation=operation ^(DOT SCOPE IDENT) asoprhs=expr[$code] {
 		//設定先
 		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
 		$asmlist.push_back(Inst::SearchScope);
@@ -245,41 +270,32 @@ expr [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
 		//設定
 		$asmlist.push_back(Inst::StoreObj);
 	})
-	| ^(unary_operation uobj=expr[$code] {
-		$asmlist.insert($asmlist.end(), $uobj.asmlist.begin(), $uobj.asmlist.end());
-		//メソッドの解決
-		$asmlist.push_back(Inst::PushCopy | 0);
-		$asmlist.push_back(Inst::Push | $code->constCode<string>($unary_operation.sym));
-		$asmlist.push_back(Inst::LoadObj);
-		//実行：引数：０
-		$asmlist.push_back(Inst::Apply | 0);
-	})
-	| ^(biop=operation blhs=expr[$code] brhs=expr[$code] {
-		//適用先：lhs
-		$asmlist.insert($asmlist.end(), $blhs.asmlist.begin(), $blhs.asmlist.end());
-		//メソッド解決
-		$asmlist.push_back(Inst::PushCopy);
-		$asmlist.push_back(Inst::Push | $code->constCode<string>($biop.sym));
-		$asmlist.push_back(Inst::LoadObj);
-		//第１引数：rhsオブジェクト
-		$asmlist.insert($asmlist.end(), $brhs.asmlist.begin(), $brhs.asmlist.end());
-		//実行：引数：１
-		$asmlist.push_back(Inst::Apply | 1);
-	})
-	| ^(DOT dexpr=expr[$code] ac=accessor[$code])
-	{
-		$asmlist.insert($asmlist.end(), $dexpr.asmlist.begin(), $dexpr.asmlist.end());
-		$asmlist.insert($asmlist.end(), $ac.asmlist.begin(), $ac.asmlist.end());
-		$asmlist.push_back(Inst::LoadObj);
-	}
-	| ^(DOT SCOPE IDENT)
-	{
+	;
+
+assign [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
+	: ^(ASSIGN ^(DOT SCOPE IDENT) asrhs=expr[$code] {
+		//適用先：解決されたスコープの先
 		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
 		$asmlist.push_back(Inst::SearchScope);
+		//第一引数：名前
 		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
-		$asmlist.push_back(Inst::LoadObj);
-	}
+		//第二引数：rhsオブジェクト
+		$asmlist.insert($asmlist.end(), $asrhs.asmlist.begin(), $asrhs.asmlist.end());
+		//設定
+		$asmlist.push_back(Inst::StoreObj);
+	})
+	| ^(ASSIGN ^(DOT asscope=expr[$code] ac=accessor[$code]) asrhs=expr[$code] { //
+		//適用先：scopeオブジェクト
+		$asmlist.insert($asmlist.end(), $asscope.asmlist.begin(), $asscope.asmlist.end());
+		//第一引数：名前
+		$asmlist.insert($asmlist.end(), $ac.asmlist.begin(), $ac.asmlist.end());
+		//第二引数：rhsオブジェクト
+		$asmlist.insert($asmlist.end(), $asrhs.asmlist.begin(), $asrhs.asmlist.end());
+		//設定
+		$asmlist.push_back(Inst::StoreObj);
+	})
 	;
+
 
 accessor [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	: IDENT
