@@ -39,7 +39,7 @@ private:
 	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override final;
 	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override final;
 private:
-	virtual Handler<Object> apply(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& arg) override final;
+	virtual Handler<Object> apply(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& arg) const override final;
 };
 
 class ReactiveNativeClosureObject final : public NativeClosureObject {
@@ -57,7 +57,7 @@ private:
 	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override final;
 	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override final;
 private:
-	virtual Handler<Object> apply(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& arg) override final;
+	virtual Handler<Object> apply(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& arg) const override final;
 };
 
 }}
