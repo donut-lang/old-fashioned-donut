@@ -22,6 +22,16 @@
 namespace chisa {
 namespace donut {
 
+TEST(DonutIntegerTest, AddTest)
+{
+	SOURCE_TEST_INT(3, "1+2;")
+}
+
+TEST(DonutIntegerTest, AddTripleTest)
+{
+	SOURCE_TEST_INT(4, "2+1+1;")
+}
+
 TEST(DonutIntegerTest, ImplicitConvertTest)
 {
 	INIT_DONUT;

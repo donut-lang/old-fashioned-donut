@@ -22,6 +22,21 @@
 namespace chisa {
 namespace donut {
 
+TEST(ArrayTest, LiteralTest)
+{
+	EXECUTE_SRC("[2,3,1];");
+	ASSERT_TRUE(result->has(heap, "0"));
+	ASSERT_EQ(2, result->get(heap, "0")->toInt(heap));
+	ASSERT_EQ(2, result->get(heap, 0)->toInt(heap));
+
+	ASSERT_TRUE(result->has(heap, "1"));
+	ASSERT_EQ(3, result->get(heap, "1")->toInt(heap));
+	ASSERT_EQ(3, result->get(heap, 1)->toInt(heap));
+
+	ASSERT_TRUE(result->has(heap, "2"));
+	ASSERT_EQ(1, result->get(heap, 2)->toInt(heap));
+}
+
 TEST(ArrayTest, LiteralAccessIndex)
 {
 	SOURCE_TEST_FLOAT(1.0, "array=['0',1.0,2];array[1];");

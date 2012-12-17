@@ -342,14 +342,25 @@ apply [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist 
 	;
 
 cond [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
-	: ^(COND ifcond=expr[$code] ift=block[$code] iff=block[$code])
-	{
-		$asmlist.insert($asmlist.end(), $ifcond.asmlist.begin(), $ifcond.asmlist.end());
-		$asmlist.push_back(Inst::BranchFalse | $ift.asmlist.size()+1);
-		$asmlist.insert($asmlist.end(), $ift.asmlist.begin(), $ift.asmlist.end());
-		$asmlist.push_back(Inst::Branch | $iff.asmlist.size());
-		$asmlist.insert($asmlist.end(), $iff.asmlist.begin(), $iff.asmlist.end());
-	}
+	: ^(COND ifcond=expr[$code] ift=block[$code]
+		(iff=block[$code]
+		{
+			$asmlist.insert($asmlist.end(), $ifcond.asmlist.begin(), $ifcond.asmlist.end());
+			$asmlist.push_back(Inst::BranchFalse | $ift.asmlist.size()+1);
+			$asmlist.insert($asmlist.end(), $ift.asmlist.begin(), $ift.asmlist.end());
+			$asmlist.push_back(Inst::Branch | $iff.asmlist.size());
+			$asmlist.insert($asmlist.end(), $iff.asmlist.begin(), $iff.asmlist.end());
+		}
+		|ifc=cond[$code]
+		{
+			$asmlist.insert($asmlist.end(), $ifcond.asmlist.begin(), $ifcond.asmlist.end());
+			$asmlist.push_back(Inst::BranchFalse | $ift.asmlist.size()+1);
+			$asmlist.insert($asmlist.end(), $ift.asmlist.begin(), $ift.asmlist.end());
+			$asmlist.push_back(Inst::Branch | $ifc.asmlist.size());
+			$asmlist.insert($asmlist.end(), $ifc.asmlist.begin(), $ifc.asmlist.end());
+		}
+		)
+	)
 	;
 
 loop [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
@@ -377,7 +388,7 @@ literal [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlis
 	}
 	| NULL_LITERAL
 	{
-		$asmlist.push_back(Inst::Push | $code->constCode<std::nullptr_t>(nullptr));
+		$asmlist.push_back(Inst::Push | $code->constCode<nullptr_t>(nullptr));
 	}
 	| HEX_LITERAL
 	{

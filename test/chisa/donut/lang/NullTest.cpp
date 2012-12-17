@@ -22,6 +22,13 @@
 namespace chisa {
 namespace donut {
 
+TEST(NullTest, EmptyTest)
+{
+	EXECUTE_SRC("");
+	ASSERT_TRUE(result->isNull());
+	ASSERT_FALSE(result->isObject());
+}
+
 TEST(NullTest, ImplicitConvertTest)
 {
 	INIT_DONUT;
