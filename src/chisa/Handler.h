@@ -386,25 +386,23 @@ protected:
 	virtual ~HandlerBody() noexcept (true) {}; //XXX: GCCのバグでデフォルトにできない？
 protected:
 	inline int refcount() const noexcept { return this->refcount_; };
-	inline Handler<Derived> self() const { return Handler<Derived>::__internal__fromRawPointerWithoutCheck(static_cast<Derived*>(const_cast<HandlerBody<Derived, atomic>*>(this))); };
+	inline Handler<const Derived> self() const { return Handler<Derived>::__internal__fromRawPointerWithoutCheck(static_cast<const Derived*>(this)); };
+	inline Handler<Derived> self() { return Handler<Derived>::__internal__fromRawPointerWithoutCheck(static_cast<Derived*>(this)); };
 protected:
 	inline void incref( bool check ) const{
-		HandlerBody<Derived, atomic>* self = const_cast<HandlerBody<Derived, atomic>*>(this);
+		HandlerBody<Derived, atomic>* const self = const_cast<HandlerBody<Derived, atomic>*>(this);
 		if((self->refcount_++) != 0 && check){
 			int const val = --self->refcount_;
 			throw logging::Exception(__FILE__, __LINE__, "[BUG] Handler created, but refcount = %d, not zero.", val);
 		}
 	}
 	inline void decref() const{
-		HandlerBody<Derived, atomic>* self = const_cast<HandlerBody<Derived, atomic>*>(this);
+		HandlerBody<Derived, atomic>* const self = const_cast<HandlerBody<Derived, atomic>*>(this);
 		--self->refcount_;
 		if(self->refcount_ < 0){
 			int const val = self->refcount_;
 			throw logging::Exception(__FILE__, __LINE__, "[BUG] Handler refcount = %d < 0", val);\
-		}else if(self->refcount_ == 0){
-			if(self->deleted){
-				return;
-			}
+		}else if(self->refcount_ == 0 && !self->deleted){
 			self->deleted = true;
 			if(self->weakEntity_){
 				self->weakEntity_->notifyDead();

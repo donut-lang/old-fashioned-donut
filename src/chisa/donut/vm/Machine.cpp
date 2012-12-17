@@ -217,6 +217,7 @@ Handler<Object> Machine::popStack()
 	stack.pop_back();
 	return obj;
 }
+
 Handler<Object> Machine::topStack()
 {
 	return this->stack().back();
