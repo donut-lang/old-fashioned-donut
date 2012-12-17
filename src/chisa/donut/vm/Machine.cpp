@@ -34,7 +34,6 @@ const static std::string TAG("Machine");
 Context::Context(Handler<Clock> const& clk)
 :time_(clk->now())
 ,stack_()
-,local_(32)
 ,callStack_()
 {
 
@@ -43,7 +42,6 @@ Context::Context(Handler<Clock> const& clk)
 Context::Context(Handler<Clock> const& clk, Context const& other)
 :time_(clk->now())
 ,stack_(other.stack_)
-,local_(other.local_)
 ,callStack_(other.callStack_)
 {
 
@@ -117,12 +115,6 @@ std::vector<Callchain>& Machine::callStack()
 {
 	Context& ctx =  this->contextRevs_.back();
 	return ctx.callStack_;
-}
-
-std::vector<Handler<Object> >& Machine::local()
-{
-	Context& ctx =  this->contextRevs_.back();
-	return ctx.local_;
 }
 
 std::vector<Handler<Object> >& Machine::stack()
@@ -280,7 +272,12 @@ Handler<Object> Machine::run()
 			break;
 		}
 		case Inst::PushCopy: {
-			this->pushStack( this->topStack() );
+			Handler<Object> obj(*(this->stack().end()-constIndex-1));
+			this->pushStack( obj );
+			break;
+		}
+		case Inst::ReplaceCopy: {
+			*(this->stack().end()-constIndex-1) = this->stack().back();
 			break;
 		}
 		case Inst::Pop:
@@ -322,15 +319,6 @@ Handler<Object> Machine::run()
 			this->pushStack( destObj->get(heap_, nameObj->toString(heap_)) );
 			break;
 		}
-		case Inst::LoadLocal: {
-			Handler<Object> obj = this->local()[constIndex&31];
-			this->pushStack(obj);
-			break;
-		}
-		case Inst::StoreLocal: {
-			this->local()[constIndex&31] = this->topStack();
-			break;
-		}
 		case Inst::Apply: {
 			Handler<DonutObject> obj(heap_->createEmptyDonutObject());
 			for(unsigned int i=constIndex;i>0;--i){
@@ -343,13 +331,13 @@ Handler<Object> Machine::run()
 
 			//XXX: ちゃんと型を使う
 			if(!closureObj->isObject()){
-				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. \"%s\" is not callable.", closureObj->toString(heap_).c_str());
+				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. \"%s\" is not callable.", closureObj->repr(heap_).c_str());
 			} else if ( Handler<DonutClosureObject> closObj = closureObj.tryCast<DonutClosureObject>() ) {
 				this->enterClosure(destObj, closObj, obj);
 			} else if ( Handler<NativeClosureObject> clos = closureObj.tryCast<NativeClosureObject>() ) {
 				this->pushStack( clos->apply(heap_, destObj, obj) );
 			}else{
-				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. \"%s\" is not callable.", closureObj->toString(heap_).c_str());
+				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. \"%s\" is not callable.", closureObj->repr(heap_).c_str());
 			}
 			break;
 		}
@@ -405,7 +393,7 @@ Handler<Object> Machine::run()
 			break;
 		}
 		default:
-			throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Unknwon opcode: closure<%s>:%08x", closureObject()->toString(heap_).c_str(), this->pc()-1);
+			throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Unknwon opcode: closure<%s>:%08x", closureObject()->repr(heap_).c_str(), this->pc()-1);
 		}
 	}
 	Handler<Object> result(this->popStack());

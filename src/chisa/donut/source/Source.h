@@ -123,8 +123,12 @@ public:
 public:
 	std::string disasm( Instruction inst );
 	static inline void disasm( Instruction inst, Instruction& opcode, Instruction& constKind, int& constIndex ) {
-		opcode = inst & Inst::OpcodeMask;
-		constKind = inst & Inst::ConstKindMask;
+		/*
+		opcode = (inst & Inst::OpcodeMask)>>Inst::OpcodeShift;
+		constKind = (inst & Inst::ConstKindMask)>>Inst::ConstKindShift;
+		*/
+		opcode = (inst & Inst::OpcodeMask);
+		constKind = (inst & Inst::ConstKindMask);
 		constIndex = inst & 0xffff;
 		if(constIndex >= 0x8000) {
 			constIndex -= 0x10000;

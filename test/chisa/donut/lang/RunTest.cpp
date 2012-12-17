@@ -32,6 +32,7 @@ TEST(DonutRunTest, NullTest)
 TEST(DonutRunTest, AssignTest)
 {
 	SOURCE_TEST_INT(1, "test=1;");
+	SOURCE_TEST_INT(1, "t={test=>0};t.test=1;");
 }
 
 TEST(DonutRunTest, ObjectTest)
@@ -69,19 +70,26 @@ TEST(DonutRunTest, AddTripleTest)
 
 TEST(DonutRunTest, AssignOpTest)
 {
-	SOURCE_TEST_INT(1, "test=0; test+=1;")
+	SOURCE_TEST_INT(1, "test=0; test+=1;");
+	SOURCE_TEST_INT(1, "test=0; test+=1; test;");
+	SOURCE_TEST_INT(1, "t={}; t.test=0; t.test+=1;");
+	SOURCE_TEST_INT(1, "t={}; t.test=0; t.test+=1; t.test;");
 }
 
 TEST(DonutRunTest, PostOpTest)
 {
 	SOURCE_TEST_INT(0, "test=0; test++;");
 	SOURCE_TEST_INT(1, "test=0; test++; test;");
+	SOURCE_TEST_INT(0, "t={}; t.test=0; t.test++;");
+	SOURCE_TEST_INT(1, "t={}; t.test=0; t.test++; t.test;");
 }
 
 TEST(DonutRunTest, PreOpTest)
 {
 	SOURCE_TEST_INT(1, "test=0; ++test;");
 	SOURCE_TEST_INT(1, "test=0; ++test; test;");
+	SOURCE_TEST_INT(1, "t={}; t.test=0; ++t.test;");
+	SOURCE_TEST_INT(1, "t={}; t.test=0; ++t.test; t.test;");
 }
 
 }}

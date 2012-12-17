@@ -24,7 +24,7 @@ namespace donut {
 
 TEST(ArraySyntaxTest, LiteralAccessIndex)
 {
-	SOURCE_TEST_FLOAT(1.0, "array=['0',1.0,2];array[2];");
+	SOURCE_TEST_FLOAT(1.0, "array=['0',1.0,2];array[1];");
 }
 
 TEST(ArraySyntaxTest, LiteralAssignIndex)
