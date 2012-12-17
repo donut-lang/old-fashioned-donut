@@ -30,6 +30,49 @@ template <typename T> XArchiver& XArchiver::operator &(T& val) {
 	return *this;
 }
 
+template <typename T>
+struct XSerializer<std::vector<T>,false> {
+	static XValue serialize(std::vector<T>& val){
+		Handler<XArray> array(new XArray);
+		for(T& v : val){
+			array->append( XSerializer<T>::serialize(v) );
+		}
+		return array;
+	}
+	static void deserialize(std::vector<T>& val, XValue const& xval){
+		Handler<XArray> array(xval.as<XArray>());
+		val.clear();
+		val.reserve( array->size() );
+		for( XValue& v : *(array) ) {
+			T t;
+			XSerializer<T>::deserialize(t, v);
+			val.push_back(  t );
+		}
+	}
+};
+
+template <typename T, std::size_t N>
+struct XSerializer<T[N],false> {
+	static XValue serialize(T (&val)[N]) {
+		Handler<XArray> array(new XArray);
+		for(T& v : val){
+			array->append( XSerializer<T>::serialize(v) );
+		}
+		return array;
+	}
+	static void deserialize(T (&val)[N], XValue const& xval){
+		Handler<XArray> array(xval.as<XArray>());
+		if(array->size() != N) {
+			std::size_t const n = N;
+			throw logging::Exception(__FILE__, __LINE__, "Array size does not match!: requested:%d != actual:%d", n, array->size());
+		}
+		int cnt=0;
+		for( XValue& v : *(array) ) {
+			XSerializer<T>::deserialize(val[cnt++], v);
+		}
+	}
+};
+
 #define PRIM_VAR(TYPE)\
 template <>\
 struct XSerializer<TYPE, false> {\
