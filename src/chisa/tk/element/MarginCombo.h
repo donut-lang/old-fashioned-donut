@@ -29,15 +29,12 @@ class MarginCombo : public Element {
 	Handler<Element> child_;
 	geom::Space margin_;
 public:
-	virtual Handler<Element> getChildAt(const size_t index) const override;
-	virtual std::size_t getChildCount() const override;
 	virtual std::string toString() const override;
 private:
 	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override;
 	virtual geom::Box measureImpl(geom::Box const& constraint) override;
 	virtual void layoutImpl(geom::Box const& size) override;
 	virtual void loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
-	virtual Handler<Element> getElementByIdImpl(std::string const& id) override;
 };
 
 }}}

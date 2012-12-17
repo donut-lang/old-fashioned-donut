@@ -17,7 +17,7 @@
  */
 #pragma once
 
-#include "../Element.h"
+#include "ElementGroup.h"
 #include "../Task.h"
 #include "ElementFactory.h"
 
@@ -25,7 +25,7 @@ namespace chisa {
 namespace tk {
 namespace element {
 
-class ScrollCombo: public chisa::tk::Element {
+class ScrollCombo: public ElementGroup {
 	CHISA_ELEMENT_SUBKLASS_FINAL(ScrollCombo);
 private:
 	static constexpr float ScrollBarTimeOut = 500.0f;
@@ -41,8 +41,6 @@ private:
 	geom::Box childSize_;
 	float lastMovedFrom_;
 public:
-	virtual Handler<Element> getChildAt(const std::size_t index) const override;
-	virtual std::size_t getChildCount() const override;
 	virtual std::string toString() const override;
 	virtual void idle(const float delta_ms) override;
 private:
@@ -50,7 +48,6 @@ private:
 	virtual geom::Box measureImpl(geom::Box const& constraint) override;
 	virtual void layoutImpl(geom::Box const& size) override;
 	virtual void loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
-	virtual Handler<Element> getElementByIdImpl(std::string const& id) override;
 public:
 	virtual bool onScroll(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance) override;
 };

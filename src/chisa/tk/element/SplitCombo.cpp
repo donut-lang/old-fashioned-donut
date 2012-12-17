@@ -30,7 +30,7 @@ const std::string SplitCombo::AttrName::Max("split-max");
 const std::string SplitCombo::AttrName::Min("split-min");
 
 
-CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(SplitCombo)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(SplitCombo, ElementGroup)
 ,splitMode_(Vertical)
 ,totalSize_(geom::Unspecified)
 ,changed_getter(nullptr)
@@ -69,11 +69,6 @@ std::string SplitCombo::toString() const
 	}
 }
 
-void SplitCombo::addChild(SplitDef const& def, Handler<Element> element)
-{
-	this->children().push_back(SplitCtx(def, element));
-}
-
 void SplitCombo::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* top)
 {
 	const std::string name(top->Name());
@@ -103,37 +98,18 @@ void SplitCombo::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement
 		if(geom::isUnspecified(max)){
 			max = geom::Unspecified;
 		}
-		const SplitDef def(weight, min, max);
-		this->addChild(def, factory->parseTree(this->self(), elem));
-	}
-}
-
-void SplitCombo::idle(const float delta_ms)
-{
-	for(SplitCtx& ctx : this->children()){
-		ctx.element->idle(delta_ms);
+		SplitCtx ctx(SplitDef(weight, min, max), factory->parseTree(this->self(), elem));
+		this->layoutContext_.push_back(ctx);
+		this->addChild(ctx.element);
 	}
 }
 
 void SplitCombo::resetChildren()
 {
-	for(SplitCtx& ctx : this->children()){
+	for(SplitCtx& ctx: this->layoutContext_){
 		ctx.size=geom::Unspecified;
 	}
 	this->totalSize_ = geom::Unspecified;
-}
-
-Handler<Element> SplitCombo::getChildAt(const std::size_t index) const
-{
-	if(index < this->children().size()){
-		SplitCtx const& ctx = this->children()[index];
-		return ctx.element;
-	}
-	return Handler<Element>();
-}
-std::size_t SplitCombo::getChildCount() const
-{
-	return this->children().size();
 }
 
 void SplitCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
@@ -143,7 +119,7 @@ void SplitCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, ge
 	const float drawnEndOffset = drawnStartOffset+boxSize;
 	const float screenStart = (screenArea.point().*point_getter)();
 	float offset = 0;
-	for(SplitCtx& ctx : this->children()){
+	for(SplitCtx& ctx : this->layoutContext_){
 		const float size = ctx.size;
 		if(offset+size < drawnStartOffset){
 			offset += size;
@@ -178,7 +154,7 @@ geom::Box SplitCombo::measureImpl(geom::Box const& constraint)
 		//いくらでも伸びてよし
 		float totalSize = 0;
 		float fixedMaxSize = 0;
-		for(SplitCtx& childCtx : this->children()){
+		for(SplitCtx& childCtx : this->layoutContext_){
 			const geom::Box childSize(childCtx.element->measure(cbox));
 			const float size = this->wrapSize((childSize.*changed_getter)(), childCtx.def);
 			if(geom::isSpecified(size)){
@@ -212,7 +188,7 @@ geom::Box SplitCombo::measureImpl(geom::Box const& constraint)
 		//まず、親から与えられた長さが十分かどうか調べる
 		float intendedSizeTotal = 0;
 		float nonWeightedSizeTotal = 0;
-		for(SplitCtx& childCtx : this->children()){
+		for(SplitCtx& childCtx : this->layoutContext_){
 			const bool weightSpecified = geom::isSpecified(childCtx.def.weight);
 			const geom::Box childSize(childCtx.element->measure(cbox));
 			if(weightSpecified){
@@ -243,7 +219,7 @@ geom::Box SplitCombo::measureImpl(geom::Box const& constraint)
 			//十分足りる
 			float leftWeight = totalWeight;
 			float leftSize = limitChangedSize - nonWeightedSizeTotal;
-			for(SplitCtx& childCtx : this->children()){
+			for(SplitCtx& childCtx : this->layoutContext_){
 				Handler<Element> child;
 				const bool weightSpecified = geom::isSpecified(childCtx.weight);
 				if(weightSpecified){
@@ -261,7 +237,7 @@ geom::Box SplitCombo::measureImpl(geom::Box const& constraint)
 		}else{
 			//足りない
 			const float changedOverrun = intendedSizeTotal-limitChangedSize;
-			for(SplitCtx& childCtx : this->children()){
+			for(SplitCtx& childCtx : this->layoutContext_){
 				//元の割合に応じてサイズを設定
 				childCtx.size -= changedOverrun * childCtx.size / intendedSizeTotal;
 			}
@@ -279,23 +255,12 @@ geom::Box SplitCombo::measureImpl(geom::Box const& constraint)
 
 void SplitCombo::layoutImpl(geom::Box const& size)
 {
-	for(SplitCtx& ctx : this->children()){
+	for(SplitCtx& ctx : this->layoutContext_){
 		geom::Box box;
 		(box.*changed_setter)(ctx.size);
 		(box.*fixed_setter)((size.*fixed_getter)());
 		ctx.element->layout(box);
 	}
 }
-
-Handler<Element> SplitCombo::getElementByIdImpl(std::string const& id)
-{
-	for(SplitCtx& childCtx : this->children()){
-		if(Handler<Element> res = childCtx.element->getElementById(id)) {
-			return res;
-		}
-	}
-	return Handler<Element>();
-}
-
 
 }}}

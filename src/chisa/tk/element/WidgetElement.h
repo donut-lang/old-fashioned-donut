@@ -21,14 +21,13 @@
 #include <memory>
 #include <tinyxml2.h>
 #include "../Element.h"
-#include "LeafElement.h"
 
 namespace chisa {
 namespace tk {
 namespace element {
 class ElementFactory;
 
-class WidgetElement: public LeafElement {
+class WidgetElement: public Element {
 	CHISA_ELEMENT_SUBKLASS_FINAL(WidgetElement);
 public:
 	enum FitMode {

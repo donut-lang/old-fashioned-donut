@@ -20,14 +20,13 @@
 #include <memory>
 #include <tinyxml2.h>
 #include "../Element.h"
-#include "LeafElement.h"
 
 namespace chisa {
 namespace tk {
 namespace element {
 class ElementFactory;
 
-class Empty : public LeafElement {
+class Empty : public Element {
 	CHISA_ELEMENT_SUBKLASS_FINAL(Empty);
 public:
 	virtual std::string toString() const override;

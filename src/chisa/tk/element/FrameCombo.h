@@ -17,19 +17,16 @@
  */
 
 #pragma once
-#include "../Element.h"
+#include "ElementGroup.h"
 #include "../../geom/Area.h"
 
 namespace chisa {
 namespace tk {
 namespace element {
 
-class FrameCombo : public Element {
+class FrameCombo : public ElementGroup {
 	CHISA_ELEMENT_SUBKLASS(FrameCombo);
-	std::vector<Handler<Element> > elements_;
 public:
-	virtual Handler<Element> getChildAt(const size_t index) const override;
-	virtual std::size_t getChildCount() const override;
 	virtual std::string toString() const override;
 public:
 	std::size_t bringToFront(Handler<Element> const& e);
@@ -38,7 +35,6 @@ private:
 	virtual geom::Box measureImpl(geom::Box const& constraint) override;
 	virtual void layoutImpl(geom::Box const& size) override;
 	virtual void loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
-	virtual Handler<Element> getElementByIdImpl(std::string const& id) override;
 };
 
 }}}

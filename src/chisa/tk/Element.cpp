@@ -32,12 +32,6 @@ Element::Element(logging::Logger& log, HandlerW<World> world, HandlerW<Element> 
 
 void Element::idle(const float delta_ms)
 {
-	const size_t max = this->getChildCount();
-	for(size_t i=0;i<max;++i){
-		if( Handler<Element> child = this->getChildAt(i) ){
-			child->idle(delta_ms);
-		}
-	}
 }
 
 void Element::loadXml(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
@@ -58,25 +52,14 @@ Handler<Element> Element::findRootElement()
 	return root;
 }
 
-Handler<Element> Element::getElementById(std::string const& id)
+Handler<Element> Element::findElementById(std::string const& id)
 {
-	return id == this->id() ? this->self() : this->getElementByIdImpl(id);
+	return id == this->id() ? this->self() : Handler<Element>();
 }
 
-Handler<Element> Element::getElementByPoint(geom::Vector const& screenPoint)
+Handler<Element> Element::findElementByPoint(geom::Vector const& screenPoint)
 {
-	if(!this->screenArea().contain(screenPoint)){
-		return Handler<Element>();
-	}
-	const size_t max = this->getChildCount();
-	for(size_t i=0;i<max;++i){
-		if(Handler<Element> child = this->getChildAt(i) ){
-			if(child->screenArea().contain(screenPoint)){
-				return child->getElementByPoint(screenPoint);
-			}
-		}
-	}
-	return this->self();
+	return this->screenArea().contain(screenPoint) ? this->self() : Handler<Element>();
 }
 
 
