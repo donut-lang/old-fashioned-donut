@@ -98,4 +98,43 @@ TEST(XArchiveTest, ComplexStructTest)
 	}
 }
 
+TEST(XArchiveTest, VectorTest)
+{
+	std::vector<int> a;
+	a.push_back(1);
+	a.push_back(2);
+	a.push_back(3);
+	XValue v;
+	{
+		XArchiverOut out;
+		out << a;
+		out >> v;
+	}
+	std::vector<int> b;
+	{
+		XArchiverIn in;
+		in << v;
+		in >> b;
+	}
+	ASSERT_EQ(a,b);
+}
+
+TEST(XArchiveTest, ArrayTest)
+{
+	int a[3]={1,2,3};
+	XValue v;
+	{
+		XArchiverOut out;
+		out << a;
+		out >> v;
+	}
+	int b[3];
+	{
+		XArchiverIn in;
+		in << v;
+		in >> b;
+	}
+	ASSERT_TRUE(ArraysMatch(a,b));
+}
+
 }}}
