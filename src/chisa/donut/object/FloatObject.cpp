@@ -36,7 +36,7 @@ std::string FloatObject::reprImpl(Handler<Heap> const& heap) const
 	return std::string("float: ")+util::toString(value_);
 }
 
-Handler<const FloatObject> FloatObject::toFloatImpl(Handler<Heap> const& heap) const
+Handler<const FloatObject> FloatObject::toFloatObjectImpl() const
 {
 	return Handler<const FloatObject>::__internal__fromRawPointerWithoutCheck(this);
 }
