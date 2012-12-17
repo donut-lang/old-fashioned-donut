@@ -120,8 +120,8 @@ postfix
 	( '++' -> ^(POST_OP ADD $postfix)
 	| '--'	-> ^(POST_OP SUB $postfix)
 	| '.' n=name -> ^(DOT $postfix $n)
-	| '[' arl=arglist ']' -> ^(IDX $postfix $arl)
-	| '(' apl=arglist ')' -> ^(APPLY $postfix $apl)
+	| '[' e=expr ']' -> ^(IDX $postfix $e)
+	| '(' a=arglist ')' -> ^(APPLY $postfix $a)
 	)*
 	;
 primary
