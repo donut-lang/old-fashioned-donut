@@ -123,6 +123,9 @@ std::string Source::disasm( Instruction inst )
 	case PushCopy:
 		repl += "PushCopy";
 		break;
+	case ReplaceCopy:
+		repl += "ReplaceCopy";
+		break;
 	case Pop:
 		repl += "Pop";
 		break;
@@ -134,12 +137,6 @@ std::string Source::disasm( Instruction inst )
 		break;
 	case LoadObj:
 		repl += "LoadObj";
-		break;
-	case LoadLocal:
-		repl += "LoadLocal";
-		break;
-	case StoreLocal:
-		repl += "StoreLocal";
 		break;
 	case Apply:
 		repl += "Apply";
@@ -210,37 +207,37 @@ std::string Source::disasm( Instruction inst )
 template<>
 Instruction Source::constCode<bool>(bool const& val)
 {
-	return Inst::ConstBool | (val ? 1 : 0);
+	return (Inst::ConstBool) | (val ? 1 : 0);
 }
 
 template<>
 Instruction Source::constCode<int>(int const& val)
 {
-	return Inst::ConstInt | this->intTable_.regist(val);
+	return (Inst::ConstInt) | this->intTable_.regist(val);
 }
 
 template<>
 Instruction Source::constCode<float>(float const& val)
 {
-	return Inst::ConstFloat | this->floatTable_.regist(val);
+	return (Inst::ConstFloat) | this->floatTable_.regist(val);
 }
 
 template<>
 Instruction Source::constCode<Handler<donut::Closure> >(Handler<donut::Closure> const& val)
 {
-	return Inst::ConstClosure | this->closureTable_.regist(val);
+	return (Inst::ConstClosure) | this->closureTable_.regist(val);
 }
 
 template<>
 Instruction Source::constCode<std::nullptr_t>(std::nullptr_t const& null)
 {
-	return Inst::ConstNull;
+	return (Inst::ConstNull);
 }
 
 template<>
 Instruction Source::constCode<std::string>(std::string const& val)
 {
-	return Inst::ConstString | this->stringTable_.regist(val);
+	return (Inst::ConstString) | this->stringTable_.regist(val);
 }
 
 }}

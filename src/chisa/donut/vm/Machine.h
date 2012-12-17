@@ -51,7 +51,6 @@ public:
 struct Context final {
 	unsigned int time_;
 	std::vector<Handler<Object> > stack_;
-	std::vector<Handler<Object> > local_;
 	std::vector<Callchain> callStack_;
 	Context(Handler<Clock> const& clk);
 	Context(Handler<Clock> const& clk, Context const& other);
@@ -80,7 +79,6 @@ private: /* それへのアクセス手段の提供。 */
 	Handler<DonutClosureObject> const& closureObject();
 	Handler<Source> const& src();
 	Handler<Closure> const& closure();
-	std::vector<Handler<Object> >& local();
 	std::vector<Handler<Object> >& stack();
 	unsigned int stackBase();
 	std::vector<Callchain>& callStack();
