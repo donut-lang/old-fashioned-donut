@@ -67,5 +67,9 @@ void DonutClosureObject::loadImpl(Handler<Heap> const& heap, util::XValue const&
 	const_cast<Handler<Closure>&>(this->asm_) = this->src_->getClosure(this->index_);
 }
 
+Handler<DonutClosureObject> DonutClosureObject::tryCastToDonutClosureObjectImpl()
+{
+	return Handler<DonutClosureObject>::__internal__fromRawPointerWithoutCheck(this);
+}
 
 }}
