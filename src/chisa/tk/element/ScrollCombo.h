@@ -47,9 +47,9 @@ public:
 	virtual void idle(const float delta_ms) override;
 private:
 	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override;
-	virtual geom::Box onMeasure(geom::Box const& constraint) override;
-	virtual void onLayout(geom::Box const& size) override;
-	virtual void loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
+	virtual geom::Box measureImpl(geom::Box const& constraint) override;
+	virtual void layoutImpl(geom::Box const& size) override;
+	virtual void loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
 	virtual Handler<Element> getElementByIdImpl(std::string const& id) override;
 public:
 	virtual bool onScroll(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance) override;

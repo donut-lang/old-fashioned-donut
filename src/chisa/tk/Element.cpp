@@ -46,7 +46,7 @@ void Element::loadXML(element::ElementFactory* const factory, tinyxml2::XMLEleme
 		//firstには要素名が、secondにはnodeをパースして設定する関数オブジェクトが入ってる
 		it.second(element);
 	}
-	this->loadXMLimpl(factory, element);
+	this->loadXmlImpl(factory, element);
 }
 
 Handler<Element> Element::findRootElement()
@@ -87,7 +87,7 @@ std::string Element::toString() const
 
 geom::Box Element::measure(geom::Box const& constraint)
 {
-	return this->onMeasure(constraint);
+	return this->measureImpl(constraint);
 }
 
 void Element::render(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
@@ -106,7 +106,7 @@ void Element::render(gl::Canvas& canvas, geom::Area const& screenArea, geom::Are
 
 void Element::layout(geom::Box const& size)
 {
-	this->onLayout(size);
+	this->layoutImpl(size);
 	this->size(size);
 }
 
