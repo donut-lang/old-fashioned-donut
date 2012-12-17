@@ -32,6 +32,11 @@ TEST(DonutIfTest, FalseTest)
 	SOURCE_TEST_INT(2, "if(1!=1){1;}else{2;};");
 }
 
+TEST(DonutIfTest, ElifTest)
+{
+	SOURCE_TEST_INT(2, "if(1!=1){1;}elif(1==1){2;}else{3;};");
+}
+
 
 }}
 
