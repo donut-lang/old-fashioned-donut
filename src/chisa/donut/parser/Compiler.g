@@ -109,6 +109,7 @@ expr [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	| postop[$code] {$asmlist.swap($postop.asmlist);}
 	| assignop[$code] {$asmlist.swap($assignop.asmlist);}
 	| assign[$code] {$asmlist.swap($assign.asmlist);}
+	| block[$code] {$asmlist.swap($block.asmlist);}
 	| ^(unary_operation uobj=expr[$code] {
 		$asmlist.insert($asmlist.end(), $uobj.asmlist.begin(), $uobj.asmlist.end());
 		//メソッドの解決

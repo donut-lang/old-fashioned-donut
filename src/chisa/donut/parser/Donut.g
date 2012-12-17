@@ -129,7 +129,8 @@ primary
 	| SELF
 	| name -> ^(DOT SCOPE name)
 	| '(' expr ')' -> expr
-	| object
+	| (object)=> object
+	| block
 	;
 
 cond
@@ -139,8 +140,7 @@ cond
 		)
 	;
 
-
-block : '{' exprlist '}' -> exprlist;
+block: '{' exprlist '}' -> exprlist;
 
 name : IDENT;
 
