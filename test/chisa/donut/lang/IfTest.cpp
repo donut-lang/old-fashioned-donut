@@ -34,7 +34,7 @@ TEST(DonutIfTest, FalseTest)
 
 TEST(DonutIfTest, ElifTest)
 {
-	SOURCE_TEST_INT(2, "if(1!=1){1;}elif(1==1){2;}else{3;};");
+	SOURCE_TEST_INT(2, "z=3;if(z==1){1;}elif(z==2){2;}elif(z==3){}else{3;};");
 }
 
 

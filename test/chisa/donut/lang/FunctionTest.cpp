@@ -27,6 +27,11 @@ TEST(DonutFunctionTest, ReservedWord)
 	SOURCE_TEST_THROW("func(a,b);");
 }
 
+TEST(DonutFunctionTest, LiteralClosureTest)
+{
+	SOURCE_TEST_INT(3, "func(a,b){a+b}(1,2);");
+}
+
 TEST(DonutFunctionTest, ReturnTest)
 {
 	SOURCE_TEST_INT(3, "z = func(a,b){a+b;};z(1,2);");
@@ -55,7 +60,7 @@ TEST(DonutFunctionTest, ScopeHideTest)
 
 TEST(DonutFunctionTest, ClosureCountTest)
 {
-	SOURCE_TEST_INT(2, "a = 1; f = (func(){ b = 0; func(){ b++; }; })(); f(); f(); f();");
+	SOURCE_TEST_INT(2, "a = 1; f = func(){ b = 0; func(){ b++; }; }(); f(); f(); f();");
 }
 
 TEST(DonutFunctionTest, RecursiveTest)
