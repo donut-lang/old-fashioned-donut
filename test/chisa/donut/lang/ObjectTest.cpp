@@ -30,6 +30,15 @@ TEST(DonutObjectTest, EmptyObjectTest)
 //	ASSERT_NO_FATAL_FAILURE( obj.tryCast<BaseObject>() );
 }
 
+TEST(DonutObjectTest, LiteralTest)
+{
+	EXECUTE_SRC("{a=>1};");
+	ASSERT_TRUE(result->has(heap, "a"));
+	ASSERT_TRUE(result->isObject());
+	ASSERT_EQ(1, result->get(heap, "a")->toInt(heap));
+}
+
+
 }}
 
 

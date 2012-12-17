@@ -48,7 +48,6 @@ tokens {
 	PAIR;
 	
 	COND;
-	BRANCH;
 	FOR;
 }
 
@@ -134,8 +133,12 @@ primary
 	;
 
 cond
-	: 'if' '(' expr ')' a=block 'else' b=block -> ^(COND expr $a $b)
+	: 'if' '(' expr ')' a=block 'else'
+		(b=block -> ^(COND expr $a $b)
+		|c=cond -> ^(COND expr $a $c)
+		)
 	;
+
 
 block : '{' exprlist '}' -> exprlist;
 
