@@ -113,7 +113,7 @@ def build(bld):
 		features = 'cxx cprogram',
 		source = DONUT_SRC,
 		target = 'donut',
-		use=['PPROF','PTHREAD','BOOST','ICU','ANTLR'])	
+		use=['PPROF','PTHREAD','BOOST','ICU','ANTLR'])
 	bld(
 			features = 'cxx cprogram',
 			source = MAIN_SRC,
