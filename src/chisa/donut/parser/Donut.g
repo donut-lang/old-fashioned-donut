@@ -11,7 +11,6 @@ tokens {
 	VARS;
 	ARGS;
 	CONT;
-	IDX;
 	APPLY;
 	
 	ASSIGN;
@@ -120,7 +119,7 @@ postfix
 	( '++' -> ^(POST_OP ADD $postfix)
 	| '--'	-> ^(POST_OP SUB $postfix)
 	| '.' n=name -> ^(DOT $postfix $n)
-	| '[' e=expr ']' -> ^(IDX $postfix $e)
+	| '[' e=expr ']' -> ^(DOT $postfix $e)
 	| '(' a=arglist ')' -> ^(APPLY $postfix $a)
 	)*
 	;

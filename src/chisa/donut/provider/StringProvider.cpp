@@ -52,6 +52,9 @@ StringProvider::StringProvider(Handler<Heap> const& heap )
 		}
 		return ss.str();
 	}));
+	this->registerPureNativeClosure("toString", std::function<StringObject*(StringObject*)>([&](StringObject* self) {
+		return self;
+	}));
 }
 
 }}
