@@ -78,8 +78,8 @@ public:
 	inline void onDiscardHistoryNotify(Handler<Heap> const& heap){ if(isObject()){ this->onDiscardHistoryNotifyImpl(heap); } };
 protected: /* 実装すべきもの */
 	virtual std::string reprImpl(Handler<Heap> const& heap) const = 0;
-	virtual Handler<const StringObject> toStringImpl(Handler<Heap> const& heap) const;
-	virtual Handler<const FloatObject> toFloatImpl(Handler<Heap> const& heap) const;
+	virtual Handler<const StringObject> toStringObjectImpl() const;
+	virtual Handler<const FloatObject> toFloatObjectImpl() const;
 	virtual std::string providerNameImpl(Handler<Heap> const& heap) const = 0;
 	virtual bool hasImpl(Handler<Heap> const& heap, std::string const& name) const = 0;
 	virtual bool hasOwnImpl(Handler<Heap> const& heap, std::string const& name) const = 0;

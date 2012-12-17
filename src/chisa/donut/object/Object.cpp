@@ -55,7 +55,7 @@ std::string Object::toString(Handler<Heap> const& heap) const
 {
 	switch(this->tag()){
 	case Tag::Obj: {
-		Handler<const StringObject> val(this->toStringImpl(heap));
+		Handler<const StringObject> val(this->toStringObjectImpl());
 		if(val){
 			return val->value();
 		}else{
@@ -93,7 +93,7 @@ float Object::toFloat(Handler<Heap> const& heap) const
 {
 	switch(this->tag()){
 	case Tag::Obj: {
-		Handler<const FloatObject> val(this->toFloatImpl(heap));
+		Handler<const FloatObject> val(this->toFloatObjectImpl());
 		if(val){
 			return val->value();
 		}else{
@@ -238,11 +238,11 @@ bool Object::hasOwn(Handler<Heap> const& heap, int const& idx) const
 	return this->has(heap, toName(idx));
 }
 
-Handler<const StringObject> Object::toStringImpl(Handler<Heap> const& heap) const
+Handler<const StringObject> Object::toStringObjectImpl() const
 {
 	return Handler<const StringObject>();
 }
-Handler<const FloatObject> Object::toFloatImpl(Handler<Heap> const& heap) const
+Handler<const FloatObject> Object::toFloatObjectImpl() const
 {
 	return Handler<const FloatObject>();
 }

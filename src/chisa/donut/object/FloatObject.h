@@ -33,7 +33,7 @@ public:
 protected:
 	virtual std::string reprImpl(Handler<Heap> const& heap) const override final;
 protected:
-	virtual Handler<const FloatObject> toFloatImpl(Handler<Heap> const& heap) const override final;
+	virtual Handler<const FloatObject> toFloatObjectImpl() const override final;
 	virtual void onBackNotifyImpl(Handler<Heap> const& heap) override final;
 	virtual void onForwardNotifyImpl(Handler<Heap> const& heap) override final;
 	virtual void onDiscardHistoryNotifyImpl(Handler<Heap> const& heap) override final;
