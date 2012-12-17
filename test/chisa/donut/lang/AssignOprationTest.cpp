@@ -22,20 +22,20 @@
 namespace chisa {
 namespace donut {
 
-TEST(DonutRunTest, NullTest)
+TEST(AssignOperationTest, NullTest)
 {
 	EXECUTE_SRC("");
 	ASSERT_TRUE(result->isNull());
 	ASSERT_FALSE(result->isObject());
 }
 
-TEST(DonutRunTest, AssignTest)
+TEST(AssignOperationTest, AssignTest)
 {
 	SOURCE_TEST_INT(1, "test=1;");
 	SOURCE_TEST_INT(1, "t={test=>0};t.test=1;");
 }
 
-TEST(DonutRunTest, ObjectTest)
+TEST(AssignOperationTest, ObjectTest)
 {
 	EXECUTE_SRC("{a=>1};");
 	ASSERT_TRUE(result->has(heap, "a"));
@@ -43,7 +43,7 @@ TEST(DonutRunTest, ObjectTest)
 	ASSERT_EQ(1, result->get(heap, "a")->toInt(heap));
 }
 
-TEST(DonutRunTest, ArrayTest)
+TEST(AssignOperationTest, ArrayTest)
 {
 	EXECUTE_SRC("[2,3,1];");
 	ASSERT_TRUE(result->has(heap, "0"));
@@ -58,50 +58,38 @@ TEST(DonutRunTest, ArrayTest)
 	ASSERT_EQ(1, result->get(heap, 2)->toInt(heap));
 }
 
-TEST(DonutRunTest, AddTest)
+TEST(AssignOperationTest, AddTest)
 {
 	SOURCE_TEST_INT(3, "1+2;")
 }
 
-TEST(DonutRunTest, AddTripleTest)
+TEST(AssignOperationTest, AddTripleTest)
 {
 	SOURCE_TEST_INT(4, "2+1+1;")
 }
 
-TEST(DonutRunTest, AssignOpTest)
+TEST(AssignOperationTest, AssignOpTest)
 {
 	SOURCE_TEST_INT(1, "test=0; test+=1;");
 	SOURCE_TEST_INT(1, "test=0; test+=1; test;");
 	SOURCE_TEST_INT(1, "t={}; t.test=0; t.test+=1;");
 	SOURCE_TEST_INT(1, "t={}; t.test=0; t.test+=1; t.test;");
-	SOURCE_TEST_INT(1, "t={}; i=\"t\"; t[i]=0; t[i]+=1;");
-	SOURCE_TEST_INT(1, "t={}; i=\"t\"; t[i]=0; t[i]+=1; t[i];");
-	SOURCE_TEST_INT(1, "t=['1']; i=\"t\"; t[i]=0; t[i]+=1;");
-	SOURCE_TEST_INT(1, "t=['1']; i=\"t\"; t[i]=0; t[i]+=1; t[i];");
 }
 
-TEST(DonutRunTest, PostOpTest)
+TEST(AssignOperationTest, PostOpTest)
 {
 	SOURCE_TEST_INT(0, "test=0; test++;");
 	SOURCE_TEST_INT(1, "test=0; test++; test;");
 	SOURCE_TEST_INT(0, "t={}; t.test=0; t.test++;");
 	SOURCE_TEST_INT(1, "t={}; t.test=0; t.test++; t.test;");
-	SOURCE_TEST_INT(0, "t={}; i=\"t\"; t[i]=0; t[i]++;");
-	SOURCE_TEST_INT(1, "t={}; i=\"t\"; t[i]=0; t[i]++; t[i];");
-	SOURCE_TEST_INT(0, "t=['1']; i=\"t\"; t[i]=0; t[i]++;");
-	SOURCE_TEST_INT(1, "t=['1']; i=\"t\"; t[i]=0; t[i]++; t[i]");
 }
 
-TEST(DonutRunTest, PreOpTest)
+TEST(AssignOperationTest, PreOpTest)
 {
 	SOURCE_TEST_INT(1, "test=0; ++test;");
 	SOURCE_TEST_INT(1, "test=0; ++test; test;");
 	SOURCE_TEST_INT(1, "t={}; t.test=0; ++t.test;");
 	SOURCE_TEST_INT(1, "t={}; t.test=0; ++t.test; t.test;");
-	SOURCE_TEST_INT(1, "t={}; i=\"t\"; t[i]=0; ++t[i];");
-	SOURCE_TEST_INT(1, "t={}; i=\"t\"; t[i]=0; ++t[i]; t[i];");
-	SOURCE_TEST_INT(1, "t=['1']; i=\"t\"; t[i]=0; ++t[i];");
-	SOURCE_TEST_INT(1, "t=['1']; i=\"t\"; t[i]=0; ++t[i]; t[i]");
 }
 
 }}
