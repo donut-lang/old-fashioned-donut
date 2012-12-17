@@ -47,7 +47,8 @@ tokens {
 	OBJECT;
 	PAIR;
 	
-	IF;
+	COND;
+	BRANCH;
 	FOR;
 }
 
@@ -63,13 +64,13 @@ program : exprlist -> ^(CLOS VARS exprlist);
 exprlist : expr? ((';')+ expr)* (';')? -> ^(CONT expr*);
 
 expr
-	: FUNC '(' varlist ')' '{' exprlist '}' -> ^(CLOS varlist exprlist)
-	| 'if' '(' expr ')' '{' a=exprlist '}' 'else' '{' b=exprlist '}' -> ^(IF expr $a $b)
-	| 'for' '(' fa=expr? ';' fb=expr? ';' fc=expr? ')' '{' fd=exprlist '}' -> ^(FOR ^(CONT $fa?) ^(CONT $fb?) ^(CONT $fc?) $fd)
-	| 'while' '(' fb=expr? ')' '{' fd=exprlist '}' -> ^(FOR ^(CONT) ^(CONT $fb) ^(CONT) $fd)
+	: expr8
+	| cond
+	| 'for' '(' fa=expr? ';' fb=expr? ';' fc=expr? ')' fd=block -> ^(FOR ^(CONT $fa?) ^(CONT $fb?) ^(CONT $fc?) $fd)
+	| 'while' '(' fb=expr? ')' fd=block -> ^(FOR ^(CONT) ^(CONT $fb) ^(CONT) $fd)
 	| RETURN expr -> ^(RETURN expr)
 	| INTERRUPT expr -> ^(INTERRUPT expr)
-	| expr8;
+	;
 
 expr8 : (a=expr7->$a)
 	( '='  b=expr -> ^(ASSIGN $expr8 $b)
@@ -132,6 +133,11 @@ primary
 	| object
 	;
 
+cond
+	: 'if' '(' expr ')' a=block 'else' b=block -> ^(COND expr $a $b)
+	;
+
+block : '{' exprlist '}' -> exprlist;
 
 name : IDENT;
 
@@ -148,12 +154,11 @@ literal
 	: numeric_literal
 	| boolean_literal
 	| string_literal
-	| 'null'
+	| NULL_LITERAL
+	| FUNC '(' varlist ')' block -> ^(CLOS varlist block)
 	;
 
-boolean_literal
-	: 'true'
-	| 'false';
+boolean_literal : TRUE_LITERAL | FALSE_LITERAL;
 
 numeric_literal
 	: HEX_LITERAL
@@ -167,6 +172,9 @@ string_literal : STRING_SINGLE | STRING_DOUBLE;
 // Lexer
 //---------------------------------------------------------------------------------------------------------------------
 
+TRUE_LITERAL: 'true';
+FALSE_LITERAL: 'false';
+NULL_LITERAL: 'null';
 SELF: 'self';
 FUNC: 'func';
 RETURN: 'return';
@@ -217,17 +225,13 @@ OCT_LITERAL :
 INT_LITERAL : NONZERO_DIGIT DIGIT*;
 
 FLOAT_LITERAL
-    :   ('0'..'9')+ '.' ('0'..'9')* EXPONENT?
-    |   '.' ('0'..'9')+ EXPONENT?
-    |   ('0'..'9')+ EXPONENT
-    ;
+	:('0'..'9')+ '.' ('0'..'9')* EXPONENT?
+	|'.' ('0'..'9')+ EXPONENT?
+	|('0'..'9')+ EXPONENT
+	;
 
-fragment
-DIGIT :
-  '0'..'9';
-fragment
-NONZERO_DIGIT :
-  '1'..'9';
+fragment DIGIT : '0'..'9';
+fragment NONZERO_DIGIT : '1'..'9';
 fragment EXPONENT
 	: ('e'|'E') ('+'|'-')? ('0'..'9')+ ;
 fragment HEX_DIGIT

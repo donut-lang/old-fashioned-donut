@@ -102,7 +102,7 @@ expr [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	: literal[$code] { $asmlist.swap($literal.asmlist); }
 	| apply[$code] { $asmlist.swap($apply.asmlist); }
 	| loop[$code] { $asmlist.swap($loop.asmlist); }
-	| branch[$code] { $asmlist.swap($branch.asmlist); }
+	| cond[$code] { $asmlist.swap($cond.asmlist); }
 	| return_[$code] { $asmlist.swap($return_.asmlist); }
 	| interrupt[$code] { $asmlist.swap($interrupt.asmlist); }
 	| preop[$code] {$asmlist.swap($preop.asmlist);}
@@ -207,7 +207,7 @@ postop [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist
 	})
 	| ^(POST_OP operation ^(DOT postexpr=expr[$code] ac=accessor[$code]) {
 		//あとで値になる部分のnullを設定する
-		$asmlist.push_back(Inst::Push | $code->constCode<nullptr_t>(0));
+		$asmlist.push_back(Inst::Push | $code->constCode<nullptr_t>(nullptr));
 		//設定先を取得
 		$asmlist.insert($asmlist.end(), $postexpr.asmlist.begin(), $postexpr.asmlist.end());
 		$asmlist.insert($asmlist.end(), $ac.asmlist.begin(), $ac.asmlist.end());
@@ -341,8 +341,8 @@ apply [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist 
 	}
 	;
 
-branch [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
-	: ^(IF ifcond=expr[$code] ift=block[$code] iff=block[$code])
+cond [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
+	: ^(COND ifcond=expr[$code] ift=block[$code] iff=block[$code])
 	{
 		$asmlist.insert($asmlist.end(), $ifcond.asmlist.begin(), $ifcond.asmlist.end());
 		$asmlist.push_back(Inst::BranchFalse | $ift.asmlist.size()+1);
@@ -367,15 +367,15 @@ loop [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	;
 
 literal [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
-	: 'true'
+	: TRUE_LITERAL
 	{
 		$asmlist.push_back(Inst::Push | $code->constCode<bool>(true));
 	}
-	| 'false'
+	| FALSE_LITERAL
 	{
 		$asmlist.push_back(Inst::Push | $code->constCode<bool>(false));
 	}
-	| 'null'
+	| NULL_LITERAL
 	{
 		$asmlist.push_back(Inst::Push | $code->constCode<std::nullptr_t>(nullptr));
 	}
