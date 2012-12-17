@@ -129,7 +129,7 @@ Handler<Element> ElementFactory::parseTree(HandlerW<Element> parent, XMLElement*
 		throw logging::Exception(__FILE__,__LINE__, "Unknwon Element: %s", name);
 	}
 	Handler<Element> elm(it->second(this->log(), this->world(), parent));
-	elm->loadXML(this, top);
+	elm->loadXml(this, top);
 	return elm;
 }
 

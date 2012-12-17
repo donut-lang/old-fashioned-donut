@@ -40,7 +40,7 @@ void Element::idle(const float delta_ms)
 	}
 }
 
-void Element::loadXML(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
+void Element::loadXml(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
 	for(auto it : this->attrMap_){
 		//firstには要素名が、secondにはnodeをパースして設定する関数オブジェクトが入ってる
