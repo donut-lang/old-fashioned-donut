@@ -64,7 +64,7 @@ public: /* ツリー操作 */
 	virtual Handler<Element> getChildAt(const size_t index) const = 0;
 	virtual size_t getChildCount() const = 0;
 public: /* 木の生成 */
-	void loadXML(element::ElementFactory* const factory, tinyxml2::XMLElement* const element);
+	void loadXml(element::ElementFactory* const factory, tinyxml2::XMLElement* const element);
 public: /* バックグラウンドタスク */
 	virtual void idle(const float delta_ms);
 public: /* 実装メソッド */
