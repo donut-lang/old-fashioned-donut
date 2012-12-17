@@ -17,6 +17,8 @@
  */
 
 #include "NativeObject.h"
+#include "StringObject.h"
+#include "FloatObject.h"
 #include "../../util/StringUtil.h"
 #include "../Exception.h"
 #include "Heap.h"
@@ -30,24 +32,9 @@ NativeObject::NativeObject(std::string const& providerName)
 {
 }
 
-std::string NativeObject::toStringImpl(Handler<Heap> const& heap) const
+std::string NativeObject::reprImpl(Handler<Heap> const& heap) const
 {
 	return util::format("(NativeObject %p)", this);
-}
-
-int NativeObject::toIntImpl(Handler<Heap> const& heap) const
-{
-	throw DonutException(__FILE__, __LINE__, "Failed to NativeObject to int.");
-}
-
-float NativeObject::toFloatImpl(Handler<Heap> const& heap) const
-{
-	throw DonutException(__FILE__, __LINE__, "Failed to NativeObject to float.");
-}
-
-bool NativeObject::toBoolImpl(Handler<Heap> const& heap) const
-{
-	throw DonutException(__FILE__, __LINE__, "Failed to NativeObject to bool.");
 }
 
 bool NativeObject::hasImpl(Handler<Heap> const& heap, std::string const& name) const

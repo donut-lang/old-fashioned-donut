@@ -82,25 +82,14 @@ IntProvider::IntProvider(Handler<Heap> const& heap)
 	}));
 }
 
-std::string IntProvider::toString(const Object* ptr) const
+std::string IntProvider::repr(const Object* ptr) const
 {
-	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast Integer to String implicitly. Use toString()");
+	return std::string("int:")+util::toString(IntProvider::fromPointer(ptr));
 }
 
 int IntProvider::toInt(const Object* ptr) const
 {
 	return fromPointer(ptr);
-}
-
-float IntProvider::toFloat(const Object* ptr) const
-{
-	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast Integer to Float implicitly. Use toFloat()");
-}
-
-bool IntProvider::toBool(const Object* ptr) const
-{
-
-	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast Integer to Boolean.");
 }
 
 Handler<Object> IntProvider::create( int const& val )

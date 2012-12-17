@@ -20,6 +20,7 @@
 #include "DonutClosureObject.h"
 #include "../source/Source.h"
 #include "../Exception.h"
+#include "../../util/StringUtil.h"
 
 namespace chisa {
 namespace donut {
@@ -32,6 +33,11 @@ DonutClosureObject::DonutClosureObject(std::string const& providerName)
 ,index_(-1)
 ,asm_(nullptr)
 {
+}
+
+std::string DonutClosureObject::reprImpl(Handler<Heap> const& heap) const
+{
+	return util::format("(DonutClosureObject %p)", this);
 }
 
 void DonutClosureObject::bootstrap(Handler<Heap> const& heap, Handler<Source> const& src, unsigned int const& closureIndex, Handler<Object> const& scope)

@@ -288,14 +288,15 @@ expr [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	;
 
 index [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
-	: ^(IDX obj=expr[$code] ex=arglist[$code])
+	: ^(IDX target=expr[$code] idx=expr[$code])
 	{
-		$asmlist.insert($asmlist.end(), $obj.asmlist.begin(), $obj.asmlist.end());
+		$asmlist.insert($asmlist.end(), $target.asmlist.begin(), $target.asmlist.end());
+		$asmlist.insert($asmlist.end(), $idx.asmlist.begin(), $idx.asmlist.end());
 		$asmlist.push_back(Inst::PushCopy);
-		$asmlist.push_back(Inst::Push | $code->constCode<string>("opIdxGet"));
+		$asmlist.push_back(Inst::Push | $code->constCode<string>("toString"));
 		$asmlist.push_back(Inst::LoadObj);
-		$asmlist.insert($asmlist.end(), $ex.asmlist.begin(), $ex.asmlist.end());
-		$asmlist.push_back(Inst::Apply | $ex.count);
+		$asmlist.push_back(Inst::Apply | 1);
+		$asmlist.push_back(Inst::LoadObj);
 	}
 	;
 
@@ -344,7 +345,7 @@ loop [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	{
 		$asmlist.insert($asmlist.end(), $forstart.asmlist.begin(), $forstart.asmlist.end());
 		$asmlist.insert($asmlist.end(), $forcond.asmlist.begin(), $forcond.asmlist.end());
-		$asmlist.push_back(Inst::BranchFalse | $forblock.asmlist.size() + $fornext.asmlist.size()+3);
+		$asmlist.push_back(Inst::BranchFalse | ($forblock.asmlist.size() + $fornext.asmlist.size()+3));
 		$asmlist.push_back(Inst::Pop);
 		$asmlist.insert($asmlist.end(), $forblock.asmlist.begin(), $forblock.asmlist.end());
 		$asmlist.insert($asmlist.end(), $fornext.asmlist.begin(), $fornext.asmlist.end());

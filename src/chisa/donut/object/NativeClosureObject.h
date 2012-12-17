@@ -33,6 +33,8 @@ public:
 	PureNativeClosureObject( std::string const& providerName):NativeClosureObject(providerName){}
 	virtual ~PureNativeClosureObject() noexcept {};
 	void bootstrap( std::string const& objectProviderName, std::string const& closureName, Signature f );
+protected:
+	virtual std::string reprImpl(Handler<Heap> const& heap) const override;
 private:
 	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override final;
 	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override final;
@@ -49,6 +51,8 @@ public:
 	ReactiveNativeClosureObject( std::string const& providerName):NativeClosureObject(providerName){}
 	virtual ~ReactiveNativeClosureObject() noexcept {};
 	void bootstrap( std::string const& objectProviderName, std::string const& closureName, Signature f );
+protected:
+	virtual std::string reprImpl(Handler<Heap> const& heap) const override;
 private:
 	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override final;
 	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override final;

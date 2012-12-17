@@ -33,24 +33,9 @@ DonutObject::DonutObject(std::string const& providerName)
 
 }
 
-std::string DonutObject::toStringImpl(Handler<Heap> const& heap) const
+std::string DonutObject::reprImpl(Handler<Heap> const& heap) const
 {
 	return util::format("(DonutObject %p)", this);
-}
-
-int DonutObject::toIntImpl(Handler<Heap> const& heap) const
-{
-	throw DonutException(__FILE__, __LINE__, "Failed to convert object to int.");
-}
-
-float DonutObject::toFloatImpl(Handler<Heap> const& heap) const
-{
-	throw DonutException(__FILE__, __LINE__, "Failed to convert to float.");
-}
-
-bool DonutObject::toBoolImpl(Handler<Heap> const& heap) const
-{
-	throw DonutException(__FILE__, __LINE__, "Failed to convert to bool.");
 }
 
 bool DonutObject::hasImpl(Handler<Heap> const& heap, std::string const& name) const

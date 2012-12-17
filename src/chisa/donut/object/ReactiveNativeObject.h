@@ -37,10 +37,7 @@ private:
 	int findUpperIndex( timestamp_t const& t );
 	int findLowerIndex( timestamp_t const& t );
 protected:
-	virtual std::string toStringImpl(Handler<Heap> const& heap) const override final;
-	virtual int toIntImpl(Handler<Heap> const& heap) const override final;
-	virtual float toFloatImpl(Handler<Heap> const& heap) const override final;
-	virtual bool toBoolImpl(Handler<Heap> const& heap) const override final;
+	virtual std::string reprImpl(Handler<Heap> const& heap) const override final;
 public:
 	virtual void onBackNotifyImpl(Handler<Heap> const& heap) override final;
 	virtual void onForwardNotifyImpl(Handler<Heap> const& heap) override final;

@@ -28,10 +28,12 @@ private:
 public:
 	StringObject(std::string const& providerName);
 	virtual ~StringObject() noexcept = default;
-	virtual std::string toStringImpl(Handler<Heap> const& heap) const override final;
-	virtual int toIntImpl(Handler<Heap> const& heap) const override final;
-	virtual float toFloatImpl(Handler<Heap> const& heap) const override final;
-	virtual bool toBoolImpl(Handler<Heap> const& heap) const override final;
+public:
+	std::string value() const noexcept { return this->str_; };
+protected:
+	virtual std::string reprImpl(Handler<Heap> const& heap) const override final;
+protected:
+	virtual Handler<const StringObject> toStringImpl(Handler<Heap> const& heap) const override final;
 	virtual void onBackNotifyImpl(Handler<Heap> const& heap) override final;
 	virtual void onForwardNotifyImpl(Handler<Heap> const& heap) override final;
 	virtual void onDiscardHistoryNotifyImpl(Handler<Heap> const& heap) override final;
