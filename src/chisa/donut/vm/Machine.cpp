@@ -391,7 +391,9 @@ Handler<Object> Machine::run()
 			break;
 		}
 		default:
-			throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Unknwon opcode: closure<%s>:%08x", closureObject()->repr(heap_).c_str(), this->pc()-1);
+			throw DonutException(__FILE__, __LINE__,
+					"[BUG] Oops. Unknwon opcode: closure<%s>@%08x=%08x => (%02x,%02x,%04x)",
+					closureObject()->repr(heap_).c_str(), this->pc()-1, inst,opcode,constKind,constIndex);
 		}
 	}
 	Handler<Object> result(this->popStack());
