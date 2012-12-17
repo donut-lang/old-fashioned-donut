@@ -330,13 +330,10 @@ Handler<Object> Machine::run()
 			Handler<Object> closureObj = this->popStack();
 			Handler<Object> destObj = this->popStack();
 
-			//XXX: ちゃんと型を使う
-			if(!closureObj->isObject()){
-				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. \"%s\" is not callable.", closureObj->repr(heap_).c_str());
-			} else if ( Handler<DonutClosureObject> closObj = closureObj.tryCast<DonutClosureObject>() ) {
-				this->enterClosure(destObj, closObj, obj);
-			} else if ( Handler<NativeClosureObject> clos = closureObj.tryCast<NativeClosureObject>() ) {
-				this->pushStack( clos->apply(heap_, destObj, obj) );
+			if( Handler<NativeClosureObject> nclos = closureObj->tryCastToNativeClosureObject() ){
+				this->pushStack( nclos->apply(heap_, destObj, obj) );
+			}else if( Handler<DonutClosureObject> dclos = closureObj->tryCastToDonutClosureObject() ){
+				this->enterClosure(destObj, dclos, obj);
 			}else{
 				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. \"%s\" is not callable.", closureObj->repr(heap_).c_str());
 			}

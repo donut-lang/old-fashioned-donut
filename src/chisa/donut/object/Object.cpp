@@ -127,6 +127,17 @@ bool Object::toBool(Handler<Heap> const& heap) const
 	}
 }
 
+Handler<NativeClosureObject> Object::tryCastToNativeClosureObject()
+{
+	return this->isObject() ? this->tryCastToNativeClosureObjectImpl() : Handler<NativeClosureObject>();
+}
+
+Handler<DonutClosureObject> Object::tryCastToDonutClosureObject()
+{
+	return this->isObject() ? this->tryCastToDonutClosureObjectImpl() : Handler<DonutClosureObject>();
+}
+
+
 bool Object::has(Handler<Heap> const& heap, std::string const& name) const
 {
 	switch(this->tag()){
@@ -246,6 +257,12 @@ Handler<const FloatObject> Object::toFloatObjectImpl() const
 {
 	return Handler<const FloatObject>();
 }
-
-
+Handler<NativeClosureObject> Object::tryCastToNativeClosureObjectImpl()
+{
+	return Handler<NativeClosureObject>();
+}
+Handler<DonutClosureObject> Object::tryCastToDonutClosureObjectImpl()
+{
+	return Handler<DonutClosureObject>();
+}
 }}

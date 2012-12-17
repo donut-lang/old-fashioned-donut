@@ -77,6 +77,10 @@ void NativeObject::load( Handler<Heap> const& heap, util::XValue const& data )
 	this->loadImpl( heap, obj->get<XValue>("content") );
 }
 
+Handler<NativeClosureObject> NativeClosureObject::tryCastToNativeClosureObjectImpl()
+{
+	return Handler<NativeClosureObject>::__internal__fromRawPointerWithoutCheck(this);
+}
 
 }}
 

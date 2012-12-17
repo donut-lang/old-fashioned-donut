@@ -63,6 +63,8 @@ public: //すべてのオブジェクトに出来なければならないこと
 	Handler<Object> get(Handler<Heap> const& heap, int const& idx) const;
 	std::string providerName(Handler<Heap> const& heap) const;
 	object_desc_t toDescriptor() const noexcept;
+	Handler<NativeClosureObject> tryCastToNativeClosureObject();
+	Handler<DonutClosureObject> tryCastToDonutClosureObject();
 public:
 	inline bool isObject() const noexcept { return Tag::Obj==tag(); };
 	inline bool isNull() const noexcept { return Tag::Null==tag(); };
@@ -80,6 +82,8 @@ protected: /* 実装すべきもの */
 	virtual std::string reprImpl(Handler<Heap> const& heap) const = 0;
 	virtual Handler<const StringObject> toStringObjectImpl() const;
 	virtual Handler<const FloatObject> toFloatObjectImpl() const;
+	virtual Handler<NativeClosureObject> tryCastToNativeClosureObjectImpl();
+	virtual Handler<DonutClosureObject> tryCastToDonutClosureObjectImpl();
 	virtual std::string providerNameImpl(Handler<Heap> const& heap) const = 0;
 	virtual bool hasImpl(Handler<Heap> const& heap, std::string const& name) const = 0;
 	virtual bool hasOwnImpl(Handler<Heap> const& heap, std::string const& name) const = 0;
@@ -251,6 +255,7 @@ public:
 protected:
 	virtual std::string reprImpl(Handler<Heap> const& heap) const = 0;
 protected:
+	virtual Handler<NativeClosureObject> tryCastToNativeClosureObjectImpl() override final;
 	virtual bool hasImpl(Handler<Heap> const& heap, std::string const& name) const override final;
 	virtual bool hasOwnImpl(Handler<Heap> const& heap, std::string const& name) const override final;
 	virtual Handler<Object> setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> obj) override final;
