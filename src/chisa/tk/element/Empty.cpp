@@ -34,7 +34,7 @@ Empty::~Empty() noexcept
 }
 
 
-void Empty::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElement* element)
+void Empty::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* element)
 {
 
 }
@@ -49,12 +49,12 @@ void Empty::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::A
 	//何も描画しない
 }
 
-geom::Box Empty::onMeasure(geom::Box const& constraint)
+geom::Box Empty::measureImpl(geom::Box const& constraint)
 {
 	return geom::Box(geom::Unspecified, geom::Unspecified);
 }
 
-void Empty::onLayout(geom::Box const& size)
+void Empty::layoutImpl(geom::Box const& size)
 {
 	//何もしない
 }

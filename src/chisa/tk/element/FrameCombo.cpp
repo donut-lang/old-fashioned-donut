@@ -69,7 +69,7 @@ void FrameCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, ge
 	}
 }
 
-geom::Box FrameCombo::onMeasure(geom::Box const& constraint)
+geom::Box FrameCombo::measureImpl(geom::Box const& constraint)
 {
 	if( this->getChildCount() > 0 ){
 		Handler<Element>& elm = this->elements_.back();
@@ -78,7 +78,7 @@ geom::Box FrameCombo::onMeasure(geom::Box const& constraint)
 	return constraint;
 }
 
-void FrameCombo::onLayout(geom::Box const& size)
+void FrameCombo::layoutImpl(geom::Box const& size)
 {
 	if( this->getChildCount() > 0 ){
 		Handler<Element>& elm = this->elements_.back();
@@ -86,7 +86,7 @@ void FrameCombo::onLayout(geom::Box const& size)
 	}
 }
 
-void FrameCombo::loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
+void FrameCombo::loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
 	for( tinyxml2::XMLElement* e = element->FirstChildElement(); e; e=e->NextSiblingElement() ){
 		this->elements_.push_back( factory->parseTree(this->self(), e) );

@@ -61,7 +61,7 @@ void MarginCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, g
 	}
 }
 
-geom::Box MarginCombo::onMeasure(geom::Box const& constraint)
+geom::Box MarginCombo::measureImpl(geom::Box const& constraint)
 {
 	if(this->child_){
 		return this->child_->measure( constraint-this->margin_.totalSpace() ) + this->margin_.totalSpace();
@@ -69,14 +69,14 @@ geom::Box MarginCombo::onMeasure(geom::Box const& constraint)
 	return constraint;
 }
 
-void MarginCombo::onLayout(geom::Box const& size)
+void MarginCombo::layoutImpl(geom::Box const& size)
 {
 	if(this->child_){
 		this->child_->layout( size-this->margin_.totalSpace() );
 	}
 }
 
-void MarginCombo::loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
+void MarginCombo::loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
 	this->child_=factory->parseTree(this->self(), element->FirstChildElement());
 }

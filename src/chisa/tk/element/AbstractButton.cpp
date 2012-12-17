@@ -104,18 +104,18 @@ Handler<gl::TextDrawable> AbstractButton::textImage()
 	}
 	return this->textImage_;
 }
-geom::Box AbstractButton::onMeasure(geom::Box const& constraint)
+geom::Box AbstractButton::measureImpl(geom::Box const& constraint)
 {
 	return this->textImage()->size()+this->padding_.totalSpace()+this->margin_.totalSpace()+geom::Distance(shadowDepth_,shadowDepth_);
 }
 
-void AbstractButton::onLayout(geom::Box const& size)
+void AbstractButton::layoutImpl(geom::Box const& size)
 {
 	//中心になるようにオフセットを設定する。
 	this->renderOffset_ = ((size-this->margin_.totalSpace()-this->padding_.totalSpace()-this->textImage_->size()-geom::Distance(shadowDepth_,shadowDepth_))/2)+this->padding_.offset();
 }
 
-void AbstractButton::loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
+void AbstractButton::loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
 }
 

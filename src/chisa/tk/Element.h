@@ -47,14 +47,13 @@ private: /* クラス固定 */
 	util::VectorMap<std::string, std::function<void(tinyxml2::XMLElement*)> > attrMap_; //コンストラクタでセット
 public: /* ツリー */
 	DEFINE_MEMBER(protected, private, HandlerW<World>, world); // 属する世界
-	DEFINE_MEMBER(public, private, HandlerW<Element>, root); //Rootエレメント
 	DEFINE_MEMBER(public, private, HandlerW<Element>, parent); //親
 	DEFINE_MEMBER(public, private, std::string, id); //要素に付けられたID
 public: /* 画面描画情報 */
 	DEFINE_MEMBER(public, private, geom::Box, size); //現在の大きさ
 	DEFINE_MEMBER(public, private, geom::Area, screenArea); //画面上の占める位置
 	DEFINE_MEMBER(protected, private, geom::Area, drawnArea); //大きさの中で、レンダリングされている部分
-public: /* レンダリング */
+public: /* レンダリング(非virtual) */
 	void render(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area);
 	geom::Box measure(geom::Box const& constraint);
 	void layout(geom::Box const& size);
@@ -69,11 +68,11 @@ public: /* 木の生成 */
 public: /* バックグラウンドタスク */
 	virtual void idle(const float delta_ms);
 public: /* 実装メソッド */
-	virtual std::string toString() const = 0;
+	virtual std::string toString() const;
 	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) = 0;
-	virtual geom::Box onMeasure(geom::Box const& constraint) = 0;
-	virtual void onLayout(geom::Box const& size) = 0;
-	virtual void loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) = 0;
+	virtual geom::Box measureImpl(geom::Box const& constraint) = 0;
+	virtual void layoutImpl(geom::Box const& size) = 0;
+	virtual void loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) = 0;
 	virtual Handler<Element> getElementByIdImpl(std::string const& id) = 0;
 protected:
 	Element(logging::Logger& log, HandlerW<World> world, HandlerW<Element> parent);

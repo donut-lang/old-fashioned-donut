@@ -74,7 +74,7 @@ void SplitCombo::addChild(SplitDef const& def, Handler<Element> element)
 	this->children().push_back(SplitCtx(def, element));
 }
 
-void SplitCombo::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElement* top)
+void SplitCombo::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* top)
 {
 	const std::string name(top->Name());
 	if(name == "horizontal"){
@@ -168,7 +168,7 @@ void SplitCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, ge
 	}
 }
 
-geom::Box SplitCombo::onMeasure(geom::Box const& constraint)
+geom::Box SplitCombo::measureImpl(geom::Box const& constraint)
 {
 	const bool changedSpecified = geom::isSpecified((constraint.*changed_getter)());
 	const bool fixedSpecified = geom::isSpecified((constraint.*fixed_getter)());
@@ -277,7 +277,7 @@ geom::Box SplitCombo::onMeasure(geom::Box const& constraint)
 	}
 }
 
-void SplitCombo::onLayout(geom::Box const& size)
+void SplitCombo::layoutImpl(geom::Box const& size)
 {
 	for(SplitCtx& ctx : this->children()){
 		geom::Box box;

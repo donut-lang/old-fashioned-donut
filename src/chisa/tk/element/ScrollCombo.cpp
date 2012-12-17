@@ -49,7 +49,7 @@ size_t ScrollCombo::getChildCount() const
 	}
 }
 
-void ScrollCombo::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElement* element)
+void ScrollCombo::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* element)
 {
 	if( const char* _mode = element->Attribute("mode", nullptr) ){
 		std::string mode(_mode);
@@ -103,12 +103,12 @@ void ScrollCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, g
 	}
 }
 
-geom::Box ScrollCombo::onMeasure(geom::Box const& constraint)
+geom::Box ScrollCombo::measureImpl(geom::Box const& constraint)
 {
 	return geom::Box(geom::Unspecified, geom::Unspecified);
 }
 
-void ScrollCombo::onLayout(geom::Box const& size)
+void ScrollCombo::layoutImpl(geom::Box const& size)
 {
 	if(this->child_){
 		geom::Box childBox((this->scrollMode_ & Horizontal) == Horizontal ? geom::Unspecified : size.width(), (this->scrollMode_ & Vertical) == Vertical ? geom::Unspecified : size.height());

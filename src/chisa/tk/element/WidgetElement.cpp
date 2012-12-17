@@ -83,7 +83,7 @@ void WidgetElement::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea,
 	widget()->render(canvas, this->widgetDrawnArea());
 }
 
-geom::Box WidgetElement::onMeasure(geom::Box const& constraint)
+geom::Box WidgetElement::measureImpl(geom::Box const& constraint)
 {
 	if(!widget()){
 		return geom::Box(0,0);
@@ -140,7 +140,7 @@ float WidgetElement::calcScale(geom::Box const& widget, geom::Box const& constra
 	);
 }
 
-void WidgetElement::onLayout(geom::Box const& size)
+void WidgetElement::layoutImpl(geom::Box const& size)
 {
 	if(!widget()){
 		return;
@@ -178,7 +178,7 @@ std::string WidgetElement::toString() const
 {
 	return util::format( "(WidgetElement \"%s\")", this->widgetId_.c_str());
 }
-void WidgetElement::loadXMLimpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)
+void WidgetElement::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
 	if(element->Attribute("fit", "fit")){
 		this->fitMode_ = Fit;

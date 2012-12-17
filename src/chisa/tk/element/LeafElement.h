@@ -34,9 +34,9 @@ public:
 	virtual std::string toString() const override = 0;
 private:
 	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override = 0;
-	virtual geom::Box onMeasure(geom::Box const& constraint) override = 0;
-	virtual void onLayout(geom::Box const& size) override = 0;
-	virtual void loadXMLimpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override = 0;
+	virtual geom::Box measureImpl(geom::Box const& constraint) override = 0;
+	virtual void layoutImpl(geom::Box const& size) override = 0;
+	virtual void loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override = 0;
 };
 
 }}}
