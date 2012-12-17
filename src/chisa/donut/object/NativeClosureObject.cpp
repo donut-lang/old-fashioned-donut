@@ -18,6 +18,8 @@
 
 #include "NativeClosureObject.h"
 #include "ReactiveNativeObject.h"
+#include "StringObject.h"
+#include "FloatObject.h"
 #include "../../util/StringUtil.h"
 #include "../Exception.h"
 #include "Heap.h"
@@ -25,26 +27,6 @@
 namespace chisa {
 namespace donut {
 static const std::string TAG("NativeClosureObject");
-
-std::string NativeClosureObject::toStringImpl(Handler<Heap> const& heap) const
-{
-	return util::format("(NativeClosureObject %p)", this);
-}
-
-int NativeClosureObject::toIntImpl(Handler<Heap> const& heap) const
-{
-	throw DonutException(__FILE__, __LINE__, "Failed to convert NativeClosureObject to int.");
-}
-
-float NativeClosureObject::toFloatImpl(Handler<Heap> const& heap) const
-{
-	throw DonutException(__FILE__, __LINE__, "Failed to convert NativeClosureObject to float.");
-}
-
-bool NativeClosureObject::toBoolImpl(Handler<Heap> const& heap) const
-{
-	throw DonutException(__FILE__, __LINE__, "Failed to convert NativeClosureObject to bool.");
-}
 
 bool NativeClosureObject::hasImpl(Handler<Heap> const& heap, std::string const& name) const
 {
@@ -120,6 +102,11 @@ void PureNativeClosureObject::bootstrap( std::string const& objectProviderName, 
 	this->func_ = f;
 }
 
+std::string PureNativeClosureObject::reprImpl(Handler<Heap> const& heap) const
+{
+	return util::format("PureNativeClosure %s#%s at %p", this->objectProviderName().c_str(), this->closureName().c_str(), this);
+}
+
 Handler<Object> PureNativeClosureObject::apply(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& arg)
 {
 	return func_(heap, self,arg);
@@ -143,6 +130,11 @@ void ReactiveNativeClosureObject::bootstrap( std::string const& objectProviderNa
 {
 	this->NativeClosureObject::bootstrap(objectProviderName, closureName);
 	this->func_ = f;
+}
+
+std::string ReactiveNativeClosureObject::reprImpl(Handler<Heap> const& heap) const
+{
+	return util::format("ReactiveNativeClosure %s#%s at %p", this->objectProviderName().c_str(), this->closureName().c_str(), this);
 }
 
 Handler<Object> ReactiveNativeClosureObject::apply(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& arg)

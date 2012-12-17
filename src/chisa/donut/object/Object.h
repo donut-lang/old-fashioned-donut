@@ -48,9 +48,10 @@ public:
 	Object() = default;
 	virtual ~Object() noexcept = default;
 public: //すべてのオブジェクトに出来なければならないこと
-	std::string toString(Handler<Heap> const& heap) const;
+	std::string repr(Handler<Heap> const& heap) const;
 	int toInt(Handler<Heap> const& heap) const;
 	float toFloat(Handler<Heap> const& heap) const;
+	std::string toString(Handler<Heap> const& heap) const;
 	bool toBool(Handler<Heap> const& heap) const;
 	bool has(Handler<Heap> const& heap, std::string const& name) const;
 	bool has(Handler<Heap> const& heap, int const& idx) const;
@@ -68,19 +69,18 @@ public:
 	inline bool isBool() const noexcept { return Tag::Bool==tag(); };
 	inline bool isInt() const noexcept { return Tag::Int==tag(); };
 	inline int tag() const noexcept { return static_cast<int>( reinterpret_cast<std::intptr_t>(this) ) & Tag::Mask; };
-	inline void incref( bool check ) { if(isObject()) { this->HandlerBody<Object>::incref(check); } }
-	inline void decref() { if(isObject()) { this->HandlerBody<Object>::decref(); } };
+	inline void incref( bool check ) const { if(isObject()) { this->HandlerBody<Object>::incref(check); } }
+	inline void decref() const { if(isObject()) { this->HandlerBody<Object>::decref(); } };
 	inline void mark(Handler<Heap> const& heap, int color) { if(isObject()){ this->markImpl(heap, color); } }
 	inline void onBackNotify(Handler<Heap> const& heap){ if(isObject()){ this->onBackNotifyImpl(heap); } };
 	inline void onForwardNotify(Handler<Heap> const& heap){ if(isObject()){ this->onForwardNotifyImpl(heap); } };
 	inline void onDiscardFutureNotify(Handler<Heap> const& heap){ if(isObject()){ this->onDiscardFutureNotifyImpl(heap); } };
 	inline void onDiscardHistoryNotify(Handler<Heap> const& heap){ if(isObject()){ this->onDiscardHistoryNotifyImpl(heap); } };
 protected: /* 実装すべきもの */
-	virtual std::string toStringImpl(Handler<Heap> const& heap) const = 0;
+	virtual std::string reprImpl(Handler<Heap> const& heap) const = 0;
+	virtual Handler<const StringObject> toStringImpl(Handler<Heap> const& heap) const;
+	virtual Handler<const FloatObject> toFloatImpl(Handler<Heap> const& heap) const;
 	virtual std::string providerNameImpl(Handler<Heap> const& heap) const = 0;
-	virtual int toIntImpl(Handler<Heap> const& heap) const = 0;
-	virtual float toFloatImpl(Handler<Heap> const& heap) const = 0;
-	virtual bool toBoolImpl(Handler<Heap> const& heap) const = 0;
 	virtual bool hasImpl(Handler<Heap> const& heap, std::string const& name) const = 0;
 	virtual bool hasOwnImpl(Handler<Heap> const& heap, std::string const& name) const = 0;
 	virtual Handler<Object> setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> obj) = 0;
@@ -178,10 +178,8 @@ public:
 	DonutObject(std::string const& providerName);
 	virtual ~DonutObject() noexcept = default;
 protected:
-	virtual std::string toStringImpl(Handler<Heap> const& heap) const override;
-	virtual int toIntImpl(Handler<Heap> const& heap) const override;
-	virtual float toFloatImpl(Handler<Heap> const& heap) const override;
-	virtual bool toBoolImpl(Handler<Heap> const& heap) const override;
+	virtual std::string reprImpl(Handler<Heap> const& heap) const override;
+protected:
 	virtual bool hasImpl(Handler<Heap> const& heap, std::string const& name) const override;
 	virtual bool hasOwnImpl(Handler<Heap> const& heap, std::string const& name) const override;
 	virtual Handler<Object> setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> obj) override;
@@ -221,11 +219,8 @@ protected:
 public:
 	virtual ~NativeObject() noexcept = default;
 protected:
-	virtual std::string toStringImpl(Handler<Heap> const& heap) const override;
-
-	virtual int toIntImpl(Handler<Heap> const& heap) const override;
-	virtual float toFloatImpl(Handler<Heap> const& heap) const override;
-	virtual bool toBoolImpl(Handler<Heap> const& heap) const override;
+	virtual std::string reprImpl(Handler<Heap> const& heap) const = 0;
+protected:
 	virtual bool hasImpl(Handler<Heap> const& heap, std::string const& name) const override;
 	virtual bool hasOwnImpl(Handler<Heap> const& heap, std::string const& name) const override;
 	virtual Handler<Object> setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> obj) override;
@@ -254,11 +249,8 @@ public:
 	std::string objectProviderName() const noexcept { return this->objectProviderName_; };
 	std::string closureName() const noexcept { return this->closureName_; };
 protected:
-	virtual std::string toStringImpl(Handler<Heap> const& heap) const override final;
-
-	virtual int toIntImpl(Handler<Heap> const& heap) const override final;
-	virtual float toFloatImpl(Handler<Heap> const& heap) const override final;
-	virtual bool toBoolImpl(Handler<Heap> const& heap) const override final;
+	virtual std::string reprImpl(Handler<Heap> const& heap) const = 0;
+protected:
 	virtual bool hasImpl(Handler<Heap> const& heap, std::string const& name) const override final;
 	virtual bool hasOwnImpl(Handler<Heap> const& heap, std::string const& name) const override final;
 	virtual Handler<Object> setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> obj) override final;

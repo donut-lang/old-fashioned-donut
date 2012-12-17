@@ -79,7 +79,7 @@ public:
 public:
 	template <typename... Args> inline
 	Handler<T> newInstance(Args... args) {
-		 Handler<T> t ( new T( this->name() ) );
+		Handler<T> t ( new T( this->name() ) );
 		t->bootstrap(args...);
 		return t;
 	}

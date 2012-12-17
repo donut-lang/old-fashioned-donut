@@ -30,30 +30,21 @@ StringObject::StringObject(std::string const& providerName)
 
 }
 
-std::string StringObject::toStringImpl(Handler<Heap> const& heap) const
+std::string StringObject::reprImpl(Handler<Heap> const& heap) const
 {
-	return this->str_;
+	return std::string("string: ")+this->str_;
 }
 
-int StringObject::toIntImpl(Handler<Heap> const& heap) const
+Handler<const StringObject> StringObject::toStringImpl(Handler<Heap> const& heap) const
 {
-	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast String to Integer implicitly. Use toInteger()");
-}
-
-float StringObject::toFloatImpl(Handler<Heap> const& heap) const
-{
-	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast String to Float implicitly. Use toFloat()");
-}
-
-bool StringObject::toBoolImpl(Handler<Heap> const& heap) const
-{
-	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast String to Bool implicitly. Use toBoolean()");
+	return Handler<const StringObject>::__internal__fromRawPointerWithoutCheck(this);
 }
 
 void StringObject::onBackNotifyImpl(Handler<Heap> const& heap)
 {
 
 }
+
 void StringObject::onForwardNotifyImpl(Handler<Heap> const& heap)
 {
 

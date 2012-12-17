@@ -48,7 +48,7 @@
 	ASSERT_FALSE(result->isNull());\
 	ASSERT_FALSE(result->isObject());\
 	ASSERT_TRUE(result->isBool());\
-	ASSERT_TRUE(result->toBool(heap));\
+	ASSERT_TRUE( result->toBool(heap) );\
 }
 
 #define SOURCE_TEST_FALSE(expr)\
@@ -56,9 +56,8 @@
 	EXECUTE_SRC(expr);\
 	ASSERT_FALSE(result->isNull());\
 	ASSERT_FALSE(result->isObject());\
-	ASSERT_FALSE(result->isInt());\
 	ASSERT_TRUE(result->isBool());\
-	ASSERT_FALSE(result->toBool(heap));\
+	ASSERT_FALSE( result->toBool(heap) );\
 }
 
 #define SOURCE_TEST_NULL(expr)\
@@ -92,10 +91,14 @@
 
 #define SOURCE_TEST_STR(str, expr)\
 {\
+	std::string val;\
 	EXECUTE_SRC(expr);\
-	ASSERT_FALSE(result->isNull());\
-	ASSERT_FALSE(result->isBool());\
-	ASSERT_TRUE(result->isObject());\
-	ASSERT_FALSE(result->isInt());\
-	ASSERT_EQ(std::string(str), result->toString(heap));\
+	{\
+		ASSERT_FALSE(result->isNull());\
+		ASSERT_FALSE(result->isBool());\
+		ASSERT_TRUE(result->isObject());\
+		ASSERT_FALSE(result->isInt());\
+		ASSERT_NO_THROW(val=result->toString(heap));\
+		ASSERT_EQ(std::string(str), val);\
+	}\
 }

@@ -18,6 +18,7 @@
 
 #include "FloatObject.h"
 #include <algorithm>
+#include "../../util/StringUtil.h"
 
 namespace chisa {
 namespace donut {
@@ -30,26 +31,15 @@ FloatObject::FloatObject(std::string const& providerName)
 {
 }
 
-std::string FloatObject::toStringImpl(Handler<Heap> const& heap) const
+std::string FloatObject::reprImpl(Handler<Heap> const& heap) const
 {
-	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast Float to String implicitly. Use toString()");
+	return std::string("float: ")+util::toString(value_);
 }
 
-int FloatObject::toIntImpl(Handler<Heap> const& heap) const
+Handler<const FloatObject> FloatObject::toFloatImpl(Handler<Heap> const& heap) const
 {
-	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast Float to Integer implicitly. Use toInteger()");
+	return Handler<const FloatObject>::__internal__fromRawPointerWithoutCheck(this);
 }
-
-float FloatObject::toFloatImpl(Handler<Heap> const& heap) const
-{
-	return this->value_;
-}
-
-bool FloatObject::toBoolImpl(Handler<Heap> const& heap) const
-{
-	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast Float to Bool implicitly. Use toBoolean()");
-}
-
 void FloatObject::onBackNotifyImpl(Handler<Heap> const& heap)
 {
 

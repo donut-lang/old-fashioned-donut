@@ -21,30 +21,16 @@
 #include "Heap.h"
 #include "../Clock.h"
 #include "../../util/PairUtil.h"
+#include "../../util/StringUtil.h"
 
 namespace chisa {
 namespace donut {
 
 const std::string TAG("ReactiveNativeObject");
 
-std::string ReactiveNativeObject::toStringImpl(Handler<Heap> const& heap) const
+std::string ReactiveNativeObject::reprImpl(Handler<Heap> const& heap) const
 {
-	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast Reactive Native Object to String implicitly. Use toString()");
-}
-
-int ReactiveNativeObject::toIntImpl(Handler<Heap> const& heap) const
-{
-	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast Reactive Native Object to Integer implicitly. Use toInteger()");
-}
-
-float ReactiveNativeObject::toFloatImpl(Handler<Heap> const& heap) const
-{
-	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast Reactive Native Object to Float implicitly. Use toFloat()");
-}
-
-bool ReactiveNativeObject::toBoolImpl(Handler<Heap> const& heap) const
-{
-	throw DonutException(__FILE__, __LINE__, "[BUG] You cannot cast Reactive Native Object to Bool implicitly. Use toBoolean()");
+	return util::format("(ReactiveNativeObject: %p)", this);
 }
 
 int ReactiveNativeObject::findLowerIndex( timestamp_t const& t )

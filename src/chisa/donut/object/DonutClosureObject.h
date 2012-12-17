@@ -30,6 +30,8 @@ private:
 public:
 	DonutClosureObject(std::string const& providerName);
 	virtual ~DonutClosureObject() noexcept = default;
+protected:
+	virtual std::string reprImpl(Handler<Heap> const& heap) const override final;
 public:
 	inline Handler<Source> const& source() const { return this->src_; };
 	inline Handler<Closure> const& closureCode() const { return this->asm_; };

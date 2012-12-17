@@ -46,19 +46,9 @@ BoolProvider::BoolProvider(Handler<Heap> const& heap)
 	}));
 }
 
-std::string BoolProvider::toString(const Object* ptr) const
+std::string BoolProvider::repr(const Object* ptr) const
 {
-	throw DonutException(__FILE__, __LINE__, "Ccannot convert from boolean to string.");
-}
-
-int BoolProvider::toInt(const Object* ptr) const
-{
-	throw DonutException(__FILE__, __LINE__, "Ccannot convert from boolean to integer.");
-}
-
-float BoolProvider::toFloat(const Object* ptr) const
-{
-	throw DonutException(__FILE__, __LINE__, "Ccannot convert from boolean to float.");
+	return BoolProvider::fromPointer(ptr) ? "bool: true" : "bool: false";
 }
 
 bool BoolProvider::toBool(const Object* ptr) const

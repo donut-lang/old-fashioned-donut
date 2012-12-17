@@ -22,10 +22,18 @@
 namespace chisa {
 namespace donut {
 
-TEST(ArraySyntaxTest, LiteralIndex)
+TEST(ArraySyntaxTest, LiteralAccessIndex)
 {
 	SOURCE_TEST_FLOAT(1.0, "array=['0',1.0,2];array[2];");
+}
+
+TEST(ArraySyntaxTest, LiteralAssignIndex)
+{
 	SOURCE_TEST_STR("4", "array=['0',1.0,2];array[2]='4';");
+}
+
+TEST(ArraySyntaxTest, LiteralAssignAndGetIndex)
+{
 	SOURCE_TEST_STR("4", "array=['0',1.0,2];array[2]='4';array[2];");
 }
 

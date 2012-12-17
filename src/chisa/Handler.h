@@ -354,6 +354,18 @@ bool operator!=(Handler<T> const& a, Handler<U> const& b) noexcept
 	return a.get() != b.get();
 }
 
+template <bool atomic=false>
+struct _HandlerBodyTypes{
+	typedef int RefCounterType;
+	typedef bool DelFlagType;
+};
+
+template <>
+struct _HandlerBodyTypes<true>{
+	typedef std::atomic<int> RefCounterType;
+	typedef bool DelFlagType;
+};
+
 template <class Derived, bool atomic=false>
 class HandlerBody {
 private:
@@ -365,8 +377,8 @@ private:
 	template <typename T> friend class chisa::HandlerW;
 	friend class chisa::internal::WeakHandlerEntity;
 private:
-	int refcount_;
-	bool deleted;
+	typename _HandlerBodyTypes<atomic>::RefCounterType refcount_;
+	typename _HandlerBodyTypes<atomic>::DelFlagType deleted;
 	chisa::internal::WeakHandlerEntity* weakEntity_;
 protected:
 	HandlerBody()
@@ -374,90 +386,39 @@ protected:
 	virtual ~HandlerBody() noexcept (true) {}; //XXX: GCCのバグでデフォルトにできない？
 protected:
 	inline int refcount() const noexcept { return this->refcount_; };
-	inline Handler<Derived> self() { return Handler<Derived>::__internal__fromRawPointerWithoutCheck(static_cast<Derived*>(this)); };
+	inline Handler<Derived> self() const { return Handler<Derived>::__internal__fromRawPointerWithoutCheck(static_cast<Derived*>(const_cast<HandlerBody<Derived, atomic>*>(this))); };
 protected:
-	inline void incref( bool check ) {
-		if((this->refcount_++) != 0 && check){
-			this->refcount_--;
-			throw logging::Exception(__FILE__, __LINE__, "[BUG] Handler created, but refcount = %d, not zero.", this->refcount_);
+	inline void incref( bool check ) const{
+		HandlerBody<Derived, atomic>* self = const_cast<HandlerBody<Derived, atomic>*>(this);
+		if((self->refcount_++) != 0 && check){
+			int const val = --self->refcount_;
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] Handler created, but refcount = %d, not zero.", val);
 		}
 	}
-	inline void decref(){
-		this->refcount_--;
-		if(this->refcount_ < 0){
-			throw logging::Exception(__FILE__, __LINE__, "[BUG] Handler refcount = %d < 0", this->refcount_);\
-		}else if(this->refcount_ == 0){
-			if(deleted){
+	inline void decref() const{
+		HandlerBody<Derived, atomic>* self = const_cast<HandlerBody<Derived, atomic>*>(this);
+		--self->refcount_;
+		if(self->refcount_ < 0){
+			int const val = self->refcount_;
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] Handler refcount = %d < 0", val);\
+		}else if(self->refcount_ == 0){
+			if(self->deleted){
 				return;
 			}
-			this->deleted = true;
-			if(this->weakEntity_){
-				this->weakEntity_->notifyDead();
-				this->weakEntity_ = nullptr;
+			self->deleted = true;
+			if(self->weakEntity_){
+				self->weakEntity_->notifyDead();
+				self->weakEntity_ = nullptr;
 			}
-			if(static_cast<Derived*>(this)->onFree()) {
+			if(static_cast<Derived*>(self)->onFree()) {
 				//recycle
-				this->deleted = false;
+				self->deleted = false;
 			}else{
-				delete this;
+				delete self;
 			}
 		}
 	}
 };
-
-template <class Derived>
-class HandlerBody<Derived, true> {
-private:
-	HandlerBody(const HandlerBody<Derived, true>& other) = delete;
-	HandlerBody(HandlerBody<Derived, true>&& other) = delete;
-	const HandlerBody<Derived, true>& operator=(const HandlerBody<Derived, true>& other) = delete;
-	const HandlerBody<Derived, true>& operator=(const HandlerBody<Derived, true>&& other) = delete;
-	template <typename T> friend class chisa::Handler;
-	template <typename T> friend class chisa::HandlerW;
-	friend class chisa::internal::WeakHandlerEntity;
-private:
-	std::atomic<int> refcount_;
-	bool onDestroy_;
-	chisa::internal::WeakHandlerEntity* weakEntity_;
-protected:
-	HandlerBody()
-	:refcount_(0), onDestroy_(false), weakEntity_(nullptr) {}
-	virtual ~HandlerBody() noexcept (true) {};//XXX: GCCのバグ？
-protected:
-	inline int refcount() const noexcept { return this->refcount_; };
-	inline Handler<Derived> self() { return Handler<Derived>::__internal__fromRawPointerWithoutCheck(this); };
-private:
-	inline void incref( bool check ) {
-		if((this->refcount_++) != 0 && check){
-			this->refcount_--;
-			throw logging::Exception(__FILE__, __LINE__, "[BUG] Sprite::Handler created, but refcount = %d, not zero.", int(this->refcount_));
-		}
-	}
-	inline void decref(){
-		//マルチスレッド性はこれで担保できるの？
-		this->refcount_--;
-		if(this->refcount_ < 0) {
-			throw logging::Exception(__FILE__, __LINE__, "[BUG] Handler refcount = %d < 0", int(this->refcount_));
-		} else if( this->refcount_ == 0 ) {
-			if(onDestroy_) {
-				return;
-			}
-			this->onDestroy_ = true;
-			if(this->weakEntity_){
-				this->weakEntity_->notifyDead();
-				this->weakEntity_ = nullptr;
-			}
-			if(static_cast<Derived*>(this)->onFree()) {
-				//recycle
-				this->onDestroy_ = false;
-			}else{
-				delete this;
-			}
-		}
-	}
-
-};
-
 
 }
 

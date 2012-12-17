@@ -36,9 +36,7 @@ public:
 		return reinterpret_cast<Object*>((val << 2) | Object::Tag::Bool);
 	}
 public:
-	std::string toString(const Object* ptr) const;
-	int toInt(const Object* ptr) const;
-	float toFloat(const Object* ptr) const;
+	std::string repr(const Object* ptr) const;
 	bool toBool(const Object* ptr) const;
 public:
 	Handler<Object> create( bool const& val );
