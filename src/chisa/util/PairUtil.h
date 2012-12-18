@@ -36,6 +36,20 @@ struct PairCompare : public std::binary_function<std::pair<T,U>,std::pair<T,U>,b
 	}
 };
 
+template <typename T, typename U>
+struct PairEq : public std::unary_function<std::pair<T,U>,bool>{
+private:
+	T const& t_;
+public:
+	PairEq(T const& t):t_(t){}
+	bool operator()(T const& a){
+		return a == t_;
+	}
+	bool operator()(std::pair<T,U> const& a){
+		return a.first == t_;
+	}
+};
+
 }}
 
 #undef DEF_OVERLOD
