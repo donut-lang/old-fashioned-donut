@@ -117,6 +117,9 @@ void Canvas::drawTexture(unsigned int texId, geom::Point const& pt, geom::IntBox
 
 void Canvas::drawLine(const float width, Color const& color, geom::Point const& start, geom::Point const& end, const float depth)
 {
+	if(color.isInvalid() || !(width > 0)){
+		return;
+	}
 	glLineWidth(width);
 	this->setColor(color);
 	glBegin(GL_LINES);
@@ -127,6 +130,9 @@ void Canvas::drawLine(const float width, Color const& color, geom::Point const& 
 
 void Canvas::drawRect(const float width, Color const& color, geom::Area const& area, const float depth)
 {
+	if(color.isInvalid() || !(width > 0)){
+		return;
+	}
 	glLineWidth(width);
 	this->setColor(color);
 	float const sx = area.x();
@@ -144,6 +150,9 @@ void Canvas::drawRect(const float width, Color const& color, geom::Area const& a
 }
 void Canvas::fillRect(Color const& color, geom::Area const& area, const float depth)
 {
+	if(color.isInvalid() || area.empty()){
+		return;
+	}
 	this->setColor(color);
 	float const sx = area.x();
 	float const ex = area.x()+area.width();

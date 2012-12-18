@@ -31,26 +31,27 @@ namespace tk {
 
 const std::string AbstractButton::AttrName::Text("text");
 const std::string AbstractButton::AttrName::TextSize("text-size");
-const std::string AbstractButton::AttrName::ForegroundColor("foreground-color");
-const std::string AbstractButton::AttrName::BackgroundColor("background-color");
+const std::string AbstractButton::AttrName::EdgeColor("edge-color");
 const std::string AbstractButton::AttrName::ShadowColor("shadow-color");
 const std::string AbstractButton::AttrName::ShadowDepth("shadow-depth");
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(AbstractButton, Element)
 ,text_()
 ,textSize_(32.0f)
-,margin_(2.5f)
-,padding_(2.0f)
 ,vertical_(false)
-,foregroundColor_(gl::Black)
-,backgroundColor_(gl::Color(0.9,0.9,0.9,1))
+,edgeColor_(gl::Black)
 ,shadowColor_(gl::DarkGray)
 ,shadowDepth_(3.0f)
 ,textImage_()
 ,pushedCnt_(0)
 {
+	this->margin(geom::Space(2.5f));
+	this->padding(geom::Space(2.5f));
 	this->addAttribute(AttrName::Text, this->text_);
 	this->addAttribute(AttrName::TextSize, this->textSize_);
+	this->addAttribute(AttrName::EdgeColor, this->edgeColor_);
+	this->addAttribute(AttrName::ShadowColor, this->shadowColor_);
+	this->addAttribute(AttrName::ShadowDepth, this->shadowDepth_);
 }
 
 AbstractButton::~AbstractButton() noexcept
@@ -64,16 +65,14 @@ std::string AbstractButton::toString() const
 
 void AbstractButton::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
 {
-	geom::Area marginedArea(this->margin_.apply(screenArea));
-	canvas.fillRect(this->backgroundColor_, marginedArea);
 	if( this->pushedCnt_ > 0 ){
-		canvas.fillRect(this->shadowColor_, geom::Area(marginedArea.point(), geom::Box(marginedArea.width(), shadowDepth_)),.001);
-		canvas.fillRect(this->shadowColor_, geom::Area(marginedArea.point(), geom::Box(shadowDepth_, marginedArea.height())),.001);
-		this->textImage()->draw(canvas, geom::Area(marginedArea.point()+this->renderOffset_+geom::Distance(shadowDepth_, shadowDepth_), area.box()), .001);
+		canvas.fillRect(this->shadowColor_, geom::Area(screenArea.point(), geom::Box(screenArea.width(), shadowDepth_)),.001);
+		canvas.fillRect(this->shadowColor_, geom::Area(screenArea.point(), geom::Box(shadowDepth_, screenArea.height())),.001);
+		this->textImage()->draw(canvas, geom::Area(screenArea.point()+this->renderOffset_+geom::Distance(shadowDepth_, shadowDepth_), area.box()), .001);
 	}else{
-		canvas.fillRect(this->shadowColor_, geom::Area(marginedArea.point()+geom::Distance(0, marginedArea.height()-shadowDepth_), geom::Box(marginedArea.width(), shadowDepth_)),.001);
-		canvas.fillRect(this->shadowColor_, geom::Area(marginedArea.point()+geom::Distance(marginedArea.width()-shadowDepth_, 0), geom::Box(shadowDepth_, marginedArea.height())),.001);
-		this->textImage()->draw(canvas, geom::Area(marginedArea.point()+this->renderOffset_, area.box()), .001);
+		canvas.fillRect(this->shadowColor_, geom::Area(screenArea.point()+geom::Distance(0, screenArea.height()-shadowDepth_), geom::Box(screenArea.width(), shadowDepth_)),.001);
+		canvas.fillRect(this->shadowColor_, geom::Area(screenArea.point()+geom::Distance(screenArea.width()-shadowDepth_, 0), geom::Box(shadowDepth_, screenArea.height())),.001);
+		this->textImage()->draw(canvas, geom::Area(screenArea.point()+this->renderOffset_, area.box()), .001);
 	}
 }
 Handler<gl::TextDrawable> AbstractButton::textImage()
@@ -87,7 +86,7 @@ Handler<gl::TextDrawable> AbstractButton::textImage()
 						Handler<gl::Font>(),
 						gl::TextDrawable::Style::Bold,
 						gl::TextDrawable::Decoration::None,
-						this->foregroundColor_,
+						this->foregroundColor(),
 						gl::Transparent
 						);
 			}else{
@@ -97,7 +96,7 @@ Handler<gl::TextDrawable> AbstractButton::textImage()
 						Handler<gl::Font>(),
 						gl::TextDrawable::Style::Bold,
 						gl::TextDrawable::Decoration::None,
-						this->foregroundColor_,
+						this->foregroundColor(),
 						gl::Transparent
 						);
 			}
@@ -107,13 +106,13 @@ Handler<gl::TextDrawable> AbstractButton::textImage()
 }
 geom::Box AbstractButton::measureImpl(geom::Box const& constraint)
 {
-	return this->textImage()->size()+this->padding_.totalSpace()+this->margin_.totalSpace()+geom::Distance(shadowDepth_,shadowDepth_);
+	return this->textImage()->size()+geom::Distance(shadowDepth_,shadowDepth_);
 }
 
 void AbstractButton::layoutImpl(geom::Box const& size)
 {
 	//中心になるようにオフセットを設定する。
-	this->renderOffset_ = ((size-this->margin_.totalSpace()-this->padding_.totalSpace()-this->textImage_->size()-geom::Distance(shadowDepth_,shadowDepth_))/2)+this->padding_.offset();
+	this->renderOffset_ = ((size-this->textImage_->size()-geom::Distance(shadowDepth_,shadowDepth_))/2);
 }
 
 void AbstractButton::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)
@@ -122,9 +121,42 @@ void AbstractButton::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLEle
 
 void AbstractButton::text(std::string const& text)
 {
-	this->text_ = text;
-	this->textImage_.reset();
-	//TODO: レイアウトの再設定が必要
+	if(this->text_ != text){
+		this->text_ = text;
+		this->textImage_.reset();
+		this->invalidate();
+	}
+}
+
+void AbstractButton::textSize(float const& size)
+{
+	if( this->textSize_ != size ) {
+		this->textSize_ = size;
+		this->textImage_.reset();
+		this->invalidate();
+	}
+}
+void AbstractButton::setVertical(bool isVertical)
+{
+	if( this->vertical_ != isVertical ) {
+		this->vertical_ = isVertical;
+		this->textImage_.reset();
+		this->invalidate();
+	}
+}
+void AbstractButton::shadowColor(gl::Color const& color)
+{
+	if(this->shadowColor_ != color){
+		this->shadowColor_ = color;
+		this->invalidate();
+	}
+}
+void AbstractButton::shadowDepth(float const& depth)
+{
+	if( this->shadowDepth_ != depth ) {
+		this->shadowDepth_ = depth;
+		this->invalidate();
+	}
 }
 
 void AbstractButton::onClick()

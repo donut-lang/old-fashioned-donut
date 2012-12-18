@@ -30,19 +30,15 @@ public:
 	struct AttrName{
 		const static std::string Text;
 		const static std::string TextSize;
-		const static std::string ForegroundColor;
-		const static std::string BackgroundColor;
+		const static std::string EdgeColor;
 		const static std::string ShadowColor;
 		const static std::string ShadowDepth;
 	};
 private:
 	std::string text_;
 	float textSize_;
-	geom::Space margin_;
-	geom::Space padding_;
 	bool vertical_;
-	gl::Color foregroundColor_;
-	gl::Color backgroundColor_;
+	gl::Color edgeColor_;
 	gl::Color shadowColor_;
 	float shadowDepth_;
 private:
@@ -52,14 +48,14 @@ private:
 	int pushedCnt_;
 public:
 	void text(std::string const& text);
+	void textSize(float const& size);
+	void setVertical(bool isVertical);
+	void shadowColor(gl::Color const& color);
+	void shadowDepth(float const& depth);
 public:
 	inline std::string text() const noexcept{ return this->text_; };
 	inline float textSize() const noexcept { return this->textSize_; };
-	inline geom::Space const& margin() noexcept { return this->margin_; };
-	inline geom::Space const& padding() const noexcept { return this->padding_; };
 	inline bool isVertical() const noexcept { return this->vertical_; };
-	inline gl::Color const& foregroundColor() const noexcept { return this->foregroundColor_; };
-	inline gl::Color const& backgroundColor() const noexcept { return this->foregroundColor_; };
 	inline gl::Color const& shadowColor() const noexcept { return this->shadowColor_; };
 	inline float shadowDepth() const noexcept { return this->shadowDepth_; };
 private:
