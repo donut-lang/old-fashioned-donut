@@ -33,9 +33,6 @@ namespace chisa {
 namespace tk {
 class World;
 
-namespace element {
-
-
 template <typename T>
 Handler<T> elementConstructor(CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST)
 {
@@ -90,4 +87,4 @@ public:
 	}
 };
 
-}}}
+}}

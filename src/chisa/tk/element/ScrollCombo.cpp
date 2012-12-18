@@ -20,8 +20,6 @@
 
 namespace chisa {
 namespace tk {
-namespace element {
-
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(ScrollCombo, Super)
 ,scrollMode_(None)
@@ -158,4 +156,4 @@ bool ScrollCombo::onScroll(const float timeMs, geom::Point const& start, geom::P
 
 
 
-}}}
+}}

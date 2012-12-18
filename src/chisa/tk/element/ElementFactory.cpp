@@ -34,7 +34,6 @@
 
 namespace chisa {
 namespace tk {
-namespace element {
 
 using namespace tinyxml2;
 using namespace logging;
@@ -145,4 +144,4 @@ Handler<Element> ElementFactory::parseTree(std::string const& elementId)
 	throw logging::Exception(__FILE__, __LINE__, "Element ID \"%s\" not found in %s", elementId.c_str(), this->filename_.c_str());
 }
 
-}}}
+}}

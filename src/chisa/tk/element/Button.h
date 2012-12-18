@@ -23,7 +23,6 @@
 
 namespace chisa {
 namespace tk {
-namespace element {
 
 class Button: public AbstractButton {
 	CHISA_ELEMENT_SUBKLASS_FINAL(Button);
@@ -31,4 +30,4 @@ public:
 	virtual std::string toString() const override final;
 };
 
-}}}
+}}

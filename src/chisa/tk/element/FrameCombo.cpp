@@ -22,7 +22,6 @@
 
 namespace chisa {
 namespace tk {
-namespace element {
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(FrameCombo, Super)
 {
@@ -60,11 +59,11 @@ void FrameCombo::layoutImpl(geom::Box const& size)
 	}
 }
 
-void FrameCombo::loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
+void FrameCombo::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
 	for( tinyxml2::XMLElement* e = element->FirstChildElement(); e; e=e->NextSiblingElement() ){
 		this->addChild( factory->parseTree(this->self(), e) );
 	}
 }
 
-}}}
+}}

@@ -21,7 +21,6 @@
 
 namespace chisa {
 namespace tk {
-namespace element {
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(ElementGroup)
 {
@@ -33,4 +32,4 @@ ElementGroup::~ElementGroup() noexcept
 
 }
 
-}}}
+}}

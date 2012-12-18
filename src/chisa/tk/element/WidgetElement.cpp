@@ -23,7 +23,6 @@
 
 namespace chisa {
 namespace tk {
-namespace element {
 
 static const std::string TAG("WidgetElement");
 
@@ -248,4 +247,4 @@ bool WidgetElement::onZoom(const float timeMs, geom::Point const& center, const 
 	return widget_->onZoom(timeMs, calcPtInWidget(center), ratio);
 }
 
-}}}
+}}

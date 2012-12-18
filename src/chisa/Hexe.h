@@ -44,7 +44,7 @@ public:
 
 public:
 	virtual void registerWidgets(tk::widget::WidgetFactory& factory){};
-	virtual void registerElements(tk::element::ElementFactory& factory){};
+	virtual void registerElements(tk::ElementFactory& factory){};
 public:
 	virtual Handler<WorldGeist> invokeWorldGeist(HandlerW<chisa::tk::World> world, std::string const& nameOfGeist) = 0;
 };

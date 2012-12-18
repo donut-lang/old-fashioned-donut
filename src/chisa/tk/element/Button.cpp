@@ -26,7 +26,6 @@
 #include <iostream>
 namespace chisa {
 namespace tk {
-namespace element {
 
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(Button, AbstractButton)
@@ -42,4 +41,4 @@ std::string Button::toString() const
 	return util::format("(Button text:\"%s\" %p)", this->text().c_str(), this);
 }
 
-}}}
+}}

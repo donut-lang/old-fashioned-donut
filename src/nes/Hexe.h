@@ -27,7 +27,7 @@ public:
 	virtual ~Hexe() noexcept;
 public:
 	virtual void registerWidgets(chisa::tk::widget::WidgetFactory& factory) override;
-	virtual void registerElements(chisa::tk::element::ElementFactory& factory) override;
+	virtual void registerElements(chisa::tk::ElementFactory& factory) override;
 public:
 	virtual chisa::Handler<chisa::WorldGeist> invokeWorldGeist(chisa::HandlerW<chisa::tk::World> world, std::string const& nameOfGeist) override;
 };

@@ -26,7 +26,6 @@
 #include <iostream>
 namespace chisa {
 namespace tk {
-namespace element {
 
 const std::string AbstractButton::AttrName::Text("text");
 const std::string AbstractButton::AttrName::TextSize("text-size");
@@ -115,7 +114,7 @@ void AbstractButton::layoutImpl(geom::Box const& size)
 	this->renderOffset_ = ((size-this->margin_.totalSpace()-this->padding_.totalSpace()-this->textImage_->size()-geom::Distance(shadowDepth_,shadowDepth_))/2)+this->padding_.offset();
 }
 
-void AbstractButton::loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
+void AbstractButton::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
 }
 
@@ -156,4 +155,4 @@ bool AbstractButton::onSingleTapUp(const float timeMs, geom::Point const& ptInSc
 	return true;
 }
 
-}}}
+}}

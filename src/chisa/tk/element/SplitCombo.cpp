@@ -22,7 +22,6 @@
 
 namespace chisa {
 namespace tk {
-namespace element {
 
 static const std::string TAG("SplitCombo");
 const std::string SplitCombo::AttrName::Weight("split-weight");
@@ -263,4 +262,4 @@ void SplitCombo::layoutImpl(geom::Box const& size)
 	}
 }
 
-}}}
+}}

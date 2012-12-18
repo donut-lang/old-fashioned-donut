@@ -23,7 +23,6 @@
 
 namespace chisa {
 namespace tk {
-namespace element {
 
 class FrameCombo;
 class SplitCombo;
@@ -48,6 +47,8 @@ public: /* ツリー操作 */
 	virtual Handler<Element> getChildAt( std::size_t const& idx ) const noexcept override final;
 	virtual void addChild(Handler<Element> const& h) override final;
 	virtual void addChild(std::size_t const& idx, Handler<Element> const& h) override final;
+	void addChild(Handler<Element> const& h, std::string const& text);
+	void addChild(std::size_t const& idx, Handler<Element> const& h, std::string const& text);
 	virtual Handler<Element> removeChild(std::size_t const& idx) override final;
 	virtual Handler<Element> removeChild(Handler<Element> const& h) override final;
 	virtual Handler<Element> lastChild() const noexcept override final;
@@ -65,7 +66,7 @@ private:
 	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override;
 	virtual geom::Box measureImpl(geom::Box const& constraint) override;
 	virtual void layoutImpl(geom::Box const& size) override;
-	virtual void loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
+	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
 };
 
-}}}
+}}
