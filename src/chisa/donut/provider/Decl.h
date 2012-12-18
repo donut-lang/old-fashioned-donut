@@ -37,5 +37,7 @@ class FloatProvider;
 class PureNativeClosureProvider;
 class ReactiveNativeClosureProvider;
 
+class HomuraProvider;
+
 }}
 

@@ -25,9 +25,11 @@
 #include "../provider/FloatProvider.h"
 #include "../provider/StringProvider.h"
 #include "../provider/NativeClosureProvider.h"
+#include "../provider/HomuraProvider.h"
 
 #include "StringObject.h"
 #include "FloatObject.h"
+#include "HomuraObject.h"
 
 namespace chisa {
 namespace donut {
@@ -209,6 +211,14 @@ Handler<ReactiveNativeClosureObject> Heap::createReactiveNativeClosureObject(std
 
 	return obj;
 }
+
+Handler<HomuraObject> Heap::createHomuraObject()
+{
+	Handler<HomuraObject> obj(this->homuraProvider_->newInstance(self()));
+	this->registerObject(obj);
+
+	return obj;
+}
 Handler<Object> Heap::createInt(int const& val)
 {
 	return this->intProvider()->create(val);
@@ -277,6 +287,7 @@ void Heap::bootstrap()
 	this->globalObject_->set(self, "Int", this->intProto());
 	this->globalObject_->set(self, "Boolean", this->boolProto());
 	this->globalObject_->set(self, "Null", this->nullProto());
+	this->globalObject_->set(self, "Homura", this->createHomuraObject());
 
 	this->globalObject_->set(self, "Global", this->globalObject_);
 }
@@ -354,6 +365,7 @@ void Heap::initPrimitiveProviders()
 	this->registerProvider( this->floatProvider_ = Handler<FloatProvider>( new FloatProvider(self) ) );
 	this->registerProvider( this->pureNativeClosureProvider_ = Handler<PureNativeClosureProvider>( new PureNativeClosureProvider(self) ) );
 	this->registerProvider( this->reactiveNativeClosureProvider_ = Handler<ReactiveNativeClosureProvider>( new ReactiveNativeClosureProvider(self) ) );
+	this->registerProvider( this->homuraProvider_ = Handler<HomuraProvider>( new HomuraProvider(self) ) );
 }
 
 void Heap::initPrototypes()

@@ -37,6 +37,8 @@ class DonutClosureObject;
 class PureNativeClosureObject;
 class ReactiveNativeClosureObject;
 
+class HomuraObject;
+
 class StringObject;
 class FloatObject;
 

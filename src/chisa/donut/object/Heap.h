@@ -63,6 +63,7 @@ private:
 	Handler<StringProvider> stringProvider_;
 	Handler<PureNativeClosureProvider> pureNativeClosureProvider_;
 	Handler<ReactiveNativeClosureProvider> reactiveNativeClosureProvider_;
+	Handler<HomuraProvider> homuraProvider_;
 
 	Handler<DonutObject> boolProto_;
 	Handler<DonutObject> intProto_;
@@ -94,6 +95,8 @@ public: /* オブジェクトを作ってそれをプールに登録し、メモ
 	Handler<Object> createNull();
 	Handler<PureNativeClosureObject> createPureNativeClosureObject(std::string const& objectProviderName, std::string const& closureName, PureNativeClosureObject::Signature sig);
 	Handler<ReactiveNativeClosureObject> createReactiveNativeClosureObject(std::string const& objectProviderName, std::string const& closureName, ReactiveNativeClosureObject::Signature f);
+private:
+	Handler<HomuraObject> createHomuraObject();
 public: /* ヒープ管理 */
 	void gc();
 public: /* グローバルオブジェクトの管理 */

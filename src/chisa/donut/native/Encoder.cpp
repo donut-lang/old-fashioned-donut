@@ -33,6 +33,12 @@ Handler<Object> encode<int>(Handler<Heap> const& heap, int val)
 }
 
 template <>
+Handler<Object> encode<unsigned int>(Handler<Heap> const& heap, unsigned int val)
+{
+	return heap->createInt(val);
+}
+
+template <>
 Handler<Object> encode<float>(Handler<Heap> const& heap, float val)
 {
 	return heap->createFloatObject(val);

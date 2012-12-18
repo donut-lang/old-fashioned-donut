@@ -52,6 +52,7 @@ Machine::Machine(logging::Logger& log, Handler<Clock> const& clock, Handler<Heap
 :log_(log)
 ,clock_(clock)
 ,heap_(heap)
+,running_(false)
 {
 }
 
@@ -130,6 +131,18 @@ unsigned int Machine::stackBase()
 	return chain.stackBase_;
 }
 
+int Machine::findRevisionIndex(timestamp_t const& t) const
+{
+	for(int i=this->contextRevs_.size()-1; i>=0;--i){
+		Context const& c = this->contextRevs_[i];
+		if(t >= c.time_){
+			return i;
+			break;
+		}
+	}
+	return -1;
+}
+
 Handler<Object> Machine::start( Handler<Source> const& src )
 {
 	if( this->isInterrupted() ){
@@ -169,14 +182,7 @@ bool Machine::isInterrupted() const noexcept
 		return !last.callStack_.empty();
 	}
 	// シークされてるので、インデックスを探す
-	int idx = -1;
-	for(int i=this->contextRevs_.size()-1; i>=0;--i){
-		Context const& c = this->contextRevs_[i];
-		if(time >= c.time_){
-			idx = i;
-			break;
-		}
-	}
+	int const idx = this->findRevisionIndex(time);
 	if( idx < 0 ){
 		return false;
 	}
@@ -225,6 +231,7 @@ Handler<Object> Machine::topStack()
 
 Handler<Object> Machine::run()
 {
+	this->running_ = true;
 	bool running = true;
 	Instruction inst;
 	while( running ){
@@ -397,6 +404,7 @@ Handler<Object> Machine::run()
 		}
 	}
 	Handler<Object> result(this->popStack());
+	this->running_ = false;
 	if( !this->isInterrupted() && !this->stack().empty() ){
 		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Execution ended, but stack id not empty:%d", this->stack().size());
 	}
@@ -501,8 +509,12 @@ void Machine::load( util::XValue const& obj)
 
 // 特に何もしない　問題ないはず
 // 実行時にdiscardFuture/discardHistoryされるので実行時に駄目になることはないはず
-void Machine::onBackNotify(){}
-void Machine::onForwardNotify(){}
+void Machine::onBackNotify()
+{
+}
+void Machine::onForwardNotify()
+{
+}
 
 /**
  * 現在の時刻以降のコンテキストを消し去る。
@@ -521,6 +533,10 @@ void Machine::onDiscardFutureNotify()
 		}
 	}
 	this->contextRevs_.erase( this->contextRevs_.begin()+idx+1, this->contextRevs_.end() );
+	Context& last = this->contextRevs_.back();
+	if(this->running_ && time != last.time_) {
+		this->contextRevs_.push_back(Context(clock_, last));
+	}
 }
 
 /**
