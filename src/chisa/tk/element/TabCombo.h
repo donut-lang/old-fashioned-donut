@@ -26,7 +26,7 @@ namespace tk {
 
 class FrameCombo;
 class SplitCombo;
-class Button;
+class TabButton;
 class TabCombo : public ElementGroup {
 	CHISA_ELEMENT_SUBKLASS(TabCombo);
 public:
@@ -41,7 +41,7 @@ private:
 	Handler<FrameCombo> frame_;
 	Handler<SplitCombo> buttons_;
 	ButtonPosition buttonPosition_;
-	util::VectorMap<Handler<Element>, Handler<Button> > buttonMap_;
+	util::VectorMap<Handler<Element>, Handler<TabButton> > buttonMap_;
 public: /* ツリー操作 */
 	virtual std::size_t getChildCount() const noexcept override final;
 	virtual Handler<Element> getChildAt( std::size_t const& idx ) const noexcept override final;

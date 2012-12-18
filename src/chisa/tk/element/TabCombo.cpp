@@ -20,7 +20,7 @@
 #include "ElementFactory.h"
 #include "FrameCombo.h"
 #include "SplitCombo.h"
-#include "Button.h"
+#include "TabButton.h"
 
 namespace chisa {
 
@@ -79,16 +79,18 @@ void TabCombo::addChild(std::size_t const& idx, Handler<Element> const& h)
 
 void TabCombo::addChild(Handler<Element> const& h, std::string const& title)
 {
-	Handler<Button> btn(new Button(log(), world(), top_));
+	Handler<TabButton> btn(new TabButton(log(), world(), top_));
 	btn->text(title);
+	btn->setVertical( (this->buttonPosition_ == ButtonPosition::Left) || (this->buttonPosition_ == ButtonPosition::Right) );
 	this->buttonMap_.insert(h, btn);
 	this->frame_->addChild(h);
 	this->buttons_->addChild(btn, SplitComboContext(1));
 }
 void TabCombo::addChild(std::size_t const& idx, Handler<Element> const& h, std::string const& title)
 {
-	Handler<Button> btn(new Button(log(), world(), top_));
+	Handler<TabButton> btn(new TabButton(log(), world(), top_));
 	btn->text(title);
+	btn->setVertical( (this->buttonPosition_ == ButtonPosition::Left) || (this->buttonPosition_ == ButtonPosition::Right) );
 	this->frame_->addChild(idx, h);
 	this->buttons_->addChild(idx, btn, SplitComboContext(1));
 }
@@ -97,7 +99,7 @@ Handler<Element> TabCombo::removeChild(std::size_t const& idx)
 {
 	Handler<Element> elm(this->frame_->removeChild(idx));
 	auto it = this->buttonMap_.find(elm);
-	Handler<Button> btn(it->second);
+	Handler<TabButton> btn(it->second);
 	this->buttonMap_.erase(it);
 	this->buttons_->removeChild(btn);
 	return elm;
@@ -105,7 +107,7 @@ Handler<Element> TabCombo::removeChild(std::size_t const& idx)
 Handler<Element> TabCombo::removeChild(Handler<Element> const& h)
 {
 	auto it = this->buttonMap_.find(h);
-	Handler<Button> btn(it->second);
+	Handler<TabButton> btn(it->second);
 	this->buttonMap_.erase(it);
 	this->buttons_->removeChild(btn);
 	return 	this->frame_->removeChild(h);

@@ -31,7 +31,6 @@ namespace tk {
 
 const std::string AbstractButton::AttrName::Text("text");
 const std::string AbstractButton::AttrName::TextSize("text-size");
-const std::string AbstractButton::AttrName::EdgeColor("edge-color");
 const std::string AbstractButton::AttrName::ShadowColor("shadow-color");
 const std::string AbstractButton::AttrName::ShadowDepth("shadow-depth");
 
@@ -39,7 +38,6 @@ CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(AbstractButton, Element)
 ,text_()
 ,textSize_(32.0f)
 ,vertical_(false)
-,edgeColor_(gl::Black)
 ,shadowColor_(gl::DarkGray)
 ,shadowDepth_(3.0f)
 ,textImage_()
@@ -47,9 +45,9 @@ CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(AbstractButton, Element)
 {
 	this->margin(geom::Space(2.5f));
 	this->padding(geom::Space(2.5f));
+	this->edgeWidth(1);
 	this->addAttribute(AttrName::Text, this->text_);
 	this->addAttribute(AttrName::TextSize, this->textSize_);
-	this->addAttribute(AttrName::EdgeColor, this->edgeColor_);
 	this->addAttribute(AttrName::ShadowColor, this->shadowColor_);
 	this->addAttribute(AttrName::ShadowDepth, this->shadowDepth_);
 }
