@@ -178,6 +178,9 @@ void Clock::tickStep()
 	if( this->last_ != this->now_ ){
 		this->discardFutureStep();
 	}
+	if(this->log().t()){
+		this->log().t(TAG, "time flies %d -> %d...", this->now_, this->now_+1);
+	}
 	this->last_ = ++this->now_;
 	if(Handler<Donut> dnt = donut_.lock()) {
 		dnt->onTickNotify();
@@ -186,6 +189,9 @@ void Clock::tickStep()
 
 void Clock::backStep()
 {
+	if(this->log().t()){
+		this->log().t(TAG, "time goes back from %d to %d...", this->now_, this->now_-1);
+	}
 	--this->now_;
 	if(Handler<Donut> donut = this->donut_.lock()){
 		donut->onBackNotify();
@@ -195,6 +201,9 @@ void Clock::backStep()
 }
 void Clock::forwardStep()
 {
+	if(this->log().t()){
+		this->log().t(TAG, "time goes foward from %d to %d...", this->now_, this->now_+1);
+	}
 	++this->now_;
 	if(Handler<Donut> donut = this->donut_.lock()){
 		donut->onForwardNotify();
@@ -209,6 +218,9 @@ void Clock::discardFutureStep()
 		log().w(TAG, "Tried to discard future, but vm state is already latest.");
 		return;
 	}
+	if(this->log().t()){
+		this->log().t(TAG, "Discarding future from %d to %d... now: %d", this->now_, this->last_, this->now_);
+	}
 	if(Handler<Donut> donut = this->donut_.lock()){
 		donut->onDiscardFutureNotify();
 	}else{
@@ -221,6 +233,9 @@ void Clock::discardHistoryStep()
 	if( this->first_ >= this->now_ ){
 		log().w(TAG, "Tried to discard history, but vm state is already oldest.");
 		return;
+	}
+	if(this->log().t()){
+		this->log().t(TAG, "Discarding history from %d to %d... now: %d", this->first_, this->now_, this->now_);
 	}
 	if(Handler<Donut> donut = this->donut_.lock()){
 		donut->onDiscardHistoryNotify();
