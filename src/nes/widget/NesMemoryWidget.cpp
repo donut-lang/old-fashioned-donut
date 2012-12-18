@@ -13,7 +13,6 @@
 #include "../../chisa/gl/DrawableManager.h"
 
 namespace nes {
-namespace widget {
 
 NesMemoryWidget::NesMemoryWidget(chisa::logging::Logger& log, chisa::HandlerW<chisa::tk::World> _world, tinyxml2::XMLElement* element)
 :Widget(log, _world, element)
@@ -47,4 +46,4 @@ chisa::geom::Box NesMemoryWidget::measure(chisa::geom::Box const& constraintSize
 	return constraintSize;
 }
 
-}}
+}

@@ -23,7 +23,6 @@
 #include "../../chisa/geom/Area.h"
 
 namespace nes {
-namespace widget {
 
 NesScreenWidget::NesScreenWidget(chisa::logging::Logger& log, chisa::HandlerW<chisa::tk::World> _world, tinyxml2::XMLElement* element)
 :Widget(log, _world, element)
@@ -72,4 +71,4 @@ chisa::geom::Box NesScreenWidget::measure(chisa::geom::Box const& constraintSize
 	return chisa::geom::Box(256,240);
 }
 
-}}
+}

@@ -81,7 +81,7 @@ void World::init()
 				log().t(TAG, "Geist not specified for: %s", this->name().c_str());
 			}
 		}
-		this->widgetFactory_ = new widget::WidgetFactory(this->log_, self());
+		this->widgetFactory_ = new WidgetFactory(this->log_, self());
 		universe->hexe()->registerWidgets(*this->widgetFactory_);
 	}
 	this->gestureMediator_ = new GestureMediator(this->log_, self());

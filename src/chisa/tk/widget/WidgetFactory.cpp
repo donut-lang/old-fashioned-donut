@@ -24,7 +24,6 @@
 
 namespace chisa {
 namespace tk {
-namespace widget {
 
 WidgetFactory::WidgetFactory(logging::Logger& log, HandlerW<World> world)
 :log_(log)
@@ -52,4 +51,4 @@ Widget* WidgetFactory::createWidget(std::string const& klass, tinyxml2::XMLEleme
 	return it->second(log_, world_, elem);
 }
 
-}}}
+}}

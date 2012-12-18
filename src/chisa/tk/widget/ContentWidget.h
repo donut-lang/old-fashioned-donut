@@ -29,7 +29,6 @@ class Document;
 }
 
 namespace tk {
-namespace widget {
 
 class ContentWidget: public chisa::tk::Widget {
 	CHISA_WIDGET_SUBKLASS(ContentWidget);
@@ -49,4 +48,4 @@ public:
 	virtual bool onZoom(const float timeMs, geom::Point const& center, const float ratio) override;
 };
 
-}}}
+}}

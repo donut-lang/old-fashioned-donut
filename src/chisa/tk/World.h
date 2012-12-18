@@ -63,7 +63,7 @@ private:
 	DEFINE_MEMBER(public, private, Handler<WorldGeist>, geist);
 private:
 	ElementFactory* elementFactory_;
-	widget::WidgetFactory* widgetFactory_;
+	WidgetFactory* widgetFactory_;
 	GestureMediator* gestureMediator_;
 public:
 	void render(gl::Canvas& canvas);
