@@ -70,8 +70,8 @@ BlockSession::~BlockSession() noexcept
 void BlockSession::disposeInlineObject()
 {
 	for(Handler<RenderObject> obj : this->inlineObjects_){
-		//Y位置だけは最後に計算する。他はすでに計算済み
-		obj->area().y(obj->area().y() + this->inlineHeight_-obj->area().height());
+		//Y位置だけは最後にここで計算する。他はすでに計算済み
+		obj->area().y(obj->area().y() + (this->inlineHeight_-obj->area().height())/2);
 	}
 	this->inlineObjects_.clear();
 }

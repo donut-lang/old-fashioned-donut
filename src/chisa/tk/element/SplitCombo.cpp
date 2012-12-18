@@ -100,7 +100,7 @@ void SplitCombo::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement
 void SplitCombo::resetChildren()
 {
 	for(ContainerType& ctx: this->children()){
-		//ctx.second.size=geom::Unspecified;
+		ctx.second.size=geom::Unspecified;
 	}
 	this->totalSize_ = geom::Unspecified;
 }
