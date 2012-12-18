@@ -33,11 +33,6 @@ FrameCombo::~FrameCombo() noexcept
 
 }
 
-std::size_t FrameCombo::bringToFront(Handler<Element> const& e)
-{
-	return this->bringChildToLast(e);
-}
-
 std::string FrameCombo::toString() const
 {
 	return util::format("(FrameCombo %p with %d elements)", this, getChildCount());

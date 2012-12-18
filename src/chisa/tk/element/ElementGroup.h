@@ -30,17 +30,14 @@ private:
 public:
 	inline std::size_t getChildCount() const noexcept { return child_.size(); };
 	inline Handler<Element> getChildAt( std::size_t const& idx ) const noexcept { return child_.at(idx); };
-	inline void addChild(Handler<Element> const& h){ this->child_.push_back(h); };
-	inline void addChild(std::size_t const& idx, Handler<Element> const& h){ this->child_.insert(this->child_.begin()+idx, h); };
-	Handler<Element> removeChild(std::size_t const& idx);
-	Handler<Element> removeChild(Handler<Element> const& h);
-	Handler<Element> lastChild() const noexcept;
-	std::size_t bringChildToLast(Handler<Element> const& e);
-	std::size_t bringChildToFront(Handler<Element> const& e);
-	inline auto begin() -> decltype(child_.begin()) { return this->child_.begin(); };
-	inline auto begin() const -> decltype(child_.begin()) { return this->child_.begin(); };
-	inline auto end() -> decltype(child_.begin()) { return this->child_.end(); };
-	inline auto end() const -> decltype(child_.begin()) { return this->child_.end(); };
+	virtual void addChild(Handler<Element> const& h);
+	virtual void addChild(std::size_t const& idx, Handler<Element> const& h);
+	virtual Handler<Element> removeChild(std::size_t const& idx);
+	virtual Handler<Element> removeChild(Handler<Element> const& h);
+	virtual Handler<Element> lastChild() const noexcept;
+	virtual Handler<Element> frontChild() const noexcept;
+	virtual std::size_t bringChildToLast(Handler<Element> const& e);
+	virtual std::size_t bringChildToFront(Handler<Element> const& e);
 public: /* ツリー操作 */
 	virtual Handler<Element> findElementById(std::string const& id) override final;
 	virtual Handler<Element> findElementByPoint(geom::Vector const& screenPoint) override final;

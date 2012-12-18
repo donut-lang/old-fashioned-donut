@@ -35,27 +35,19 @@ ElementGroup::~ElementGroup() noexcept
 
 void ElementGroup::idle(const float delta_ms)
 {
+	for(Handler<Element>& child : this->child_) {
+		child->idle(delta_ms);
+	}
 }
 
-/*
-void ElementGroup::loadXml(element::ElementGroupFactory* const factory, tinyxml2::XMLElementGroup* const element)
+void ElementGroup::addChild(Handler<Element> const& h)
 {
-	for(auto it : this->attrMap_){
-		//firstには要素名が、secondにはnodeをパースして設定する関数オブジェクトが入ってる
-		it.second(element);
-	}
-	this->loadXmlImpl(factory, element);
+	this->child_.push_back(h);
 }
-
-Handler<ElementGroup> ElementGroup::findRootElement()
+void ElementGroup::addChild(std::size_t const& idx, Handler<Element> const& h)
 {
-	Handler<ElementGroup> root(self());
-	for(Handler<ElementGroup> element=parent().lock(); element; element=element->parent().lock()){
-		root=element;
-	}
-	return root;
+	this->child_.insert(this->child_.begin() + idx, h);
 }
-*/
 
 Handler<Element> ElementGroup::removeChild(std::size_t const& idx)
 {
@@ -80,6 +72,11 @@ Handler<Element> ElementGroup::removeChild(Handler<Element> const& h)
 Handler<Element> ElementGroup::lastChild() const noexcept
 {
 	return this->child_.size() <= 0 ? Handler<Element>() : this->child_.back();
+}
+
+Handler<Element> ElementGroup::frontChild() const noexcept
+{
+	return this->child_.size() <= 0 ? Handler<Element>() : this->child_.front();
 }
 
 Handler<Element> ElementGroup::findElementById(std::string const& id)

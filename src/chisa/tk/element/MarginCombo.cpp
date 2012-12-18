@@ -24,7 +24,7 @@ namespace chisa {
 namespace tk {
 namespace element {
 
-CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF(MarginCombo)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(MarginCombo, ElementGroup)
 {
 	this->margin_ = geom::Space(0,0,0,0);
 	this->addAttribute("margin", this->margin_);
@@ -42,8 +42,8 @@ std::string MarginCombo::toString() const
 
 void MarginCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
 {
-	if(this->child_){
-		this->child_->render(
+	if(auto c = this->frontChild()){
+		c->render(
 			canvas,
 			geom::Area(screenArea.point()+this->margin_.offset(), screenArea.box()-this->margin_.totalSpace()),
 			geom::Area(area.point(), area.box()-this->margin_.totalSpace())
@@ -53,22 +53,22 @@ void MarginCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, g
 
 geom::Box MarginCombo::measureImpl(geom::Box const& constraint)
 {
-	if(this->child_){
-		return this->child_->measure( constraint-this->margin_.totalSpace() ) + this->margin_.totalSpace();
+	if(auto c = this->frontChild()){
+		return c->measure( constraint-this->margin_.totalSpace() ) + this->margin_.totalSpace();
 	}
 	return constraint;
 }
 
 void MarginCombo::layoutImpl(geom::Box const& size)
 {
-	if(this->child_){
-		this->child_->layout( size-this->margin_.totalSpace() );
+	if(auto c = this->frontChild()){
+		c->layout( size-this->margin_.totalSpace() );
 	}
 }
 
 void MarginCombo::loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
-	this->child_=factory->parseTree(this->self(), element->FirstChildElement());
+	this->addChild( factory->parseTree(this->self(), element->FirstChildElement()) );
 }
 
 
