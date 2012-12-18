@@ -17,7 +17,6 @@
  */
 
 #include "FloatObject.h"
-#include <algorithm>
 #include "../../util/StringUtil.h"
 
 namespace chisa {

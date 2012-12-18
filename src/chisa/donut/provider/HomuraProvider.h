@@ -16,35 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Decoder.h"
+#pragma once
+#include "Provider.h"
 
 namespace chisa {
 namespace donut {
-namespace native {
 
-template <>
-int decode<int>(Handler<Heap> const& heap, Handler<Object> obj)
-{
-	return obj->toInt(heap);
-}
+class HomuraObject;
+class HomuraProvider final : public HeapProviderImpl<HomuraObject> {
+public:
+	HomuraProvider(Handler<Heap> const& heap);
+	virtual ~HomuraProvider() noexcept = default;
+};
 
-template <>
-unsigned int decode<unsigned int>(Handler<Heap> const& heap, Handler<Object> obj)
-{
-	return obj->toInt(heap);
-}
-template <>
-float decode<float>(Handler<Heap> const& heap, Handler<Object> obj)
-{
-	return obj->toFloat(heap);
-}
-
-template <>
-bool decode<bool>(Handler<Heap> const& heap, Handler<Object> obj)
-{
-	return obj->toBool(heap);
-}
-
-}}}
-
-
+}}

@@ -73,6 +73,7 @@ private: /* 何があっても不変なもの。*/
 	Handler<Heap> const heap_;
 private: /* 時とともに変わっていくもの */
 	std::vector<Context> contextRevs_;
+	bool running_;
 private: /* それへのアクセス手段の提供。 */
 	Handler<Object> const& self();
 	Handler<DonutObject> const& scope();
@@ -82,6 +83,7 @@ private: /* それへのアクセス手段の提供。 */
 	std::vector<Handler<Object> >& stack();
 	unsigned int stackBase();
 	std::vector<Callchain>& callStack();
+	int findRevisionIndex(timestamp_t const& t) const;
 	pc_t& pc();
 public: /* 生成 */
 	Machine(logging::Logger& log, Handler<Clock> const& clock, Handler<Heap> const& heap);
