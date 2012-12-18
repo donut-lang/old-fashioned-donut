@@ -23,7 +23,7 @@ namespace tk {
 namespace element {
 
 
-CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(ScrollCombo, ElementGroupBase<std::nullptr_t>)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(ScrollCombo, Super)
 ,scrollMode_(None)
 ,scrollOffset_(0,0)
 ,lastMovedFrom_(0)
