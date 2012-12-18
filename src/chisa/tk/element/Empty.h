@@ -17,8 +17,6 @@
  */
 
 #pragma once
-#include <memory>
-#include <tinyxml2.h>
 #include "../Element.h"
 
 namespace chisa {

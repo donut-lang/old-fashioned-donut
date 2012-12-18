@@ -24,7 +24,7 @@ namespace chisa {
 namespace tk {
 namespace element {
 
-CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(MarginCombo, ElementGroup)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(MarginCombo, Super)
 {
 	this->margin_ = geom::Space(0,0,0,0);
 	this->addAttribute("margin", this->margin_);
@@ -33,6 +33,21 @@ CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(MarginCombo, ElementGroup)
 MarginCombo::~MarginCombo() noexcept
 {
 
+}
+
+void MarginCombo::addChild(Handler<Element> const& h, Context const& ctx)
+{
+	if(getChildCount() > 0){
+		throw logging::Exception(__FILE__, __LINE__, "[BUG] Margin Combo can hold only one element.");
+	}
+	this->Super::addChild(h,ctx);
+}
+void MarginCombo::addChild(std::size_t const& idx, Handler<Element> const& h, Context const& ctx)
+{
+	if(getChildCount() > 0){
+		throw logging::Exception(__FILE__, __LINE__, "[BUG] Margin Combo can hold only one element.");
+	}
+	this->Super::addChild(idx,h,ctx);
 }
 
 std::string MarginCombo::toString() const

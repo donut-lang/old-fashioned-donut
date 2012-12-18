@@ -342,18 +342,6 @@ void swap(Handler<T>& a, Handler<T>& b) noexcept
 	a.swap(b);
 }
 
-template<class T, class U>
-bool operator==(Handler<T> const& a, Handler<U> const& b) noexcept
-{
-	return a.get() == b.get();
-}
-
-template<class T, class U>
-bool operator!=(Handler<T> const& a, Handler<U> const& b) noexcept
-{
-	return a.get() != b.get();
-}
-
 template <bool atomic=false>
 struct _HandlerBodyTypes{
 	typedef int RefCounterType;
@@ -417,6 +405,42 @@ protected:
 		}
 	}
 };
+
+template<class T, class U>
+bool operator==(Handler<T> const& a, Handler<U> const& b) noexcept
+{
+	return a.get() == b.get();
+}
+
+template<class T, class U>
+bool operator!=(Handler<T> const& a, Handler<U> const& b) noexcept
+{
+	return a.get() != b.get();
+}
+
+template<class T, class U>
+bool operator<(Handler<T> const& a, Handler<U> const& b) noexcept
+{
+	return a.get() < b.get();
+}
+
+template<class T, class U>
+bool operator<=(Handler<T> const& a, Handler<U> const& b) noexcept
+{
+	return a.get() <= b.get();
+}
+
+template<class T, class U>
+bool operator>(Handler<T> const& a, Handler<U> const& b) noexcept
+{
+	return a.get() > b.get();
+}
+
+template<class T, class U>
+bool operator>=(Handler<T> const& a, Handler<U> const& b) noexcept
+{
+	return a.get() >= b.get();
+}
 
 }
 

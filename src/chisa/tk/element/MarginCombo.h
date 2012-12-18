@@ -24,13 +24,16 @@ namespace chisa {
 namespace tk {
 namespace element {
 
-class MarginCombo : public ElementGroup {
+class MarginCombo : public ElementGroupBase<std::nullptr_t> {
 	CHISA_ELEMENT_SUBKLASS(MarginCombo);
 	geom::Space margin_;
 public:
 	virtual std::string toString() const override;
 private:
-
+	using Super::addChild;
+	virtual void addChild(Handler<Element> const& h, Context const& ctx) override final;
+	virtual void addChild(std::size_t const& idx, Handler<Element> const& h, Context const& ctx) override final;
+private:
 	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override;
 	virtual geom::Box measureImpl(geom::Box const& constraint) override;
 	virtual void layoutImpl(geom::Box const& size) override;

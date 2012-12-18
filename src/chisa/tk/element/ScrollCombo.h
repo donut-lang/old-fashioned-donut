@@ -39,6 +39,10 @@ private:
 	geom::Point scrollOffset_;
 	geom::Box childSize_;
 	float lastMovedFrom_;
+private:
+	using Super::addChild;
+	virtual void addChild(Handler<Element> const& h, Context const& ctx) override final;
+	virtual void addChild(std::size_t const& idx, Handler<Element> const& h, Context const& ctx) override final;
 public:
 	virtual std::string toString() const override;
 	virtual void idle(const float delta_ms) override;

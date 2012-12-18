@@ -18,6 +18,7 @@
 
 #pragma once
 #include "../Element.h"
+#include <vector>
 
 namespace chisa {
 namespace tk {
@@ -25,10 +26,6 @@ namespace element {
 
 class ElementGroup : public Element {
 	CHISA_ELEMENT_SUBKLASS_FINAL(ElementGroup);
-private:
-	std::vector<Handler<Element> > children_;
-protected:
-	inline std::vector<Handler<Element> >& children(){ return this->children_; };
 public: /* ツリー操作 */
 	virtual std::size_t getChildCount() const noexcept = 0;
 	virtual Handler<Element> getChildAt( std::size_t const& idx ) const noexcept = 0;
@@ -49,13 +46,14 @@ public: /* 実装メソッド */
 	virtual std::string toString() const override = 0;
 };
 
-template <typename Context>
+template <typename __Context>
 class ElementGroupBase : public ElementGroup {
 protected:
 	ElementGroupBase(CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST)
 	:ElementGroup(CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_APPLY){}
 	virtual ~ElementGroupBase() noexcept {}
 protected:
+	typedef __Context Context;
 	typedef std::pair<Handler<Element>,Context> ContainerType;
 	typedef ElementGroupBase<Context> Super;
 private:
@@ -72,13 +70,13 @@ public: /* ツリー操作 */
 	virtual void addChild(Handler<Element> const& h, Context const& ctx) {
 		this->children_.push_back(std::make_pair(h,ctx));
 	}
-	virtual void addChild(Handler<Element> const& h) override final {
-		this->addChild(h, Context());
-	}
 	virtual void addChild(std::size_t const& idx, Handler<Element> const& h, Context const& ctx) {
 		this->children_.insert(this->children_.begin() + idx, std::make_pair(h,ctx));
 	}
-	virtual void addChild(std::size_t const& idx, Handler<Element> const& h) override {
+	virtual void addChild(Handler<Element> const& h) override final {
+		this->addChild(h, Context());
+	}
+	virtual void addChild(std::size_t const& idx, Handler<Element> const& h) override final {
 		this->addChild(idx, h, Context());
 	}
 	virtual Handler<Element> removeChild(std::size_t const& idx) override final {

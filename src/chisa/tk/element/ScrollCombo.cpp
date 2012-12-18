@@ -35,6 +35,22 @@ ScrollCombo::~ScrollCombo() noexcept
 {
 }
 
+
+void ScrollCombo::addChild(Handler<Element> const& h, Context const& ctx)
+{
+	if(getChildCount() > 0){
+		throw logging::Exception(__FILE__, __LINE__, "[BUG] Scroll Combo can hold only one element.");
+	}
+	this->Super::addChild(h,ctx);
+}
+void ScrollCombo::addChild(std::size_t const& idx, Handler<Element> const& h, Context const& ctx)
+{
+	if(getChildCount() > 0){
+		throw logging::Exception(__FILE__, __LINE__, "[BUG] Scroll Combo can hold only one element.");
+	}
+	this->Super::addChild(idx,h,ctx);
+}
+
 void ScrollCombo::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* element)
 {
 	if( const char* _mode = element->Attribute("mode", nullptr) ){

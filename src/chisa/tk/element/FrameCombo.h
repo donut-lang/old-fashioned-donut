@@ -18,7 +18,6 @@
 
 #pragma once
 #include "ElementGroup.h"
-#include "../../geom/Area.h"
 
 namespace chisa {
 namespace tk {
@@ -28,7 +27,7 @@ class FrameCombo : public ElementGroupBase<std::nullptr_t> {
 	CHISA_ELEMENT_SUBKLASS(FrameCombo);
 public:
 	virtual std::string toString() const override;
-private:
+public:
 	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override;
 	virtual geom::Box measureImpl(geom::Box const& constraint) override;
 	virtual void layoutImpl(geom::Box const& size) override;
