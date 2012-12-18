@@ -34,14 +34,14 @@ void parseAttr<TabCombo::ButtonPosition>(std::string const& name, TabCombo::Butt
 	v=def;
 	const char* val = elm->Attribute(name.c_str());
 	if(val){
-		std::string v(util::toLower(val));
-		if(v == "top"){
+		std::string vs(util::toLower(val));
+		if(vs == "top"){
 			v=TabCombo::ButtonPosition::Top;
-		}else if(v=="bottom"){
+		}else if(vs=="bottom"){
 			v=TabCombo::ButtonPosition::Bottom;
-		}else if(v=="right"){
+		}else if(vs=="right"){
 			v=TabCombo::ButtonPosition::Right;
-		}else if(v=="left"){
+		}else if(vs=="left"){
 			v=TabCombo::ButtonPosition::Left;
 		}
 	}
@@ -169,24 +169,24 @@ void TabCombo::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* 
 		this->top_->setMode(SplitCombo::SplitMode::Horizontal);
 		this->buttons_->setMode(SplitCombo::SplitMode::Vertical);
 		this->top_->addChild(this->frame_, SplitComboContext(1));
-		this->top_->addChild(this->buttons_, SplitComboContext(0));
+		this->top_->addChild(this->buttons_, SplitComboContext(1));
 		break;
 	case ButtonPosition::Left:
 		this->top_->setMode(SplitCombo::SplitMode::Horizontal);
 		this->buttons_->setMode(SplitCombo::SplitMode::Vertical);
-		this->top_->addChild(this->buttons_, SplitComboContext(0));
+		this->top_->addChild(this->buttons_, SplitComboContext(1));
 		this->top_->addChild(this->frame_, SplitComboContext(1));
 		break;
 	case ButtonPosition::Bottom:
 		this->top_->setMode(SplitCombo::SplitMode::Vertical);
 		this->buttons_->setMode(SplitCombo::SplitMode::Horizontal);
 		this->top_->addChild(this->frame_, SplitComboContext(1));
-		this->top_->addChild(this->buttons_, SplitComboContext(0));
+		this->top_->addChild(this->buttons_, SplitComboContext(1));
 		break;
 	case ButtonPosition::Top:
 		this->top_->setMode(SplitCombo::SplitMode::Vertical);
 		this->buttons_->setMode(SplitCombo::SplitMode::Horizontal);
-		this->top_->addChild(this->buttons_, SplitComboContext(0));
+		this->top_->addChild(this->buttons_, SplitComboContext(1));
 		this->top_->addChild(this->frame_, SplitComboContext(1));
 		break;
 	}
