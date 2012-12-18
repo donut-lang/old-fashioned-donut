@@ -58,7 +58,7 @@ void TabCombo::loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XML
 	this->buttons_ = this->createChild<SplitCombo>();
 	this->frame_ = this->createChild<FrameCombo>();
 	for( tinyxml2::XMLElement* e = element->FirstChildElement(); e; e=e->NextSiblingElement() ){
-		//this->frame_->appendChild( factory->parseTree(this->self(), e) );
+		this->frame_->addChild( factory->parseTree(this->self(), e) );
 	}
 }
 

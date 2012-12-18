@@ -157,10 +157,6 @@ public: /* バックグラウンドタスク */
 			child.first->idle(delta_ms);
 		}
 	}
-public: /* 実装メソッド */
-	virtual std::string toString() const override {
-		return "(ElementGroupBase)";
-	}
 };
 
 
