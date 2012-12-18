@@ -17,13 +17,31 @@
  */
 
 #include "../Color.h"
+
 #include "../../util/XArchiver.h"
+#include "../../util/XMLAttrParser.h"
+
 #include "../../util/StringUtil.h"
+
+using namespace chisa::gl;
 
 namespace chisa {
 namespace util {
+namespace xml {
 
-using namespace chisa::gl;
+template <>
+void parseAttr<Color>(std::string const& name, Color& v, Color const& def, tinyxml2::XMLElement* elm)
+{
+	if( const char* attr = elm->Attribute(name.c_str()) ) {
+		Color const c = Color::fromString(attr);
+		if(!c.isInvalid()){
+			v=c;
+			return;
+		}
+	}
+	v=def;
+}
+}
 
 template <>
 struct XSerializer<Color> {
@@ -47,3 +65,5 @@ struct XSerializer<Color> {
 };
 
 }}
+
+

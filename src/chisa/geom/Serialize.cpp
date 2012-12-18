@@ -18,10 +18,38 @@
 
 #include "Vector.h"
 #include "Area.h"
+#include "../util/XMLAttrParser.h"
 #include "../util/XArchiver.h"
+
+using namespace chisa::geom;
 
 namespace chisa {
 namespace util {
+namespace xml {
+
+template <>
+void parseAttr<Space>(std::string const& name, Space& v, Space const& def, tinyxml2::XMLElement* elm)
+{
+	float margin=0.0f;
+	v=def;
+	if(elm->QueryFloatAttribute(name.c_str(), &margin) == tinyxml2::XML_SUCCESS){
+		v.margin(margin);
+	}
+	if(elm->QueryFloatAttribute((name+"-top").c_str(), &margin) == tinyxml2::XML_SUCCESS){
+		v.top(margin);
+	}
+	if(elm->QueryFloatAttribute((name+"-left").c_str(), &margin) == tinyxml2::XML_SUCCESS){
+		v.left(margin);
+	}
+	if(elm->QueryFloatAttribute((name+"-right").c_str(), &margin) == tinyxml2::XML_SUCCESS){
+		v.right(margin);
+	}
+	if(elm->QueryFloatAttribute((name+"-bottom").c_str(), &margin) == tinyxml2::XML_SUCCESS){
+		v.bottom(margin);
+	}
+}
+
+}
 
 using namespace chisa::geom;
 template <>
