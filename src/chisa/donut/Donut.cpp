@@ -150,6 +150,14 @@ bool Donut::canAdvance() const noexcept
  * from clock
  **********************************************************************************/
 
+void Donut::onTickNotify()
+{
+	for( std::pair<std::string const,Handler<Machine> > const& m : this->machines_ ){
+		m.second->onTickNotify();
+	}
+	this->heap_->onTickNotify();
+}
+
 void Donut::onBackNotify()
 {
 	for( std::pair<std::string const,Handler<Machine> > const& m : this->machines_ ){

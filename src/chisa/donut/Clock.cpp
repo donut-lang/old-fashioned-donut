@@ -30,19 +30,14 @@ Clock::Clock( Donut* const donut)
 ,first_(1)
 ,now_(1)
 ,donut_(donut)
-,state(State::NORMAL)
+,enter_(false)
 ,discardFutureRequested_(false)
 ,discardHistoryRequested_(false)
+,tickRequested_(false)
 {
 }
 
-void Clock::tick()
-{
-	if( this->last_ != this->now_ ){
-		this->discardFuture();
-	}
-	this->last_ = ++this->now_;
-}
+
 
 /**********************************************************************************
  * save/restore function
@@ -81,137 +76,155 @@ void Clock::seek( unsigned int const& time )
 	if( time > this->lastTime() ) {
 		throw DonutException(__FILE__, __LINE__, "[BUG] Failed to seek. time: %d > %d", time, this->last_);
 	}
+	this->enter_=true;
 	while(time != this->now()){
 		if( time < this->now()){
-			this->back();
+			this->backStep();
 		}else{
-			this->forward();
+			this->forwardStep();
 		}
 	}
+	this->processRequest();
+	this->enter_=false;
 }
 
-void Clock::processRequestedDiscard()
+void Clock::processRequest()
 {
-	if( this->discardFutureRequested_ ){
-		this->discardFuture();
-	}
-	if(this->discardHistoryRequested_ ){
-		this->discardHistory();
+	int cnt = 0;
+	while( this->discardFutureRequested_ || this->discardHistoryRequested_ || this->tickRequested_){
+		if( this->discardFutureRequested_ ){
+			this->discardFutureStep();
+			this->discardFutureRequested_=false;
+		}
+		if(this->discardHistoryRequested_ ){
+			this->discardHistoryStep();
+			this->discardHistoryRequested_=false;
+		}
+		if(this->tickRequested_) {
+			this->tickStep();
+			this->tickRequested_ = false;
+		}
+		++cnt;
+		if(cnt > 1000){
+			throw DonutException(__FILE__, __LINE__, "[BUG] Endless discard/tick loop.");
+		}
 	}
 }
 
 void Clock::back()
 {
-	switch(this->state){
-	case State::NORMAL:
-		break;
-	case State::SEEK:
-		throw DonutException(__FILE__, __LINE__, "[BUG] Seek function is not reentrant.");
+	if(this->enter_){
 		return;
-	case State::DISCARD:
-		throw DonutException(__FILE__, __LINE__, "[BUG] You cannot call seek function while discarding.");
-	default:
-		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon clock state!");
 	}
-	if( this->now_ <= this->first_ ){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Cannot back the clock anymore.");
+	this->enter_=true;
+	this->backStep();
+	this->processRequest();
+	this->enter_=false;
+}
+void Clock::forward()
+{
+	if(this->enter_){
+		return;
 	}
-	this->state = State::SEEK;
+	this->enter_=true;
+	this->forwardStep();
+	this->processRequest();
+	this->enter_=false;
+}
+
+void Clock::tick()
+{
+	if(this->enter_){
+		this->tickRequested_=true;
+		return;
+	}
+	this->enter_=true;
+	this->tickStep();
+	this->processRequest();
+	this->enter_=false;
+}
+void Clock::discardFuture()
+{
+	if(this->enter_){
+		this->discardFutureRequested_=true;
+		return;
+	}
+	this->enter_=true;
+	this->discardFutureStep();
+	this->processRequest();
+	this->enter_=false;
+}
+void Clock::discardHistory()
+{
+	if(this->enter_){
+		this->discardHistoryRequested_=true;
+		return;
+	}
+	this->enter_=true;
+	this->discardHistoryStep();
+	this->processRequest();
+	this->enter_=false;
+}
+
+/**********************************************************************************
+ * time impl
+ **********************************************************************************/
+
+void Clock::tickStep()
+{
+	if( this->last_ != this->now_ ){
+		this->discardFutureStep();
+	}
+	this->last_ = ++this->now_;
+	if(Handler<Donut> dnt = donut_.lock()) {
+		dnt->onTickNotify();
+	}
+}
+
+void Clock::backStep()
+{
 	--this->now_;
 	if(Handler<Donut> donut = this->donut_.lock()){
 		donut->onBackNotify();
 	}else{
 		log().e(TAG, "Seeked to %d, but donut was already dead.", time);
 	}
-	this->state = State::NORMAL;
-	this->processRequestedDiscard();
 }
-void Clock::forward()
+void Clock::forwardStep()
 {
-	switch(this->state){
-	case State::NORMAL:
-		break;
-	case State::SEEK:
-		throw DonutException(__FILE__, __LINE__, "[BUG] Seek function is not reentrant.");
-		return;
-	case State::DISCARD:
-		throw DonutException(__FILE__, __LINE__, "[BUG] You cannot call seek function while discarding.");
-	default:
-		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon clock state!");
-	}
-	if( this->now_ >= this->last_ ){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Cannot back the clock anymore.");
-	}
-	this->state = State::SEEK;
 	++this->now_;
 	if(Handler<Donut> donut = this->donut_.lock()){
 		donut->onForwardNotify();
 	}else{
 		log().e(TAG, "Seeked to %d, but donut was already dead.", time);
 	}
-	this->state = State::NORMAL;
-	this->processRequestedDiscard();
 }
 
-void Clock::discardFuture()
+void Clock::discardFutureStep()
 {
-	switch(this->state){
-	case State::NORMAL:
-		break;
-	case State::SEEK:
-		this->log().i(TAG, "Discarding future reserved");
-		this->discardFutureRequested_ = true;
-		return;
-	case State::DISCARD:
-		throw DonutException(__FILE__, __LINE__, "[BUG] Discarding function is not reentrant");
-	default:
-		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon clock state!");
-	}
 	if( this->last_ <= this->now_ ){
 		log().w(TAG, "Tried to discard future, but vm state is already latest.");
 		return;
 	}
-	this->state = State::DISCARD;
-	{
-		if(Handler<Donut> donut = this->donut_.lock()){
-			donut->onDiscardFutureNotify();
-		}else{
-			log().e(TAG, "Tried to discard future, but donut was already dead.");
-		}
-		this->last_ = this->now_;
-		this->discardFutureRequested_ = false;
+	if(Handler<Donut> donut = this->donut_.lock()){
+		donut->onDiscardFutureNotify();
+	}else{
+		log().e(TAG, "Tried to discard future, but donut was already dead.");
 	}
-	this->state = State::NORMAL;
+	this->last_ = this->now_;
 }
-void Clock::discardHistory()
+void Clock::discardHistoryStep()
 {
-	switch(this->state){
-	case State::NORMAL:
-		break;
-	case State::SEEK:
-		this->log().i(TAG, "Discarding future reserved");
-		this->discardHistoryRequested_ = true;
-		return;
-	case State::DISCARD:
-		throw DonutException(__FILE__, __LINE__, "[BUG] Discarding function is not reentrant");
-	default:
-		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon clock state!");
-	}
 	if( this->first_ >= this->now_ ){
 		log().w(TAG, "Tried to discard history, but vm state is already oldest.");
 		return;
 	}
-	this->state = State::DISCARD;
-	{
-		if(Handler<Donut> donut = this->donut_.lock()){
-			donut->onDiscardHistoryNotify();
-		}else{
-			log().e(TAG, "Tried to discard future, but donut was already dead.");
-		}
-		this->first_ = this->now_;
-		this->discardHistoryRequested_ = false;
+	if(Handler<Donut> donut = this->donut_.lock()){
+		donut->onDiscardHistoryNotify();
+	}else{
+		log().e(TAG, "Tried to discard future, but donut was already dead.");
 	}
-	this->state = State::NORMAL;
+	this->first_ = this->now_;
 }
 
 

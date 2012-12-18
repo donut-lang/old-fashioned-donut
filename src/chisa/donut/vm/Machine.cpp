@@ -507,10 +507,20 @@ void Machine::load( util::XValue const& obj)
  * time functions
  **********************************************************************************/
 
+void Machine::onTickNotify()
+{
+	if(this->running_) {
+		Context& last = this->contextRevs_.back();
+		this->contextRevs_.push_back(Context(clock_, last));
+	}
+}
 // 特に何もしない　問題ないはず
 // 実行時にdiscardFuture/discardHistoryされるので実行時に駄目になることはないはず
 void Machine::onBackNotify()
 {
+	if(this->running_) {
+		clock_->tick();
+	}
 }
 void Machine::onForwardNotify()
 {
@@ -533,10 +543,6 @@ void Machine::onDiscardFutureNotify()
 		}
 	}
 	this->contextRevs_.erase( this->contextRevs_.begin()+idx+1, this->contextRevs_.end() );
-	Context& last = this->contextRevs_.back();
-	if(this->running_ && time != last.time_) {
-		this->contextRevs_.push_back(Context(clock_, last));
-	}
 }
 
 /**
