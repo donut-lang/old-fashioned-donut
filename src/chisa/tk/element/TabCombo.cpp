@@ -70,25 +70,25 @@ Handler<Element> TabCombo::getChildAt(std::size_t const& idx) const noexcept
 }
 void TabCombo::addChild(Handler<Element> const& h)
 {
-	this->addChild(h, "Button");
+	this->addChild(h, h->toString());
 }
 void TabCombo::addChild(std::size_t const& idx, Handler<Element> const& h)
 {
-	this->addChild(idx, h, "Button");
+	this->addChild(idx, h, h->toString());
 }
 
-void TabCombo::addChild(Handler<Element> const& h, std::string const& text)
+void TabCombo::addChild(Handler<Element> const& h, std::string const& title)
 {
 	Handler<Button> btn(new Button(log(), world(), top_));
-	btn->text(text);
+	btn->text(title);
 	this->buttonMap_.insert(h, btn);
 	this->frame_->addChild(h);
 	this->buttons_->addChild(btn);
 }
-void TabCombo::addChild(std::size_t const& idx, Handler<Element> const& h, std::string const& text)
+void TabCombo::addChild(std::size_t const& idx, Handler<Element> const& h, std::string const& title)
 {
 	Handler<Button> btn(new Button(log(), world(), top_));
-	btn->text(text);
+	btn->text(title);
 	this->frame_->addChild(idx, h);
 	this->buttons_->addChild(idx, btn);
 }
@@ -191,9 +191,9 @@ void TabCombo::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* 
 		break;
 	}
 	for( tinyxml2::XMLElement* e = element->FirstChildElement(); e; e=e->NextSiblingElement() ){
-		const char* text = e->Attribute("label");
-		if(text){
-			this->addChild( factory->parseTree(this->self(), e), text);
+		const char* title = e->Attribute("title");
+		if(title){
+			this->addChild( factory->parseTree(this->self(), e), title);
 		}else{
 			this->addChild( factory->parseTree(this->self(), e));
 		}

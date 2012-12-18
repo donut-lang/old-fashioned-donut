@@ -110,7 +110,7 @@ public: /* ツリー操作 */
 		auto d = *it;
 		children_.erase(it);
 		children_.push_back(d);
-		this->layout(this->screenArea().box());
+		this->invalidate();
 		return s;
 	}
 	virtual std::size_t bringChildToFront(Handler<Element> const& e) override final {
@@ -122,7 +122,7 @@ public: /* ツリー操作 */
 		auto d = *it;
 		children_.erase(it);
 		children_.insert(this->children_.begin(), d);
-		this->layout(this->screenArea().box());
+		this->invalidate();
 		return s;
 	}
 public: /* ツリー操作 */

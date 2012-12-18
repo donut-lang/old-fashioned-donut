@@ -52,7 +52,16 @@ private:
 	int pushedCnt_;
 public:
 	void text(std::string const& text);
-	std::string text() const{ return this->text_; };
+public:
+	inline std::string text() const noexcept{ return this->text_; };
+	inline float textSize() const noexcept { return this->textSize_; };
+	inline geom::Space const& margin() noexcept { return this->margin_; };
+	inline geom::Space const& padding() const noexcept { return this->padding_; };
+	inline bool isVertical() const noexcept { return this->vertical_; };
+	inline gl::Color const& foregroundColor() const noexcept { return this->foregroundColor_; };
+	inline gl::Color const& backgroundColor() const noexcept { return this->foregroundColor_; };
+	inline gl::Color const& shadowColor() const noexcept { return this->shadowColor_; };
+	inline float shadowDepth() const noexcept { return this->shadowDepth_; };
 private:
 	Handler<gl::TextDrawable> textImage();
 	void onClick();

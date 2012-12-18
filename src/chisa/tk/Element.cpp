@@ -26,6 +26,7 @@ Element::Element(logging::Logger& log, HandlerW<World> world, HandlerW<Element> 
 :log_(log)
 ,world_(world)
 ,parent_(parent)
+,dirty_(false)
 {
 	this->addAttribute("id", this->id_);
 }
@@ -75,6 +76,9 @@ geom::Box Element::measure(geom::Box const& constraint)
 
 void Element::render(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
 {
+	if( this->dirty_ ){
+		this->revalidate();
+	}
 	this->screenArea(screenArea);
 	this->drawnArea(area);
 	if( //描画範囲にないので書く必要性がありません。
@@ -93,5 +97,26 @@ void Element::layout(geom::Box const& size)
 	this->size(size);
 }
 
+bool Element::isValidationRoot() const noexcept
+{
+	return false;
+}
+
+void Element::invalidate()
+{
+	this->dirty_ = true;
+	if(Handler<Element> p = this->parent().lock()) {
+		if(p->isValidationRoot()){
+			p->invalidate();
+		}
+	}
+}
+
+void Element::revalidate()
+{
+	this->measure(this->size_);
+	this->layout(this->size_);
+	this->dirty_= false;
+}
 
 }}
