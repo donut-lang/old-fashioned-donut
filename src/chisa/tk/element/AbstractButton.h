@@ -30,7 +30,6 @@ public:
 	struct AttrName{
 		const static std::string Text;
 		const static std::string TextSize;
-		const static std::string EdgeColor;
 		const static std::string ShadowColor;
 		const static std::string ShadowDepth;
 	};
@@ -38,7 +37,6 @@ private:
 	std::string text_;
 	float textSize_;
 	bool vertical_;
-	gl::Color edgeColor_;
 	gl::Color shadowColor_;
 	float shadowDepth_;
 private:

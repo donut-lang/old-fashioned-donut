@@ -45,6 +45,8 @@ public:
 		const static std::string Id;
 		const static std::string Padding;
 		const static std::string Margin;
+		const static std::string EdgeWidth;
+		const static std::string EdgeColor;
 		const static std::string ForegroundColor;
 		const static std::string BackgroundColor;
 	};
@@ -59,6 +61,8 @@ private: /* ツリー */
 	DEFINE_MEMBER(public, private, std::string, id); //要素に付けられたID
 	geom::Space margin_;
 	geom::Space padding_;
+	gl::Color edgeColor_;
+	float edgeWidth_;
 	gl::Color foregroundColor_;
 	gl::Color backgroundColor_;
 	bool dirty_;
@@ -71,6 +75,8 @@ public:
 	void padding(geom::Space const& p);
 	void foregroundColor(gl::Color const& c);
 	void backgroundColor(gl::Color const& c);
+	void edgeColor(gl::Color const& c);
+	void edgeWidth(float const& f);
 	inline geom::Space const& margin() noexcept { return this->margin_; };
 	inline geom::Space const& padding() const noexcept { return this->padding_; };
 	inline gl::Color const& foregroundColor() const noexcept { return this->foregroundColor_; };
