@@ -26,6 +26,7 @@
 #include "ScrollCombo.h"
 #include "WidgetElement.h"
 #include "Button.h"
+#include "TabCombo.h"
 
 #include <algorithm>
 #include <memory>
@@ -105,7 +106,7 @@ void ElementFactory::init()
 	this->registerElement<ScrollCombo>(ElemName::Scroll);
 	this->registerElement<WidgetElement>(ElemName::WidgetWrapper);
 	this->registerElement<Button>(ElemName::Button);
-	//this->registerElement<TabElement>(ElemName::Tab);
+	this->registerElement<TabCombo>(ElemName::Tab);
 }
 
 ElementFactory::~ElementFactory()
