@@ -107,6 +107,7 @@ public: /* 処理系の保存・復帰をします。 */
 	util::XValue save();
 	void load( util::XValue const& data);
 public: /* 時間操作 */
+	void onTickNotify();
 	void onBackNotify();
 	void onForwardNotify();
 	void onDiscardFutureNotify();

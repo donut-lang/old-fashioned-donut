@@ -38,15 +38,17 @@ private:
 private:
 	HandlerW<Donut> donut_;
 private:
-	enum State{
-		NORMAL,
-		SEEK,
-		DISCARD
-	} state;
+	bool enter_;
 	bool discardFutureRequested_;
 	bool discardHistoryRequested_;
+	bool tickRequested_;
 private:
-	void processRequestedDiscard();
+	void processRequest();
+	void backStep();
+	void forwardStep();
+	void tickStep();
+	void discardFutureStep();
+	void discardHistoryStep();
 public:
 	Clock( Donut* const donut );
 	virtual ~Clock() noexcept = default;
