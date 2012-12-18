@@ -43,11 +43,12 @@ class Element : public HandlerBody<Element>, public GestureListener {
 private: /* クラス固定 */
 	DEFINE_MEMBER_REF(protected, logging::Logger, log); //ロガー
 	util::VectorMap<std::string, std::function<void(tinyxml2::XMLElement*)> > attrMap_; //コンストラクタでセット
-public: /* ツリー */
+private: /* ツリー */
 	DEFINE_MEMBER(protected, private, HandlerW<World>, world); // 属する世界
 	DEFINE_MEMBER(public, private, HandlerW<Element>, parent); //親
 	DEFINE_MEMBER(public, private, std::string, id); //要素に付けられたID
-public: /* 画面描画情報 */
+	bool dirty_;
+private: /* 画面描画情報 */
 	DEFINE_MEMBER(public, private, geom::Box, size); //現在の大きさ
 	DEFINE_MEMBER(public, private, geom::Area, screenArea); //画面上の占める位置
 	DEFINE_MEMBER(protected, private, geom::Area, drawnArea); //大きさの中で、レンダリングされている部分
@@ -55,6 +56,10 @@ public: /* レンダリング(非virtual) */
 	void render(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area);
 	geom::Box measure(geom::Box const& constraint);
 	void layout(geom::Box const& size);
+	void invalidate();
+private:
+	virtual bool isValidationRoot() const noexcept;
+	void revalidate();
 public: /* ツリー操作 */
 	Handler<Element> findRootElement();
 	virtual Handler<Element> findElementById(std::string const& id);

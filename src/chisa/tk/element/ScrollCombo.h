@@ -42,6 +42,7 @@ private:
 	using Super::addChild;
 	virtual void addChild(Handler<Element> const& h, Context const& ctx) override final;
 	virtual void addChild(std::size_t const& idx, Handler<Element> const& h, Context const& ctx) override final;
+	virtual bool isValidationRoot() const noexcept override final;
 public:
 	virtual std::string toString() const override;
 	virtual void idle(const float delta_ms) override;

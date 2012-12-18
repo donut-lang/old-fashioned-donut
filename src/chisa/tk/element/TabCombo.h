@@ -47,8 +47,8 @@ public: /* ツリー操作 */
 	virtual Handler<Element> getChildAt( std::size_t const& idx ) const noexcept override final;
 	virtual void addChild(Handler<Element> const& h) override final;
 	virtual void addChild(std::size_t const& idx, Handler<Element> const& h) override final;
-	void addChild(Handler<Element> const& h, std::string const& text);
-	void addChild(std::size_t const& idx, Handler<Element> const& h, std::string const& text);
+	void addChild(Handler<Element> const& h, std::string const& title);
+	void addChild(std::size_t const& idx, Handler<Element> const& h, std::string const& title);
 	virtual Handler<Element> removeChild(std::size_t const& idx) override final;
 	virtual Handler<Element> removeChild(Handler<Element> const& h) override final;
 	virtual Handler<Element> lastChild() const noexcept override final;

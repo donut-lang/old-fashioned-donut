@@ -49,6 +49,11 @@ void ScrollCombo::addChild(std::size_t const& idx, Handler<Element> const& h, Co
 	this->Super::addChild(idx,h,ctx);
 }
 
+bool ScrollCombo::isValidationRoot() const noexcept
+{
+	return true;
+}
+
 void ScrollCombo::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* element)
 {
 	if( const char* _mode = element->Attribute("mode", nullptr) ){
