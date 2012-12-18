@@ -132,26 +132,26 @@ void TabCombo::loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XML
 	case ButtonPosition::Right:
 		this->top_->setMode(SplitCombo::SplitMode::Horizontal);
 		this->buttons_->setMode(SplitCombo::SplitMode::Vertical);
-		this->top_->addChild(this->frame_, SplitContext(1));
-		this->top_->addChild(this->buttons_, SplitContext(0));
+		this->top_->addChild(this->frame_, SplitComboContext(1));
+		this->top_->addChild(this->buttons_, SplitComboContext(0));
 		break;
 	case ButtonPosition::Left:
 		this->top_->setMode(SplitCombo::SplitMode::Horizontal);
 		this->buttons_->setMode(SplitCombo::SplitMode::Vertical);
-		this->top_->addChild(this->buttons_, SplitContext(0));
-		this->top_->addChild(this->frame_, SplitContext(1));
+		this->top_->addChild(this->buttons_, SplitComboContext(0));
+		this->top_->addChild(this->frame_, SplitComboContext(1));
 		break;
 	case ButtonPosition::Bottom:
 		this->top_->setMode(SplitCombo::SplitMode::Vertical);
 		this->buttons_->setMode(SplitCombo::SplitMode::Horizontal);
-		this->top_->addChild(this->frame_, SplitContext(1));
-		this->top_->addChild(this->buttons_, SplitContext(0));
+		this->top_->addChild(this->frame_, SplitComboContext(1));
+		this->top_->addChild(this->buttons_, SplitComboContext(0));
 		break;
 	case ButtonPosition::Top:
 		this->top_->setMode(SplitCombo::SplitMode::Vertical);
 		this->buttons_->setMode(SplitCombo::SplitMode::Horizontal);
-		this->top_->addChild(this->buttons_, SplitContext(0));
-		this->top_->addChild(this->frame_, SplitContext(1));
+		this->top_->addChild(this->buttons_, SplitComboContext(0));
+		this->top_->addChild(this->frame_, SplitComboContext(1));
 		break;
 	}
 	for( tinyxml2::XMLElement* e = element->FirstChildElement(); e; e=e->NextSiblingElement() ){
