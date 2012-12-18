@@ -81,12 +81,20 @@ void Sprite::drawImpl(Canvas* const canvas, geom::Point const& pt, const float d
 void Sprite::flushBuffer()
 {
 	if(this->buffer_){
-		glBindTexture(GL_TEXTURE_2D, this->texId_);
-		//ここのサイズはバッファのものにしないと変な所を読みに行くかもしれない。
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0,0, this->size().width(), this->size().height(), this->bufferType_, GL_UNSIGNED_BYTE, this->buffer_->ptr());
-		const GLenum err = glGetError();
-		if(err != GL_NO_ERROR){
-			throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to transfer texture: code 0x%x", err);
+		{
+			glBindTexture(GL_TEXTURE_2D, this->texId_);
+			const GLenum err = glGetError();
+			if(err != GL_NO_ERROR){
+				throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to bind texture: code 0x%x", err);
+			}
+		}
+		{
+			//ここのサイズはバッファのものにしないと変な所を読みに行くかもしれない。
+			glTexSubImage2D(GL_TEXTURE_2D, 0, 0,0, this->size().width(), this->size().height(), this->bufferType_, GL_UNSIGNED_BYTE, this->buffer_->ptr());
+			const GLenum err = glGetError();
+			if(err != GL_NO_ERROR){
+				throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to transfer texture: code 0x%x", err);
+			}
 		}
 		this->backBuffer();
 	}

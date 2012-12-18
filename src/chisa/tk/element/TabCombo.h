@@ -58,6 +58,7 @@ public: /* ツリー操作 */
 public: /* ツリー操作 */
 	virtual Handler<Element> findElementById(std::string const& id) override final;
 	virtual Handler<Element> findElementByPoint(geom::Vector const& screenPoint) override final;
+	virtual void validate() override final;
 public: /* バックグラウンドタスク */
 	virtual void idle(const float delta_ms) override final;
 public: /* 実装メソッド */

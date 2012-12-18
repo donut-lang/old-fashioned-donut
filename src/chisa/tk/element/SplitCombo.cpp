@@ -100,7 +100,7 @@ void SplitCombo::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement
 void SplitCombo::resetChildren()
 {
 	for(ContainerType& ctx: this->children()){
-		ctx.second.size=geom::Unspecified;
+		//ctx.second.size=geom::Unspecified;
 	}
 	this->totalSize_ = geom::Unspecified;
 }
@@ -139,7 +139,7 @@ void SplitCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, ge
 
 geom::Box SplitCombo::measureImpl(geom::Box const& constraint)
 {
-	this->resetChildren();
+	//this->resetChildren();
 	const bool changedSpecified = geom::isSpecified((constraint.*changed_getter)());
 	const bool fixedSpecified = geom::isSpecified((constraint.*fixed_getter)());
 	geom::Box cbox(constraint);

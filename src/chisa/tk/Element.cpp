@@ -106,7 +106,7 @@ void Element::invalidate()
 {
 	this->dirty_ = true;
 	if(Handler<Element> p = this->parent().lock()) {
-		if(p->isValidationRoot()){
+		if(!p->isValidationRoot()){
 			p->invalidate();
 		}
 	}
@@ -116,6 +116,11 @@ void Element::revalidate()
 {
 	this->measure(this->size_);
 	this->layout(this->size_);
+	this->validate();
+}
+
+void Element::validate()
+{
 	this->dirty_= false;
 }
 

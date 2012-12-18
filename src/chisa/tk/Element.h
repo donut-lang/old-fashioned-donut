@@ -56,10 +56,10 @@ public: /* レンダリング(非virtual) */
 	void render(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area);
 	geom::Box measure(geom::Box const& constraint);
 	void layout(geom::Box const& size);
-	void invalidate();
-private:
 	virtual bool isValidationRoot() const noexcept;
 	void revalidate();
+	void invalidate();
+	virtual void validate();
 public: /* ツリー操作 */
 	Handler<Element> findRootElement();
 	virtual Handler<Element> findElementById(std::string const& id);

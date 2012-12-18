@@ -175,7 +175,7 @@ void WidgetElement::layoutImpl(geom::Box const& size)
 
 std::string WidgetElement::toString() const
 {
-	return util::format( "(WidgetElement \"%s\")", this->widgetId_.c_str());
+	return util::format( "(WidgetElement \"%s\" %p)", this->widgetId_.c_str(), this);
 }
 void WidgetElement::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
