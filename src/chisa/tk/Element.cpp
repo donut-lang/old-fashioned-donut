@@ -17,22 +17,61 @@
  */
 
 #include "Element.h"
+#include "../gl/Canvas.h"
 #include <tinyxml2.h>
 
 namespace chisa {
 namespace tk {
 
+const std::string Element::AttrName::ForegroundColor("foreground-color");
+const std::string Element::AttrName::BackgroundColor("background-color");
+
+const std::string Element::AttrName::Padding("padding");
+const std::string Element::AttrName::Margin("margin");
+
+const std::string Element::AttrName::Id("id");
+
+
 Element::Element(logging::Logger& log, HandlerW<World> world, HandlerW<Element> parent)
 :log_(log)
 ,world_(world)
 ,parent_(parent)
+,margin_(0)
+,padding_(0)
+,foregroundColor_(gl::Black)
+,backgroundColor_(gl::Color(0.9,0.9,0.9,1))
 ,dirty_(false)
 {
-	this->addAttribute("id", this->id_);
+	this->addAttribute(AttrName::Margin, this->margin_);
+	this->addAttribute(AttrName::Padding, this->padding_);
+	this->addAttribute(AttrName::ForegroundColor, this->foregroundColor_);
+	this->addAttribute(AttrName::BackgroundColor, this->backgroundColor_);
+	this->addAttribute(AttrName::Id, this->id_);
 }
 
 void Element::idle(const float delta_ms)
 {
+}
+
+void Element::margin(geom::Space const& m)
+{
+	this->margin_ = m;
+	this->invalidate();
+}
+void Element::padding(geom::Space const& p)
+{
+	this->padding_ = p;
+	this->invalidate();
+}
+void Element::foregroundColor(gl::Color const& c)
+{
+	this->foregroundColor_ = c;
+	this->invalidate();
+}
+void Element::backgroundColor(gl::Color const& c)
+{
+	this->backgroundColor_ = c;
+	this->invalidate();
 }
 
 void Element::loadXml(ElementFactory* const factory, tinyxml2::XMLElement* const element)
@@ -71,7 +110,8 @@ std::string Element::toString() const
 
 geom::Box Element::measure(geom::Box const& constraint)
 {
-	return this->measureImpl(constraint);
+	geom::Distance total(this->margin_.totalSpace()+this->padding_.totalSpace());
+	return this->measureImpl(constraint-total)+total;
 }
 
 void Element::render(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
@@ -88,12 +128,18 @@ void Element::render(gl::Canvas& canvas, geom::Area const& screenArea, geom::Are
 		area.y() >= this->size().height() ){
 		return;
 	}
-	this->renderImpl(canvas, screenArea, area);
+	geom::Area const marginedScreenArea(this->margin_.apply(screenArea));
+	geom::Area const marginedArea(this->margin_.apply(area));
+	canvas.fillRect(this->backgroundColor_, marginedScreenArea);
+	geom::Area const paddedScreenArea(this->margin_.apply(marginedScreenArea));
+	geom::Area const paddedArea(this->margin_.apply(marginedArea));
+
+	this->renderImpl(canvas, paddedScreenArea, paddedArea);
 }
 
 void Element::layout(geom::Box const& size)
 {
-	this->layoutImpl(size);
+	this->layoutImpl(size-(this->margin_.totalSpace()+this->padding_.totalSpace()));
 	this->size(size);
 }
 
@@ -104,10 +150,12 @@ bool Element::isValidationRoot() const noexcept
 
 void Element::invalidate()
 {
-	this->dirty_ = true;
-	if(Handler<Element> p = this->parent().lock()) {
-		if(!p->isValidationRoot()){
-			p->invalidate();
+	if(!this->dirty_){
+		this->dirty_ = true;
+		if(Handler<Element> p = this->parent().lock()) {
+			if(!p->isValidationRoot()){
+				p->invalidate();
+			}
 		}
 	}
 }

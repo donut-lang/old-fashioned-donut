@@ -24,6 +24,7 @@
 #include "../util/XMLAttrParser.h"
 #include "../geom/Vector.h"
 #include "../geom/Area.h"
+#include "../gl/Color.h"
 #include "../Handler.h"
 #include <string>
 #include <cmath>
@@ -39,6 +40,15 @@ class ElementFactory;
 class World;
 
 class Element : public HandlerBody<Element>, public GestureListener {
+public:
+	struct AttrName {
+		const static std::string Id;
+		const static std::string Padding;
+		const static std::string Margin;
+		const static std::string ForegroundColor;
+		const static std::string BackgroundColor;
+	};
+private:
 	DISABLE_COPY_AND_ASSIGN(Element);
 private: /* クラス固定 */
 	DEFINE_MEMBER_REF(protected, logging::Logger, log); //ロガー
@@ -47,11 +57,24 @@ private: /* ツリー */
 	DEFINE_MEMBER(protected, private, HandlerW<World>, world); // 属する世界
 	DEFINE_MEMBER(public, private, HandlerW<Element>, parent); //親
 	DEFINE_MEMBER(public, private, std::string, id); //要素に付けられたID
+	geom::Space margin_;
+	geom::Space padding_;
+	gl::Color foregroundColor_;
+	gl::Color backgroundColor_;
 	bool dirty_;
 private: /* 画面描画情報 */
 	DEFINE_MEMBER(public, private, geom::Box, size); //現在の大きさ
 	DEFINE_MEMBER(public, private, geom::Area, screenArea); //画面上の占める位置
 	DEFINE_MEMBER(protected, private, geom::Area, drawnArea); //大きさの中で、レンダリングされている部分
+public:
+	void margin(geom::Space const& m);
+	void padding(geom::Space const& p);
+	void foregroundColor(gl::Color const& c);
+	void backgroundColor(gl::Color const& c);
+	inline geom::Space const& margin() noexcept { return this->margin_; };
+	inline geom::Space const& padding() const noexcept { return this->padding_; };
+	inline gl::Color const& foregroundColor() const noexcept { return this->foregroundColor_; };
+	inline gl::Color const& backgroundColor() const noexcept { return this->foregroundColor_; };
 public: /* レンダリング(非virtual) */
 	void render(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area);
 	geom::Box measure(geom::Box const& constraint);
