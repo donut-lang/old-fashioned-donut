@@ -26,29 +26,29 @@ namespace element {
 
 class ElementFactory;
 
-struct SplitDef
+struct SplitRequest
 {
 public:
 	float weight;
 	float min;
 	float max;
-	SplitDef(const float weight, const float min=NAN, const float max=NAN)
+	SplitRequest(const float weight, const float min, const float max)
 	:weight(weight), min(min), max(max)
 	{
 	}
 };
-struct SplitCtx
+struct SplitContext
 {
-	SplitDef def;
+	SplitRequest def;
 	float size;
 	float weight;
-	SplitCtx(SplitDef const& def)
-	:def(def),size(NAN),weight(def.weight){}
-	SplitCtx():def(0),size(NAN),weight(def.weight){}
+	SplitContext(const float weight, const float min=NAN, const float max=NAN)
+	:def(weight, min, max),size(NAN),weight(def.weight){}
+	SplitContext():def(0, NAN, NAN),size(NAN),weight(def.weight){}
 };
 
 
-class SplitCombo: public ElementGroupBase<SplitCtx> {
+class SplitCombo: public ElementGroupBase<SplitContext> {
 	CHISA_ELEMENT_SUBKLASS_FINAL(SplitCombo);
 public:
 	enum SplitMode {
@@ -61,11 +61,12 @@ public:
 		static const std::string Min;
 	};
 private:
-	DEFINE_MEMBER(private, private, enum SplitMode, splitMode);
+	DEFINE_MEMBER(public, private, enum SplitMode, splitMode);
 	float totalSize_;
+public:
 	void setMode(enum SplitMode mode);
 private:
-	inline float wrapSize(float changedSize, SplitDef const& def) const
+	inline float wrapSize(float changedSize, SplitRequest const& def) const
 	{
 		if(geom::isUnspecified(changedSize)){
 			return def.min;
