@@ -23,7 +23,7 @@ namespace tk {
 namespace element {
 
 
-CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(ScrollCombo, ElementGroup)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(ScrollCombo, ElementGroupBase<std::nullptr_t>)
 ,scrollMode_(None)
 ,scrollOffset_(0,0)
 ,lastMovedFrom_(0)
@@ -49,7 +49,7 @@ void ScrollCombo::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElemen
 	}
 	tinyxml2::XMLElement* const childElement = element->FirstChildElement();
 	if(childElement) {
-		this->child_ = factory->parseTree(this->self(), childElement);
+		this->addChild(factory->parseTree(this->self(), childElement));
 	}
 }
 
@@ -66,7 +66,7 @@ void ScrollCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, g
 {
 	const geom::Area clipArea(this->scrollOffset_, this->size());
 	const geom::Area logicalArea(area.point()+this->scrollOffset_, area.box());
-	this->child_->render(canvas, screenArea, clipArea.intersect(logicalArea));
+	this->frontChild()->render(canvas, screenArea, clipArea.intersect(logicalArea));
 	if(this->lastMovedFrom_ < ScrollBarTimeOut){
 		const float alpha = (ScrollBarTimeOut - this->lastMovedFrom_) / ScrollBarTimeOut;
 		if((this->scrollMode_ & Vertical)){
@@ -96,19 +96,20 @@ geom::Box ScrollCombo::measureImpl(geom::Box const& constraint)
 
 void ScrollCombo::layoutImpl(geom::Box const& size)
 {
-	if(this->child_){
+	if(auto child = this->frontChild()){
 		geom::Box childBox((this->scrollMode_ & Horizontal) == Horizontal ? geom::Unspecified : size.width(), (this->scrollMode_ & Vertical) == Vertical ? geom::Unspecified : size.height());
-		this->childSize_ = this->child_->measure(childBox);
+		this->childSize_ = child->measure(childBox);
 		this->childSize_ = geom::Box(
 				(geom::isSpecified(this->childSize_.width()) ? this->childSize_.width() : size.width()),
 				(geom::isSpecified(this->childSize_.height()) ? this->childSize_.height() : size.height())
 		);
-		this->child_->layout(this->childSize_);
+		child->layout(this->childSize_);
 	}
 }
 
 void ScrollCombo::idle(const float delta_ms)
 {
+	Super::idle(delta_ms);
 	geom::Point ptStart(this->scrollOffset_);
 	geom::Point ptEnd(this->scrollOffset_+this->size());
 	if((this->scrollMode_ & Horizontal) && ptStart.x() < 0){

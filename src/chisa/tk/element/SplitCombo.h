@@ -43,27 +43,15 @@ public:
 struct SplitCtx
 {
 	SplitDef def;
-	Handler<Element> element;
 	float size;
 	float weight;
 	SplitCtx(SplitDef const& def)
-	:def(def)
-	,element(nullptr)
-	,size(NAN)
-	,weight(def.weight)
-	{
-	}
-	SplitCtx(SplitDef const& def, Handler<Element> const& elm)
-	:def(def)
-	,element(elm)
-	,size(NAN)
-	,weight(def.weight)
-	{
-	}
+	:def(def),size(NAN),weight(def.weight){}
+	SplitCtx():def(0),size(NAN),weight(def.weight){}
 };
 
 
-class SplitCombo: public ElementGroup {
+class SplitCombo: public ElementGroupBase<SplitCtx> {
 	CHISA_ELEMENT_SUBKLASS_FINAL(SplitCombo);
 public:
 	enum SplitMode {
@@ -77,7 +65,6 @@ public:
 	};
 private:
 	DEFINE_MEMBER(private, private, enum SplitMode, splitMode);
-	DEFINE_CONTAINER(private, private, std::vector<SplitCtx>, layoutContext)
 	float totalSize_;
 	void setMode(enum SplitMode mode);
 private:
@@ -90,7 +77,7 @@ private:
 		changedSize = std::max(changedSize, def.min);
 		return changedSize;
 	}
-private:
+private: //どちらの方向に伸びるかで、アクセサを使い分ける
 	float (geom::Box::*changed_getter)() const;
 	void (geom::Box::*changed_setter)(float);
 	float (geom::Box::*fixed_getter)() const;

@@ -25,7 +25,7 @@ namespace chisa {
 namespace tk {
 namespace element {
 
-class ScrollCombo: public ElementGroup {
+class ScrollCombo: public ElementGroupBase<std::nullptr_t> {
 	CHISA_ELEMENT_SUBKLASS_FINAL(ScrollCombo);
 private:
 	static constexpr float ScrollBarTimeOut = 500.0f;
@@ -37,7 +37,6 @@ private:
 	};
 	enum Mode scrollMode_;
 	geom::Point scrollOffset_;
-	Handler<Element> child_;
 	geom::Box childSize_;
 	float lastMovedFrom_;
 public:

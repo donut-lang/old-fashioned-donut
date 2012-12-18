@@ -24,7 +24,7 @@ namespace chisa {
 namespace tk {
 namespace element {
 
-class FrameCombo : public ElementGroup {
+class FrameCombo : public ElementGroupBase<std::nullptr_t> {
 	CHISA_ELEMENT_SUBKLASS(FrameCombo);
 public:
 	virtual std::string toString() const override;

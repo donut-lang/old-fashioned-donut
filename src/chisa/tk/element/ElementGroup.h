@@ -26,25 +26,141 @@ namespace element {
 class ElementGroup : public Element {
 	CHISA_ELEMENT_SUBKLASS_FINAL(ElementGroup);
 private:
-	std::vector<Handler<Element> > child_;
-public:
-	inline std::size_t getChildCount() const noexcept { return child_.size(); };
-	inline Handler<Element> getChildAt( std::size_t const& idx ) const noexcept { return child_.at(idx); };
-	virtual void addChild(Handler<Element> const& h);
-	virtual void addChild(std::size_t const& idx, Handler<Element> const& h);
-	virtual Handler<Element> removeChild(std::size_t const& idx);
-	virtual Handler<Element> removeChild(Handler<Element> const& h);
-	virtual Handler<Element> lastChild() const noexcept;
-	virtual Handler<Element> frontChild() const noexcept;
-	virtual std::size_t bringChildToLast(Handler<Element> const& e);
-	virtual std::size_t bringChildToFront(Handler<Element> const& e);
+	std::vector<Handler<Element> > children_;
+protected:
+	inline std::vector<Handler<Element> >& children(){ return this->children_; };
 public: /* ツリー操作 */
-	virtual Handler<Element> findElementById(std::string const& id) override final;
-	virtual Handler<Element> findElementByPoint(geom::Vector const& screenPoint) override final;
+	virtual std::size_t getChildCount() const noexcept = 0;
+	virtual Handler<Element> getChildAt( std::size_t const& idx ) const noexcept = 0;
+	virtual void addChild(Handler<Element> const& h) = 0;
+	virtual void addChild(std::size_t const& idx, Handler<Element> const& h) = 0;
+	virtual Handler<Element> removeChild(std::size_t const& idx) = 0;
+	virtual Handler<Element> removeChild(Handler<Element> const& h) = 0;
+	virtual Handler<Element> lastChild() const noexcept = 0;
+	virtual Handler<Element> frontChild() const noexcept = 0;
+	virtual std::size_t bringChildToLast(Handler<Element> const& e) = 0;
+	virtual std::size_t bringChildToFront(Handler<Element> const& e) = 0;
+public: /* ツリー操作 */
+	virtual Handler<Element> findElementById(std::string const& id) override = 0;
+	virtual Handler<Element> findElementByPoint(geom::Vector const& screenPoint) override = 0;
 public: /* バックグラウンドタスク */
-	virtual void idle(const float delta_ms) override;
+	virtual void idle(const float delta_ms) override = 0;
 public: /* 実装メソッド */
-	virtual std::string toString() const override;
+	virtual std::string toString() const override = 0;
+};
+
+template <typename Context>
+class ElementGroupBase : public ElementGroup {
+protected:
+	ElementGroupBase(CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST)
+	:ElementGroup(CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_APPLY){}
+	virtual ~ElementGroupBase() noexcept {}
+protected:
+	typedef std::pair<Handler<Element>,Context> ContainerType;
+	typedef ElementGroupBase<Context> Super;
+private:
+	std::vector<ContainerType> children_;
+protected:
+	inline std::vector<ContainerType>& children(){ return this->children_; };
+public: /* ツリー操作 */
+	virtual std::size_t getChildCount() const noexcept override final{
+		return this->children_.size();
+	}
+	virtual Handler<Element> getChildAt( std::size_t const& idx ) const noexcept override {
+		return children_.at(idx).first;
+	}
+	virtual void addChild(Handler<Element> const& h, Context const& ctx) {
+		this->children_.push_back(std::make_pair(h,ctx));
+	}
+	virtual void addChild(Handler<Element> const& h) override final {
+		this->addChild(h, Context());
+	}
+	virtual void addChild(std::size_t const& idx, Handler<Element> const& h, Context const& ctx) {
+		this->children_.insert(this->children_.begin() + idx, std::make_pair(h,ctx));
+	}
+	virtual void addChild(std::size_t const& idx, Handler<Element> const& h) override {
+		this->addChild(idx, h, Context());
+	}
+	virtual Handler<Element> removeChild(std::size_t const& idx) override final {
+		if(idx >= children_.size()) {
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] Invalid index: %d >= %d", idx, children_.size());
+		}
+		auto it = this->children_.begin()+idx;
+		Handler<Element> element ((*it).first);
+		this->children_.erase(it);
+		return element;
+	}
+	virtual Handler<Element> removeChild(Handler<Element> const& h) override final {
+		auto it = std::find_if(children_.begin(), children_.end(), util::PairEq<Handler<Element>,Context>(h));
+		if(it == children_.begin()) {
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] %s does not have %s.", this->toString().c_str(), h->toString().c_str());
+		}
+		this->children_.erase(it);
+		return h;
+	}
+	virtual Handler<Element> lastChild() const noexcept override final {
+		return this->children_.empty() ? Handler<Element>() : this->children_.back().first;
+	}
+	virtual Handler<Element> frontChild() const noexcept override final {
+		return this->children_.empty() ? Handler<Element>() : this->children_.front().first;
+	}
+	virtual std::size_t bringChildToLast(Handler<Element> const& e) override final {
+		auto it = std::find_if(children_.begin(), children_.end(), util::PairEq<Handler<Element>,Context>(e));
+		std::size_t s = std::distance(children_.begin(), it);
+		if(it == this->children_.end()){
+			throw logging::Exception(__FILE__, __LINE__, "Element: %s is not contained in this combo.", e->toString().c_str());
+		}
+		auto d = *it;
+		children_.erase(it);
+		children_.push_back(d);
+		this->layout(this->screenArea().box());
+		return s;
+	}
+	virtual std::size_t bringChildToFront(Handler<Element> const& e) override final {
+		auto it = std::find_if(children_.begin(), children_.end(), util::PairEq<Handler<Element>,Context>(e));
+		std::size_t s = std::distance(children_.begin(), it);
+		if(it == this->children_.end()){
+			throw logging::Exception(__FILE__, __LINE__, "Element: %s is not contained in this combo.", e->toString().c_str());
+		}
+		auto d = *it;
+		children_.erase(it);
+		children_.insert(this->children_.begin(), d);
+		this->layout(this->screenArea().box());
+		return s;
+	}
+public: /* ツリー操作 */
+	virtual Handler<Element> findElementById(std::string const& id) override final {
+		if(id==this->id()){
+			return self();
+		}
+		for(ContainerType& child : this->children_) {
+			if(Handler<Element> r = child.first->findElementById(id)){
+				return r;
+			}
+		}
+		return Handler<Element>();
+	}
+	virtual Handler<Element> findElementByPoint(geom::Vector const& screenPoint) override final {
+		if(!this->screenArea().contain(screenPoint)){
+			return Handler<ElementGroup>();
+		}
+		for(ContainerType& child : this->children_) {
+			if(child.first->screenArea().contain(screenPoint)){
+				return child.first->findElementByPoint(screenPoint);
+			}
+		}
+		return this->self();
+	}
+public: /* バックグラウンドタスク */
+	virtual void idle(const float delta_ms) override {
+		for(ContainerType& child : this->children_) {
+			child.first->idle(delta_ms);
+		}
+	}
+public: /* 実装メソッド */
+	virtual std::string toString() const override {
+		return "(ElementGroupBase)";
+	}
 };
 
 
