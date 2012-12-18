@@ -22,7 +22,6 @@
 
 namespace chisa {
 namespace tk {
-namespace widget {
 
 const static std::string TAG("ImageWidget");
 
@@ -77,4 +76,4 @@ geom::Box ImageWidget::measure(geom::Box const& constraint)
 	}
 }
 
-}}}
+}}

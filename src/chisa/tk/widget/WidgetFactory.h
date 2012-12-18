@@ -33,7 +33,6 @@ class Param;
 namespace tk {
 class World;
 class Widget;
-namespace widget {
 
 template <typename WidgetKlass>
 WidgetKlass* widgetConstructor(logging::Logger& log, HandlerW<World> world, tinyxml2::XMLElement* elem){
@@ -60,4 +59,4 @@ public:
 	Widget* createWidget(std::string const& klass, tinyxml2::XMLElement* elem);
 };
 
-}}}
+}}

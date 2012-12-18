@@ -12,8 +12,6 @@
 namespace nes {
 class NesGeist;
 
-namespace widget {
-
 class NesMemoryWidget: public chisa::tk::Widget {
 private:
 	chisa::HandlerW<nes::NesGeist> geist_;
@@ -27,5 +25,4 @@ public:
 	virtual chisa::geom::Box measure(chisa::geom::Box const& constraintSize) override;
 };
 
-}}
-
+}

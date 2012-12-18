@@ -28,7 +28,6 @@ class ParamSet;
 }
 
 namespace tk {
-namespace widget {
 
 class ImageWidget: public chisa::tk::Widget {
 	DISABLE_COPY_AND_ASSIGN(ImageWidget);
@@ -45,4 +44,4 @@ public:
 	virtual geom::Box measure(geom::Box const& constraint) override;
 };
 
-}}}
+}}

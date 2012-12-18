@@ -191,7 +191,7 @@ void TabCombo::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* 
 		break;
 	}
 	for( tinyxml2::XMLElement* e = element->FirstChildElement(); e; e=e->NextSiblingElement() ){
-		const char* text = e->Attribute("tab-text");
+		const char* text = e->Attribute("label");
 		if(text){
 			this->addChild( factory->parseTree(this->self(), e), text);
 		}else{

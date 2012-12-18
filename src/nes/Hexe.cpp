@@ -33,10 +33,10 @@ Hexe::~Hexe() noexcept
 {
 }
 
-void Hexe::registerWidgets(chisa::tk::widget::WidgetFactory& factory)
+void Hexe::registerWidgets(chisa::tk::WidgetFactory& factory)
 {
-	factory.registerWidget<nes::widget::NesScreenWidget>("nes-screen");
-	factory.registerWidget<nes::widget::NesMemoryWidget>("nes-memory");
+	factory.registerWidget<nes::NesScreenWidget>("nes-screen");
+	factory.registerWidget<nes::NesMemoryWidget>("nes-memory");
 }
 
 void Hexe::registerElements(chisa::tk::ElementFactory& factory)

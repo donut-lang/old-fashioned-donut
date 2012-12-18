@@ -26,7 +26,6 @@
 
 namespace chisa {
 namespace tk {
-namespace widget {
 
 static std::string const TAG("ContentWidget");
 
@@ -90,5 +89,5 @@ bool ContentWidget::onZoom(const float timeMs, geom::Point const& center, const 
 	return true;
 }
 
-}}}
+}}
 
