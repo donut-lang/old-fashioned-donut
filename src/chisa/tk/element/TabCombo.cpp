@@ -52,7 +52,7 @@ namespace tk {
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(TabCombo, ElementGroup)
 ,buttonPosition_(ButtonPosition::Bottom)
 {
-	this->addAttribute("tab", this->buttonPosition_);
+	this->addAttribute("place", this->buttonPosition_);
 }
 
 TabCombo::~TabCombo() noexcept
