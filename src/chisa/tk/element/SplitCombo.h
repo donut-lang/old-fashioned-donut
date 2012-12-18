@@ -26,29 +26,25 @@ namespace element {
 
 class ElementFactory;
 
-struct SplitRequest
+struct SplitComboContext
 {
-public:
-	float weight;
-	float min;
-	float max;
-	SplitRequest(const float weight, const float min, const float max)
-	:weight(weight), min(min), max(max)
-	{
-	}
-};
-struct SplitContext
-{
-	SplitRequest def;
+	struct Request{
+	public:
+		float weight;
+		float min;
+		float max;
+		Request(const float weight, const float min, const float max)
+		:weight(weight), min(min), max(max){}
+	} def;
 	float size;
 	float weight;
-	SplitContext(const float weight, const float min=NAN, const float max=NAN)
+	SplitComboContext(const float weight, const float min=NAN, const float max=NAN)
 	:def(weight, min, max),size(NAN),weight(def.weight){}
-	SplitContext():def(0, NAN, NAN),size(NAN),weight(def.weight){}
+	SplitComboContext():def(0, NAN, NAN),size(NAN),weight(def.weight){}
 };
 
 
-class SplitCombo: public ElementGroupBase<SplitContext> {
+class SplitCombo: public ElementGroupBase<SplitComboContext> {
 	CHISA_ELEMENT_SUBKLASS_FINAL(SplitCombo);
 public:
 	enum SplitMode {
@@ -66,7 +62,7 @@ private:
 public:
 	void setMode(enum SplitMode mode);
 private:
-	inline float wrapSize(float changedSize, SplitRequest const& def) const
+	inline float wrapSize(float changedSize, SplitComboContext::Request const& def) const
 	{
 		if(geom::isUnspecified(changedSize)){
 			return def.min;

@@ -94,7 +94,7 @@ void SplitCombo::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement
 		if(geom::isUnspecified(max)){
 			max = geom::Unspecified;
 		}
-		this->addChild(factory->parseTree(self(), elem), SplitContext(weight, min, max));
+		this->addChild(factory->parseTree(self(), elem), SplitComboContext(weight, min, max));
 	}
 }
 
@@ -150,7 +150,7 @@ geom::Box SplitCombo::measureImpl(geom::Box const& constraint)
 		float totalSize = 0;
 		float fixedMaxSize = 0;
 		for(ContainerType& it : this->children()){
-			SplitContext& childCtx = it.second;
+			SplitComboContext& childCtx = it.second;
 			const geom::Box childSize(it.first->measure(cbox));
 			const float size = this->wrapSize((childSize.*changed_getter)(), childCtx.def);
 			if(geom::isSpecified(size)){
@@ -185,7 +185,7 @@ geom::Box SplitCombo::measureImpl(geom::Box const& constraint)
 		float intendedSizeTotal = 0;
 		float nonWeightedSizeTotal = 0;
 		for(ContainerType& it : this->children()){
-			SplitContext& childCtx = it.second;
+			SplitComboContext& childCtx = it.second;
 			const bool weightSpecified = geom::isSpecified(childCtx.def.weight);
 			const geom::Box childSize(it.first->measure(cbox));
 			if(weightSpecified){
@@ -217,7 +217,7 @@ geom::Box SplitCombo::measureImpl(geom::Box const& constraint)
 			float leftWeight = totalWeight;
 			float leftSize = limitChangedSize - nonWeightedSizeTotal;
 			for(ContainerType& it : this->children()){
-				SplitContext& childCtx = it.second;
+				SplitComboContext& childCtx = it.second;
 				Handler<Element> child;
 				const bool weightSpecified = geom::isSpecified(childCtx.weight);
 				if(weightSpecified){
@@ -236,7 +236,7 @@ geom::Box SplitCombo::measureImpl(geom::Box const& constraint)
 			//足りない
 			const float changedOverrun = intendedSizeTotal-limitChangedSize;
 			for(ContainerType& it : this->children()){
-				SplitContext& childCtx = it.second;
+				SplitComboContext& childCtx = it.second;
 				//元の割合に応じてサイズを設定
 				childCtx.size -= changedOverrun * childCtx.size / intendedSizeTotal;
 			}
@@ -255,7 +255,7 @@ geom::Box SplitCombo::measureImpl(geom::Box const& constraint)
 void SplitCombo::layoutImpl(geom::Box const& size)
 {
 	for(ContainerType& it : this->children()){
-		SplitContext& ctx = it.second;
+		SplitComboContext& ctx = it.second;
 		geom::Box box;
 		(box.*changed_setter)(ctx.size);
 		(box.*fixed_setter)((size.*fixed_getter)());
