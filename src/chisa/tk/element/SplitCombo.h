@@ -19,9 +19,6 @@
 #pragma once
 
 #include "ElementGroup.h"
-#include <tinyxml2.h>
-#include <vector>
-#include <memory>
 
 namespace chisa {
 namespace tk {

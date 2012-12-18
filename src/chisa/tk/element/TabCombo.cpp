@@ -20,6 +20,7 @@
 #include "ElementFactory.h"
 #include "FrameCombo.h"
 #include "SplitCombo.h"
+#include "Button.h"
 
 namespace chisa {
 namespace tk {
@@ -35,6 +36,73 @@ TabCombo::~TabCombo() noexcept
 
 }
 
+std::size_t TabCombo::getChildCount() const noexcept
+{
+	return this->frame_->getChildCount();
+}
+Handler<Element> TabCombo::getChildAt(std::size_t const& idx) const noexcept
+{
+	return this->frame_->getChildAt(idx);
+}
+void TabCombo::addChild(Handler<Element> const& h)
+{
+	Handler<Button> btn(new Button(log(), world(), top_));
+	this->buttonMap_.insert(h, btn);
+	this->frame_->addChild(h);
+	this->buttons_->addChild(btn);
+}
+void TabCombo::addChild(std::size_t const& idx, Handler<Element> const& h)
+{
+	Handler<Button> btn(new Button(log(), world(), top_));
+	this->frame_->addChild(idx, h);
+	this->buttons_->addChild(idx, btn);
+}
+Handler<Element> TabCombo::removeChild(std::size_t const& idx)
+{
+	Handler<Element> elm(this->frame_->removeChild(idx));
+	auto it = this->buttonMap_.find(elm);
+	Handler<Button> btn(it->second);
+	this->buttonMap_.erase(it);
+	this->buttons_->removeChild(btn);
+	return elm;
+}
+Handler<Element> TabCombo::removeChild(Handler<Element> const& h)
+{
+	auto it = this->buttonMap_.find(h);
+	Handler<Button> btn(it->second);
+	this->buttonMap_.erase(it);
+	this->buttons_->removeChild(btn);
+	return 	this->frame_->removeChild(h);
+}
+Handler<Element> TabCombo::lastChild() const noexcept
+{
+	return this->frame_->lastChild();
+}
+Handler<Element> TabCombo::frontChild() const noexcept
+{
+	return this->frame_->frontChild();
+}
+std::size_t TabCombo::bringChildToLast(Handler<Element> const& e)
+{
+	return this->frame_->bringChildToLast(e);
+}
+std::size_t TabCombo::bringChildToFront(Handler<Element> const& e)
+{
+	return this->frame_->bringChildToFront(e);
+}
+Handler<Element> TabCombo::findElementById(std::string const& id)
+{
+	return this->frame_->findElementById(id);
+}
+Handler<Element> TabCombo::findElementByPoint(geom::Vector const& screenPoint)
+{
+	return this->top_->findElementByPoint(screenPoint);
+}
+void TabCombo::idle(const float delta_ms)
+{
+	this->top_->idle(delta_ms);
+}
+
 std::string TabCombo::toString() const
 {
 	return util::format("(TabCombo %p with %d elements)", this, this->frame_->getChildCount());
@@ -42,14 +110,17 @@ std::string TabCombo::toString() const
 
 void TabCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
 {
+	this->top_->render(canvas, screenArea, area);
 }
 
 geom::Box TabCombo::measureImpl(geom::Box const& constraint)
 {
+	return this->top_->measure(constraint);
 }
 
 void TabCombo::layoutImpl(geom::Box const& size)
 {
+	this->top_->layout(size);
 }
 
 void TabCombo::loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
@@ -61,6 +132,5 @@ void TabCombo::loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XML
 		this->frame_->addChild( factory->parseTree(this->self(), e) );
 	}
 }
-
 
 }}}

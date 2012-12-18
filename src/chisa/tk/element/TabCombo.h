@@ -18,6 +18,7 @@
 
 #pragma once
 #include "ElementGroup.h"
+#include "../../util/VectorMap.h"
 #include "../../geom/Area.h"
 
 namespace chisa {
@@ -26,6 +27,7 @@ namespace element {
 
 class FrameCombo;
 class SplitCombo;
+class Button;
 class TabCombo : public ElementGroup {
 	CHISA_ELEMENT_SUBKLASS(TabCombo);
 public:
@@ -40,8 +42,25 @@ private:
 	Handler<FrameCombo> frame_;
 	Handler<SplitCombo> buttons_;
 	ButtonPosition buttonPosition_;
-public:
-	virtual std::string toString() const override;
+	util::VectorMap<Handler<Element>, Handler<Button> > buttonMap_;
+public: /* ツリー操作 */
+	virtual std::size_t getChildCount() const noexcept override final;
+	virtual Handler<Element> getChildAt( std::size_t const& idx ) const noexcept override final;
+	virtual void addChild(Handler<Element> const& h) override final;
+	virtual void addChild(std::size_t const& idx, Handler<Element> const& h) override final;
+	virtual Handler<Element> removeChild(std::size_t const& idx) override final;
+	virtual Handler<Element> removeChild(Handler<Element> const& h) override final;
+	virtual Handler<Element> lastChild() const noexcept override final;
+	virtual Handler<Element> frontChild() const noexcept override final;
+	virtual std::size_t bringChildToLast(Handler<Element> const& e) override final;
+	virtual std::size_t bringChildToFront(Handler<Element> const& e) override final;
+public: /* ツリー操作 */
+	virtual Handler<Element> findElementById(std::string const& id) override final;
+	virtual Handler<Element> findElementByPoint(geom::Vector const& screenPoint) override final;
+public: /* バックグラウンドタスク */
+	virtual void idle(const float delta_ms) override final;
+public: /* 実装メソッド */
+	virtual std::string toString() const override final;
 private:
 	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override;
 	virtual geom::Box measureImpl(geom::Box const& constraint) override;

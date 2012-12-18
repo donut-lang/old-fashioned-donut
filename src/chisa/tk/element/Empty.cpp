@@ -33,7 +33,6 @@ Empty::~Empty() noexcept
 {
 }
 
-
 void Empty::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* element)
 {
 
