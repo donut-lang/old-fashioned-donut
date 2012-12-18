@@ -39,6 +39,7 @@ public: /* ツリー操作 */
 public: /* ツリー操作 */
 	virtual Handler<Element> findElementById(std::string const& id) override = 0;
 	virtual Handler<Element> findElementByPoint(geom::Vector const& screenPoint) override = 0;
+	virtual void validate() = 0;
 public: /* バックグラウンドタスク */
 	virtual void idle(const float delta_ms) override = 0;
 public: /* 実装メソッド */
@@ -147,6 +148,12 @@ public: /* ツリー操作 */
 			}
 		}
 		return this->self();
+	}
+	virtual void validate() final{
+		Element::validate();
+		for(ContainerType& child : this->children_) {
+			child.first->validate();
+		}
 	}
 public: /* バックグラウンドタスク */
 	virtual void idle(const float delta_ms) override {

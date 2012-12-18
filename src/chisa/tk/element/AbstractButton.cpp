@@ -23,6 +23,8 @@
 #include "../../gl/DrawableManager.h"
 #include "../World.h"
 
+#include "ElementGroup.h"
+
 #include <iostream>
 namespace chisa {
 namespace tk {
@@ -128,6 +130,9 @@ void AbstractButton::text(std::string const& text)
 void AbstractButton::onClick()
 {
 	std::cout << "CLICK" << std::endl;
+	Handler<ElementGroup> h(this->findRootElement()->findElementById("frame").cast<ElementGroup>());
+	h->bringChildToLast(h->getChildAt(0));
+	h->invalidate();
 }
 
 bool AbstractButton::onDownRaw(const float timeMs, geom::Point const& ptInScreen)

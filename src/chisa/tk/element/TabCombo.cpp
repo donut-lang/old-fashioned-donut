@@ -83,14 +83,14 @@ void TabCombo::addChild(Handler<Element> const& h, std::string const& title)
 	btn->text(title);
 	this->buttonMap_.insert(h, btn);
 	this->frame_->addChild(h);
-	this->buttons_->addChild(btn);
+	this->buttons_->addChild(btn, SplitComboContext(1));
 }
 void TabCombo::addChild(std::size_t const& idx, Handler<Element> const& h, std::string const& title)
 {
 	Handler<Button> btn(new Button(log(), world(), top_));
 	btn->text(title);
 	this->frame_->addChild(idx, h);
-	this->buttons_->addChild(idx, btn);
+	this->buttons_->addChild(idx, btn, SplitComboContext(1));
 }
 
 Handler<Element> TabCombo::removeChild(std::size_t const& idx)
@@ -128,12 +128,19 @@ std::size_t TabCombo::bringChildToFront(Handler<Element> const& e)
 }
 Handler<Element> TabCombo::findElementById(std::string const& id)
 {
-	return this->frame_->findElementById(id);
+	return this->id() == id ? self() : this->frame_->findElementById(id);
 }
 Handler<Element> TabCombo::findElementByPoint(geom::Vector const& screenPoint)
 {
 	return this->top_->findElementByPoint(screenPoint);
 }
+
+void TabCombo::validate()
+{
+	Element::validate();
+	this->top_->validate();
+}
+
 void TabCombo::idle(const float delta_ms)
 {
 	this->top_->idle(delta_ms);
