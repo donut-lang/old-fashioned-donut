@@ -94,7 +94,8 @@ void Clock::processRequestedDiscard()
 {
 	if( this->discardFutureRequested_ ){
 		this->discardFuture();
-	}else if(this->discardHistoryRequested_ ){
+	}
+	if(this->discardHistoryRequested_ ){
 		this->discardHistory();
 	}
 }
