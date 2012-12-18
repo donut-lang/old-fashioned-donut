@@ -28,8 +28,6 @@ class FrameCombo : public ElementGroup {
 	CHISA_ELEMENT_SUBKLASS(FrameCombo);
 public:
 	virtual std::string toString() const override;
-public:
-	std::size_t bringToFront(Handler<Element> const& e);
 private:
 	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override;
 	virtual geom::Box measureImpl(geom::Box const& constraint) override;

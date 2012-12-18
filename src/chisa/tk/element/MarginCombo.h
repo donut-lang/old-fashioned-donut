@@ -17,20 +17,20 @@
  */
 
 #pragma once
-#include "../Element.h"
+#include "ElementGroup.h"
 #include "../../geom/Area.h"
 
 namespace chisa {
 namespace tk {
 namespace element {
 
-class MarginCombo : public Element {
+class MarginCombo : public ElementGroup {
 	CHISA_ELEMENT_SUBKLASS(MarginCombo);
-	Handler<Element> child_;
 	geom::Space margin_;
 public:
 	virtual std::string toString() const override;
 private:
+
 	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override;
 	virtual geom::Box measureImpl(geom::Box const& constraint) override;
 	virtual void layoutImpl(geom::Box const& size) override;
