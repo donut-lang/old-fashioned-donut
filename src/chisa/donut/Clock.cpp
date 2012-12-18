@@ -114,7 +114,7 @@ void Clock::processRequest()
 void Clock::back()
 {
 	if(this->enter_){
-		return;
+		throw DonutException(__FILE__, __LINE__, "[BUG] You cannt seek back while discarding/seeking/ticking clock, homura!");
 	}
 	this->enter_=true;
 	this->backStep();
@@ -124,7 +124,7 @@ void Clock::back()
 void Clock::forward()
 {
 	if(this->enter_){
-		return;
+		throw DonutException(__FILE__, __LINE__, "[BUG] You cannt seek forward while discarding/seeking/ticking clock, homura!");
 	}
 	this->enter_=true;
 	this->forwardStep();
@@ -135,6 +135,7 @@ void Clock::forward()
 void Clock::tick()
 {
 	if(this->enter_){
+		this->log().i(TAG, "Ticking reserved.");
 		this->tickRequested_=true;
 		return;
 	}
@@ -146,6 +147,7 @@ void Clock::tick()
 void Clock::discardFuture()
 {
 	if(this->enter_){
+		this->log().i(TAG, "Discarding future reserved.");
 		this->discardFutureRequested_=true;
 		return;
 	}
@@ -157,6 +159,7 @@ void Clock::discardFuture()
 void Clock::discardHistory()
 {
 	if(this->enter_){
+		this->log().i(TAG, "Discarding history reserved.");
 		this->discardHistoryRequested_=true;
 		return;
 	}
