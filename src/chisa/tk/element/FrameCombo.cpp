@@ -24,7 +24,7 @@ namespace chisa {
 namespace tk {
 namespace element {
 
-CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(FrameCombo, ElementGroup)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(FrameCombo, Super)
 {
 }
 
