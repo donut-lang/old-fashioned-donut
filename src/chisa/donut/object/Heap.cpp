@@ -435,9 +435,6 @@ void Heap::onTickNotify()
 }
 void Heap::onBackNotify()
 {
-	if(this->log().t()){
-		this->log().t(TAG, "go back to %d...", this->clock_->now());
-	}
 	Handler<Heap> self(this->self());
 	for( Object* const& o : this->objectPool_){
 		o->onBackNotify(self);
@@ -445,9 +442,6 @@ void Heap::onBackNotify()
 }
 void Heap::onForwardNotify()
 {
-	if(this->log().t()){
-		this->log().t(TAG, "go forward to %d...", this->clock_->now());
-	}
 	Handler<Heap> self(this->self());
 	for( Object* const& o : this->objectPool_){
 		o->onForwardNotify(self);
@@ -456,9 +450,6 @@ void Heap::onForwardNotify()
 
 void Heap::onDiscardFutureNotify()
 {
-	if(this->log().d()){
-		this->log().d(TAG, "Discarding future... now: %d", this->clock_->now());
-	}
 	for( Object* const& o : this->objectPool_){
 		o->onDiscardFutureNotify(self());
 	}
@@ -466,9 +457,6 @@ void Heap::onDiscardFutureNotify()
 
 void Heap::onDiscardHistoryNotify()
 {
-	if(this->log().d()){
-		this->log().d(TAG, "Discarding history... now: %d", this->clock_->now());
-	}
 	for( Object* const& o : this->objectPool_){
 		o->onDiscardHistoryNotify(self());
 	}
