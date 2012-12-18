@@ -22,7 +22,6 @@
 
 namespace chisa {
 namespace tk {
-namespace element {
 
 class ElementGroup : public Element {
 	CHISA_ELEMENT_SUBKLASS_FINAL(ElementGroup);
@@ -158,4 +157,4 @@ public: /* バックグラウンドタスク */
 };
 
 
-}}}
+}}

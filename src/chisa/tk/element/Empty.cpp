@@ -22,7 +22,6 @@
 
 namespace chisa {
 namespace tk {
-namespace element {
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(Empty, Element)
 {
@@ -58,4 +57,4 @@ void Empty::layoutImpl(geom::Box const& size)
 	//何もしない
 }
 
-}}}
+}}

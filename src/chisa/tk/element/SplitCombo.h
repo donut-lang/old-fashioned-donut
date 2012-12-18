@@ -22,7 +22,6 @@
 
 namespace chisa {
 namespace tk {
-namespace element {
 
 class ElementFactory;
 
@@ -42,7 +41,6 @@ struct SplitComboContext
 	:def(weight, min, max),size(NAN),weight(def.weight){}
 	SplitComboContext():def(0, NAN, NAN),size(NAN),weight(def.weight){}
 };
-
 
 class SplitCombo: public ElementGroupBase<SplitComboContext> {
 	CHISA_ELEMENT_SUBKLASS_FINAL(SplitCombo);
@@ -87,7 +85,7 @@ private:
 	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override;
 	virtual geom::Box measureImpl(geom::Box const& constraint) override;
 	virtual void layoutImpl(geom::Box const& size) override;
-	virtual void loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
+	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
 };
 
-}}}
+}}

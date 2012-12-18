@@ -22,7 +22,6 @@
 
 namespace chisa {
 namespace tk {
-namespace element {
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(MarginCombo, Super)
 {
@@ -81,10 +80,10 @@ void MarginCombo::layoutImpl(geom::Box const& size)
 	}
 }
 
-void MarginCombo::loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
+void MarginCombo::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
 	this->addChild( factory->parseTree(this->self(), element->FirstChildElement()) );
 }
 
 
-}}}
+}}

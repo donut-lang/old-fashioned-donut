@@ -23,12 +23,36 @@
 #include "Button.h"
 
 namespace chisa {
+
+namespace util {
+namespace xml {
+using namespace chisa::tk;
+
+template <>
+void parseAttr<TabCombo::ButtonPosition>(std::string const& name, TabCombo::ButtonPosition& v, TabCombo::ButtonPosition const& def, tinyxml2::XMLElement* elm)
+{
+	v=def;
+	const char* val = elm->Attribute(name.c_str());
+	if(val){
+		std::string v(util::toLower(val));
+		if(v == "top"){
+			v=TabCombo::ButtonPosition::Top;
+		}else if(v=="bottom"){
+			v=TabCombo::ButtonPosition::Bottom;
+		}else if(v=="right"){
+			v=TabCombo::ButtonPosition::Right;
+		}else if(v=="left"){
+			v=TabCombo::ButtonPosition::Left;
+		}
+	}
+}}}
+
 namespace tk {
-namespace element {
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(TabCombo, ElementGroup)
 ,buttonPosition_(ButtonPosition::Bottom)
 {
+	this->addAttribute("tab", this->buttonPosition_);
 }
 
 TabCombo::~TabCombo() noexcept
@@ -46,17 +70,29 @@ Handler<Element> TabCombo::getChildAt(std::size_t const& idx) const noexcept
 }
 void TabCombo::addChild(Handler<Element> const& h)
 {
+	this->addChild(h, "Button");
+}
+void TabCombo::addChild(std::size_t const& idx, Handler<Element> const& h)
+{
+	this->addChild(idx, h, "Button");
+}
+
+void TabCombo::addChild(Handler<Element> const& h, std::string const& text)
+{
 	Handler<Button> btn(new Button(log(), world(), top_));
+	btn->text(text);
 	this->buttonMap_.insert(h, btn);
 	this->frame_->addChild(h);
 	this->buttons_->addChild(btn);
 }
-void TabCombo::addChild(std::size_t const& idx, Handler<Element> const& h)
+void TabCombo::addChild(std::size_t const& idx, Handler<Element> const& h, std::string const& text)
 {
 	Handler<Button> btn(new Button(log(), world(), top_));
+	btn->text(text);
 	this->frame_->addChild(idx, h);
 	this->buttons_->addChild(idx, btn);
 }
+
 Handler<Element> TabCombo::removeChild(std::size_t const& idx)
 {
 	Handler<Element> elm(this->frame_->removeChild(idx));
@@ -123,7 +159,7 @@ void TabCombo::layoutImpl(geom::Box const& size)
 	this->top_->layout(size);
 }
 
-void TabCombo::loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element)
+void TabCombo::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
 	this->top_ = this->createChild<SplitCombo>();
 	this->buttons_ = this->createChild<SplitCombo>();
@@ -155,8 +191,13 @@ void TabCombo::loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XML
 		break;
 	}
 	for( tinyxml2::XMLElement* e = element->FirstChildElement(); e; e=e->NextSiblingElement() ){
-		this->addChild( factory->parseTree(this->self(), e) );
+		const char* text = e->Attribute("tab-text");
+		if(text){
+			this->addChild( factory->parseTree(this->self(), e), text);
+		}else{
+			this->addChild( factory->parseTree(this->self(), e));
+		}
 	}
 }
 
-}}}
+}}

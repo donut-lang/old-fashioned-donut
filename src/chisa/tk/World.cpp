@@ -71,7 +71,7 @@ void World::init()
 		const std::string filename(universe->resolveWorldFilepath(this->name_, "layout.xml"));
 		this->doc_ = new tinyxml2::XMLDocument();
 		this->doc_->LoadFile(filename.c_str());
-		this->elementFactory_ = new element::ElementFactory(this->log_, self(), filename, this->doc_, false);
+		this->elementFactory_ = new ElementFactory(this->log_, self(), filename, this->doc_, false);
 
 		if( const char* geistName = this->doc_->RootElement()->Attribute("geist", nullptr)){
 			universe->hexe()->registerElements(*this->elementFactory_);
@@ -149,7 +149,7 @@ Handler<Element> World::getElementById(std::string const& id)
 	return Handler<Element>();
 }
 
-element::WidgetElement* World::getWidgetById(std::string const& name)
+WidgetElement* World::getWidgetById(std::string const& name)
 {
 	auto it = this->widgetMap_.find(name);
 	if(it == this->widgetMap_.end()){
@@ -158,18 +158,18 @@ element::WidgetElement* World::getWidgetById(std::string const& name)
 	return it->second;
 }
 
-bool World::replaceWidget(std::string const& widgetId, element::WidgetElement* const newHandler)
+bool World::replaceWidget(std::string const& widgetId, WidgetElement* const newHandler)
 {
-	std::unordered_map<std::string, element::WidgetElement*>::iterator it = this->widgetMap_.find(widgetId);
+	std::unordered_map<std::string, WidgetElement*>::iterator it = this->widgetMap_.find(widgetId);
 	if(it != widgetMap_.end()) {
 		this->widgetMap_.erase(it);
 	}
-	this->widgetMap_.insert(std::pair<std::string, element::WidgetElement*>(widgetId, newHandler));
+	this->widgetMap_.insert(std::pair<std::string, WidgetElement*>(widgetId, newHandler));
 	return true;
 }
-bool World::deleteWidget(std::string const& widgetId, element::WidgetElement* const handler)
+bool World::deleteWidget(std::string const& widgetId, WidgetElement* const handler)
 {
-	std::unordered_map<std::string, element::WidgetElement*>::iterator it = this->widgetMap_.find(widgetId);
+	std::unordered_map<std::string, WidgetElement*>::iterator it = this->widgetMap_.find(widgetId);
 	if(it != widgetMap_.end()) {
 		log_.w(TAG, "Oops. WidgetID: %s not found.", widgetId.c_str());
 		return false;

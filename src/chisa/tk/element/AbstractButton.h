@@ -23,7 +23,6 @@
 
 namespace chisa {
 namespace tk {
-namespace element {
 
 class AbstractButton: public Element {
 	CHISA_ELEMENT_SUBKLASS_FINAL(AbstractButton);
@@ -63,7 +62,7 @@ private:
 	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override;
 	virtual geom::Box measureImpl(geom::Box const& constraint) override;
 	virtual void layoutImpl(geom::Box const& size) override;
-	virtual void loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
+	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
 public:
 	virtual bool onDownRaw(const float timeMs, geom::Point const& ptInScreen) override;
 	virtual bool onUpRaw(const float timeMs, geom::Point const& ptInScreen) override;
@@ -71,4 +70,4 @@ public:
 	virtual bool onSingleTapUp(const float timeMs, geom::Point const& ptInScreen) override;
 };
 
-}}}
+}}

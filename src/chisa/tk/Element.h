@@ -34,9 +34,7 @@ class XMLElement;
 
 namespace chisa {
 namespace tk {
-namespace element {
 class ElementFactory;
-}
 
 class World;
 
@@ -62,7 +60,7 @@ public: /* ツリー操作 */
 	virtual Handler<Element> findElementById(std::string const& id);
 	virtual Handler<Element> findElementByPoint(geom::Vector const& screenPoint);
 public: /* 木の生成 */
-	void loadXml(element::ElementFactory* const factory, tinyxml2::XMLElement* const element);
+	void loadXml(ElementFactory* const factory, tinyxml2::XMLElement* const element);
 public: /* バックグラウンドタスク */
 	virtual void idle(const float delta_ms);
 public: /* 実装メソッド */
@@ -70,7 +68,7 @@ public: /* 実装メソッド */
 	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) = 0;
 	virtual geom::Box measureImpl(geom::Box const& constraint) = 0;
 	virtual void layoutImpl(geom::Box const& size) = 0;
-	virtual void loadXmlImpl(element::ElementFactory* const factory, tinyxml2::XMLElement* const element) = 0;
+	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) = 0;
 protected:
 	Element(logging::Logger& log, HandlerW<World> world, HandlerW<Element> parent);
 	template <typename T> void addAttribute(std::string const& name, T& ptr)

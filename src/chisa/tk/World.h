@@ -56,13 +56,13 @@ private:
 	TaskHandler taskHandler_;
 	Handler<donut::DozenBox> dozenBox_;
 	Stack<Handler<Element> > elementStack_;
-	std::unordered_map<std::string, element::WidgetElement*> widgetMap_;
+	std::unordered_map<std::string, WidgetElement*> widgetMap_;
 	DEFINE_MEMBER(private, private, geom::Area, area);
 private:
 	tinyxml2::XMLDocument* doc_;
 	DEFINE_MEMBER(public, private, Handler<WorldGeist>, geist);
 private:
-	element::ElementFactory* elementFactory_;
+	ElementFactory* elementFactory_;
 	widget::WidgetFactory* widgetFactory_;
 	GestureMediator* gestureMediator_;
 public:
@@ -73,9 +73,9 @@ private:
 	void popElement();
 	void pushElement(std::string const& filename);
 public:
-	element::WidgetElement* getWidgetById(std::string const& name);
-	bool replaceWidget(std::string const& widgetId, element::WidgetElement* const newHandler);
-	bool deleteWidget(std::string const& widgetId, element::WidgetElement* const handler);
+	WidgetElement* getWidgetById(std::string const& name);
+	bool replaceWidget(std::string const& widgetId, WidgetElement* const newHandler);
+	bool deleteWidget(std::string const& widgetId, WidgetElement* const handler);
 	Widget* createWidget(std::string const& klass, tinyxml2::XMLElement* elem);
 public:
 	Handler<Element> getElementByPoint(geom::Point const& screenVector);
