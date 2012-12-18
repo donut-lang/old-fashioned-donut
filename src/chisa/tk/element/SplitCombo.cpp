@@ -30,7 +30,7 @@ const std::string SplitCombo::AttrName::Max("split-max");
 const std::string SplitCombo::AttrName::Min("split-min");
 
 
-CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(SplitCombo, ElementGroupBase<SplitCtx>)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(SplitCombo, Super)
 ,splitMode_(Vertical)
 ,totalSize_(geom::Unspecified)
 ,changed_getter(nullptr)
