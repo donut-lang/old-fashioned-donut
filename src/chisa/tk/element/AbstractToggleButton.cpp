@@ -53,13 +53,10 @@ std::string AbstractToggleButton::toString() const
 void AbstractToggleButton::checked(bool const& state)
 {
 	this->checkedImpl(state);
-	bool const res = this->checked();
-	if(res != state){
-		this->toggleStateChanged();
-	}
+	this->notifyCheckedStateChanged();
 }
 
-void AbstractToggleButton::toggleStateChanged()
+void AbstractToggleButton::notifyCheckedStateChanged()
 {
 	if(this->checked()){
 		if(this->onBackgroundColor_.isInvalid()){
@@ -79,6 +76,35 @@ void AbstractToggleButton::toggleStateChanged()
 		}
 		this->backgroundColor(this->offBackgroundColor());
 		this->foregroundColor(this->offForegroundColor());
+	}
+}
+
+void AbstractToggleButton::onBackgroundColor(gl::Color const& c)
+{
+	this->onBackgroundColor_ = c;
+	if(this->checked()) {
+		this->backgroundColor(c);
+	}
+}
+void AbstractToggleButton::onForegroundColor(gl::Color const& c)
+{
+	this->onForegroundColor_ = c;
+	if(this->checked()) {
+		this->foregroundColor(c);
+	}
+}
+void AbstractToggleButton::offBackgroundColor(gl::Color const& c)
+{
+	this->offBackgroundColor_ = c;
+	if(!this->checked()) {
+		this->backgroundColor(c);
+	}
+}
+void AbstractToggleButton::offForegroundColor(gl::Color const& c)
+{
+	this->offForegroundColor_ = c;
+	if(!this->checked()) {
+		this->foregroundColor(c);
 	}
 }
 
