@@ -1,5 +1,5 @@
 /**
- * Saccubus
+ * Chisa
  * Copyright (C) 2012 psi
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SACCUBUS_TESTCOMMON_H_
-#define SACCUBUS_TESTCOMMON_H_
+#pragma once
 
 #include <memory>
-using std::shared_ptr;
 #include <gtest/gtest.h>
 #include <iostream>
 #include "../src/chisa/logging/Exception.h"
@@ -61,5 +59,3 @@ template<typename T, size_t N>
 	}
 	return ::testing::AssertionSuccess();
 }
-
-#endif /* SACCUBUS_TESTCOMMON_H_ */
