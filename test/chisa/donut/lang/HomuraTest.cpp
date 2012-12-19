@@ -62,13 +62,30 @@ TEST(DonutHomuraTest, MemorizeTest)
 TEST(DonutHomuraTest, LoopTest)
 {
 	INIT_DONUT;
-	const timestamp_t time = donut->nowTime();
-	Handler<Object> result;
 	{
+		Handler<Object> result;
 		result = machine->start( donut->parse("Homura.test=1;t=Homura.tick();if(Homura.test < 10){ Homura.test+=1; Homura.seek(t); }else{ Homura.test; };Homura.test;", "<MEM>", 0) );
 		ASSERT_EQ(10, result->toInt(heap));
 	}
 }
+
+TEST(DonutHomuraTest, SaveTest)
+{
+	util::XValue v;
+	{
+		INIT_DONUT;
+		Handler<Object> result;
+		result = machine->start( donut->parse("Homura.test=1;", "<MEM>", 0) );
+		v = donut->save();
+	}
+	{
+		INIT_DONUT_WITH(v);
+		Handler<Object> result;
+		ASSERT_NO_THROW( result = machine->start( donut->parse("Homura.test;", "<MEM>", 0) ) );
+		ASSERT_EQ(1, result->toInt(heap));
+	}
+}
+
 }}
 
 

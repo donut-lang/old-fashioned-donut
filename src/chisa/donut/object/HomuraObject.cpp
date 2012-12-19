@@ -111,7 +111,7 @@ void HomuraObject::loadImpl( Handler<Heap> const& heap, util::XValue const& data
 	using namespace util;
 	Handler<XObject> xobj(data.as<XObject>());
 	for(std::pair<std::string, XValue> const& v : *(xobj->get<XObject>("slot"))){
-		slot_.insert(v.first, heap->decodeHeapDescriptor(v.second.as<object_desc_t>()).get());
+		slot_.insert(v.first, heap->decodeDescriptor(v.second.as<object_desc_t>()).get());
 	}
 }
 
