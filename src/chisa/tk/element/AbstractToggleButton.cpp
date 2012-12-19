@@ -60,11 +60,9 @@ void AbstractToggleButton::checked(bool const& state)
 	if(res){
 		this->backgroundColor(this->onBackgroundColor());
 		this->foregroundColor(this->onForegroundColor());
-		std::cout << "IN" << std::endl;
 	}else{
 		this->backgroundColor(this->offBackgroundColor());
 		this->foregroundColor(this->offForegroundColor());
-		std::cout << "OUT" << std::endl;
 	}
 }
 bool AbstractToggleButton::checked() const
