@@ -77,35 +77,57 @@ void TabCombo::addChild(std::size_t const& idx, Handler<Element> const& h)
 	this->addChild(idx, h, h->toString());
 }
 
+void TabCombo::updateButtonState(Handler<Element> const& elm, Handler<TabButton> const& btn)
+{
+	Handler<TabButton> b = btn ? btn : (*this->buttonMap_.find(elm)).second;
+	b->toggleStateChanged();
+}
+
 void TabCombo::addChild(Handler<Element> const& h, std::string const& title)
 {
-	Handler<TabButton> btn(new TabButton(log(), world(), top_));
-	btn->text(title);
-	btn->setVertical( (this->buttonPosition_ == ButtonPosition::Left) || (this->buttonPosition_ == ButtonPosition::Right) );
-	btn->tab(self().cast<TabCombo>());
-	btn->element(h);
+	Handler<TabButton> const btn(new TabButton(log(), world(), top_));
+	Handler<Element> last = this->lastChild();
 	this->buttonMap_.insert(h, btn);
 	this->frame_->addChild(h);
 	this->buttons_->addChild(btn, SplitComboContext(1));
-}
-void TabCombo::addChild(std::size_t const& idx, Handler<Element> const& h, std::string const& title)
-{
-	Handler<TabButton> btn(new TabButton(log(), world(), top_));
+	if(last){
+		updateButtonState(last, Handler<TabButton>());
+	}
+
 	btn->text(title);
 	btn->setVertical( (this->buttonPosition_ == ButtonPosition::Left) || (this->buttonPosition_ == ButtonPosition::Right) );
 	btn->tab(self().cast<TabCombo>());
 	btn->element(h);
+	updateButtonState(h, btn);
+}
+void TabCombo::addChild(std::size_t const& idx, Handler<Element> const& h, std::string const& title)
+{
+	Handler<TabButton> const btn(new TabButton(log(), world(), top_));
+	Handler<Element> last = this->lastChild();
+	this->buttonMap_.insert(h, btn);
 	this->frame_->addChild(idx, h);
 	this->buttons_->addChild(idx, btn, SplitComboContext(1));
+	if(last){
+		updateButtonState(last, Handler<TabButton>());
+	}
+
+	btn->text(title);
+	btn->setVertical( (this->buttonPosition_ == ButtonPosition::Left) || (this->buttonPosition_ == ButtonPosition::Right) );
+	btn->tab(self().cast<TabCombo>());
+	btn->element(h);
+	updateButtonState(h, btn);
 }
 
 Handler<Element> TabCombo::removeChild(std::size_t const& idx)
 {
 	Handler<Element> elm(this->frame_->removeChild(idx));
-	auto it = this->buttonMap_.find(elm);
+	auto const it = this->buttonMap_.find(elm);
 	Handler<TabButton> btn(it->second);
 	this->buttonMap_.erase(it);
 	this->buttons_->removeChild(btn);
+	if(this->lastChild()){
+		updateButtonState(this->lastChild(), Handler<TabButton>());
+	}
 	return elm;
 }
 Handler<Element> TabCombo::removeChild(Handler<Element> const& h)
@@ -114,7 +136,11 @@ Handler<Element> TabCombo::removeChild(Handler<Element> const& h)
 	Handler<TabButton> btn(it->second);
 	this->buttonMap_.erase(it);
 	this->buttons_->removeChild(btn);
-	return 	this->frame_->removeChild(h);
+	this->frame_->removeChild(h);
+	if(this->lastChild()){
+		updateButtonState(this->lastChild(), Handler<TabButton>());
+	}
+	return h;
 }
 Handler<Element> TabCombo::lastChild() const noexcept
 {
@@ -126,11 +152,24 @@ Handler<Element> TabCombo::frontChild() const noexcept
 }
 std::size_t TabCombo::bringChildToLast(Handler<Element> const& e)
 {
-	return this->frame_->bringChildToLast(e);
+	Handler<Element> last(this->frame_->lastChild());
+	std::size_t t = this->frame_->bringChildToLast(e);
+	this->updateButtonState(e, Handler<TabButton>());
+	if(last){
+		updateButtonState(last, Handler<TabButton>());
+	}
+
+	return t;
 }
 std::size_t TabCombo::bringChildToFront(Handler<Element> const& e)
 {
-	return this->frame_->bringChildToFront(e);
+	Handler<Element> last(this->lastChild());
+	std::size_t t = this->frame_->bringChildToFront(e);
+	this->updateButtonState(e, Handler<TabButton>());
+	if(last){
+		updateButtonState(last, Handler<TabButton>());
+	}
+	return t;
 }
 Handler<Element> TabCombo::findElementById(std::string const& id)
 {

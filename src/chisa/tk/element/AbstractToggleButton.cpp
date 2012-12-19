@@ -54,17 +54,34 @@ void AbstractToggleButton::checked(bool const& state)
 {
 	this->checkedImpl(state);
 	bool const res = this->checked();
-	//if(res == state){
-	//	return;
-	//}
-	if(res){
+	if(res != state){
+		this->toggleStateChanged();
+	}
+}
+
+void AbstractToggleButton::toggleStateChanged()
+{
+	if(this->checked()){
+		if(this->onBackgroundColor_.isInvalid()){
+			this->onBackgroundColor_ = this->backgroundColor();
+		}
+		if(this->onForegroundColor_.isInvalid()){
+			this->onForegroundColor_ = this->foregroundColor();
+		}
 		this->backgroundColor(this->onBackgroundColor());
 		this->foregroundColor(this->onForegroundColor());
 	}else{
+		if(this->offBackgroundColor_.isInvalid()){
+			this->offBackgroundColor_ = this->backgroundColor().darker();
+		}
+		if(this->offForegroundColor_.isInvalid()){
+			this->offForegroundColor_ = this->foregroundColor().lighter();
+		}
 		this->backgroundColor(this->offBackgroundColor());
 		this->foregroundColor(this->offForegroundColor());
 	}
 }
+
 bool AbstractToggleButton::checked() const
 {
 	return this->checkedImpl();
@@ -77,19 +94,19 @@ void AbstractToggleButton::toggle()
 
 gl::Color AbstractToggleButton::onBackgroundColor() const
 {
-	return this->onBackgroundColor_.isInvalid() ? this->backgroundColor() : this->onBackgroundColor_;
+	return this->onBackgroundColor_;
 }
 gl::Color AbstractToggleButton::onForegroundColor() const
 {
-	return this->onForegroundColor_.isInvalid() ? this->foregroundColor() : this->onForegroundColor_;
+	return this->onForegroundColor_;
 }
 gl::Color AbstractToggleButton::offBackgroundColor() const
 {
-	return this->offBackgroundColor_.isInvalid() ? this->backgroundColor().darker() : this->offBackgroundColor_;
+	return this->offBackgroundColor_;
 }
 gl::Color AbstractToggleButton::offForegroundColor() const
 {
-	return this->offForegroundColor_.isInvalid() ? this->foregroundColor().lighter() : this->offForegroundColor_;
+	return this->offForegroundColor_;
 }
 
 void AbstractToggleButton::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)
