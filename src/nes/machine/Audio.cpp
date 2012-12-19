@@ -2,15 +2,22 @@
 
 namespace nes {
 
-Audio::Audio(VirtualMachine& vm, AudioFairy& audioFairy):
-	VM(vm),
-	audioFairy(audioFairy),
-	//---
-	rectangle1(true),
-	rectangle2(false),
-	triangle(),
-	noize(),
-	digital(vm)
+Audio::Audio(VirtualMachine& vm, AudioFairy& audioFairy)
+:VM(vm)
+,audioFairy(audioFairy)
+// ---
+,clockCnt(0)
+,leftClock(0)
+,frameCnt(0)
+,isNTSCmode(true)
+,frameIRQenabled(true)
+,frameIRQCnt(0)
+// ---
+,rectangle1(true)
+,rectangle2(false)
+,triangle()
+,noize()
+,digital(vm)
 {
 	//ctor
 }
@@ -307,8 +314,34 @@ const uint8_t AudioChannel::LengthCounterConst[32] = {
 
 
 
-Rectangle::Rectangle(bool isFirstChannel):
-isFirstChannel(isFirstChannel)
+Rectangle::Rectangle(bool isFirstChannel)
+:isFirstChannel(isFirstChannel)
+//decay or volume
+,volumeOrDecayRate(0)
+,decayReloaded(false)
+,decayEnabled(false)
+,dutyRatio(0)
+
+,decayCounter(0)
+
+,decayVolume(0)
+
+//sweep
+,sweepEnabled(false)
+,sweepShiftAmount(0)
+,sweepIncreased(false)
+,sweepUpdateRatio(0)
+
+,sweepCounter(0)
+
+//
+,frequency(0)
+,loopEnabled(false)
+,lengthCounter(0)
+
+//
+,freqCounter(0)
+,dutyCounter(0)
 {
 
 }
@@ -457,6 +490,17 @@ const uint8_t Triangle::waveForm[32] ={
 };
 
 Triangle::Triangle()
+:haltFlag(false)
+
+,enableLinearCounter(false)
+,frequency(0)
+,linearCounterBuffer(0)
+//
+,linearCounter(0)
+,lengthCounter(0)
+//
+,freqCounter(0)
+,streamCounter(0)
 {
 
 }
@@ -543,6 +587,24 @@ const uint16_t Noize::FrequencyTable[16] = {
 };
 
 Noize::Noize()
+//rand
+:shiftRegister(1<<14)
+,modeFlag(false)
+
+//decay
+,volumeOrDecayRate(0)
+,decayReloaded(false)
+,decayEnabled(false)
+
+,decayCounter(0)
+,decayVolume(0)
+//
+,loopEnabled(false)
+,frequency(0)
+//
+,lengthCounter(0)
+//
+,freqCounter(0)
 {
 }
 Noize::~Noize()
@@ -653,8 +715,20 @@ const uint16_t Digital::FrequencyTable[16] = {
 		//398, 354, 316, 298, 276, 236, 210, 198, 176, 148, 132, 118,  98,  78,  66,  50
 };
 
-Digital::Digital(VirtualMachine& vm) :
-VM(vm)
+Digital::Digital(VirtualMachine& vm)
+:VM(vm)
+,irqEnabled(false)
+,loopEnabled(false)
+,frequency(0)
+,deltaCounter(0)
+,sampleAddr(0xc000)
+,sampleLength(0)
+,sampleLengthBuffer(0)
+//
+,sampleBuffer(0)
+,sampleBufferLeft(0)
+//
+,freqCounter(0)
 {
 
 }

@@ -5,6 +5,7 @@ namespace nes {
 Mapper1::Mapper1(VirtualMachine& vm, const NesFile* nesFile) :
 Cartridge(vm, nesFile),
 is512krom(nesFile->getPrgPageCnt()==32),
+useHighPrgBank(false), //あとで決める
 hasChrRam(nesFile->getChrPageCnt() == 0),
 lastPrgBank(nesFile->getPrgPageCnt()-1),
 chrMode(0),
