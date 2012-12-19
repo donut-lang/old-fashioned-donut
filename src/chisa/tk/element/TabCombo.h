@@ -68,6 +68,8 @@ private:
 	virtual geom::Box measureImpl(geom::Box const& constraint) override;
 	virtual void layoutImpl(geom::Box const& size) override;
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
+private:
+	void updateButtonState(Handler<Element> const& elm, Handler<TabButton> const& btn);
 };
 
 }}

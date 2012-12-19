@@ -43,6 +43,7 @@ public:
 	void toggle();
 	void checked(bool const& state);
 	bool checked() const;
+	void toggleStateChanged();
 public:
 	gl::Color onBackgroundColor() const;
 	gl::Color onForegroundColor() const;
