@@ -266,7 +266,7 @@ protected:
 	virtual void onDiscardHistoryNotifyImpl(Handler<Heap> const& heap) override final;
 	virtual void onDiscardFutureNotifyImpl(Handler<Heap> const& heap) override final;
 public:
-	virtual Handler<Object> apply(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& arg) const = 0;
+	virtual Handler<Object> apply(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& arg) const = 0;
 private:
 	virtual util::XValue save( Handler<Heap> const& heap ) override final;
 	virtual void load( Handler<Heap> const& heap, util::XValue const& data ) override final;
