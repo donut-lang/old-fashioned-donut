@@ -28,19 +28,15 @@ namespace donut {
 namespace native {
 
 template <size_t idx, typename R>
-Handler<Object> bindArgumentPure(Handler<Heap> const& heap, Handler<DonutObject> const& args, std::function<R()> const& funct)
+Handler<Object> bindArgumentPure(Handler<Heap> const& heap, std::vector<Handler<Object> > const& args, std::function<R()> const& funct)
 {
 	return native::Encoder<R>::exec( heap, funct() );
 }
 
 template <size_t idx, typename R, typename U, typename... Args>
-Handler<Object> bindArgumentPure(Handler<Heap> const& heap, Handler<DonutObject> const& args, std::function<R(U val, Args... args)> const& funct)
+Handler<Object> bindArgumentPure(Handler<Heap> const& heap, std::vector<Handler<Object> > const& args, std::function<R(U val, Args... args)> const& funct)
 {
-	if( !args->has(heap, idx) ) {
-		constexpr int _idx = idx+1;
-		throw DonutException(__FILE__, __LINE__, "oops. args size mismatched. need more than %d arguments.", _idx);
-	}
-	U const val = native::Decoder<U>::exec( heap, args->get(heap, idx) );
+	U const val = native::Decoder<U>::exec( heap, args.at(idx) );
 	std::function<R(Args ... args)> const left ( [funct, val](Args... args) {
 		return funct(val, args...);
 	});
@@ -48,9 +44,9 @@ Handler<Object> bindArgumentPure(Handler<Heap> const& heap, Handler<DonutObject>
 }
 
 template <typename R, typename S, typename... Args>
-std::function<Handler<Object>(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& args)> createBindPure(std::function<R(S self, Args... args)> f)
+std::function<Handler<Object>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)> createBindPure(std::function<R(S self, Args... args)> f)
 {
-	return [f](Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& args){
+	return [f](Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args){
 		std::function<R(Args...)> self_applied ( [f, heap, self ](Args... args_){ return f(native::Decoder<S>::exec( heap, self ), args_...); } );
 		return bindArgumentPure<0>(heap, args, self_applied);
 	};
@@ -61,7 +57,7 @@ std::function<Handler<Object>(Handler<Heap> const& heap, Handler<Object> const& 
  **********************************************************************************************************************/
 
 template <size_t idx, typename R>
-std::tuple<Handler<Object>, util::XValue> bindArgumentReactive(Handler<Heap> const& heap, Handler<DonutObject> const& args, std::function<std::tuple<R, util::XValue>()> const& funct)
+std::tuple<Handler<Object>, util::XValue> bindArgumentReactive(Handler<Heap> const& heap, std::vector<Handler<Object> > const& args, std::function<std::tuple<R, util::XValue>()> const& funct)
 {
 	R res;
 	util::XValue val;
@@ -70,13 +66,9 @@ std::tuple<Handler<Object>, util::XValue> bindArgumentReactive(Handler<Heap> con
 }
 
 template <size_t idx, typename R, typename U, typename... Args>
-std::tuple<Handler<Object>, util::XValue> bindArgumentReactive(Handler<Heap> const& heap, Handler<DonutObject> const& args, std::function<std::tuple<R, util::XValue>(U val, Args... args)> const& funct)
+std::tuple<Handler<Object>, util::XValue> bindArgumentReactive(Handler<Heap> const& heap, std::vector<Handler<Object> > const& args, std::function<std::tuple<R, util::XValue>(U val, Args... args)> const& funct)
 {
-	if( !args->has(heap, idx) ) {
-		constexpr int _idx = idx+1;
-		throw DonutException(__FILE__, __LINE__, "oops. args size mismatched. need more than %d arguments.", _idx);
-	}
-	U const val = native::Decoder<U>::exec( heap, args->get(heap, idx) );
+	U const val = native::Decoder<U>::exec( heap, args.at(idx) );
 	std::function<std::tuple<R, util::XValue>(Args ... args)> const left ( [funct, val](Args... args) {
 		return funct(val, args...);
 	});
@@ -84,9 +76,9 @@ std::tuple<Handler<Object>, util::XValue> bindArgumentReactive(Handler<Heap> con
 }
 
 template <typename R, typename S, typename... Args>
-std::function<std::tuple<Handler<Object>, util::XValue>(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& args)> createBindReactive(std::function<std::tuple<R, util::XValue>(S self, Args... args)> f)
+std::function<std::tuple<Handler<Object>, util::XValue>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)> createBindReactive(std::function<std::tuple<R, util::XValue>(S self, Args... args)> f)
 {
-	return [f](Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& args){
+	return [f](Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args){
 		std::function<std::tuple<R, util::XValue>(Args...)> self_applied ( [f, heap, self ](Args... args_){ return f(native::Decoder<S>::exec( heap, self ), args_...); } );
 		return bindArgumentReactive<0>(heap, args, self_applied);
 	};

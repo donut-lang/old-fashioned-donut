@@ -107,7 +107,7 @@ std::string PureNativeClosureObject::reprImpl(Handler<Heap> const& heap) const
 	return util::format("PureNativeClosure %s#%s at %p", this->objectProviderName().c_str(), this->closureName().c_str(), this);
 }
 
-Handler<Object> PureNativeClosureObject::apply(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& arg) const
+Handler<Object> PureNativeClosureObject::apply(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& arg) const
 {
 	return func_(heap, self,arg);
 }
@@ -137,7 +137,7 @@ std::string ReactiveNativeClosureObject::reprImpl(Handler<Heap> const& heap) con
 	return util::format("ReactiveNativeClosure %s#%s at %p", this->objectProviderName().c_str(), this->closureName().c_str(), this);
 }
 
-Handler<Object> ReactiveNativeClosureObject::apply(Handler<Heap> const& heap, Handler<Object> const& self, Handler<DonutObject> const& arg) const
+Handler<Object> ReactiveNativeClosureObject::apply(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& arg) const
 {
 	Handler<ReactiveNativeObject> obj;
 	if(!self->isObject() || !(obj = self.tryCast<ReactiveNativeObject>())){

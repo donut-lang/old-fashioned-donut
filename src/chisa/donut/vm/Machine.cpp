@@ -155,7 +155,7 @@ Handler<Object> Machine::start( Handler<Source> const& src )
 		this->contextRevs_.push_back( Context( this->clock_, this->contextRevs_.back() ) );
 	}
 	Handler<DonutClosureObject> entryPoint( heap_->createDonutClosureObject(src, src->getEntrypointID(), heap_->global()) );
-	this->enterClosure(heap_->createNull(), entryPoint, heap_->createNull());
+	this->enterClosure(heap_->createNull(), entryPoint, std::vector<Handler<Object> >());
 	return this->run();
 }
 
@@ -190,19 +190,23 @@ bool Machine::isInterrupted() const noexcept
 	return !ctx.callStack_.empty();
 }
 
-void Machine::enterClosure(Handler<Object> const& self, Handler<DonutClosureObject> const& clos, Handler<Object> const& args)
+void Machine::enterClosure(Handler<Object> const& self, Handler<DonutClosureObject> const& clos, std::vector<Handler<Object> > const& args)
 {
-	Handler<DonutObject> scope ( heap_->createEmptyDonutObject() );
-	scope->set(heap_, "__scope__", clos);
-	{
-		Handler<Closure> c = clos->closureCode();
-		const std::size_t max = c->arglist().size();
-		for(std::size_t i=0;i<max;++i){
-			const std::string arg = c->arglist().at(i);
-			scope->set( heap_, arg, args->get(heap_, i) );
-		}
+	Handler<Closure> c = clos->closureCode();
+	const std::size_t argsize = c->arglist().size();
+	if(argsize != args.size()) {
+		throw DonutException(__FILE__, __LINE__, "[BUG] Argument size does not match actual: %d != applied: %d", argsize, args.size());
 	}
-	this->callStack().push_back( Callchain(0, this->stack().size(), self, clos, scope) );
+	{
+		Handler<DonutObject> scope ( heap_->createEmptyDonutObject() );
+		scope->set(heap_, "__scope__", clos);
+		int cnt=0;
+		for(Handler<Object> const& arg : args) {
+			const std::string argname = c->arglist().at(cnt++);
+			scope->set(heap_, argname, arg);
+		}
+		this->callStack().push_back( Callchain(0, this->stack().size(), self, clos, scope) );
+	}
 }
 
 bool Machine::leaveClosure()
@@ -231,6 +235,7 @@ Handler<Object> Machine::topStack()
 
 Handler<Object> Machine::run()
 {
+	std::vector<Handler<Object> > arg;
 	this->running_ = true;
 	bool running = true;
 	Instruction inst;
@@ -328,19 +333,19 @@ Handler<Object> Machine::run()
 			break;
 		}
 		case Inst::Apply: {
-			Handler<DonutObject> obj(heap_->createEmptyDonutObject());
-			for(unsigned int i=constIndex;i>0;--i){
-				Handler<Object> val = this->popStack();
-				obj->set(heap_, i-1, val);
+			arg.clear();
+			for(unsigned int i=constIndex;i;--i){
+				arg.push_back(this->popStack());
 			}
+			std::reverse(arg.begin(), arg.end());
 
 			Handler<Object> closureObj = this->popStack();
 			Handler<Object> destObj = this->popStack();
 
 			if( Handler<NativeClosureObject> nclos = closureObj->tryCastToNativeClosureObject() ){
-				this->pushStack( nclos->apply(heap_, destObj, obj) );
+				this->pushStack( nclos->apply(heap_, destObj, arg) );
 			}else if( Handler<DonutClosureObject> dclos = closureObj->tryCastToDonutClosureObject() ){
-				this->enterClosure(destObj, dclos, obj);
+				this->enterClosure(destObj, dclos, arg);
 			}else{
 				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. \"%s\" is not callable.", closureObj->repr(heap_).c_str());
 			}

@@ -98,7 +98,7 @@ private: /* スタック操作 */
 	Handler<Object> popStack();
 	Handler<Object> topStack();
 private: /* 実行 */
-	void enterClosure(Handler<Object> const& self, Handler<DonutClosureObject> const& clos, Handler<Object> const& args);
+	void enterClosure(Handler<Object> const& self, Handler<DonutClosureObject> const& clos, std::vector<Handler<Object> > const& args);
 	bool leaveClosure();
 	bool fetchPC( Instruction& inst );
 	Handler<Object> run();
