@@ -17,6 +17,7 @@
  */
 
 #include "TabButton.h"
+#include "TabCombo.h"
 
 namespace chisa {
 namespace tk {
@@ -32,6 +33,15 @@ TabButton::~TabButton() noexcept
 {
 }
 
+void TabButton::tab(Handler<TabCombo> const& tab)
+{
+	this->tab_ = tab;
+}
+void TabButton::element(Handler<Element> const& element)
+{
+	this->element_ = element;
+}
+
 std::string TabButton::toString() const
 {
 	return util::format("(TabButton text:\"%s\" %p)", this->text().c_str(), this);
@@ -39,11 +49,13 @@ std::string TabButton::toString() const
 
 void TabButton::checkedImpl(bool const& state)
 {
-
+	if(state && this->tab_){
+		this->tab_->bringChildToLast(this->element_);
+	}
 }
 bool TabButton::checkedImpl() const noexcept
 {
-	return false;
+	return this->tab_ && this->tab_->lastChild() == this->element_;
 }
 
 }}

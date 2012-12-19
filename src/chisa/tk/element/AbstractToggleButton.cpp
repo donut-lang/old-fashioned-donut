@@ -19,17 +19,24 @@
 #include "AbstractToggleButton.h"
 #include "../../logging/Exception.h"
 #include "../../gl/Canvas.h"
+#include <iostream>
 
 namespace chisa {
 namespace tk {
 
+const std::string AbstractToggleButton::AttrName::OnForegroundColor("foreground-color-on");
+const std::string AbstractToggleButton::AttrName::OnBackgroundColor("background-color-on");
 const std::string AbstractToggleButton::AttrName::OffForegroundColor("foreground-color-off");
 const std::string AbstractToggleButton::AttrName::OffBackgroundColor("background-color-off");
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(AbstractToggleButton, AbstractButton)
+,onForegroundColor_(gl::InvalidColor)
+,onBackgroundColor_(gl::InvalidColor)
 ,offForegroundColor_(gl::InvalidColor)
 ,offBackgroundColor_(gl::InvalidColor)
 {
+	this->addAttribute(AttrName::OnForegroundColor, this->onForegroundColor_);
+	this->addAttribute(AttrName::OnBackgroundColor, this->onBackgroundColor_);
 	this->addAttribute(AttrName::OffForegroundColor, this->offForegroundColor_);
 	this->addAttribute(AttrName::OffBackgroundColor, this->offBackgroundColor_);
 }
@@ -53,9 +60,11 @@ void AbstractToggleButton::checked(bool const& state)
 	if(res){
 		this->backgroundColor(this->onBackgroundColor());
 		this->foregroundColor(this->onForegroundColor());
+		std::cout << "IN" << std::endl;
 	}else{
 		this->backgroundColor(this->offBackgroundColor());
 		this->foregroundColor(this->offForegroundColor());
+		std::cout << "OUT" << std::endl;
 	}
 }
 bool AbstractToggleButton::checked() const
@@ -70,19 +79,19 @@ void AbstractToggleButton::toggle()
 
 gl::Color AbstractToggleButton::onBackgroundColor() const
 {
-	return this->backgroundColor();
+	return this->onBackgroundColor_.isInvalid() ? this->backgroundColor() : this->onBackgroundColor_;
 }
 gl::Color AbstractToggleButton::onForegroundColor() const
 {
-	return this->foregroundColor();
+	return this->onForegroundColor_.isInvalid() ? this->foregroundColor() : this->onForegroundColor_;
 }
 gl::Color AbstractToggleButton::offBackgroundColor() const
 {
-	return offBackgroundColor_;
+	return this->offBackgroundColor_.isInvalid() ? this->backgroundColor().darker() : this->offBackgroundColor_;
 }
 gl::Color AbstractToggleButton::offForegroundColor() const
 {
-	return offForegroundColor_;
+	return this->offForegroundColor_.isInvalid() ? this->foregroundColor().lighter() : this->offForegroundColor_;
 }
 
 void AbstractToggleButton::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)
@@ -102,12 +111,6 @@ bool AbstractToggleButton::isOn() const noexcept
 
 geom::Box AbstractToggleButton::measureButtonContent(geom::Box const& constraint)
 {
-	if(this->offForegroundColor_.isInvalid()){
-		this->offForegroundColor_ = this->foregroundColor().lighter();
-	}
-	if(this->offBackgroundColor_.isInvalid()){
-		this->offBackgroundColor_ = this->backgroundColor().darker();
-	}
 	return this->textImage()->size();
 }
 void AbstractToggleButton::layoutButtonContent(geom::Box const& size)

@@ -27,10 +27,14 @@ class AbstractToggleButton: public AbstractButton {
 	CHISA_ELEMENT_SUBKLASS_FINAL(AbstractToggleButton);
 public:
 	struct AttrName{
+		static std::string const OnForegroundColor;
+		static std::string const OnBackgroundColor;
 		static std::string const OffForegroundColor;
 		static std::string const OffBackgroundColor;
 	};
 private:
+	gl::Color onForegroundColor_;
+	gl::Color onBackgroundColor_;
 	gl::Color offForegroundColor_;
 	gl::Color offBackgroundColor_;
 private:
