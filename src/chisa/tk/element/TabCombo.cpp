@@ -82,6 +82,8 @@ void TabCombo::addChild(Handler<Element> const& h, std::string const& title)
 	Handler<TabButton> btn(new TabButton(log(), world(), top_));
 	btn->text(title);
 	btn->setVertical( (this->buttonPosition_ == ButtonPosition::Left) || (this->buttonPosition_ == ButtonPosition::Right) );
+	btn->tab(self().cast<TabCombo>());
+	btn->element(h);
 	this->buttonMap_.insert(h, btn);
 	this->frame_->addChild(h);
 	this->buttons_->addChild(btn, SplitComboContext(1));
@@ -91,6 +93,8 @@ void TabCombo::addChild(std::size_t const& idx, Handler<Element> const& h, std::
 	Handler<TabButton> btn(new TabButton(log(), world(), top_));
 	btn->text(title);
 	btn->setVertical( (this->buttonPosition_ == ButtonPosition::Left) || (this->buttonPosition_ == ButtonPosition::Right) );
+	btn->tab(self().cast<TabCombo>());
+	btn->element(h);
 	this->frame_->addChild(idx, h);
 	this->buttons_->addChild(idx, btn, SplitComboContext(1));
 }
