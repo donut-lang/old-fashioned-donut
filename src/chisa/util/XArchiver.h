@@ -98,9 +98,12 @@ public:
 	static const bool value = check_func_decl::value;
 };
 
+template <typename T, int generic=HasSerializer<T>::value ? 1 : std::is_enum<T>::value ? 2 : 0 >
+struct XSerializer;
+
 //持っている場合は再帰的に適用する
-template <typename T, bool has_serializer=HasSerializer<T>::value >
-struct XSerializer {
+template <typename T>
+struct XSerializer<T, 1> {
 	static XValue serialize(T& val){
 		XArchiverOut a;
 		XValue v;
@@ -114,9 +117,20 @@ struct XSerializer {
 	}
 };
 
+//enumを持っている
+template <typename T>
+struct XSerializer<T, 2> {
+	static XValue serialize(T& val){
+		return XValue(static_cast<XUInt>(val));
+	}
+	static void deserialize(T& val, XValue const& xval){
+		val = static_cast<T>(xval.as<XUInt>());
+	}
+};
+
 //持ってない場合は…誰かが定義する
 template <typename T>
-struct XSerializer<T,false > {
+struct XSerializer<T,0> {
 	static XValue serialize(T& val);
 	static void deserialize(T& val, XValue const& xval);
 };
