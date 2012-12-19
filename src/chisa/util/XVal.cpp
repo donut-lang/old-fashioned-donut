@@ -239,8 +239,9 @@ void XValue::copy(XValue const& o)
 
 void XValue::swap( XValue& o )
 {
-	std::swap(o.type_, type_);
-	std::swap(o.spirit_, spirit_);
+	using std::swap;
+	swap(o.type_, type_);
+	swap(o.spirit_, spirit_);
 }
 
 template<> XValue& XObject::set<XValue>(std::string const& name, XValue const& obj)
