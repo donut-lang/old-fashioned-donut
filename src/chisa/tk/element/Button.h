@@ -27,7 +27,26 @@ namespace tk {
 class Button: public AbstractButton {
 	CHISA_ELEMENT_SUBKLASS_FINAL(Button);
 public:
+	struct AttrName{
+		const static std::string ShadowColor;
+		const static std::string ShadowDepth;
+	};
+private:
+	gl::Color shadowColor_;
+	float shadowDepth_;
+	geom::Box renderOffset_;
+public:
 	virtual std::string toString() const override final;
+	inline gl::Color const& shadowColor() const noexcept { return this->shadowColor_; };
+	inline float shadowDepth() const noexcept { return this->shadowDepth_; };
+	void shadowColor(gl::Color const& color);
+	void shadowDepth(float const& depth);
+private:
+	virtual geom::Box measureButtonContent(geom::Box const& constraint) override final;
+	virtual void layoutButtonContent(geom::Box const& size) override final;
+	virtual void renderOn(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override final;
+	virtual void renderOff(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override final;
+	virtual bool isOn() const noexcept override final;
 };
 
 }}

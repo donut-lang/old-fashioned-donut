@@ -31,15 +31,11 @@ namespace tk {
 
 const std::string AbstractButton::AttrName::Text("text");
 const std::string AbstractButton::AttrName::TextSize("text-size");
-const std::string AbstractButton::AttrName::ShadowColor("shadow-color");
-const std::string AbstractButton::AttrName::ShadowDepth("shadow-depth");
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(AbstractButton, Element)
 ,text_()
 ,textSize_(32.0f)
 ,vertical_(false)
-,shadowColor_(gl::DarkGray)
-,shadowDepth_(3.0f)
 ,textImage_()
 ,pushedCnt_(0)
 {
@@ -48,8 +44,6 @@ CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(AbstractButton, Element)
 	this->edgeWidth(1);
 	this->addAttribute(AttrName::Text, this->text_);
 	this->addAttribute(AttrName::TextSize, this->textSize_);
-	this->addAttribute(AttrName::ShadowColor, this->shadowColor_);
-	this->addAttribute(AttrName::ShadowDepth, this->shadowDepth_);
 }
 
 AbstractButton::~AbstractButton() noexcept
@@ -63,14 +57,10 @@ std::string AbstractButton::toString() const
 
 void AbstractButton::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
 {
-	if( this->pushedCnt_ > 0 ){
-		canvas.fillRect(this->shadowColor_, geom::Area(screenArea.point(), geom::Box(screenArea.width(), shadowDepth_)),.001);
-		canvas.fillRect(this->shadowColor_, geom::Area(screenArea.point(), geom::Box(shadowDepth_, screenArea.height())),.001);
-		this->textImage()->draw(canvas, geom::Area(screenArea.point()+this->renderOffset_+geom::Distance(shadowDepth_, shadowDepth_), area.box()), .001);
+	if(this->isOn()) {
+		this->renderOn(canvas, screenArea, area);
 	}else{
-		canvas.fillRect(this->shadowColor_, geom::Area(screenArea.point()+geom::Distance(0, screenArea.height()-shadowDepth_), geom::Box(screenArea.width(), shadowDepth_)),.001);
-		canvas.fillRect(this->shadowColor_, geom::Area(screenArea.point()+geom::Distance(screenArea.width()-shadowDepth_, 0), geom::Box(shadowDepth_, screenArea.height())),.001);
-		this->textImage()->draw(canvas, geom::Area(screenArea.point()+this->renderOffset_, area.box()), .001);
+		this->renderOff(canvas, screenArea, area);
 	}
 }
 Handler<gl::TextDrawable> AbstractButton::textImage()
@@ -104,13 +94,12 @@ Handler<gl::TextDrawable> AbstractButton::textImage()
 }
 geom::Box AbstractButton::measureImpl(geom::Box const& constraint)
 {
-	return this->textImage()->size()+geom::Distance(shadowDepth_,shadowDepth_);
+	return this->measureButtonContent(constraint);
 }
 
 void AbstractButton::layoutImpl(geom::Box const& size)
 {
-	//中心になるようにオフセットを設定する。
-	this->renderOffset_ = ((size-this->textImage_->size()-geom::Distance(shadowDepth_,shadowDepth_))/2);
+	return this->layoutButtonContent(size);
 }
 
 void AbstractButton::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)
@@ -121,8 +110,7 @@ void AbstractButton::text(std::string const& text)
 {
 	if(this->text_ != text){
 		this->text_ = text;
-		this->textImage_.reset();
-		this->invalidate();
+		this->notifyViewRefreshed();
 	}
 }
 
@@ -130,39 +118,25 @@ void AbstractButton::textSize(float const& size)
 {
 	if( this->textSize_ != size ) {
 		this->textSize_ = size;
-		this->textImage_.reset();
-		this->invalidate();
+		this->notifyViewRefreshed();
 	}
 }
 void AbstractButton::setVertical(bool isVertical)
 {
 	if( this->vertical_ != isVertical ) {
 		this->vertical_ = isVertical;
-		this->textImage_.reset();
-		this->invalidate();
-	}
-}
-void AbstractButton::shadowColor(gl::Color const& color)
-{
-	if(this->shadowColor_ != color){
-		this->shadowColor_ = color;
-		this->invalidate();
-	}
-}
-void AbstractButton::shadowDepth(float const& depth)
-{
-	if( this->shadowDepth_ != depth ) {
-		this->shadowDepth_ = depth;
-		this->invalidate();
+		this->notifyViewRefreshed();
 	}
 }
 
 void AbstractButton::onClick()
 {
-	std::cout << "CLICK" << std::endl;
-	Handler<ElementGroup> h(this->findRootElement()->findElementById("frame").cast<ElementGroup>());
-	h->bringChildToLast(h->getChildAt(0));
-	h->invalidate();
+}
+
+bool AbstractButton::notifyViewRefreshedImpl()
+{
+	this->textImage_.reset();
+	return true;
 }
 
 bool AbstractButton::onDownRaw(const float timeMs, geom::Point const& ptInScreen)

@@ -19,10 +19,8 @@
 #pragma once
 
 #include <string>
-#include <memory>
 #include <functional>
 #include <vector>
-#include <tinyxml2.h>
 #include "../../logging/Exception.h"
 #include "../../logging/Logger.h"
 #include "../../util/ClassUtil.h"

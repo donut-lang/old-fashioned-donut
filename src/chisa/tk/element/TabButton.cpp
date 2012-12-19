@@ -22,9 +22,10 @@ namespace chisa {
 namespace tk {
 
 
-CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(TabButton, AbstractButton)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(TabButton, AbstractToggleButton)
 {
-	this->shadowDepth(0);
+	this->margin(geom::Space(0));
+	this->padding(geom::Space(0));
 }
 
 TabButton::~TabButton() noexcept
@@ -34,6 +35,15 @@ TabButton::~TabButton() noexcept
 std::string TabButton::toString() const
 {
 	return util::format("(TabButton text:\"%s\" %p)", this->text().c_str(), this);
+}
+
+void TabButton::checkedImpl(bool const& state)
+{
+
+}
+bool TabButton::checkedImpl() const noexcept
+{
+	return false;
 }
 
 }}

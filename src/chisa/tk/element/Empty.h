@@ -21,7 +21,6 @@
 
 namespace chisa {
 namespace tk {
-class ElementFactory;
 
 class Empty : public Element {
 	CHISA_ELEMENT_SUBKLASS_FINAL(Empty);

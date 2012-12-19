@@ -17,15 +17,11 @@
  */
 
 #pragma once
-
-#include <memory>
-#include <tinyxml2.h>
 #include "../Element.h"
 
 namespace chisa {
 namespace tk {
-
-class ElementFactory;
+class Widget;
 
 class WidgetElement: public Element {
 	CHISA_ELEMENT_SUBKLASS_FINAL(WidgetElement);
