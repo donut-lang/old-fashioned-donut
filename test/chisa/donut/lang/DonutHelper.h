@@ -28,6 +28,12 @@
 	Handler<Heap> heap( donut->heap() );\
 	Handler<Machine> machine = donut->queryMachine();
 
+#define INIT_DONUT_WITH(SAVE_DATA)\
+	Handler<Donut> donut(new Donut(log_trace));\
+	donut->load(SAVE_DATA);\
+	Handler<Heap> heap( donut->heap() );\
+	Handler<Machine> machine = donut->queryMachine();
+
 #define EXECUTE_SRC(src) INIT_DONUT\
 	Handler<Object> result = machine->start( donut->parse(src, "<MEM>", 0) );
 
