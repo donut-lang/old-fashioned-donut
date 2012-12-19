@@ -37,8 +37,45 @@ TEST(VectorTest, BasicTest)
 	ASSERT_FLOAT_EQ(p1.y(),2);
 
 	ASSERT_TRUE(p1.near(p2, 1));
+
+	Point p3(Point(1,2)); //rvalue
+	ASSERT_FLOAT_EQ(p3.x(),1);
+	ASSERT_FLOAT_EQ(p3.y(),2);
 }
 
+TEST(VectorTest, FloatMDTest)
+{
+	{
+		Box box1(1,2);
+		Box box2 = box1/2;
+		ASSERT_FLOAT_EQ(box2.x(), 0.5f);
+		ASSERT_FLOAT_EQ(box2.y(), 1.0f);
+	}
+	{
+		Box box1(1,2);
+		Box box2 = box1*2;
+		ASSERT_FLOAT_EQ(box2.x(), 2.0f);
+		ASSERT_FLOAT_EQ(box2.y(), 4.0f);
+	}
+}
+
+TEST(VectorTest, ScaleVectorTest)
+{
+	{
+		Box box1(1,2);
+		ScaleVector sv(3,4);
+		Box box2(box1*sv);
+		ASSERT_FLOAT_EQ(box2.x(), 3);
+		ASSERT_FLOAT_EQ(box2.y(), 8);
+	}
+	{
+		Box box1(1,2);
+		ScaleVector sv(3,4);
+		Box box2(box1/sv);
+		ASSERT_FLOAT_EQ(box2.x(), 1.0/3);
+		ASSERT_FLOAT_EQ(box2.y(), 2.0/4);
+	}
+}
 #define OPTEST(V1,V2,OP,V3)\
 do{\
 	Vector v3 (V1 OP V2);\
