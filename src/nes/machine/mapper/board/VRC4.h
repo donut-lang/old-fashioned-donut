@@ -5,9 +5,7 @@
  *      Author: psi
  */
 
-#ifndef VRC4_H_
-#define VRC4_H_
-
+#pragma once
 #include "../../VirtualMachine.h"
 
 namespace nes {
@@ -142,4 +140,3 @@ private:
 };
 
 }
-#endif /* VRC4_H_ */

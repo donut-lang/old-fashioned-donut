@@ -17,7 +17,6 @@
  */
 
 #pragma once
-#include <memory>
 #include "../Handler.h"
 #include "../util/ClassUtil.h"
 #include "../logging/Logger.h"

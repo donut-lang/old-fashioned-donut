@@ -5,9 +5,7 @@
  *      Author: psi
  */
 
-#ifndef AUDIOCHANNEL_H_
-#define AUDIOCHANNEL_H_
-
+#pragma once
 #include <cstddef>
 #include <stdint.h>
 #include <stdio.h>
@@ -175,4 +173,3 @@ public:
 };
 
 }
-#endif /* AUDIOCHANNEL_H_ */

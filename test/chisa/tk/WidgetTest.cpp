@@ -16,8 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gtest/gtest.h>
-#include <memory>
 #include "../../TestCommon.h"
 #include "../../../src/chisa/tk/Universe.h"
 

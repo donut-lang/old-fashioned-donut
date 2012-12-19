@@ -28,8 +28,6 @@
 #include "Button.h"
 #include "TabCombo.h"
 
-#include <algorithm>
-#include <memory>
 #include <tinyxml2.h>
 
 namespace chisa {
