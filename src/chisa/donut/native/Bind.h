@@ -36,7 +36,7 @@ Handler<Object> bindArgumentPure(Handler<Heap> const& heap, std::vector<Handler<
 template <size_t idx, typename R, typename U, typename... Args>
 Handler<Object> bindArgumentPure(Handler<Heap> const& heap, std::vector<Handler<Object> > const& args, std::function<R(U val, Args... args)> const& funct)
 {
-	U const val = native::Decoder<U>::exec( heap, args.at(idx) );
+	U const val = native::Decoder<U>::exec( heap, args[idx] );
 	std::function<R(Args ... args)> const left ( [funct, val](Args... args) {
 		return funct(val, args...);
 	});
@@ -47,6 +47,9 @@ template <typename R, typename S, typename... Args>
 std::function<Handler<Object>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)> createBindPure(std::function<R(S self, Args... args)> f)
 {
 	return [f](Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args){
+		if (args.size() != sizeof...(Args)) {
+			throw DonutException(__FILE__, __LINE__, "this pure native closure needs %d arguments, but %d arguments applied.", sizeof...(Args), args.size());
+		}
 		std::function<R(Args...)> self_applied ( [f, heap, self ](Args... args_){ return f(native::Decoder<S>::exec( heap, self ), args_...); } );
 		return bindArgumentPure<0>(heap, args, self_applied);
 	};
@@ -68,7 +71,7 @@ std::tuple<Handler<Object>, util::XValue> bindArgumentReactive(Handler<Heap> con
 template <size_t idx, typename R, typename U, typename... Args>
 std::tuple<Handler<Object>, util::XValue> bindArgumentReactive(Handler<Heap> const& heap, std::vector<Handler<Object> > const& args, std::function<std::tuple<R, util::XValue>(U val, Args... args)> const& funct)
 {
-	U const val = native::Decoder<U>::exec( heap, args.at(idx) );
+	U const val = native::Decoder<U>::exec( heap, args[idx] );
 	std::function<std::tuple<R, util::XValue>(Args ... args)> const left ( [funct, val](Args... args) {
 		return funct(val, args...);
 	});
@@ -79,6 +82,9 @@ template <typename R, typename S, typename... Args>
 std::function<std::tuple<Handler<Object>, util::XValue>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)> createBindReactive(std::function<std::tuple<R, util::XValue>(S self, Args... args)> f)
 {
 	return [f](Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args){
+		if (args.size() != sizeof...(Args)) {
+			throw DonutException(__FILE__, __LINE__, "this reactive native closure needs %d arguments, but %d arguments applied.", sizeof...(Args), args.size());
+		}
 		std::function<std::tuple<R, util::XValue>(Args...)> self_applied ( [f, heap, self ](Args... args_){ return f(native::Decoder<S>::exec( heap, self ), args_...); } );
 		return bindArgumentReactive<0>(heap, args, self_applied);
 	};
