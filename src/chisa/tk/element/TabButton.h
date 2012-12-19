@@ -18,16 +18,18 @@
 
 #pragma once
 
-#include "../Element.h"
-#include "AbstractButton.h"
+#include "AbstractToggleButton.h"
 
 namespace chisa {
 namespace tk {
 
-class TabButton: public AbstractButton {
+class TabButton: public AbstractToggleButton {
 	CHISA_ELEMENT_SUBKLASS_FINAL(TabButton);
 public:
 	virtual std::string toString() const override final;
+private:
+	virtual void checkedImpl(bool const& state) override final;
+	virtual bool checkedImpl() const noexcept  override final;
 };
 
 }}

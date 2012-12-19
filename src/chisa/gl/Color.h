@@ -67,6 +67,20 @@ public:
 				std::fabs(this->green_ - o.green_) >= DELTA ||
 				std::fabs(this->alpha_ - o.alpha_) >= DELTA;
 	}
+	constexpr gl::Color darker() const noexcept {
+		return Color(
+				red_*0.75f,
+				green_*0.75f,
+				blue_*0.75f,
+				alpha_);
+	}
+	constexpr gl::Color lighter() const noexcept {
+		return Color(
+				red_+((1.0f-red_)/4.0f),
+				green_+((1.0f-green_)/4.0f),
+				blue_+((1.0f-blue_)/4.0f),
+				alpha_);
+	}
 };
 
 constexpr Color InvalidColor(NAN, NAN, NAN, NAN);

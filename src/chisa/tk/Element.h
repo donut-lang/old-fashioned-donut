@@ -17,7 +17,6 @@
  */
 
 #pragma once
-#include "Widget.h"
 #include "Gesture.h"
 #include "../util/ClassUtil.h"
 #include "../util/VectorMap.h"
@@ -34,6 +33,10 @@ class XMLElement;
 }
 
 namespace chisa {
+namespace gl {
+class Canvas;
+}
+
 namespace tk {
 class ElementFactory;
 
@@ -65,7 +68,7 @@ private: /* ツリー */
 	float edgeWidth_;
 	gl::Color foregroundColor_;
 	gl::Color backgroundColor_;
-	bool dirty_;
+	bool relayoutRequested_;
 private: /* 画面描画情報 */
 	DEFINE_MEMBER(public, private, geom::Box, size); //現在の大きさ
 	DEFINE_MEMBER(public, private, geom::Area, screenArea); //画面上の占める位置
@@ -80,15 +83,17 @@ public:
 	inline geom::Space const& margin() noexcept { return this->margin_; };
 	inline geom::Space const& padding() const noexcept { return this->padding_; };
 	inline gl::Color const& foregroundColor() const noexcept { return this->foregroundColor_; };
-	inline gl::Color const& backgroundColor() const noexcept { return this->foregroundColor_; };
+	inline gl::Color const& backgroundColor() const noexcept { return this->backgroundColor_; };
 public: /* レンダリング(非virtual) */
 	void render(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area);
 	geom::Box measure(geom::Box const& constraint);
 	void layout(geom::Box const& size);
 	virtual bool isValidationRoot() const noexcept;
-	void revalidate();
-	void invalidate();
-	virtual void validate();
+	void requestRelayout();
+	virtual void notifyRelayoutFinished();
+	void notifyViewRefreshed();
+private:
+	void forceRelayout();
 public: /* ツリー操作 */
 	Handler<Element> findRootElement();
 	virtual Handler<Element> findElementById(std::string const& id);
@@ -103,6 +108,7 @@ public: /* 実装メソッド */
 	virtual geom::Box measureImpl(geom::Box const& constraint) = 0;
 	virtual void layoutImpl(geom::Box const& size) = 0;
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) = 0;
+	virtual bool notifyViewRefreshedImpl();
 protected:
 	Element(logging::Logger& log, HandlerW<World> world, HandlerW<Element> parent);
 	template <typename T> void addAttribute(std::string const& name, T& ptr)

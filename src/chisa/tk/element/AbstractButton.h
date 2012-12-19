@@ -30,42 +30,40 @@ public:
 	struct AttrName{
 		const static std::string Text;
 		const static std::string TextSize;
-		const static std::string ShadowColor;
-		const static std::string ShadowDepth;
 	};
-private:
+private: /* 設定されうるリソース */
 	std::string text_;
 	float textSize_;
 	bool vertical_;
-	gl::Color shadowColor_;
-	float shadowDepth_;
-private:
+private: /* 描画のための一時的なリソース */
 	Handler<gl::TextDrawable> textImage_;
 private:
-	geom::Box renderOffset_;
 	int pushedCnt_;
 public:
 	void text(std::string const& text);
 	void textSize(float const& size);
 	void setVertical(bool isVertical);
-	void shadowColor(gl::Color const& color);
-	void shadowDepth(float const& depth);
 public:
 	inline std::string text() const noexcept{ return this->text_; };
 	inline float textSize() const noexcept { return this->textSize_; };
 	inline bool isVertical() const noexcept { return this->vertical_; };
-	inline gl::Color const& shadowColor() const noexcept { return this->shadowColor_; };
-	inline float shadowDepth() const noexcept { return this->shadowDepth_; };
-private:
-	Handler<gl::TextDrawable> textImage();
-	void onClick();
-public:
+protected:
 	virtual std::string toString() const override;
-private:
-	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override;
+	int pushedCount() const noexcept { return this->pushedCnt_; };
+	Handler<gl::TextDrawable> textImage();
+protected:
+	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override final;
 	virtual geom::Box measureImpl(geom::Box const& constraint) override;
 	virtual void layoutImpl(geom::Box const& size) override;
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
+	virtual bool notifyViewRefreshedImpl() override;
+protected: /* 子クラスの実装すべきメソッド */
+	virtual geom::Box measureButtonContent(geom::Box const& constraint) = 0;
+	virtual void layoutButtonContent(geom::Box const& size) = 0;
+	virtual void renderOn(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) = 0;
+	virtual void renderOff(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) = 0;
+	virtual bool isOn() const noexcept = 0;
+	virtual void onClick();
 public:
 	virtual bool onDownRaw(const float timeMs, geom::Point const& ptInScreen) override;
 	virtual bool onUpRaw(const float timeMs, geom::Point const& ptInScreen) override;

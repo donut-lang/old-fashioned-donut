@@ -44,7 +44,7 @@ Element::Element(logging::Logger& log, HandlerW<World> world, HandlerW<Element> 
 ,edgeWidth_(0)
 ,foregroundColor_(gl::Black)
 ,backgroundColor_(gl::Color(0.9,0.9,0.9,1))
-,dirty_(false)
+,relayoutRequested_(false)
 {
 	this->addAttribute(AttrName::Margin, this->margin_);
 	this->addAttribute(AttrName::Padding, this->padding_);
@@ -62,33 +62,33 @@ void Element::idle(const float delta_ms)
 void Element::margin(geom::Space const& m)
 {
 	this->margin_ = m;
-	this->invalidate();
+	this->requestRelayout();
 }
 void Element::padding(geom::Space const& p)
 {
 	this->padding_ = p;
-	this->invalidate();
+	this->requestRelayout();
 }
 void Element::foregroundColor(gl::Color const& c)
 {
 	this->foregroundColor_ = c;
-	this->invalidate();
+	this->notifyViewRefreshed();
 }
 void Element::backgroundColor(gl::Color const& c)
 {
 	this->backgroundColor_ = c;
-	this->invalidate();
+	this->requestRelayout();
 }
 
 void Element::edgeColor(gl::Color const& c)
 {
 	this->edgeColor_ = c;
-	this->invalidate();
+	this->requestRelayout();
 }
 void Element::edgeWidth(float const& f)
 {
 	this->edgeWidth_ = f;
-	this->invalidate();
+	this->requestRelayout();
 }
 
 void Element::loadXml(ElementFactory* const factory, tinyxml2::XMLElement* const element)
@@ -133,8 +133,8 @@ geom::Box Element::measure(geom::Box const& constraint)
 
 void Element::render(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
 {
-	if( this->dirty_ ){
-		this->revalidate();
+	if( this->relayoutRequested_ ){
+		this->forceRelayout();
 	}
 	this->screenArea(screenArea);
 	this->drawnArea(area);
@@ -166,28 +166,41 @@ bool Element::isValidationRoot() const noexcept
 	return false;
 }
 
-void Element::invalidate()
+void Element::requestRelayout()
 {
-	if(!this->dirty_){
-		this->dirty_ = true;
+	if(!this->relayoutRequested_){
+		this->relayoutRequested_ = true;
 		if(Handler<Element> p = this->parent().lock()) {
 			if(!p->isValidationRoot()){
-				p->invalidate();
+				p->requestRelayout();
 			}
 		}
 	}
 }
 
-void Element::revalidate()
+void Element::forceRelayout()
 {
 	this->measure(this->size_);
 	this->layout(this->size_);
-	this->validate();
+	this->notifyRelayoutFinished();
 }
 
-void Element::validate()
+void Element::notifyRelayoutFinished()
 {
-	this->dirty_= false;
+	this->relayoutRequested_= false;
 }
+
+void Element::notifyViewRefreshed()
+{
+	if( this->notifyViewRefreshedImpl() ) {
+		this->requestRelayout();
+	}
+}
+
+bool Element::notifyViewRefreshedImpl()
+{
+	return false;
+}
+
 
 }}

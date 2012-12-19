@@ -40,13 +40,10 @@ class Element;
 class Widget;
 class GestureMediator;
 
-namespace element {
 class WidgetElement;
 class ElementFactory;
-}
-namespace widget{
+
 class WidgetFactory;
-}
 
 class World : public HandlerBody<World> {
 private:

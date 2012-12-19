@@ -20,6 +20,7 @@
 #include "WidgetElement.h"
 #include "../World.h"
 #include "../../gl/Canvas.h"
+#include "../Widget.h"
 
 namespace chisa {
 namespace tk {

@@ -137,10 +137,10 @@ Handler<Element> TabCombo::findElementByPoint(geom::Vector const& screenPoint)
 	return this->top_->findElementByPoint(screenPoint);
 }
 
-void TabCombo::validate()
+void TabCombo::notifyRelayoutFinished()
 {
-	Element::validate();
-	this->top_->validate();
+	Element::notifyRelayoutFinished();
+	this->top_->notifyRelayoutFinished();
 }
 
 void TabCombo::idle(const float delta_ms)

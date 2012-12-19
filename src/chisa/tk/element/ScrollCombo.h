@@ -18,8 +18,6 @@
 #pragma once
 
 #include "ElementGroup.h"
-#include "../Task.h"
-#include "ElementFactory.h"
 
 namespace chisa {
 namespace tk {
