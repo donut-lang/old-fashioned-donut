@@ -40,6 +40,17 @@ struct ComplexTest{
 	}
 };
 
+struct EnumTest{
+	enum ENUM{
+		X,
+		Y,
+		Z
+	} en;
+	void serialize(XArchiver& arc){
+		arc & en;
+	}
+};
+
 TEST(XArchiveTest, BasicStructTest)
 {
 	XValue v;
@@ -135,6 +146,25 @@ TEST(XArchiveTest, ArrayTest)
 		in >> b;
 	}
 	ASSERT_TRUE(ArraysMatch(a,b));
+}
+
+TEST(XArchiveTest, EnumTest)
+{
+	EnumTest en;
+	en.en=EnumTest::ENUM::Z;
+	XValue v;
+	{
+		XArchiverOut out;
+		out << en;
+		out >> v;
+	}
+	EnumTest eb;
+	{
+		XArchiverIn in;
+		in << v;
+		in >> eb;
+	}
+	ASSERT_EQ(EnumTest::ENUM::Z, eb.en);
 }
 
 }}}
