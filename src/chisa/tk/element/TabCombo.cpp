@@ -80,42 +80,50 @@ void TabCombo::addChild(std::size_t const& idx, Handler<Element> const& h)
 void TabCombo::updateButtonState(Handler<Element> const& elm, Handler<TabButton> const& btn)
 {
 	Handler<TabButton> b = btn ? btn : (*this->buttonMap_.find(elm)).second;
-	b->toggleStateChanged();
+	b->notifyCheckedStateChanged();
 }
 
 void TabCombo::addChild(Handler<Element> const& h, std::string const& title)
 {
+	//ボタンの作成
 	Handler<TabButton> const btn(new TabButton(log(), world(), top_));
-	Handler<Element> last = this->lastChild();
+	btn->text(title);
+	btn->setVertical( (this->buttonPosition_ == ButtonPosition::Left) || (this->buttonPosition_ == ButtonPosition::Right) );
+	btn->tab(self().cast<TabCombo>());
+	btn->element(h);
+
+	//ボタンの登録
+	Handler<Element> last = this->lastChild(); //もともとの最終エレメント
 	this->buttonMap_.insert(h, btn);
 	this->frame_->addChild(h);
 	this->buttons_->addChild(btn, SplitComboContext(1));
-	if(last){
+
+	//トグル状態の変更を通知
+	updateButtonState(h, btn);
+	if(last){ //ボタンがない状態で最初の登録をした時、これはnullになる
 		updateButtonState(last, Handler<TabButton>());
 	}
-
-	btn->text(title);
-	btn->setVertical( (this->buttonPosition_ == ButtonPosition::Left) || (this->buttonPosition_ == ButtonPosition::Right) );
-	btn->tab(self().cast<TabCombo>());
-	btn->element(h);
-	updateButtonState(h, btn);
 }
 void TabCombo::addChild(std::size_t const& idx, Handler<Element> const& h, std::string const& title)
 {
+	//ボタンの作成
 	Handler<TabButton> const btn(new TabButton(log(), world(), top_));
-	Handler<Element> last = this->lastChild();
-	this->buttonMap_.insert(h, btn);
-	this->frame_->addChild(idx, h);
-	this->buttons_->addChild(idx, btn, SplitComboContext(1));
-	if(last){
-		updateButtonState(last, Handler<TabButton>());
-	}
-
 	btn->text(title);
 	btn->setVertical( (this->buttonPosition_ == ButtonPosition::Left) || (this->buttonPosition_ == ButtonPosition::Right) );
 	btn->tab(self().cast<TabCombo>());
 	btn->element(h);
+
+	//ボタンの登録
+	Handler<Element> last = this->lastChild(); //もともとの最終エレメント
+	this->buttonMap_.insert(h, btn);
+	this->frame_->addChild(idx, h);
+	this->buttons_->addChild(idx, btn, SplitComboContext(1));
+
+	//トグル状態の変更を通知
 	updateButtonState(h, btn);
+	if(last){ //ボタンがない状態で最初の登録をした時、これはnullになる
+		updateButtonState(last, Handler<TabButton>());
+	}
 }
 
 Handler<Element> TabCombo::removeChild(std::size_t const& idx)
@@ -125,7 +133,7 @@ Handler<Element> TabCombo::removeChild(std::size_t const& idx)
 	Handler<TabButton> btn(it->second);
 	this->buttonMap_.erase(it);
 	this->buttons_->removeChild(btn);
-	if(this->lastChild()){
+	if(this->lastChild()){ //もうボタンが残っていない場合、nullが帰ってくるので
 		updateButtonState(this->lastChild(), Handler<TabButton>());
 	}
 	return elm;
@@ -137,7 +145,7 @@ Handler<Element> TabCombo::removeChild(Handler<Element> const& h)
 	this->buttonMap_.erase(it);
 	this->buttons_->removeChild(btn);
 	this->frame_->removeChild(h);
-	if(this->lastChild()){
+	if(this->lastChild()){ //もうボタンが残っていない場合、nullが帰ってくるので
 		updateButtonState(this->lastChild(), Handler<TabButton>());
 	}
 	return h;
@@ -153,23 +161,26 @@ Handler<Element> TabCombo::frontChild() const noexcept
 std::size_t TabCombo::bringChildToLast(Handler<Element> const& e)
 {
 	Handler<Element> last(this->frame_->lastChild());
-	std::size_t t = this->frame_->bringChildToLast(e);
-	this->updateButtonState(e, Handler<TabButton>());
-	if(last){
+	if(last != e){
+		std::size_t t = this->frame_->bringChildToLast(e);
+		updateButtonState(e, Handler<TabButton>());
 		updateButtonState(last, Handler<TabButton>());
+		return t;
+	}else{
+		return this->frame_->getChildCount()-1;
 	}
-
-	return t;
 }
 std::size_t TabCombo::bringChildToFront(Handler<Element> const& e)
 {
-	Handler<Element> last(this->lastChild());
-	std::size_t t = this->frame_->bringChildToFront(e);
-	this->updateButtonState(e, Handler<TabButton>());
-	if(last){
-		updateButtonState(last, Handler<TabButton>());
+	Handler<Element> front(this->frame_->frontChild());
+	if(front != e) {
+		std::size_t t = this->frame_->bringChildToFront(e);
+		this->updateButtonState(e, Handler<TabButton>());
+		this->updateButtonState(this->frame_->lastChild(), Handler<TabButton>());
+		return t;
+	}else{
+		return this->frame_->getChildCount()-1;
 	}
-	return t;
 }
 Handler<Element> TabCombo::findElementById(std::string const& id)
 {

@@ -43,12 +43,17 @@ public:
 	void toggle();
 	void checked(bool const& state);
 	bool checked() const;
-	void toggleStateChanged();
+	void notifyCheckedStateChanged();
 public:
 	gl::Color onBackgroundColor() const;
 	gl::Color onForegroundColor() const;
 	gl::Color offBackgroundColor() const;
 	gl::Color offForegroundColor() const;
+public:
+	void onBackgroundColor(gl::Color const& c);
+	void onForegroundColor(gl::Color const& c);
+	void offBackgroundColor(gl::Color const& c);
+	void offForegroundColor(gl::Color const& c);
 protected:
 	virtual std::string toString() const override;
 protected: /* AbstractButtonの実装 */
