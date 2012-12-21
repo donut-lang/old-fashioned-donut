@@ -69,6 +69,25 @@ TEST(DonutHomuraTest, LoopTest)
 	}
 }
 
+TEST(DonutHomuraTest, BackFirstTest)
+{
+	INIT_DONUT;
+	{
+		Handler<Object> result;
+		ASSERT_NO_THROW(
+				result = machine->start( donut->parse("x=interrupt null; if(x){ \"back\"; Homura.seek(Homura.now()); }else{ \"through\"; };", "<MEM>", 0) ) );
+		ASSERT_TRUE(result->isNull());
+		ASSERT_TRUE(machine->isInterrupted());
+		ASSERT_NO_THROW( result = machine->startContinue(heap->createBool(true)) );
+		ASSERT_TRUE(result->isNull());
+		ASSERT_TRUE(machine->isInterrupted());
+
+		ASSERT_NO_THROW( result = machine->startContinue(heap->createBool(false)) );
+		ASSERT_TRUE(result->isObject());
+		ASSERT_EQ("through", result->toString(heap));
+		ASSERT_FALSE(machine->isInterrupted());
+	}
+}
 TEST(DonutHomuraTest, SaveTest)
 {
 	util::XValue v;
