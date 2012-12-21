@@ -167,4 +167,74 @@ TEST(XArchiveTest, EnumTest)
 	ASSERT_EQ(EnumTest::ENUM::Z, eb.en);
 }
 
+TEST(XArchiveTest, BinaryHeapTest)
+{
+	std::unique_ptr<char> data( new char[256] );
+	std::unique_ptr<char> data2( new char[256] );
+	for(int i=0;i<256;++i){
+		(data.get())[i] = i;
+		(data2.get())[i] = i;
+	}
+	XValue v;
+	{
+		XArchiverOut out;
+		out.binary(data.get(), 256);
+		out >> v;
+	}
+	std::memset(data.get(), 256, 0xff);
+	{
+		XArchiverIn in;
+		in << v;
+		in.binary(data.get(), 256);
+	}
+	for(int i=0;i<256;++i) {
+		ASSERT_EQ((data2.get())[i], (data.get())[i]);
+	}
+}
+
+TEST(XArchiveTest, BinaryArrayTest)
+{
+	char data[256];
+	char data2[256];
+	for(int i=0;i<256;++i){
+		data[i] = i;
+		data2[i]=i;
+	}
+	XValue v;
+	{
+		XArchiverOut out;
+		out << data;
+		out >> v;
+	}
+	std::memset(data, 256, 0xff);
+	{
+		XArchiverIn in;
+		in << v;
+		in >> data;
+	}
+	ASSERT_TRUE(ArraysMatch(data2, data));
+}
+
+TEST(XArchiveTest, UnsignedBinaryArrayTest)
+{
+	unsigned char data[256];
+	unsigned char data2[256];
+	for(int i=0;i<256;++i){
+		data[i] = i;
+		data2[i]=i;
+	}
+	XValue v;
+	{
+		XArchiverOut out;
+		out << data;
+		out >> v;
+	}
+	std::memset(data, 256, 0xff);
+	{
+		XArchiverIn in;
+		in << v;
+		in >> data;
+	}
+	ASSERT_TRUE(ArraysMatch(data2, data));
+}
 }}}

@@ -45,16 +45,18 @@ public:
 	enum Type {
 		NullT,
 		ArrayT,
+		BinaryT,
 		ObjectT,
 		StringT,
 		UIntT,
 		SIntT,
 		FloatT,
-		BoolT
+		BoolT,
 	};
 	typedef std::nullptr_t Null;
 	typedef std::string String;
 	typedef XArray Array;
+	typedef std::vector<char> Binary;
 	typedef XObject Object;
 	typedef unsigned int UInt;
 	typedef signed int SInt;
@@ -66,6 +68,7 @@ private:
 		Null null_;
 		Handler<Array>* array_;
 		Handler<Object>* object_;
+		Binary* binary_;
 		String* str_;
 		UInt uint_;
 		SInt int_;
@@ -97,6 +100,8 @@ public:
 	explicit inline XValue(UInt const& val):type_(Type::UIntT){ this->spirit_.uint_=val; };
 	inline XValue(Handler<XArray> const& val):type_(Type::ArrayT){ this->spirit_.array_= new Handler<Array>( val ); };
 	inline XValue(Handler<XObject> const& val):type_(Type::ObjectT){ this->spirit_.object_= new Handler<Object>( val ); };
+	explicit inline XValue(const char* const& val, std::size_t len):type_(Type::BinaryT){ this->spirit_.binary_ = new std::vector<char>(val, val+len); };
+	explicit inline XValue(Binary const& val):type_(Type::BinaryT){ this->spirit_.binary_ = new std::vector<char>(val); };
 	explicit inline XValue(String const& val):type_(Type::StringT){ this->spirit_.str_= new std::string(val); };
 	explicit inline XValue(const char* const& val):type_(Type::StringT){ this->spirit_.str_ = new std::string(val); };
 	~XValue() noexcept { this->remove(); }
@@ -168,6 +173,7 @@ typedef XValue::UInt XUInt;
 typedef XValue::SInt XSInt;
 typedef XValue::Float XFloat;
 typedef XValue::Bool XBool;
+typedef XValue::Binary XBinary;
 
 }}
 

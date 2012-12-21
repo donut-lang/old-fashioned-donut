@@ -210,6 +210,22 @@ TEST(XValueTest, FloatTest)
 	}
 }
 
+TEST(XValueTest, BinaryTest)
+{
+	char orig[256];
+	for(int i=0;i<256;++i){
+		orig[i] = i;
+	}
+	{
+		XValue p(orig, 256);
+		XBinary const& b = p.as<XBinary>();
+		for(int i=0;i<256;++i){
+			ASSERT_EQ(orig[i], b.at(i));
+		}
+		ASSERT_EQ(std::vector<char>(orig, orig+256), b);
+	}
+}
+
 TEST(XValueTest, BooleanTest)
 {
 	{

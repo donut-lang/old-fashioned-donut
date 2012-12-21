@@ -78,6 +78,8 @@ XValue XValue::fromXML( tinyxml2::XMLElement* elm ) {
 		return XValue();
 	}else if( name == "xarray" ){
 		return XValue(Handler<XArray>( new XArray(elm)));
+	}else if( name == "xbinary" ){
+		return XValue::fromString<Binary>( elm->GetText() );
 	}else if(name=="xobject") {
 		return XValue(Handler<XObject>( new XObject(elm)) );
 	}else if(name=="xstring") {
@@ -104,6 +106,11 @@ tinyxml2::XMLElement* XValue::toXML( tinyxml2::XMLDocument* doc )
 		return (*this->spirit_.array_)->toXML(doc);
 	case ObjectT:
 		return (*this->spirit_.object_)->toXML(doc);
+	case BinaryT: {
+		tinyxml2::XMLElement* elm = doc->NewElement("xbinary");
+		elm->InsertEndChild(doc->NewText(util::encodeBase64(*(this->spirit_.binary_)).c_str()));
+		return elm;
+	}
 	case StringT: {
 		tinyxml2::XMLElement* elm = doc->NewElement("xstring");
 		elm->InsertEndChild(doc->NewText(this->spirit_.str_->c_str()));
@@ -140,6 +147,8 @@ std::string XValue::typeString() const noexcept {
 		return "XNull";
 	case Type::ArrayT:
 		return "XArray";
+	case Type::BinaryT:
+		return "XBinary";
 	case Type::ObjectT:
 		return "XObject";
 	case Type::StringT:
@@ -168,6 +177,10 @@ void XValue::remove()
 		delete this->spirit_.object_;
 		this->spirit_.object_ = nullptr;
 		break;
+	case Type::BinaryT:
+		delete this->spirit_.binary_;
+		this->spirit_.binary_ = nullptr;
+		break;
 	case Type::StringT:
 		delete this->spirit_.str_;
 		this->spirit_.str_ = nullptr;
@@ -189,6 +202,10 @@ void XValue::grab(XValue&& o)
 	case ObjectT:
 		this->spirit_.object_ = o.spirit_.object_;
 		o.spirit_.object_ = nullptr;
+		break;
+	case BinaryT:
+		this->spirit_.binary_ = o.spirit_.binary_;
+		o.spirit_.binary_ = nullptr;
 		break;
 	case StringT:
 		this->spirit_.str_ = o.spirit_.str_;
@@ -218,6 +235,9 @@ void XValue::copy(XValue const& o)
 		break;
 	case ObjectT:
 		this->spirit_.object_ = new Handler<Object>(*o.spirit_.object_);
+		break;
+	case BinaryT:
+		this->spirit_.binary_ = new Binary(*o.spirit_.binary_);
 		break;
 	case StringT:
 		this->spirit_.str_ = new std::string(*o.spirit_.str_);
@@ -290,6 +310,10 @@ template <> XValue XValue::fromString<XValue::Bool>(std::string const& str)
 		throw logging::Exception(__FILE__, __LINE__, "Failed to convert %s to bool", str.c_str());
 	}
 	return XValue((Bool)val);
+}
+template <> XValue XValue::fromString<XValue::Binary>(std::string const& str)
+{
+	return XValue( util::decodeBase64(str) );
 }
 
 }}

@@ -68,6 +68,14 @@ template <> struct _TypeAdapter<Handler<XObject> > {
 	typedef Handler<XObject>& return_type;
 	typedef Handler<XObject> const& return_const_type;
 };
+
+template <> struct _TypeAdapter<XBinary> {
+	typedef XBinary spirit_type;
+	typedef XBinary init_type;
+	typedef XBinary& return_type;
+	typedef XBinary const& return_const_type;
+};
+
 template <> struct _TypeAdapter<const char*> {
 	typedef XString spirit_type;
 	typedef XString init_type;
@@ -80,6 +88,7 @@ template <std::size_t N> struct _TypeAdapter<const char[N]> {
 	typedef XString& return_type;
 	typedef XString const& return_const_type;
 };
+
 template <std::size_t N> struct _TypeAdapter<char[N]> {
 	typedef XString spirit_type;
 	typedef XString init_type;
@@ -201,6 +210,7 @@ FUNCT(Null, spirit_.null_);
 FUNCT(Array, *spirit_.array_);
 FUNCT(Object, *spirit_.object_);
 FUNCT(String, *spirit_.str_);
+FUNCT(Binary, *spirit_.binary_);
 FUNCT(UInt, spirit_.uint_);
 FUNCT(SInt, spirit_.int_);
 FUNCT(Float, spirit_.float_);
@@ -227,5 +237,6 @@ template <> XValue XValue::fromString<XValue::UInt>(std::string const& str);
 template <> XValue XValue::fromString<XValue::SInt>(std::string const& str);
 template <> XValue XValue::fromString<XValue::Float>(std::string const& str);
 template <> XValue XValue::fromString<XValue::Bool>(std::string const& str);
+template <> XValue XValue::fromString<XValue::Binary>(std::string const& str);
 
 }}
