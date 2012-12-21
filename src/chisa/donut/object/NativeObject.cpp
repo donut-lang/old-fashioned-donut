@@ -47,7 +47,7 @@ bool NativeObject::hasOwnImpl(Handler<Heap> const& heap, std::string const& name
 	return false;
 }
 
-Handler<Object> NativeObject::setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> obj)
+Handler<Object> NativeObject::setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> const& obj)
 {
 	return obj;
 }

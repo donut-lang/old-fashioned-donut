@@ -29,7 +29,7 @@ public:
 	StringObject(std::string const& providerName);
 	virtual ~StringObject() noexcept = default;
 public:
-	std::string value() const noexcept { return this->str_; };
+	inline std::string const& value() const noexcept { return this->str_; };
 protected:
 	virtual std::string reprImpl(Handler<Heap> const& heap) const override final;
 protected:

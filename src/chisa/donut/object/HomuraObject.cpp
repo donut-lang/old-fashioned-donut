@@ -68,7 +68,7 @@ bool HomuraObject::hasOwnImpl(Handler<Heap> const& heap, std::string const& name
 {
 	return this->slot_.find(name) != this->slot_.end();
 }
-Handler<Object> HomuraObject::setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> obj)
+Handler<Object> HomuraObject::setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> const& obj)
 {
 	this->slot_.update(name, obj.get());
 	return obj;

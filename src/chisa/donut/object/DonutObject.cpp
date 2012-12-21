@@ -49,7 +49,7 @@ bool DonutObject::hasOwnImpl(Handler<Heap> const& heap, std::string const& name)
 	return it != this->slots_.end() && it->second.have();
 }
 
-Handler<Object> DonutObject::setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> obj)
+Handler<Object> DonutObject::setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> const& obj)
 {
 	auto it = this->slots_.find(name);
 	if(it == this->slots_.end()){

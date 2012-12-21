@@ -29,7 +29,7 @@ public:
 	FloatObject(std::string const& providerName);
 	virtual ~FloatObject() noexcept = default;
 public:
-	float value() const noexcept { return this->value_; };
+	inline float const& value() const noexcept { return this->value_; };
 protected:
 	virtual std::string reprImpl(Handler<Heap> const& heap) const override final;
 protected:
