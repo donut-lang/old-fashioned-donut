@@ -36,8 +36,8 @@ class ObjectWalker;
 class Object : public HandlerBody<Object> {
 	DISABLE_COPY_AND_ASSIGN(Object);
 public:
-	static constexpr const int TagShift = 2U;
 	enum Tag{
+		TagShift = 2U,
 		Mask=3U,
 		Obj=0U,
 		Int=1U,
@@ -50,15 +50,15 @@ public:
 public: //すべてのオブジェクトに出来なければならないこと
 	std::string repr(Handler<Heap> const& heap) const;
 	int toInt(Handler<Heap> const& heap) const;
-	float toFloat(Handler<Heap> const& heap) const;
-	std::string toString(Handler<Heap> const& heap) const;
+	float const& toFloat(Handler<Heap> const& heap) const;
+	std::string const& toString(Handler<Heap> const& heap) const;
 	bool toBool(Handler<Heap> const& heap) const;
 	bool has(Handler<Heap> const& heap, std::string const& name) const;
 	bool has(Handler<Heap> const& heap, int const& idx) const;
 	bool hasOwn(Handler<Heap> const& heap, std::string const& name) const;
 	bool hasOwn(Handler<Heap> const& heap, int const& idx) const;
-	Handler<Object> set(Handler<Heap> const& heap, std::string const& name, Handler<Object> obj);
-	Handler<Object> set(Handler<Heap> const& heap, int const& idx, Handler<Object> obj);
+	Handler<Object> set(Handler<Heap> const& heap, std::string const& name, Handler<Object> const& obj);
+	Handler<Object> set(Handler<Heap> const& heap, int const& idx, Handler<Object> const& obj);
 	Handler<Object> get(Handler<Heap> const& heap, std::string const& name) const;
 	Handler<Object> get(Handler<Heap> const& heap, int const& idx) const;
 	std::string providerName(Handler<Heap> const& heap) const;
@@ -87,7 +87,7 @@ protected: /* 実装すべきもの */
 	virtual std::string providerNameImpl(Handler<Heap> const& heap) const = 0;
 	virtual bool hasImpl(Handler<Heap> const& heap, std::string const& name) const = 0;
 	virtual bool hasOwnImpl(Handler<Heap> const& heap, std::string const& name) const = 0;
-	virtual Handler<Object> setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> obj) = 0;
+	virtual Handler<Object> setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> const& obj) = 0;
 	virtual Handler<Object> getImpl(Handler<Heap> const& heap, std::string const& name) const = 0;
 	virtual void markImpl(Handler<Heap> const& heap, int color) = 0;
 	virtual void onBackNotifyImpl(Handler<Heap> const& heap) = 0;
@@ -186,7 +186,7 @@ protected:
 protected:
 	virtual bool hasImpl(Handler<Heap> const& heap, std::string const& name) const override;
 	virtual bool hasOwnImpl(Handler<Heap> const& heap, std::string const& name) const override;
-	virtual Handler<Object> setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> obj) override;
+	virtual Handler<Object> setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> const& obj) override;
 	virtual Handler<Object> getImpl(Handler<Heap> const& heap, std::string const& name) const override;
 	virtual void markImpl(Handler<Heap> const& heap, int color) override;
 public: /* time functions */
@@ -227,7 +227,7 @@ protected:
 protected:
 	virtual bool hasImpl(Handler<Heap> const& heap, std::string const& name) const override;
 	virtual bool hasOwnImpl(Handler<Heap> const& heap, std::string const& name) const override;
-	virtual Handler<Object> setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> obj) override;
+	virtual Handler<Object> setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> const& obj) override;
 	virtual Handler<Object> getImpl(Handler<Heap> const& heap, std::string const& name) const override;
 	virtual void markImpl(Handler<Heap> const& heap, int color) override;
 protected:
@@ -258,7 +258,7 @@ protected:
 	virtual Handler<NativeClosureObject> tryCastToNativeClosureObjectImpl() override final;
 	virtual bool hasImpl(Handler<Heap> const& heap, std::string const& name) const override final;
 	virtual bool hasOwnImpl(Handler<Heap> const& heap, std::string const& name) const override final;
-	virtual Handler<Object> setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> obj) override final;
+	virtual Handler<Object> setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> const& obj) override final;
 	virtual Handler<Object> getImpl(Handler<Heap> const& heap, std::string const& name) const override final;
 	virtual void markImpl(Handler<Heap> const& heap, int color) override final;
 	virtual void onBackNotifyImpl(Handler<Heap> const& heap) override final;

@@ -40,7 +40,7 @@ protected:	virtual void onBackNotifyImpl(Handler<Heap> const& heap) override fin
 public:
 	virtual bool hasImpl(Handler<Heap> const& heap, std::string const& name) const override final;
 	virtual bool hasOwnImpl(Handler<Heap> const& heap, std::string const& name) const override final;
-	virtual Handler<Object> setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> obj) override final;
+	virtual Handler<Object> setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> const& obj) override final;
 	virtual Handler<Object> getImpl(Handler<Heap> const& heap, std::string const& name) const override final;
 	virtual void markImpl(Handler<Heap> const& heap, int color) override final;
 public:

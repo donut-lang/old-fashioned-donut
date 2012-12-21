@@ -51,7 +51,7 @@ std::string Object::repr(Handler<Heap> const& heap) const
 	}
 }
 
-std::string Object::toString(Handler<Heap> const& heap) const
+std::string const& Object::toString(Handler<Heap> const& heap) const
 {
 	switch(this->tag()){
 	case Tag::Obj: {
@@ -89,7 +89,7 @@ int Object::toInt(Handler<Heap> const& heap) const
 	}
 }
 
-float Object::toFloat(Handler<Heap> const& heap) const
+float const& Object::toFloat(Handler<Heap> const& heap) const
 {
 	switch(this->tag()){
 	case Tag::Obj: {
@@ -170,7 +170,7 @@ bool Object::hasOwn(Handler<Heap> const& heap, std::string const& name) const
 	}
 }
 
-Handler<Object> Object::set(Handler<Heap> const& heap, std::string const& name, Handler<Object> obj)
+Handler<Object> Object::set(Handler<Heap> const& heap, std::string const& name, Handler<Object> const& obj)
 {
 	switch(this->tag()){
 	case Tag::Obj:
@@ -230,7 +230,7 @@ object_desc_t Object::toDescriptor() const noexcept
 	}
 }
 
-Handler<Object> Object::set(Handler<Heap> const& heap, int const& idx, Handler<Object> obj)
+Handler<Object> Object::set(Handler<Heap> const& heap, int const& idx, Handler<Object> const& obj)
 {
 	return this->set(heap, toName(idx), obj);
 }

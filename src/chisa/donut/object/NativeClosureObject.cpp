@@ -38,7 +38,7 @@ bool NativeClosureObject::hasOwnImpl(Handler<Heap> const& heap, std::string cons
 	return false;
 }
 
-Handler<Object> NativeClosureObject::setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> obj)
+Handler<Object> NativeClosureObject::setImpl(Handler<Heap> const& heap, std::string const& name, Handler<Object> const& obj)
 {
 	heap->log().w(TAG, "NativeClosureObject cannot have any property.");
 	return obj;
