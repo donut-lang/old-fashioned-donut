@@ -69,10 +69,7 @@ XArchiver& XArchiver::binary(char* const& bin, std::size_t const& len)
 		if(len != b.size()){
 			throw logging::Exception(__FILE__, __LINE__, "[BUG] Binary size does not match. requested: %d archived: %d", len, b.size());
 		}
-		for(std::size_t i = 0;i<len;++i){
-			bin[i] = b.at(i);
-		}
-		//std::copy(b.begin(), b.end(), bin);
+		std::copy(b.begin(), b.end(), bin);
 	}else{
 		array_->append( XValue(bin, len) );
 	}
