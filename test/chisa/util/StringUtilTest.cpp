@@ -217,6 +217,21 @@ TEST(StringUtilTest, Base64DecodeTest)
 	ASSERT_EQ("あいうえお", decodeBase64AsString("44GC44GE44GG44GI44GK"));
 }
 
+TEST(StringUtilTest, Base64Test)
+{
+	std::vector<char> a;
+	std::vector<char> b;
+	{
+		for(int i=0;i<256;++i){
+			a.push_back(i);
+			b.push_back(i);
+		}
+		std::string s ( util::encodeBase64(b) );
+		b.clear();
+		b = decodeBase64( s );
+	}
+	ASSERT_EQ(a, b);
+}
 TEST(StringUtilTest, PercentDecodeTest)
 {
 	ASSERT_EQ("NOT_ENCODED", decodePercent("NOT_ENCODED"));

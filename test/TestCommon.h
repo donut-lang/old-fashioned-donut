@@ -54,7 +54,7 @@ template<typename T, size_t N>
 {
 	for (size_t i(0); i < N; ++i) {
 		if (expected[i] != actual[i]) {
-			return ::testing::AssertionFailure() << "array[" << i << "] (" << actual[i] << ") != expected[" << i << "] (" << expected[i] << ")";
+			return ::testing::AssertionFailure() << "array[" << i << "] ( = \"" << actual[i] << "\") != expected[" << i << "] ( = \"" << expected[i] << "\")";
 		}
 	}
 	return ::testing::AssertionSuccess();

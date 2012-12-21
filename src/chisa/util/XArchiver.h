@@ -41,6 +41,7 @@ protected:
 	inline Handler<XArray>& array( Handler<XArray> const& a ) noexcept { return this->array_ = a; };
 public:
 	template <typename T> XArchiver& operator &(T& val);
+	XArchiver& binary(char* const& bin, std::size_t const& len);
 };
 
 class XArchiverIn : public XArchiver {

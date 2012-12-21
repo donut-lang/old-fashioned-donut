@@ -17,6 +17,7 @@
  */
 
 #pragma once
+#include "../StringUtil.h"
 
 namespace chisa {
 namespace util {
@@ -63,13 +64,40 @@ struct XSerializer<T[N],0> {
 	static void deserialize(T (&val)[N], XValue const& xval){
 		Handler<XArray> array(xval.as<XArray>());
 		if(array->size() != N) {
-			std::size_t const n = N;
-			throw logging::Exception(__FILE__, __LINE__, "Array size does not match!: requested:%d != actual:%d", n, array->size());
+			throw logging::Exception(__FILE__, __LINE__, "Array size does not match!: requested:%d != actual:%d", N, array->size());
 		}
 		int cnt=0;
 		for( XValue& v : *(array) ) {
 			XSerializer<T>::deserialize(val[cnt++], v);
 		}
+	}
+};
+
+template <std::size_t N>
+struct XSerializer<char[N],0> {
+	static XValue serialize(char (&val)[N]) {
+		return XValue( util::encodeBase64( val, N ) );
+	}
+	static void deserialize(char (&val)[N], XValue const& xval){
+		std::vector<char> c ( util::decodeBase64(xval.as<XString>()) );
+		if(c.size() != N) {
+			throw logging::Exception(__FILE__, __LINE__, "Binary size does not match!: requested:%d != actual:%d", N, c.size());
+		}
+		std::copy(c.begin(), c.end(), val);
+	}
+};
+
+template <std::size_t N>
+struct XSerializer<unsigned char[N],0> {
+	static XValue serialize(unsigned char (&val)[N]) {
+		return XValue( util::encodeBase64( reinterpret_cast<char*>(val), N ) );
+	}
+	static void deserialize(unsigned char (&val)[N], XValue const& xval){
+		std::vector<char> c ( util::decodeBase64(xval.as<XString>()) );
+		if(c.size() != N) {
+			throw logging::Exception(__FILE__, __LINE__, "Binary size does not match!: requested:%d != actual:%d", N, c.size());
+		}
+		std::copy(c.begin(), c.end(), val);
 	}
 };
 

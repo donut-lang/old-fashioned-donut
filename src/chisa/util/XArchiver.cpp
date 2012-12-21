@@ -59,5 +59,25 @@ XArchiverOut::XArchiverOut()
 	this->index(0);
 }
 
+XArchiver& XArchiver::binary(char* const& bin, std::size_t const& len)
+{
+	if(decode_now_){
+		if(!bin){
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] Oops. Binary Area is not allocated.");
+		}
+		XBinary const& b(array_->get<XBinary>(this->array_index_++));
+		if(len != b.size()){
+			throw logging::Exception(__FILE__, __LINE__, "[BUG] Binary size does not match. requested: %d archived: %d", len, b.size());
+		}
+		for(std::size_t i = 0;i<len;++i){
+			bin[i] = b.at(i);
+		}
+		//std::copy(b.begin(), b.end(), bin);
+	}else{
+		array_->append( XValue(bin, len) );
+	}
+	return *this;
+}
+
 }}
 
