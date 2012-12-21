@@ -76,10 +76,10 @@ struct XSerializer<T[N],0> {
 template <std::size_t N>
 struct XSerializer<char[N],0> {
 	static XValue serialize(char (&val)[N]) {
-		return XValue( util::encodeBase64( val, N ) );
+		return XValue( val, N);
 	}
 	static void deserialize(char (&val)[N], XValue const& xval){
-		std::vector<char> c ( util::decodeBase64(xval.as<XString>()) );
+		std::vector<char> c ( xval.as<XBinary>() );
 		if(c.size() != N) {
 			throw logging::Exception(__FILE__, __LINE__, "Binary size does not match!: requested:%d != actual:%d", N, c.size());
 		}
@@ -90,10 +90,10 @@ struct XSerializer<char[N],0> {
 template <std::size_t N>
 struct XSerializer<unsigned char[N],0> {
 	static XValue serialize(unsigned char (&val)[N]) {
-		return XValue( util::encodeBase64( reinterpret_cast<char*>(val), N ) );
+		return XValue( reinterpret_cast<char*>(val), N );
 	}
 	static void deserialize(unsigned char (&val)[N], XValue const& xval){
-		std::vector<char> c ( util::decodeBase64(xval.as<XString>()) );
+		std::vector<char> c ( xval.as<XBinary>() );
 		if(c.size() != N) {
 			throw logging::Exception(__FILE__, __LINE__, "Binary size does not match!: requested:%d != actual:%d", N, c.size());
 		}
