@@ -52,6 +52,28 @@ private:
 	uint16_t dutyCounter;
 
 public:
+	template <typename Archiver>
+	void serialize(Archiver& arc){
+		arc & isFirstChannel;
+		//decay or volume
+		arc & volumeOrDecayRate;
+		arc & decayReloaded;
+		arc & decayEnabled;
+		arc & dutyRatio;
+
+		arc & decayCounter;
+
+		arc & decayVolume;
+
+		arc & sweepEnabled;
+		arc & sweepShiftAmount;
+		arc & sweepIncreased;
+		arc & sweepUpdateRatio;
+
+		arc & sweepCounter;
+	}
+
+public:
 	explicit Rectangle(bool isFirstChannel);
 	~Rectangle();
 	inline void analyzeVolumeRegister(uint8_t reg);
@@ -83,6 +105,22 @@ private:
 	//
 	uint16_t freqCounter;
 	uint16_t streamCounter;
+
+public:
+	template <typename Archiver>
+	void serialize(Archiver& arc){
+		arc & haltFlag;
+
+		arc & enableLinearCounter;
+		arc & frequency;
+		arc & linearCounterBuffer;
+
+		arc & linearCounter;
+		arc & lengthCounter;
+
+		arc & freqCounter;
+		arc & streamCounter;
+	}
 public:
 	Triangle();
 	~Triangle();
@@ -122,6 +160,28 @@ private:
 	//
 	uint16_t freqCounter;
 public:
+	template <typename Archiver>
+	void serialize(Archiver& arc){
+		//rand
+		arc & shiftRegister;
+		arc & modeFlag;
+
+		//decay
+		arc & volumeOrDecayRate;
+		arc & decayReloaded;
+		arc & decayEnabled;
+
+		arc & decayCounter;
+		arc & decayVolume;
+		//
+		arc & loopEnabled;
+		arc & frequency;
+		//
+		arc & lengthCounter;
+		//
+		arc & freqCounter;
+	}
+public:
 	Noize();
 	~Noize();
 	inline void analyzeVolumeRegister(uint8_t reg);
@@ -155,6 +215,22 @@ private:
 	uint8_t sampleBufferLeft;
 	//
 	uint16_t freqCounter;
+public:
+	template <typename Archiver>
+	void serialize(Archiver& arc){
+		arc & irqEnabled;
+		arc & loopEnabled;
+		arc & frequency;
+		arc & deltaCounter;
+		arc & sampleAddr;
+		arc & sampleLength;
+		arc & sampleLengthBuffer;
+		//
+		arc & sampleBuffer;
+		arc & sampleBufferLeft;
+		//
+		arc & freqCounter;
+	}
 public:
 	Digital(VirtualMachine& vm);
 	~Digital();
