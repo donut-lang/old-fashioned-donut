@@ -122,6 +122,15 @@ private:
 	GamepadFairy& pad2Fairy;
 	uint8_t pad1Idx;
 	uint8_t pad2Idx;
+public:
+	template <typename Archiver>
+	void serialize(Archiver& arc){
+		arc & pad1Fairy;
+		arc & pad2Fairy;
+		arc & pad1Idx;
+		arc & pad2Idx;
+	}
+
 };
 
 class Audio {
@@ -160,7 +169,22 @@ class Audio {
 		//---
 		inline void analyzeStatusRegister(uint8_t value);
 		inline void analyzeLowFrequentryRegister(uint8_t value);
-
+	public:
+		template <typename Archiver>
+		void serialize(Archiver& arc){
+			arc & audioFairy;
+			arc & clockCnt;
+			arc & leftClock;
+			arc & frameCnt;
+			arc & isNTSCmode;
+			arc & frameIRQenabled;
+			arc & frameIRQCnt;
+			arc & rectangle1;
+			arc & rectangle2;
+			arc & triangle;
+			arc & noize;
+			arc & digital;
+		}
 };
 
 class Video
@@ -213,6 +237,18 @@ class Video
 			bool isForeground;
 			bool flipHorizontal;
 			bool flipVertical;
+		public:
+			template <typename Archiver>
+			void serialize(Archiver& arc){
+				arc & idx;
+				arc & y;
+				arc & x;
+				arc & paletteNo;
+				arc & tileAddr;
+				arc & isForeground;
+				arc & flipHorizontal;
+				arc & flipVertical;
+			}
 		} spriteTable[defaultSpriteCnt];
 		uint16_t spriteHitCnt;
 		inline void spriteEval();
