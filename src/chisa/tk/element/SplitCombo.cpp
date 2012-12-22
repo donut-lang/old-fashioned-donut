@@ -161,17 +161,11 @@ geom::Box SplitCombo::measureImpl(geom::Box const& constraint)
 				totalSize += childCtx.def.min;
 				childCtx.size = childCtx.def.min;
 			}
-			if(geom::isSpecified((childSize.*fixed_getter)())) {
-				fixedMaxSize = std::max(fixedMaxSize, (childSize.*fixed_getter)());
-			}
+			fixedMaxSize = std::max(fixedMaxSize, (childSize.*fixed_getter)());
 		}
 		geom::Box measured;
 		(measured.*changed_setter)(totalSize);
-		if(fixedSpecified){
-			(measured.*fixed_setter)((constraint.*fixed_getter)());
-		}else{
-			(measured.*fixed_setter)(fixedMaxSize);
-		}
+		(measured.*fixed_setter)(fixedMaxSize);
 		return measured;
 	}else{
 		//長さは制限される：ふくざつ！！
@@ -202,9 +196,7 @@ geom::Box SplitCombo::measureImpl(geom::Box const& constraint)
 					totalWeight += childCtx.weight;
 				}
 			}
-			if(geom::isSpecified((childSize.*fixed_getter)())) {
-				fixedMaxSize = std::max(fixedMaxSize, (childSize.*fixed_getter)());
-			}
+			fixedMaxSize = std::max(fixedMaxSize, (childSize.*fixed_getter)());
 		}
 
 		geom::Box measured;
