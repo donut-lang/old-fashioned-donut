@@ -19,7 +19,6 @@
 #include "AbstractToggleButton.h"
 #include "../../logging/Exception.h"
 #include "../../gl/Canvas.h"
-#include <iostream>
 
 namespace chisa {
 namespace tk {
