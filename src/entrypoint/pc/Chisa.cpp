@@ -21,6 +21,7 @@
 #include "../../chisa/tk/Universe.h"
 #include "../../chisa/logging/Exception.h"
 #include "../../nes/Hexe.h"
+#include "../../nes/machine/exception/EmulatorException.h"
 
 using namespace std;
 
@@ -133,10 +134,14 @@ int main(int argc, char** argv) {
 		std::cerr << "<msg>" << e.msg() << std::endl;
 		glfwTerminate();
 		return -2;
+	} catch (nes::EmulatorException& e) {
+		std::cerr << "Emulator Exception:" << e.getMessage() << std::endl;
+		glfwTerminate();
+		return -3;
 	} catch (...) {
 		std::cerr << "caught unknwon error." << std::endl;
 		glfwTerminate();
-		return -3;
+		return -4;
 	}
 	decltype(gUniverse)().swap(gUniverse);
 	delete gHexe;

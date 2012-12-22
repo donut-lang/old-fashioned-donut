@@ -60,6 +60,7 @@ public:
 	NesGeist(chisa::logging::Logger& log, chisa::HandlerW<chisa::tk::World> world);
 	virtual ~NesGeist() noexcept;
 	virtual std::string toString() const override;
+	inline VirtualMachine* machine() const noexcept { return this->machine_; };
 public:
 	virtual void dispatchRendering(const uint8_t nesBuffer[screenHeight][screenWidth], const uint8_t paletteMask) override;
 	virtual void onUpdate() override;
