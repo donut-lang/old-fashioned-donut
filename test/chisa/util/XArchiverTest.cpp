@@ -40,16 +40,6 @@ struct ComplexTest{
 	}
 };
 
-struct SaveLoadSample {
-	int x,y,z;
-	void save(XArchiverOut& out) {
-		out & x & y & z;
-	}
-	void load(XArchiver& in) {
-		in & x & y & z;
-	}
-};
-
 struct EnumTest{
 	enum ENUM{
 		X,
@@ -248,6 +238,16 @@ TEST(XArchiveTest, UnsignedBinaryArrayTest)
 	ASSERT_TRUE(ArraysMatch(data2, data));
 }
 
+struct SaveLoadSample {
+	int x,y,z;
+	void save(XArchiverOut& out) {
+		out & x & y & z;
+	}
+	void load(XArchiver& in) {
+		in & x & y & z;
+	}
+};
+
 TEST(XArchiveTest, SaveLoadTest)
 {
 	SaveLoadSample sample2;
@@ -255,6 +255,46 @@ TEST(XArchiveTest, SaveLoadTest)
 	{
 		XArchiverOut out;
 		SaveLoadSample sample;
+		sample.x = 1;
+		sample.y = 2;
+		sample.z = 3;
+		out << sample;
+		out >> v;
+	}
+	{
+		XArchiverIn in;
+		in << v;
+		in >> sample2;
+	}
+	ASSERT_EQ(1, sample2.x);
+	ASSERT_EQ(2, sample2.y);
+	ASSERT_EQ(3, sample2.z);
+}
+
+struct XSaveLoadSample {
+	int x,y,z;
+	XValue save() {
+		Handler<XObject> obj(new XObject);
+		obj->set("x", x);
+		obj->set("y", y);
+		obj->set("z", z);
+		return obj;
+	}
+	void load(XValue const& in) {
+		Handler<XObject> obj(in.as<XObject>());
+		x = obj->get<int>("x");
+		y = obj->get<int>("y");
+		z = obj->get<int>("z");
+	}
+};
+
+TEST(XArchiveTest, XSaveLoadTest)
+{
+	XSaveLoadSample sample2;
+	XValue v;
+	{
+		XArchiverOut out;
+		XSaveLoadSample sample;
 		sample.x = 1;
 		sample.y = 2;
 		sample.z = 3;
