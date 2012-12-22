@@ -24,8 +24,8 @@ namespace donut {
 
 const std::string TAG("FloatObject");
 
-FloatObject::FloatObject(std::string const& providerName)
-:NativeObject(providerName)
+FloatObject::FloatObject(HeapProvider* const provider)
+:NativeObject(provider)
 ,value_(NAN)
 {
 }

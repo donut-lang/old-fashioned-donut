@@ -25,8 +25,8 @@ namespace donut {
 
 const std::string TAG("HomuraObject");
 
-HomuraObject::HomuraObject(std::string const& providerName)
-:NativeObject(providerName)
+HomuraObject::HomuraObject(HeapProvider* const provider)
+:NativeObject(provider)
 {
 }
 

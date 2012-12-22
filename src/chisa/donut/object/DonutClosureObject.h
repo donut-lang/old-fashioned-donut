@@ -28,7 +28,7 @@ private:
 	unsigned int const index_;
 	Handler<Closure> const asm_;
 public:
-	DonutClosureObject(std::string const& providerName);
+	DonutClosureObject(HeapProvider* const provider);
 	virtual ~DonutClosureObject() noexcept = default;
 protected:
 	virtual std::string reprImpl(Handler<Heap> const& heap) const override final;

@@ -26,7 +26,7 @@ class FloatObject final: public NativeObject {
 private:
 	const float value_;
 public:
-	FloatObject(std::string const& providerName);
+	FloatObject(HeapProvider* const provider);
 	virtual ~FloatObject() noexcept = default;
 public:
 	inline float const& value() const noexcept { return this->value_; };

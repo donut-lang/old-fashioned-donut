@@ -24,8 +24,8 @@ namespace donut {
 
 const std::string TAG("StringObject");
 
-StringObject::StringObject(std::string const& providerName)
-:NativeObject(providerName)
+StringObject::StringObject(HeapProvider* const provider)
+:NativeObject(provider)
 {
 
 }

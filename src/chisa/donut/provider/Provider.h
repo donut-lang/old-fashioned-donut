@@ -79,13 +79,13 @@ public:
 public:
 	template <typename... Args> inline
 	Handler<T> newInstance(Args... args) {
-		Handler<T> t ( new T( this->name() ) );
+		Handler<T> t ( new T( this ) );
 		t->bootstrap(args...);
 		return t;
 	}
 private:
 	virtual HeapObject* createEmptyObject() override {
-		return new T( this->name() );
+		return new T( this );
 	}
 };
 

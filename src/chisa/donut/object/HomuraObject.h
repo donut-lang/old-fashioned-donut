@@ -27,7 +27,7 @@ class HomuraObject final: public NativeObject {
 private:
 	util::VectorMap<std::string, Object*> slot_;
 public:
-	HomuraObject(std::string const& providerName);
+	HomuraObject(HeapProvider* const provider);
 	virtual ~HomuraObject() noexcept = default;
 protected:
 	virtual std::string reprImpl(Handler<Heap> const& heap) const override final;

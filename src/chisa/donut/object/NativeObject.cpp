@@ -26,8 +26,8 @@
 namespace chisa {
 namespace donut {
 
-NativeObject::NativeObject(std::string const& providerName)
-:HeapObject(providerName)
+NativeObject::NativeObject(HeapProvider* const provider)
+:HeapObject(provider)
 ,prototype_(nullptr)
 {
 }
@@ -58,7 +58,7 @@ Handler<Object> NativeObject::getImpl(Handler<Heap> const& heap, std::string con
 }
 
 void NativeObject::bootstrap(Handler<Heap> const& heap) {
-	this->prototype_ = heap->findHeapProvider(this->providerName())->prototype().get();
+	this->prototype_ = this->provider()->prototype().get();
 }
 
 util::XValue NativeObject::save( Handler<Heap> const& heap )

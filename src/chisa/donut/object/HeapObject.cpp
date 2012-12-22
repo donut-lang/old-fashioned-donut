@@ -17,18 +17,22 @@
  */
 
 #include "Object.h"
-#include "../../util/StringUtil.h"
 #include "../Exception.h"
 #include "Heap.h"
 namespace chisa {
 namespace donut {
 
-HeapObject::HeapObject(std::string const& providerName)
-:providerName_(providerName)
+HeapObject::HeapObject(HeapProvider* const provider)
+:provider_(provider)
 ,id_(0)
 ,erased_(0)
 ,color_(0)
 {
+}
+
+std::string HeapObject::providerNameImpl(Handler<Heap> const& heap) const
+{
+	return this->provider_->name();
 }
 
 }}
