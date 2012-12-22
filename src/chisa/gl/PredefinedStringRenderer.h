@@ -31,13 +31,17 @@ class PredefinedStringRenderer {
 private:
 	Handler<DrawableManager> drawableManager_;
 	std::map<unsigned int, Handler<Sprite> > spriteTable_;
+	float maxWidth_;
+	float maxHeight_;
 public:
-	typedef std::basic_string<unsigned int> String;
+	typedef std::vector<unsigned int> String;
 	static const constexpr unsigned int EOS = 0U;
 	PredefinedStringRenderer(logging::Logger& log, Handler<DrawableManager> drawableManager);
 	virtual ~PredefinedStringRenderer() noexcept = default;
 public:
 	void registerCharacter( unsigned int symbol, std::string const& str );
+	inline float maxWidth() const noexcept { return this->maxWidth_; };
+	inline float maxHeight() const noexcept { return this->maxHeight_; };
 	geom::Area renderString( Canvas& cv, geom::Point const& point, String const& str, float depth );
 };
 
