@@ -5,6 +5,7 @@
 
 namespace nes {
 
+
 class Mapper0 : public Cartridge
 {
 	public:
@@ -28,6 +29,13 @@ class Mapper0 : public Cartridge
 		const uint16_t addrMask;
 		const bool hasChrRam;
 		uint8_t chrRam[8192];
+	public:
+		template <typename Archiver>
+		void serialize(Archiver& arc){
+			arc & const_cast<uint16_t&>(addrMask);
+			arc & const_cast<bool&>(hasChrRam);
+			arc & chrRam;
+		}
 };
 
 }

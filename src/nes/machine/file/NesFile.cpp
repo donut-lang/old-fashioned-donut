@@ -6,8 +6,8 @@
 
 namespace nes {
 
-NesFile::NesFile(const uint8_t* data, const uint32_t size, std::string const& name) :
-filename(name),
+NesFile::NesFile(std::string const& filename) :
+filename(filename),
 mapperNo(0),
 prgRom(NULL),
 chrRom(NULL),
@@ -19,8 +19,7 @@ chrSize(0),
 prgPageCnt(0),
 chrPageCnt(0)
 {
-	const uint32_t contentSize = size - NES_FORMAT_SIZE;
-	this->analyzeFile(data, contentSize, &data[NES_FORMAT_SIZE]);
+	this->loadFile();
 }
 
 NesFile::~NesFile()
@@ -33,6 +32,29 @@ NesFile::~NesFile()
 	}
 }
 
+void NesFile::loadFile()
+{
+	std::ifstream in(filename, std::fstream::binary);
+	in.seekg(0, std::ifstream::end);
+	const std::ifstream::pos_type endPos = in.tellg();
+	in.seekg(0, std::ifstream::beg);
+	const std::ifstream::pos_type startPos = in.tellg();
+	const uint32_t size = static_cast<uint32_t>(endPos - startPos);
+
+	uint8_t* const data = new uint8_t[size];
+	try{
+		in.read(reinterpret_cast<char*>(data), size);
+		if(in.gcount() != static_cast<int32_t>(size)){
+			throw EmulatorException("[FIXME] Invalid file format: ") << filename;
+		}
+		const uint32_t contentSize = size - NES_FORMAT_SIZE;
+		this->analyzeFile(data, contentSize, &data[NES_FORMAT_SIZE]);
+		delete [] data;
+	} catch (...) {
+		delete [] data;
+		throw;
+	}
+}
 
 void NesFile::analyzeFile(const uint8_t* const header, const uint32_t filesize, const uint8_t* data)
 {

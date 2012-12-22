@@ -23,7 +23,7 @@ public:
 		CHR_ROM_PAGE_SIZE = 8 * 1024,
 	};
 public:
-	explicit NesFile(const uint8_t* data, const uint32_t size, std::string const& name="MEMORY");
+	explicit NesFile(std::string const& filename);
 	~NesFile();
 	inline MirrorType getMirrorType() const
 	{
@@ -84,6 +84,7 @@ private:
 	uint32_t prgPageCnt;
 	uint32_t chrPageCnt;
 
+	void loadFile();
 	void analyzeFile(const uint8_t* const header, const uint32_t filesize, const uint8_t* data);
 public:
 	template <typename Archiver>
