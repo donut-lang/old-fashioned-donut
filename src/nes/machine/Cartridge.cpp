@@ -11,6 +11,8 @@
 #include <string>
 #include <sstream>
 
+#include "../../chisa/util/XArchiver.h"
+
 namespace nes {
 
 //ダミー実装
@@ -125,6 +127,7 @@ void Cartridge::changeMirrorType(NesFile::MirrorType mirrorType)
 		this->vramMirroring[0] = &internalVram[0];
 		this->vramMirroring[1] = &internalVram[0x400];
 		this->vramMirroring[2] = &internalVram[0];
+
 		this->vramMirroring[3] = &internalVram[0x400];
 		break;
 	default:
@@ -141,11 +144,11 @@ void Cartridge::releaseIRQ()
 	VM.releaseIRQ(VirtualMachine::DEVICE_CARTRIDGE);
 }
 
-Cartridge* Cartridge::loadCartridge(VirtualMachine& vm, const uint8_t* data, const uint32_t size, std::string const& name)
+Cartridge* Cartridge::loadCartridge(VirtualMachine& vm, std::string const& filename)
 {
 	NesFile* nesFile = NULL;
 	try{
-		nesFile = new NesFile(data, size, name);
+		nesFile = new NesFile(filename);
 		const uint8_t mapperNo = nesFile->getMapperNo();
 		switch(mapperNo)
 		{
@@ -179,5 +182,22 @@ Cartridge* Cartridge::loadCartridge(VirtualMachine& vm, const uint8_t* data, con
 	}
 	return NULL;
 }
+
+void Cartridge::save(chisa::util::XArchiverOut& arc)
+{
+	arc & hasSram;
+	arc & sram;
+	arc & mirrorType;
+	arc & fourScreenVram;
+
+}
+void Cartridge::load(chisa::util::XArchiverIn& arc)
+{
+	arc & hasSram;
+	arc & sram;
+	arc & mirrorType;
+	arc & fourScreenVram;
+}
+
 
 }

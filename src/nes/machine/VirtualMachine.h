@@ -10,6 +10,13 @@
 #include "fairy/GamepadFairy.h"
 #include "AudioChannel.h"
 
+namespace chisa{
+namespace util {
+class XArchiver;
+class XArchiverIn;
+class XArchiverOut;
+}}
+
 namespace nes {
 
 class VirtualMachine;
@@ -19,7 +26,7 @@ public:
 	enum{
 		SRAM_SIZE = 8192
 	};
-	static Cartridge* loadCartridge(VirtualMachine& vm, const uint8_t* data, const uint32_t size, std::string const& name="MEMORY");
+	static Cartridge* loadCartridge(VirtualMachine& vm, std::string const& filename);
 public:
 	explicit Cartridge(VirtualMachine& vm, const NesFile* nesFile = 0);
 	virtual ~Cartridge();
@@ -70,6 +77,9 @@ private:
 	uint8_t* vramMirroring[4];
 	uint8_t* internalVram;
 	uint8_t fourScreenVram[4096];
+public:
+	virtual void save(chisa::util::XArchiverOut& arc);
+	virtual void load(chisa::util::XArchiverIn& arc);
 };
 
 class IOPort
@@ -507,7 +517,7 @@ class Processor
 		inline uint8_t getP() const noexcept { return P; };
 };
 
-class VirtualMachine
+class VirtualMachine final
 {
 	public:
 		explicit VirtualMachine(VideoFairy& videoFairy, AudioFairy& audioFairy, GamepadFairy* player1, GamepadFairy* player2);
@@ -527,7 +537,6 @@ class VirtualMachine
 		void sendHardReset(); //from user to all subsystems.
 		void sendReset(); //from user to all subsystems.
 		void loadCartridge(const char* filename);
-		void loadCartridge(const uint8_t* data, const uint32_t size, std::string const& name="MEMORY"); //from user
 		inline void consumeCpuClock(uint32_t clock)
 		{
 			consumeClock(clock * CPU_CLOCK_FACTOR);
@@ -599,7 +608,6 @@ class VirtualMachine
 					throw EmulatorException("[FIXME] Invalid addr: 0x") << std::hex << addr;
 			}
 		}
-	protected:
 	private:
 		enum{
 			MAIN_CLOCK = 21477272, //21.28MHz(NTSC)
@@ -622,6 +630,9 @@ class VirtualMachine
 		uint8_t irqLine;
 	public:
 		inline Processor const* getProcessor() const noexcept { return &processor; };
+	public:
+		void save(chisa::util::XArchiverOut& arc);
+		void load(chisa::util::XArchiverIn& arc);
 };
 
 }
