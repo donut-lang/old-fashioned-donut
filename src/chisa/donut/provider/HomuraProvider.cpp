@@ -52,7 +52,6 @@ HomuraProvider::HomuraProvider(Handler<Heap> const& heap)
 		}
 		Handler<Clock> clk(heap->clock());
 		clk->seek(t);
-		clk->discardFuture();
 		return t;
 	}));
 	this->registerPureNativeClosure("discardHistory", std::function<timestamp_t(HomuraObject*)>([&](HomuraObject* hom) {
