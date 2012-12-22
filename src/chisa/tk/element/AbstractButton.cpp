@@ -25,7 +25,6 @@
 
 #include "ElementGroup.h"
 
-#include <iostream>
 namespace chisa {
 namespace tk {
 
