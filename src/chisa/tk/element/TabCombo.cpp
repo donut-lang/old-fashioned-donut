@@ -96,7 +96,7 @@ void TabCombo::addChild(Handler<Element> const& h, std::string const& title)
 	Handler<Element> last = this->lastChild(); //もともとの最終エレメント
 	this->buttonMap_.insert(h, btn);
 	this->frame_->addChild(h);
-	this->buttons_->addChild(btn, SplitComboContext(1));
+	this->buttons_->addChild(btn, SplitComboContext());
 
 	//トグル状態の変更を通知
 	updateButtonState(h, btn);
@@ -117,7 +117,7 @@ void TabCombo::addChild(std::size_t const& idx, Handler<Element> const& h, std::
 	Handler<Element> last = this->lastChild(); //もともとの最終エレメント
 	this->buttonMap_.insert(h, btn);
 	this->frame_->addChild(idx, h);
-	this->buttons_->addChild(idx, btn, SplitComboContext(1));
+	this->buttons_->addChild(idx, btn, SplitComboContext());
 
 	//トグル状態の変更を通知
 	updateButtonState(h, btn);
@@ -232,24 +232,24 @@ void TabCombo::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* 
 		this->top_->setMode(SplitCombo::SplitMode::Horizontal);
 		this->buttons_->setMode(SplitCombo::SplitMode::Vertical);
 		this->top_->addChild(this->frame_, SplitComboContext(1));
-		this->top_->addChild(this->buttons_, SplitComboContext(1));
+		this->top_->addChild(this->buttons_, SplitComboContext());
 		break;
 	case ButtonPosition::Left:
 		this->top_->setMode(SplitCombo::SplitMode::Horizontal);
 		this->buttons_->setMode(SplitCombo::SplitMode::Vertical);
-		this->top_->addChild(this->buttons_, SplitComboContext(1));
+		this->top_->addChild(this->buttons_, SplitComboContext());
 		this->top_->addChild(this->frame_, SplitComboContext(1));
 		break;
 	case ButtonPosition::Bottom:
 		this->top_->setMode(SplitCombo::SplitMode::Vertical);
 		this->buttons_->setMode(SplitCombo::SplitMode::Horizontal);
 		this->top_->addChild(this->frame_, SplitComboContext(1));
-		this->top_->addChild(this->buttons_, SplitComboContext(1));
+		this->top_->addChild(this->buttons_, SplitComboContext());
 		break;
 	case ButtonPosition::Top:
 		this->top_->setMode(SplitCombo::SplitMode::Vertical);
 		this->buttons_->setMode(SplitCombo::SplitMode::Horizontal);
-		this->top_->addChild(this->buttons_, SplitComboContext(1));
+		this->top_->addChild(this->buttons_, SplitComboContext());
 		this->top_->addChild(this->frame_, SplitComboContext(1));
 		break;
 	}
