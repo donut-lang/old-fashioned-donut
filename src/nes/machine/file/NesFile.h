@@ -85,6 +85,22 @@ private:
 	uint32_t chrPageCnt;
 
 	void analyzeFile(const uint8_t* const header, const uint32_t filesize, const uint8_t* data);
+public:
+	template <typename Archiver>
+	void serialize(Archiver& arc){
+		arc & const_cast<std::string&>(filename);
+		arc & mapperNo;
+		arc & trainer;
+		arc & mirrorType;
+		arc & trainerFlag;
+		arc & sramFlag;
+		arc & prgSize;
+		arc & chrSize;
+		arc & prgPageCnt;
+		arc & chrPageCnt;
+		arc.binary(prgRom, prgSize);
+		arc.binary(chrRom, chrSize);
+	}
 };
 
 }
