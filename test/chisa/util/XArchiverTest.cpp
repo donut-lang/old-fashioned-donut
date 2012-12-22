@@ -40,6 +40,16 @@ struct ComplexTest{
 	}
 };
 
+struct SaveLoadSample {
+	int x,y,z;
+	void save(XArchiverOut& out) {
+		out & x & y & z;
+	}
+	void load(XArchiver& in) {
+		in & x & y & z;
+	}
+};
+
 struct EnumTest{
 	enum ENUM{
 		X,
@@ -237,4 +247,28 @@ TEST(XArchiveTest, UnsignedBinaryArrayTest)
 	}
 	ASSERT_TRUE(ArraysMatch(data2, data));
 }
+
+TEST(XArchiveTest, SaveLoadTest)
+{
+	SaveLoadSample sample2;
+	XValue v;
+	{
+		XArchiverOut out;
+		SaveLoadSample sample;
+		sample.x = 1;
+		sample.y = 2;
+		sample.z = 3;
+		out << sample;
+		out >> v;
+	}
+	{
+		XArchiverIn in;
+		in << v;
+		in >> sample2;
+	}
+	ASSERT_EQ(1, sample2.x);
+	ASSERT_EQ(2, sample2.y);
+	ASSERT_EQ(3, sample2.z);
+}
+
 }}}
