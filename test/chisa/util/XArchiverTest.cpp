@@ -169,27 +169,29 @@ TEST(XArchiveTest, EnumTest)
 
 TEST(XArchiveTest, BinaryHeapTest)
 {
-	std::unique_ptr<char> data( new char[256] );
-	std::unique_ptr<char> data2( new char[256] );
+	char* data( new char[256] );
+	char* data2( new char[256] );
 	for(int i=0;i<256;++i){
-		(data.get())[i] = i;
-		(data2.get())[i] = i;
+		data[i] = i;
+		data2[i] = i;
 	}
 	XValue v;
 	{
 		XArchiverOut out;
-		out.binary(data.get(), 256);
+		out.binary(data, 256);
 		out >> v;
 	}
-	std::memset(data.get(), 256, 0xff);
+	std::memset(data, 256, 0xff);
 	{
 		XArchiverIn in;
 		in << v;
-		in.binary(data.get(), 256);
+		in.binary(data, 256);
 	}
 	for(int i=0;i<256;++i) {
-		ASSERT_EQ((data2.get())[i], (data.get())[i]);
+		ASSERT_EQ(data2[i], data[i]);
 	}
+	delete [] data;
+	delete [] data2;
 }
 
 TEST(XArchiveTest, BinaryArrayTest)
