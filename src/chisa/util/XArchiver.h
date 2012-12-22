@@ -99,12 +99,53 @@ public:
 	static const bool value = check_func_decl::value;
 };
 
-template <typename T, int generic=HasSerializer<T>::value ? 1 : std::is_enum<T>::value ? 2 : 0 >
+template <typename T>
+class HasSaveLoad {
+	template <typename U>
+	static auto checkSave(U u) -> decltype(u.save(std::declval<XArchiverOut&>()), std::true_type());
+	static auto checkSave(...) -> decltype( std::false_type() );
+	template <typename U>
+	static auto checkLoad(U u) -> decltype(u.load(std::declval<XArchiverIn&>()), std::true_type());
+	static auto checkLoad(...) -> decltype( std::false_type() );
+public:
+	typedef decltype(checkSave(std::declval<T>())) check_save_decl;
+	typedef decltype(checkLoad(std::declval<T>())) check_load_decl;
+	static const bool value = check_save_decl::value && check_load_decl::value;
+};
+
+template <typename T, int generic=std::is_enum<T>::value ? 1 : HasSaveLoad<T>::value ? 2 : HasSerializer<T>::value ? 3 : 0 >
 struct XSerializer;
 
-//持っている場合は再帰的に適用する
+//enumを持っている
 template <typename T>
 struct XSerializer<T, 1> {
+	static XValue serialize(T& val){
+		return XValue(static_cast<XUInt>(val));
+	}
+	static void deserialize(T& val, XValue const& xval){
+		val = static_cast<T>(xval.as<XUInt>());
+	}
+};
+
+//ロードとセーブがカスタマイズされている場合はそれを利用する
+template <typename T>
+struct XSerializer<T, 2> {
+	static XValue serialize(T& val){
+		XArchiverOut a;
+		XValue v;
+		val.save(a);
+		a >> v;
+		return v;
+	}
+	static void deserialize(T& val, XValue const& xval){
+		XArchiverIn arc(xval.as<XArray>());
+		val.load(arc);
+	}
+};
+
+//独自のシリアライズ関数を持っている場合はそれを利用する
+template <typename T>
+struct XSerializer<T, 3> {
 	static XValue serialize(T& val){
 		XArchiverOut a;
 		XValue v;
@@ -115,17 +156,6 @@ struct XSerializer<T, 1> {
 	static void deserialize(T& val, XValue const& xval){
 		XArchiverIn arc(xval.as<XArray>());
 		val.serialize(arc);
-	}
-};
-
-//enumを持っている
-template <typename T>
-struct XSerializer<T, 2> {
-	static XValue serialize(T& val){
-		return XValue(static_cast<XUInt>(val));
-	}
-	static void deserialize(T& val, XValue const& xval){
-		val = static_cast<T>(xval.as<XUInt>());
 	}
 };
 
