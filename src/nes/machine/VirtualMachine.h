@@ -194,7 +194,7 @@ class Video
 		};
 		VirtualMachine& VM;
 		Cartridge* cartridge;
-	   VideoFairy& videoFairy;
+		VideoFairy& videoFairy;
 		bool isEven;
 		uint16_t nowY;
 		uint16_t nowX;
@@ -306,6 +306,11 @@ protected:
 private:
 	VirtualMachine& VM;
 	uint8_t wram[WRAM_LENGTH]; //2KB WRAM
+public:
+	template <typename Archiver>
+	void serialize(Archiver& arc){
+		arc & wram;
+	}
 };
 
 class Processor
@@ -350,6 +355,21 @@ class Processor
 		bool needStatusRewrite;
 		uint8_t newStatus;
 		//
+	public:
+		template <typename Archiver>
+		void serialize(Archiver& arc){
+			arc & A;
+			arc & X;
+			arc & Y;
+			arc & PC;
+			arc & SP;
+			arc & P;
+			arc & NMI;
+			arc & IRQ;
+			arc & needStatusRewrite;
+			arc & newStatus;
+		}
+	public:
 		inline void push(uint8_t val);
 		inline uint8_t pop();
 		inline void consumeClock(uint8_t clock);
