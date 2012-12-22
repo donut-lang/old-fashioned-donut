@@ -49,7 +49,7 @@ void Empty::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::A
 
 geom::Box Empty::measureImpl(geom::Box const& constraint)
 {
-	return geom::ZERO;
+	return geom::Box(geom::Unspecified, geom::Unspecified);
 }
 
 void Empty::layoutImpl(geom::Box const& size)

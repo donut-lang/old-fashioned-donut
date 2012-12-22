@@ -48,9 +48,8 @@ geom::Box FrameCombo::measureImpl(geom::Box const& constraint)
 {
 	if( Handler<Element> elm = this->lastChild() ){
 		return elm->measure( constraint );
-	}else{
-		return geom::ZERO;
 	}
+	return constraint;
 }
 
 void FrameCombo::layoutImpl(geom::Box const& size)

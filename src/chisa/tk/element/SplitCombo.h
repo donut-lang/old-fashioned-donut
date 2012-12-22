@@ -37,9 +37,9 @@ struct SplitComboContext
 	} def;
 	float size;
 	float weight;
-	SplitComboContext(const float weight, const float min=0, const float max=NAN)
+	SplitComboContext(const float weight, const float min=NAN, const float max=NAN)
 	:def(weight, min, max),size(NAN),weight(def.weight){}
-	SplitComboContext():def(NAN, 0, NAN),size(NAN),weight(def.weight){}
+	SplitComboContext():def(0, NAN, NAN),size(NAN),weight(def.weight){}
 };
 
 class SplitCombo: public ElementGroupBase<SplitComboContext> {

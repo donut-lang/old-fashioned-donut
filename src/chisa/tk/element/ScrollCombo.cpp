@@ -110,12 +110,7 @@ void ScrollCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, g
 
 geom::Box ScrollCombo::measureImpl(geom::Box const& constraint)
 {
-	if(auto child = this->frontChild()){
-		geom::Box childBox((this->scrollMode_ & Horizontal) == Horizontal ? geom::Unspecified : constraint.width(), (this->scrollMode_ & Vertical) == Vertical ? geom::Unspecified : constraint.height());
-		return child->measure(childBox);
-	}else{
-		return geom::ZERO;
-	}
+	return geom::Box(geom::Unspecified, geom::Unspecified);
 }
 
 void ScrollCombo::layoutImpl(geom::Box const& size)

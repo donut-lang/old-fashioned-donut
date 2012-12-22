@@ -142,14 +142,15 @@ geom::Box SplitCombo::measureImpl(geom::Box const& constraint)
 	//this->resetChildren();
 	const bool changedSpecified = geom::isSpecified((constraint.*changed_getter)());
 	const bool fixedSpecified = geom::isSpecified((constraint.*fixed_getter)());
-
+	geom::Box cbox(constraint);
+	(cbox.*changed_setter)(geom::Unspecified);
 	if(!changedSpecified){
 		//いくらでも伸びてよし
 		float totalSize = 0;
 		float fixedMaxSize = 0;
 		for(ContainerType& it : this->children()){
 			SplitComboContext& childCtx = it.second;
-			const geom::Box childSize(it.first->measure(constraint));
+			const geom::Box childSize(it.first->measure(cbox));
 			const float size = this->wrapSize((childSize.*changed_getter)(), childCtx.def);
 			if(geom::isSpecified(size)){
 				totalSize += size;
@@ -161,100 +162,103 @@ geom::Box SplitCombo::measureImpl(geom::Box const& constraint)
 				totalSize += childCtx.def.min;
 				childCtx.size = childCtx.def.min;
 			}
-			fixedMaxSize = std::max(fixedMaxSize, (childSize.*fixed_getter)());
+			if(geom::isSpecified((childSize.*fixed_getter)())) {
+				fixedMaxSize = std::max(fixedMaxSize, (childSize.*fixed_getter)());
+			}
 		}
 		geom::Box measured;
 		(measured.*changed_setter)(totalSize);
-		(measured.*fixed_setter)(fixedMaxSize);
+		if(fixedSpecified){
+			(measured.*fixed_setter)((constraint.*fixed_getter)());
+		}else{
+			(measured.*fixed_setter)(fixedMaxSize);
+		}
 		return measured;
 	}else{
 		//長さは制限される：ふくざつ！！
 		const float limitChangedSize = (constraint.*changed_getter)();
 		float fixedMaxSize = 0;
 		float totalWeight = 0;
-		float intendedSizeTotal = 0;
 
 		//まず、親から与えられた長さが十分かどうか調べる
+		float intendedSizeTotal = 0;
+		float nonWeightedSizeTotal = 0;
 		for(ContainerType& it : this->children()){
 			SplitComboContext& childCtx = it.second;
 			const bool weightSpecified = geom::isSpecified(childCtx.def.weight);
-			const geom::Box childSize(it.first->measure(constraint));
-			if(geom::isUnspecified((childSize.*changed_getter)())){ //サイズが決まってない場合は
-				if(!weightSpecified) {
-					childCtx.weight = 1.0f;
-				}
-				intendedSizeTotal += childCtx.def.min; //とりあえず最小値
-				childCtx.size = childCtx.def.min;
+			const geom::Box childSize(it.first->measure(cbox));
+			if(weightSpecified){
+				//ウェイトがかかっている場合は最小サイズを。
+				childCtx.weight = childCtx.def.weight;
+				intendedSizeTotal += childCtx.def.min;
+				childCtx.size = childCtx.def.min;//足りなかった時に使うための仮置き
+				totalWeight += childCtx.weight;
+			}else if(geom::isUnspecified((childSize.*changed_getter)())){
+				childCtx.weight = 1.0f;
+				intendedSizeTotal += childCtx.def.min;
+				childCtx.size = childCtx.def.min;//足りなかった時に使うための仮置き
 				totalWeight += childCtx.weight;
 			}else{
-				//決まっている場合は、子レイアウトに言われた通りのサイズを。
+				//そうでない場合は、子レイアウトに言われた通りのサイズを。
 				//ただしmin/maxは守る
-				childCtx.size = this->wrapSize((childSize.*changed_getter)(), childCtx.def);
-				intendedSizeTotal += childCtx.size;
-				if(weightSpecified){ //伸びれるようにもしておこう
-					childCtx.weight = childCtx.def.weight;
-					totalWeight += childCtx.weight;
-				}
+				const float tempChangedSize = this->wrapSize((childSize.*changed_getter)(), childCtx.def);
+				childCtx.size = tempChangedSize;
+				intendedSizeTotal += tempChangedSize;
+				nonWeightedSizeTotal += tempChangedSize;
 			}
-			fixedMaxSize = std::max(fixedMaxSize, (childSize.*fixed_getter)());
+			if(geom::isSpecified((childSize.*fixed_getter)())) {
+				fixedMaxSize = std::max(fixedMaxSize, (childSize.*fixed_getter)());
+			}
 		}
 
+		if(intendedSizeTotal <= limitChangedSize){
+			//十分足りる
+			float leftWeight = totalWeight;
+			float leftSize = limitChangedSize - nonWeightedSizeTotal;
+			for(ContainerType& it : this->children()){
+				SplitComboContext& childCtx = it.second;
+				Handler<Element> child;
+				const bool weightSpecified = geom::isSpecified(childCtx.weight);
+				if(weightSpecified){
+					//ウェイトがかかっている
+					float size = leftSize * childCtx.weight / leftWeight;
+					//max/minを考慮しつつサイズを割り当てる
+					size = this->wrapSize(size, childCtx.def);
+					leftWeight -= childCtx.weight;
+					leftSize -= size;
+					childCtx.size = size;
+				}else{
+					//上のループですでに設定済みなのでどうでも良かった
+				}
+			}
+		}else{
+			//足りない
+			const float changedOverrun = intendedSizeTotal-limitChangedSize;
+			for(ContainerType& it : this->children()){
+				SplitComboContext& childCtx = it.second;
+				//元の割合に応じてサイズを設定
+				childCtx.size -= changedOverrun * childCtx.size / intendedSizeTotal;
+			}
+		}
 		geom::Box measured;
-		(measured.*changed_setter)(geom::min(intendedSizeTotal, limitChangedSize));
-		(measured.*fixed_setter)(fixedMaxSize);
+		(measured.*changed_setter)(limitChangedSize);
+		if(fixedSpecified){
+			(measured.*fixed_setter)((constraint.*fixed_getter)());
+		}else{
+			(measured.*fixed_setter)(fixedMaxSize);
+		}
 		return measured;
 	}
 }
 
 void SplitCombo::layoutImpl(geom::Box const& size)
 {
-	geom::Box box;
-	(box.*fixed_setter)((size.*fixed_getter)());
-
-	//まずはサイズを確認
-	const float limitChangedSize = (size.*changed_getter)();
-	float intendedSizeTotal = 0;
-	float totalWeight = 0;
 	for(ContainerType& it : this->children()){
-		SplitComboContext& childCtx = it.second;
-		intendedSizeTotal += childCtx.size;
-		totalWeight += geom::max(childCtx.weight, 0);
-	}
-	//
-	if(intendedSizeTotal <= limitChangedSize){
-		//十分足りる
-		float leftWeight = totalWeight;
-		float leftSize = limitChangedSize - intendedSizeTotal;
-		for(ContainerType& it : this->children()){
-			Handler<Element>& child = it.first;
-			SplitComboContext& childCtx = it.second;
-			const bool weightSpecified = geom::isSpecified(childCtx.weight);
-			if(weightSpecified){ //ウェイトが掛かってるコンポーネントに、ウェイト分を配給する
-				//ウェイトがかかっている
-				float const alloc_size = (leftSize * childCtx.weight / leftWeight);
-				//max/minを考慮しつつサイズを割り当てる
-				float const actual_size = this->wrapSize(alloc_size+childCtx.size, childCtx.def);
-				float const delta_size = actual_size-childCtx.size;
-
-				leftWeight -= childCtx.weight;
-				leftSize -= delta_size;
-
-				childCtx.size = actual_size;
-			}
-			(box.*changed_setter)(childCtx.size);
-			child->layout(box);
-		}
-	}else{
-		//足りない
-		const float changedOverrun = intendedSizeTotal-limitChangedSize;
-		for(ContainerType& it : this->children()){
-			Handler<Element>& child = it.first;
-			SplitComboContext& childCtx = it.second;
-			//元の割合に応じてサイズを設定
-			childCtx.size -= changedOverrun * childCtx.size / intendedSizeTotal;
-			(box.*changed_setter)(childCtx.size);
-			child->layout(box);
-		}
+		SplitComboContext& ctx = it.second;
+		geom::Box box;
+		(box.*changed_setter)(ctx.size);
+		(box.*fixed_setter)((size.*fixed_getter)());
+		it.first->layout(box);
 	}
 }
 
