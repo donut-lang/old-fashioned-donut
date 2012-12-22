@@ -146,7 +146,7 @@ int Machine::findRevisionIndex(timestamp_t const& t) const
 Handler<Object> Machine::start( Handler<Source> const& src )
 {
 	if( this->isInterrupted() ){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. This machine is interrupted now. Call #startContinue instead.");
+		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. This machine is interrupted now. Call #resume instead.");
 	}
 	this->clock_->tick();
 	if( this->contextRevs_.empty() ){
@@ -156,10 +156,15 @@ Handler<Object> Machine::start( Handler<Source> const& src )
 	}
 	Handler<DonutClosureObject> entryPoint( heap_->createDonutClosureObject(src, src->getEntrypointID(), heap_->global()) );
 	this->enterClosure(heap_->createNull(), entryPoint, std::vector<Handler<Object> >());
+	if(this->log().d()){
+		this->log().d(TAG, "Entrypoint context revision created.");
+	}
+	this->clock_->tick();
+	this->contextRevs_.push_back( Context( this->clock_, this->contextRevs_.back() ) );
 	return this->run();
 }
 
-Handler<Object> Machine::startContinue(Handler<Object> const& obj)
+Handler<Object> Machine::resume(Handler<Object> const& obj)
 {
 	if( !this->isInterrupted() ){
 		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. This machine is not interrupted now. Call #start instead.");
@@ -192,7 +197,7 @@ bool Machine::isInterrupted() const noexcept
 
 void Machine::enterClosure(Handler<Object> const& self, Handler<DonutClosureObject> const& clos, std::vector<Handler<Object> > const& args)
 {
-	Handler<Closure> c = clos->closureCode();
+	Handler<Closure> const& c = clos->closureCode();
 	const std::size_t argsize = c->arglist().size();
 	if(argsize != args.size()) {
 		throw DonutException(__FILE__, __LINE__, "[BUG] Argument size does not match actual: %d != applied: %d", argsize, args.size());
@@ -202,7 +207,7 @@ void Machine::enterClosure(Handler<Object> const& self, Handler<DonutClosureObje
 		scope->set(heap_, "__scope__", clos);
 		int cnt=0;
 		for(Handler<Object> const& arg : args) {
-			const std::string argname = c->arglist().at(cnt++);
+			std::string const& argname = c->arglist().at(cnt++);
 			scope->set(heap_, argname, arg);
 		}
 		this->callStack().push_back( Callchain(0, this->stack().size(), self, clos, scope) );
@@ -539,15 +544,15 @@ void Machine::onForwardNotify()
 void Machine::onDiscardFutureNotify()
 {
 	timestamp_t const time = clock_->now();
-	int idx = -1;
+	int idx = 0;
 	for(int i=this->contextRevs_.size()-1; i>=0;--i){
 		Context& c = this->contextRevs_[i];
 		if(time >= c.time_){
-			idx = i;
+			idx = i+1;
 			break;
 		}
 	}
-	this->contextRevs_.erase( this->contextRevs_.begin()+idx+1, this->contextRevs_.end() );
+	this->contextRevs_.erase( this->contextRevs_.begin()+idx, this->contextRevs_.end() );
 }
 
 /**
@@ -561,7 +566,7 @@ void Machine::onDiscardHistoryNotify()
 	const int max = this->contextRevs_.size();
 	for(int i=0; i<max;++i){
 		Context& c = this->contextRevs_[i];
-		if( c.time_ > time ){
+		if( c.time_ >= time ){
 			idx = i;
 			break;
 		}

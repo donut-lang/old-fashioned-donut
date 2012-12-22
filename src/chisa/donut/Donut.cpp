@@ -49,7 +49,7 @@ void Donut::sendMessage( std::string const& name, Handler<Object> const& obj )
 		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Machine: \"%s\" not found.", name.c_str());
 	}
 	Handler<Machine> machine = it->second;
-	machine->startContinue(obj);
+	machine->resume(obj);
 }
 
 

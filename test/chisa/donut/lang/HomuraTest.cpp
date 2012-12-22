@@ -29,7 +29,7 @@ TEST(DonutHomuraTest, NowTest)
 	Handler<Object> result;
 	{
 		result = machine->start( donut->parse("Homura.now();", "<MEM>", 0) );
-		ASSERT_EQ(1+time, result->toInt(heap));
+		ASSERT_EQ(2+time, result->toInt(heap));
 	}
 }
 TEST(DonutHomuraTest, TickTest)
@@ -39,8 +39,8 @@ TEST(DonutHomuraTest, TickTest)
 	Handler<Object> result;
 	{
 		result = machine->start( donut->parse("Homura.tick();", "<MEM>", 0) );
-		ASSERT_EQ(1+time, result->toInt(heap));
-		ASSERT_EQ(2+time, donut->nowTime());
+		ASSERT_EQ(3+time, donut->nowTime());
+		ASSERT_EQ(2+time, result->toInt(heap));
 	}
 }
 TEST(DonutHomuraTest, MemorizeTest)
@@ -79,12 +79,12 @@ TEST(DonutHomuraTest, BackWithInterruptTest)
 		ASSERT_TRUE(result->isNull());
 		ASSERT_TRUE(machine->isInterrupted());
 
-		ASSERT_NO_THROW( result = machine->startContinue(heap->createBool(true)) );
+		ASSERT_NO_THROW( result = machine->resume(heap->createBool(true)) );
 		ASSERT_TRUE(result->isInt());
 		ASSERT_EQ(donut->nowTime(), result->toInt(heap));
 		ASSERT_TRUE(machine->isInterrupted());
 
-		ASSERT_NO_THROW( result = machine->startContinue(heap->createBool(false)) );
+		ASSERT_NO_THROW( result = machine->resume(heap->createBool(false)) );
 		ASSERT_TRUE(result->isObject());
 		ASSERT_EQ("through", result->toString(heap));
 		ASSERT_FALSE(machine->isInterrupted());
@@ -101,11 +101,11 @@ TEST(DonutHomuraTest, BackFirstTest)
 		ASSERT_TRUE(result->isNull());
 		ASSERT_TRUE(machine->isInterrupted());
 
-		ASSERT_NO_THROW( result = machine->startContinue(heap->createBool(true)) );
+		ASSERT_NO_THROW( result = machine->resume(heap->createBool(true)) );
 		ASSERT_TRUE(result->isNull());
 		ASSERT_TRUE(machine->isInterrupted());
 
-		ASSERT_NO_THROW( result = machine->startContinue(heap->createBool(false)) );
+		ASSERT_NO_THROW( result = machine->resume(heap->createBool(false)) );
 		ASSERT_TRUE(result->isObject());
 		ASSERT_EQ("through", result->toString(heap));
 		ASSERT_FALSE(machine->isInterrupted());

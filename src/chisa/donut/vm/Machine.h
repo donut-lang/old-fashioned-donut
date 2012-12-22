@@ -91,7 +91,7 @@ public: /* 生成 */
 	bool onFree() noexcept { return false; };
 public: /* 外部からの実行指示 */
 	Handler<Object> start( Handler<Source> const& src );
-	Handler<Object> startContinue( Handler<Object> const& obj );
+	Handler<Object> resume( Handler<Object> const& obj );
 	bool isInterrupted() const noexcept;
 private: /* スタック操作 */
 	void pushStack( Handler<Object> const& obj );

@@ -146,7 +146,7 @@ void Slot::onDiscardHistoryNotify( Handler<Heap> const& heap )
 	}
 	std::vector<std::pair<timestamp_t, Object*> >::iterator end = this->rev_.begin()+index_;
 	this->rev_.erase(this->rev_.begin(), end);
-	this->index_ = this->rev_.size()-1;
+	this->index_ = 0;
 }
 
 void Slot::onDiscardFutureNotify( Handler<Heap> const& heap )

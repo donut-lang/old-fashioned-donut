@@ -148,7 +148,7 @@ TEST(SaveTest, SaveOnInterruptTest)
 			ASSERT_EQ(10, obj->toInt(donut->heap()));
 		}
 		{
-			Handler<Object> obj = donut->queryMachine()->startContinue(donut->heap()->createFloatObject(10.123));
+			Handler<Object> obj = donut->queryMachine()->resume(donut->heap()->createFloatObject(10.123));
 			ASSERT_TRUE(obj->isObject());
 			ASSERT_FLOAT_EQ(10.123, obj->toFloat(donut->heap()));
 		}

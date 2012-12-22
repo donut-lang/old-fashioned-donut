@@ -228,7 +228,7 @@ TEST(SeekTest, SeekWithMultMachineAndInterruptTest)
 	}
 	unsigned int const time4 = donut->nowTime();
 	{
-		result = emachine->startContinue( heap->createInt(20) );
+		result = emachine->resume( heap->createInt(20) );
 		ASSERT_EQ(20, result->toInt(heap));
 		ASSERT_EQ(20, heap->getGlobalObject("test2")->toInt(heap));
 		ASSERT_FALSE( emachine->isInterrupted() );
@@ -300,7 +300,7 @@ TEST(SeekTest, InterruptTest)
 	ASSERT_FALSE( donut->canAdvance() );
 	unsigned int const time2 = donut->nowTime();
 	{
-		result = machine->startContinue( heap->createNull() );
+		result = machine->resume( heap->createNull() );
 		ASSERT_TRUE( result->isNull() );
 		ASSERT_TRUE( heap->getGlobalObject("test")->isNull() );
 		ASSERT_FALSE( machine->isInterrupted() );
@@ -340,7 +340,7 @@ TEST(SeekTest, InterruptTest)
 
 	{ //さらに実行
 		donut->seek( time2 );
-		result = machine->startContinue( heap->createBool( true ) );
+		result = machine->resume( heap->createBool( true ) );
 		ASSERT_TRUE( heap->hasGlobalObject("test") );
 		ASSERT_TRUE( result->toBool( heap ) );
 		ASSERT_TRUE( heap->getGlobalObject("test")->toBool(heap) );
@@ -377,7 +377,7 @@ TEST(SeekTest, SeekWithMultMachineAndInterruptAndExecuteTest)
 	}
 	unsigned int const time4 = donut->nowTime();
 	{
-		result = emachine->startContinue( heap->createInt(20) );
+		result = emachine->resume( heap->createInt(20) );
 		ASSERT_EQ(20, result->toInt(heap));
 		ASSERT_EQ(20, heap->getGlobalObject("test2")->toInt(heap));
 		ASSERT_FALSE( emachine->isInterrupted() );
@@ -414,7 +414,7 @@ TEST(SeekTest, SeekWithMultMachineAndInterruptAndExecuteTest)
 	}
 	//分岐
 	{
-		result = emachine->startContinue( heap->createInt(30) );
+		result = emachine->resume( heap->createInt(30) );
 		ASSERT_EQ(30, result->toInt(heap));
 		ASSERT_TRUE( heap->hasGlobalObject("test2") );
 		ASSERT_EQ(30, heap->getGlobalObject("test2")->toInt(heap));
