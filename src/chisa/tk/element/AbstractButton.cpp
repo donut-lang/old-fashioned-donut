@@ -24,8 +24,6 @@
 #include "../World.h"
 
 #include "ElementGroup.h"
-
-#include <iostream>
 namespace chisa {
 namespace tk {
 
