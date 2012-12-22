@@ -75,7 +75,7 @@ TEST(DonutHomuraTest, BackWithInterruptTest)
 	{
 		Handler<Object> result;
 		ASSERT_NO_THROW(
-				result = machine->start( donut->parse("x=interrupt null; if(x){ \"back\"; Homura.seek(Homura.now()); }else{ \"through\"; };", "<MEM>", 0) ) );
+				result = machine->start( donut->parse("x=interrupt null; if(x){ \"back\"; Homura.seek(Homura.now()-1); }else{ \"through\"; };", "<MEM>", 0) ) );
 		ASSERT_TRUE(result->isNull());
 		ASSERT_TRUE(machine->isInterrupted());
 

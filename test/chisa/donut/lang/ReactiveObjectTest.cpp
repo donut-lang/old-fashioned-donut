@@ -30,8 +30,8 @@ public:
 	bool backable_but_non_fowardable;
 	int backable_and_forwardable;
 	int backable_only_once;
-	SampleObject(std::string const& provicerName)
-	:ReactiveNativeObject(provicerName)
+	SampleObject(HeapProvider* const provider)
+	:ReactiveNativeObject(provider)
 	,futureDiscarded(false)
 	,historyDiscarded(false)
 	,backable_but_non_fowardable(false)

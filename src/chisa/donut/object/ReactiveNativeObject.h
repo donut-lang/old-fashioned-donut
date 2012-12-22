@@ -27,7 +27,7 @@ private:
 	std::vector<std::pair<timestamp_t, util::XValue> > reactions_;
 	int index_; //次に順方向で挿入されるべきインデックスを示す。0なら戻るものがないのを示す。
 public:
-	ReactiveNativeObject( std::string const& providerName ):NativeObject(providerName), index_(0){}
+	ReactiveNativeObject(HeapProvider* const provider):NativeObject(provider), index_(0){}
 	virtual ~ReactiveNativeObject() noexcept = default;
 public:
 	void bootstrap(Handler<Heap> const& heap);

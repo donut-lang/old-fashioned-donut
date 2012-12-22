@@ -30,7 +30,7 @@ public:
 private:
 	Signature func_;
 public:
-	PureNativeClosureObject( std::string const& providerName):NativeClosureObject(providerName){}
+	PureNativeClosureObject(HeapProvider* const provider):NativeClosureObject(provider){}
 	virtual ~PureNativeClosureObject() noexcept {};
 	void bootstrap( std::string const& objectProviderName, std::string const& closureName, Signature f );
 protected:
@@ -48,7 +48,7 @@ public:
 private:
 	Signature func_;
 public:
-	ReactiveNativeClosureObject( std::string const& providerName):NativeClosureObject(providerName){}
+	ReactiveNativeClosureObject(HeapProvider* const provider):NativeClosureObject(provider){}
 	virtual ~ReactiveNativeClosureObject() noexcept {};
 	void bootstrap( std::string const& objectProviderName, std::string const& closureName, Signature f );
 protected:

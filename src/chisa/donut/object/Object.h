@@ -126,15 +126,14 @@ namespace donut {
 
 class HeapObject : public Object {
 private:
-	std::string const providerName_;
+	HeapProvider* const provider_;
 	objectid_t id_;
 	bool erased_;
 	int color_;
 public:
-	HeapObject(std::string const& providerName);
+	HeapObject(HeapProvider* const provider);
 	virtual ~HeapObject() noexcept = default;
 public:
-	inline std::string providerName() const noexcept { return this->providerName_; }
 	inline objectid_t id() const noexcept { return this->id_; }
 	virtual object_desc_t toDescriptorImpl() const noexcept override final { return Object::encodeObjectId(this->id_); };
 	inline void id(objectid_t const& nid) noexcept { this->id_ = nid; }
@@ -150,8 +149,10 @@ protected:
 	void color(const int color) noexcept { this->color_=color; };
 	virtual util::XValue saveImpl( Handler<Heap> const& heap ) = 0;
 	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) = 0;
+protected:
+	inline HeapProvider* const& provider() const noexcept { return this->provider_; };
 private:
-	virtual std::string providerNameImpl(Handler<Heap> const& heap) const override final { return this->providerName_; }
+	virtual std::string providerNameImpl(Handler<Heap> const& heap) const override final;
 public:
 	struct CompareById : std::binary_function<HeapObject* const&,HeapObject* const&,bool>{
 		bool operator()(HeapObject* const& a, HeapObject* const& b){
@@ -179,7 +180,7 @@ class DonutObject : public HeapObject {
 private:
 	std::unordered_map<std::string, Slot> slots_;
 public:
-	DonutObject(std::string const& providerName);
+	DonutObject(HeapProvider* const provider);
 	virtual ~DonutObject() noexcept = default;
 protected:
 	virtual std::string reprImpl(Handler<Heap> const& heap) const override;
@@ -219,7 +220,7 @@ class NativeObject : public HeapObject {
 private:
 	DonutObject* prototype_;
 protected:
-	NativeObject(std::string const& providerName);
+	NativeObject(HeapProvider* const provider);
 public:
 	virtual ~NativeObject() noexcept = default;
 protected:
@@ -248,7 +249,7 @@ private:
 	std::string const objectProviderName_;
 	std::string const closureName_;
 public:
-	NativeClosureObject(std::string const& providerName):HeapObject(providerName){};
+	NativeClosureObject(HeapProvider* const provider):HeapObject(provider){};
 	virtual ~NativeClosureObject() noexcept = default;
 	std::string objectProviderName() const noexcept { return this->objectProviderName_; };
 	std::string closureName() const noexcept { return this->closureName_; };

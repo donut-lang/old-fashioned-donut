@@ -409,11 +409,11 @@ util::XValue Heap::save()
 		Handler<XArray> pool(new XArray);
 		for( HeapObject* const& obj : this->objectPool_ ) {
 			Handler<XObject> xobj(new XObject);
-			xobj->set("provider", obj->providerName().c_str());
+			xobj->set("provider", obj->providerName(self).c_str());
 			xobj->set("id", obj->id());
-			Handler<Provider> provider ( this->findHeapProvider(obj->providerName()) );
+			Handler<Provider> provider ( this->findHeapProvider(obj->providerName(self)) );
 			if(!provider){
-				throw DonutException(__FILE__, __LINE__, "Provider %s not found.", obj->providerName().c_str());
+				throw DonutException(__FILE__, __LINE__, "Provider %s not found.", obj->providerName(self).c_str());
 			}
 			xobj->set("content", obj->save(self));
 			pool->append(xobj);

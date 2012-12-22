@@ -26,7 +26,7 @@ class StringObject final: public NativeObject {
 private:
 	const std::string str_;
 public:
-	StringObject(std::string const& providerName);
+	StringObject(HeapProvider* const provider);
 	virtual ~StringObject() noexcept = default;
 public:
 	inline std::string const& value() const noexcept { return this->str_; };

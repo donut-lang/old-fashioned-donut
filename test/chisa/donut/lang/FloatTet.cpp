@@ -59,7 +59,7 @@ TEST(FloatTest, SaveLoadTest)
 		ASSERT_ANY_THROW(obj->toString(heap));
 		ASSERT_FLOAT_EQ(10.1, obj->toFloat(heap));
 		data = Handler<HeapObject>(obj)->save(heap);
-		providerName = obj->providerName();
+		providerName = obj->providerName(heap);
 	}
 	{
 		Handler<HeapObject> obj(heap->findHeapProvider(providerName)->createEmptyObject());

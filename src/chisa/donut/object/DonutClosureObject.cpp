@@ -27,8 +27,8 @@ namespace donut {
 
 const std::string TAG("DonutClosureObject");
 
-DonutClosureObject::DonutClosureObject(std::string const& providerName)
-:DonutObject(providerName)
+DonutClosureObject::DonutClosureObject(HeapProvider* const provider)
+:DonutObject(provider)
 ,src_(nullptr)
 ,index_(-1)
 ,asm_(nullptr)
