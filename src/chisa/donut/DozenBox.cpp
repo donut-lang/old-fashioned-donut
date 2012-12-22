@@ -59,7 +59,7 @@ Handler<Object> DozenBox::continueCombo(std::string const& comboname, Handler<Ob
 		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Combo: \"%s\" not found.", comboname.c_str());
 	}
 	Handler<Donut> combo = it->second;
-	return combo->queryMachine()->startContinue( obj );
+	return combo->queryMachine()->resume( obj );
 }
 
 }}

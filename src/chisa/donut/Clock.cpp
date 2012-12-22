@@ -70,11 +70,11 @@ void Clock::load(util::XValue const& data)
 
 void Clock::seek( unsigned int const& time )
 {
-	if( time < this->firstTime() ) {
-		throw DonutException(__FILE__, __LINE__, "[BUG] Failed to seek. time: %d < %d", time, this->first_);
-	}
-	if( time > this->lastTime() ) {
-		throw DonutException(__FILE__, __LINE__, "[BUG] Failed to seek. time: %d > %d", time, this->last_);
+	if( time < this->firstTime() || time > this->lastTime()) {
+		throw DonutException(__FILE__, __LINE__, "[BUG] Failed to seek. time: %d , available time: %d -> %d", time, this->first_, this->last_);
+	}else if(time == this->now()){
+		this->log().w(TAG, "Requested seeking to %d, but it's already %d", time, this->now());
+		return;
 	}
 	this->enter_=true;
 	while(time != this->now()){

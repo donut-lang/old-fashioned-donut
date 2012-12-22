@@ -42,18 +42,18 @@ Global.x = interrupt 20;
 	}
 	ASSERT_ANY_THROW( machine->start(src_) );
 	{
-		result = machine->startContinue( heap->createInt(1) );
+		result = machine->resume( heap->createInt(1) );
 		ASSERT_TRUE(machine->isInterrupted());
 		ASSERT_EQ(20, result->toInt(heap) );
 		ASSERT_EQ( 1, heap->getGlobalObject("x")->toInt(heap) );
 	}
 	{
-		result = machine->startContinue( heap->createInt(2) );
+		result = machine->resume( heap->createInt(2) );
 		ASSERT_FALSE(machine->isInterrupted());
 		ASSERT_EQ( 2, result->toInt(heap) );
 		ASSERT_EQ( 2, heap->getGlobalObject("x")->toInt(heap) );
 	}
-	ASSERT_ANY_THROW( machine->startContinue( heap->createNull() ) );
+	ASSERT_ANY_THROW( machine->resume( heap->createNull() ) );
 }
 
 
