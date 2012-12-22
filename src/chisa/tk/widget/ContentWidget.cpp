@@ -66,7 +66,8 @@ geom::Box ContentWidget::measure(geom::Box const& constraintSize)
 			doc::Disposer(log(), renderTree_, constraintSize.width()).start(this->rootNode_)
 		);
 	}
-	return geom::Box(geom::max(constraintSize.width(), this->lastSize().width()), geom::max(constraintSize.height(), this->lastSize().height()));
+	return geom::Box(geom::Unspecified, geom::Unspecified);
+//	return geom::Box(geom::min(constraintSize.width(), this->lastSize().width()), geom::min(constraintSize.height(), this->lastSize().height()));
 }
 
 bool ContentWidget::onDownRaw(const float timeMs, geom::Point const& ptInWidget)
