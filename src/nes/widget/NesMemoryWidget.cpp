@@ -14,7 +14,7 @@
 
 namespace nes {
 
-NesMemoryWidget::NesMemoryWidget(chisa::logging::Logger& log, chisa::HandlerW<chisa::tk::World> _world, tinyxml2::XMLElement* element)
+NesMemoryWidget::NesMemoryWidget(chisa::Logger& log, chisa::HandlerW<chisa::tk::World> _world, tinyxml2::XMLElement* element)
 :Widget(log, _world, element)
 ,numRenderer_(log, _world.lock()->drawableManager())
 {

@@ -16,9 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Color.h"
-#include "../util/StringUtil.h"
+#include <tarte/String.h>
 #include <cstdlib>
+
+#include "Color.h"
 
 namespace chisa {
 namespace gl {
@@ -89,6 +90,6 @@ Color Color::fromString(std::string const& name)
 
 std::string Color::toString() const noexcept
 {
-	return util::format("(Color %p r:%0.2f g:%0.2f b:%0.2f a:%0.2f)", this, red_, green_, blue_, alpha_);
+	return ::tarte::format("(Color %p r:%0.2f g:%0.2f b:%0.2f a:%0.2f)", this, red_, green_, blue_, alpha_);
 }
 }}

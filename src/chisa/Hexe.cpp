@@ -21,7 +21,7 @@
 
 namespace chisa {
 
-Hexe::Hexe(logging::Logger& log, std::string const& basepath)
+Hexe::Hexe(Logger& log, std::string const& basepath)
 :log_(log)
 ,basepath_(basepath)
 {
@@ -33,10 +33,10 @@ Hexe::~Hexe() noexcept
 
 std::string Hexe::toString() const
 {
-	return util::format("(Hexe %p)", this);
+	return ::tarte::format("(Hexe %p)", this);
 }
 
-WorldGeist::WorldGeist(logging::Logger& log, HandlerW<chisa::tk::World> world)
+WorldGeist::WorldGeist(Logger& log, HandlerW<chisa::tk::World> world)
 :log_(log)
 ,world_(world)
 {
@@ -53,7 +53,7 @@ Handler<chisa::tk::World> WorldGeist::world()
 }
 
 std::string WorldGeist::toString() const{
-	return util::format("(WorldGeist %p)", this);
+	return format("(WorldGeist %p)", this);
 }
 
 

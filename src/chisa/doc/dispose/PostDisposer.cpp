@@ -16,14 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <tarte/Exception.h>
+
 #include "PostDisposer.h"
 #include "../node/Node.h"
-#include "../../logging/Exception.h"
 
 namespace chisa {
 namespace doc {
 
-PostDisposer::PostDisposer(logging::Logger& log)
+PostDisposer::PostDisposer(Logger& log)
 :log_(log)
 {
 	this->offsetStack_.push_back(geom::Point(0,0));
@@ -32,7 +33,7 @@ PostDisposer::PostDisposer(logging::Logger& log)
 geom::Point PostDisposer::offset()
 {
 	if(this->offsetStack_.size() <= 0){
-		throw logging::Exception(__FILE__, __LINE__, "[BUG] Oops. Offset stack is empty.");
+		TARTE_EXCEPTION(Exception, "[BUG] Oops. Offset stack is empty.");
 	}
 	return this->offsetStack_.back();
 }

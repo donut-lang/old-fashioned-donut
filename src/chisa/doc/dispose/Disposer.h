@@ -17,10 +17,10 @@
  */
 
 #pragma once
+#include <tarte/Logger.h>
+#include <tarte/ClassUtil.h>
 
 #include "../node/NodeWalker.h"
-#include "../../logging/Logger.h"
-#include "../../util/ClassUtil.h"
 #include "../../geom/Area.h"
 #include "TextContext.h"
 
@@ -29,9 +29,9 @@ namespace doc {
 class BlockSession;
 
 class Disposer: public chisa::doc::NodeWalker {
-	DEFINE_MEMBER_REF(private, logging::Logger, log)
+	DEFINE_MEMBER_REF(private, Logger, log)
 public:
-	Disposer(logging::Logger& log, Handler<RenderTree> renderTree, const float widgetWidth);
+	Disposer(Logger& log, Handler<RenderTree> renderTree, const float widgetWidth);
 	virtual ~Disposer() noexcept(true) = default;
 private:
 	Handler<RenderTree> renderTree_;

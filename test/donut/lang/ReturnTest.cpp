@@ -19,7 +19,6 @@
 #include "DonutHelper.h"
 #include <math.h>
 
-namespace chisa {
 namespace donut {
 
 TEST(ReturnTest, LiteralTest)
@@ -47,6 +46,4 @@ TEST(ReturnTest, ReturnLoopTest)
 	SOURCE_TEST_INT(55, src);
 }
 
-}}
-
-
+}

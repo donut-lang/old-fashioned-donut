@@ -19,7 +19,6 @@
 #include "DonutHelper.h"
 #include <math.h>
 
-namespace chisa {
 namespace donut {
 
 TEST(NullTest, EmptyTest)
@@ -43,6 +42,4 @@ TEST(DonutNullTest, LiteralTest)
 	SOURCE_TEST_NULL("null;");
 }
 
-}}
-
-
+}

@@ -18,18 +18,19 @@
 
 #pragma once
 #include <unordered_set>
-#include "../logging/Logger.h"
+#include <tarte/Logger.h>
 
 namespace chisa {
+using namespace tarte;
 namespace tk {
 
 class Task {
 private:
-	logging::Logger& log_;
+	Logger& log_;
 protected:
-	inline logging::Logger& log() const { return log_; };
+	inline Logger& log() const { return log_; };
 public:
-	Task(logging::Logger& log):log_(log){};
+	Task(Logger& log):log_(log){};
 	virtual ~Task() {};
 public:
 	// タスクが実行される。
@@ -39,11 +40,11 @@ public:
 
 class TaskHandler {
 private:
-	logging::Logger& log;
+	Logger& log;
 private:
 	std::unordered_set<Task*> taskPool;
 public:
-	TaskHandler(logging::Logger& log);
+	TaskHandler(Logger& log);
 	virtual ~TaskHandler();
 public:
 	void registerTask(Task* task);

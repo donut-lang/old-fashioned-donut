@@ -29,7 +29,7 @@ namespace gl {
 
 const static std::string TAG("Canvas");
 
-Canvas::Canvas(logging::Logger& log)
+Canvas::Canvas(Logger& log)
 :log_(log)
 ,width_(NAN)
 ,height_(NAN)

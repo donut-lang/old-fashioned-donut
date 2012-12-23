@@ -21,6 +21,8 @@
 #include <vector>
 
 namespace chisa {
+using namespace tarte;
+
 namespace tk {
 
 class ElementGroup : public Element {
@@ -81,7 +83,7 @@ public: /* ツリー操作 */
 	}
 	virtual Handler<Element> removeChild(std::size_t const& idx) override final {
 		if(idx >= children_.size()) {
-			throw logging::Exception(__FILE__, __LINE__, "[BUG] Invalid index: %d >= %d", idx, children_.size());
+			TARTE_EXCEPTION(Exception, "[BUG] Invalid index: %d >= %d", idx, children_.size());
 		}
 		auto it = this->children_.begin()+idx;
 		Handler<Element> element ((*it).first);
@@ -89,9 +91,9 @@ public: /* ツリー操作 */
 		return element;
 	}
 	virtual Handler<Element> removeChild(Handler<Element> const& h) override final {
-		auto it = std::find_if(children_.begin(), children_.end(), util::PairEq<Handler<Element>,Context>(h));
+		auto it = std::find_if(children_.begin(), children_.end(), PairEq<Handler<Element>,Context>(h));
 		if(it == children_.begin()) {
-			throw logging::Exception(__FILE__, __LINE__, "[BUG] %s does not have %s.", this->toString().c_str(), h->toString().c_str());
+			TARTE_EXCEPTION(Exception, "[BUG] %s does not have %s.", this->toString().c_str(), h->toString().c_str());
 		}
 		this->children_.erase(it);
 		return h;
@@ -103,10 +105,10 @@ public: /* ツリー操作 */
 		return this->children_.empty() ? Handler<Element>() : this->children_.front().first;
 	}
 	virtual std::size_t bringChildToLast(Handler<Element> const& e) override final {
-		auto it = std::find_if(children_.begin(), children_.end(), util::PairEq<Handler<Element>,Context>(e));
+		auto it = std::find_if(children_.begin(), children_.end(), PairEq<Handler<Element>,Context>(e));
 		std::size_t s = std::distance(children_.begin(), it);
 		if(it == this->children_.end()){
-			throw logging::Exception(__FILE__, __LINE__, "Element: %s is not contained in this combo.", e->toString().c_str());
+			TARTE_EXCEPTION(Exception, "Element: %s is not contained in this combo.", e->toString().c_str());
 		}
 		auto d = *it;
 		children_.erase(it);
@@ -115,10 +117,10 @@ public: /* ツリー操作 */
 		return s;
 	}
 	virtual std::size_t bringChildToFront(Handler<Element> const& e) override final {
-		auto it = std::find_if(children_.begin(), children_.end(), util::PairEq<Handler<Element>,Context>(e));
+		auto it = std::find_if(children_.begin(), children_.end(), PairEq<Handler<Element>,Context>(e));
 		std::size_t s = std::distance(children_.begin(), it);
 		if(it == this->children_.end()){
-			throw logging::Exception(__FILE__, __LINE__, "Element: %s is not contained in this combo.", e->toString().c_str());
+			TARTE_EXCEPTION(Exception, "Element: %s is not contained in this combo.", e->toString().c_str());
 		}
 		auto d = *it;
 		children_.erase(it);

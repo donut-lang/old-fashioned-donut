@@ -16,8 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <tarte/Logger.h>
+
 #include "PredefinedStringRenderer.h"
-#include "../logging/Logger.h"
 #include "Canvas.h"
 
 namespace chisa {
@@ -25,7 +26,7 @@ namespace gl {
 
 static const std::string TAG("PredefinedStringRenderer");
 
-PredefinedStringRenderer::PredefinedStringRenderer(logging::Logger& log, Handler<DrawableManager> drawableManager)
+PredefinedStringRenderer::PredefinedStringRenderer(Logger& log, Handler<DrawableManager> drawableManager)
 :log_(log)
 ,drawableManager_(drawableManager)
 ,maxWidth_(0)

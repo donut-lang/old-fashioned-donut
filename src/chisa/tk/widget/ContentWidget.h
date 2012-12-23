@@ -17,10 +17,11 @@
  */
 #pragma once
 
+#include <tarte/Handler.h>
+
 #include "../Widget.h"
 #include "../../geom/Vector.h"
 #include "../../gl/Font.h"
-#include "../../Handler.h"
 #include "../../doc/render/RenderTree.h"
 
 namespace chisa {

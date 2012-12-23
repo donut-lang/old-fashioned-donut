@@ -19,7 +19,6 @@
 #include "Helper.h"
 #include <math.h>
 
-namespace chisa {
 namespace donut {
 
 class DonutParserTest : public ::testing::Test
@@ -130,6 +129,4 @@ TEST_F(DonutParserTest, ClosureCompTest)
 }
 
 
-}}
-
-
+}

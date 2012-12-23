@@ -24,7 +24,7 @@ namespace doc {
 
 const static std::string TAG("RenderTree");
 
-RenderTree::RenderTree(logging::Logger& log, Handler<gl::DrawableManager> drawableManager, const std::size_t maxDrawable)
+RenderTree::RenderTree(Logger& log, Handler<gl::DrawableManager> drawableManager, const std::size_t maxDrawable)
 :log_(log)
 ,maxDrawable_(maxDrawable)
 ,drawableManager_(drawableManager)

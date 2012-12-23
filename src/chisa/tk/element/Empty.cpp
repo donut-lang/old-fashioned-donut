@@ -16,9 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <tarte/String.h>
+
 #include "Empty.h"
 #include "ElementFactory.h"
-#include "../../util/StringUtil.h"
 
 namespace chisa {
 namespace tk {
@@ -39,7 +40,7 @@ void Empty::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* ele
 
 std::string Empty::toString() const
 {
-	return util::format("(Empty %p)",this);
+	return ::tarte::format("(Empty %p)",this);
 }
 
 void Empty::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)

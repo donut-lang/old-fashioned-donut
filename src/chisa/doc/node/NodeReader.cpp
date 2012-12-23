@@ -16,9 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "NodeReader.h"
-#include "../../logging/Exception.h"
+#include <tarte/Exception.h>
+#include <tarte/TypeTraits.h>
 #include <tinyxml2.h>
+
+#include "NodeReader.h"
 #include "Node.h"
 
 namespace chisa {
@@ -76,10 +78,10 @@ for(auto it = (node)->FirstChild(); it; it = it->NextSibling())
 std::shared_ptr<Document> NodeReader::parseTree(tinyxml2::XMLElement* elm)
 {
 	if(!elm){
-		throw logging::Exception(__FILE__, __LINE__, "[BUG] parsing null element.");
+		TARTE_EXCEPTION(Exception, "[BUG] parsing null element.");
 	}
 	if(RootElementName != elm->Name()){
-		throw logging::Exception(__FILE__, __LINE__, "Invalid document tag: %s",elm->Name());
+		TARTE_EXCEPTION(Exception, "Invalid document tag: %s",elm->Name());
 	}
 	std::shared_ptr<Document> doc(Node::createRootDocument());
 	doc->parseAttribute(elm);
@@ -92,20 +94,20 @@ std::shared_ptr<Document> NodeReader::parseTree(tinyxml2::XMLElement* elm)
 Node* NodeReader::parseNode(Document* root, BlockNode* block, TreeNode* parent, tinyxml2::XMLNode* node)
 {
 	if(!node){
-		throw logging::Exception(__FILE__, __LINE__, "[BUG] parsing null node!");
+		TARTE_EXCEPTION(Exception, "[BUG] parsing null node!");
 	}
 	if(tinyxml2::XMLElement* elm = node->ToElement()){
 		auto it = this->elementParser_.find(elm->Name());
 		if(it == this->elementParser_.end()){
-			throw logging::Exception(__FILE__, __LINE__, "Unknwon document tag: %s", elm->Name());
+			TARTE_EXCEPTION(Exception, "Unknwon document tag: %s", elm->Name());
 		}
-		util::VectorMap<std::string, ParseFunc>::Pair const& p = *it;
+		VectorMap<std::string, ParseFunc>::Pair const& p = *it;
 		const ParseFunc f = p.second;
 		return f(*this, root, block, parent, elm);
 	}else if(tinyxml2::XMLText* txt = node->ToText()){
 		return this->parseText(root, block, parent, txt);
 	}
-	throw logging::Exception(__FILE__, __LINE__, "Unknwon document node: %s", node->Value());
+	TARTE_EXCEPTION(Exception, "Unknwon document node: %s", node->Value());
 }
 
 TreeNode* NodeReader::parseTreeNode(TreeConstructor constructor, Document* root, BlockNode* block, TreeNode* parent, tinyxml2::XMLElement* elm)

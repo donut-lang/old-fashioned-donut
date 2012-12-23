@@ -123,11 +123,11 @@ void VirtualMachine::loadCartridge(const char* filename)
 	this->video.connectCartridge(this->cartridge);
 }
 
-void VirtualMachine::save(chisa::util::XArchiverOut& arc)
+void VirtualMachine::save(XArchiverOut& arc)
 {
 
 }
-void VirtualMachine::load(chisa::util::XArchiverIn& arc)
+void VirtualMachine::load(XArchiverIn& arc)
 {
 
 }

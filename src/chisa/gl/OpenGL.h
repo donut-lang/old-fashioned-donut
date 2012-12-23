@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include "../util/Platform.h"
+#include <tarte/Platform.h>
 #include <GL/gl.h>
 
 #undef min

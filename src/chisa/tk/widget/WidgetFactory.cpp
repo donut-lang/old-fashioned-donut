@@ -25,7 +25,7 @@
 namespace chisa {
 namespace tk {
 
-WidgetFactory::WidgetFactory(logging::Logger& log, HandlerW<World> world)
+WidgetFactory::WidgetFactory(Logger& log, HandlerW<World> world)
 :log_(log)
 ,world_(world)
 {
@@ -37,7 +37,7 @@ WidgetFactory::~WidgetFactory()
 {
 }
 
-void WidgetFactory::registerWidget(std::string const& klass, std::function<Widget*(logging::Logger& log, HandlerW<World> world, tinyxml2::XMLElement* elem)> func)
+void WidgetFactory::registerWidget(std::string const& klass, std::function<Widget*(Logger& log, HandlerW<World> world, tinyxml2::XMLElement* elem)> func)
 {
 	this->widgetMap_.update(klass, func);
 }

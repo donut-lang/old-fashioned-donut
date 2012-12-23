@@ -16,8 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <tarte/Exception.h>
+
 #include "AbstractToggleButton.h"
-#include "../../logging/Exception.h"
 #include "../../gl/Canvas.h"
 
 namespace chisa {
@@ -46,7 +47,7 @@ AbstractToggleButton::~AbstractToggleButton() noexcept
 
 std::string AbstractToggleButton::toString() const
 {
-	return util::format("(AbstractToggleButton text:\"%s\" %p)", this->text().c_str(), this);
+	return ::tarte::format("(AbstractToggleButton text:\"%s\" %p)", this->text().c_str(), this);
 }
 
 void AbstractToggleButton::checked(bool const& state)

@@ -19,7 +19,7 @@ private:
 	chisa::gl::PredefinedStringRenderer numRenderer_;
 	float addrWidth_;
 public:
-	NesMemoryWidget(chisa::logging::Logger& log, chisa::HandlerW<chisa::tk::World> _world, tinyxml2::XMLElement* element);
+	NesMemoryWidget(chisa::Logger& log, chisa::HandlerW<chisa::tk::World> _world, tinyxml2::XMLElement* element);
 	virtual ~NesMemoryWidget();
 public:
 	virtual void render(chisa::gl::Canvas& cv, chisa::geom::Area const& area) override;

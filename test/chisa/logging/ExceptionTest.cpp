@@ -17,7 +17,7 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../../src/chisa/logging/Exception.h"
+#include <tarte/Exception.h>
 
 namespace chisa {
 namespace logging{

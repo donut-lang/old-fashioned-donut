@@ -18,11 +18,12 @@
 
 #pragma once
 #include <deque>
-#include "../../Handler.h"
-#include "../../logging/Logger.h"
-#include "../../util/ClassUtil.h"
+#include <tarte/Handler.h>
+#include <tarte/Logger.h>
+#include <tarte/ClassUtil.h>
 
 namespace chisa {
+using namespace tarte;
 namespace gl {
 class Sprite;
 
@@ -30,13 +31,13 @@ namespace internal {
 class SpriteManager;
 
 class ImageManager : public HandlerBody<ImageManager> {
-	DEFINE_MEMBER_REF(private, logging::Logger, log);
+	DEFINE_MEMBER_REF(private, Logger, log);
 private:
 	std::deque<std::pair<std::string, Handler<Sprite> > > imageCache_;
 	Handler<Sprite> loadPNG(std::string const& filename);
 	HandlerW<SpriteManager> spriteManager_;
 public:
-	ImageManager(logging::Logger& log, Handler<SpriteManager> spriteManager);
+	ImageManager(Logger& log, Handler<SpriteManager> spriteManager);
 	virtual ~ImageManager() noexcept = default;
 	Handler<Sprite> queryImage(std::string const& filename);
 public:

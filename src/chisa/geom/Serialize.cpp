@@ -16,15 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <tarte/XMLAttrParser.h>
+#include <tarte/XArchiver.h>
+
 #include "Vector.h"
 #include "Area.h"
-#include "../util/XMLAttrParser.h"
-#include "../util/XArchiver.h"
 
 using namespace chisa::geom;
 
-namespace chisa {
-namespace util {
+namespace tarte {
 namespace xml {
 
 template <>
@@ -51,7 +51,6 @@ void parseAttr<Space>(std::string const& name, Space& v, Space const& def, tinyx
 
 }
 
-using namespace chisa::geom;
 template <>
 void XSerializer<Area>::deserialize(Area& val, XValue const& xval)
 {
@@ -127,6 +126,6 @@ XValue XSerializer<Space>::serialize(Space& val)
 	return obj;
 }
 
-}}
+}
 
 

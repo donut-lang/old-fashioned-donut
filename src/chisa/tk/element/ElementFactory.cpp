@@ -16,9 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <tarte/Exception.h>
+#include <tinyxml2.h>
+
 #include "ElementFactory.h"
 #include "../Element.h"
-#include "../../logging/Exception.h"
 
 #include "SplitCombo.h"
 #include "FrameCombo.h"
@@ -28,13 +30,11 @@
 #include "Button.h"
 #include "TabCombo.h"
 
-#include <tinyxml2.h>
-
 namespace chisa {
 namespace tk {
 
 using namespace tinyxml2;
-using namespace logging;
+using namespace tarte;
 
 const std::string ElementFactory::ElemName::World("world");
 const std::string ElementFactory::ElemName::Vertical("vertical");
@@ -48,7 +48,7 @@ const std::string ElementFactory::ElemName::Button("button");
 
 const std::string ElementFactory::AttrName::Id("id");
 
-ElementFactory::ElementFactory(logging::Logger& log, HandlerW<World> world, std::string const& filename)
+ElementFactory::ElementFactory(Logger& log, HandlerW<World> world, std::string const& filename)
 :log_(log)
 ,world_(world)
 ,filename_(filename)
@@ -66,7 +66,7 @@ ElementFactory::ElementFactory(logging::Logger& log, HandlerW<World> world, std:
 	}
 }
 
-ElementFactory::ElementFactory(logging::Logger& log, HandlerW<World> world, std::string const& filename, XMLDocument* document, bool doc_free_by_me)
+ElementFactory::ElementFactory(Logger& log, HandlerW<World> world, std::string const& filename, XMLDocument* document, bool doc_free_by_me)
 :log_(log)
 ,world_(world)
 ,filename_(filename)
@@ -80,7 +80,7 @@ ElementFactory::ElementFactory(logging::Logger& log, HandlerW<World> world, std:
 	}
 }
 
-ElementFactory::ElementFactory(logging::Logger& log, HandlerW<World> world, std::string const& filename, const char* buffer, size_t lenb)
+ElementFactory::ElementFactory(Logger& log, HandlerW<World> world, std::string const& filename, const char* buffer, size_t lenb)
 :log_(log)
 ,world_(world)
 ,doc_()
@@ -124,7 +124,7 @@ Handler<Element> ElementFactory::parseTree(HandlerW<Element> parent, XMLElement*
 	const char* name = top->Name();
 	auto it = this->elementMap_.find(name);
 	if(this->elementMap_.end() == it){
-		throw logging::Exception(__FILE__,__LINE__, "Unknwon Element: %s", name);
+		TARTE_EXCEPTION(Exception, "Unknwon Element: %s", name);
 	}
 	Handler<Element> elm(it->second(this->log(), this->world(), parent));
 	elm->loadXml(this, top);
@@ -139,7 +139,7 @@ Handler<Element> ElementFactory::parseTree(std::string const& elementId)
 			return this->parseTree(HandlerW<Element>(), elem);
 		}
 	}
-	throw logging::Exception(__FILE__, __LINE__, "Element ID \"%s\" not found in %s", elementId.c_str(), this->filename_.c_str());
+	TARTE_EXCEPTION(Exception, "ID \"%s\" not found in %s", elementId.c_str(), this->filename_.c_str());
 }
 
 }}

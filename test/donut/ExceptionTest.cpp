@@ -17,14 +17,13 @@
  */
 
 #include "../TestCommon.h"
-#include "../../src/chisa/donut/Exception.h"
+#include "../../src/donut/Exception.h"
 
-namespace chisa {
 namespace donut {
 
 TEST(DonutExceptionTest, ThrowingTest)
 {
-	ASSERT_THROW(throw DonutException(__FILE__, __LINE__, "Hey!"), DonutException);
+	ASSERT_THROW(throw donut::DonutException(__FILE__, __LINE__, "Hey!"), donut::DonutException);
 }
 
 TEST(DonutExceptionTest, MessageTest)
@@ -58,5 +57,5 @@ TEST(DonutExceptionTest, EmptyTest)
 
 }
 
-}}
+}
 

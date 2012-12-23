@@ -19,7 +19,6 @@
 #include "DonutHelper.h"
 #include <math.h>
 
-namespace chisa {
 namespace donut {
 
 TEST(SelfTest, BasicTest)
@@ -38,6 +37,4 @@ TEST(SelfTest, SelfRecusriveTest)
 	SOURCE_TEST_INT(30, "z={x=>0,add=>func(){ self.x+=1; if(self.x < 30){ self.add(); }else{ self.x; };}}; z.add();");
 }
 
-}}
-
-
+}

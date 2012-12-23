@@ -17,22 +17,22 @@
  */
 
 #pragma once
+#include <tarte/ClassUtil.h>
+#include <tarte/Logger.h>
+#include <vector>
 
 #include "../node/NodeWalker.h"
-#include "../../util/ClassUtil.h"
-#include "../../logging/Logger.h"
 #include "../../geom/Vector.h"
-#include <vector>
 
 namespace chisa {
 namespace doc {
 
 class PostDisposer: public chisa::doc::NodeWalker {
-	DEFINE_MEMBER_REF(private, logging::Logger, log);
+	DEFINE_MEMBER_REF(private, Logger, log);
 private:
 	std::vector<geom::Point> offsetStack_;
 public:
-	PostDisposer(logging::Logger& log);
+	PostDisposer(Logger& log);
 	virtual ~PostDisposer() noexcept = default;
 private:
 	template <typename T, typename U> void walkBlock(T* block, U clos);

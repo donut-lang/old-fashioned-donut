@@ -19,7 +19,6 @@
 #include "DonutHelper.h"
 #include <math.h>
 
-namespace chisa {
 namespace donut {
 
 TEST(LocalTest, LocalTest)
@@ -42,6 +41,4 @@ TEST(LocalTest, LocalVarNotKeepingTest)
 	ASSERT_ANY_THROW( result = machine->start( donut->parse("x;", "<MEM>", 0) ) );
 }
 
-}}
-
-
+}

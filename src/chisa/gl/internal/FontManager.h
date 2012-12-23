@@ -22,11 +22,12 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-#include "../../logging/Logger.h"
-#include "../../Handler.h"
-#include "../../util/ClassUtil.h"
+#include <tarte/Logger.h>
+#include <tarte/Handler.h>
+#include <tarte/ClassUtil.h>
 
 namespace chisa {
+using namespace tarte;
 namespace gl {
 class Font;
 
@@ -43,7 +44,7 @@ public:
 };
 
 class FontManager : public HandlerBody<FontManager> {
-	DEFINE_MEMBER_REF(private, logging::Logger, log);
+	DEFINE_MEMBER_REF(private, Logger, log);
 	DEFINE_MEMBER_CONST(protected, std::string, fontdir);
 private:
 	static constexpr std::size_t MaxUnusedFonts = 100;
@@ -51,7 +52,7 @@ private:
 	std::deque<Handler<Font> > unusedFonts_;
 	Handler<Font> defaultFont_;
 public:
-	FontManager(logging::Logger& log, std::string const& fontdir);
+	FontManager(Logger& log, std::string const& fontdir);
 	Handler<Font> queryFont(std::string const& name = std::string());
 private:
 	~FontManager() noexcept;

@@ -21,7 +21,7 @@
 namespace chisa {
 namespace gl {
 
-DrawableManager::DrawableManager(logging::Logger& log, DrawableSetting const& setting)
+DrawableManager::DrawableManager(Logger& log, DrawableSetting const& setting)
 :log_(log)
 ,spriteManager_(new gl::internal::SpriteManager(log))
 ,imageManager_(new gl::internal::ImageManager(log, this->spriteManager_))
@@ -47,7 +47,7 @@ Handler<Sprite> DrawableManager::queryImage(std::string const& filename)
 Handler<Drawable> DrawableManager::queryDrawable(std::string const& repl, geom::Box const& box)
 {
 	for(std::pair<std::string, constructor> p : this->factories_){
-		if(util::startsWith(repl, p.first)){
+		if(::tarte::startsWith(repl, p.first)){
 			std::string const left = repl.substr(p.first.size());
 			return p.second(this->self(), box, left);
 		}

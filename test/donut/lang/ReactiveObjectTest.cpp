@@ -17,10 +17,9 @@
  */
 
 #include "DonutHelper.h"
-#include "../../../src/chisa/donut/object/ReactiveNativeObject.h"
+#include "../../../src/donut/object/ReactiveNativeObject.h"
 #include <math.h>
 
-namespace chisa {
 namespace donut {
 namespace {
 class SampleObject : public ReactiveNativeObject {
@@ -38,30 +37,30 @@ public:
 	,backable_and_forwardable(0)
 	,backable_only_once(0)
 	{}
-	virtual util::XValue onBack(Handler<Heap> const& heap, util::XValue const& val) override
+	virtual XValue onBack(Handler<Heap> const& heap, XValue const& val) override
 	{
 		std::string v(val.as<std::string>());
 		if(v == "backable_but_non_fowardable"){
 			backable_but_non_fowardable = true;
-			return util::XValue(); //non-fowardable
+			return XValue(); //non-fowardable
 		}else if(v == "backable_and_forwardable"){
 			++backable_and_forwardable;
-			return util::XValue("backable_and_forwardable");
+			return XValue("backable_and_forwardable");
 		}else if(v == "backable_only_once") {
-			return util::XValue("backable_only_once");
+			return XValue("backable_only_once");
 		}
-		return util::XValue(2);
+		return XValue(2);
 	}
-	virtual util::XValue onForward(Handler<Heap> const& heap, util::XValue const& val) override
+	virtual XValue onForward(Handler<Heap> const& heap, XValue const& val) override
 	{
 		std::string v(val.as<std::string>());
 		if(v == "backable_and_forwardable"){
 			++backable_and_forwardable;
-			return util::XValue("backable_and_forwardable");
+			return XValue("backable_and_forwardable");
 		}else if(v == "backable_only_once"){
-			return util::XValue();
+			return XValue();
 		}
-		return util::XValue(1);
+		return XValue(1);
 	}
 	virtual void onFutureDiscarded(Handler<Heap> const& heap) {
 		this->futureDiscarded = true;
@@ -69,27 +68,27 @@ public:
 	virtual void onHistoryDiscarded(Handler<Heap> const& heap) {
 		this->historyDiscarded = true;
 	}
-	virtual util::XValue saveImpl( Handler<Heap> const& heap ) override {
-		return util::XValue();
+	virtual XValue saveImpl( Handler<Heap> const& heap ) override {
+		return XValue();
 	}
-	virtual void loadImpl( Handler<Heap> const& heap, util::XValue const& data ) override {
+	virtual void loadImpl( Handler<Heap> const& heap, XValue const& data ) override {
 
 	}
 };
 class SampleProvider : public HeapProviderImpl<SampleObject>{
 public:
 	SampleProvider(Handler<Heap> const& heap ):HeapProviderImpl<SampleObject>(heap, "SampleObject"){
-		this->registerReactiveNativeClosure("unrecoverable", std::function<std::tuple<std::string, util::XValue>(SampleObject*)>([](SampleObject* obj){
-			return std::make_tuple("hey!", util::XValue());
+		this->registerReactiveNativeClosure("unrecoverable", std::function<std::tuple<std::string, XValue>(SampleObject*)>([](SampleObject* obj){
+			return std::make_tuple("hey!", XValue());
 		}));
-		this->registerReactiveNativeClosure("backable_but_non_fowardable", std::function<std::tuple<std::string, util::XValue>(SampleObject*)>([](SampleObject* obj){
-			return std::make_tuple("hey!", util::XValue("backable_but_non_fowardable"));
+		this->registerReactiveNativeClosure("backable_but_non_fowardable", std::function<std::tuple<std::string, XValue>(SampleObject*)>([](SampleObject* obj){
+			return std::make_tuple("hey!", XValue("backable_but_non_fowardable"));
 		}));
-		this->registerReactiveNativeClosure("backable_and_forwardable", std::function<std::tuple<std::string, util::XValue>(SampleObject*)>([](SampleObject* obj){
-			return std::make_tuple("hey!", util::XValue("backable_and_forwardable"));
+		this->registerReactiveNativeClosure("backable_and_forwardable", std::function<std::tuple<std::string, XValue>(SampleObject*)>([](SampleObject* obj){
+			return std::make_tuple("hey!", XValue("backable_and_forwardable"));
 		}));
-		this->registerReactiveNativeClosure("backable_only_once", std::function<std::tuple<std::string, util::XValue>(SampleObject*)>([](SampleObject* obj){
-			return std::make_tuple("hey!", util::XValue("backable_only_once"));
+		this->registerReactiveNativeClosure("backable_only_once", std::function<std::tuple<std::string, XValue>(SampleObject*)>([](SampleObject* obj){
+			return std::make_tuple("hey!", XValue("backable_only_once"));
 		}));
 	}
 };
@@ -125,7 +124,7 @@ public:
 	void boot(){
 		donut->bootstrap();
 	}
-	void reload(util::XValue const& v){
+	void reload(XValue const& v){
 		init();
 		donut->load(v);
 	}
@@ -308,6 +307,5 @@ TEST_F(ReactiveObjectTest, BackableOnlyOnceTest)
 	ASSERT_TRUE( obj->historyDiscarded );
 }
 
-}}}
-
+}}
 

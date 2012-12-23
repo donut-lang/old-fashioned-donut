@@ -26,7 +26,7 @@ namespace tk {
 
 static const std::string TAG("GestureSession");
 
-GestureSession::GestureSession(logging::Logger& log, const unsigned int pointerIndex, HandlerW<Element> targetElement, geom::Point const& startPoint, const float startTimeMs)
+GestureSession::GestureSession(Logger& log, const unsigned int pointerIndex, HandlerW<Element> targetElement, geom::Point const& startPoint, const float startTimeMs)
 :log_(log)
 ,target_(targetElement)
 ,pointerIndex_(pointerIndex)

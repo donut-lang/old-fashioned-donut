@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include "../util/ClassUtil.h"
+#include <tarte/ClassUtil.h>
 #include <cmath>
 #include <utility>
 #include <string>

@@ -19,7 +19,6 @@
 #include "DonutHelper.h"
 #include <math.h>
 
-namespace chisa {
 namespace donut {
 
 TEST(DonutHomuraTest, NowTest)
@@ -113,7 +112,7 @@ TEST(DonutHomuraTest, BackToEntrypointTest)
 
 TEST(DonutHomuraTest, SaveTest)
 {
-	util::XValue v;
+	XValue v;
 	{
 		INIT_DONUT;
 		Handler<Object> result;
@@ -128,6 +127,4 @@ TEST(DonutHomuraTest, SaveTest)
 	}
 }
 
-}}
-
-
+}

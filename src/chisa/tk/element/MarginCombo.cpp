@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <tarte/XMLAttrParser.h>
 #include "MarginCombo.h"
 #include "ElementFactory.h"
-#include "../../util/XMLAttrParser.h"
 
 namespace chisa {
 namespace tk {
@@ -37,21 +37,21 @@ MarginCombo::~MarginCombo() noexcept
 void MarginCombo::addChild(Handler<Element> const& h, Context const& ctx)
 {
 	if(getChildCount() > 0){
-		throw logging::Exception(__FILE__, __LINE__, "[BUG] Margin Combo can hold only one element.");
+		TARTE_EXCEPTION(Exception, "[BUG] Margin Combo can hold only one element.");
 	}
 	this->Super::addChild(h,ctx);
 }
 void MarginCombo::addChild(std::size_t const& idx, Handler<Element> const& h, Context const& ctx)
 {
 	if(getChildCount() > 0){
-		throw logging::Exception(__FILE__, __LINE__, "[BUG] Margin Combo can hold only one element.");
+		TARTE_EXCEPTION(Exception, "[BUG] Margin Combo can hold only one element.");
 	}
 	this->Super::addChild(idx,h,ctx);
 }
 
 std::string MarginCombo::toString() const
 {
-	return util::format("(MarginCombo %p)", this);
+	return ::tarte::format("(MarginCombo %p)", this);
 }
 
 void MarginCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)

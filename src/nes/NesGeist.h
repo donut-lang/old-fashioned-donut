@@ -21,9 +21,11 @@
 #include "../chisa/Hexe.h"
 #include "../chisa/tk/Task.h"
 #include "../chisa/gl/Sprite.h"
-#include "../chisa/util/Thread.h"
+#include <tarte/Thread.h>
+#include <tarte/Logger.h>
 
 namespace nes {
+using namespace tarte;
 
 class NesGeist : public chisa::WorldGeist, public VideoFairy, public AudioFairy, public GamepadFairy, public chisa::tk::Task {
 private:
@@ -45,19 +47,19 @@ public:
 	public:
 		Lock(NesGeist& parent);
 		virtual ~Lock();
-		inline chisa::Handler<chisa::gl::Sprite> getSprite() { return parent_.spr_; };
+		inline Handler<chisa::gl::Sprite> getSprite() { return parent_.spr_; };
 	};
 private:
 	VirtualMachine* machine_;
 	std::thread* runner_t_;
 	Runner* runner_;
-	chisa::Handler<chisa::gl::Sprite> spr_;
+	Handler<chisa::gl::Sprite> spr_;
 	std::mutex spr_mutex_;
 	std::mutex frame_mutex_;
 	float time_ms_;
 	std::condition_variable cond_;
 public:
-	NesGeist(chisa::logging::Logger& log, chisa::HandlerW<chisa::tk::World> world);
+	NesGeist(Logger& log, HandlerW<chisa::tk::World> world);
 	virtual ~NesGeist() noexcept;
 	virtual std::string toString() const override;
 	inline VirtualMachine* machine() const noexcept { return this->machine_; };

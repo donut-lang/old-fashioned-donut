@@ -17,9 +17,9 @@
  */
 
 #pragma once
-#include "../Handler.h"
-#include "../util/ClassUtil.h"
-#include "../logging/Logger.h"
+#include <tarte/Handler.h>
+#include <tarte/ClassUtil.h>
+#include <tarte/Logger.h>
 #include "../geom/Decl.h"
 
 namespace tinyxml2 {
@@ -27,6 +27,8 @@ class XMLElement;
 }
 
 namespace chisa {
+using namespace tarte;
+
 namespace gl{
 class Canvas;
 }
@@ -39,11 +41,11 @@ class World;
 
 class Widget {
 	DISABLE_COPY_AND_ASSIGN(Widget);
-	DEFINE_MEMBER_REF(protected, logging::Logger, log);
+	DEFINE_MEMBER_REF(protected, Logger, log);
 	DEFINE_MEMBER(protected, private, HandlerW<World>, world)
 	DEFINE_MEMBER(private, private, HandlerW<WidgetElement>, wrapper);
 public:
-	Widget(logging::Logger& log, HandlerW<World> world, tinyxml2::XMLElement* element);
+	Widget(Logger& log, HandlerW<World> world, tinyxml2::XMLElement* element);
 	virtual ~Widget();
 public:
 	void updateWrapper(HandlerW<WidgetElement> wrapper) { this->wrapper_ = wrapper; };
@@ -80,7 +82,7 @@ public:
 
 };
 
-#define CHISA_WIDGET_SUBKLASS_CONSTRUCTOR_PARAM_LIST logging::Logger& log, HandlerW<World> world, tinyxml2::XMLElement* element
+#define CHISA_WIDGET_SUBKLASS_CONSTRUCTOR_PARAM_LIST Logger& log, HandlerW<World> world, tinyxml2::XMLElement* element
 #define CHISA_WIDGET_SUBKLASS_CONSTRUCTOR_PARAM_APPLY log, world, element
 
 #define CHISA_WIDGET_SUBKLASS(Klass)\

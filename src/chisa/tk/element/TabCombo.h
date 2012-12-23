@@ -17,8 +17,9 @@
  */
 
 #pragma once
+#include <tarte/VectorMap.h>
+
 #include "ElementGroup.h"
-#include "../../util/VectorMap.h"
 #include "../../geom/Area.h"
 
 namespace chisa {
@@ -41,7 +42,7 @@ private:
 	Handler<FrameCombo> frame_;
 	Handler<SplitCombo> buttons_;
 	ButtonPosition buttonPosition_;
-	util::VectorMap<Handler<Element>, Handler<TabButton> > buttonMap_;
+	VectorMap<Handler<Element>, Handler<TabButton> > buttonMap_;
 public: /* ツリー操作 */
 	virtual std::size_t getChildCount() const noexcept override final;
 	virtual Handler<Element> getChildAt( std::size_t const& idx ) const noexcept override final;

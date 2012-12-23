@@ -17,17 +17,18 @@
  */
 
 #pragma once
-#include "../util/ClassUtil.h"
+#include <tarte/ClassUtil.h>
 #include "../geom/Decl.h"
 #include "DrawableManager.h"
 
 namespace chisa {
+using namespace tarte;
 namespace gl {
 class Canvas;
 
 class PredefinedStringRenderer {
 	DISABLE_COPY_AND_ASSIGN(PredefinedStringRenderer);
-	DEFINE_MEMBER_REF(private, logging::Logger, log);
+	DEFINE_MEMBER_REF(private, Logger, log);
 private:
 	Handler<DrawableManager> drawableManager_;
 	std::map<unsigned int, Handler<Sprite> > spriteTable_;
@@ -36,7 +37,7 @@ private:
 public:
 	typedef std::vector<unsigned int> String;
 	static const constexpr unsigned int EOS = 0U;
-	PredefinedStringRenderer(logging::Logger& log, Handler<DrawableManager> drawableManager);
+	PredefinedStringRenderer(Logger& log, Handler<DrawableManager> drawableManager);
 	virtual ~PredefinedStringRenderer() noexcept = default;
 public:
 	void registerCharacter( unsigned int symbol, std::string const& str );

@@ -19,7 +19,6 @@
 #include "lang/DonutHelper.h"
 #include <math.h>
 
-namespace chisa {
 namespace donut {
 
 TEST(ClockTest, InvalidTimeSeekTest)
@@ -88,7 +87,7 @@ TEST(ClockTest, ClockSaveTest)
 	clock->seek(clock->lastTime()-2);
 	clock->seek(clock->lastTime()-4);
 	{
-		Handler<util::XObject> obj = clock->save().as<util::XObject>();
+		Handler<XObject> obj = clock->save().as<XObject>();
 		tinyxml2::XMLDocument doc;
 		doc.InsertFirstChild(obj->toXML(&doc));
 		tinyxml2::XMLPrinter printer;
@@ -99,13 +98,13 @@ TEST(ClockTest, ClockSaveTest)
 	{
 		tinyxml2::XMLDocument doc;
 		doc.Parse(src.c_str());
-		clock2->load(Handler<util::XObject>(new util::XObject(doc.RootElement())));
+		clock2->load(Handler<XObject>(new XObject(doc.RootElement())));
 	}
 	ASSERT_EQ(clock->now(), clock2->now());
 	ASSERT_EQ(clock->lastTime(), clock2->lastTime());
 	ASSERT_EQ(clock->firstTime(), clock2->firstTime());
 }
 
-}}
+}
 
 

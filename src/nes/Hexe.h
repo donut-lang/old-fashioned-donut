@@ -23,7 +23,7 @@ namespace nes {
 
 class Hexe: public chisa::Hexe {
 public:
-	Hexe(chisa::logging::Logger& log, std::string const& basepath);
+	Hexe(chisa::Logger& log, std::string const& basepath);
 	virtual ~Hexe() noexcept;
 public:
 	virtual void registerWidgets(chisa::tk::WidgetFactory& factory) override;

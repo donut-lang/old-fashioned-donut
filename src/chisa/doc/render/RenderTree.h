@@ -17,9 +17,9 @@
  */
 
 #pragma once
-#include "../../util/ClassUtil.h"
-#include "../../Handler.h"
-#include "../../logging/Logger.h"
+#include <tarte/ClassUtil.h>
+#include <tarte/Logger.h>
+#include <tarte/Handler.h>
 #include <deque>
 #include <vector>
 #include "../../gl/Drawable.h"
@@ -36,14 +36,14 @@ namespace doc {
 class RenderObject;
 
 class RenderTree : public HandlerBody<RenderTree> {
-	DEFINE_MEMBER_REF(private, logging::Logger, log);
+	DEFINE_MEMBER_REF(private, Logger, log);
 private:
 	const std::size_t maxDrawable_;
 	Handler<gl::DrawableManager> drawableManager_;
 	std::deque<Handler<gl::Drawable> > drawableCache_;
 	std::vector<Handler<RenderObject> > objects_;
 public:
-	RenderTree(logging::Logger& log, Handler<gl::DrawableManager> drawableManager, const std::size_t maxDrawable=100);
+	RenderTree(Logger& log, Handler<gl::DrawableManager> drawableManager, const std::size_t maxDrawable=100);
 	virtual ~RenderTree() noexcept = default;
 public:
 	void render(gl::Canvas& canvas, geom::Area const& area, float depth);

@@ -19,7 +19,6 @@
 #include "Helper.h"
 #include <math.h>
 
-namespace chisa {
 namespace donut {
 
 class DonutSlotTest : public ::testing::Test
@@ -99,7 +98,7 @@ TEST_F(DonutSlotTest, SeekTest)
 
 TEST_F(DonutSlotTest, SaveTest)
 {
-	util::XValue v;
+	XValue v;
 	timestamp_t t1,t2,t3;
 	{
 		Slot slot;
@@ -142,6 +141,4 @@ TEST_F(DonutSlotTest, SaveTest)
 		ASSERT_EQ(200, slot.load()->toInt(heap));
 	}
 }
-}}
-
-
+}

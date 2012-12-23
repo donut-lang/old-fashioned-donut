@@ -18,8 +18,7 @@
 
 #include "Node.h"
 
-namespace chisa {
-namespace util {
+namespace tarte {
 namespace xml {
 
 using namespace chisa::doc;
@@ -40,4 +39,4 @@ template <> void parseAttr<BlockNode::Direction>(std::string const& name, BlockN
 	}
 	v = def;
 }
-}}}
+}}

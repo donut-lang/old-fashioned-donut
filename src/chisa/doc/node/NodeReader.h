@@ -16,14 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include "../../util/ClassUtil.h"
+#include <tarte/ClassUtil.h>
+#include <tarte/VectorMap.h>
 #include <memory>
 #include <string>
 #include <tinyxml2.h>
 #include "Decl.h"
-#include "../../util/VectorMap.h"
 
 namespace chisa {
+using namespace tarte;
+
 namespace doc {
 
 class NodeReader {
@@ -34,7 +36,7 @@ public:
 	typedef std::function<BlockNode*(Document*, BlockNode*, TreeNode*)> BlockConstructor;
 private:
 	static const std::string RootElementName;
-	util::VectorMap<std::string, ParseFunc> elementParser_;
+	VectorMap<std::string, ParseFunc> elementParser_;
 public:
 	NodeReader();
 	virtual ~NodeReader() = default;

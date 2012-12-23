@@ -30,7 +30,7 @@ namespace tk {
 
 const static std::string& TAG("World");
 
-World::World(logging::Logger& log, HandlerW<Universe> _universe, std::string const& worldname)
+World::World(Logger& log, HandlerW<Universe> _universe, std::string const& worldname)
 :log_(log)
 ,universe_(_universe)
 ,name_(worldname)

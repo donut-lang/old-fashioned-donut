@@ -19,7 +19,6 @@
 #include "Helper.h"
 #include <math.h>
 
-namespace chisa {
 namespace donut {
 
 class ObjectTest : public ::testing::Test
@@ -82,6 +81,4 @@ TEST_F(ObjectTest, ObjectPrimitiveCheckTest)
 	ASSERT_FALSE( Object::isPrimitiveDescriptor(heap->createStringObject("str")->toDescriptor()) );
 }
 
-}}
-
-
+}

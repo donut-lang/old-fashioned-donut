@@ -19,7 +19,6 @@
 #include "DonutHelper.h"
 #include <math.h>
 
-namespace chisa {
 namespace donut {
 
 TEST(SaveTest, DonutSaveTest)
@@ -29,7 +28,7 @@ TEST(SaveTest, DonutSaveTest)
 		INIT_DONUT;
 		machine->start(donut->parse("Global.val = {}; Global.val.x=1+1;"));
 		tinyxml2::XMLDocument doc;
-		Handler<util::XObject> obj = donut->save().as<util::XObject>();
+		Handler<XObject> obj = donut->save().as<XObject>();
 		doc.InsertEndChild(obj->toXML(&doc));
 		tinyxml2::XMLPrinter printer;
 		doc.Print(&printer);
@@ -40,7 +39,7 @@ TEST(SaveTest, DonutSaveTest)
 		Handler<Donut> donut(new Donut(log_trace));
 		tinyxml2::XMLDocument doc;
 		doc.Parse(src.c_str());
-		util::XValue v = util::XValue::fromXML(doc.RootElement());
+		XValue v = XValue::fromXML(doc.RootElement());
 		donut->load(v);
 		Handler<Object> obj = donut->queryMachine()->start(donut->parse("Global.val.x;"));
 		ASSERT_TRUE(obj->isInt());
@@ -55,7 +54,7 @@ TEST(SaveTest, ClosureRestoreTest)
 		INIT_DONUT;
 		machine->start(donut->parse("Global.val = {}; Global.val.x=func(x,y){x+y;};"));
 		tinyxml2::XMLDocument doc;
-		Handler<util::XObject> obj = donut->save().as<util::XObject>();
+		Handler<XObject> obj = donut->save().as<XObject>();
 		doc.InsertEndChild(obj->toXML(&doc));
 		tinyxml2::XMLPrinter printer;
 		doc.Print(&printer);
@@ -66,7 +65,7 @@ TEST(SaveTest, ClosureRestoreTest)
 		Handler<Donut> donut(new Donut(log_trace));
 		tinyxml2::XMLDocument doc;
 		doc.Parse(src.c_str());
-		util::XValue v = util::XValue::fromXML(doc.RootElement());
+		XValue v = XValue::fromXML(doc.RootElement());
 		donut->load(v);
 		Handler<Object> obj = donut->queryMachine()->start(donut->parse("Global.val.x(1,2);"));
 		ASSERT_TRUE(obj->isInt());
@@ -87,7 +86,7 @@ TEST(SaveTest, ClosureSeekAndSaveLoadTest)
 		tm2 = donut->nowTime();
 		donut->seek(tm1);
 		tinyxml2::XMLDocument doc;
-		Handler<util::XObject> obj = donut->save().as<util::XObject>();
+		Handler<XObject> obj = donut->save().as<XObject>();
 		doc.InsertEndChild(obj->toXML(&doc));
 		tinyxml2::XMLPrinter printer;
 		doc.Print(&printer);
@@ -98,7 +97,7 @@ TEST(SaveTest, ClosureSeekAndSaveLoadTest)
 		Handler<Donut> donut(new Donut(log_trace));
 		tinyxml2::XMLDocument doc;
 		doc.Parse(src.c_str());
-		util::XValue v = util::XValue::fromXML(doc.RootElement());
+		XValue v = XValue::fromXML(doc.RootElement());
 		donut->load(v);
 		ASSERT_EQ(tm1, donut->nowTime());
 		{
@@ -128,7 +127,7 @@ TEST(SaveTest, SaveOnInterruptTest)
 		machine->start(donut->parse("Global.x = {}; x.val = 10; x.val=interrupt \"str\"; x.val;"));
 		ASSERT_TRUE(donut->queryMachine()->isInterrupted());
 		tinyxml2::XMLDocument doc;
-		util::XValue v = donut->save().as<util::XObject>();
+		XValue v = donut->save().as<XObject>();
 		doc.InsertEndChild(v.toXML(&doc));
 		tinyxml2::XMLPrinter printer;
 		doc.Print(&printer);
@@ -139,7 +138,7 @@ TEST(SaveTest, SaveOnInterruptTest)
 		Handler<Donut> donut(new Donut(log_trace));
 		tinyxml2::XMLDocument doc;
 		doc.Parse(src.c_str());
-		util::XValue v = util::XValue::fromXML(doc.RootElement());
+		XValue v = XValue::fromXML(doc.RootElement());
 		donut->load(v);
 		ASSERT_TRUE(donut->queryMachine()->isInterrupted());
 		{
@@ -159,6 +158,5 @@ TEST(SaveTest, SaveOnInterruptTest)
 		}
 	}
 }
-}}
 
-
+}

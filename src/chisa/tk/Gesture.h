@@ -17,12 +17,14 @@
  */
 
 #pragma once
-#include "../Handler.h"
-#include "../util/ClassUtil.h"
-#include "../logging/Logger.h"
+#include <tarte/Handler.h>
+#include <tarte/ClassUtil.h>
+#include <tarte/Logger.h>
 #include "../geom/Vector.h"
 
 namespace chisa {
+using namespace tarte;
+
 namespace tk {
 class World;
 class Element;
@@ -52,9 +54,9 @@ public:
 
 class GestureSession {
 	DISABLE_COPY_AND_ASSIGN(GestureSession);
-	DEFINE_MEMBER_REF(private, logging::Logger, log)
+	DEFINE_MEMBER_REF(private, Logger, log)
 public:
-	GestureSession(logging::Logger& log, const unsigned int pointerIndex, HandlerW<Element> targetElement, geom::Point const& startPoint, const float startTimeMs);
+	GestureSession(Logger& log, const unsigned int pointerIndex, HandlerW<Element> targetElement, geom::Point const& startPoint, const float startTimeMs);
 	virtual ~GestureSession();
 private:
 	//static constexpr float MaxFlingVelocity=4000;
@@ -84,13 +86,13 @@ private:
 
 class GestureMediator {
 	DISABLE_COPY_AND_ASSIGN(GestureMediator);
-	DEFINE_MEMBER_REF(private, logging::Logger, log)
+	DEFINE_MEMBER_REF(private, Logger, log)
 	DEFINE_MEMBER_CONST(private, HandlerW<World>, world)
 private:
 	static constexpr std::size_t MaxTouxhPoint = 5;
 	GestureSession* session_[MaxTouxhPoint];
 public:
-	GestureMediator(logging::Logger& log, const HandlerW<World> world);
+	GestureMediator(Logger& log, const HandlerW<World> world);
 	virtual ~GestureMediator();
 public:
 	void onTouchDown(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);

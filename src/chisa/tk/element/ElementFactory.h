@@ -21,13 +21,15 @@
 #include <string>
 #include <functional>
 #include <vector>
-#include "../../logging/Exception.h"
-#include "../../logging/Logger.h"
-#include "../../util/ClassUtil.h"
-#include "../../util/VectorMap.h"
+#include <tarte/Exception.h>
+#include <tarte/Logger.h>
+#include <tarte/ClassUtil.h>
+#include <tarte/VectorMap.h>
 #include "../Element.h"
 
 namespace chisa {
+using namespace tarte;
+
 namespace tk {
 class World;
 
@@ -56,11 +58,11 @@ public:
 	};
 	typedef std::function<Handler<Element>(CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST)> ConstructorType;
 private:
-	logging::Logger& log_;
+	Logger& log_;
 	HandlerW<World> world_;
-	util::VectorMap<std::string, ConstructorType> elementMap_;
+	VectorMap<std::string, ConstructorType> elementMap_;
 public:
-	inline logging::Logger& log() const { return log_; }
+	inline Logger& log() const { return log_; }
 	inline HandlerW<World> world() const { return world_; }
 private:
 	std::string filename_;
@@ -68,9 +70,9 @@ private:
 	const bool doc_free_by_me_;
 	tinyxml2::XMLElement* root_;
 public:
-	ElementFactory(logging::Logger& log, HandlerW<World> world, std::string const& filename);
-	ElementFactory(logging::Logger& log, HandlerW<World> world, std::string const& filename, tinyxml2::XMLDocument* document, bool doc_free_by_me);
-	ElementFactory(logging::Logger& log, HandlerW<World> world, std::string const& filename, const char* buffer, std::size_t lenb);
+	ElementFactory(Logger& log, HandlerW<World> world, std::string const& filename);
+	ElementFactory(Logger& log, HandlerW<World> world, std::string const& filename, tinyxml2::XMLDocument* document, bool doc_free_by_me);
+	ElementFactory(Logger& log, HandlerW<World> world, std::string const& filename, const char* buffer, std::size_t lenb);
 	virtual ~ElementFactory();
 private:
 	void init();

@@ -19,7 +19,6 @@
 #include "DonutHelper.h"
 #include <math.h>
 
-namespace chisa {
 namespace donut {
 
 TEST(StringTest, ImplicitConvertTest)
@@ -94,6 +93,4 @@ TEST(StringTest, ToBooleanYesNoBigTest)
 	SOURCE_TEST_FALSE("\"No\".toBoolean();");
 }
 
-}}
-
-
+}

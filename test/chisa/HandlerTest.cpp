@@ -17,9 +17,9 @@
  */
 
 #include "../TestCommon.h"
-#include "../../src/chisa/Handler.h"
+#include <tarte/Handler.h>
 
-namespace chisa {
+namespace tarte {
 
 class TestFix : public HandlerBody<TestFix> {
 private:

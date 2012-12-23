@@ -17,9 +17,9 @@
  */
 
 #pragma once
-#include "../util/ClassUtil.h"
-#include "../logging/Logger.h"
-#include "../util/VectorMap.h"
+#include <tarte/ClassUtil.h>
+#include <tarte/Logger.h>
+#include <tarte/VectorMap.h>
 #include "Sprite.h"
 #include "Font.h"
 #include "internal/ImageManager.h"
@@ -33,6 +33,8 @@
 #endif
 
 namespace chisa {
+using namespace tarte;
+
 namespace gl {
 
 class DrawableSetting {
@@ -49,16 +51,16 @@ public:
 //---------------------------------------------------------------------------------------------------------------------
 
 class DrawableManager : public HandlerBody<DrawableManager> {
-	DEFINE_MEMBER_REF(private, logging::Logger, log);
+	DEFINE_MEMBER_REF(private, Logger, log);
 private:
 	typedef std::function<Handler<Drawable>(HandlerW<DrawableManager>, geom::Box const&, std::string const&)> constructor;
-	util::VectorMap<std::string, constructor> factories_;
+	VectorMap<std::string, constructor> factories_;
 private:
 	Handler<internal::SpriteManager> spriteManager_;
 	Handler<internal::ImageManager> imageManager_;
 	Handler<internal::FontManager> fontManager_;
 public:
-	DrawableManager(logging::Logger& log, DrawableSetting const& setting);
+	DrawableManager(Logger& log, DrawableSetting const& setting);
 	virtual ~DrawableManager() noexcept = default;
 public:
 	Handler<Sprite> queryRawSprite(const int width, const int height);

@@ -22,10 +22,9 @@
 #include "SplitCombo.h"
 #include "TabButton.h"
 
-namespace chisa {
-
-namespace util {
+namespace tarte {
 namespace xml {
+
 using namespace chisa::tk;
 
 template <>
@@ -34,7 +33,7 @@ void parseAttr<TabCombo::ButtonPosition>(std::string const& name, TabCombo::Butt
 	v=def;
 	const char* val = elm->Attribute(name.c_str());
 	if(val){
-		std::string vs(util::toLower(val));
+		std::string vs(::tarte::toLower(val));
 		if(vs == "top"){
 			v=TabCombo::ButtonPosition::Top;
 		}else if(vs=="bottom"){
@@ -45,8 +44,11 @@ void parseAttr<TabCombo::ButtonPosition>(std::string const& name, TabCombo::Butt
 			v=TabCombo::ButtonPosition::Left;
 		}
 	}
-}}}
+}
 
+}}
+
+namespace chisa {
 namespace tk {
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(TabCombo, ElementGroup)
@@ -204,7 +206,7 @@ void TabCombo::idle(const float delta_ms)
 
 std::string TabCombo::toString() const
 {
-	return util::format("(TabCombo %p with %d elements)", this, this->frame_->getChildCount());
+	return ::tarte::format("(TabCombo %p with %d elements)", this, this->frame_->getChildCount());
 }
 
 void TabCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
