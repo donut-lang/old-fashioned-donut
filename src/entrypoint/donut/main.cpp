@@ -1,5 +1,5 @@
 /**
- * Nekomata
+ * Donut
  * Copyright (C) 2012 psi
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,6 +17,7 @@
  */
 
 #include <iostream>
+#include <fstream>
 #include <getopt.h>
 #include <libgen.h>
 #include <iomanip>
@@ -27,22 +28,20 @@
 #include <tarte/Exception.h>
 #include "../../donut/Donut.h"
 
-using namespace tarte;
-
 namespace donut {
+using namespace tarte;
 
 static const std::string TAG("Donut");
 
 void usage(int argc, char* argv[]){
 	static const std::string USAGE_TAB="    ";
-	std::cout << "Usage: " << basename(argv[0]) << " [switches] [--] [programfile]" << std::endl;
+	std::cout << "Usage: " << basename(argv[0]) << " [switches] [--] [programfile] [arguments]" << std::endl;
 	std::cout << USAGE_TAB << std::left << std::setw(15) << "--trace" << "set log level." << std::endl;
 	std::cout << USAGE_TAB << std::left << std::setw(15) << "--verbose" << "set log level." << std::endl;
 	std::cout << USAGE_TAB << std::left << std::setw(15) << "--debug"<<"set log level." << std::endl;
 	std::cout << USAGE_TAB << std::left << std::setw(15) << "--warning"<<"set log level." << std::endl;
 	std::cout << USAGE_TAB << std::left << std::setw(15) << "--info"<<"set log level." << std::endl;
 	std::cout << USAGE_TAB << std::left << std::setw(15) << "--error"<<"set log level." << std::endl;
-	std::cout << USAGE_TAB << std::left << std::setw(15) << "--dump"<<"output dump of AST, then exit." << std::endl;
 	std::cout << USAGE_TAB << std::left << std::setw(15) << "--version"<<"output the version, then exit." << std::endl;
 	std::cout << USAGE_TAB << std::left << std::setw(15) << "-h, --help"<<"output the help, then exit." << std::endl;
 	exit(0);
@@ -60,17 +59,30 @@ const struct option ARG_OPTIONS[] = {
 		{"warning", no_argument, 0, 4},
 		{"info", no_argument, 0, 5},
 		{"error", no_argument, 0, 6},
-		{"dump", no_argument, 0, 7},
-		{"help", no_argument, 0, 8},
-		{"version", no_argument, 0, 9},
+		{"help", no_argument, 0, 7},
+		{"version", no_argument, 0, 8},
 		{0,0,0,0}
 };
+
+std::string readAll(std::istream& stream) {
+	std::stringstream source_;
+	std::string buf;
+	while(std::cin && std::getline(std::cin, buf)){
+		while(buf.size() > 0 && (buf.at(buf.size()-1)=='\r' || buf.at(buf.size()-1)=='\n')){
+			buf=buf.substr(0, buf.size()-1);
+		}
+		while(buf.size() > 0 && (buf.at(0)=='\r' || buf.at(0)=='\n')){
+			buf=buf.substr(1);
+		}
+		source_ << buf << std::endl;
+	}
+	return source_.str();
+}
 
 int main(int argc, char* argv[]){
 
 	int indexptr=0;
 	Logger::Level level = Logger::Level::WARN_;
-	bool dump = false;
 	while(1){
 		int opt = getopt_long(argc, argv, "h", ARG_OPTIONS, &indexptr);
 		if(opt < 0){
@@ -97,13 +109,10 @@ int main(int argc, char* argv[]){
 			level = Logger::ERROR_;
 			break;
 		case 7:
-			dump = true;
-			break;
-		case 8:
 		case 'h':
 			usage(argc, argv);
 			break;
-		case 9:
+		case 8:
 			version(argc, argv);
 			break;
 		case '?':
@@ -116,24 +125,14 @@ int main(int argc, char* argv[]){
 	log.t(TAG, "Logger created. Level: %d", level);
 
 	std::string source;
-	{
-		std::stringstream source_;
-		std::string buf;
-		while(std::cin && std::getline(std::cin, buf)){
-			while(buf.size() > 0 && (buf.at(buf.size()-1)=='\r' || buf.at(buf.size()-1)=='\n')){
-				buf=buf.substr(0, buf.size()-1);
-			}
-			while(buf.size() > 0 && (buf.at(0)=='\r' || buf.at(0)=='\n')){
-				buf=buf.substr(1);
-			}
-			source_ << buf << std::endl;
-		}
-		source = source_.str();
+	if(optind == argc){
+		source = readAll(std::cin);
+	}else{
+		std::ifstream in(argv[optind]);
+		source = readAll(in);
 	}
-	std::cout << "source: " << std::endl;
-	std::cout << source << std::endl;
 
-	{
+	{ //実行
 		Handler<Donut> donut(new Donut(log));
 		donut->bootstrap();
 		Handler<Machine> machine = donut->queryMachine();
@@ -156,7 +155,7 @@ int main(int argc, char* argv[]){
 		std::cout << "Donut Exception catch: " << e.what() << std::endl;
 		return -1;
 	} catch (tarte::Exception& e){
-		std::cout << "Chisa Exception catch: " << e.what() << std::endl;
+		std::cout << "Tarte Exception catch: " << e.what() << std::endl;
 		return -1;
 	} catch (std::exception& ex){
 		std::cout << "Default Exception catch: " << ex.what() << std::endl;
