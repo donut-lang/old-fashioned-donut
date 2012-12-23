@@ -17,7 +17,7 @@
  */
 
 #include "DonutHelper.h"
-#include "../../../../src/chisa/util/StringUtil.h"
+#include "../../../src/chisa/util/StringUtil.h"
 #include <math.h>
 
 namespace chisa {
