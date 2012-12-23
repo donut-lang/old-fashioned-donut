@@ -18,13 +18,13 @@
 
 #pragma once
 #include "Gesture.h"
-#include "../util/ClassUtil.h"
-#include "../util/VectorMap.h"
-#include "../util/XMLAttrParser.h"
+#include <tarte/ClassUtil.h>
+#include <tarte/Handler.h>
+#include <tarte/VectorMap.h>
+#include <tarte/XMLAttrParser.h>
 #include "../geom/Vector.h"
 #include "../geom/Area.h"
 #include "../gl/Color.h"
-#include "../Handler.h"
 #include <string>
 #include <cmath>
 
@@ -33,6 +33,8 @@ class XMLElement;
 }
 
 namespace chisa {
+using namespace tarte;
+
 namespace gl {
 class Canvas;
 }
@@ -56,8 +58,8 @@ public:
 private:
 	DISABLE_COPY_AND_ASSIGN(Element);
 private: /* クラス固定 */
-	DEFINE_MEMBER_REF(protected, logging::Logger, log); //ロガー
-	util::VectorMap<std::string, std::function<void(tinyxml2::XMLElement*)> > attrMap_; //コンストラクタでセット
+	DEFINE_MEMBER_REF(protected, Logger, log); //ロガー
+	VectorMap<std::string, std::function<void(tinyxml2::XMLElement*)> > attrMap_; //コンストラクタでセット
 private: /* ツリー */
 	DEFINE_MEMBER(protected, private, HandlerW<World>, world); // 属する世界
 	DEFINE_MEMBER(public, private, HandlerW<Element>, parent); //親
@@ -110,10 +112,10 @@ public: /* 実装メソッド */
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) = 0;
 	virtual bool notifyViewRefreshedImpl();
 protected:
-	Element(logging::Logger& log, HandlerW<World> world, HandlerW<Element> parent);
+	Element(Logger& log, HandlerW<World> world, HandlerW<Element> parent);
 	template <typename T> void addAttribute(std::string const& name, T& ptr)
 	{
-		this->attrMap_.insert(name, std::bind(chisa::util::xml::parseAttr<T>, std::string(name), std::ref(ptr), std::ref(ptr), std::placeholders::_1));
+		this->attrMap_.insert(name, std::bind(xml::parseAttr<T>, std::string(name), std::ref(ptr), std::ref(ptr), std::placeholders::_1));
 	}
 	template <typename T> Handler<T> createChild(){
 		return Handler<T>(new T(this->log(), this->world(), this->self()));
@@ -124,7 +126,7 @@ public:
 };
 
 
-#define CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST logging::Logger& log, HandlerW<World> world, HandlerW<Element> parent
+#define CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST Logger& log, HandlerW<World> world, HandlerW<Element> parent
 #define CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_APPLY log, world, parent
 
 #define CHISA_ELEMENT_SUBKLASS_FINAL(Klass) \

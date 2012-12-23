@@ -19,10 +19,10 @@
 #pragma once
 #include <string>
 #include <unordered_map>
-#include "../util/ClassUtil.h"
+#include <tarte/ClassUtil.h>
 #include "../gl/Canvas.h"
 #include "../geom/Area.h"
-#include "../donut/DozenBox.h"
+#include "../../donut/DozenBox.h"
 
 #include "Task.h"
 #include "Stack.h"
@@ -34,6 +34,7 @@ class XMLDocument;
 }
 
 namespace chisa {
+using namespace tarte;
 
 namespace tk {
 class Element;
@@ -47,11 +48,11 @@ class WidgetFactory;
 
 class World : public HandlerBody<World> {
 private:
-	DEFINE_MEMBER_REF(public, logging::Logger, log);
+	DEFINE_MEMBER_REF(public, Logger, log);
 	HandlerW<Universe> const universe_;
 	DEFINE_MEMBER_CONST(public, std::string, name);
 	TaskHandler taskHandler_;
-	Handler<donut::DozenBox> dozenBox_;
+	Handler< ::donut::DozenBox> dozenBox_;
 	Stack<Handler<Element> > elementStack_;
 	std::unordered_map<std::string, WidgetElement*> widgetMap_;
 	DEFINE_MEMBER(private, private, geom::Area, area);
@@ -94,7 +95,7 @@ public:
 		if(Handler<Universe> universe = this->universe_.lock()){
 			return universe->resolveWorldFilepath(this->name(), related_filename...);
 		}else{
-			throw logging::Exception(__FILE__, __LINE__, "Oops. Universe already removed.");
+			TARTE_EXCEPTION(Exception, "Oops. Universe already removed.");
 		}
 	}
 	template <typename... Args>
@@ -103,7 +104,7 @@ public:
 		if(Handler<Universe> universe = this->universe_.lock()){
 			return universe->resolveUniverseFilepath(related_filename...);
 		}else{
-			throw logging::Exception(__FILE__, __LINE__, "Oops. Universe already removed.");
+			TARTE_EXCEPTION(Exception, "Oops. Universe already removed.");
 		}
 	}
 	/******************************************************************************
@@ -118,10 +119,10 @@ public:
 	 * 生成
 	 ******************************************************************************/
 private:
-	World(logging::Logger& log, HandlerW<Universe> _universe, std::string const& worldname);
+	World(Logger& log, HandlerW<Universe> _universe, std::string const& worldname);
 	void init();
 public:
-	static Handler<World> create(logging::Logger& log, HandlerW<Universe> _universe, std::string const& worldname)
+	static Handler<World> create(Logger& log, HandlerW<Universe> _universe, std::string const& worldname)
 	{
 		Handler<World> ptr(new World(log, _universe, worldname));
 		ptr->init();

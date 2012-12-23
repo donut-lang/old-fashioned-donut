@@ -60,11 +60,11 @@ SplitCombo::~SplitCombo() noexcept
 std::string SplitCombo::toString() const
 {
 	if(this->splitMode() == Horizontal){
-		return util::format("(HorizontalCombo %p)", this);
+		return ::tarte::format("(HorizontalCombo %p)", this);
 	}else if(this->splitMode() == Vertical){
-		return util::format("(VerticalCombo %p)", this);
+		return ::tarte::format("(VerticalCombo %p)", this);
 	}else{
-		return util::format("(InvalidSplitCombo %p)", this);
+		return ::tarte::format("(InvalidSplitCombo %p)", this);
 	}
 }
 

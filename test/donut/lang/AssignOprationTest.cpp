@@ -19,7 +19,6 @@
 #include "DonutHelper.h"
 #include <math.h>
 
-namespace chisa {
 namespace donut {
 
 TEST(AssignOperationTest, NullTest)
@@ -112,6 +111,4 @@ TEST(DonutRunTest, AssignOpTest)
 	SOURCE_TEST_INT(1, "t=['1']; i=\"t\"; t[i]=0; t[i]+=1; t[i];");
 }
 
-}}
-
-
+}

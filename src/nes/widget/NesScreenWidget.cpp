@@ -24,17 +24,17 @@
 
 namespace nes {
 
-NesScreenWidget::NesScreenWidget(chisa::logging::Logger& log, chisa::HandlerW<chisa::tk::World> _world, tinyxml2::XMLElement* element)
+NesScreenWidget::NesScreenWidget(chisa::Logger& log, chisa::HandlerW<chisa::tk::World> _world, tinyxml2::XMLElement* element)
 :Widget(log, _world, element)
-,conf_(new chisa::util::XObject)
+,conf_(new XObject)
 {
 	chisa::Handler<chisa::tk::World> world(_world.lock());
 	chisa::Handler<nes::NesGeist> geist(world->geist().cast<nes::NesGeist>());
 	this->geist_ = geist;
 	this->conf_->accumlate(element->FirstChildElement());
 
-	if(this->conf_->has<chisa::util::XString>("rom")){
-		geist->loadNES(world->resolveUniverseFilepath(this->conf_->get<chisa::util::XString>("rom")));
+	if(this->conf_->has<XString>("rom")){
+		geist->loadNES(world->resolveUniverseFilepath(this->conf_->get<XString>("rom")));
 		geist->startNES();
 	}
 }

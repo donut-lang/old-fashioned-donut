@@ -19,7 +19,6 @@
 #include "DonutHelper.h"
 #include <math.h>
 
-namespace chisa {
 namespace donut {
 
 TEST(DonutFunctionTest, ReservedWord)
@@ -68,6 +67,4 @@ TEST(DonutFunctionTest, RecursiveTest)
 	SOURCE_TEST_INT(55, "f = func(a){ if(a>0){ a+f(a-1); }else{ 0; }; };f(10);");
 }
 
-}}
-
-
+}

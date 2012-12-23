@@ -16,14 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Button.h"
 #include <tinyxml2.h>
-#include "../../logging/Exception.h"
+#include <tarte/Exception.h>
+
+#include "Button.h"
 #include "../../gl/Canvas.h"
 #include "../../gl/DrawableManager.h"
 #include "../World.h"
 
-#include <iostream>
 namespace chisa {
 namespace tk {
 
@@ -44,7 +44,7 @@ Button::~Button() noexcept
 
 std::string Button::toString() const
 {
-	return util::format("(Button text:\"%s\" %p)", this->text().c_str(), this);
+	return ::tarte::format("(Button text:\"%s\" %p)", this->text().c_str(), this);
 }
 
 void Button::shadowColor(gl::Color const& color)

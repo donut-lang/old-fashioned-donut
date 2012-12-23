@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#include "../Handler.h"
-#include "../logging/Logger.h"
+#include <tarte/Handler.h>
+#include <tarte/Logger.h>
 #include "../gl/Canvas.h"
 #include "../gl/Font.h"
 #include "../geom/Area.h"
@@ -27,6 +27,8 @@
 #include "Stack.h"
 
 namespace chisa {
+using namespace tarte;
+
 namespace gl {
 class DrawableManager;
 }
@@ -41,7 +43,7 @@ class World;
 class Universe : public HandlerBody<Universe> {
 	DISABLE_COPY_AND_ASSIGN(Universe);
 private:
-	DEFINE_MEMBER_REF(private, logging::Logger, log);
+	DEFINE_MEMBER_REF(private, Logger, log);
 	DEFINE_MEMBER_CONST(public, Hexe*, hexe);
 	Stack<Handler<World> > worldStack;
 	DEFINE_MEMBER(public, private, geom::Area, area);
@@ -85,10 +87,10 @@ public:
 	 * 生成
 	 ******************************************************************************/
 private:
-	Universe(logging::Logger& log, Hexe* hexe);
+	Universe(Logger& log, Hexe* hexe);
 	void init();
 public:
-	static Handler<Universe> create(logging::Logger& log, Hexe* hexe)
+	static Handler<Universe> create(Logger& log, Hexe* hexe)
 	{
 		Handler<Universe> ptr(new Universe(log, hexe));
 		ptr->init();

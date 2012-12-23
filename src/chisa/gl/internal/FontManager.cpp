@@ -17,7 +17,7 @@
  */
 
 #include "../Font.h"
-#include "../../util/FileUtil.h"
+#include <tarte/FileSystem.h>
 
 namespace chisa {
 namespace gl {
@@ -27,7 +27,7 @@ FreeType::FreeType()
 :library_(nullptr)
 {
 	if(FT_Init_FreeType(&this->library_) != 0){
-		throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to init Freetype.");
+		TARTE_EXCEPTION(Exception, "[BUG] Failed to init Freetype.");
 	}
 }
 
@@ -39,7 +39,7 @@ FreeType::~FreeType() noexcept
 
 static std::string TAG("Font");
 
-FontManager::FontManager(logging::Logger& log, std::string const& fontdir)
+FontManager::FontManager(Logger& log, std::string const& fontdir)
 :log_(log)
 ,fontdir_(fontdir)
 ,freetype_( new FreeType )
@@ -85,7 +85,7 @@ Font* FontManager::searchFont( std::string const& name )
 	std::string family;
 	std::string style;
 	Font::analyzeFontName(name, family, style);
-	std::vector<std::string> files(util::file::enumFiles(this->fontdir_));
+	std::vector<std::string> files(file::enumFiles(this->fontdir_));
 	for(std::string const& fname : files){
 		int face_idx=0;
 		while(FT_New_Face(this->freetype_->raw(), fname.c_str(), (face_idx++), &face) == 0){
@@ -102,7 +102,7 @@ Font* FontManager::searchFont( std::string const& name )
 Font* FontManager::seachDefaultFont()
 {
 	FT_Face face;
-	std::vector<std::string> files(util::file::enumFiles(this->fontdir_));
+	std::vector<std::string> files(file::enumFiles(this->fontdir_));
 	for(std::string const& fname : files){
 		if(FT_New_Face(this->freetype_->raw(), fname.c_str(), 0, &face) == 0){
 			return new Font(this, this->freetype_, face);
@@ -110,7 +110,7 @@ Font* FontManager::seachDefaultFont()
 			this->log().e(TAG, "Failed to open font: %s", fname.c_str());
 		}
 	}
-	throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed open default font: %s", this->fontdir_.c_str());
+	TARTE_EXCEPTION(Exception, "[BUG] Failed open default font: %s", this->fontdir_.c_str());
 }
 
 void FontManager::backFont(Font* font)

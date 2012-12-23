@@ -19,7 +19,6 @@
 #include "DonutHelper.h"
 #include <math.h>
 
-namespace chisa {
 namespace donut {
 
 TEST(InterruptTest, WithGlobalTest)
@@ -56,7 +55,4 @@ Global.x = interrupt 20;
 	ASSERT_ANY_THROW( machine->resume( heap->createNull() ) );
 }
 
-
-}}
-
-
+}

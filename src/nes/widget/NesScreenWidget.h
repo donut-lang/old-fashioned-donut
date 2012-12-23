@@ -20,17 +20,20 @@
 
 #include "../../chisa/tk/Widget.h"
 #include "../../chisa/Hexe.h"
-#include "../../chisa/util/XVal.h"
+#include <tarte/Handler.h>
+#include <tarte/XVal.h>
 
 namespace nes {
+using namespace tarte;
+
 class NesGeist;
 
 class NesScreenWidget: public ::chisa::tk::Widget {
 private:
-	chisa::HandlerW<nes::NesGeist> geist_;
-	chisa::Handler<chisa::util::XObject> conf_;
+	HandlerW<nes::NesGeist> geist_;
+	Handler<XObject> conf_;
 public:
-	NesScreenWidget(chisa::logging::Logger& log, chisa::HandlerW<chisa::tk::World> world, tinyxml2::XMLElement* element);
+	NesScreenWidget(Logger& log, chisa::HandlerW<chisa::tk::World> world, tinyxml2::XMLElement* element);
 	virtual ~NesScreenWidget();
 public:
 	virtual void render(chisa::gl::Canvas& cv, chisa::geom::Area const& area) override;

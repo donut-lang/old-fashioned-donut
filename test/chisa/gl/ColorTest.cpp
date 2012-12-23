@@ -18,9 +18,11 @@
 
 #include "../../TestCommon.h"
 #include "../../../src/chisa/gl/Color.h"
-#include "../../../src/chisa/util/XMLAttrParser.h"
+#include <tarte/XMLAttrParser.h>
 
 namespace chisa {
+using namespace tarte;
+
 namespace gl {
 
 #define TEST_GETTER_SETTER(color, name, val)\
@@ -66,7 +68,7 @@ TEST(ColorTest, UnchangedColorTest)
 
 TEST(ColorTest, StringParsingTest)
 {
-	using namespace chisa::util::xml;
+	using namespace tarte::xml;
 	using namespace tinyxml2;
 	XMLDocument doc;
 	XMLElement* elm = doc.NewElement("a");
@@ -126,7 +128,7 @@ TEST(ColorTest, StringParsingTest)
 
 TEST(ColorTest, StringNameParsingTest)
 {
-	using namespace chisa::util::xml;
+	using namespace tarte::xml;
 	using namespace tinyxml2;
 	XMLDocument doc;
 	Color c;

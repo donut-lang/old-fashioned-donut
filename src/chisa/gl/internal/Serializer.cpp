@@ -18,15 +18,14 @@
 
 #include "../Color.h"
 
-#include "../../util/XArchiver.h"
-#include "../../util/XMLAttrParser.h"
+#include <tarte/XArchiver.h>
+#include <tarte/XMLAttrParser.h>
 
-#include "../../util/StringUtil.h"
+#include <tarte/String.h>
 
 using namespace chisa::gl;
 
-namespace chisa {
-namespace util {
+namespace tarte {
 namespace xml {
 
 template <>
@@ -41,6 +40,7 @@ void parseAttr<Color>(std::string const& name, Color& v, Color const& def, tinyx
 	}
 	v=def;
 }
+
 }
 
 template <>
@@ -64,6 +64,4 @@ struct XSerializer<Color> {
 	}
 };
 
-}}
-
-
+}

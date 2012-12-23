@@ -16,9 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "AbstractButton.h"
 #include <tinyxml2.h>
-#include "../../logging/Exception.h"
+#include <tarte/Exception.h>
+
+#include "AbstractButton.h"
 #include "../../gl/Canvas.h"
 #include "../../gl/DrawableManager.h"
 #include "../World.h"
@@ -50,7 +51,7 @@ AbstractButton::~AbstractButton() noexcept
 
 std::string AbstractButton::toString() const
 {
-	return util::format("(AbstractButton text:\"%s\" %p)", this->text_.c_str(), this);
+	return ::tarte::format("(AbstractButton text:\"%s\" %p)", this->text_.c_str(), this);
 }
 
 void AbstractButton::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)

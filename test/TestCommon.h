@@ -19,11 +19,14 @@
 #pragma once
 
 #include <memory>
-#include <gtest/gtest.h>
 #include <iostream>
-#include "../src/chisa/logging/Exception.h"
-#include "../src/chisa/logging/Logger.h"
-using namespace chisa::logging;
+
+#include <tarte/Exception.h>
+#include <tarte/Logger.h>
+
+#include <gtest/gtest.h>
+
+using namespace tarte;
 
 #define MATERIAL_DIR "__testfiles__"
 

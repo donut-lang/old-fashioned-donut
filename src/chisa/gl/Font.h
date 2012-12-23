@@ -18,12 +18,13 @@
 
 #pragma once
 #include <string>
-#include "../Handler.h"
-#include "../util/ClassUtil.h"
-#include "../logging/Logger.h"
+#include <tarte/Handler.h>
+#include <tarte/ClassUtil.h>
+#include <tarte/Logger.h>
 #include "internal/FontManager.h"
 
 namespace chisa {
+using namespace tarte;
 namespace gl {
 
 class Font : public HandlerBody<Font>
@@ -55,7 +56,7 @@ public:
 	public:
 		RawFaceSession(Handler<Font> font):parent_(font){
 			if(this->parent_->locked()){
-				throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to lock Font.");
+				TARTE_EXCEPTION(Exception, "[BUG] Failed to lock Font.");
 			}
 			this->parent_->locked(true);
 		};

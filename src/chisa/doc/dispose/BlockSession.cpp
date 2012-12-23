@@ -168,7 +168,7 @@ void BlockSession::extendBlock(BlockNode* blockNode)
 		this->blockPosX_ += size.width();
 		break;
 	default:
-		throw logging::Exception(__FILE__, __LINE__, "[BUG] Unknown direction: %d", this->dir_);
+		TARTE_EXCEPTION(Exception, "[BUG] Unknown direction: %d", this->dir_);
 	}
 }
 

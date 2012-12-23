@@ -19,7 +19,7 @@
 #pragma once
 #include <cmath>
 #include <string>
-#include "../util/StringUtil.h"
+#include <tarte/String.h>
 
 #define SETUP(Klass)\
 public:\
@@ -100,6 +100,8 @@ public:\
 	};
 
 namespace chisa {
+using namespace tarte;
+
 namespace geom {
 constexpr bool isUnspecified(const float width_or_height){
 	return std::isnan(width_or_height);
@@ -246,7 +248,7 @@ class ScaleVector : public BaseVector<ScaleVector, float> {
 	SETUP(ScaleVector)
 public:
 	inline std::string toString() const{
-		return util::format("(ScaleVector %f %f)", this->x(), this->y());
+		return format("(ScaleVector %f %f)", this->x(), this->y());
 	}
 };
 
@@ -256,7 +258,7 @@ class Vector : public BaseVector<Vector, float> {
 	SETUP(Vector);
 public:
 	inline std::string toString() const{
-		return util::format("(Vector %f %f)", this->x(), this->y());
+		return format("(Vector %f %f)", this->x(), this->y());
 	}
 	ENABLE_UNARY_OP(Vector);
 	ENABLE_PM(Vector , Vector , Vector );
@@ -294,7 +296,7 @@ public:
 	void operator delete(void* pv) = delete;
 public:
 	inline std::string toString() const{
-		return util::format("(IntVector %f %f)", this->x(), this->y());
+		return format("(IntVector %f %f)", this->x(), this->y());
 	}
 	ENABLE_UNARY_OP(IntVector);
 	ENABLE_PM(IntVector , IntVector , IntVector );
@@ -316,7 +318,7 @@ class Velocity : public BaseVector<Velocity, float> {
 	SETUP(Velocity)
 public:
 	inline std::string toString() const{
-		return util::format("(Velocity %f %f)", this->x(), this->y());
+		return format("(Velocity %f %f)", this->x(), this->y());
 	}
 	inline constexpr Velocity(Vector const& dist, const float time):BaseVector<Velocity, float>(dist/time){}
 	ENABLE_UNARY_OP(Velocity);

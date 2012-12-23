@@ -34,7 +34,7 @@ const std::string Element::AttrName::Margin("margin");
 const std::string Element::AttrName::Id("id");
 
 
-Element::Element(logging::Logger& log, HandlerW<World> world, HandlerW<Element> parent)
+Element::Element(Logger& log, HandlerW<World> world, HandlerW<Element> parent)
 :log_(log)
 ,world_(world)
 ,parent_(parent)
@@ -122,7 +122,7 @@ Handler<Element> Element::findElementByPoint(geom::Vector const& screenPoint)
 
 std::string Element::toString() const
 {
-	return util::format("(Element %p)", this);
+	return ::tarte::format("(Element %p)", this);
 }
 
 geom::Box Element::measure(geom::Box const& constraint)

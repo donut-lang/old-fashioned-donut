@@ -19,10 +19,10 @@
 #include <memory>
 #include <vector>
 #include <tinyxml2.h>
-#include "../../Handler.h"
-#include "../../util/ClassUtil.h"
-#include "../../util/XMLAttrParser.h"
-#include "../../util/VectorMap.h"
+#include <tarte/Handler.h>
+#include <tarte/ClassUtil.h>
+#include <tarte/XMLAttrParser.h>
+#include <tarte/VectorMap.h>
 #include "../../geom/Area.h"
 #include "../../gl/Color.h"
 #include "../../gl/Drawable.h"
@@ -31,6 +31,8 @@
 #include "../render/RenderObject.h"
 
 namespace chisa {
+using namespace tarte;
+
 namespace doc {
 
 /******************************************************************************
@@ -89,7 +91,7 @@ private:
 	DEFINE_MEMBER(public, private, std::string, id);
 private:
 	DEFINE_MEMBER(public, private, ChildrenType, children);
-	util::VectorMap<std::string, std::function<void(tinyxml2::XMLElement*)> > attrMap_;
+	VectorMap<std::string, std::function<void(tinyxml2::XMLElement*)> > attrMap_;
 public: /* as component */
 	inline Iterator begin() { return this->children_.begin(); };
 	inline Iterator end() { return this->children_.end(); };
@@ -105,7 +107,7 @@ public:
 protected:
 	template <typename T> void addAttribute(std::string const& name, T& ptr)
 	{
-		this->attrMap_.insert(name, std::bind(chisa::util::xml::parseAttr<T>, std::string(name), std::ref(ptr), std::ref(ptr), std::placeholders::_1));
+		this->attrMap_.insert(name, std::bind(xml::parseAttr<T>, std::string(name), std::ref(ptr), std::ref(ptr), std::placeholders::_1));
 	}
 protected:
 	TreeNode();

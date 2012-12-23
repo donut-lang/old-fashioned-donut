@@ -18,8 +18,10 @@
 
 #include <iostream>
 #include <GL/glfw.h>
+#include <tarte/Exception.h>
+#include <tarte/Logger.h>
+
 #include "../../chisa/tk/Universe.h"
-#include "../../chisa/logging/Exception.h"
 #include "../../nes/Hexe.h"
 #include "../../nes/machine/exception/EmulatorException.h"
 
@@ -29,7 +31,7 @@ namespace chisa {
 namespace entrypoint {
 namespace pc {
 
-logging::Logger log(std::cout, logging::Logger::TRACE_);
+Logger log(std::cout, Logger::TRACE_);
 chisa::Handler<tk::Universe> gUniverse;
 
 Hexe* gHexe = nullptr;
@@ -90,7 +92,7 @@ int main(int argc, char** argv) {
 	}
 	try {
 		if(GL_TRUE != glfwOpenWindow(1024,768, 8, 8, 8, 8, 16, 0, GLFW_WINDOW)){
-			throw logging::Exception(__FILE__, __LINE__, "Failed to open window.");
+			TARTE_EXCEPTION(Exception, "Failed to open window.");
 		}
 
 		glfwSetWindowTitle("Chisa");
@@ -129,7 +131,7 @@ int main(int argc, char** argv) {
 			running = !glfwGetKey( GLFW_KEY_ESC ) && glfwGetWindowParam( GLFW_OPENED );
 		}
 
-	} catch (logging::Exception& e) {
+	} catch (tarte::Exception& e) {
 		std::cerr << "Exception caught at " << e.file() << ":" << e.line() << std::endl;
 		std::cerr << "<msg>" << e.msg() << std::endl;
 		glfwTerminate();

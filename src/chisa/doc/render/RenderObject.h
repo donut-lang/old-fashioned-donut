@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#include "../../Handler.h"
-#include "../../util/ClassUtil.h"
+#include <tarte/Handler.h>
+#include <tarte/ClassUtil.h>
 #include "../../geom/Area.h"
 #include "../../gl/Drawable.h"
 

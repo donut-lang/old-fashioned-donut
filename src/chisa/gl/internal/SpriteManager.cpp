@@ -25,7 +25,7 @@ namespace gl{
 namespace internal {
 static const std::string TAG("RawSpriteManager");
 
-SpriteManager::SpriteManager(logging::Logger& log)
+SpriteManager::SpriteManager(Logger& log)
 :log_(log)
 {
 

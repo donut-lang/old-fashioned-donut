@@ -19,24 +19,25 @@
 #include "../../TestCommon.h"
 #include "../../../src/chisa/geom/Vector.h"
 #include "../../../src/chisa/geom/Area.h"
-#include "../../../src/chisa/util/XArchiver.h"
+#include <tarte/XArchiver.h>
 #include <math.h>
 
 namespace chisa {
+using namespace tarte;
 namespace geom {
 
 TEST(GeomSerializeTest, VectorTest)
 {
-	util::XValue v;
+	XValue v;
 	{
 		Vector vec(0,2);
-		util::XArchiverOut arc;
+		XArchiverOut arc;
 		arc << vec;
 		arc >> v;
 	}
 	{
 		Vector vec;
-		util::XArchiverIn in(v);
+		XArchiverIn in(v);
 		in >> vec;
 		ASSERT_FLOAT_EQ(0, vec.x());
 		ASSERT_FLOAT_EQ(2, vec.y());
@@ -45,16 +46,16 @@ TEST(GeomSerializeTest, VectorTest)
 
 TEST(GeomSerializeTest, IntVectorTest)
 {
-	util::XValue v;
+	XValue v;
 	{
 		IntVector vec(0,2);
-		util::XArchiverOut arc;
+		XArchiverOut arc;
 		arc << vec;
 		arc >> v;
 	}
 	{
 		IntVector vec;
-		util::XArchiverIn in(v);
+		XArchiverIn in(v);
 		in >> vec;
 		ASSERT_EQ(0, vec.x());
 		ASSERT_EQ(2, vec.y());
@@ -63,16 +64,16 @@ TEST(GeomSerializeTest, IntVectorTest)
 
 TEST(GeomSerializeTest, AreaVectorTest)
 {
-	util::XValue v;
+	XValue v;
 	{
 		Area area(0,2,4,6);
-		util::XArchiverOut arc;
+		XArchiverOut arc;
 		arc << area;
 		arc >> v;
 	}
 	{
 		Area area;
-		util::XArchiverIn in(v);
+		XArchiverIn in(v);
 		in >> area;
 		ASSERT_FLOAT_EQ(0, area.x());
 		ASSERT_FLOAT_EQ(2, area.y());
@@ -83,16 +84,16 @@ TEST(GeomSerializeTest, AreaVectorTest)
 
 TEST(GeomSerializeTest, SpaceVectorTest)
 {
-	util::XValue v;
+	XValue v;
 	{
 		Space area(0,2,4,6);
-		util::XArchiverOut arc;
+		XArchiverOut arc;
 		arc << area;
 		arc >> v;
 	}
 	{
 		Space area;
-		util::XArchiverIn in(v);
+		XArchiverIn in(v);
 		in >> area;
 		ASSERT_FLOAT_EQ(0, area.top());
 		ASSERT_FLOAT_EQ(2, area.bottom());

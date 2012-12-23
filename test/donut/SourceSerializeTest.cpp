@@ -19,7 +19,6 @@
 #include "Helper.h"
 #include <math.h>
 
-namespace chisa {
 namespace donut {
 
 class SourceSerializeTest : public ::testing::Test
@@ -41,7 +40,7 @@ f = func(x,y,z){ x+y+z; };
 	)delimiter", "<MEM>", 0)->parseProgram();
 	Handler<Closure> clos = code1->getEntrypoint();
 
-	util::XValue val = code1->save();
+	XValue val = code1->save();
 	Handler<Source> code2 (new Source(val));
 	ASSERT_NE(code1, code2);
 	ASSERT_TRUE(*code1 == *code2);
@@ -57,12 +56,10 @@ f = func(x,y,z){ x+y+z; };
 	)delimiter", "<MEM>", 0)->parseProgram();
 	Handler<Closure> clos = code->getEntrypoint();
 
-	util::XValue val = clos->save();
+	XValue val = clos->save();
 	Handler<Closure> clos2 (new Closure(val));
 	ASSERT_NE(clos, clos2);
 	ASSERT_EQ(*clos, *clos2);
 }
 
-}}
-
-
+}

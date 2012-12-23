@@ -23,6 +23,7 @@
 
 namespace chisa {
 namespace tk {
+
 using namespace std;
 using namespace tinyxml2;
 const string fname = "memory";
@@ -68,7 +69,7 @@ TEST_F(HorizontalComboTest, EmptyTest)
 	ElementFactory factory(log_trace, chisa::HandlerW<World>(), fname, &doc, false);
 	Handler<ElementGroup> root = factory.parseTree("test").cast<ElementGroup>();
 	ASSERT_EQ(root->getChildCount(), 0);
-	ASSERT_TRUE(util::startsWith(root->toString(), "(HorizontalCombo"));
+	ASSERT_TRUE(startsWith(root->toString(), "(HorizontalCombo"));
 }
 
 TEST_F(HorizontalComboTest, BasicLayoutTest)

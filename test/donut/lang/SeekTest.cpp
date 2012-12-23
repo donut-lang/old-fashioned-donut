@@ -19,7 +19,6 @@
 #include "DonutHelper.h"
 #include <math.h>
 
-namespace chisa {
 namespace donut {
 
 TEST(SeekTest, TimeShouldAdvanceTest)
@@ -429,6 +428,4 @@ TEST(SeekTest, SeekWithMultMachineAndInterruptAndExecuteTest)
 
 }
 
-}}
-
-
+}

@@ -17,10 +17,8 @@
  */
 
 #include "DonutHelper.h"
-#include "../../../src/chisa/util/StringUtil.h"
 #include <math.h>
 
-namespace chisa {
 namespace donut {
 
 TEST(FloatTest, ImplicitConvertTest)
@@ -51,7 +49,7 @@ TEST(FloatTest, SaveLoadTest)
 {
 	INIT_DONUT;
 	std::string providerName;
-	util::XValue data;
+	XValue data;
 	{
 		Handler<FloatObject> obj( heap->createFloatObject(10.1) );
 		ASSERT_ANY_THROW(obj->toBool(heap));
@@ -92,9 +90,7 @@ TEST(FloatTest, IntCastTest)
 
 TEST(FloatTest, ToStringTest)
 {
-	SOURCE_TEST_STR(util::toString((10.12345)), "(10.12345).toString();");
+	SOURCE_TEST_STR(toString((10.12345)), "(10.12345).toString();");
 }
 
-}}
-
-
+}

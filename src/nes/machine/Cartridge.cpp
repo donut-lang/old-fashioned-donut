@@ -11,9 +11,10 @@
 #include <string>
 #include <sstream>
 
-#include "../../chisa/util/XArchiver.h"
+#include <tarte/XArchiver.h>
 
 namespace nes {
+using namespace tarte;
 
 //ダミー実装
 Cartridge::Cartridge(VirtualMachine& vm, const NesFile* nesFile) :
@@ -183,7 +184,7 @@ Cartridge* Cartridge::loadCartridge(VirtualMachine& vm, std::string const& filen
 	return NULL;
 }
 
-void Cartridge::save(chisa::util::XArchiverOut& arc)
+void Cartridge::save(XArchiverOut& arc)
 {
 	arc & hasSram;
 	arc & sram;
@@ -191,7 +192,7 @@ void Cartridge::save(chisa::util::XArchiverOut& arc)
 	arc & fourScreenVram;
 
 }
-void Cartridge::load(chisa::util::XArchiverIn& arc)
+void Cartridge::load(XArchiverIn& arc)
 {
 	arc & hasSram;
 	arc & sram;

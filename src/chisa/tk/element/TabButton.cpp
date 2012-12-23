@@ -44,7 +44,7 @@ void TabButton::element(Handler<Element> const& element)
 
 std::string TabButton::toString() const
 {
-	return util::format("(TabButton text:\"%s\" %p)", this->text().c_str(), this);
+	return ::tarte::format("(TabButton text:\"%s\" %p)", this->text().c_str(), this);
 }
 
 void TabButton::checkedImpl(bool const& state)

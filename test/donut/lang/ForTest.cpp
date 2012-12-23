@@ -19,7 +19,6 @@
 #include "DonutHelper.h"
 #include <math.h>
 
-namespace chisa {
 namespace donut {
 
 class DonutForTest : public ::testing::Test
@@ -56,8 +55,4 @@ TEST_F(DonutForTest, ForWhileTest)
 	SOURCE_TEST_INT(10, "cnt=0;i=0;for(;i<10;){++i;cnt+=1;};");
 }
 
-
-
-}}
-
-
+}

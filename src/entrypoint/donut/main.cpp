@@ -23,11 +23,12 @@
 #include <cstdlib>
 #include <exception>
 #include <sstream>
-#include "../../chisa/logging/Logger.h"
-#include "../../chisa/donut/Exception.h"
-#include "../../chisa/donut/Donut.h"
+#include <tarte/Logger.h>
+#include <tarte/Exception.h>
+#include "../../donut/Donut.h"
 
-namespace chisa{
+using namespace tarte;
+
 namespace donut {
 
 static const std::string TAG("Donut");
@@ -68,7 +69,7 @@ const struct option ARG_OPTIONS[] = {
 int main(int argc, char* argv[]){
 
 	int indexptr=0;
-	logging::Logger::Level level = logging::Logger::Level::WARN_;
+	Logger::Level level = Logger::Level::WARN_;
 	bool dump = false;
 	while(1){
 		int opt = getopt_long(argc, argv, "h", ARG_OPTIONS, &indexptr);
@@ -78,22 +79,22 @@ int main(int argc, char* argv[]){
 		switch(opt)
 		{
 		case 1:
-			level = logging::Logger::TRACE_;
+			level = Logger::TRACE_;
 			break;
 		case 2:
-			level = logging::Logger::VERBOSE_;
+			level = Logger::VERBOSE_;
 			break;
 		case 3:
-			level = logging::Logger::DEBUG_;
+			level = Logger::DEBUG_;
 			break;
 		case 4:
-			level = logging::Logger::INFO_;
+			level = Logger::INFO_;
 			break;
 		case 5:
-			level = logging::Logger::WARN_;
+			level = Logger::WARN_;
 			break;
 		case 6:
-			level = logging::Logger::ERROR_;
+			level = Logger::ERROR_;
 			break;
 		case 7:
 			dump = true;
@@ -111,7 +112,7 @@ int main(int argc, char* argv[]){
 		}
 	}
 
-	logging::Logger log(std::cout, level);
+	Logger log(std::cout, level);
 	log.t(TAG, "Logger created. Level: %d", level);
 
 	std::string source;
@@ -145,16 +146,16 @@ int main(int argc, char* argv[]){
 	return 0;
 }
 
-}}
+}
 
 int main(int argc, char* argv[]){
 	try{
-		const int resultCode = chisa::donut::main(argc, argv);
+		const int resultCode = donut::main(argc, argv);
 		return resultCode;
-	} catch (chisa::donut::DonutException& e){
+	} catch (donut::DonutException& e){
 		std::cout << "Donut Exception catch: " << e.what() << std::endl;
 		return -1;
-	} catch (chisa::logging::Exception& e){
+	} catch (tarte::Exception& e){
 		std::cout << "Chisa Exception catch: " << e.what() << std::endl;
 		return -1;
 	} catch (std::exception& ex){

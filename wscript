@@ -9,6 +9,7 @@ srcdir = '.'
 blddir = 'build'
 
 def enum(dirname, exclude=[]):
+	dirname = os.path.join(*(dirname.split('/')))
 	COMPILED_EXT=['.cpp','.c']
 	f = []
 	for root,dirs,files in os.walk(dirname):
@@ -23,14 +24,20 @@ def enum(dirname, exclude=[]):
 			fabs = os.path.join(root, fitem)
 			_, ext = os.path.splitext(fabs)
 			if ext in COMPILED_EXT:
-				f.append(fabs)
+				f.append(os.path.relpath(fabs))
 	return f
-
-def udir(f):
-	return os.path.join(*(f.split('/')))
 
 TINYXML2_DIR=os.path.join(os.path.abspath(os.path.dirname(srcdir)), 'external', 'tinyxml2')
 TINYXML2_SRC=[os.path.join('.', 'external','tinyxml2','tinyxml2.cpp')]
+
+TARTE_INCLUDE_DIR=os.path.join(os.path.abspath(os.path.dirname(srcdir)), 'src', 'tarte','include')
+TARTE_SRC=enum('src/tarte')
+
+DONUT_INCLUDE_DIR=os.path.join(os.path.abspath(os.path.dirname(srcdir)), 'src', 'donut','include')
+DONUT_SRC=enum('src/donut')
+
+CHISA_DIR=os.path.join(os.path.abspath(os.path.dirname(srcdir)), 'src', 'chisa')
+CHISA_SRC=enum('src/chisa')
 
 def options(opt):
 	opt.add_option('--coverage', action='store_true', default=False, help='Enabling coverage measuring.')
@@ -55,6 +62,8 @@ def configure(conf):
 def configureLibrary(conf):
 	conf.load('compiler_c compiler_cxx')
 	conf.env.append_value('CXXFLAGS', ['-I'+TINYXML2_DIR])
+	conf.env.append_value('CXXFLAGS', ['-I'+TARTE_INCLUDE_DIR])
+	conf.env.append_value('CXXFLAGS', ['-I'+DONUT_INCLUDE_DIR])
 	conf.check_cfg(package='icu-uc icu-i18n', uselib_store='ICU', mandatory=True, args='--cflags --libs')
 	conf.check_cfg(package='libpng', uselib_store='LIBPNG', mandatory=True, args='--cflags --libs')
 	conf.check_cfg(package='freetype2', uselib_store='FREETYPE2', mandatory=True, args='--cflags --libs')
@@ -79,31 +88,27 @@ def configureLibrary(conf):
 			conf.to_log("Google perftools not found, so performance will not measureable.")
 	#リリースとデバッグで変更
 
-ANTLR_IN_SRC = [
-		udir('src/chisa/donut/parser/Compiler.g'),
-		udir('src/chisa/donut/parser/Donut.g')]
-ANTLR_OUT_DIR=udir('src/chisa/donut/parser/output')
-ANTLR_OUT_SRC = [
-		udir('{0}/Compiler.cpp'.format(ANTLR_OUT_DIR)),
-		udir('{0}/DonutLexer.cpp'.format(ANTLR_OUT_DIR)),
-		udir('{0}/DonutParser.cpp'.format(ANTLR_OUT_DIR))]
 TEST_SRC=\
-		ANTLR_OUT_SRC+\
 		TINYXML2_SRC+\
-		enum('src', [udir('src/entrypoint'), ANTLR_OUT_DIR])+\
+		TARTE_SRC+\
+		DONUT_SRC+\
+		CHISA_SRC+\
+		enum('src/nes')+\
 		enum('test')
+
 MAIN_SRC=\
-		ANTLR_OUT_SRC+\
 		TINYXML2_SRC+\
-		enum('src', [udir('src/entrypoint'), ANTLR_OUT_DIR])+\
-		enum(udir('src/entrypoint/pc/'))
+		TARTE_SRC+\
+		DONUT_SRC+\
+		CHISA_SRC+\
+		enum('src/nes')+\
+		enum('src/entrypoint/pc')
+
 DONUT_SRC=\
-		ANTLR_OUT_SRC+\
 		TINYXML2_SRC+\
-		enum(udir('src/chisa/donut'), [ANTLR_OUT_DIR])+\
-		enum(udir('src/chisa/logging'))+\
-		enum(udir('src/chisa/util'))+\
-		enum(udir('src/entrypoint/donut'))
+		TARTE_SRC+\
+		DONUT_SRC+\
+		enum('src/entrypoint/donut')
 
 def build(bld):
 	if not bld.variant:

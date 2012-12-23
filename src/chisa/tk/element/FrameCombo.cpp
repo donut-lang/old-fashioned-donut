@@ -16,9 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <tarte/XMLAttrParser.h>
+
 #include "FrameCombo.h"
 #include "ElementFactory.h"
-#include "../../util/XMLAttrParser.h"
 
 namespace chisa {
 namespace tk {
@@ -34,7 +35,7 @@ FrameCombo::~FrameCombo() noexcept
 
 std::string FrameCombo::toString() const
 {
-	return util::format("(FrameCombo %p with %d elements)", this, getChildCount());
+	return ::tarte::format("(FrameCombo %p with %d elements)", this, getChildCount());
 }
 
 void FrameCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)

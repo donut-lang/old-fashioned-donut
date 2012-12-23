@@ -18,7 +18,7 @@
 
 #pragma once
 #include "Vector.h"
-#include "../util/ClassUtil.h"
+#include <tarte/ClassUtil.h>
 
 namespace chisa {
 namespace geom {
@@ -69,7 +69,7 @@ public:
 	inline void width(const float width) noexcept { box_.width(width); };
 	inline void height(const float height) noexcept { box_.height(height); };
 	inline std::string toString() const{
-		return util::format("(Area %f %f %f %f)", x(), y(), width(), height());
+		return format("(Area %f %f %f %f)", x(), y(), width(), height());
 	}
 	inline constexpr bool empty() const noexcept { return this->box_.empty(); }
 	//	inline Area intersect(Area const& other) const noexcept

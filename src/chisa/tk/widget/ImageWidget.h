@@ -18,8 +18,8 @@
 
 #pragma once
 
+#include <tarte/XVal.h>
 #include "../Widget.h"
-#include "../../util/XVal.h"
 #include "../../gl/Sprite.h"
 
 namespace chisa {
@@ -33,9 +33,9 @@ class ImageWidget: public chisa::tk::Widget {
 	DISABLE_COPY_AND_ASSIGN(ImageWidget);
 private:
 	Handler<gl::Sprite> imageSprite_;
-	Handler<util::XObject> conf_;
+	Handler<XObject> conf_;
 public:
-	ImageWidget(logging::Logger& log, HandlerW<World> world, tinyxml2::XMLElement* element);
+	ImageWidget(Logger& log, HandlerW<World> world, tinyxml2::XMLElement* element);
 	virtual ~ImageWidget();
 public:
 	virtual void render(gl::Canvas& cv, geom::Area const& area) override;

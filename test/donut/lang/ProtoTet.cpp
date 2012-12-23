@@ -19,7 +19,6 @@
 #include "DonutHelper.h"
 #include <math.h>
 
-namespace chisa {
 namespace donut {
 
 TEST(DonutProtoTest, NullTest)
@@ -27,6 +26,4 @@ TEST(DonutProtoTest, NullTest)
 	SOURCE_TEST_INT(1, "z={};x={__proto__=>z};z.x=1;x.x;");
 }
 
-}}
-
-
+}

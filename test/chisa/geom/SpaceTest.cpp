@@ -18,7 +18,7 @@
 
 #include "../../TestCommon.h"
 #include "../../../src/chisa/geom/Area.h"
-#include "../../../src/chisa/util/XMLAttrParser.h"
+#include <tarte/XMLAttrParser.h>
 #include <math.h>
 
 namespace chisa {
@@ -68,7 +68,7 @@ TEST(SpaceTest, XMLParseNotFoundTest)
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc/>
 	)delimiter");
-	util::xml::parseAttr<Space>("margin", std::ref(m), std::ref(m), doc->RootElement());
+	xml::parseAttr<Space>("margin", std::ref(m), std::ref(m), doc->RootElement());
 	ASSERT_FLOAT_EQ(1,m.top());
 	ASSERT_FLOAT_EQ(2,m.bottom());
 	ASSERT_FLOAT_EQ(10,m.left());
@@ -81,7 +81,7 @@ TEST(SpaceTest, XMLParseInvalidTest)
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc margin="string!!" />
 	)delimiter");
-	util::xml::parseAttr<Space>("margin", std::ref(m), std::ref(m), doc->RootElement());
+	xml::parseAttr<Space>("margin", std::ref(m), std::ref(m), doc->RootElement());
 	ASSERT_FLOAT_EQ(1,m.top());
 	ASSERT_FLOAT_EQ(2,m.bottom());
 	ASSERT_FLOAT_EQ(10,m.left());
@@ -94,7 +94,7 @@ TEST(SpaceTest, XMLParseOnlySpaceTest)
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc margin="100" />
 	)delimiter");
-	util::xml::parseAttr<Space>("margin", std::ref(m), std::ref(m), doc->RootElement());
+	xml::parseAttr<Space>("margin", std::ref(m), std::ref(m), doc->RootElement());
 	ASSERT_FLOAT_EQ(100,m.top());
 	ASSERT_FLOAT_EQ(100,m.bottom());
 	ASSERT_FLOAT_EQ(100,m.left());
@@ -107,7 +107,7 @@ TEST(SpaceTest, XMLParseAllSpaceTest)
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc margin-top="100" margin-bottom="200" margin-left="1000" margin-right="2000" />
 	)delimiter");
-	util::xml::parseAttr<Space>("margin", std::ref(m), std::ref(m), doc->RootElement());
+	xml::parseAttr<Space>("margin", std::ref(m), std::ref(m), doc->RootElement());
 	ASSERT_FLOAT_EQ(100,m.top());
 	ASSERT_FLOAT_EQ(200,m.bottom());
 	ASSERT_FLOAT_EQ(1000,m.left());
@@ -120,7 +120,7 @@ TEST(SpaceTest, XMLParseAllMarginOverrideTest)
 	auto doc = parse(R"delimiter(
 	<?xml version="1.0" encoding="UTF-8"?><doc margin="0" margin-top="100" margin-bottom="200" margin-left="1000" margin-right="2000" />
 	)delimiter");
-	util::xml::parseAttr<Space>("margin", std::ref(m), std::ref(m), doc->RootElement());
+	xml::parseAttr<Space>("margin", std::ref(m), std::ref(m), doc->RootElement());
 	ASSERT_FLOAT_EQ(100,m.top());
 	ASSERT_FLOAT_EQ(200,m.bottom());
 	ASSERT_FLOAT_EQ(1000,m.left());

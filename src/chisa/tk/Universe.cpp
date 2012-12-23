@@ -16,9 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <tarte/FileSystem.h>
+
 #include "Universe.h"
 #include "World.h"
-#include "../util/FileUtil.h"
 #include "../gl/DrawableManager.h"
 
 static const std::string TAG("Universe");
@@ -26,7 +27,7 @@ static const std::string TAG("Universe");
 namespace chisa {
 namespace tk {
 
-Universe::Universe(logging::Logger& log, Hexe* hexe)
+Universe::Universe(Logger& log, Hexe* hexe)
 :log_(log)
 ,hexe_(hexe)
 ,canvas_(log)

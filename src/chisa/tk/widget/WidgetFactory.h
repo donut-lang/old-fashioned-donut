@@ -20,12 +20,14 @@
 #include <functional>
 #include <tinyxml2.h>
 #include <vector>
-#include "../../Handler.h"
-#include "../../logging/Logger.h"
-#include "../../util/ClassUtil.h"
-#include "../../util/VectorMap.h"
+#include <tarte/Handler.h>
+#include <tarte/Logger.h>
+#include <tarte/ClassUtil.h>
+#include <tarte/VectorMap.h>
 
 namespace chisa {
+using namespace tarte;
+
 namespace util {
 class ParamSet;
 class Param;
@@ -35,22 +37,22 @@ class World;
 class Widget;
 
 template <typename WidgetKlass>
-WidgetKlass* widgetConstructor(logging::Logger& log, HandlerW<World> world, tinyxml2::XMLElement* elem){
+WidgetKlass* widgetConstructor(Logger& log, HandlerW<World> world, tinyxml2::XMLElement* elem){
 	return new WidgetKlass(log, world, elem);
 }
 
 class WidgetFactory {
 	DISABLE_COPY_AND_ASSIGN(WidgetFactory);
 private:
-	logging::Logger& log_;
+	Logger& log_;
 	HandlerW<World> world_;
-	typedef std::function<Widget*(logging::Logger& log, HandlerW<World> world, tinyxml2::XMLElement* elem)> ConstructorType;
-	util::VectorMap<std::string, ConstructorType> widgetMap_;
+	typedef std::function<Widget*(Logger& log, HandlerW<World> world, tinyxml2::XMLElement* elem)> ConstructorType;
+	VectorMap<std::string, ConstructorType> widgetMap_;
 public:
-	WidgetFactory(logging::Logger& log, HandlerW<World> world);
+	WidgetFactory(Logger& log, HandlerW<World> world);
 	virtual ~WidgetFactory();
 public:
-	void registerWidget(std::string const& klass, std::function<Widget*(logging::Logger& log, HandlerW<World> world, tinyxml2::XMLElement* elem)> func);
+	void registerWidget(std::string const& klass, std::function<Widget*(Logger& log, HandlerW<World> world, tinyxml2::XMLElement* elem)> func);
 	template <typename WidgetKlass>
 	void registerWidget(std::string const& klass) {
 		this->registerWidget(klass, widgetConstructor<WidgetKlass>);

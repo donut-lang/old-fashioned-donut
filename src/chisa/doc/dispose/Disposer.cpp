@@ -27,7 +27,7 @@ namespace doc {
 
 const static std::string TAG("Disposer");
 
-Disposer::Disposer(logging::Logger& log, Handler<RenderTree> renderTree, const float widgetWidth)
+Disposer::Disposer(Logger& log, Handler<RenderTree> renderTree, const float widgetWidth)
 :log_(log)
 ,renderTree_(renderTree)
 ,dmanager_(renderTree->drawableManager())

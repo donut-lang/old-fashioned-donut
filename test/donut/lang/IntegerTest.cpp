@@ -19,7 +19,6 @@
 #include "DonutHelper.h"
 #include <math.h>
 
-namespace chisa {
 namespace donut {
 
 TEST(DonutIntegerTest, AddTest)
@@ -147,6 +146,4 @@ TEST(DonutIntegerTest, ToStringTest)
 	SOURCE_TEST_STR("12345", "(12345).toString();");
 }
 
-}}
-
-
+}

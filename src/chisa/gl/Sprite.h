@@ -18,14 +18,15 @@
 
 #pragma once
 #include "OpenGL.h"
-#include "../logging/Logger.h"
-#include "../util/ClassUtil.h"
-#include "../util/Thread.h"
-#include "../Handler.h"
+#include <tarte/Logger.h>
+#include <tarte/ClassUtil.h>
+#include <tarte/Thread.h>
+#include <tarte/Handler.h>
 #include "../geom/Area.h"
 #include "internal/SpriteManager.h"
 
 namespace chisa {
+using namespace tarte;
 namespace gl {
 
 class Sprite : public HandlerBody<Sprite, true> {

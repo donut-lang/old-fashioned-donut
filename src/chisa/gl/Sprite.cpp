@@ -42,18 +42,18 @@ Sprite::Sprite(HandlerW<internal::SpriteManager> mgr, geom::IntVector const& siz
 	glGenTextures(1, &this->texId_);
 	const GLenum gerr = glGetError();
 	if(gerr != GL_NO_ERROR){
-		throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to generate texture: 0x%08x", gerr);
+		TARTE_EXCEPTION(Exception, "[BUG] Failed to generate texture: 0x%08x", gerr);
 	}
 	glBindTexture(GL_TEXTURE_2D, this->texId_);
 	const GLenum berr = glGetError();
 	if(berr != GL_NO_ERROR){
-		throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to bind texture: 0x%08x", berr);
+		TARTE_EXCEPTION(Exception, "[BUG] Failed to bind texture: 0x%08x", berr);
 	}
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->origSize().width(), this->origSize().height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 	const GLenum terr = glGetError();
 	if(terr != GL_NO_ERROR){
-		throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to transfer texture: 0x%08x", terr);
+		TARTE_EXCEPTION(Exception, "[BUG] Failed to transfer texture: 0x%08x", terr);
 	}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
@@ -85,7 +85,7 @@ void Sprite::flushBuffer()
 			glBindTexture(GL_TEXTURE_2D, this->texId_);
 			const GLenum err = glGetError();
 			if(err != GL_NO_ERROR){
-				throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to bind texture: code 0x%x", err);
+				TARTE_EXCEPTION(Exception, "[BUG] Failed to bind texture: code 0x%x", err);
 			}
 		}
 		{
@@ -93,7 +93,7 @@ void Sprite::flushBuffer()
 			glTexSubImage2D(GL_TEXTURE_2D, 0, 0,0, this->size().width(), this->size().height(), this->bufferType_, GL_UNSIGNED_BYTE, this->buffer_->ptr());
 			const GLenum err = glGetError();
 			if(err != GL_NO_ERROR){
-				throw logging::Exception(__FILE__, __LINE__, "[BUG] Failed to transfer texture: code 0x%x", err);
+				TARTE_EXCEPTION(Exception, "[BUG] Failed to transfer texture: code 0x%x", err);
 			}
 		}
 		this->backBuffer();
@@ -103,14 +103,14 @@ void Sprite::flushBuffer()
 void Sprite::resize(int width, int height)
 {
 	if(width > this->origSize().width() || height > this->origSize().height()){
-		throw logging::Exception(__FILE__, __LINE__, "[BUG] You can't resize Sprite bigger than original.");
+		TARTE_EXCEPTION(Exception, "[BUG] You can't resize Sprite bigger than original.");
 	}
 	this->size(geom::IntBox(width, height));
 }
 
 std::string Sprite::toString() const noexcept
 {
-	return util::format("(Sprite %p tex: %d buffer: %p orig: %s now: %s)", this, this->texId_, this->buffer_, this->origSize().toString().c_str(), this->size().toString().c_str());
+	return ::tarte::format("(Sprite %p tex: %d buffer: %p orig: %s now: %s)", this, this->texId_, this->buffer_, this->origSize().toString().c_str(), this->size().toString().c_str());
 }
 
 //-----------------------------------------------------------------------------
@@ -141,7 +141,7 @@ internal::Buffer* Sprite::lock(Sprite::BufferType bufferType)
 {
 	bool expected = false;
 	if(!this->locked_.compare_exchange_strong(expected, true)){
-		throw logging::Exception(__FILE__, __LINE__, "[BUG] Sprite already locked!");
+		TARTE_EXCEPTION(Exception, "[BUG] Sprite already locked!");
 	}
 	if(this->buffer_ && this->bufferType_ == bufferType){
 		return this->buffer_;
@@ -150,7 +150,7 @@ internal::Buffer* Sprite::lock(Sprite::BufferType bufferType)
 		if( Handler<internal::SpriteManager> mgr = this->mgr_.lock() ){
 			this->buffer_ = mgr->queryBuffer(this->size().width() * this->size().height() * 4);
 		}else{
-			throw logging::Exception(__FILE__, __LINE__, "[BUG] SpriteManager already dead!!");
+			TARTE_EXCEPTION(Exception, "[BUG] SpriteManager already dead!!");
 		}
 		this->bufferType_ = bufferType;
 		return (this->buffer_);
@@ -160,7 +160,7 @@ void Sprite::unlock()
 {
 	bool expected = true;
 	if(!this->locked_.compare_exchange_strong(expected, false)){
-		throw logging::Exception(__FILE__, __LINE__, "[BUG] Sprite already unlocked!");
+		TARTE_EXCEPTION(Exception, "[BUG] Sprite already unlocked!");
 	}
 }
 

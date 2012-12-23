@@ -18,12 +18,12 @@
 
 #pragma once
 #include <vector>
-#include "../logging/Exception.h"
-#include "../logging/Logger.h"
-#include "../util/ClassUtil.h"
+#include <tarte/Exception.h>
+#include <tarte/Logger.h>
+#include <tarte/ClassUtil.h>
+#include <tarte/Handler.h>
 #include "../geom/Decl.h"
 #include "Color.h"
-#include "../Handler.h"
 #include "Sprite.h"
 #include "Drawable.h"
 
@@ -35,12 +35,12 @@ namespace gl {
 
 class Canvas {
 	DISABLE_COPY_AND_ASSIGN(Canvas);
-	DEFINE_MEMBER_REF(private, logging::Logger, log);
+	DEFINE_MEMBER_REF(private, Logger, log);
 private:
 	float width_;
 	float height_;
 public:
-	Canvas(logging::Logger& log);
+	Canvas(Logger& log);
 	virtual ~Canvas();
 public:
 	void ortho(const float left, const float right, const float bottom, const float top, const float near_val, const float far_val);

@@ -24,7 +24,7 @@ namespace tk {
 
 static const std::string TAG("GestureMediator");
 
-GestureMediator::GestureMediator(logging::Logger& log, const HandlerW<World> world)
+GestureMediator::GestureMediator(Logger& log, const HandlerW<World> world)
 :log_(log)
 ,world_(world)
 {

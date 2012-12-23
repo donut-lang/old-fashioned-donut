@@ -22,7 +22,7 @@
 
 namespace nes {
 
-NesGeist::NesGeist(chisa::logging::Logger& log, chisa::HandlerW<chisa::tk::World> world)
+NesGeist::NesGeist(chisa::Logger& log, chisa::HandlerW<chisa::tk::World> world)
 :chisa::WorldGeist(log, world)
 ,chisa::tk::Task(log)
 ,machine_(nullptr)
@@ -44,7 +44,7 @@ NesGeist::~NesGeist() noexcept
 
 std::string NesGeist::toString() const
 {
-	return chisa::util::format("(NesGeist %p)", this);
+	return format("(NesGeist %p)", this);
 }
 
 void NesGeist::dispatchRendering(const uint8_t nesBuffer[screenHeight][screenWidth], const uint8_t paletteMask)

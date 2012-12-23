@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../util/Platform.h"
+#include <tarte/Exception.h>
 #include "TextContext.h"
 #include <unicode/unistr.h>
 #include <unicode/bytestream.h>
@@ -27,7 +27,7 @@
 namespace chisa {
 namespace doc {
 
-TextContext::TextContext(logging::Logger& log, Handler<RenderTree> renderTree)
+TextContext::TextContext(Logger& log, Handler<RenderTree> renderTree)
 :log_(log)
 ,renderTree_(renderTree)
 ,font_()
@@ -45,13 +45,13 @@ TextContext::TextContext(logging::Logger& log, Handler<RenderTree> renderTree)
 	{
 		cairo_status_t st = cairo_surface_status(this->nullSurface_);
 		if(st != CAIRO_STATUS_SUCCESS){
-			throw logging::Exception(__FILE__, __LINE__, "Oops. Failed to create cairo surface. Error code: %d", st);
+			TARTE_EXCEPTION(Exception, "Oops. Failed to create cairo surface. Error code: %d", st);
 		}
 	}
 	{
 		cairo_status_t st = cairo_status(this->cairo_);
 		if(st != CAIRO_STATUS_SUCCESS){
-			throw logging::Exception(__FILE__, __LINE__, "Oops. Failed to create cairo. Error code: %d", st);
+			TARTE_EXCEPTION(Exception, "Oops. Failed to create cairo. Error code: %d", st);
 		}
 	}
 }
@@ -160,7 +160,7 @@ std::string TextContext::nowFont() const
 void TextContext::popFont()
 {
 	if(!this->face_){
-		throw logging::Exception(__FILE__, __LINE__, "[BUG] Oops. you call \"popFont\" before pushing!");
+		TARTE_EXCEPTION(Exception, "[BUG] Oops. you call \"popFont\" before pushing!");
 	}
 	cairo_font_face_destroy(this->face_);
 	this->face_ = nullptr;

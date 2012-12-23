@@ -16,9 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <tarte/FileSystem.h>
+#include <tarte/String.h>
+
 #include "Font.h"
-#include "../util/FileUtil.h"
-#include "../util/StringUtil.h"
 
 namespace chisa {
 namespace gl {

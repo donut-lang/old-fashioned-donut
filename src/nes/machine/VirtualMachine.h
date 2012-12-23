@@ -4,6 +4,8 @@
 #include <iostream>
 #include <stdint.h>
 #include <string.h>
+#include <tarte/XArchiver.h>
+
 #include "file/NesFile.h"
 #include "fairy/VideoFairy.h"
 #include "fairy/AudioFairy.h"
@@ -18,6 +20,7 @@ class XArchiverOut;
 }}
 
 namespace nes {
+using namespace tarte;
 
 class VirtualMachine;
 
@@ -78,8 +81,8 @@ private:
 	uint8_t* internalVram;
 	uint8_t fourScreenVram[4096];
 public:
-	virtual void save(chisa::util::XArchiverOut& arc);
-	virtual void load(chisa::util::XArchiverIn& arc);
+	virtual void save(XArchiverOut& arc);
+	virtual void load(XArchiverIn& arc);
 };
 
 class IOPort
@@ -631,8 +634,8 @@ class VirtualMachine final
 	public:
 		inline Processor const* getProcessor() const noexcept { return &processor; };
 	public:
-		void save(chisa::util::XArchiverOut& arc);
-		void load(chisa::util::XArchiverIn& arc);
+		void save(XArchiverOut& arc);
+		void load(XArchiverIn& arc);
 };
 
 }

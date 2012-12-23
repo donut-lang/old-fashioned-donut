@@ -23,7 +23,7 @@
 
 namespace nes {
 
-Hexe::Hexe(chisa::logging::Logger& log, std::string const& basepath)
+Hexe::Hexe(chisa::Logger& log, std::string const& basepath)
 :chisa::Hexe(log, basepath)
 {
 

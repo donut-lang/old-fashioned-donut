@@ -18,9 +18,11 @@
 
 #pragma once
 #include <deque>
-#include "../../util/ClassUtil.h"
+#include <tarte/ClassUtil.h>
 
 namespace chisa {
+using namespace tarte;
+
 namespace gl {
 class Sprite;
 class Canvas;
@@ -36,14 +38,14 @@ public:
 	~Buffer() noexcept;
 };
 class SpriteManager: public HandlerBody<SpriteManager> {
-	DEFINE_MEMBER_REF(private, logging::Logger, log)
+	DEFINE_MEMBER_REF(private, Logger, log)
 private:
 	static constexpr size_t MaxCachedSpriteCount = 200;
 	static constexpr size_t MaxCachedBufferCount = 200;
 	std::deque<Sprite*> unusedSprite_;
 	std::deque<internal::Buffer*> unusedBuffer_;
 public:
-	SpriteManager(logging::Logger& log);
+	SpriteManager(Logger& log);
 	virtual ~SpriteManager() noexcept;
 	inline bool onFree() noexcept { return false; };
 	Handler<Sprite> queryRawSprite(const int width, const int height);

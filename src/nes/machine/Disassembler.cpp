@@ -18,9 +18,10 @@
 
 #include "Disassembler.h"
 #include "VirtualMachine.h"
-#include "../../chisa/logging/Exception.h"
+#include <tarte/Exception.h>
 
 namespace nes {
+using namespace tarte;
 
 Disassembler::Disassembler(VirtualMachine* vm)
 :vm_(vm)
@@ -118,7 +119,7 @@ void Disassembler::decodeAt(uint16_t addr, Instruction* inst)
 			inst->val_ = 0;
 			break;
 		default:
-			throw chisa::logging::Exception(__FILE__, __LINE__, "[BUG] Oops. Unknown addr mode.");
+			TARTE_EXCEPTION(Exception, "[BUG] Oops. Unknown addr mode.");
 	}
 }
 

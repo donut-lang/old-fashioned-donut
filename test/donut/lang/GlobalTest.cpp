@@ -19,7 +19,6 @@
 #include "DonutHelper.h"
 #include <math.h>
 
-namespace chisa {
 namespace donut {
 
 TEST(GlobalTest, GlobalExistsTest)
@@ -74,6 +73,4 @@ TEST(GlobalTest, GlobalFromScriptTest)
 	ASSERT_EQ(1, result->toInt(heap) );
 }
 
-}}
-
-
+}

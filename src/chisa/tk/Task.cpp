@@ -23,7 +23,7 @@ namespace tk {
 
 
 
-TaskHandler::TaskHandler(logging::Logger& log)
+TaskHandler::TaskHandler(Logger& log)
 :log(log)
 {
 

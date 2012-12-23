@@ -17,10 +17,11 @@
  */
 
 #include <cairo/cairo-ft.h>
+#include <tarte/String.h>
+
 #include "Drawable.h"
 #include "../geom/Area.h"
 #include "../geom/Vector.h"
-#include "../util/StringUtil.h"
 #include "internal/CairoUtil.h"
 #include "Canvas.h"
 #include "DrawableManager.h"
@@ -64,7 +65,7 @@ Handler<Drawable> ColorDrawable::create( HandlerW<DrawableManager> manager, geom
 
 std::string ColorDrawable::toString() const
 {
-	return util::format("(ColorDrawable %p size:%s color: %s)", this, this->size_.toString().c_str(), this->color_.toString().c_str());
+	return ::tarte::format("(ColorDrawable %p size:%s color: %s)", this, this->size_.toString().c_str(), this->color_.toString().c_str());
 }
 
 //-----------------------------------------------------------------------------
@@ -106,7 +107,7 @@ Handler<Drawable> ImageDrawable::create( HandlerW<DrawableManager> manager, geom
 
 std::string ImageDrawable::toString() const
 {
-	return util::format("(ImageDrawable %p size:%s file: %s sprite: %p)", this, this->size_.toString().c_str(), this->filename_.c_str(), this->sprite_.get());
+	return ::tarte::format("(ImageDrawable %p size:%s file: %s sprite: %p)", this, this->size_.toString().c_str(), this->filename_.c_str(), this->sprite_.get());
 }
 
 //-----------------------------------------------------------------------------
@@ -155,7 +156,7 @@ Handler<Drawable> RepeatDrawable::create( HandlerW<DrawableManager> manager, geo
 std::string RepeatDrawable::toString() const
 {
 	std::string const childRepl(this->child() ? this->child()->toString() : "none");
-	return util::format("(RepeatDrawable %p size:%s drawable: %s)", this, this->size_.toString().c_str(), childRepl.c_str());
+	return ::tarte::format("(RepeatDrawable %p size:%s drawable: %s)", this, this->size_.toString().c_str(), childRepl.c_str());
 }
 
 //-----------------------------------------------------------------------------
@@ -198,7 +199,7 @@ Handler<Drawable> StretchDrawable::create( HandlerW<DrawableManager> manager, ge
 std::string StretchDrawable::toString() const
 {
 	std::string const childRepl(this->child() ? this->child()->toString() : "none");
-	return util::format("(StretchDrawable %p size:%s drawable: %s)", this, this->size_.toString().c_str(), childRepl.c_str());
+	return ::tarte::format("(StretchDrawable %p size:%s drawable: %s)", this, this->size_.toString().c_str(), childRepl.c_str());
 }
 
 //-----------------------------------------------------------------------------
@@ -210,7 +211,7 @@ Handler<Drawable> NullDrawable::create( HandlerW<DrawableManager> manager, geom:
 
 std::string NullDrawable::toString() const
 {
-	return util::format("(NullDrawable %p size: %s)", this, this->size_.toString().c_str());
+	return ::tarte::format("(NullDrawable %p size: %s)", this, this->size_.toString().c_str());
 }
 
 //-----------------------------------------------------------------------------
@@ -333,7 +334,7 @@ Handler<gl::Sprite> TextDrawable::sprite()
 			break;
 		}
 		default: {
-			throw logging::Exception(__FILE__, __LINE__, "[BUG] Oops. Invalid decoration: %d", this->deco_);
+			TARTE_EXCEPTION(Exception, "[BUG] Oops. Invalid decoration: %d", this->deco_);
 		}
 		}
 
@@ -362,7 +363,7 @@ void TextDrawable::draw(Canvas& canvas, geom::Area const& area, const float dept
 
 std::string TextDrawable::toString() const
 {
-	return util::format("(TextDrawable %p str:\"%p\" size: %d)", this, this->str_.c_str(), size_);
+	return ::tarte::format("(TextDrawable %p str:\"%p\" size: %d)", this, this->str_.c_str(), size_);
 }
 
 void TextDrawable::setupCairo(cairo_t* cairo, cairo_font_face_t* face, cairo_font_options_t* opt, float size, Style style)

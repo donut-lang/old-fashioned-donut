@@ -19,7 +19,6 @@
 #include "DonutHelper.h"
 #include <math.h>
 
-namespace chisa {
 namespace donut {
 
 TEST(ArrayTest, LiteralTest)
@@ -64,6 +63,4 @@ TEST(ArrayTest, StringIndex)
 	SOURCE_TEST_INT(2, "array={};array['a']=1;array['b']=2;array['c']=3;array['b'];");
 }
 
-}}
-
-
+}
