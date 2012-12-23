@@ -403,7 +403,7 @@ Handler<Object> Machine::run()
 			break;
 		}
 		case Inst::Return: {
-			this->stack().resize( this->stackBase()+1 );
+			this->stack().resize( this->stackBase()+1 ); //戻り値の分の+1
 			running &= this->leaveClosure();
 			break;
 		}
@@ -529,7 +529,7 @@ void Machine::onTickNotify()
 void Machine::onBackNotify()
 {
 	if(this->running_) {
-		clock_->tick();
+		clock_->tick(); //discardHistoryされて、その後tickされる。上のonTickが最後に呼ばれるはず。
 	}
 }
 void Machine::onForwardNotify()

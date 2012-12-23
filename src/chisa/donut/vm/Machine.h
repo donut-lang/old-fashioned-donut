@@ -31,12 +31,13 @@ typedef unsigned int pc_t;
  * クロージャの実行状態
  */
 struct Callchain final {
+public: /* 値 */
 	pc_t pc_; // Program counter
 	unsigned int stackBase_;
 	Handler<Object> self_; //このクロージャの対象self
 	Handler<DonutClosureObject> closure_; //クロージャ本体
 	Handler<DonutObject> scope_; //ローカル変数の格納されるオブジェクト
-public:
+public: /* 作成・破棄・セーブ */
 	Callchain(pc_t pc, unsigned int const& stackBase, Handler<Object> const& self, Handler<DonutClosureObject> const& closure, Handler<DonutObject> const& scope)
 	:pc_(pc), stackBase_(stackBase), self_(self), closure_(closure), scope_(scope){
 	}
@@ -49,9 +50,11 @@ public:
  * 命令実行とは、このコンテキストの状態が変化していくこと
  */
 struct Context final {
+public: /* 値 */
 	unsigned int time_;
 	std::vector<Handler<Object> > stack_;
 	std::vector<Callchain> callStack_;
+public: /* 作成・破棄・セーブ */
 	Context(Handler<Clock> const& clk);
 	Context(Handler<Clock> const& clk, Context const& other);
 	Context(Handler<Heap> const& heap, util::XValue const& data);
