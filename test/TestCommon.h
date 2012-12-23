@@ -25,6 +25,8 @@
 #include <tarte/Logger.h>
 
 #include <gtest/gtest.h>
+#include <tinyxml2.h>
+
 
 using namespace tarte;
 
@@ -34,7 +36,6 @@ using namespace tarte;
 static Logger log_trace(std::cout, Logger::TRACE_);
 static Logger log_err(std::cout, Logger::ERROR_);
 
-#include <tinyxml2.h>
 std::shared_ptr<tinyxml2::XMLDocument> parse(std::string const& str);
 
 template <int... Args>
