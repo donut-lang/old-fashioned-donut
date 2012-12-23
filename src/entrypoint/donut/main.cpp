@@ -133,7 +133,7 @@ int main(int argc, char* argv[]){
 		std::ifstream in(argv[optind]);
 		source = readAll(in);
 	}
-	log.t(TAG, "Source: %s", source.c_str());
+	log.t(TAG, "Source: \n%s", source.c_str());
 	log.t(TAG, "Start executing...");
 
 	{ //実行
