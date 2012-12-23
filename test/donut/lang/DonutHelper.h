@@ -17,10 +17,10 @@
  */
 
 #pragma once
-#include "../../../TestCommon.h"
-#include "../../../../src/chisa/donut/Donut.h"
-#include "../../../../src/chisa/donut/object/FloatObject.h"
-#include "../../../../src/chisa/donut/object/StringObject.h"
+#include "../../TestCommon.h"
+#include "../../../src/chisa/donut/Donut.h"
+#include "../../../src/chisa/donut/object/FloatObject.h"
+#include "../../../src/chisa/donut/object/StringObject.h"
 
 #define INIT_DONUT\
 	Handler<Donut> donut(new Donut(log_trace));\

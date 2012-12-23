@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../TestCommon.h"
-#include "../../../src/chisa/donut/Exception.h"
+#include "../TestCommon.h"
+#include "../../src/chisa/donut/Exception.h"
 
 namespace chisa {
 namespace donut {

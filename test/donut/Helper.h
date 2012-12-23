@@ -18,11 +18,11 @@
 
 #pragma once
 
-#include "../../TestCommon.h"
-#include "../../../src/chisa/donut/parser/Parser.h"
-#include "../../../src/chisa/donut/object/Slot.h"
-#include "../../../src/chisa/donut/object/Heap.h"
-#include "../../../src/chisa/donut/object/FloatObject.h"
-#include "../../../src/chisa/donut/object/StringObject.h"
-#include "../../../src/chisa/donut/Donut.h"
+#include "../TestCommon.h"
+#include "../../src/chisa/donut/parser/Parser.h"
+#include "../../src/chisa/donut/object/Slot.h"
+#include "../../src/chisa/donut/object/Heap.h"
+#include "../../src/chisa/donut/object/FloatObject.h"
+#include "../../src/chisa/donut/object/StringObject.h"
+#include "../../src/chisa/donut/Donut.h"
 
