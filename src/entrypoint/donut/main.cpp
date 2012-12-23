@@ -67,7 +67,7 @@ const struct option ARG_OPTIONS[] = {
 std::string readAll(std::istream& stream) {
 	std::stringstream source_;
 	std::string buf;
-	while(std::cin && std::getline(std::cin, buf)){
+	while(std::cin && std::getline(stream, buf)){
 		while(buf.size() > 0 && (buf.at(buf.size()-1)=='\r' || buf.at(buf.size()-1)=='\n')){
 			buf=buf.substr(0, buf.size()-1);
 		}
@@ -126,11 +126,15 @@ int main(int argc, char* argv[]){
 
 	std::string source;
 	if(optind == argc){
+		log.t(TAG, "Read from std::cin");
 		source = readAll(std::cin);
 	}else{
+		log.t(TAG, "Read from file: %s", argv[optind]);
 		std::ifstream in(argv[optind]);
 		source = readAll(in);
 	}
+	log.t(TAG, "Source: ", source.c_str());
+	log.t(TAG, "Start executing...");
 
 	{ //実行
 		Handler<Donut> donut(new Donut(log));
