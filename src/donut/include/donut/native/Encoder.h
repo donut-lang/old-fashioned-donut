@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#include "../object/Object.h"
 #include <tarte/TypeTraits.h>
+#include "../object/Object.h"
 
 namespace donut {
 using namespace tarte;

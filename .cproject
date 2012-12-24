@@ -84,7 +84,7 @@
 							</builder>
 							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.base.1906636441" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.base">
 								<option id="gnu.both.asm.option.include.paths.99077832" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="/home/psi/my/include"/>
+									<listOptionValue builtIn="false" value="../."/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1245247697" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
@@ -94,7 +94,8 @@
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/external/tinyxml2&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;D:\software\dev\applib\cairo\include\freetype2&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/src/tarte/include&quot;"/>
-									<listOptionValue builtIn="false" value="/home/psi/my/include"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/src/donut/include&quot;"/>
+									<listOptionValue builtIn="false" value="../."/>
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.1070326383" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__GXX_EXPERIMENTAL_CXX0X__=1"/>
@@ -103,7 +104,7 @@
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.mingw.base.94861635" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.mingw.base">
 								<option id="gnu.c.compiler.option.include.paths.810491757" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="/home/psi/my/include"/>
+									<listOptionValue builtIn="false" value="../."/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.214214961" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
