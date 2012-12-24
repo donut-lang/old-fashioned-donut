@@ -18,30 +18,30 @@
 
 #pragma once
 
-#include "source/Source.h"
-#include "object/Heap.h"
-#include "vm/Machine.h"
-
-#include "Clock.h"
 
 #include <tarte/Logger.h>
 #include <tarte/Handler.h>
 #include <tarte/XVal.h>
 #include <tarte/VectorMap.h>
 
+#include "Clock.h"
+#include "source/Source.h"
+#include "object/Heap.h"
+#include "vm/Machine.h"
+#include "Patron.h"
+
 namespace donut {
 using namespace tarte;
-
-class Provider;
 
 class Donut final : public HandlerBody<Donut> {
 	DEFINE_MEMBER_REF(public, Logger, log);
 private:
 	Handler<Clock> clock_;
 	Handler<Heap> heap_;
+	Handler<Patron> patron_;
 	VectorMap<std::string, Handler<Machine> > machines_;
 public: /* 生成・破棄 */
-	Donut(Logger& log);
+	Donut(Logger& log, Handler<Patron> const& patron=Handler<Patron>());
 	virtual ~Donut() noexcept = default;
 	inline bool onFree() noexcept { return false; };
 public:
