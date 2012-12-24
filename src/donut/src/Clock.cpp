@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Clock.h"
-#include "Donut.h"
+#include <donut/Clock.h>
+#include <donut/Donut.h>
 
 namespace donut {
 

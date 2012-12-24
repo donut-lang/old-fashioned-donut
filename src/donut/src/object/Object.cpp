@@ -18,14 +18,14 @@
 
 #include <tarte/String.h>
 
-#include "Heap.h"
-#include "Object.h"
-#include "../provider/IntProvider.h"
-#include "../provider/BoolProvider.h"
-#include "../provider/NullProvider.h"
-#include "StringObject.h"
-#include "FloatObject.h"
-#include "../Exception.h"
+#include <donut/object/Heap.h>
+#include <donut/object/Object.h>
+#include <donut/provider/IntProvider.h>
+#include <donut/provider/BoolProvider.h>
+#include <donut/provider/NullProvider.h>
+#include <donut/object/StringObject.h>
+#include <donut/object/FloatObject.h>
+#include <donut/Exception.h>
 
 namespace donut {
 

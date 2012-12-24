@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "FloatProvider.h"
-#include "../object/Heap.h"
-#include "../object/FloatObject.h"
+#include <donut/provider/FloatProvider.h>
+#include <donut/object/Heap.h>
+#include <donut/object/FloatObject.h>
 #include <tarte/String.h>
 
 namespace donut {

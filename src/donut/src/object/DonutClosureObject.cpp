@@ -18,10 +18,10 @@
 
 #include <tarte/String.h>
 
-#include "Heap.h"
-#include "DonutClosureObject.h"
-#include "../source/Source.h"
-#include "../Exception.h"
+#include <donut/Exception.h>
+#include <donut/object/Heap.h>
+#include <donut/object/DonutClosureObject.h>
+#include <donut/source/Source.h>
 
 namespace donut {
 using namespace tarte;

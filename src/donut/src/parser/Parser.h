@@ -20,7 +20,7 @@
 #include <memory>
 #include <tarte/Handler.h>
 
-#include "../source/Source.h"
+#include <donut/source/Source.h>
 
 namespace donut {
 using namespace tarte;

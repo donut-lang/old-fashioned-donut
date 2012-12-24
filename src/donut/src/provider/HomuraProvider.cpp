@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "HomuraProvider.h"
-#include "../object/Heap.h"
-#include "../object/HomuraObject.h"
+#include <donut/provider/HomuraProvider.h>
+#include <donut/object/Heap.h>
+#include <donut/object/HomuraObject.h>
 
 namespace donut {
 

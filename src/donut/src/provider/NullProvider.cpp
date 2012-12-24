@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "NullProvider.h"
-#include "../Exception.h"
+#include <donut/provider/NullProvider.h>
+#include <donut/Exception.h>
 
 namespace donut {
 

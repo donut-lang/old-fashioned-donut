@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Object.h"
-#include "../Exception.h"
-#include "Heap.h"
+#include <donut/object/Object.h>
+#include <donut/Exception.h>
+#include <donut/object/Heap.h>
 namespace donut {
 
 HeapObject::HeapObject(HeapProvider* const provider)

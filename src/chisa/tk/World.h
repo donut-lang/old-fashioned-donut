@@ -20,9 +20,9 @@
 #include <string>
 #include <unordered_map>
 #include <tarte/ClassUtil.h>
+#include <donut/Donut.h>
 #include "../gl/Canvas.h"
 #include "../geom/Area.h"
-#include "../../donut/DozenBox.h"
 
 #include "Task.h"
 #include "Stack.h"
@@ -52,7 +52,7 @@ private:
 	HandlerW<Universe> const universe_;
 	DEFINE_MEMBER_CONST(public, std::string, name);
 	TaskHandler taskHandler_;
-	Handler< ::donut::DozenBox> dozenBox_;
+	Handler< ::donut::Donut> donut_;
 	Stack<Handler<Element> > elementStack_;
 	std::unordered_map<std::string, WidgetElement*> widgetMap_;
 	DEFINE_MEMBER(private, private, geom::Area, area);

@@ -19,10 +19,10 @@
 #pragma once
 
 #include "../TestCommon.h"
-#include "../../src/donut/parser/Parser.h"
-#include "../../src/donut/object/Slot.h"
-#include "../../src/donut/object/Heap.h"
-#include "../../src/donut/object/FloatObject.h"
-#include "../../src/donut/object/StringObject.h"
-#include "../../src/donut/Donut.h"
+#include "../../donut/src/parser/Parser.h"
+#include <donut/object/Slot.h>
+#include <donut/object/Heap.h>
+#include <donut/object/FloatObject.h>
+#include <donut/object/StringObject.h>
+#include <donut/Donut.h>
 

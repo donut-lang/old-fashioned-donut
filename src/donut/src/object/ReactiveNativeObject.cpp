@@ -20,9 +20,9 @@
 #include <tarte/String.h>
 #include <algorithm>
 
-#include "ReactiveNativeObject.h"
-#include "Heap.h"
-#include "../Clock.h"
+#include <donut/object/ReactiveNativeObject.h>
+#include <donut/object/Heap.h>
+#include <donut/Clock.h>
 
 namespace donut {
 

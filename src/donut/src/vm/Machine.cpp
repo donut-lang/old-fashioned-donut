@@ -19,12 +19,12 @@
 #include <tarte/String.h>
 #include <algorithm>
 
-#include "Machine.h"
-#include "../Exception.h"
-#include "../object/StringObject.h"
-#include "../object/FloatObject.h"
-#include "../object/NativeClosureObject.h"
-#include "../object/DonutClosureObject.h"
+#include <donut/vm/Machine.h>
+#include <donut/Exception.h>
+#include <donut/object/StringObject.h>
+#include <donut/object/FloatObject.h>
+#include <donut/object/NativeClosureObject.h>
+#include <donut/object/DonutClosureObject.h>
 
 
 namespace donut {

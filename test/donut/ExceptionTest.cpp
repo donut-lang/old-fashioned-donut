@@ -17,7 +17,7 @@
  */
 
 #include "../TestCommon.h"
-#include "../../src/donut/Exception.h"
+#include <donut/Exception.h>
 
 namespace donut {
 

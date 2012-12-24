@@ -19,8 +19,8 @@
 #include <tarte/String.h>
 #include <tarte/XVal.h>
 
-#include "HomuraObject.h"
-#include "Heap.h"
+#include <donut/object/HomuraObject.h>
+#include <donut/object/Heap.h>
 
 namespace donut {
 using namespace tarte;

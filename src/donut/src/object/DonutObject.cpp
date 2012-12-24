@@ -19,9 +19,9 @@
 #include <sstream>
 #include <tarte/String.h>
 
-#include "Heap.h"
-#include "DonutObject.h"
-#include "../Exception.h"
+#include <donut/object/Heap.h>
+#include <donut/object/DonutObject.h>
+#include <donut/Exception.h>
 
 namespace donut {
 using namespace tarte;

@@ -160,8 +160,8 @@ typedef struct Compiler_Ctx_struct Compiler, * pCompiler;
 #include <cstddef>
 #include <algorithm>
 #include <tarte/String.h>
-#include "../../source/Source.h"
-#include "../../source/Closure.h"
+#include <donut/source/Source.h>
+#include <donut/source/Closure.h>
 #include "../ParseUtil.h"
 
 using namespace tarte;
