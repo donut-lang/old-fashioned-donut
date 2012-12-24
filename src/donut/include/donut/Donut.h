@@ -18,7 +18,6 @@
 
 #pragma once
 
-
 #include <tarte/Logger.h>
 #include <tarte/Handler.h>
 #include <tarte/XVal.h>
@@ -41,7 +40,10 @@ private:
 	Handler<Patron> patron_;
 	VectorMap<std::string, Handler<Machine> > machines_;
 public: /* 生成・破棄 */
-	Donut(Logger& log, Handler<Patron> patron=Handler<Patron>());
+	Donut();
+	Donut(Logger& log);
+	Donut(Handler<Patron> patron);
+	Donut(Logger& log, Handler<Patron> patron);
 	virtual ~Donut() noexcept = default;
 	inline bool onFree() noexcept { return false; };
 public:

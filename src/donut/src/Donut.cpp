@@ -16,14 +16,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <iostream>
 #include <donut/Donut.h>
 #include <donut/Patron.h>
 #include "parser/Parser.h"
 
 namespace donut {
 
+static Logger defaultLogger(std::cout, Logger::Level::WARN_);
+
+Donut::Donut()
+:log_(defaultLogger)
+,clock_(new Clock(this))
+,heap_(new Heap(log_, clock_))
+,patron_()
+{
+
+}
+
+Donut::Donut(Logger& log)
+:log_(log)
+,clock_(new Clock(this))
+,heap_(new Heap(log_, clock_))
+,patron_()
+{
+
+}
+
 Donut::Donut(Logger& log, Handler<Patron> patron)
 :log_(log)
+,clock_(new Clock(this))
+,heap_(new Heap(log_, clock_))
+,patron_(patron)
+{
+
+}
+
+Donut::Donut(Handler<Patron> patron)
+:log_(defaultLogger)
 ,clock_(new Clock(this))
 ,heap_(new Heap(log_, clock_))
 ,patron_(patron)

@@ -24,8 +24,6 @@
 #include <cstdlib>
 #include <exception>
 #include <sstream>
-#include <tarte/Logger.h>
-#include <tarte/Exception.h>
 #include <donut/Donut.h>
 #include "SystemProvider.h"
 #include "SystemObject.h"
@@ -148,13 +146,16 @@ int main(int argc, char* argv[]){
 	log.t(TAG, "Logger created. Level: %d", level);
 
 	std::string source;
+	std::string filename;
 	if(optind == argc){
 		log.t(TAG, "Read from std::cin");
 		source = readAll(std::cin);
+		filename = "<CIN>";
 	}else{
 		log.t(TAG, "Read from file: %s", argv[optind]);
 		std::ifstream in(argv[optind]);
 		source = readAll(in);
+		filename = argv[optind];
 		optind++;
 	}
 	log.t(TAG, "Source: \n%s", source.c_str());
@@ -164,7 +165,7 @@ int main(int argc, char* argv[]){
 		Handler<Donut> donut(new Donut(log, Handler<Patron>(new Patron(argc-optind, argv))));
 		donut->bootstrap();
 		Handler<Machine> machine = donut->queryMachine();
-		Handler<Source> src = donut->parse( source, "<CIN>" );
+		Handler<Source> src = donut->parse( source, filename );
 		Handler<Object> obj = machine->start( src );
 	}
 
