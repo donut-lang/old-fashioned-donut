@@ -21,7 +21,7 @@
 
 namespace donut {
 
-TEST(DonutFunctionTest, ReservedWord)
+TEST(DonutFunctionTest, FuncIsReservedWord)
 {
 	SOURCE_TEST_THROW("func(a,b);");
 }

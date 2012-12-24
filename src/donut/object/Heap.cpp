@@ -122,6 +122,8 @@ Handler<Object> Heap::decodeDescriptor( object_desc_t const& desc )
 {
 	if( Object::isPrimitiveDescriptor(desc) ) {
 		return Handler<Object>::__internal__fromRawPointerWithoutCheck( Object::castToPointer(desc) );
+	}else if(!desc){
+		return Handler<Object>();
 	}
 	return Handler<HeapObject>::__internal__fromRawPointerWithoutCheck( findHeapObjectFromID( Object::decodeObjectId( desc) ) );
 }

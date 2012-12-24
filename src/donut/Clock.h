@@ -53,6 +53,29 @@ public:
 	Clock( Donut* const donut );
 	virtual ~Clock() noexcept = default;
 	bool onFree() noexcept { return false; };
+private: /* VMから呼ばれる特殊ファンクション */
+	enum MachineRequest {
+		NONE = 0,
+		TICK = 1,
+		SEEK = 2,
+		BACK = 3,
+		FORWARD = 4,
+		DISCARD_FUTURE = 5,
+		DISCARD_HISTORY = 6
+	} machineRequest_;
+	unsigned int machineRequestedSeekTime_;
+public:
+	void tickFromMachine();
+	void seekFromMachine( unsigned int const& time );
+	void backFromMachine();
+	void forwardFromMachine();
+	void discardFutureFromMachine();
+	void discardHistoryFromMachine();
+	/**
+	 * 予約しておいたオペレーションを実際に実行する。
+	 * 時間が不自然な動きをした時は、trueを返す
+	 */
+	bool invokeMahcineRequest();
 public: /* 処理系の保存・復帰をします。 */
 	void bootstrap();
 	XValue save();
