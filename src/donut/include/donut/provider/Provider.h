@@ -83,7 +83,7 @@ class HeapProvider : public Provider {
 	friend class Heap;
 protected:
 	HeapProvider( Handler<Heap> const& heap, std::string const& name ):Provider(heap, name){};
-	virtual HeapObject* createEmptyObject() = 0;
+	virtual HeapObject* __internal__createInstanceForLoading() = 0;
 public:
 	virtual ~HeapProvider() noexcept = default;
 };
@@ -94,16 +94,16 @@ protected:
 	HeapProviderImpl( Handler<Heap> const& heap, std::string const& name ):HeapProvider(heap, name){};
 public:
 	virtual ~HeapProviderImpl() noexcept = default;
-public:
+private:
+	virtual HeapObject* __internal__createInstanceForLoading() override {
+		return new T( this );
+	}
+public: /* これを使ってオブジェクトを生成してね */
 	template <typename... Args> inline
 	Handler<T> newInstance(Args... args) {
 		Handler<T> t ( new T( this ) );
 		t->bootstrap(args...);
 		return t;
-	}
-private:
-	virtual HeapObject* createEmptyObject() override {
-		return new T( this );
 	}
 };
 

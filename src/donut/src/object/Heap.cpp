@@ -312,7 +312,7 @@ void Heap::load(XValue const& data)
 			std::string const provider = obj->get<XString>("provider");
 			objectid_t id = obj->get<objectid_t>("id");
 			//中身
-			HeapObject* robj ( this->findHeapProvider(provider)->createEmptyObject() );
+			HeapObject* robj ( this->findHeapProvider(provider)->__internal__createInstanceForLoading() );
 			robj->id(id);
 			this->objectPool_.push_back( robj );
 		}
