@@ -62,8 +62,6 @@ def configure(conf):
 def configureLibrary(conf):
 	conf.load('compiler_c compiler_cxx')
 	conf.env.append_value('CXXFLAGS', ['-I'+TINYXML2_DIR])
-	conf.env.append_value('CXXFLAGS', ['-I'+TARTE_INCLUDE_DIR])
-	conf.env.append_value('CXXFLAGS', ['-I'+DONUT_INCLUDE_DIR])
 	conf.check_cfg(package='icu-uc icu-i18n', uselib_store='ICU', mandatory=True, args='--cflags --libs')
 	conf.check_cfg(package='libpng', uselib_store='LIBPNG', mandatory=True, args='--cflags --libs')
 	conf.check_cfg(package='freetype2', uselib_store='FREETYPE2', mandatory=True, args='--cflags --libs')
@@ -118,12 +116,14 @@ def build(bld):
 		features = 'cxx cprogram',
 		source = DONUT_SRC,
 		target = 'donut',
-		use=['PPROF','PTHREAD','BOOST','ICU','ANTLR'])
+		use=['PPROF','PTHREAD','BOOST','ICU','ANTLR'],
+		includes=[TARTE_INCLUDE_DIR, DONUT_INCLUDE_DIR])
 	bld(
-			features = 'cxx cprogram',
-			source = MAIN_SRC,
-			target = 'chisa',
-			use=['PPROF','PTHREAD', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU','ANTLR'])
+		features = 'cxx cprogram',
+		source = MAIN_SRC,
+		target = 'chisa',
+		use=['PPROF','PTHREAD', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU','ANTLR'],
+		includes=[TARTE_INCLUDE_DIR, DONUT_INCLUDE_DIR])
 	
 	test_env = None
 	if "coverage" in bld.all_envs:
@@ -135,7 +135,8 @@ def build(bld):
 		source = TEST_SRC,
 		target = 'chisa_test',
 		env = test_env,
-		use=['PTHREAD', 'OPENGL','FREETYPE2','CAIRO','GTEST','LIBPNG','BOOST','ICU','ANTLR'])
+		use=['PTHREAD', 'OPENGL','FREETYPE2','CAIRO','GTEST','LIBPNG','BOOST','ICU','ANTLR'],
+		includes=[TARTE_INCLUDE_DIR, DONUT_INCLUDE_DIR])
 
 # from http://docs.waf.googlecode.com/git/book_16/single.html#_custom_build_outputs
 from waflib.Build import BuildContext, CleanContext, InstallContext, UninstallContext
