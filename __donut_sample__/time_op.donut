@@ -1,0 +1,10 @@
+Homura.counter=1; //Homuraオブジェクトは、時間操作の影響を受けません。
+back=Homura.tick(); //このあとの命令を使って、ここの時点まで時を戻します。
+if(Homura.counter <= 10){
+    System.println("Eating ", Homura.counter, "(st/nd/th) donut(s)!"); //この行を10回繰り返します
+    Homura.counter+=1; //このHomuraオブジェクトへの操作は、時間操作の影響を受けません。
+    Homura.seek(back); //上で記録した時間まで、スクリプトエンジン全体を戻します。
+} else { //ど～なっつでは、else節を省略することはできません。
+};
+
+
