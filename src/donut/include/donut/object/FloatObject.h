@@ -29,9 +29,10 @@ public:
 	virtual ~FloatObject() noexcept = default;
 public:
 	inline float const& value() const noexcept { return this->value_; };
-protected:
+private:
 	virtual std::string reprImpl(Handler<Heap> const& heap) const override final;
-protected:
+	virtual std::string printImpl(Handler<Heap> const& heap) const override final;
+private:
 	virtual Handler<const FloatObject> toFloatObjectImpl() const override final;
 	virtual void onBackNotifyImpl(Handler<Heap> const& heap) override final;
 	virtual void onForwardNotifyImpl(Handler<Heap> const& heap) override final;

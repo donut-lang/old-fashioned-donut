@@ -51,6 +51,22 @@ std::string Object::repr(Handler<Heap> const& heap) const
 	}
 }
 
+std::string Object::print(Handler<Heap> const& heap) const
+{
+	switch(this->tag()){
+	case Tag::Obj:
+		return this->printImpl(heap);
+	case Tag::Int:
+		return heap->intProvider()->print(this);
+	case Tag::Bool:
+		return heap->boolProvider()->print(this);
+	case Tag::Null:
+		return heap->nullProvider()->print(this);
+	default:
+		DONUT_EXCEPTION(Exception, "[BUG] Unknwon object tag: %d", this->tag());
+	}
+}
+
 std::string const& Object::toString(Handler<Heap> const& heap) const
 {
 	switch(this->tag()){

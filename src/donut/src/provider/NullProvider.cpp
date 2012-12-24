@@ -33,6 +33,11 @@ std::string NullProvider::repr(const Object* ptr) const
 	return std::string("null");
 }
 
+std::string NullProvider::print(const Object* ptr) const
+{
+	return std::string("");
+}
+
 Handler<Object> NullProvider::createNull()
 {
 	return Handler<Object>::__internal__fromRawPointerWithoutCheck( NullProvider::toPointer() );

@@ -45,7 +45,7 @@ void SystemObject::bootstrap(Handler<Heap> const& heap)
 Handler<Object> SystemObject::println(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& arg)
 {
 	for(Handler<Object> const& obj : arg){
-		std::cout << obj->toString(heap);
+		std::cout << obj->print(heap);
 	}
 	std::cout << std::endl;
 	return self;
@@ -54,7 +54,7 @@ Handler<Object> SystemObject::println(Handler<Heap> const& heap, Handler<Object>
 Handler<Object> SystemObject::print(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& arg)
 {
 	for(Handler<Object> const& obj : arg){
-		std::cout << obj->toString(heap);
+		std::cout << obj->print(heap);
 	}
 	return self;
 }
