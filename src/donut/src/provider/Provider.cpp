@@ -46,6 +46,28 @@ ReactiveNativeClosureObject::Signature const& Provider::findReactiveNativeClosur
 	return p.second;
 }
 
+//関数ポインタ版
+template <>
+bool Provider::registerPureNativeClosure<PureNativeClosureObject::Function> ( std::string const& name, PureNativeClosureObject::Function f) {
+	return (!pureNativeClosures_.have(name)) && pureNativeClosures_.update( name, f );
+}
+
+template <>
+bool Provider::registerReactiveNativeClosure<ReactiveNativeClosureObject::Function> ( std::string const& name, ReactiveNativeClosureObject::Function f) {
+	return (!reactiveNativeClosures_.have(name)) && reactiveNativeClosures_.update( name, f );
+}
+
+// std::function版
+template <>
+bool Provider::registerPureNativeClosure<PureNativeClosureObject::Signature>( std::string const& name, PureNativeClosureObject::Signature f) {
+	return (!pureNativeClosures_.have(name)) && pureNativeClosures_.update( name, f );
+}
+
+template <>
+bool Provider::registerReactiveNativeClosure<ReactiveNativeClosureObject::Signature>( std::string const& name, ReactiveNativeClosureObject::Signature f) {
+	return (!reactiveNativeClosures_.have(name)) && reactiveNativeClosures_.update( name, f );
+}
+
 /******************************************************************************
  * save/load
  ******************************************************************************/
