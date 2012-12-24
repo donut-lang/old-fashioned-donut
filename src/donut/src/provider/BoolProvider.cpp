@@ -52,6 +52,11 @@ std::string BoolProvider::repr(const Object* ptr) const
 	return BoolProvider::fromPointer(ptr) ? "bool: true" : "bool: false";
 }
 
+std::string BoolProvider::print(const Object* ptr) const
+{
+	return BoolProvider::fromPointer(ptr) ? "true" : "false";
+}
+
 bool BoolProvider::toBool(const Object* ptr) const
 {
 	return BoolProvider::fromPointer(ptr);

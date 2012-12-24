@@ -34,6 +34,11 @@ std::string StringObject::reprImpl(Handler<Heap> const& heap) const
 	return std::string("string: ")+this->str_;
 }
 
+std::string StringObject::printImpl(Handler<Heap> const& heap) const
+{
+	return this->str_;
+}
+
 Handler<const StringObject> StringObject::toStringObjectImpl() const
 {
 	return Handler<const StringObject>::__internal__fromRawPointerWithoutCheck(this);

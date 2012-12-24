@@ -87,6 +87,11 @@ std::string IntProvider::repr(const Object* ptr) const
 	return std::string("int:")+toString(IntProvider::fromPointer(ptr));
 }
 
+std::string IntProvider::print(const Object* ptr) const
+{
+	return toString(IntProvider::fromPointer(ptr));
+}
+
 int IntProvider::toInt(const Object* ptr) const
 {
 	return fromPointer(ptr);

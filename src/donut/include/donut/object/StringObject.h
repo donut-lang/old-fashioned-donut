@@ -29,9 +29,10 @@ public:
 	virtual ~StringObject() noexcept = default;
 public:
 	inline std::string const& value() const noexcept { return this->str_; };
-protected:
+private:
 	virtual std::string reprImpl(Handler<Heap> const& heap) const override final;
-protected:
+	virtual std::string printImpl(Handler<Heap> const& heap) const override final;
+private:
 	virtual Handler<const StringObject> toStringObjectImpl() const override final;
 	virtual void onBackNotifyImpl(Handler<Heap> const& heap) override final;
 	virtual void onForwardNotifyImpl(Handler<Heap> const& heap) override final;

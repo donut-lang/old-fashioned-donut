@@ -50,6 +50,7 @@ public:
 	virtual ~Object() noexcept = default;
 public: //すべてのオブジェクトに出来なければならないこと
 	std::string repr(Handler<Heap> const& heap) const;
+	std::string print(Handler<Heap> const& heap) const;
 	int toInt(Handler<Heap> const& heap) const;
 	float const& toFloat(Handler<Heap> const& heap) const;
 	std::string const& toString(Handler<Heap> const& heap) const;
@@ -81,6 +82,7 @@ public:
 	inline void onDiscardHistoryNotify(Handler<Heap> const& heap){ if(isObject()){ this->onDiscardHistoryNotifyImpl(heap); } };
 protected: /* 実装すべきもの */
 	virtual std::string reprImpl(Handler<Heap> const& heap) const = 0;
+	virtual std::string printImpl(Handler<Heap> const& heap) const = 0;
 	virtual Handler<const StringObject> toStringObjectImpl() const;
 	virtual Handler<const FloatObject> toFloatObjectImpl() const;
 	virtual Handler<NativeClosureObject> tryCastToNativeClosureObjectImpl();
@@ -154,6 +156,7 @@ protected:
 	inline HeapProvider* const& provider() const noexcept { return this->provider_; };
 private:
 	virtual std::string providerNameImpl(Handler<Heap> const& heap) const override final;
+	virtual std::string printImpl(Handler<Heap> const& heap) const { return reprImpl(heap); };
 public:
 	struct CompareById : std::binary_function<HeapObject* const&,HeapObject* const&,bool>{
 		bool operator()(HeapObject* const& a, HeapObject* const& b){

@@ -32,6 +32,7 @@ private:
 	}
 public:
 	std::string repr(const Object* ptr) const;
+	std::string print(const Object* ptr) const;
 public:
 	Handler<Object> createNull();
 };
