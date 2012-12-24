@@ -80,11 +80,12 @@ bool Provider::registerReactiveNativeClosure<ReactiveNativeClosureObject::Signat
 //---------------------------------------------------------------------------------------------------------------------
 
 class HeapProvider : public Provider {
+	friend class Heap;
 protected:
 	HeapProvider( Handler<Heap> const& heap, std::string const& name ):Provider(heap, name){};
+	virtual HeapObject* createEmptyObject() = 0;
 public:
 	virtual ~HeapProvider() noexcept = default;
-	virtual HeapObject* createEmptyObject() = 0;
 };
 
 template <typename T>
