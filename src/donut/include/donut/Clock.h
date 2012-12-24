@@ -64,7 +64,7 @@ private: /* VMから呼ばれる特殊ファンクション */
 		DISCARD_HISTORY = 6
 	} machineRequest_;
 	unsigned int machineRequestedSeekTime_;
-public:
+public: /* Machineから呼ばれる、普通は呼ばない */
 	void tickFromMachine();
 	void seekFromMachine( unsigned int const& time );
 	void backFromMachine();
@@ -75,7 +75,9 @@ public:
 	 * 予約しておいたオペレーションを実際に実行する。
 	 * 時間が不自然な動きをした時は、trueを返す
 	 */
-	bool invokeMahcineRequest();
+	inline bool invokeMahcineRequest() { return this->machineRequest_ && this->invokeMahcineRequestInner(); };
+private:
+	bool invokeMahcineRequestInner();
 public: /* 処理系の保存・復帰をします。 */
 	void bootstrap();
 	XValue save();

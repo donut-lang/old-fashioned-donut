@@ -427,6 +427,9 @@ Handler<Object> Machine::run()
 
 			if( Handler<NativeClosureObject> nclos = closureObj->tryCastToNativeClosureObject() ){
 				this->pushStack( nclos->apply(heap_, destObj, arg) );
+				if( clock_->invokeMahcineRequest() ){ //ネイティブ処理の実行後は時計操作が行われる可能性がある
+					running &= !this->isInterruptedNow();
+				}
 			}else if( Handler<DonutClosureObject> dclos = closureObj->tryCastToDonutClosureObject() ){
 				this->enterClosure(destObj, dclos, arg);
 			}else{
@@ -490,9 +493,6 @@ Handler<Object> Machine::run()
 			DONUT_EXCEPTION(Exception,
 					"[BUG] Oops. Unknwon opcode: closure<%s>@%08x=%08x => (%02x,%02x,%04x)",
 					closureObject()->repr(heap_).c_str(), this->pc()-1, inst,opcode,constKind,constIndex);
-		}
-		if( clock_->invokeMahcineRequest() ){
-			running &= !this->isInterruptedNow();
 		}
 	}
 	if(this->isInterruptedNow()) {

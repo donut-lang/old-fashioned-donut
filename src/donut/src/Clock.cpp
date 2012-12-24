@@ -100,11 +100,8 @@ void Clock::discardHistoryFromMachine()
 	this->machineRequest_ = MachineRequest::DISCARD_HISTORY;
 }
 
-bool Clock::invokeMahcineRequest()
+bool Clock::invokeMahcineRequestInner()
 {
-	if(!this->machineRequest_){
-		return false;
-	}
 	MachineRequest const req = this->machineRequest_;
 	this->machineRequest_ = MachineRequest::NONE;
 	switch (req) {
