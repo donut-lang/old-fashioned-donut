@@ -30,6 +30,7 @@ SystemProvider::SystemProvider(Handler<Heap> const& heap, int argc, char** argv)
 {
 	this->registerPureNativeClosure("println", SystemObject::println);
 	this->registerPureNativeClosure("print", SystemObject::print);
+	this->registerPureNativeClosure("args", SystemObject::args);
 }
 
 }
