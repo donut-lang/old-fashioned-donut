@@ -149,7 +149,7 @@ Handler<Object> Machine::start( Handler<Source> const& src )
 {
 	if( this->isInterrupted() ){
 		DONUT_EXCEPTION(Exception, "[BUG] Oops. This machine is interrupted now. Call #resume instead.");
-	}else if(!this->isCallstackEmpty()) {
+	}else if( !this->isCallstackEmpty() ) {
 		DONUT_EXCEPTION(Exception, "[BUG] Oops. This machine is already running source now. Call #restart instead.");
 	}
 	this->clock_->tick();
@@ -190,7 +190,7 @@ Handler<Object> Machine::resume(Handler<Object> const& obj)
 {
 	if( this->isCallstackEmpty() ) {
 		DONUT_EXCEPTION(Exception, "[BUG] Oops. This machine is not running any source. Call #start with source first.");
-	} else if(this->isInterrupted()) {
+	} else if( !this->isInterrupted() ) {
 		DONUT_EXCEPTION(Exception, "[BUG] Oops. This machine is not interrupted now. Call #restart instead.");
 	}
 	this->clock_->tick();
@@ -211,8 +211,8 @@ bool Machine::isInterrupted() const noexcept
 	unsigned int const time = this->clock_->now();
 	// シークされてない
 	Context const& last = this->contextRevs_.back();
-	if( time == last.time_ ){
-		return this->isInterruptedNow();
+	if( time >= last.time_ ){
+		return bool(last.interrupt_);
 	}
 	// シークされてるので、インデックスを探す
 	int const idx = this->findRevisionIndex(time);
@@ -226,18 +226,18 @@ bool Machine::isInterrupted() const noexcept
 bool Machine::isCallstackEmpty() const noexcept
 {
 	if( this->contextRevs_.empty() ) {
-		return false;
+		return true;
 	}
 	unsigned int const time = this->clock_->now();
 	// シークされてない
 	Context const& last = this->contextRevs_.back();
-	if( time == last.time_ ){
+	if( time >= last.time_ ){
 		return last.callStack_.empty();
 	}
 	// シークされてるので、インデックスを探す
 	int const idx = this->findRevisionIndex(time);
 	if( idx < 0 ){
-		return false;
+		return true;
 	}
 	Context const& ctx = this->contextRevs_[idx];
 	return ctx.callStack_.empty();
@@ -315,7 +315,7 @@ Handler<Object> Machine::topStack()
 
 Handler<Object> Machine::run()
 {
-	RunLock(this);
+	RunLock lock(this);
 
 	std::vector<Handler<Object> > arg;
 	bool running = true;
@@ -606,6 +606,9 @@ void Machine::load( XValue const& obj)
 void Machine::onTickNotify()
 {
 	if( this->running() ) {
+		if(this->log().t()){
+			this->log().t(TAG, "New context created.");
+		}
 		Context& last = this->contextRevs_.back();
 		this->contextRevs_.push_back(Context(clock_, last));
 	}

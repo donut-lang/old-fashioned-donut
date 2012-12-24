@@ -89,6 +89,9 @@ private: /* 実行時の一時的な変数 */
 			m->running_= true;
 		}
 		inline ~RunLock() noexcept {
+			if(!m->running_){
+				DONUT_EXCEPTION(Exception, "[BUG] Oops. Already unlocked!!");
+			}
 			m->running_ = false;
 		}
 	};
