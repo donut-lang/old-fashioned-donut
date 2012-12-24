@@ -27,9 +27,12 @@
 #include <tarte/Logger.h>
 #include <tarte/Exception.h>
 #include <donut/Donut.h>
+#include "SystemProvider.h"
+#include "SystemObject.h"
 
-namespace donut {
+namespace donut_cli {
 using namespace tarte;
+using namespace donut;
 
 static const std::string TAG("Donut");
 
@@ -78,6 +81,26 @@ std::string readAll(std::istream& stream) {
 	}
 	return source_.str();
 }
+
+class Patron : public donut::Patron {
+	int argc_;
+	char** argv_;
+	Handler<SystemProvider> systemProvider_;
+public:
+	Patron(int argc, char** argv): argc_(argc), argv_(argv){
+
+	}
+	virtual ~Patron() noexcept = default;
+public:
+	virtual void onRegisterProvider(Handler<Heap> const& heap) override final
+	{
+		heap->registerProvider(systemProvider_ = Handler<SystemProvider>(new SystemProvider(heap, argc_, argv_)));
+	}
+	virtual void onGlobalObjectInitialized(Handler<Heap> const& heap) override final
+	{
+		heap->setGlobalObject("System", systemProvider_->newInstance(heap));
+	}
+};
 
 int main(int argc, char* argv[]){
 
@@ -132,18 +155,17 @@ int main(int argc, char* argv[]){
 		log.t(TAG, "Read from file: %s", argv[optind]);
 		std::ifstream in(argv[optind]);
 		source = readAll(in);
+		optind++;
 	}
 	log.t(TAG, "Source: \n%s", source.c_str());
 	log.t(TAG, "Start executing...");
 
 	{ //実行
-		Handler<Donut> donut(new Donut(log));
+		Handler<Donut> donut(new Donut(log, Handler<Patron>(new Patron(argc-optind, argv))));
 		donut->bootstrap();
 		Handler<Machine> machine = donut->queryMachine();
 		Handler<Source> src = donut->parse( source, "<CIN>" );
 		Handler<Object> obj = machine->start( src );
-
-		std::cout << obj->toString( donut->heap() ) << std::endl;
 	}
 
 	return 0;
@@ -153,7 +175,7 @@ int main(int argc, char* argv[]){
 
 int main(int argc, char* argv[]){
 	try{
-		const int resultCode = donut::main(argc, argv);
+		const int resultCode = donut_cli::main(argc, argv);
 		return resultCode;
 	} catch (donut::DonutException& e){
 		std::cout << "Donut Exception catch: " << e.what() << std::endl;

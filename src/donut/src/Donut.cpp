@@ -22,7 +22,7 @@
 
 namespace donut {
 
-Donut::Donut(Logger& log, Handler<Patron> const& patron)
+Donut::Donut(Logger& log, Handler<Patron> patron)
 :log_(log)
 ,clock_(new Clock(this))
 ,heap_(new Heap(log_, clock_))
@@ -67,10 +67,12 @@ void Donut::bootstrap()
 	// 1: 時計
 	this->clock_->bootstrap();
 	// 2: ヒープ
-	this->heap_->bootstrap();
 	if(this->patron_) {
 		this->patron_->onRegisterProvider(heap_);
-		this->patron_->onRegisterInitialGlobalObject(heap_);
+	}
+	this->heap_->bootstrap();
+	if(this->patron_) {
+		this->patron_->onGlobalObjectInitialized(heap_);
 	}
 	// 3:マシン
 	this->machines_.clear(); //すべて削除

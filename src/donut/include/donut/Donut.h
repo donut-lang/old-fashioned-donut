@@ -41,7 +41,7 @@ private:
 	Handler<Patron> patron_;
 	VectorMap<std::string, Handler<Machine> > machines_;
 public: /* 生成・破棄 */
-	Donut(Logger& log, Handler<Patron> const& patron=Handler<Patron>());
+	Donut(Logger& log, Handler<Patron> patron=Handler<Patron>());
 	virtual ~Donut() noexcept = default;
 	inline bool onFree() noexcept { return false; };
 public:

@@ -31,7 +31,7 @@ public:
 	inline bool onFree() const noexcept { return false; };
 public:
 	virtual void onRegisterProvider(Handler<Heap> const& heap) = 0;
-	virtual void onRegisterInitialGlobalObject(Handler<Heap> const& heap) = 0;
+	virtual void onGlobalObjectInitialized(Handler<Heap> const& heap) = 0;
 };
 
 }
