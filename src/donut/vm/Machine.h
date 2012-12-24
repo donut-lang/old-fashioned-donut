@@ -93,7 +93,7 @@ private: /* 実行時の一時的な変数 */
 		}
 	};
 	inline bool running() const noexcept { return this->running_; };
-private: /* それへのアクセス手段の提供。 */
+private: /* 最新のコンテキストへのアクセサ */
 	Handler<Object> const& self();
 	Handler<DonutObject> const& scope();
 	Handler<DonutClosureObject> const& closureObject();
@@ -102,8 +102,13 @@ private: /* それへのアクセス手段の提供。 */
 	std::vector<Handler<Object> >& stack();
 	unsigned int stackBase();
 	std::vector<Callchain>& callStack();
-	int findRevisionIndex(timestamp_t const& t) const;
 	pc_t& pc();
+	Handler<Object> const& interrupt() const noexcept;
+	void interrupt(Handler<Object> const& obj);
+	void releaseInterrupt();
+	bool isInterruptedNow() const noexcept;
+private:
+	int findRevisionIndex(timestamp_t const& t) const;
 public: /* 生成 */
 	Machine(Logger& log, Handler<Clock> const& clock, Handler<Heap> const& heap);
 	virtual ~Machine() noexcept = default;
@@ -123,10 +128,6 @@ private: /* 実行 */
 	bool leaveClosure();
 	bool fetchPC( Instruction& inst );
 	Handler<Object> run();
-	Handler<Object> const& interrupt() const noexcept;
-	void interrupt(Handler<Object> const& obj);
-	void releaseInterrupt();
-	bool isInterruptedNow() const noexcept;
 public: /* 処理系の保存・復帰をします。 */
 	void bootstrap();
 	XValue save();
