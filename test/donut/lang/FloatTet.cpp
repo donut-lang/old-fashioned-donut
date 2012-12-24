@@ -60,7 +60,7 @@ TEST(FloatTest, SaveLoadTest)
 		providerName = obj->providerName(heap);
 	}
 	{
-		Handler<HeapObject> obj(heap->findHeapProvider(providerName)->createEmptyObject());
+		Handler<HeapObject> obj(new FloatObject(heap->findHeapProvider(providerName).get()));
 		obj->load(heap, data);
 		ASSERT_NO_THROW(obj.cast<FloatObject>());
 		ASSERT_ANY_THROW(obj->toBool(heap));
