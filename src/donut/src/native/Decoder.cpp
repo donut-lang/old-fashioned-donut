@@ -16,43 +16,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Encoder.h"
-
-#include "../object/Heap.h"
-#include "../object/StringObject.h"
-#include "../object/FloatObject.h"
+#include <donut/native/Decoder.h>
 
 namespace donut {
 namespace native {
 
 template <>
-Handler<Object> encode<int>(Handler<Heap> const& heap, int val)
+int decode<int>(Handler<Heap> const& heap, Handler<Object> obj)
 {
-	return heap->createInt(val);
+	return obj->toInt(heap);
 }
 
 template <>
-Handler<Object> encode<unsigned int>(Handler<Heap> const& heap, unsigned int val)
+unsigned int decode<unsigned int>(Handler<Heap> const& heap, Handler<Object> obj)
 {
-	return heap->createInt(val);
+	return obj->toInt(heap);
+}
+template <>
+float decode<float>(Handler<Heap> const& heap, Handler<Object> obj)
+{
+	return obj->toFloat(heap);
 }
 
 template <>
-Handler<Object> encode<float>(Handler<Heap> const& heap, float val)
+bool decode<bool>(Handler<Heap> const& heap, Handler<Object> obj)
 {
-	return heap->createFloatObject(val);
-}
-
-template <>
-Handler<Object> encode<bool>(Handler<Heap> const& heap, bool val)
-{
-	return heap->createBool(val);
-}
-
-template <>
-Handler<Object> encode<std::string>(Handler<Heap> const& heap, std::string val)
-{
-	return heap->createStringObject(val);
+	return obj->toBool(heap);
 }
 
 }}
