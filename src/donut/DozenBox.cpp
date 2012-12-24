@@ -30,7 +30,7 @@ Handler<Object> DozenBox::execute( std::string const& src )
 	Handler<Machine> const machine(this->mainDonut_->queryMachine());
 	Handler<Object> const obj(machine->start(this->mainDonut_->parse(src)));
 	if(machine->isInterrupted()){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Oops!! You cannot execute interrupted script in main donut!!");
+		DONUT_EXCEPTION(Exception, "[BUG] Oops!! You cannot execute interrupted script in main donut!!");
 	}
 	return obj;
 }
@@ -44,7 +44,7 @@ Handler<Object> DozenBox::startCombo(std::string const& comboname, std::string c
 {
 	auto it = this->combos_.find(comboname);
 	if( it != this->combos_.end() ){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Combo: \"%s\" is already started.", comboname.c_str());
+		DONUT_EXCEPTION(Exception, "[BUG] Oops. Combo: \"%s\" is already started.", comboname.c_str());
 	}
 	Handler<Donut> donut(new Donut(this->log_));
 	Handler<Source> parsed(donut->parse(src));
@@ -55,7 +55,7 @@ Handler<Object> DozenBox::continueCombo(std::string const& comboname, Handler<Ob
 {
 	auto it = this->combos_.find(comboname);
 	if( it == this->combos_.end() ){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Combo: \"%s\" not found.", comboname.c_str());
+		DONUT_EXCEPTION(Exception, "[BUG] Oops. Combo: \"%s\" not found.", comboname.c_str());
 	}
 	Handler<Donut> combo = it->second;
 	return combo->queryMachine()->resume( obj );

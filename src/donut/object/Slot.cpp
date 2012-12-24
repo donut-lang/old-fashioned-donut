@@ -47,7 +47,7 @@ Slot::Slot()
 Object* Slot::load() const
 {
 	if(this->index_ < 0){
-		throw DonutException(__FILE__, __LINE__, "[BUG] No objects.");
+		DONUT_EXCEPTION(Exception, "[BUG] No objects.");
 	}
 	std::pair<timestamp_t, Object*> const& p = this->rev_.at(this->index_);
 	return p.second;
@@ -57,7 +57,7 @@ Object* Slot::store(Handler<Heap> const& heap, Object* obj)
 {
 	unsigned int now = heap->clock()->now();
 	if( static_cast<int>(this->rev_.size())-1 != this->index_ ){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. this slot is not synchronized.");
+		DONUT_EXCEPTION(Exception, "[BUG] Oops. this slot is not synchronized.");
 	}
 	if(this->index_ < 0 || ((std::pair<timestamp_t, Object*> const&)this->rev_.back()).first < now){
 		this->rev_.push_back( std::pair<timestamp_t, Object*>(now, obj) );

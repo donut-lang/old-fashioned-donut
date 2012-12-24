@@ -70,7 +70,7 @@ public:
 	T get(std::size_t index) const
 	{
 		if(index >= table_.size()){
-			throw DonutException(__FILE__, __LINE__, "Unknown const index: %d", index);
+			DONUT_EXCEPTION(Exception, "Unknown const index: %d", index);
 		}
 		return table_.at(index);
 	}
@@ -174,7 +174,7 @@ public:
 	inline Handler<Closure> getEntrypoint()
 	{
 		if( this->entrypoint_id_ == -1 ){
-			throw DonutException(__FILE__, __LINE__, "[BUG] Entrypoint ID is not set.");
+			DONUT_EXCEPTION(Exception, "[BUG] Entrypoint ID is not set.");
 		}
 		return this->getClosure( this->entrypoint_id_ );
 	}

@@ -148,7 +148,9 @@ int Machine::findRevisionIndex(timestamp_t const& t) const
 Handler<Object> Machine::start( Handler<Source> const& src )
 {
 	if( this->isInterrupted() ){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. This machine is interrupted now. Call #resume instead.");
+		DONUT_EXCEPTION(Exception, "[BUG] Oops. This machine is interrupted now. Call #resume instead.");
+	}else if(!this->isCallstackEmpty()) {
+		DONUT_EXCEPTION(Exception, "[BUG] Oops. This machine is already running source now. Call #restart instead.");
 	}
 	this->clock_->tick();
 	if( this->contextRevs_.empty() ){
@@ -163,18 +165,41 @@ Handler<Object> Machine::start( Handler<Source> const& src )
 	}
 	this->clock_->tick();
 	this->contextRevs_.push_back( Context( this->clock_, this->contextRevs_.back() ) );
+	if(this->log().d()){
+		this->log().d(TAG, "Start running...");
+	}
+	return this->run();
+}
+
+Handler<Object> Machine::restart()
+{
+	if( this->isInterrupted() ){
+		DONUT_EXCEPTION(Exception, "[BUG] Oops. This machine is interrupted now. Call #resume instead.");
+	}else if( this->isCallstackEmpty() ) {
+		DONUT_EXCEPTION(Exception, "[BUG] Oops. This machine is not running any source. Call #start with source first.");
+	}
+	this->clock_->tick();
+	this->contextRevs_.push_back( Context( this->clock_, this->contextRevs_.back() ) );
+	if(this->log().d()){
+		this->log().d(TAG, "Restart running...");
+	}
 	return this->run();
 }
 
 Handler<Object> Machine::resume(Handler<Object> const& obj)
 {
-	if( !this->isInterrupted() ){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. This machine is not interrupted now. Call #start instead.");
+	if( this->isCallstackEmpty() ) {
+		DONUT_EXCEPTION(Exception, "[BUG] Oops. This machine is not running any source. Call #start with source first.");
+	} else if(this->isInterrupted()) {
+		DONUT_EXCEPTION(Exception, "[BUG] Oops. This machine is not interrupted now. Call #restart instead.");
 	}
 	this->clock_->tick();
 	this->contextRevs_.push_back( Context( this->clock_, this->contextRevs_.back() ) );
 	this->releaseInterrupt();
 	this->pushStack(obj);
+	if(this->log().d()){
+		this->log().d(TAG, "Resuming...");
+	}
 	return this->run();
 }
 
@@ -196,6 +221,26 @@ bool Machine::isInterrupted() const noexcept
 	}
 	Context const& ctx = this->contextRevs_[idx];
 	return bool(ctx.interrupt_);
+}
+
+bool Machine::isCallstackEmpty() const noexcept
+{
+	if( this->contextRevs_.empty() ) {
+		return false;
+	}
+	unsigned int const time = this->clock_->now();
+	// シークされてない
+	Context const& last = this->contextRevs_.back();
+	if( time == last.time_ ){
+		return last.callStack_.empty();
+	}
+	// シークされてるので、インデックスを探す
+	int const idx = this->findRevisionIndex(time);
+	if( idx < 0 ){
+		return false;
+	}
+	Context const& ctx = this->contextRevs_[idx];
+	return ctx.callStack_.empty();
 }
 
 void Machine::interrupt(Handler<Object> const& obj)
@@ -230,7 +275,7 @@ void Machine::enterClosure(Handler<Object> const& self, Handler<DonutClosureObje
 	Handler<Closure> const& c = clos->closureCode();
 	const std::size_t argsize = c->arglist().size();
 	if(argsize != args.size()) {
-		throw DonutException(__FILE__, __LINE__, "[BUG] Argument size does not match actual: %d != applied: %d", argsize, args.size());
+		DONUT_EXCEPTION(Exception, "[BUG] Argument size does not match actual: %d != applied: %d", argsize, args.size());
 	}
 	{
 		Handler<DonutObject> scope ( heap_->createEmptyDonutObject() );
@@ -270,8 +315,9 @@ Handler<Object> Machine::topStack()
 
 Handler<Object> Machine::run()
 {
+	RunLock(this);
+
 	std::vector<Handler<Object> > arg;
-	this->running_ = true;
 	bool running = true;
 	Instruction inst = 0;
 
@@ -317,7 +363,7 @@ Handler<Object> Machine::run()
 				break;
 			}
 			default:
-				throw DonutException(__FILE__, __LINE__, "Unknwon const type: %d", constKind);
+				DONUT_EXCEPTION(Exception, "Unknwon const type: %d", constKind);
 			}
 			break;
 		}
@@ -384,7 +430,7 @@ Handler<Object> Machine::run()
 			}else if( Handler<DonutClosureObject> dclos = closureObj->tryCastToDonutClosureObject() ){
 				this->enterClosure(destObj, dclos, arg);
 			}else{
-				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. \"%s\" is not callable.", closureObj->repr(heap_).c_str());
+				DONUT_EXCEPTION(Exception, "[BUG] Oops. \"%s\" is not callable.", closureObj->repr(heap_).c_str());
 			}
 			break;
 		}
@@ -449,13 +495,12 @@ Handler<Object> Machine::run()
 			running &= !this->isInterruptedNow();
 		}
 	}
-	this->running_ = false;
 	if(this->isInterruptedNow()) {
 		return this->interrupt();
 	}else{
 		Handler<Object> result(this->popStack());
 		if( !this->stack().empty() ){
-			throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Execution ended, but stack id not empty:%d", this->stack().size());
+			DONUT_EXCEPTION(Exception, "[BUG] Oops. Execution ended, but stack id not empty:%d", this->stack().size());
 		}
 		return result;
 	}
@@ -550,7 +595,7 @@ void Machine::load( XValue const& obj)
 		this->contextRevs_.push_back( Context(heap_, data) );
 	}
 	if( !std::is_sorted(this->contextRevs_.begin(), this->contextRevs_.end(), Context::CompareByTime()) ){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Invalid save data. Revision data is not sorted.");
+		DONUT_EXCEPTION(Exception, "[BUG] Invalid save data. Revision data is not sorted.");
 	}
 }
 
@@ -560,7 +605,7 @@ void Machine::load( XValue const& obj)
 
 void Machine::onTickNotify()
 {
-	if(this->running_) {
+	if( this->running() ) {
 		Context& last = this->contextRevs_.back();
 		this->contextRevs_.push_back(Context(clock_, last));
 	}
@@ -569,7 +614,7 @@ void Machine::onTickNotify()
 // 実行時にdiscardFuture/discardHistoryされるので実行時に駄目になることはないはず
 void Machine::onBackNotify()
 {
-	if(this->running_) {
+	if( this->running() ) {
 		clock_->tick(); //discardHistoryされて、その後tickされる。上のonTickが最後に呼ばれるはず。
 	}
 }

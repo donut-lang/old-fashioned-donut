@@ -100,7 +100,7 @@ void Heap::unregisterSource( Source* source )
 			std::lower_bound( this->sourcePool_.begin(), this->sourcePool_.end(), id, Source::CompareById());
 	Source* src = *it;
 	if( it == this->sourcePool_.end() || src != source) {
-		throw DonutException(__FILE__, __LINE__, "[BUG] source unregistration notified, but there is no source with id: %d", id);
+		DONUT_EXCEPTION(Exception, "[BUG] source unregistration notified, but there is no source with id: %d", id);
 	}
 	this->sourcePool_.erase(it);
 }
@@ -134,7 +134,7 @@ HeapObject* Heap::findHeapObjectFromID( objectid_t const& id )
 			std::lower_bound( this->objectPool_.begin(), this->objectPool_.end(), id, HeapObject::CompareById());
 	HeapObject* obj = *it;
 	if( it == this->objectPool_.end() || obj->id() != id ) {
-		throw DonutException(__FILE__, __LINE__, "[BUG] Object id: %d not found. Invalid Object Descriptor.", id);
+		DONUT_EXCEPTION(Exception, "[BUG] Object id: %d not found. Invalid Object Descriptor.", id);
 	}
 	return obj;
 }
@@ -145,7 +145,7 @@ Handler<Source> Heap::decodeSourceID(int const& id)
 			std::lower_bound( this->sourcePool_.begin(), this->sourcePool_.end(), id, Source::CompareById());
 	Source* src = *it;
 	if( it == this->sourcePool_.end() || src->id() != id ) {
-		throw DonutException(__FILE__, __LINE__, "[BUG] Source id: %d not found. Invalid Source ID.", id);
+		DONUT_EXCEPTION(Exception, "[BUG] Source id: %d not found. Invalid Source ID.", id);
 	}
 	return Handler<Source>::__internal__fromRawPointerWithoutCheck( src );
 }
@@ -337,12 +337,12 @@ void Heap::load(XValue const& data)
 		auto it = array->begin();
 		for(HeapObject*& obj : this->objectPool_){
 			if(it == array->end()){
-				throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Heap size mismatched while loading.");
+				DONUT_EXCEPTION(Exception, "[BUG] Oops. Heap size mismatched while loading.");
 			}
 			Handler<XObject> const xobj ( (it++)->as<XObject>() );
 			objectid_t id = xobj->get<objectid_t>("id");
 			if(id != obj->id()){
-				throw DonutException(__FILE__, __LINE__, "[BUG] Object ID mismatched while loading.");
+				DONUT_EXCEPTION(Exception, "[BUG] Object ID mismatched while loading.");
 			}
 			obj->load(self, xobj->get<XValue>("content"));
 		}
@@ -412,7 +412,7 @@ XValue Heap::save()
 			xobj->set("id", obj->id());
 			Handler<Provider> provider ( this->findHeapProvider(obj->providerName(self)) );
 			if(!provider){
-				throw DonutException(__FILE__, __LINE__, "Provider %s not found.", obj->providerName(self).c_str());
+				DONUT_EXCEPTION(Exception, "Provider %s not found.", obj->providerName(self).c_str());
 			}
 			xobj->set("content", obj->save(self));
 			pool->append(xobj);

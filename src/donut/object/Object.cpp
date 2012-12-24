@@ -47,7 +47,7 @@ std::string Object::repr(Handler<Heap> const& heap) const
 	case Tag::Null:
 		return heap->nullProvider()->repr(this);
 	default:
-		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
+		DONUT_EXCEPTION(Exception, "[BUG] Unknwon object tag: %d", this->tag());
 	}
 }
 
@@ -59,17 +59,17 @@ std::string const& Object::toString(Handler<Heap> const& heap) const
 		if(val){
 			return val->value();
 		}else{
-			throw DonutException(__FILE__, __LINE__, "Could not cast %s to string implicitly", this->reprImpl(heap).c_str());
+			DONUT_EXCEPTION(Exception, "Could not cast %s to string implicitly", this->reprImpl(heap).c_str());
 		}
 	}
 	case Tag::Int:
-		throw DonutException(__FILE__, __LINE__, "Could not cast %s to string implicitly", heap->intProvider()->repr(this).c_str());
+		DONUT_EXCEPTION(Exception, "Could not cast %s to string implicitly", heap->intProvider()->repr(this).c_str());
 	case Tag::Bool:
-		throw DonutException(__FILE__, __LINE__, "Could not cast %s to string implicitly", heap->boolProvider()->repr(this).c_str());
+		DONUT_EXCEPTION(Exception, "Could not cast %s to string implicitly", heap->boolProvider()->repr(this).c_str());
 	case Tag::Null:
-		throw DonutException(__FILE__, __LINE__, "Could not cast %s to string implicitly", heap->nullProvider()->repr(this).c_str());
+		DONUT_EXCEPTION(Exception, "Could not cast %s to string implicitly", heap->nullProvider()->repr(this).c_str());
 	default:
-		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
+		DONUT_EXCEPTION(Exception, "[BUG] Unknwon object tag: %d", this->tag());
 	}
 }
 
@@ -77,15 +77,15 @@ int Object::toInt(Handler<Heap> const& heap) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
-		throw DonutException(__FILE__, __LINE__, "Could not cast %s to int implicitly", this->reprImpl(heap).c_str());
+		DONUT_EXCEPTION(Exception, "Could not cast %s to int implicitly", this->reprImpl(heap).c_str());
 	case Tag::Int:
 		return heap->intProvider()->toInt(this);
 	case Tag::Bool:
-		throw DonutException(__FILE__, __LINE__, "Could not cast %s to int implicitly", heap->boolProvider()->repr(this).c_str());
+		DONUT_EXCEPTION(Exception, "Could not cast %s to int implicitly", heap->boolProvider()->repr(this).c_str());
 	case Tag::Null:
-		throw DonutException(__FILE__, __LINE__, "Could not cast %s to int implicitly", heap->nullProvider()->repr(this).c_str());
+		DONUT_EXCEPTION(Exception, "Could not cast %s to int implicitly", heap->nullProvider()->repr(this).c_str());
 	default:
-		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
+		DONUT_EXCEPTION(Exception, "[BUG] Unknwon object tag: %d", this->tag());
 	}
 }
 
@@ -97,17 +97,17 @@ float const& Object::toFloat(Handler<Heap> const& heap) const
 		if(val){
 			return val->value();
 		}else{
-			throw DonutException(__FILE__, __LINE__, "Could not cast %s to float implicitly", this->reprImpl(heap).c_str());
+			DONUT_EXCEPTION(Exception, "Could not cast %s to float implicitly", this->reprImpl(heap).c_str());
 		}
 	}
 	case Tag::Int:
-		throw DonutException(__FILE__, __LINE__, "Could not cast %s to float implicitly", heap->intProvider()->repr(this).c_str());
+		DONUT_EXCEPTION(Exception, "Could not cast %s to float implicitly", heap->intProvider()->repr(this).c_str());
 	case Tag::Bool:
-		throw DonutException(__FILE__, __LINE__, "Could not cast %s to float implicitly", heap->boolProvider()->repr(this).c_str());
+		DONUT_EXCEPTION(Exception, "Could not cast %s to float implicitly", heap->boolProvider()->repr(this).c_str());
 	case Tag::Null:
-		throw DonutException(__FILE__, __LINE__, "Could not cast %s to float implicitly", heap->nullProvider()->repr(this).c_str());
+		DONUT_EXCEPTION(Exception, "Could not cast %s to float implicitly", heap->nullProvider()->repr(this).c_str());
 	default:
-		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
+		DONUT_EXCEPTION(Exception, "[BUG] Unknwon object tag: %d", this->tag());
 	}
 }
 
@@ -115,15 +115,15 @@ bool Object::toBool(Handler<Heap> const& heap) const
 {
 	switch(this->tag()){
 	case Tag::Obj:
-		throw DonutException(__FILE__, __LINE__, "Could not cast %s to bool implicitly", this->reprImpl(heap).c_str());
+		DONUT_EXCEPTION(Exception, "Could not cast %s to bool implicitly", this->reprImpl(heap).c_str());
 	case Tag::Int:
-		throw DonutException(__FILE__, __LINE__, "Could not cast %s to bool implicitly", heap->intProvider()->repr(this).c_str());
+		DONUT_EXCEPTION(Exception, "Could not cast %s to bool implicitly", heap->intProvider()->repr(this).c_str());
 	case Tag::Bool:
 		return heap->boolProvider()->toBool(this);
 	case Tag::Null:
-		throw DonutException(__FILE__, __LINE__, "Could not cast %s to bool implicitly", heap->nullProvider()->repr(this).c_str());
+		DONUT_EXCEPTION(Exception, "Could not cast %s to bool implicitly", heap->nullProvider()->repr(this).c_str());
 	default:
-		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
+		DONUT_EXCEPTION(Exception, "[BUG] Unknwon object tag: %d", this->tag());
 	}
 }
 
@@ -150,7 +150,7 @@ bool Object::has(Handler<Heap> const& heap, std::string const& name) const
 	case Tag::Null:
 		return heap->nullProto()->hasImpl(heap, name);
 	default:
-		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
+		DONUT_EXCEPTION(Exception, "[BUG] Unknwon object tag: %d", this->tag());
 	}
 }
 
@@ -166,7 +166,7 @@ bool Object::hasOwn(Handler<Heap> const& heap, std::string const& name) const
 	case Tag::Null:
 		return heap->nullProto()->hasOwnImpl(heap, name);
 	default:
-		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
+		DONUT_EXCEPTION(Exception, "[BUG] Unknwon object tag: %d", this->tag());
 	}
 }
 
@@ -185,7 +185,7 @@ Handler<Object> Object::set(Handler<Heap> const& heap, std::string const& name, 
 		heap->log().w(TAG, "Failed to store value to null object.");
 		return obj;
 	default:
-		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
+		DONUT_EXCEPTION(Exception, "[BUG] Unknwon object tag: %d", this->tag());
 	}
 }
 
@@ -201,7 +201,7 @@ Handler<Object> Object::get(Handler<Heap> const& heap, std::string const& name) 
 	case Tag::Null:
 		return heap->nullProto()->getImpl(heap, name);
 	default:
-		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
+		DONUT_EXCEPTION(Exception, "[BUG] Unknwon object tag: %d", this->tag());
 	}
 }
 
@@ -217,7 +217,7 @@ std::string Object::providerName(Handler<Heap> const& heap) const
 	case Tag::Null:
 		return heap->nullProvider()->name();
 	default:
-		throw DonutException(__FILE__, __LINE__, "[BUG] Unknwon object tag: %d", this->tag());
+		DONUT_EXCEPTION(Exception, "[BUG] Unknwon object tag: %d", this->tag());
 	}
 }
 

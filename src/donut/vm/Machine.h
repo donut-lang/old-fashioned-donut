@@ -76,7 +76,23 @@ private: /* 何があっても不変なもの。*/
 	Handler<Heap> const heap_;
 private: /* 時とともに変わっていくもの */
 	std::vector<Context> contextRevs_;
+private: /* 実行時の一時的な変数 */
 	bool running_;
+	class RunLock{
+		Machine* const m;
+	public:
+		inline RunLock(Machine* m) noexcept
+		:m(m) {
+			if(m->running_){
+				DONUT_EXCEPTION(Exception, "[BUG] Oops. Already running!");
+			}
+			m->running_= true;
+		}
+		inline ~RunLock() noexcept {
+			m->running_ = false;
+		}
+	};
+	inline bool running() const noexcept { return this->running_; };
 private: /* それへのアクセス手段の提供。 */
 	Handler<Object> const& self();
 	Handler<DonutObject> const& scope();
@@ -94,8 +110,10 @@ public: /* 生成 */
 	bool onFree() noexcept { return false; };
 public: /* 外部からの実行指示 */
 	Handler<Object> start( Handler<Source> const& src );
+	Handler<Object> restart();
 	Handler<Object> resume( Handler<Object> const& obj );
 	bool isInterrupted() const noexcept;
+	bool isCallstackEmpty() const noexcept;
 private: /* スタック操作 */
 	void pushStack( Handler<Object> const& obj );
 	Handler<Object> popStack();
