@@ -50,7 +50,7 @@ std::function<Handler<Object>(Handler<Heap> const& heap, Handler<Object> const& 
 {
 	return [f](Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args){
 		if (args.size() != sizeof...(Args)) {
-			throw DonutException(__FILE__, __LINE__, "this pure native closure needs %d arguments, but %d arguments applied.", sizeof...(Args), args.size());
+			DONUT_EXCEPTION(Exception, "this pure native closure needs %d arguments, but %d arguments applied.", sizeof...(Args), args.size());
 		}
 		std::function<R(Args...)> self_applied ( [f, heap, self ](Args... args_){ return f(native::Decoder<S>::exec( heap, self ), args_...); } );
 		return bindArgumentPure<0>(heap, args, self_applied);
@@ -85,7 +85,7 @@ std::function<std::tuple<Handler<Object>, XValue>(Handler<Heap> const& heap, Han
 {
 	return [f](Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args){
 		if (args.size() != sizeof...(Args)) {
-			throw DonutException(__FILE__, __LINE__, "this reactive native closure needs %d arguments, but %d arguments applied.", sizeof...(Args), args.size());
+			DONUT_EXCEPTION(Exception, "this reactive native closure needs %d arguments, but %d arguments applied.", sizeof...(Args), args.size());
 		}
 		std::function<std::tuple<R, XValue>(Args...)> self_applied ( [f, heap, self ](Args... args_){ return f(native::Decoder<S>::exec( heap, self ), args_...); } );
 		return bindArgumentReactive<0>(heap, args, self_applied);

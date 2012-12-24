@@ -181,7 +181,7 @@ void Clock::load(XValue const& data)
 void Clock::seek( unsigned int const& time )
 {
 	if( time < this->firstTime() || time > this->lastTime()) {
-		throw DonutException(__FILE__, __LINE__, "[BUG] Failed to seek. time: %d , available time: %d -> %d", time, this->first_, this->last_);
+		DONUT_EXCEPTION(Exception, "[BUG] Failed to seek. time: %d , available time: %d -> %d", time, this->first_, this->last_);
 	}else if(time == this->now()){
 		this->log().w(TAG, "Requested seeking to %d, but it's already %d", time, this->now());
 		return;
@@ -216,7 +216,7 @@ void Clock::processRequest()
 		}
 		++cnt;
 		if(cnt > 1000){
-			throw DonutException(__FILE__, __LINE__, "[BUG] Endless discard/tick loop.");
+			DONUT_EXCEPTION(Exception, "[BUG] Endless discard/tick loop.");
 		}
 	}
 }
@@ -224,7 +224,7 @@ void Clock::processRequest()
 void Clock::back()
 {
 	if(this->enter_){
-		throw DonutException(__FILE__, __LINE__, "[BUG] You cannt seek back while discarding/seeking/ticking clock, homura!");
+		DONUT_EXCEPTION(Exception, "[BUG] You cannt seek back while discarding/seeking/ticking clock, homura!");
 	}
 	this->enter_=true;
 	this->backStep();
@@ -234,7 +234,7 @@ void Clock::back()
 void Clock::forward()
 {
 	if(this->enter_){
-		throw DonutException(__FILE__, __LINE__, "[BUG] You cannt seek forward while discarding/seeking/ticking clock, homura!");
+		DONUT_EXCEPTION(Exception, "[BUG] You cannt seek forward while discarding/seeking/ticking clock, homura!");
 	}
 	this->enter_=true;
 	this->forwardStep();

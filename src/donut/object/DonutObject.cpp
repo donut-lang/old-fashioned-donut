@@ -79,7 +79,7 @@ Handler<Object> DonutObject::getImpl(Handler<Heap> const& heap, std::string cons
 		for(auto i : this->slots_){
 			ss << "  -> " << i.first << std::endl;
 		}
-		throw DonutException(__FILE__, __LINE__, ss.str());
+		DONUT_EXCEPTION(Exception, ss.str());
 	}
 }
 

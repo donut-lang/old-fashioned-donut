@@ -31,7 +31,7 @@ PureNativeClosureObject::Signature const& Provider::findPureNativeClosureEntry( 
 {
 	auto it = pureNativeClosures_.find(name);
 	if(it == this->pureNativeClosures_.end()){
-		throw DonutException(__FILE__, __LINE__, "Pure Native Closure \"%s\" not found in \"%s\"!!", name.c_str(), this->name().c_str());
+		DONUT_EXCEPTION(Exception, "Pure Native Closure \"%s\" not found in \"%s\"!!", name.c_str(), this->name().c_str());
 	}
 	VectorMap<std::string, PureNativeClosureObject::Signature>::Pair const& p = *it;
 	return p.second;
@@ -40,7 +40,7 @@ ReactiveNativeClosureObject::Signature const& Provider::findReactiveNativeClosur
 {
 	auto it = reactiveNativeClosures_.find(name);
 	if(it == this->reactiveNativeClosures_.end()){
-		throw DonutException(__FILE__, __LINE__, "Reactive Native Closure \"%s\" not found in \"%s\"!!", name.c_str(), this->name().c_str());
+		DONUT_EXCEPTION(Exception, "Reactive Native Closure \"%s\" not found in \"%s\"!!", name.c_str(), this->name().c_str());
 	}
 	VectorMap<std::string, ReactiveNativeClosureObject::Signature>::Pair const& p = *it;
 	return p.second;

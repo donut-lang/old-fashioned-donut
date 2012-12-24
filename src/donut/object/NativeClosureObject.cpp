@@ -46,7 +46,7 @@ Handler<Object> NativeClosureObject::setImpl(Handler<Heap> const& heap, std::str
 
 Handler<Object> NativeClosureObject::getImpl(Handler<Heap> const& heap, std::string const& name) const
 {
-	throw DonutException(__FILE__, __LINE__, "Native Closure does not have any properety.");
+	DONUT_EXCEPTION(Exception, "Native Closure does not have any properety.");
 }
 
 void NativeClosureObject::onBackNotifyImpl(Handler<Heap> const& heap)
@@ -139,7 +139,7 @@ Handler<Object> ReactiveNativeClosureObject::apply(Handler<Heap> const& heap, Ha
 {
 	Handler<ReactiveNativeObject> obj;
 	if(!self->isObject() || !(obj = self.tryCast<ReactiveNativeObject>())){
-		throw DonutException(__FILE__, __LINE__, "[BUG] ReactiveNativeClosure must be applied only to ReactiveNativeObject.");
+		DONUT_EXCEPTION(Exception, "[BUG] ReactiveNativeClosure must be applied only to ReactiveNativeObject.");
 	}
 	Handler<Object> result;
 	XValue value;

@@ -45,7 +45,7 @@ void Donut::sendMessage( std::string const& name, Handler<Object> const& obj )
 {
 	auto it = this->machines_.find(name);
 	if(it == this->machines_.end()){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Machine: \"%s\" not found.", name.c_str());
+		DONUT_EXCEPTION(Exception, "[BUG] Oops. Machine: \"%s\" not found.", name.c_str());
 	}
 	Handler<Machine> machine = it->second;
 	machine->resume(obj);

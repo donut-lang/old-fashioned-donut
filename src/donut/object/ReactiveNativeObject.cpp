@@ -109,7 +109,7 @@ void ReactiveNativeObject::bootstrap( Handler<Heap> const& heap )
 void ReactiveNativeObject::registerReaction( timestamp_t time, XValue const& v )
 {
 	if( this->reactions_.size() > 0 && this->reactions_.back().first > time ){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Reaction table was broken!!");
+		DONUT_EXCEPTION(Exception, "[BUG] Reaction table was broken!!");
 	}
 	this->reactions_.push_back(std::pair<timestamp_t, XValue>(time, v));
 	this->index_ = this->reactions_.size();

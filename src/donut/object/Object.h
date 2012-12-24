@@ -104,7 +104,7 @@ public:
 	};
 	static inline objectid_t decodeObjectId( object_desc_t const& desc ) noexcept {
 		if(Object::isPrimitiveDescriptor(desc)) {
-			throw DonutException(__FILE__, __LINE__, "[BUG] Decoding primitive descriptor.");
+			DONUT_EXCEPTION(Exception, "[BUG] Decoding primitive descriptor.");
 		}
 		return desc >> TagShift;
 	};
