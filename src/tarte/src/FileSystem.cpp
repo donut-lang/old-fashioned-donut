@@ -19,7 +19,7 @@
 #include <tarte/FileSystem.h>
 #include <tarte/Exception.h>
 #if CHISA_WINDOWS
-#include "internal/Win32.h"
+#include <tarte/internal/Win32.h>
 #else
 #include <dirent.h>
 #include <sys/types.h>
@@ -37,7 +37,7 @@ namespace internal {
 static void enumFilesImpl(std::wstring const& dir, std::vector<std::string>& list, bool recursive)
 {
 	using namespace internal;
-	using namespace internal::win32;
+	using namespace ::tarte::internal::win32;
 	typedef FileConstants<std::wstring> ftype;
 	WIN32_FIND_DATAW findFileData;
 	HANDLE h = FindFirstFileW(join(dir,L"*.*").c_str(), &findFileData);
@@ -60,7 +60,7 @@ static void enumFilesImpl(std::wstring const& dir, std::vector<std::string>& lis
 }
 std::vector<std::string> enumFiles(std::string const& dir, bool recursive)
 {
-	using namespace internal::win32;
+	using namespace ::tarte::internal::win32;
 	std::vector<std::string> list;
 	enumFilesImpl(toUTF16(dir), list, recursive);
 	return list;
