@@ -224,7 +224,7 @@ std::string Object::providerName(Handler<Heap> const& heap) const
 object_desc_t Object::toDescriptor() const noexcept
 {
 	if( this->isObject() ) {
-		return this->toDescriptorImpl();
+		return this ? this->toDescriptorImpl() : 0;
 	}else{
 		return static_cast<object_desc_t>( reinterpret_cast<intptr_t>(this) );
 	}

@@ -33,10 +33,121 @@ Clock::Clock( Donut* const donut)
 ,discardFutureRequested_(false)
 ,discardHistoryRequested_(false)
 ,tickRequested_(false)
+,machineRequest_(MachineRequest::NONE)
+,machineRequestedSeekTime_(0)
 {
 }
 
+void Clock::tickFromMachine()
+{
+	if(machineRequest_ != MachineRequest::NONE){
+		DONUT_EXCEPTION(Exception, "[BUG] Oops. Clock operation already requested.");
+	}
+	if(this->log().d()) {
+		this->log().d(TAG, "Tick operation requested from machine.");
+	}
+	this->machineRequest_ = MachineRequest::TICK;
+}
+void Clock::seekFromMachine( unsigned int const& time )
+{
+	if(machineRequest_ != MachineRequest::NONE){
+		DONUT_EXCEPTION(Exception, "[BUG] Oops. Clock operation already requested.");
+	}
+	this->machineRequest_ = MachineRequest::SEEK;
+	this->machineRequestedSeekTime_ = time;
+	if(this->log().d()) {
+		this->log().d(TAG, "Seek operation to %d requested from machine.", time);
+	}
+}
+void Clock::backFromMachine()
+{
+	if(machineRequest_ != MachineRequest::NONE){
+		DONUT_EXCEPTION(Exception, "[BUG] Oops. Clock operation already requested.");
+	}
+	if(this->log().d()) {
+		this->log().d(TAG, "Back operation requested from machine.");
+	}
+	this->machineRequest_ = MachineRequest::BACK;
+}
+void Clock::forwardFromMachine()
+{
+	if(machineRequest_ != MachineRequest::NONE){
+		DONUT_EXCEPTION(Exception, "[BUG] Oops. Clock operation already requested.");
+	}
+	if(this->log().d()) {
+		this->log().d(TAG, "Forward operation requested from machine.");
+	}
+	this->machineRequest_ = MachineRequest::FORWARD;
+}
+void Clock::discardFutureFromMachine()
+{
+	if(machineRequest_ != MachineRequest::NONE){
+		DONUT_EXCEPTION(Exception, "[BUG] Oops. Clock operation already requested.");
+	}
+	if(this->log().d()) {
+		this->log().d(TAG, "Discarding future requested from machine.");
+	}
+	this->machineRequest_ = MachineRequest::DISCARD_FUTURE;
+}
+void Clock::discardHistoryFromMachine()
+{
+	if(machineRequest_ != MachineRequest::NONE){
+		DONUT_EXCEPTION(Exception, "[BUG] Oops. Clock operation already requested.");
+	}
+	if(this->log().d()) {
+		this->log().d(TAG, "Discarding history requested from machine.");
+	}
+	this->machineRequest_ = MachineRequest::DISCARD_HISTORY;
+}
 
+bool Clock::invokeMahcineRequest()
+{
+	if(!this->machineRequest_){
+		return false;
+	}
+	MachineRequest const req = this->machineRequest_;
+	this->machineRequest_ = MachineRequest::NONE;
+	switch (req) {
+	case MachineRequest::TICK:
+		if (this->log().d()) {
+			this->log().d(TAG, "Invoking requested tick operation from machine.");
+		}
+		this->tick();
+		return false;
+	case MachineRequest::SEEK:
+		if (this->log().d()) {
+			this->log().d(TAG, "Invoking requested seek operation to %d from machine.", this->machineRequestedSeekTime_);
+		}
+		this->seek(this->machineRequestedSeekTime_);
+		return true;
+	case MachineRequest::BACK:
+		if (this->log().d()) {
+			this->log().d(TAG, "Invoking requested back operation from machine.");
+		}
+		this->back();
+		return true;
+	case MachineRequest::FORWARD:
+		if (this->log().d()) {
+			this->log().d(TAG, "Invoking requested forward operation from machine.");
+		}
+		this->forward();
+		return true;
+	case MachineRequest::DISCARD_FUTURE:
+		if (this->log().d()) {
+			this->log().d(TAG, "Invoking requested discarding future operation from machine.");
+		}
+		this->discardFuture();
+		return false;
+	case MachineRequest::DISCARD_HISTORY:
+		if (this->log().d()) {
+			this->log().d(TAG, "Invoking requested discarding history operation from machine.");
+		}
+		this->discardHistory();
+		return false;
+	default:
+		DONUT_EXCEPTION(Exception, "[BUG] Unknown time operation.");
+	}
+}
 
 /**********************************************************************************
  * save/restore function

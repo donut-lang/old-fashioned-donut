@@ -51,6 +51,7 @@ public: /* 作成・破棄・セーブ */
 struct Context final {
 public: /* 値 */
 	unsigned int time_;
+	Handler<Object> interrupt_;
 	std::vector<Handler<Object> > stack_;
 	std::vector<Callchain> callStack_;
 public: /* 作成・破棄・セーブ */
@@ -104,6 +105,10 @@ private: /* 実行 */
 	bool leaveClosure();
 	bool fetchPC( Instruction& inst );
 	Handler<Object> run();
+	Handler<Object> const& interrupt() const noexcept;
+	void interrupt(Handler<Object> const& obj);
+	void releaseInterrupt();
+	bool isInterruptedNow() const noexcept;
 public: /* 処理系の保存・復帰をします。 */
 	void bootstrap();
 	XValue save();

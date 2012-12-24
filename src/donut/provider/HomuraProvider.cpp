@@ -34,7 +34,7 @@ HomuraProvider::HomuraProvider(Handler<Heap> const& heap)
 		}
 		Handler<Clock> clk(heap->clock());
 		timestamp_t const t = clk->now();
-		clk->tick();
+		clk->tickFromMachine();
 		return t;
 	}));
 	this->registerPureNativeClosure("now", std::function<timestamp_t(HomuraObject*)>([&](HomuraObject* hom) {
@@ -50,7 +50,7 @@ HomuraProvider::HomuraProvider(Handler<Heap> const& heap)
 			throw DonutException(__FILE__, __LINE__, "[BUG] Heap is already dead.");
 		}
 		Handler<Clock> clk(heap->clock());
-		clk->seek(t);
+		clk->seekFromMachine(t);
 		return t;
 	}));
 	this->registerPureNativeClosure("discardHistory", std::function<timestamp_t(HomuraObject*)>([&](HomuraObject* hom) {
@@ -59,7 +59,7 @@ HomuraProvider::HomuraProvider(Handler<Heap> const& heap)
 			throw DonutException(__FILE__, __LINE__, "[BUG] Heap is already dead.");
 		}
 		Handler<Clock> clk(heap->clock());
-		clk->discardHistory();
+		clk->discardHistoryFromMachine();
 		return clk->now();
 	}));
 }

@@ -78,11 +78,11 @@ TEST(DonutHomuraTest, BackWithInterruptTest)
 		ASSERT_TRUE(result->isNull());
 		ASSERT_TRUE(machine->isInterrupted());
 
-		ASSERT_NO_THROW( result = machine->resume(heap->createBool(true)) );
+		result = machine->resume(heap->createBool(true));
 		ASSERT_TRUE(result->isNull());
 		ASSERT_TRUE(machine->isInterrupted());
 
-		ASSERT_NO_THROW( result = machine->resume(heap->createBool(false)) );
+		result = machine->resume(heap->createBool(false));
 		ASSERT_TRUE(result->isObject());
 		ASSERT_EQ("through", result->toString(heap));
 		ASSERT_FALSE(machine->isInterrupted());

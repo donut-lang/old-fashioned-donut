@@ -33,6 +33,7 @@ const static std::string TAG("Machine");
 
 Context::Context(Handler<Clock> const& clk)
 :time_(clk->now())
+,interrupt_()
 ,stack_()
 ,callStack_()
 {
@@ -41,6 +42,7 @@ Context::Context(Handler<Clock> const& clk)
 
 Context::Context(Handler<Clock> const& clk, Context const& other)
 :time_(clk->now())
+,interrupt_(other.interrupt_)
 ,stack_(other.stack_)
 ,callStack_(other.callStack_)
 {
@@ -171,6 +173,7 @@ Handler<Object> Machine::resume(Handler<Object> const& obj)
 	}
 	this->clock_->tick();
 	this->contextRevs_.push_back( Context( this->clock_, this->contextRevs_.back() ) );
+	this->releaseInterrupt();
 	this->pushStack(obj);
 	return this->run();
 }
@@ -184,7 +187,7 @@ bool Machine::isInterrupted() const noexcept
 	// シークされてない
 	Context const& last = this->contextRevs_.back();
 	if( time == last.time_ ){
-		return !last.callStack_.empty();
+		return this->isInterruptedNow();
 	}
 	// シークされてるので、インデックスを探す
 	int const idx = this->findRevisionIndex(time);
@@ -192,7 +195,34 @@ bool Machine::isInterrupted() const noexcept
 		return false;
 	}
 	Context const& ctx = this->contextRevs_[idx];
-	return !ctx.callStack_.empty();
+	return bool(ctx.interrupt_);
+}
+
+void Machine::interrupt(Handler<Object> const& obj)
+{
+	Context& ctx = this->contextRevs_.back();
+	Handler<Object>& i = ctx.interrupt_;
+	if(i) {
+		DONUT_EXCEPTION(Exception, "[BUG] Oops. Already interrupted!!", i->repr(heap_).c_str());
+	}
+	i = obj;
+}
+
+void Machine::releaseInterrupt()
+{
+	Context& ctx = this->contextRevs_.back();
+	ctx.interrupt_.reset();
+}
+
+Handler<Object> const& Machine::interrupt() const noexcept
+{
+	Context const& ctx = this->contextRevs_.back();
+	return ctx.interrupt_;
+}
+bool Machine::isInterruptedNow() const noexcept
+{
+	Context const& ctx = this->contextRevs_.back();
+	return bool(ctx.interrupt_);
 }
 
 void Machine::enterClosure(Handler<Object> const& self, Handler<DonutClosureObject> const& clos, std::vector<Handler<Object> > const& args)
@@ -243,14 +273,16 @@ Handler<Object> Machine::run()
 	std::vector<Handler<Object> > arg;
 	this->running_ = true;
 	bool running = true;
-	Instruction inst;
+	Instruction inst = 0;
+
+	Instruction opcode = 0;
+	Instruction constKind = 0;
+	int constIndex = 0;
 	while( running ){
 		if(!this->fetchPC( inst )){ //このクロージャの終端に来ました
 			running &= this->leaveClosure();
 			continue;
 		}
-		Instruction opcode, constKind;
-		int constIndex;
 		Source::disasm(inst, opcode, constKind, constIndex);
 		if(this->log().t()){
 			this->log().t(TAG, format("$%04x ", this->pc())+this->src()->disasm(inst));
@@ -399,6 +431,7 @@ Handler<Object> Machine::run()
 			break;
 		}
 		case Inst::Interrupt: {
+			this->interrupt( this->popStack() );
 			running = false;
 			break;
 		}
@@ -408,17 +441,24 @@ Handler<Object> Machine::run()
 			break;
 		}
 		default:
-			throw DonutException(__FILE__, __LINE__,
+			DONUT_EXCEPTION(Exception,
 					"[BUG] Oops. Unknwon opcode: closure<%s>@%08x=%08x => (%02x,%02x,%04x)",
 					closureObject()->repr(heap_).c_str(), this->pc()-1, inst,opcode,constKind,constIndex);
 		}
+		if( clock_->invokeMahcineRequest() ){
+			running &= !this->isInterruptedNow();
+		}
 	}
-	Handler<Object> result(this->popStack());
 	this->running_ = false;
-	if( !this->isInterrupted() && !this->stack().empty() ){
-		throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Execution ended, but stack id not empty:%d", this->stack().size());
+	if(this->isInterruptedNow()) {
+		return this->interrupt();
+	}else{
+		Handler<Object> result(this->popStack());
+		if( !this->stack().empty() ){
+			throw DonutException(__FILE__, __LINE__, "[BUG] Oops. Execution ended, but stack id not empty:%d", this->stack().size());
+		}
+		return result;
 	}
-	return result;
 }
 
 /**********************************************************************************
@@ -455,6 +495,8 @@ XValue Context::save()
 	Handler<XObject> top(new XObject);
 	// time
 	top->set("time", this->time_);
+	//interrupt
+	top->set("interrupt", this->interrupt_->toDescriptor());
 	{ // callstack
 		Handler<XArray> list(new XArray);
 		for( Callchain& chain : this->callStack_ ) {
@@ -476,6 +518,9 @@ Context::Context(Handler<Heap> const& heap, XValue const& data)
 	Handler<XObject> obj ( data.as<XObject>() );
 	{ //time
 		this->time_ = obj->get<unsigned int>("time");
+	}
+	{ //interrupt
+		this->interrupt_ = heap->decodeDescriptor(obj->get<object_desc_t>("interrupt"));
 	}
 	{ // callstack
 		for( XValue& e : *(obj->get<XArray>("callstack"))) {
