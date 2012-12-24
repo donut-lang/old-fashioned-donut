@@ -1,0 +1,9 @@
+f = func(idx, acc){
+	if( idx <= 0 ){
+		acc; //最後に評価された値が戻り値になる
+	}else{
+		return f(idx-1, acc+idx); //戻り値を明示することもできます。
+	};
+};
+System.println(f(10, 0)); // prints 55
+
