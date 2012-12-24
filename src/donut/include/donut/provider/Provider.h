@@ -36,12 +36,8 @@ private: //実行時に変化し、セーブ・ロードの対象にするのは
 	Handler<DonutObject> prototype_;
 protected:
 	Provider( Handler<Heap> const& heap, std::string const& name );
-	template <typename T> bool registerPureNativeClosure( std::string const& name, T f) {
-		return (!reactiveNativeClosures_.have(name)) && pureNativeClosures_.update( name, native::createBindPure(f) );
-	}
-	template <typename T> bool registerReactiveNativeClosure( std::string const& name, T f) {
-		return (!pureNativeClosures_.have(name)) && reactiveNativeClosures_.update( name, native::createBindReactive(f) );
-	}
+	template <typename T> bool registerPureNativeClosure( std::string const& name, T f);
+	template <typename T> bool registerReactiveNativeClosure( std::string const& name, T f);
 public:
 	virtual ~Provider() noexcept = default;
 	inline bool onFree() noexcept { return false; };
@@ -59,6 +55,27 @@ protected:
 	virtual XValue saveImpl(); //please override
 	virtual void loadImpl( XValue const& data); //please override
 };
+
+template <typename T>
+bool Provider::registerPureNativeClosure( std::string const& name, T f) {
+	return (!pureNativeClosures_.have(name)) && pureNativeClosures_.update( name, native::createBindPure(f) );
+}
+
+template <typename T>
+bool Provider::registerReactiveNativeClosure( std::string const& name, T f) {
+	return (!reactiveNativeClosures_.have(name)) && reactiveNativeClosures_.update( name, native::createBindReactive(f) );
+}
+
+//関数ポインタ版
+template <>
+bool Provider::registerPureNativeClosure<PureNativeClosureObject::Function> ( std::string const& name, PureNativeClosureObject::Function f);
+template <>
+bool Provider::registerReactiveNativeClosure<ReactiveNativeClosureObject::Function> ( std::string const& name, ReactiveNativeClosureObject::Function f);
+// std::function版
+template <>
+bool Provider::registerPureNativeClosure<PureNativeClosureObject::Signature>( std::string const& name, PureNativeClosureObject::Signature f);
+template <>
+bool Provider::registerReactiveNativeClosure<ReactiveNativeClosureObject::Signature>( std::string const& name, ReactiveNativeClosureObject::Signature f);
 
 //---------------------------------------------------------------------------------------------------------------------
 

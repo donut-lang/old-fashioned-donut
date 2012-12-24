@@ -36,7 +36,7 @@ private:
 	int findUpperIndex( timestamp_t const& t );
 	int findLowerIndex( timestamp_t const& t );
 protected:
-	virtual std::string reprImpl(Handler<Heap> const& heap) const override final;
+	virtual std::string reprImpl(Handler<Heap> const& heap) const override;
 public:
 	virtual void onBackNotifyImpl(Handler<Heap> const& heap) override final;
 	virtual void onForwardNotifyImpl(Handler<Heap> const& heap) override final;
@@ -45,10 +45,10 @@ public:
 public:
 	void registerReaction( timestamp_t time, XValue const& v );
 protected:
+	virtual void onFutureDiscarded(Handler<Heap> const& heap) {};
+	virtual void onHistoryDiscarded(Handler<Heap> const& heap) {};
 	virtual XValue onBack(Handler<Heap> const& heap, XValue const& val) = 0;
 	virtual XValue onForward(Handler<Heap> const& heap, XValue const& val) = 0;
-	virtual void onFutureDiscarded(Handler<Heap> const& heap) = 0;
-	virtual void onHistoryDiscarded(Handler<Heap> const& heap) = 0;
 	virtual XValue saveImpl( Handler<Heap> const& heap ) override = 0;
 	virtual void loadImpl( Handler<Heap> const& heap, XValue const& data ) override = 0;
 };

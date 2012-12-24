@@ -26,6 +26,7 @@ namespace donut {
 class PureNativeClosureObject final : public NativeClosureObject {
 public:
 	typedef std::function<Handler<Object>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& arg)> Signature;
+	typedef Handler<Object>(*Function)(Handler<Heap> const&, Handler<Object> const&, std::vector<Handler<Object> > const&);
 private:
 	Signature func_;
 public:
@@ -44,6 +45,7 @@ private:
 class ReactiveNativeClosureObject final : public NativeClosureObject {
 public:
 	typedef std::function<std::tuple<Handler<Object>, XValue>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& arg)> Signature;
+	typedef std::tuple<Handler<Object>, XValue>(*Function)(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& arg);
 private:
 	Signature func_;
 public:
