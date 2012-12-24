@@ -16,20 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Heap.h"
-#include "../source/Source.h"
-#include "../provider/BoolProvider.h"
-#include "../provider/IntProvider.h"
-#include "../provider/NullProvider.h"
-#include "../provider/DonutProvider.h"
-#include "../provider/FloatProvider.h"
-#include "../provider/StringProvider.h"
-#include "../provider/NativeClosureProvider.h"
-#include "../provider/HomuraProvider.h"
+#include <donut/object/Heap.h>
+#include <donut/source/Source.h>
+#include <donut/provider/BoolProvider.h>
+#include <donut/provider/IntProvider.h>
+#include <donut/provider/NullProvider.h>
+#include <donut/provider/DonutProvider.h>
+#include <donut/provider/FloatProvider.h>
+#include <donut/provider/StringProvider.h>
+#include <donut/provider/NativeClosureProvider.h>
+#include <donut/provider/HomuraProvider.h>
 
-#include "StringObject.h"
-#include "FloatObject.h"
-#include "HomuraObject.h"
+#include <donut/object/StringObject.h>
+#include <donut/object/FloatObject.h>
+#include <donut/object/HomuraObject.h>
 
 namespace donut {
 

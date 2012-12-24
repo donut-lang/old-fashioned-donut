@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Closure.h"
+#include <donut/source/Closure.h>
 
 namespace donut {
 

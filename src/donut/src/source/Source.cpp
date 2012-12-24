@@ -20,10 +20,10 @@
 #include <cstddef>
 #include <tarte/String.h>
 
-#include "Source.h"
-#include "Closure.h"
-#include "..//Exception.h"
-#include "../object/Heap.h"
+#include <donut/source/Source.h>
+#include <donut/source/Closure.h>
+#include <donut/Exception.h>
+#include <donut/object/Heap.h>
 
 namespace donut {
 

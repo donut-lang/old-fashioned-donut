@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "DonutProvider.h"
-#include "../object/Object.h"
-#include "../object/DonutClosureObject.h"
+#include <donut/provider/DonutProvider.h>
+#include <donut/object/Object.h>
+#include <donut/object/DonutClosureObject.h>
 
 namespace donut {
 

@@ -19,9 +19,9 @@
 #pragma once
 #include <tarte/String.h>
 #include "../../TestCommon.h"
-#include "../../../src/donut/Donut.h"
-#include "../../../src/donut/object/FloatObject.h"
-#include "../../../src/donut/object/StringObject.h"
+#include <donut/Donut.h>
+#include <donut/object/FloatObject.h>
+#include <donut/object/StringObject.h>
 
 namespace donut {
 using namespace tarte;

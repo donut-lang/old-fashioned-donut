@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Slot.h"
-#include "Heap.h"
-#include "Object.h"
+#include <donut/object/Slot.h>
+#include <donut/object/Heap.h>
+#include <donut/object/Object.h>
 #include <algorithm>
 
 namespace donut {

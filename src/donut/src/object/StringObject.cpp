@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "StringObject.h"
+#include <donut/object/StringObject.h>
 #include <algorithm>
 
 namespace donut {

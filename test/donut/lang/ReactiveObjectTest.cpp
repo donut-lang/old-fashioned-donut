@@ -17,7 +17,7 @@
  */
 
 #include "DonutHelper.h"
-#include "../../../src/donut/object/ReactiveNativeObject.h"
+#include <donut/object/ReactiveNativeObject.h>
 #include <math.h>
 
 namespace donut {

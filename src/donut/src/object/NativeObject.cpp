@@ -18,11 +18,11 @@
 
 #include <tarte/String.h>
 
-#include "NativeObject.h"
-#include "StringObject.h"
-#include "FloatObject.h"
-#include "../Exception.h"
-#include "Heap.h"
+#include <donut/object/NativeObject.h>
+#include <donut/object/StringObject.h>
+#include <donut/object/FloatObject.h>
+#include <donut/Exception.h>
+#include <donut/object/Heap.h>
 
 namespace donut {
 

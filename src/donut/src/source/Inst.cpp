@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Inst.h"
-#include "Source.h"
+#include <donut/source/Inst.h>
+#include <donut/source/Source.h>
 
 namespace donut {
 

@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "StringProvider.h"
-#include "../object/Heap.h"
-#include "../object/StringObject.h"
+#include <donut/provider/StringProvider.h>
+#include <donut/object/Heap.h>
+#include <donut/object/StringObject.h>
 #include <sstream>
 #include <tarte/String.h>
 

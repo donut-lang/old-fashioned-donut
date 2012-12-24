@@ -18,12 +18,12 @@
 
 #include <tarte/String.h>
 
-#include "NativeClosureObject.h"
-#include "ReactiveNativeObject.h"
-#include "StringObject.h"
-#include "FloatObject.h"
-#include "../Exception.h"
-#include "Heap.h"
+#include <donut/object/NativeClosureObject.h>
+#include <donut/object/ReactiveNativeObject.h>
+#include <donut/object/StringObject.h>
+#include <donut/object/FloatObject.h>
+#include <donut/Exception.h>
+#include <donut/object/Heap.h>
 
 namespace donut {
 static const std::string TAG("NativeClosureObject");

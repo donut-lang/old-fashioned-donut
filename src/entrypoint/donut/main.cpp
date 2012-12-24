@@ -26,7 +26,7 @@
 #include <sstream>
 #include <tarte/Logger.h>
 #include <tarte/Exception.h>
-#include "../../donut/Donut.h"
+#include <donut/Donut.h>
 
 namespace donut {
 using namespace tarte;

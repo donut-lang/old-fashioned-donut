@@ -20,7 +20,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include "../Exception.h"
+#include <donut/Exception.h>
 
 namespace donut {
 	class Closure;

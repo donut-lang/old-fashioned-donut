@@ -16,10 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "IntProvider.h"
-#include "../object/Heap.h"
-#include "../Exception.h"
 #include <tarte/String.h>
+#include <donut/Exception.h>
+#include <donut/object/Heap.h>
+#include <donut/provider/IntProvider.h>
 
 namespace donut {
 using namespace tarte;
