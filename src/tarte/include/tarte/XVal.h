@@ -36,7 +36,7 @@ namespace tarte {
 class XArray;
 class XObject;
 
-template <typename T> struct _TypeAdapter;
+template <typename T, typename U=void> struct _TypeAdapter;
 
 class XValue {
 	STACK_OBJECT(XValue);
@@ -109,9 +109,12 @@ public:
 	template <typename T> bool is() const noexcept;
 	template <typename T> typename _TypeAdapter<T>::return_type as();
 	template <typename T> typename _TypeAdapter<T>::return_const_type as() const;
-
 	std::string typeString() const noexcept;
 	void swap( XValue& o );
+private:
+	template <typename T> bool isImpl() const noexcept;
+	template <typename T> typename _TypeAdapter<T>::return_type asImpl();
+	template <typename T> typename _TypeAdapter<T>::return_const_type asImpl() const;
 public:
 	tinyxml2::XMLElement* toXML( tinyxml2::XMLDocument* doc );
 	static XValue fromXML( tinyxml2::XMLElement* elm );

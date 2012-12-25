@@ -25,75 +25,56 @@ namespace tarte {
 class XArray;
 class XObject;
 
-template <typename T> struct _TypeAdapter {
-	typedef T spirit_type;
-	typedef T init_type;
-	typedef T& return_type;
-	typedef T const& return_const_type;
-};
-template <typename T> struct _TypeAdapter<T&> {
-	typedef T spirit_type;
-	typedef T init_type;
-	typedef T& return_type;
-	typedef T const& return_const_type;
-};
-template <typename T> struct _TypeAdapter<T const&> {
-	typedef T spirit_type;
-	typedef T init_type;
-	typedef T& return_type;
-	typedef T const& return_const_type;
-};
 template <> struct _TypeAdapter<XArray> {
 	typedef XArray spirit_type;
 	typedef Handler<XArray> init_type;
 	typedef Handler<XArray>& return_type;
 	typedef Handler<XArray> const& return_const_type;
 };
-template <> struct _TypeAdapter<Handler<XArray> > {
-	typedef XArray spirit_type;
-	typedef Handler<XArray> init_type;
-	typedef Handler<XArray>& return_type;
-	typedef Handler<XArray> const& return_const_type;
-};
+
 template <> struct _TypeAdapter<XObject> {
 	typedef XObject spirit_type;
 	typedef Handler<XObject> init_type;
 	typedef Handler<XObject>& return_type;
 	typedef Handler<XObject> const& return_const_type;
 };
-template <> struct _TypeAdapter<Handler<XObject> > {
-	typedef XObject spirit_type;
-	typedef Handler<XObject> init_type;
-	typedef Handler<XObject>& return_type;
-	typedef Handler<XObject> const& return_const_type;
+
+#define DEF_TYPE(TYPE)\
+template <> struct _TypeAdapter<TYPE> {\
+	typedef TYPE spirit_type;\
+	typedef TYPE init_type;\
+	typedef TYPE& return_type;\
+	typedef TYPE const& return_const_type;\
 };
 
-template <> struct _TypeAdapter<XBinary> {
-	typedef XBinary spirit_type;
-	typedef XBinary init_type;
-	typedef XBinary& return_type;
-	typedef XBinary const& return_const_type;
-};
+DEF_TYPE(XValue);
+DEF_TYPE(XNull);
+DEF_TYPE(XSInt);
+DEF_TYPE(XUInt);
+DEF_TYPE(XFloat);
+DEF_TYPE(XBool);
+DEF_TYPE(XString);
+DEF_TYPE(XBinary);
 
-template <> struct _TypeAdapter<const char*> {
-	typedef XString spirit_type;
-	typedef XString init_type;
-	typedef XString& return_type;
-	typedef XString const& return_const_type;
-};
-template <std::size_t N> struct _TypeAdapter<const char[N]> {
-	typedef XString spirit_type;
-	typedef XString init_type;
-	typedef XString& return_type;
-	typedef XString const& return_const_type;
-};
+#undef DEF_TYPE
 
-template <std::size_t N> struct _TypeAdapter<char[N]> {
-	typedef XString spirit_type;
-	typedef XString init_type;
-	typedef XString& return_type;
-	typedef XString const& return_const_type;
-};
+#define PROXY_ADAPTER(P_TYPE)\
+	typedef typename _TypeAdapter<P_TYPE>::spirit_type spirit_type;\
+	typedef typename _TypeAdapter<P_TYPE>::init_type init_type;\
+	typedef typename _TypeAdapter<P_TYPE>::return_type return_type;\
+	typedef typename _TypeAdapter<P_TYPE>::return_const_type return_const_type;\
+
+template <typename T> struct _TypeAdapter<T&> { PROXY_ADAPTER(T) };
+template <typename T> struct _TypeAdapter<T const&> { PROXY_ADAPTER(T) };
+template <typename T> struct _TypeAdapter<T const> { PROXY_ADAPTER(T) };
+template <typename T> struct _TypeAdapter<T, typename std::enable_if<std::is_enum<T>::value>::type> { PROXY_ADAPTER(XSInt) };
+template <> struct _TypeAdapter<Handler<XArray> > { PROXY_ADAPTER(XArray) };
+template <> struct _TypeAdapter<Handler<XObject> > { PROXY_ADAPTER(XObject) };
+template <> struct _TypeAdapter<const char*> { PROXY_ADAPTER(XString) };
+template <std::size_t N> struct _TypeAdapter<const char[N]> { PROXY_ADAPTER(XString) };
+template <std::size_t N> struct _TypeAdapter<char[N]> { PROXY_ADAPTER(XString) };
+
+#undef PROXY_ADAPTER
 
 template <typename T> typename _TypeAdapter<T>::return_type XArray::get( std::size_t const& idx ) {
 	typedef typename _TypeAdapter<T>::spirit_type SpiritType;
@@ -187,17 +168,17 @@ template<typename T> typename _TypeAdapter<T>::return_type XObject::set(std::str
 
 
 #define FUNCT(TYPE, VAL) \
-		template <> inline bool XValue::is<XValue::TYPE>() const noexcept {\
+		template <> inline bool XValue::isImpl<XValue::TYPE>() const noexcept {\
 			return this->type_ == XValue::Type::TYPE##T;\
 		};\
-		template <> inline typename _TypeAdapter<XValue::TYPE>::return_type XValue::as<XValue::TYPE>() {\
+		template <> inline typename _TypeAdapter<XValue::TYPE>::return_type XValue::asImpl<XValue::TYPE>() {\
 			if(this->type_ != XValue::Type::TYPE##T) {\
 				typedef typename _TypeAdapter<XValue::TYPE>::init_type Type;\
 				TARTE_EXCEPTION(Exception, "Type mismatched! required: %s actual: %s.", XValue((Type())).typeString().c_str(), this->typeString().c_str());\
 			}\
 			return VAL;\
 		};\
-		template <> inline typename _TypeAdapter<XValue::TYPE>::return_const_type XValue::as<XValue::TYPE>() const {\
+		template <> inline typename _TypeAdapter<XValue::TYPE>::return_const_type XValue::asImpl<XValue::TYPE>() const {\
 			if(this->type_ != XValue::Type::TYPE##T) {\
 				typedef typename _TypeAdapter<XValue::TYPE>::init_type Type;\
 				TARTE_EXCEPTION(Exception, "Type mismatched! required: %s actual: %s.", XValue((Type())).typeString().c_str(), this->typeString().c_str());\
@@ -216,13 +197,13 @@ FUNCT(Float, spirit_.float_);
 FUNCT(Bool, spirit_.bool_);
 #undef FUNCT
 
-template <> inline bool XValue::is<XValue>() const noexcept {
+template <> inline bool XValue::isImpl<XValue>() const noexcept {
 	return true;
 };
-template <> inline typename _TypeAdapter<XValue>::return_type XValue::as<XValue>() {
+template <> inline typename _TypeAdapter<XValue>::return_type XValue::asImpl<XValue>() {
 	return *this;
 };
-template <> inline typename _TypeAdapter<XValue>::return_const_type XValue::as<XValue>() const {
+template <> inline typename _TypeAdapter<XValue>::return_const_type XValue::asImpl<XValue>() const {
 	return *this;
 };
 
@@ -230,6 +211,19 @@ template <> inline XValue XValue::fromString<XValue::String>(std::string const& 
 {
 	return XValue((String)str);
 }
+
+template <typename T>
+inline bool XValue::is() const noexcept {
+	return this->isImpl<typename _TypeAdapter<T>::spirit_type>();
+};
+template <typename T>
+inline typename _TypeAdapter<T>::return_type XValue::as() {
+	return this->asImpl<typename _TypeAdapter<T>::spirit_type>();
+};
+template <typename T>
+inline typename _TypeAdapter<T>::return_const_type XValue::as() const {
+	return this->asImpl<typename _TypeAdapter<T>::spirit_type>();
+};
 
 template <> XValue& XObject::set<XValue>(std::string const& name, XValue const& obj);
 template <> XValue XValue::fromString<XValue::UInt>(std::string const& str);
