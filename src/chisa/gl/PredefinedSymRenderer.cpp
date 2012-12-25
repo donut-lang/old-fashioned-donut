@@ -18,7 +18,7 @@
 
 #include <tarte/Logger.h>
 
-#include "PredefinedStringRenderer.h"
+#include "PredefinedSymRenderer.h"
 #include "Canvas.h"
 
 namespace chisa {
@@ -26,7 +26,7 @@ namespace gl {
 
 static const std::string TAG("PredefinedStringRenderer");
 
-PredefinedStringRenderer::PredefinedStringRenderer(Logger& log, Handler<DrawableManager> drawableManager)
+PredefinedSymRenderer::PredefinedSymRenderer(Logger& log, Handler<DrawableManager> drawableManager)
 :log_(log)
 ,drawableManager_(drawableManager)
 ,maxWidth_(0)
@@ -35,7 +35,7 @@ PredefinedStringRenderer::PredefinedStringRenderer(Logger& log, Handler<Drawable
 
 }
 
-void PredefinedStringRenderer::registerCharacter( unsigned int symbol, std::string const& str )
+void PredefinedSymRenderer::registerSymbol( unsigned int symbol, std::string const& str )
 {
 	auto it = this->spriteTable_.find(symbol);
 	if(it != this->spriteTable_.end()){
@@ -48,7 +48,7 @@ void PredefinedStringRenderer::registerCharacter( unsigned int symbol, std::stri
 	this->spriteTable_.insert( std::pair<unsigned int, Handler<Sprite> >( symbol, spr ) );
 }
 
-geom::Area PredefinedStringRenderer::renderString( Canvas& cv, geom::Point const& point, String const& str, float depth)
+geom::Area PredefinedSymRenderer::renderSyms( Canvas& cv, geom::Point const& point, SymList const& str, float depth)
 {
 	float x=0.0f;
 	for(unsigned int symbol : str){
@@ -63,6 +63,19 @@ geom::Area PredefinedStringRenderer::renderString( Canvas& cv, geom::Point const
 		x += spr->width();
 	}
 	return geom::Area(point, geom::Box(x,this->maxHeight_));
+}
+
+geom::Area PredefinedSymRenderer::renderSym( Canvas& cv, geom::Point const& point, Symbol const& symbol, float depth)
+{
+	auto it = this->spriteTable_.find(symbol);
+	if(it == this->spriteTable_.end()){
+		this->log().w(TAG, "Unknown symbol: %d", symbol);
+		return geom::Area();
+	}
+	Handler<Sprite> const& spr( it->second );
+	geom::Point rendered( point.x(), point.y()+(this->maxHeight_-spr->height())/2 );
+	cv.drawSprite(spr, rendered, depth);
+	return geom::Area(point, geom::Box(spr->width(),this->maxHeight_));
 }
 
 
