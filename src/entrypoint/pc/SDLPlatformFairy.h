@@ -93,17 +93,17 @@ private:
 				break;
 			}
 			case SDL_MOUSEBUTTONDOWN:
-				if(ev.button.state & SDL_BUTTON_LEFT) {
+				if(ev.button.button == SDL_BUTTON_LEFT) {
 					chisa.pointerDown(ev.button.timestamp, 0, geom::Point(ev.button.x, ev.button.y));
 				}
 				break;
 			case SDL_MOUSEBUTTONUP:
-				if(!(ev.button.state & SDL_BUTTON_LEFT)) {
+				if(ev.button.button == SDL_BUTTON_LEFT) {
 					chisa.pointerUp(ev.button.timestamp, 0, geom::Point(ev.button.x, ev.button.y));
 				}
 				break;
 			case SDL_MOUSEMOTION:
-				if(ev.motion.state & SDL_BUTTON_LEFT) {
+				if(ev.motion.state & SDL_BUTTON_LMASK) {
 					chisa.pointerMove(ev.motion.timestamp, 0, geom::Point(ev.motion.x, ev.motion.y));
 				}
 				break;
@@ -120,11 +120,11 @@ private:
 	}
 	virtual void startIME(Chisa& chisa)
 	{
-
+		SDL_StartTextInput();
 	}
 	virtual void exitIME(Chisa& chisa)
 	{
-
+		SDL_StopTextInput();
 	}
 };
 
