@@ -22,6 +22,7 @@
 #include <tarte/ClassUtil.h>
 #include <tarte/Thread.h>
 #include <tarte/Handler.h>
+#include "Color.h"
 #include "../geom/Area.h"
 #include "internal/SpriteManager.h"
 
@@ -74,8 +75,8 @@ public:
 public: /* from Handler */
 	bool onFree() noexcept;
 public: /* from Canvas */
-	void drawImpl(Canvas* const canvas, geom::Point const& pt, geom::Area const& renderArea, const float depth);
-	void drawImpl(Canvas* const canvas, geom::Point const& pt, const float depth);
+	void drawImpl(Canvas* const canvas, geom::Point const& pt, geom::Area const& renderArea, Color const& color, const float depth);
+	void drawImpl(Canvas* const canvas, geom::Point const& pt, Color const& color, const float depth);
 };
 
 }}
