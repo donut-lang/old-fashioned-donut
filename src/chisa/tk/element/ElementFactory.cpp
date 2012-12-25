@@ -29,6 +29,7 @@
 #include "WidgetElement.h"
 #include "Button.h"
 #include "TabCombo.h"
+#include "TextArea.h"
 
 namespace chisa {
 namespace tk {
@@ -45,6 +46,7 @@ const std::string ElementFactory::ElemName::WidgetWrapper("widget");
 const std::string ElementFactory::ElemName::Scroll("scroll");
 const std::string ElementFactory::ElemName::Tab("tab");
 const std::string ElementFactory::ElemName::Button("button");
+const std::string ElementFactory::ElemName::TextArea("textarea");
 
 const std::string ElementFactory::AttrName::Id("id");
 
@@ -104,6 +106,7 @@ void ElementFactory::init()
 	this->registerElement<WidgetElement>(ElemName::WidgetWrapper);
 	this->registerElement<Button>(ElemName::Button);
 	this->registerElement<TabCombo>(ElemName::Tab);
+	this->registerElement<TextArea>(ElemName::TextArea);
 }
 
 ElementFactory::~ElementFactory()
