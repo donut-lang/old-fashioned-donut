@@ -41,7 +41,7 @@ WidgetElement::~WidgetElement() noexcept
 		return;
 	}
 	if(this->borrowed_){
-		if(Handler<World> world = this->world().lock()){
+		if(Handler<World> world = this->world().lock() ){
 			//ワールドの書き換えと、ウィジットへの現親レイアウトの通知
 			if(world->replaceWidget(this->widgetId_, this->borrowed_)) {
 				this->widget()->updateWrapper(this->self().cast<WidgetElement>());

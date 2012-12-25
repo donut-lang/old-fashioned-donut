@@ -17,6 +17,7 @@
  */
 
 #include "Element.h"
+#include "World.h"
 #include "../gl/Canvas.h"
 #include <tinyxml2.h>
 

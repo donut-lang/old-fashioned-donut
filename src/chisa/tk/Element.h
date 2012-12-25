@@ -60,8 +60,9 @@ private:
 private: /* クラス固定 */
 	DEFINE_MEMBER_REF(protected, Logger, log); //ロガー
 	VectorMap<std::string, std::function<void(tinyxml2::XMLElement*)> > attrMap_; //コンストラクタでセット
+private: /* 所属 */
+	HandlerW<World> const world_;
 private: /* ツリー */
-	DEFINE_MEMBER(protected, private, HandlerW<World>, world); // 属する世界
 	DEFINE_MEMBER(public, private, HandlerW<Element>, parent); //親
 	DEFINE_MEMBER(public, private, std::string, id); //要素に付けられたID
 	geom::Space margin_;
@@ -83,6 +84,7 @@ public:
 	void backgroundColor(gl::Color const& c);
 	void edgeColor(gl::Color const& c);
 	void edgeWidth(float const& f);
+	inline HandlerW<World> world() noexcept { return this->world_; }
 	inline geom::Space const& margin() noexcept { return this->margin_; };
 	inline geom::Space const& padding() const noexcept { return this->padding_; };
 	inline gl::Color const& foregroundColor() const noexcept { return this->foregroundColor_; };
