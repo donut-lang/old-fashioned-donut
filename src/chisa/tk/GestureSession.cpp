@@ -102,7 +102,19 @@ void GestureSession::onTouchMove(const float timeMs, geom::Point const& pt)
 void GestureSession::onScroll(const float timeMs, float const ratio)
 {
 	geom::Distance d(0, ratio);
+	this->lastTimeMs_ = timeMs;
 	this->invokeScroll(timeMs, this->lastPoint_, this->lastPoint_, d);
+}
+
+void GestureSession::onFocusGained(const float timeMs)
+{
+	this->lastTimeMs_ = timeMs;
+	this->invokeFocusGained(timeMs);
+}
+void GestureSession::onFocusLost(const float timeMs)
+{
+	this->lastTimeMs_ = timeMs;
+	this->invokeFocusLost(timeMs);
 }
 
 void GestureSession::invokeDownRaw(const float timeMs, geom::Point const& pt)
@@ -173,6 +185,29 @@ void GestureSession::invokeZoom(const float timeMs, geom::Point const& center, c
 			if(target->onZoom(timeMs, center, ratio)){
 				break;
 			}
+		}
+	}
+}
+
+void GestureSession::invokeFocusGained(const float timeMs)
+{
+	for(HandlerW<Element> const& it : this->elementChain_) {
+		if(Handler<Element> target = it.lock()){
+			if(this->log().t()){
+				this->log().t(TAG, "Touch Session ending: %f index: %d element: %s", this->lastTimeMs_, this->pointerIndex_, target->toString().c_str());
+			}
+			target->onFocusGained(timeMs);
+		}
+	}
+}
+void GestureSession::invokeFocusLost(const float timeMs)
+{
+	for(HandlerW<Element> const& it : this->elementChain_) {
+		if(Handler<Element> target = it.lock()){
+			if(this->log().t()){
+				this->log().t(TAG, "Touch Session ending: %f index: %d element: %s", this->lastTimeMs_, this->pointerIndex_, target->toString().c_str());
+			}
+			target->onFocusLost(timeMs);
 		}
 	}
 }
