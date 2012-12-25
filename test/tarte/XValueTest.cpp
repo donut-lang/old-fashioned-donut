@@ -258,6 +258,32 @@ TEST(XValueTest, BooleanTest)
 	}
 }
 
+namespace {
+
+enum SampleEnum{
+	X,Y,Z
+};
+
+TEST(XValueTest, EnumTest)
+{
+	tinyxml2::XMLDocument doc;
+	tinyxml2::XMLElement* e;
+	std::string str;
+	{
+		SampleEnum v = SampleEnum::Y;
+		XValue z(v);
+		e = z.toXML(&doc);
+		doc.InsertEndChild(e);
+	}
+	{
+		XValue z=XValue::fromXML(e);
+		ASSERT_TRUE(z.is<SampleEnum>());
+		ASSERT_EQ(SampleEnum::Y, z.as<SampleEnum>());
+	}
+}
+
+}
+
 TEST(XValueTest, TreeTest)
 {
 	auto tree = parse(R"delimiter(
