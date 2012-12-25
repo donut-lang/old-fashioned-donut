@@ -69,11 +69,11 @@ private:
 	virtual void setTitle(std::string const& name) {
 		SDL_SetWindowTitle(this->window_, name.c_str());
 	}
-	virtual void swapBuffer(Chisa& chisa)
+	virtual void swapBuffer()
 	{
 		SDL_GL_SwapWindow(this->window_);
 	}
-	virtual unsigned int getTimeMs(Chisa& chisa)
+	virtual unsigned int getTimeMs()
 	{
 		return SDL_GetTicks();
 	}
@@ -112,17 +112,27 @@ private:
 				break;
 			case SDL_QUIT:
 				return false;
+			case SDL_TEXTINPUT:
+				break;
+			case SDL_TEXTEDITING:
+				break;
 			default:
 				break;
 			}
 		}
 		return true;
 	}
-	virtual void startIME(Chisa& chisa)
+	virtual void startIME(geom::Area const& area) override final
 	{
 		SDL_StartTextInput();
+		SDL_Rect rect;
+		rect.x = area.x();
+		rect.y = area.y();
+		rect.w = area.width();
+		rect.h = area.height();
+		SDL_SetTextInputRect(&rect);
 	}
-	virtual void exitIME(Chisa& chisa)
+	virtual void stopIME()
 	{
 		SDL_StopTextInput();
 	}

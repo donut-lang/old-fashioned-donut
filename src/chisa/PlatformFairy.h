@@ -20,6 +20,7 @@
 #include <tarte/Handler.h>
 #include <tarte/Logger.h>
 #include <tarte/ClassUtil.h>
+#include "geom/Area.h"
 
 namespace chisa {
 using namespace tarte;
@@ -35,12 +36,12 @@ public:
 public:
 	virtual void init(std::string const& windowTitle, int width, int height, int redbits, int greenbits, int bluebits, int alphabits, int depthbits, int stencilbits ) = 0;
 	virtual void setTitle(std::string const& name) = 0;
-	virtual void swapBuffer(Chisa& chisa) = 0;
-	virtual unsigned int getTimeMs(Chisa& chisa) = 0;
+	virtual void swapBuffer() = 0;
+	virtual unsigned int getTimeMs() = 0;
 	virtual void sleepMs(unsigned int ms) = 0;
 	virtual bool pollEvent(Chisa& chisa) = 0;
-	virtual void startIME(Chisa& chisa) = 0;
-	virtual void exitIME(Chisa& chisa) = 0;
+	virtual void startIME(geom::Area const& area) = 0;
+	virtual void stopIME() = 0;
 };
 
 }

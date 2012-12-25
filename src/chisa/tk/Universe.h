@@ -45,8 +45,8 @@ class Universe : public HandlerBody<Universe> {
 	DISABLE_COPY_AND_ASSIGN(Universe);
 private:
 	DEFINE_MEMBER_REF(private, Logger, log);
+	DEFINE_MEMBER_CONST(private, Handler<PlatformFairy>, platformFairy);
 	DEFINE_MEMBER_CONST(public, Handler<Hexe>, hexe);
-	DEFINE_MEMBER_CONST(public, Handler<PlatformFairy>, platformFairy);
 	Stack<Handler<World> > worldStack;
 	DEFINE_MEMBER(public, private, geom::Area, area);
 	gl::Canvas canvas_;
@@ -86,6 +86,12 @@ public:
 	void onTouchUp(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
 	void onTouchMove(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
 	void onScroll(const float timeMs, const float delta);
+	/******************************************************************************
+	 * タッチイベント
+	 ******************************************************************************/
+public:
+	void startIME(geom::Area const& area);
+	void stopIME();
 	/******************************************************************************
 	 * 生成
 	 ******************************************************************************/

@@ -108,6 +108,24 @@ public:
 		}
 	}
 	/******************************************************************************
+	 * IME Universeへ移譲
+	 ******************************************************************************/
+public:
+	inline void startIME(geom::Area const& area) {
+		if(Handler<Universe> universe = this->universe_.lock()){
+			universe->startIME(area);
+		}else{
+			TARTE_EXCEPTION(Exception, "Oops. Universe already removed.");
+		}
+	}
+	inline void stopIME() {
+		if(Handler<Universe> universe = this->universe_.lock()){
+			universe->stopIME();
+		}else{
+			TARTE_EXCEPTION(Exception, "Oops. Universe already removed.");
+		}
+	}
+	/******************************************************************************
 	 * タッチイベント。Universeから移譲されてくる
 	 ******************************************************************************/
 public:
