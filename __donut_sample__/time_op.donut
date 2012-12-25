@@ -1,10 +1,28 @@
-Homura.counter=1; //Homuraオブジェクトは、時間操作の影響を受けません。
-back=Homura.tick(); //このあとの命令を使って、ここの時点まで時を戻します。
-if(Homura.counter <= 10){
-    System.println("Eating ", Homura.counter, "(st/nd/th) donut(s)!"); //この行を10回繰り返します
-    Homura.counter+=1; //このHomuraオブジェクトへの操作は、時間操作の影響を受けません。
-    Homura.seek(back); //上で記録した時間まで、スクリプトエンジン全体を戻します。
-} else { //ど～なっつでは、else節を省略することはできません。
+//普通の変数は、時間操作の影響を受けますが…
+tabeta=0;
+
+//Homuraは時間操作前の事を覚えていて、時間操作の影響を受けません。
+Homura.counter=0;
+
+//このあとの命令を使って、この時点まで時を戻せるようになります。
+save_time=Homura.tick();
+
+if(Homura.counter < 10){
+  // ドーナッツを食べましょう。
+  // この足し算の結果は、時間操作で戻ってしまいます。
+  tabeta++;
+
+  // ドーナッツを食べた回数を表示しましょう
+  System.println(tabeta, "番目のドーナッツを食べた！");
+
+  // Homuraに入った値は時間操作の影響を受けないので、
+  // 時間操作を行なってもこの足し算の結果は戻りません。
+  Homura.counter+=1;
+
+  // 上で記録した時間まで、スクリプトエンジン全体を戻します。
+  Homura.seek(save_time);
+} else {
+  //ど～なっつでは、else節を省略することはできません。
 };
 
 
