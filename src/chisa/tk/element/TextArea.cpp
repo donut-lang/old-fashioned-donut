@@ -55,6 +55,19 @@ std::string TextArea::toString() const
 
 void TextArea::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
 {
+	canvas.fillRect(gl::White, screenArea);
+	canvas.drawRect(2.0f, gl::Black, screenArea);
+	if( this->onFocused() ) {
+
+	}else{
+		if(this->text_.empty()) {
+			Handler<gl::Sprite> spr(this->descImage()->sprite());
+			canvas.drawSprite(spr, screenArea.point()+(screenArea.box() - spr->size())/2.0f);
+		}else{
+			Handler<gl::Sprite> spr(this->textImage()->sprite());
+			canvas.drawSprite(spr, screenArea.point()+geom::Distance(1.5f, 1.5f));
+		}
+	}
 }
 Handler<gl::TextDrawable> TextArea::textImage()
 {
@@ -84,7 +97,7 @@ Handler<gl::TextDrawable> TextArea::descImage()
 					Handler<gl::Font>(),
 					gl::TextDrawable::Style::Bold,
 					gl::TextDrawable::Decoration::None,
-					this->foregroundColor().lighter(),
+					this->foregroundColor().lighter(0.5),
 					gl::Transparent
 					);
 		}
@@ -94,7 +107,7 @@ Handler<gl::TextDrawable> TextArea::descImage()
 
 geom::Box TextArea::measureImpl(geom::Box const& constraint)
 {
-	return this->descImage()->size();
+	return this->descImage()->size() + geom::Box(3.0f, 3.0f);
 }
 
 void TextArea::layoutImpl(geom::Box const& size)
@@ -155,14 +168,32 @@ bool TextArea::onSingleTapUp(const float timeMs, geom::Point const& ptInScreen)
 	return true;
 }
 
+void TextArea::startEditing()
+{
+	this->editState_.clear();
+	for(std::string::value_type& c : this->text_){
+	}
+}
+
+void TextArea::stopEditing()
+{
+
+}
+
 void TextArea::onFocusGained(const float timeMs)
 {
 	Element::onFocusGained(timeMs);
+	if( auto world = this->world().lock() ) {
+		world->startIME(this->screenArea());
+	}
 }
 
 void TextArea::onFocusLost(const float timeMs)
 {
 	Element::onFocusLost(timeMs);
+	if( auto world = this->world().lock() ) {
+		world->stopIME();
+	}
 }
 
 }}

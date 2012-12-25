@@ -39,6 +39,8 @@ private: /* 変化するリソース */
 private: /* 描画のための一時的なリソース */
 	Handler<gl::TextDrawable> textImage_;
 	Handler<gl::TextDrawable> descImage_;
+	std::vector<Handler<gl::TextDrawable> > editState_;
+	std::size_t editPos_;
 public:
 	void text(std::string const& text);
 	void description(std::string const& text);
@@ -52,6 +54,8 @@ private:
 	Handler<gl::TextDrawable> textImage();
 	Handler<gl::TextDrawable> descImage();
 	void onClick();
+	void startEditing();
+	void stopEditing();
 protected:
 	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override final;
 	virtual geom::Box measureImpl(geom::Box const& constraint) override;

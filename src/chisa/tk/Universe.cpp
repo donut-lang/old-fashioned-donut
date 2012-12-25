@@ -120,6 +120,15 @@ void Universe::onScroll(const float timeMs, const float delta)
 	}
 }
 
+void Universe::startIME(geom::Area const& area)
+{
+	this->platformFairy()->startIME(area);
+}
+void Universe::stopIME()
+{
+	this->platformFairy()->stopIME();
+}
+
 Handler<chisa::WorldGeist> Universe::invokeWorldGeist(HandlerW<World> world, std::string const& nameOfGeist)
 {
 	if(log().t()){

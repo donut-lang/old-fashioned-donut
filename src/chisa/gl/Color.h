@@ -67,18 +67,18 @@ public:
 				std::fabs(this->green_ - o.green_) >= DELTA ||
 				std::fabs(this->alpha_ - o.alpha_) >= DELTA;
 	}
-	constexpr gl::Color darker() const noexcept {
+	constexpr gl::Color darker(float const percent=0.25f) const noexcept {
 		return Color(
-				red_*0.75f,
-				green_*0.75f,
-				blue_*0.75f,
+				red_*(1-percent),
+				green_*(1-percent),
+				blue_*(1-percent),
 				alpha_);
 	}
-	constexpr gl::Color lighter() const noexcept {
+	constexpr gl::Color lighter(float const percent=0.25f) const noexcept {
 		return Color(
-				red_+((1.0f-red_)/4.0f),
-				green_+((1.0f-green_)/4.0f),
-				blue_+((1.0f-blue_)/4.0f),
+				red_+((1.0f-red_)*percent),
+				green_+((1.0f-green_)*percent),
+				blue_+((1.0f-blue_)*percent),
 				alpha_);
 	}
 };

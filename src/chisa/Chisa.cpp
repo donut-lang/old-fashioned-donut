@@ -50,20 +50,20 @@ void Chisa::start(std::string const& initialWorldName)
 void Chisa::loop()
 {
 	bool running = true;
-	float last = fairy_->getTimeMs(*this);
+	float last = fairy_->getTimeMs();
 	float delta = 0.0f;
 	float nextFrame = last+(1000.0f/60);
 
 	while(running){
 		this->universe_->idle(delta);
-		float now = fairy_->getTimeMs(*this);
+		float now = fairy_->getTimeMs();
 		delta = now-last;
 		last = now;
 		if(now < nextFrame){
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			this->universe_->render();
-			this->fairy_->swapBuffer(*this);
-			float now = fairy_->getTimeMs(*this);
+			this->fairy_->swapBuffer();
+			float now = fairy_->getTimeMs();
 			if(now < nextFrame){
 				fairy_->sleepMs(nextFrame-now);
 			}
