@@ -65,6 +65,7 @@ def configureLibrary(conf):
 	conf.check_cfg(package='icu-uc icu-i18n', uselib_store='ICU', mandatory=True, args='--cflags --libs')
 	conf.check_cfg(package='libpng', uselib_store='LIBPNG', mandatory=True, args='--cflags --libs')
 	conf.check_cfg(package='freetype2', uselib_store='FREETYPE2', mandatory=True, args='--cflags --libs')
+	conf.check_cfg(package='sdl2', uselib_store='SDL2', mandatory=True, args='--cflags --libs')
 	conf.check_cfg(package='cairo cairo-ft', uselib_store='CAIRO', mandatory=True, args='--cflags --libs')
 	conf.check(features='cxx cxxprogram', lib=['gtest', 'gtest_main', 'pthread'], cflags=['-Wall'], uselib_store='GTEST')
 	conf.check(features='cxx cxxprogram', lib=['antlr3c'], cflags=['-Wall'], uselib_store='ANTLR')
@@ -72,14 +73,14 @@ def configureLibrary(conf):
 	# プラットフォーム依存
 	if sys.platform == 'win32':
 		#opengl
-		conf.check(features='cxx cxxprogram', lib=['glfw', 'opengl32'], cflags=['-Wall'], defines=['TEST=TEST'], uselib_store='OPENGL')
+		conf.check(features='cxx cxxprogram', lib=['opengl32'], cflags=['-Wall'], defines=['TEST=TEST'], uselib_store='OPENGL')
 		#boost
 		conf.env.append_value('CXXFLAGS', ['-DBOOST_THREAD_USE_LIB=1'])
 		conf.load('boost')
 		conf.check_boost(lib='system thread chrono')
 	elif sys.platform in ['linux2', 'linux']:
 		#opengl
-		conf.check(features='cxx cxxprogram', lib=['glfw', 'GL', 'X11', 'rt', 'Xrandr', 'pthread'], cflags=['-Wall'], uselib_store='OPENGL')
+		conf.check(features='cxx cxxprogram', lib=['GL', 'X11', 'rt', 'Xrandr', 'pthread'], cflags=['-Wall'], uselib_store='OPENGL')
 		try:
 			conf.check(features='cxx cxxprogram', lib=['tcmalloc','profiler'], cflags=['-Wall'], uselib_store='PPROF')
 		except conf.errors.ConfigurationError:
@@ -122,7 +123,7 @@ def build(bld):
 		features = 'cxx cprogram',
 		source = MAIN_SRC,
 		target = 'chisa',
-		use=['PPROF','PTHREAD', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU','ANTLR'],
+		use=['PPROF','PTHREAD', 'SDL2', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU','ANTLR'],
 		includes=[TARTE_INCLUDE_DIR, DONUT_INCLUDE_DIR])
 	
 	test_env = None
@@ -135,7 +136,7 @@ def build(bld):
 		source = TEST_SRC,
 		target = 'chisa_test',
 		env = test_env,
-		use=['PTHREAD', 'OPENGL','FREETYPE2','CAIRO','GTEST','LIBPNG','BOOST','ICU','ANTLR'],
+		use=['PTHREAD', 'SDL2', 'OPENGL','FREETYPE2','CAIRO','GTEST','LIBPNG','BOOST','ICU','ANTLR'],
 		includes=[TARTE_INCLUDE_DIR, DONUT_INCLUDE_DIR])
 
 # from http://docs.waf.googlecode.com/git/book_16/single.html#_custom_build_outputs
