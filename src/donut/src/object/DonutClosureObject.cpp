@@ -17,11 +17,10 @@
  */
 
 #include <tarte/String.h>
-
 #include <donut/Exception.h>
 #include <donut/object/Heap.h>
-#include <donut/object/DonutClosureObject.h>
 #include <donut/source/Source.h>
+#include <donut/object/DonutClosureObject.h>
 
 namespace donut {
 using namespace tarte;

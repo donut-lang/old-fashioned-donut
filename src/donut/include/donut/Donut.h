@@ -23,6 +23,7 @@
 #include <tarte/XVal.h>
 #include <tarte/VectorMap.h>
 
+#include "Decl.h"
 #include "Clock.h"
 #include "source/Source.h"
 #include "object/Heap.h"

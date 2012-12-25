@@ -18,6 +18,7 @@
 
 #pragma once
 #include <tarte/Handler.h>
+#include "Donut.h"
 
 namespace donut {
 using namespace tarte;

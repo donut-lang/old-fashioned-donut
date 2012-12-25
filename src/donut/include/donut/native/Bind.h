@@ -18,11 +18,10 @@
 
 #pragma once
 #include <functional>
-#include "Decoder.h"
-#include "Encoder.h"
 #include "../Exception.h"
 #include "../object/Object.h"
-
+#include "Decoder.h"
+#include "Encoder.h"
 
 namespace donut {
 using namespace tarte;

@@ -18,10 +18,10 @@
 
 #pragma once
 #include <string>
-#include "../object/NativeClosureObject.h"
 #include <tarte/Handler.h>
 #include <tarte/XVal.h>
 #include <tarte/VectorMap.h>
+#include "../object/NativeClosureObject.h"
 
 namespace donut {
 using namespace tarte;

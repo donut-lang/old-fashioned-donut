@@ -17,12 +17,9 @@
  */
 
 #include <tarte/String.h>
-
-#include <donut/object/NativeObject.h>
-#include <donut/object/StringObject.h>
-#include <donut/object/FloatObject.h>
 #include <donut/Exception.h>
 #include <donut/object/Heap.h>
+#include <donut/object/NativeObject.h>
 
 namespace donut {
 

@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#include "Object.h"
 #include <functional>
+#include "Object.h"
 #include "../native/Bind.h"
 
 namespace donut {

@@ -17,13 +17,12 @@
  */
 
 #pragma once
-#include "../Decl.h"
-
 #include <tarte/Handler.h>
 #include <tarte/Logger.h>
 #include <tarte/ClassUtil.h>
 #include <tarte/VectorMap.h>
 
+#include "../Decl.h"
 #include "../Clock.h"
 
 #include "Object.h"

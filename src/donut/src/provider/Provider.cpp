@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <donut/provider/Provider.h>
-#include <donut/object/Heap.h>
 #include <donut/Exception.h>
+#include <donut/object/Heap.h>
+#include <donut/provider/Provider.h>
 
 namespace donut {
 

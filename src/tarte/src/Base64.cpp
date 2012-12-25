@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <sstream>
 #include <tarte/Base64.h>
 #include <tarte/Exception.h>
-#include <sstream>
 
 #if CHISA_WINDOWS
 #define _LONG_LONG_INT_FORMAT_ "I64"

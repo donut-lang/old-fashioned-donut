@@ -22,7 +22,6 @@
 #include <cstdarg>
 
 namespace donut {
-using namespace tarte;
 
 class DonutException final : public std::exception {
 private:

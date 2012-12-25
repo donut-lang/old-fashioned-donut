@@ -20,6 +20,10 @@
 
 namespace donut {
 typedef unsigned int timestamp_t;
+
+class Donut;
+class Clock;
+class Patron;
 }
 
 #include "object/Decl.h"

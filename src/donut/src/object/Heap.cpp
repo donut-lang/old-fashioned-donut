@@ -26,7 +26,6 @@
 #include <donut/provider/StringProvider.h>
 #include <donut/provider/NativeClosureProvider.h>
 #include <donut/provider/HomuraProvider.h>
-
 #include <donut/object/StringObject.h>
 #include <donut/object/FloatObject.h>
 #include <donut/object/HomuraObject.h>

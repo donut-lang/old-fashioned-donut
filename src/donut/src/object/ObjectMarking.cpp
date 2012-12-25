@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <donut/Clock.h>
 #include <donut/object/Object.h>
 #include <donut/object/Slot.h>
-#include <donut/Clock.h>
 
 namespace donut {
 

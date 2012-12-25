@@ -16,10 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <donut/object/StringObject.h>
 #include <algorithm>
+#include <tarte/Handler.h>
+#include <donut/object/StringObject.h>
 
 namespace donut {
+using namespace tarte;
 
 const std::string TAG("StringObject");
 
