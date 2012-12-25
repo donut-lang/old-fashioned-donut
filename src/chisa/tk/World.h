@@ -114,6 +114,7 @@ public:
 	void onTouchDown(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenVector);
 	void onTouchUp(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenVector);
 	void onTouchMove(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenVector);
+	void onScroll(const float timeMs, const float delta);
 
 	/******************************************************************************
 	 * 生成

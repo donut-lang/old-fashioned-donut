@@ -217,4 +217,11 @@ void World::onTouchMove(const float timeMs, const unsigned int pointerIndex, geo
 	}
 }
 
+void World::onScroll(const float timeMs, const float delta)
+{
+	if(this->gestureMediator_){
+		this->gestureMediator_->onScroll(timeMs, delta);
+	}
+}
+
 }}

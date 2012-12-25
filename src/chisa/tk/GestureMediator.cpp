@@ -89,4 +89,11 @@ void GestureMediator::onTouchMove(const float timeMs, const unsigned int pointer
 	this->session_[pointerIndex]->onTouchMove(timeMs, screenPoint);
 }
 
+void GestureMediator::onScroll(const float timeMs, const float ratio)
+{
+	if(this->lastSession_){
+		this->lastSession_->onScroll(timeMs, ratio);
+	}
+}
+
 }}

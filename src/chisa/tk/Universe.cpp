@@ -110,6 +110,14 @@ void Universe::onTouchMove(const float timeMs, const unsigned int pointerIndex, 
 		topWorld->onTouchMove(timeMs, pointerIndex, screenPoint);
 	}
 }
+
+void Universe::onScroll(const float timeMs, const float delta)
+{
+	if(Handler<World> topWorld = this->worldStack.top()){
+		topWorld->onScroll(timeMs, delta);
+	}
+}
+
 Handler<chisa::WorldGeist> Universe::invokeWorldGeist(HandlerW<World> world, std::string const& nameOfGeist)
 {
 	if(log().t()){

@@ -99,6 +99,12 @@ void GestureSession::onTouchMove(const float timeMs, geom::Point const& pt)
 	this->lastPoint_ = pt;
 }
 
+void GestureSession::onScroll(const float timeMs, float const ratio)
+{
+	geom::Distance d(0, ratio);
+	this->invokeScroll(timeMs, this->lastPoint_, this->lastPoint_, d);
+}
+
 void GestureSession::invokeDownRaw(const float timeMs, geom::Point const& pt)
 {
 	for(HandlerW<Element> const& it : this->elementChain_) {
