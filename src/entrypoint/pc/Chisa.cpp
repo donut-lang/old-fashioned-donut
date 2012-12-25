@@ -85,6 +85,14 @@ void mouseButton(int button, int action){
 	}
 }
 
+void wheelMoved( int pos )
+{
+	const float timeMs = glfwGetTime() * 1000;
+	static int lastPos = 0;
+	gUniverse->onScroll(timeMs, (pos-lastPos)*50);
+	lastPos = pos;
+}
+
 int main(int argc, char** argv) {
 	if(GL_TRUE != glfwInit()){
 		std::cerr << "Failed to initialize GLFW" << std::endl;
@@ -109,6 +117,7 @@ int main(int argc, char** argv) {
 		glfwSetWindowSizeCallback( reshape );
 		glfwSetMouseButtonCallback( mouseButton );
 		glfwSetMousePosCallback( mousePosition );
+		glfwSetMouseWheelCallback(wheelMoved);
 		//glfwSetWindowRefreshCallback(render);
 		bool running=true;
 		float last = glfwGetTime();

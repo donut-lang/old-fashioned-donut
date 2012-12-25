@@ -83,6 +83,7 @@ public:
 	void onTouchDown(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
 	void onTouchUp(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
 	void onTouchMove(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
+	void onScroll(const float timeMs, const float delta);
 	/******************************************************************************
 	 * 生成
 	 ******************************************************************************/

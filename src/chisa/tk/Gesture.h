@@ -75,6 +75,7 @@ private:
 public:
 	void onTouchUp(const float timeMs, geom::Point const& pt);
 	void onTouchMove(const float timeMs, geom::Point const& pt);
+	void onScroll(const float timeMs, float const ratio);
 private:
 	void invokeDownRaw(const float timeMs, geom::Point const& pt);
 	void invokeUpRaw(const float timeMs, geom::Point const& pt);
@@ -101,6 +102,7 @@ public:
 	void onTouchDown(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
 	void onTouchUp(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
 	void onTouchMove(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
+	void onScroll(const float timeMs, const float ratio);
 };
 
 }}
