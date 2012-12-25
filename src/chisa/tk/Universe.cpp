@@ -69,6 +69,7 @@ void Universe::reshape(geom::Area const& area)
 void Universe::createNewWorld(std::string const& worldName)
 {
 	Handler<World> newWorld(World::create(log(),this->self(), worldName));
+	newWorld->reshape(this->area());
 	this->worldStack.push(newWorld);
 }
 

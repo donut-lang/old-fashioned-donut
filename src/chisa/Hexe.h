@@ -29,7 +29,6 @@ using namespace tarte;
 class WorldGeist;
 
 class Hexe : public HandlerBody<Hexe> {
-	DISABLE_COPY_AND_ASSIGN(Hexe);
 	DEFINE_MEMBER_REF(protected, Logger, log);
 	DEFINE_MEMBER_CONST(protected, std::string, basepath);
 public:
