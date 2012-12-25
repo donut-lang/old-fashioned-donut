@@ -26,24 +26,27 @@ using namespace tarte;
 namespace gl {
 class Canvas;
 
-class PredefinedStringRenderer {
-	DISABLE_COPY_AND_ASSIGN(PredefinedStringRenderer);
+class PredefinedSymRenderer {
+	DISABLE_COPY_AND_ASSIGN(PredefinedSymRenderer);
 	DEFINE_MEMBER_REF(private, Logger, log);
 private:
 	Handler<DrawableManager> drawableManager_;
 	std::map<unsigned int, Handler<Sprite> > spriteTable_;
 	float maxWidth_;
 	float maxHeight_;
+private:
+
 public:
-	typedef std::vector<unsigned int> String;
-	static const constexpr unsigned int EOS = 0U;
-	PredefinedStringRenderer(Logger& log, Handler<DrawableManager> drawableManager);
-	virtual ~PredefinedStringRenderer() noexcept = default;
+	typedef unsigned int Symbol;
+	typedef std::vector<Symbol> SymList;
+	PredefinedSymRenderer(Logger& log, Handler<DrawableManager> drawableManager);
+	virtual ~PredefinedSymRenderer() noexcept = default;
 public:
-	void registerCharacter( unsigned int symbol, std::string const& str );
+	void registerSymbol( Symbol symbol, std::string const& str );
 	inline float maxWidth() const noexcept { return this->maxWidth_; };
 	inline float maxHeight() const noexcept { return this->maxHeight_; };
-	geom::Area renderString( Canvas& cv, geom::Point const& point, String const& str, float depth );
+	geom::Area renderSyms( Canvas& cv, geom::Point const& point, SymList const& str, float depth );
+	geom::Area renderSym( Canvas& cv, geom::Point const& point, Symbol const& str, float depth );
 };
 
 }}
