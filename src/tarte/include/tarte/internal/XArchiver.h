@@ -31,7 +31,7 @@ template <typename T> XArchiver& XArchiver::operator &(T& val) {
 }
 
 template <typename T>
-struct XSerializer<std::vector<T>,0> {
+struct XSerializer<std::vector<T> > {
 	static XValue serialize(std::vector<T>& val){
 		Handler<XArray> array(new XArray);
 		for(T& v : val){
@@ -52,7 +52,7 @@ struct XSerializer<std::vector<T>,0> {
 };
 
 template <typename T, std::size_t N>
-struct XSerializer<T[N],0> {
+struct XSerializer<T[N]> {
 	static XValue serialize(T (&val)[N]) {
 		Handler<XArray> array(new XArray);
 		for(T& v : val){
@@ -73,7 +73,7 @@ struct XSerializer<T[N],0> {
 };
 
 template <std::size_t N>
-struct XSerializer<char[N],0> {
+struct XSerializer<char[N]> {
 	static XValue serialize(char (&val)[N]) {
 		return XValue( val, N);
 	}
@@ -87,7 +87,7 @@ struct XSerializer<char[N],0> {
 };
 
 template <std::size_t N>
-struct XSerializer<unsigned char[N],0> {
+struct XSerializer<unsigned char[N]> {
 	static XValue serialize(unsigned char (&val)[N]) {
 		return XValue( reinterpret_cast<char*>(val), N );
 	}
@@ -102,7 +102,7 @@ struct XSerializer<unsigned char[N],0> {
 
 #define PRIM_VAR(TYPE)\
 template <>\
-struct XSerializer<TYPE,0> {\
+struct XSerializer<TYPE> {\
 	typedef typename _TypeAdapter<TYPE>::init_type Type;\
 	static XValue serialize(Type& val){\
 		return XValue(val);\

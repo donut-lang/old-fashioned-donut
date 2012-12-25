@@ -126,18 +126,15 @@ public:
 	static const bool value = check_save_decl::value && check_load_decl::value;
 };
 
-template <typename T,
-	int generic=
-			std::is_enum<T>::value ? 1 :
-			HasSaveLoad<T>::value ? 2 :
-			HasXValueSaveLoad<T>::value ? 3 :
-			HasSerializer<T>::value ? 4
-			: 0 >
-struct XSerializer;
+template <typename T,typename U=void>
+struct XSerializer {
+	static XValue serialize(T& val);
+	static void deserialize(T& val, XValue const& xval);
+};
 
 //enumを持っている
 template <typename T>
-struct XSerializer<T, 1> {
+struct XSerializer<T, typename std::enable_if<std::is_enum<T>::value>::type> {
 	static XValue serialize(T& val){
 		return XValue(static_cast<XUInt>(val));
 	}
@@ -149,7 +146,7 @@ struct XSerializer<T, 1> {
 //ロードとセーブがカスタマイズされている場合はそれを利用する
 // XArchiver利用
 template <typename T>
-struct XSerializer<T, 2> {
+struct XSerializer<T, typename std::enable_if<HasSaveLoad<T>::value>::type> {
 	static XValue serialize(T& val){
 		XArchiverOut a;
 		XValue v;
@@ -166,7 +163,7 @@ struct XSerializer<T, 2> {
 //ロードとセーブがカスタマイズされている場合はそれを利用する
 // XValue利用
 template <typename T>
-struct XSerializer<T, 3> {
+struct XSerializer<T, typename std::enable_if<HasXValueSaveLoad<T>::value>::type> {
 	static XValue serialize(T& val){
 		return val.save();
 	}
@@ -177,7 +174,7 @@ struct XSerializer<T, 3> {
 
 //独自のシリアライズ関数を持っている場合はそれを利用する
 template <typename T>
-struct XSerializer<T, 4> {
+struct XSerializer<T, typename std::enable_if<HasSerializer<T>::value>::type> {
 	static XValue serialize(T& val){
 		XArchiverOut a;
 		XValue v;
@@ -189,13 +186,6 @@ struct XSerializer<T, 4> {
 		XArchiverIn arc(xval.as<XArray>());
 		val.serialize(arc);
 	}
-};
-
-//持ってない場合は…誰かが定義する
-template <typename T>
-struct XSerializer<T,0> {
-	static XValue serialize(T& val);
-	static void deserialize(T& val, XValue const& xval);
 };
 
 }
