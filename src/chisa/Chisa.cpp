@@ -25,19 +25,19 @@ Chisa::Chisa(Logger& log, Handler<PlatformFairy> fairy, Handler<Hexe> hexe)
 :log_(log)
 ,fairy_(fairy)
 ,hexe_(hexe)
-,universe_(tk::Universe::create(this->log(), hexe_.get()))
+,universe_(tk::Universe::create(this->log(), fairy, hexe))
 {
 }
 
 void Chisa::init(std::string const& windowTitle, int width, int height, int redbits, int greenbits, int bluebits, int alphabits, int depthbits, int stencilbits )
 {
-	fairy_->init(*this, windowTitle, width, height, redbits, greenbits, bluebits, alphabits, depthbits, stencilbits);
+	fairy_->init(windowTitle, width, height, redbits, greenbits, bluebits, alphabits, depthbits, stencilbits);
 	this->reshape(width, height);
 }
 
 void Chisa::setTitle(std::string const& name)
 {
-	fairy_->setTitle(*this, name);
+	fairy_->setTitle(name);
 }
 
 void Chisa::start(std::string const& initialWorldName)
@@ -65,7 +65,7 @@ void Chisa::loop()
 			this->fairy_->swapBuffer(*this);
 			float now = fairy_->getTimeMs(*this);
 			if(now < nextFrame){
-				fairy_->sleepMs(*this, nextFrame-now);
+				fairy_->sleepMs(nextFrame-now);
 			}
 		}
 		nextFrame+=(1000.0/60);
