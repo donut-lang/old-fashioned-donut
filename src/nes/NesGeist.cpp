@@ -58,7 +58,7 @@ void NesGeist::dispatchRendering(const uint8_t nesBuffer[screenHeight][screenWid
 		const int stride = s.stride();
 		for(int y=0;y<screenHeight;++y){
 			mem32 = reinterpret_cast<unsigned int*>(mem8);
-			for(int x=0;x<screenHeight;++x){
+			for(int x=0;x<screenWidth;++x){
 				mem32[x] = nesPaletteARGB[nesBuffer[y][x] & paletteMask];
 			}
 			mem8+=stride;
