@@ -37,7 +37,6 @@ private: /* 設定されうるリソース */
 	bool vertical_;
 private: /* 描画のための一時的なリソース */
 	Handler<gl::TextDrawable> textImage_;
-private:
 	int pushedCnt_;
 public:
 	void text(std::string const& text);
