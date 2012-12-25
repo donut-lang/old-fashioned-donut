@@ -34,8 +34,10 @@ private:
 	};
 	enum Mode scrollMode_;
 	geom::Point scrollOffset_;
+private: /* 描画のための一時的なリソース */
 	geom::Box childSize_;
 	float lastMovedFrom_;
+	int pushedCnt_;
 private:
 	using Super::addChild;
 	virtual void addChild(Handler<Element> const& h, Context const& ctx) override final;
@@ -50,6 +52,8 @@ private:
 	virtual void layoutImpl(geom::Box const& size) override;
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
 public:
+	virtual bool onDownRaw(const float timeMs, geom::Point const& ptInScreen) override;
+	virtual bool onUpRaw(const float timeMs, geom::Point const& ptInScreen) override;
 	virtual bool onScroll(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance) override;
 };
 

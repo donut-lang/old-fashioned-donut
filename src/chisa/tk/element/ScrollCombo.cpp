@@ -25,6 +25,7 @@ CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(ScrollCombo, Super)
 ,scrollMode_(None)
 ,scrollOffset_(0,0)
 ,lastMovedFrom_(0)
+,pushedCnt_(0)
 {
 
 }
@@ -129,31 +130,53 @@ void ScrollCombo::layoutImpl(geom::Box const& size)
 void ScrollCombo::idle(const float delta_ms)
 {
 	Super::idle(delta_ms);
-	geom::Point ptStart(this->scrollOffset_);
-	geom::Point ptEnd(this->scrollOffset_+this->size());
-	if((this->scrollMode_ & Horizontal) && ptStart.x() < 0){
-		this->scrollOffset_.x(this->scrollOffset_.x() - (ptStart.x()*delta_ms/100));
+	if(this->pushedCnt_ == 0){
+		geom::Point ptStart(this->scrollOffset_);
+		geom::Point ptEnd(this->scrollOffset_+this->size());
+		if((this->scrollMode_ & Horizontal) && ptStart.x() < 0){
+			this->scrollOffset_.x(this->scrollOffset_.x() - (ptStart.x()*delta_ms/100));
+		}
+		if((this->scrollMode_ & Vertical) && ptStart.y() < 0){
+				this->scrollOffset_.y(this->scrollOffset_.y() - (ptStart.y()*delta_ms/100));
+		}
+		if((this->scrollMode_ & Horizontal) && ptEnd.x() > this->childSize_.width()){
+			this->scrollOffset_.x(this->scrollOffset_.x() - ((ptEnd.x() - this->childSize_.width()) * delta_ms/100));
+		}
+		if((this->scrollMode_ & Vertical) && ptEnd.y() > this->childSize_.height()){
+			this->scrollOffset_.y(this->scrollOffset_.y() - ((ptEnd.y() - this->childSize_.height()) * delta_ms/100));
+		}
+		this->lastMovedFrom_ += delta_ms;
 	}
-	if((this->scrollMode_ & Vertical) && ptStart.y() < 0){
-			this->scrollOffset_.y(this->scrollOffset_.y() - (ptStart.y()*delta_ms/100));
-	}
-	if((this->scrollMode_ & Horizontal) && ptEnd.x() > this->childSize_.width()){
-		this->scrollOffset_.x(this->scrollOffset_.x() - ((ptEnd.x() - this->childSize_.width()) * delta_ms/100));
-	}
-	if((this->scrollMode_ & Vertical) && ptEnd.y() > this->childSize_.height()){
-		this->scrollOffset_.y(this->scrollOffset_.y() - ((ptEnd.y() - this->childSize_.height()) * delta_ms/100));
-	}
-	this->lastMovedFrom_ += delta_ms;
+}
+
+bool ScrollCombo::onDownRaw(const float timeMs, geom::Point const& ptInScreen)
+{
+	++this->pushedCnt_;
+	return false;
+}
+bool ScrollCombo::onUpRaw(const float timeMs, geom::Point const& ptInScreen)
+{
+	--this->pushedCnt_;
+	return false;
 }
 
 bool ScrollCombo::onScroll(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance)
 {
-	if(this->scrollMode_ == Both){
-		this->scrollOffset_ -= distance;
-	}else if(this->scrollMode_ == Vertical){
-		this->scrollOffset_.y(this->scrollOffset_.y() - distance.y());
-	}else if(this->scrollMode_ == Horizontal){
-		this->scrollOffset_.x(this->scrollOffset_.x() - distance.x());
+	geom::Point const& ptStart(this->scrollOffset_);
+	geom::Point const ptEnd(this->scrollOffset_+this->size());
+	if(this->scrollMode_ & Vertical) {
+		if (ptStart.y() < 0 || ptEnd.y() > this->childSize_.height()) {
+			this->scrollOffset_.y(this->scrollOffset_.y() - (distance.y() / 2.0f));
+		}else{
+			this->scrollOffset_.y(this->scrollOffset_.y() - distance.y());
+		}
+	}
+	if(this->scrollMode_ & Horizontal){
+		if(ptStart.x() < 0 || ptEnd.x() > this->childSize_.width()) {
+			this->scrollOffset_.x(this->scrollOffset_.x() - (distance.x()/2.0f));
+		}else{
+			this->scrollOffset_.x(this->scrollOffset_.x() - distance.x());
+		}
 	}
 	this->lastMovedFrom_ = 0.0f;
 	return true; //イベントを消費する
