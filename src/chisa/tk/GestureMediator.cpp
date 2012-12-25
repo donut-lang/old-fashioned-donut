@@ -78,8 +78,8 @@ void GestureMediator::onTouchUp(const float timeMs, const unsigned int pointerIn
 		return;
 	}
 	GestureSession* const session = this->session_[pointerIndex];
-	session->onTouchUp(timeMs, screenPoint);
 	this->releaseSession(timeMs, pointerIndex);
+	session->onTouchUp(timeMs, screenPoint);
 }
 
 void GestureMediator::onTouchMove(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)

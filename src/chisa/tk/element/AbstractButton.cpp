@@ -65,7 +65,7 @@ void AbstractButton::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea
 Handler<gl::TextDrawable> AbstractButton::textImage()
 {
 	if(!this->textImage_){
-		if( Handler<World> w = this->world().lock()){
+		if( Handler<World> w = this->world().lock() ){
 			if(vertical_){
 				this->textImage_ = w->drawableManager()->queryVerticalText(
 						this->text(),

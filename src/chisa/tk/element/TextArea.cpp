@@ -59,7 +59,7 @@ void TextArea::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom
 Handler<gl::TextDrawable> TextArea::textImage()
 {
 	if(!this->textImage_){
-		if( Handler<World> w = this->world().lock()){
+		if( Handler<World> w = this->world().lock() ){
 			this->textImage_ = w->drawableManager()->queryText(
 					this->text(),
 					this->textSize_,
@@ -77,7 +77,7 @@ Handler<gl::TextDrawable> TextArea::textImage()
 Handler<gl::TextDrawable> TextArea::descImage()
 {
 	if(!this->descImage_){
-		if( Handler<World> w = this->world().lock()){
+		if( Handler<World> w = this->world().lock() ){
 			this->descImage_ = w->drawableManager()->queryText(
 					this->description(),
 					this->textSize_,
@@ -153,6 +153,16 @@ bool TextArea::onSingleTapUp(const float timeMs, geom::Point const& ptInScreen)
 		this->onClick();
 	}
 	return true;
+}
+
+void TextArea::onFocusGained(const float timeMs)
+{
+	Element::onFocusGained(timeMs);
+}
+
+void TextArea::onFocusLost(const float timeMs)
+{
+	Element::onFocusLost(timeMs);
 }
 
 }}

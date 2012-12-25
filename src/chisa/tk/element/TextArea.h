@@ -61,6 +61,8 @@ protected:
 public:
 	virtual bool onMoveRaw(const float timeMs, geom::Point const& ptInScreen) override;
 	virtual bool onSingleTapUp(const float timeMs, geom::Point const& ptInScreen) override;
+	virtual void onFocusGained(const float timeMs) override;
+	virtual void onFocusLost(const float timeMs) override;
 };
 
 }}
