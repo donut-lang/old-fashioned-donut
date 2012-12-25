@@ -91,6 +91,9 @@ class GestureMediator {
 private:
 	static constexpr std::size_t MaxTouxhPoint = 5;
 	GestureSession* session_[MaxTouxhPoint];
+	GestureSession* lastSession_;
+private:
+	void releaseSession(unsigned int const pointerIndex);
 public:
 	GestureMediator(Logger& log, const HandlerW<World> world);
 	virtual ~GestureMediator();

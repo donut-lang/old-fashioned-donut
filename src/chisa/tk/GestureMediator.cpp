@@ -27,6 +27,7 @@ static const std::string TAG("GestureMediator");
 GestureMediator::GestureMediator(Logger& log, const HandlerW<World> world)
 :log_(log)
 ,world_(world)
+,lastSession_(nullptr)
 {
 	for(size_t i=0;i<MaxTouxhPoint;++i){
 		this->session_[i] = nullptr;
@@ -35,14 +36,32 @@ GestureMediator::GestureMediator(Logger& log, const HandlerW<World> world)
 
 GestureMediator::~GestureMediator()
 {
+	if(this->lastSession_){
+		delete this->lastSession_;
+	}
+	for(GestureSession*& session : this->session_) {
+		if(session){
+			this->log().e(TAG, "Oops. An gesture event was not closed.");
+			delete session;
+			session = nullptr;
+		}
+	}
+}
+
+void GestureMediator::releaseSession(unsigned int const pointerIndex)
+{
+	if(this->lastSession_){
+		delete this->lastSession_;
+	}
+	this->lastSession_ = this->session_[pointerIndex];
+	this->session_[pointerIndex] = nullptr;
 }
 
 void GestureMediator::onTouchDown(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
 {
 	if(this->session_[pointerIndex]){
 		this->log().e(TAG, "oops. touch down occcured, but there is already a GestureSession for pointerIndex: %d", pointerIndex);
-		delete this->session_[pointerIndex];
-		this->session_[pointerIndex] = nullptr;
+		this-> releaseSession(pointerIndex);
 	}
 	if(Handler<World> world = this->world().lock()){
 		GestureSession* const session = new GestureSession(this->log(), pointerIndex, world->getElementByPoint(screenPoint), screenPoint, timeMs);
@@ -57,9 +76,8 @@ void GestureMediator::onTouchUp(const float timeMs, const unsigned int pointerIn
 		return;
 	}
 	GestureSession* const session = this->session_[pointerIndex];
-	this->session_[pointerIndex] = nullptr;
 	session->onTouchUp(timeMs, screenPoint);
-	delete session;
+	this-> releaseSession(pointerIndex);
 }
 
 void GestureMediator::onTouchMove(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
