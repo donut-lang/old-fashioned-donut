@@ -18,31 +18,12 @@
 
 #pragma once
 #include <tarte/Handler.h>
+#include "PlatformFairy.h"
 #include "tk/Universe.h"
 #include "Hexe.h"
 
 namespace chisa {
 using namespace tarte;
-
-class Chisa;
-
-class PlatformFairy : public HandlerBody<PlatformFairy> {
-	DEFINE_MEMBER_REF(protected, Logger, log);
-protected:
-	PlatformFairy(Logger& log):log_(log){};
-	virtual ~PlatformFairy() noexcept = default;
-public:
-	inline bool onFree() noexcept { return false; };
-public:
-	virtual void init(Chisa& chisa, std::string const& windowTitle, int width, int height, int redbits, int greenbits, int bluebits, int alphabits, int depthbits, int stencilbits ) = 0;
-	virtual void setTitle(Chisa& chisa, std::string const& name) = 0;
-	virtual void swapBuffer(Chisa& chisa) = 0;
-	virtual unsigned int getTimeMs(Chisa& chisa) = 0;
-	virtual void sleepMs(Chisa& chisa, unsigned int ms) = 0;
-	virtual bool pollEvent(Chisa& chisa) = 0;
-	virtual void startIME(Chisa& chisa) = 0;
-	virtual void exitIME(Chisa& chisa) = 0;
-};
 
 class Chisa final : public HandlerBody<Chisa> {
 	DEFINE_MEMBER_REF(protected, Logger, log)

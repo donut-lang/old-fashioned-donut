@@ -27,8 +27,9 @@ static const std::string TAG("Universe");
 namespace chisa {
 namespace tk {
 
-Universe::Universe(Logger& log, Hexe* hexe)
+Universe::Universe(Logger& log, Handler<PlatformFairy> fairy, Handler<Hexe> hexe)
 :log_(log)
+,platformFairy_(fairy)
 ,hexe_(hexe)
 ,canvas_(log)
 ,drawableManager_( new gl::DrawableManager(log, gl::DrawableSetting(this->resolveUniverseFilepath("__font__"))) )

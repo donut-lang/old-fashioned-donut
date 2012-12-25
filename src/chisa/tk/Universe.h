@@ -24,6 +24,7 @@
 #include "../geom/Area.h"
 #include "../geom/Vector.h"
 #include "../Hexe.h"
+#include "../PlatformFairy.h"
 #include "Stack.h"
 
 namespace chisa {
@@ -44,7 +45,8 @@ class Universe : public HandlerBody<Universe> {
 	DISABLE_COPY_AND_ASSIGN(Universe);
 private:
 	DEFINE_MEMBER_REF(private, Logger, log);
-	DEFINE_MEMBER_CONST(public, Hexe*, hexe);
+	DEFINE_MEMBER_CONST(public, Handler<Hexe>, hexe);
+	DEFINE_MEMBER_CONST(public, Handler<PlatformFairy>, platformFairy);
 	Stack<Handler<World> > worldStack;
 	DEFINE_MEMBER(public, private, geom::Area, area);
 	gl::Canvas canvas_;
@@ -88,12 +90,12 @@ public:
 	 * 生成
 	 ******************************************************************************/
 private:
-	Universe(Logger& log, Hexe* hexe);
+	Universe(Logger& log, Handler<PlatformFairy> fairy, Handler<Hexe> hexe);
 	void init();
 public:
-	static Handler<Universe> create(Logger& log, Hexe* hexe)
+	static Handler<Universe> create(Logger& log, Handler<PlatformFairy> fairy, Handler<Hexe> hexe)
 	{
-		Handler<Universe> ptr(new Universe(log, hexe));
+		Handler<Universe> ptr(new Universe(log, fairy, hexe));
 		ptr->init();
 		return ptr;
 	}

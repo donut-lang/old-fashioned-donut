@@ -45,7 +45,7 @@ public:
 		SDL_Quit();
 	}
 private:
-	virtual void init(Chisa& chisa, std::string const& title, int width, int height, int redbits, int greenbits, int bluebits, int alphabits, int depthbits, int stencilbits ) {
+	virtual void init(std::string const& title, int width, int height, int redbits, int greenbits, int bluebits, int alphabits, int depthbits, int stencilbits ) {
 		this->window_ = SDL_CreateWindow(
 			title.c_str(),
 			SDL_WINDOWPOS_CENTERED,
@@ -66,7 +66,7 @@ private:
 		SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, stencilbits);
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	}
-	virtual void setTitle(Chisa& chisa, std::string const& name) {
+	virtual void setTitle(std::string const& name) {
 		SDL_SetWindowTitle(this->window_, name.c_str());
 	}
 	virtual void swapBuffer(Chisa& chisa)
@@ -77,7 +77,7 @@ private:
 	{
 		return SDL_GetTicks();
 	}
-	virtual void sleepMs(Chisa& chisa, unsigned int ms)
+	virtual void sleepMs(unsigned int ms)
 	{
 		SDL_Delay(ms);
 	}
