@@ -45,8 +45,8 @@ void DonutException::init(const char* file, const size_t line, std::string const
 	try{
 		this->_line = line;
 		this->_file = std::string(file);
-		this->_loc = format("(in %s:%d): ", file, line);
-		this->_msg = formatv(fmt, lst);
+		this->_loc = ::tarte::format("(in %s:%d): ", file, line);
+		this->_msg = ::tarte::formatv(fmt, lst);
 		this->_what = _loc+_msg;
 	}catch(...){
 		this->_line = 0;

@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#include "Object.h"
 #include <tarte/VectorMap.h>
+#include "Object.h"
 
 namespace donut {
 using namespace tarte;

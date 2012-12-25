@@ -17,9 +17,9 @@
  */
 
 #pragma once
+#include <vector>
 #include <tarte/Handler.h>
 #include <tarte/XVal.h>
-#include <vector>
 #include "Inst.h"
 
 namespace donut {

@@ -16,9 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tarte/String.h>
 #include <algorithm>
-
+#include <tarte/String.h>
 #include <donut/vm/Machine.h>
 #include <donut/Exception.h>
 #include <donut/object/StringObject.h>

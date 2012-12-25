@@ -17,11 +17,11 @@
  */
 
 #pragma once
-#include "../Decl.h"
+#include <vector>
 #include <tarte/Handler.h>
 #include <tarte/ClassUtil.h>
 #include <tarte/XVal.h>
-#include <vector>
+#include "../Decl.h"
 
 namespace donut {
 using namespace tarte;

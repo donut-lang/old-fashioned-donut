@@ -17,7 +17,7 @@
  */
 
 #include <tarte/String.h>
-
+#include <donut/Exception.h>
 #include <donut/object/Heap.h>
 #include <donut/object/Object.h>
 #include <donut/provider/IntProvider.h>
@@ -25,7 +25,6 @@
 #include <donut/provider/NullProvider.h>
 #include <donut/object/StringObject.h>
 #include <donut/object/FloatObject.h>
-#include <donut/Exception.h>
 
 namespace donut {
 

@@ -16,10 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <donut/provider/FloatProvider.h>
+#include <tarte/String.h>
 #include <donut/object/Heap.h>
 #include <donut/object/FloatObject.h>
-#include <tarte/String.h>
+#include <donut/provider/FloatProvider.h>
 
 namespace donut {
 using namespace tarte;

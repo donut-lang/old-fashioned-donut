@@ -17,7 +17,7 @@
  */
 
 #include <tarte/String.h>
-
+#include <tarte/Handler.h>
 #include <donut/object/FloatObject.h>
 
 namespace donut {

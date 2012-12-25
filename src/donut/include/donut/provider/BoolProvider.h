@@ -17,9 +17,9 @@
  */
 
 #pragma once
+#include <cstdint>
 #include "../object/Object.h"
 #include "Provider.h"
-#include <cstdint>
 
 namespace donut {
 

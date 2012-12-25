@@ -16,13 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <algorithm>
 #include <tarte/PairFunctor.h>
 #include <tarte/String.h>
-#include <algorithm>
-
-#include <donut/object/ReactiveNativeObject.h>
-#include <donut/object/Heap.h>
 #include <donut/Clock.h>
+#include <donut/object/Heap.h>
+#include <donut/object/ReactiveNativeObject.h>
 
 namespace donut {
 

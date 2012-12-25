@@ -18,9 +18,9 @@
 
 #pragma once
 
-#include "Platform.h"
 #include <string>
 #include <vector>
+#include "Platform.h"
 #include "internal/FileSystem.h"
 
 namespace tarte {

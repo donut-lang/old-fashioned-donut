@@ -19,7 +19,6 @@
 #pragma once
 #include <memory>
 #include <tarte/Handler.h>
-
 #include <donut/source/Source.h>
 
 namespace donut {
