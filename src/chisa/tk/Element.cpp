@@ -45,6 +45,7 @@ Element::Element(Logger& log, HandlerW<World> world, HandlerW<Element> parent)
 ,foregroundColor_(gl::Black)
 ,backgroundColor_(gl::Color(0.9,0.9,0.9,1))
 ,relayoutRequested_(false)
+,onFocused_(false)
 {
 	this->addAttribute(AttrName::Margin, this->margin_);
 	this->addAttribute(AttrName::Padding, this->padding_);
@@ -200,6 +201,16 @@ void Element::notifyViewRefreshed()
 bool Element::notifyViewRefreshedImpl()
 {
 	return false;
+}
+
+void Element::onFocusGained(const float timeMs)
+{
+	this->onFocused_ = true;
+}
+
+void Element::onFocusLost(const float timeMs)
+{
+	this->onFocused_ = false;
 }
 
 

@@ -75,6 +75,7 @@ private: /* 画面描画情報 */
 	DEFINE_MEMBER(public, private, geom::Box, size); //現在の大きさ
 	DEFINE_MEMBER(public, private, geom::Area, screenArea); //画面上の占める位置
 	DEFINE_MEMBER(protected, private, geom::Area, drawnArea); //大きさの中で、レンダリングされている部分
+	bool onFocused_;
 public:
 	void margin(geom::Space const& m);
 	void padding(geom::Space const& p);
@@ -86,6 +87,7 @@ public:
 	inline geom::Space const& padding() const noexcept { return this->padding_; };
 	inline gl::Color const& foregroundColor() const noexcept { return this->foregroundColor_; };
 	inline gl::Color const& backgroundColor() const noexcept { return this->backgroundColor_; };
+	inline bool onFocused() const noexcept { return this->onFocused_; };
 public: /* レンダリング(非virtual) */
 	void render(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area);
 	geom::Box measure(geom::Box const& constraint);
@@ -111,6 +113,8 @@ public: /* 実装メソッド */
 	virtual void layoutImpl(geom::Box const& size) = 0;
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) = 0;
 	virtual bool notifyViewRefreshedImpl();
+	virtual void onFocusGained(const float timeMs) override;
+	virtual void onFocusLost(const float timeMs) override;
 protected:
 	Element(Logger& log, HandlerW<World> world, HandlerW<Element> parent);
 	template <typename T> void addAttribute(std::string const& name, T& ptr)

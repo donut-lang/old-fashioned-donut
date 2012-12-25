@@ -48,20 +48,22 @@ GestureMediator::~GestureMediator()
 	}
 }
 
-void GestureMediator::releaseSession(unsigned int const pointerIndex)
+void GestureMediator::releaseSession(const float timeMs, unsigned int const pointerIndex)
 {
 	if(this->lastSession_){
+		this->lastSession_->onFocusLost(timeMs);
 		delete this->lastSession_;
 	}
 	this->lastSession_ = this->session_[pointerIndex];
 	this->session_[pointerIndex] = nullptr;
+	this->lastSession_->onFocusGained(timeMs);
 }
 
 void GestureMediator::onTouchDown(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
 {
 	if(this->session_[pointerIndex]){
 		this->log().e(TAG, "oops. touch down occcured, but there is already a GestureSession for pointerIndex: %d", pointerIndex);
-		this-> releaseSession(pointerIndex);
+		this->releaseSession(timeMs, pointerIndex);
 	}
 	if(Handler<World> world = this->world().lock()){
 		GestureSession* const session = new GestureSession(this->log(), pointerIndex, world->getElementByPoint(screenPoint), screenPoint, timeMs);
@@ -77,7 +79,7 @@ void GestureMediator::onTouchUp(const float timeMs, const unsigned int pointerIn
 	}
 	GestureSession* const session = this->session_[pointerIndex];
 	session->onTouchUp(timeMs, screenPoint);
-	this-> releaseSession(pointerIndex);
+	this->releaseSession(timeMs, pointerIndex);
 }
 
 void GestureMediator::onTouchMove(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)

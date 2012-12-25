@@ -42,6 +42,8 @@ public:
 	virtual bool onFling(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity){return false;};
 	virtual bool onScroll(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance){return false;};
 	virtual bool onZoom(const float timeMs, geom::Point const& center, const float ratio){return false;};
+	virtual void onFocusGained(const float timeMs){};
+	virtual void onFocusLost(const float timeMs){};
 	// 実装用
 	//	virtual bool onDownRaw(const float timeMs, geom::Point const& ptInScreen) override;
 	//	virtual bool onUpRaw(const float timeMs, geom::Point const& ptInScreen) override;
@@ -50,6 +52,8 @@ public:
 	//	virtual bool onFling(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity) override;
 	//	virtual bool onScroll(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance) override;
 	//	virtual bool onZoom(const float timeMs, geom::Point const& center, const float ratio) override;
+	// virtual bool onFocusGained(const float timeMs) override;
+	// virtual bool onFocusLost(const float timeMs) override;
 };
 
 class GestureSession {
@@ -76,6 +80,8 @@ public:
 	void onTouchUp(const float timeMs, geom::Point const& pt);
 	void onTouchMove(const float timeMs, geom::Point const& pt);
 	void onScroll(const float timeMs, float const ratio);
+	void onFocusGained(const float timeMs);
+	void onFocusLost(const float timeMs);
 private:
 	void invokeDownRaw(const float timeMs, geom::Point const& pt);
 	void invokeUpRaw(const float timeMs, geom::Point const& pt);
@@ -83,6 +89,8 @@ private:
 	void invokeFling(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity);
 	void invokeScroll(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance);
 	void invokeZoom(const float timeMs, geom::Point const& center, const float ratio);
+	void invokeFocusGained(const float timeMs);
+	void invokeFocusLost(const float timeMs);
 };
 
 class GestureMediator {
@@ -94,7 +102,7 @@ private:
 	GestureSession* session_[MaxTouxhPoint];
 	GestureSession* lastSession_;
 private:
-	void releaseSession(unsigned int const pointerIndex);
+	void releaseSession(const float timeMs, unsigned int const pointerIndex);
 public:
 	GestureMediator(Logger& log, const HandlerW<World> world);
 	virtual ~GestureMediator();
