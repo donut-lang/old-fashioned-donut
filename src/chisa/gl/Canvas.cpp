@@ -82,15 +82,15 @@ void Canvas::scissorReset()
 	glScissor(0,0,this->width_,this->height_);
 }
 
-void Canvas::drawSprite(Handler<Sprite> sprite, geom::Point const& pt, const float depth)
+void Canvas::drawSprite(Handler<Sprite> sprite, geom::Point const& pt, const float depth, Color const& color)
 {
-	sprite->drawImpl(this, pt, depth);
+	sprite->drawImpl(this, pt, color, depth);
 }
-void Canvas::drawSprite(Handler<Sprite> sprite, geom::Point const& pt, geom::Area const& spriteArea, const float depth)
+void Canvas::drawSprite(Handler<Sprite> sprite, geom::Point const& pt, geom::Area const& spriteArea, const float depth, Color const& color)
 {
-	sprite->drawImpl(this, pt, spriteArea, depth);
+	sprite->drawImpl(this, pt, spriteArea, color, depth);
 }
-void Canvas::drawTexture(unsigned int texId, geom::Point const& pt, geom::IntBox const& texSize, geom::Area const& spriteArea, const float depth)
+void Canvas::drawTexture(unsigned int texId, geom::Point const& pt, geom::IntBox const& texSize, geom::Area const& spriteArea, const float depth, Color const& color)
 {
 	const float width = spriteArea.width();
 	const float height = spriteArea.height();
@@ -101,7 +101,7 @@ void Canvas::drawTexture(unsigned int texId, geom::Point const& pt, geom::IntBox
 	const float bottom = (spriteArea.y()+height)/texSize.height();
 	glBindTexture(GL_TEXTURE_2D, texId);
 	glEnable(GL_TEXTURE_2D);
-	glColor4f(1.0f,1.0f,1.0f,1.0f);
+	this->setColor(color);
 	glBegin(GL_POLYGON);
 		glTexCoord2f(left, top   );glVertex3f(pt.x()      , pt.y(), depth);
 		glTexCoord2f(left, bottom);glVertex3f(pt.x()      , pt.y()+height, depth);
@@ -110,9 +110,9 @@ void Canvas::drawTexture(unsigned int texId, geom::Point const& pt, geom::IntBox
 	glEnd();
 	glDisable(GL_TEXTURE_2D);
 }
-void Canvas::drawTexture(unsigned int texId, geom::Point const& pt, geom::IntBox const& texSize, geom::IntBox const& spriteSize, const float depth)
+void Canvas::drawTexture(unsigned int texId, geom::Point const& pt, geom::IntBox const& texSize, geom::IntBox const& spriteSize, const float depth, Color const& color)
 {
-	this->drawTexture(texId, pt, texSize, geom::Area(geom::ZERO, spriteSize), depth);
+	this->drawTexture(texId, pt, texSize, geom::Area(geom::ZERO, spriteSize), depth, color);
 }
 
 void Canvas::drawLine(const float width, Color const& color, geom::Point const& start, geom::Point const& end, const float depth)
