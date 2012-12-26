@@ -44,6 +44,7 @@ private: /* 描画のための一時的なリソース */
 	int editStart_;
 	int editLength_;
 	std::vector<Handler<gl::TextDrawable> > editListAfter_;
+	float cursorCounter_;
 public:
 	void text(std::string const& text);
 	void description(std::string const& text);
@@ -53,6 +54,7 @@ public:
 	inline std::string description() const noexcept{ return this->description_; };
 	inline float textSize() const noexcept { return this->textSize_; };
 private:
+	virtual void idle(const float delta_ms) override;
 	virtual std::string toString() const override final;
 	Handler<gl::TextDrawable> textImage();
 	Handler<gl::TextDrawable> descImage();

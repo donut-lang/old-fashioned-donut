@@ -55,8 +55,8 @@ Sprite::Sprite(HandlerW<internal::SpriteManager> mgr, geom::IntVector const& siz
 	if(terr != GL_NO_ERROR){
 		TARTE_EXCEPTION(Exception, "[BUG] Failed to transfer texture: 0x%08x", terr);
 	}
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 }
 Sprite::~Sprite() noexcept (true)
