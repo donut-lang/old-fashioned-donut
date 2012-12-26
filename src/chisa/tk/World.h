@@ -39,7 +39,7 @@ using namespace tarte;
 namespace tk {
 class Element;
 class Widget;
-class GestureMediator;
+class ActionMediator;
 
 class WidgetElement;
 class ElementFactory;
@@ -62,7 +62,7 @@ private:
 private:
 	ElementFactory* elementFactory_;
 	WidgetFactory* widgetFactory_;
-	GestureMediator* gestureMediator_;
+	ActionMediator* gestureMediator_;
 public:
 	void render(gl::Canvas& canvas);
 	void idle(const float delta_ms);

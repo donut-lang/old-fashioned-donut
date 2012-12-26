@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Gesture.h"
+#include "Action.h"
 #include "World.h"
 
 namespace chisa {
@@ -24,7 +24,7 @@ namespace tk {
 
 static const std::string TAG("GestureMediator");
 
-GestureMediator::GestureMediator(Logger& log, const HandlerW<World> world)
+ActionMediator::ActionMediator(Logger& log, const HandlerW<World> world)
 :log_(log)
 ,world_(world)
 ,lastSession_(nullptr)
@@ -34,12 +34,12 @@ GestureMediator::GestureMediator(Logger& log, const HandlerW<World> world)
 	}
 }
 
-GestureMediator::~GestureMediator()
+ActionMediator::~ActionMediator()
 {
 	if(this->lastSession_){
 		delete this->lastSession_;
 	}
-	for(GestureSession*& session : this->session_) {
+	for(ActionSession*& session : this->session_) {
 		if(session){
 			this->log().e(TAG, "Oops. An gesture event was not closed.");
 			delete session;
@@ -48,7 +48,7 @@ GestureMediator::~GestureMediator()
 	}
 }
 
-void GestureMediator::releaseSession(float const& timeMs, unsigned int const pointerIndex)
+void ActionMediator::releaseSession(float const& timeMs, unsigned int const pointerIndex)
 {
 	if(this->lastSession_){
 		this->lastSession_->onFocusLost(timeMs);
@@ -59,30 +59,30 @@ void GestureMediator::releaseSession(float const& timeMs, unsigned int const poi
 	this->lastSession_->onFocusGained(timeMs);
 }
 
-void GestureMediator::onTouchDown(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
+void ActionMediator::onTouchDown(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
 {
 	if(this->session_[pointerIndex]){
 		this->log().e(TAG, "oops. touch down occcured, but there is already a GestureSession for pointerIndex: %d", pointerIndex);
 		this->releaseSession(timeMs, pointerIndex);
 	}
 	if(Handler<World> world = this->world().lock()){
-		GestureSession* const session = new GestureSession(this->log(), pointerIndex, world->getElementByPoint(screenPoint), screenPoint, timeMs);
+		ActionSession* const session = new ActionSession(this->log(), pointerIndex, world->getElementByPoint(screenPoint), screenPoint, timeMs);
 		this->session_[pointerIndex] = session;
 	}
 }
 
-void GestureMediator::onTouchUp(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
+void ActionMediator::onTouchUp(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
 {
 	if(!this->session_[pointerIndex]){
 		this->log().e(TAG, "oops. touch up occcured, but there is no GestureSession for pointerIndex: %d", pointerIndex);
 		return;
 	}
-	GestureSession* const session = this->session_[pointerIndex];
+	ActionSession* const session = this->session_[pointerIndex];
 	this->releaseSession(timeMs, pointerIndex);
 	session->onTouchUp(timeMs, screenPoint);
 }
 
-void GestureMediator::onTouchMove(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
+void ActionMediator::onTouchMove(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
 {
 	if(!this->session_[pointerIndex]){
 		this->log().e(TAG, "oops. touch move occured, but there is no GestureSession for pointerIndex: %d", pointerIndex);
@@ -91,20 +91,20 @@ void GestureMediator::onTouchMove(float const& timeMs, const unsigned int pointe
 	this->session_[pointerIndex]->onTouchMove(timeMs, screenPoint);
 }
 
-void GestureMediator::onScroll(float const& timeMs, const float ratio)
+void ActionMediator::onScroll(float const& timeMs, const float ratio)
 {
 	if(this->lastSession_){
 		this->lastSession_->onScroll(timeMs, ratio);
 	}
 }
 
-void GestureMediator::onTextInput(float const& timeMs, std::string const& text)
+void ActionMediator::onTextInput(float const& timeMs, std::string const& text)
 {
 	if(this->lastSession_){
 		this->lastSession_->onTextInput(timeMs, text);
 	}
 }
-void GestureMediator::onTextEdit(float const& timeMs, std::string const& text, int const start, int const length)
+void ActionMediator::onTextEdit(float const& timeMs, std::string const& text, int const start, int const length)
 {
 	if(this->lastSession_){
 		this->lastSession_->onTextEdit(timeMs, text, start, length);

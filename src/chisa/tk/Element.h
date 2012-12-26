@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include "Gesture.h"
+#include "Action.h"
 #include <tarte/ClassUtil.h>
 #include <tarte/Handler.h>
 #include <tarte/VectorMap.h>
@@ -44,7 +44,7 @@ class ElementFactory;
 
 class World;
 
-class Element : public HandlerBody<Element>, public GestureListener {
+class Element : public HandlerBody<Element>, public ActionListener {
 public:
 	struct AttrName {
 		const static std::string Id;
