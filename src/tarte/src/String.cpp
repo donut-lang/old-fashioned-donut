@@ -115,6 +115,29 @@ std::string toString(const bool val)
 	return val ? "true" : "false";
 }
 
+std::string join(std::vector<std::string> const& lst)
+{
+	std::stringstream ss;
+	for(std::string const& str : lst) {
+		ss << str;
+	}
+	return ss.str();
+}
+
+std::string join(std::vector<std::string> const& lst, std::string const& sep)
+{
+	std::stringstream ss;
+	bool isNotFirst = false;
+	for(std::string const& str : lst) {
+		if(isNotFirst){
+			ss << sep;
+		}
+		ss << str;
+		isNotFirst = true;
+	}
+	return ss.str();
+}
+
 std::vector<std::string> breakChar(std::string const& str_)
 {
 	UErrorCode st = U_ZERO_ERROR;

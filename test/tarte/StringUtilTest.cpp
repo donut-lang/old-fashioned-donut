@@ -96,11 +96,18 @@ TEST(StringUtilTest, BreakChar)
 {
 	std::vector<std::string> chars(breakChar("あいうえお"));
 	ASSERT_EQ(5, chars.size());
-	ASSERT_EQ("あ", chars[0]);
-	ASSERT_EQ("い", chars[1]);
-	ASSERT_EQ("う", chars[2]);
-	ASSERT_EQ("え", chars[3]);
-	ASSERT_EQ("お", chars[4]);
+	ASSERT_EQ("あ", (std::string&)chars[0]);
+	ASSERT_EQ("い", (std::string&)chars[1]);
+	ASSERT_EQ("う", (std::string&)chars[2]);
+	ASSERT_EQ("え", (std::string&)chars[3]);
+	ASSERT_EQ("お", (std::string&)chars[4]);
+}
+
+TEST(StringUtilTest, Join)
+{
+	std::vector<std::string> chars = {"あ","い","う",""};
+	ASSERT_EQ("あいう", join(chars));
+	ASSERT_EQ("あvいvうv", join(chars, "v"));
 }
 
 TEST(StringUtilTest, ParseIntTest)
