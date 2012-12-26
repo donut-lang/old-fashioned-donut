@@ -227,6 +227,9 @@ TextDrawable::TextDrawable(HandlerW<DrawableManager> manager, std::string const&
 ,deco_(deco)
 ,color_(color)
 ,backColor_(backColor)
+,font_ascent_(0)
+,font_descent_(0)
+,font_height_(0)
 {
 	this->revalidate();
 }
