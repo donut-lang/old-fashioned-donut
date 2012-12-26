@@ -24,7 +24,6 @@ using namespace donut;
 using std::string;
 using std::nullptr_t;
 using donut::unescapeString;
-using tarte::parseAsInt;
 using tarte::parseAs;
 
 typedef pANTLR3_COMMON_TOKEN Token;
@@ -395,19 +394,19 @@ literal [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlis
 	| HEX_LITERAL
 	{
 		std::string str(createStringFromString($HEX_LITERAL.text));
-		int const val = parseAsInt<int>(str, 16);
+		int const val = parseAs<int>(str, 16);
 		$asmlist.push_back(Inst::Push | $code->constCode<int>(val));
 	}
 	| OCT_LITERAL
 	{
 		std::string str(createStringFromString($OCT_LITERAL.text));
-		int const val = parseAsInt<int>(str, 8);
+		int const val = parseAs<int>(str, 8);
 		$asmlist.push_back(Inst::Push | $code->constCode<int>(val));
 	}
 	| INT_LITERAL
 	{
 		std::string str(createStringFromString($INT_LITERAL.text));
-		int const val = parseAsInt<int>(str, 10);
+		int const val = parseAs<int>(str, 10);
 		$asmlist.push_back(Inst::Push | $code->constCode<int>(val));
 	}
 	| FLOAT_LITERAL

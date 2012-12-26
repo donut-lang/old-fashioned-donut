@@ -200,7 +200,7 @@ std::string decodeBase64AsString(std::string const& str){
 
 #define PARSE_STRTO(TYPE, FUNC) \
 template <>\
-TYPE parseAsInt<TYPE>(std::string const& str, int radix, bool* succeed) {\
+TYPE parseAs<TYPE>(std::string const& str, int radix, bool* succeed) {\
 	char* end;\
 	TYPE const result = std::FUNC(str.c_str(), &end, radix);\
 	if((*end) != '\0'){\
@@ -213,6 +213,10 @@ TYPE parseAsInt<TYPE>(std::string const& str, int radix, bool* succeed) {\
 		if(succeed) *succeed = true;\
 	}\
 	return result;\
+}\
+template <>\
+TYPE parseAs<TYPE>(std::string const& str, bool* succeed) {\
+	return parseAs<TYPE>(str, 0, succeed);\
 }
 
 PARSE_STRTO(int, strtol);
