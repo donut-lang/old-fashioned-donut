@@ -47,6 +47,7 @@ public:
 	std::string style() const noexcept;
 public:
 	static void analyzeFontName(std::string const& name, std::string& family, std::string& style) noexcept;
+	static void calcLineInfo(FT_Face face, float const& fontSize, float& ascent, float& descent, float& height);
 public:
 	class RawFaceSession {
 		DISABLE_COPY_AND_ASSIGN(RawFaceSession);

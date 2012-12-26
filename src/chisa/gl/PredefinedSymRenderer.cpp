@@ -42,10 +42,10 @@ void PredefinedSymRenderer::registerSymbol( unsigned int symbol, std::string con
 		this->log().w(TAG, "Symbol: %d is already defined, and replaced with: %s", symbol, str.c_str());
 		this->spriteTable_.erase(it);
 	}
-	Handler<Sprite> spr = drawableManager_->queryText(str)->sprite();
+	Handler<TextDrawable> spr = drawableManager_->queryText(str);
 	this->maxWidth_ = geom::max(spr->width(), maxWidth_);
 	this->maxHeight_ = geom::max(spr->height(), maxHeight_);
-	this->spriteTable_.insert( std::pair<unsigned int, Handler<Sprite> >( symbol, spr ) );
+	this->spriteTable_.insert( std::pair<unsigned int, Handler<TextDrawable> >( symbol, spr ) );
 }
 
 geom::Area PredefinedSymRenderer::renderSyms( Canvas& cv, geom::Point const& point, SymList const& str, float depth)
@@ -57,9 +57,9 @@ geom::Area PredefinedSymRenderer::renderSyms( Canvas& cv, geom::Point const& poi
 			this->log().w(TAG, "Unknown symbol: %d", symbol);
 			continue;
 		}
-		Handler<Sprite> const& spr( it->second );
+		Handler<TextDrawable> const& spr( it->second );
 		geom::Point rendered( point.x()+x, point.y()+(this->maxHeight_-spr->height())/2 );
-		cv.drawSprite(spr, rendered, depth);
+		spr->draw(cv, rendered, depth);
 		x += spr->width();
 	}
 	return geom::Area(point, geom::Box(x,this->maxHeight_));
@@ -72,9 +72,9 @@ geom::Area PredefinedSymRenderer::renderSym( Canvas& cv, geom::Point const& poin
 		this->log().w(TAG, "Unknown symbol: %d", symbol);
 		return geom::Area();
 	}
-	Handler<Sprite> const& spr( it->second );
+	Handler<TextDrawable> const& spr( it->second );
 	geom::Point rendered( point.x(), point.y()+(this->maxHeight_-spr->height())/2 );
-	cv.drawSprite(spr, rendered, depth);
+	spr->draw(cv, rendered, depth);
 	return geom::Area(point, geom::Box(spr->width(),this->maxHeight_));
 }
 
