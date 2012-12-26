@@ -102,6 +102,14 @@ void Chisa::textEdit(float const& timeMs, std::string const& text, int const& st
 {
 	this->universe_->onTextEdit(timeMs, text, start, length);
 }
+void Chisa::keyDown(float const& timeMs, const bool isRepeat, SDL_Keysym const& sym)
+{
+	this->universe_->onKeyDown(timeMs, isRepeat, sym);
+}
+void Chisa::keyUp(float const& timeMs, SDL_Keysym const& sym)
+{
+	this->universe_->onKeyUp(timeMs, sym);
+}
 
 
 }

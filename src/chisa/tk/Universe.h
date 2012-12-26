@@ -88,6 +88,8 @@ public:
 	void onScroll(float const& timeMs, const float delta);
 	void onTextInput(float const& timeMs, std::string const& text);
 	void onTextEdit(float const& timeMs, std::string const& text, int start, int length);
+	void onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym);
+	void onKeyUp(float const& timeMs, SDL_Keysym const& sym);
 	/******************************************************************************
 	 * タッチイベント
 	 ******************************************************************************/

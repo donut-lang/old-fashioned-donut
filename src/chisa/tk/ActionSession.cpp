@@ -115,6 +115,15 @@ void ActionSession::onTextEdit(float const& timeMs, std::string const& text, int
 	this->invokeTextEdit(timeMs, text, start, length);
 }
 
+void ActionSession::onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym)
+{
+	this->invokeKeyDown(timeMs, isRepeat, sym);
+}
+void ActionSession::onKeyUp(float const& timeMs, SDL_Keysym const& sym)
+{
+	this->invokeKeyUp(timeMs, sym);
+}
+
 void ActionSession::onFocusGained(float const& timeMs)
 {
 	this->lastTimeMs_ = timeMs;
@@ -232,6 +241,27 @@ void ActionSession::invokeTextEdit(float const& timeMs, std::string const& text,
 	for(HandlerW<Element> const& it : this->elementChain_) {
 		if(Handler<Element> target = it.lock()){
 			target->onTextEdit(timeMs, text, start, length);
+		}
+	}
+}
+
+void ActionSession::invokeKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym)
+{
+	for(HandlerW<Element> const& it : this->elementChain_) {
+		if(Handler<Element> target = it.lock()){
+			if(target->onKeyDown(timeMs, isRepeat, sym)){
+				break;
+			}
+		}
+	}
+}
+void ActionSession::invokeKeyUp(float const& timeMs, SDL_Keysym const& sym)
+{
+	for(HandlerW<Element> const& it : this->elementChain_) {
+		if(Handler<Element> target = it.lock()){
+			if(target->onKeyUp(timeMs, sym)){
+				break;
+			}
 		}
 	}
 }

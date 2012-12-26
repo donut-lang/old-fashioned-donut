@@ -17,6 +17,7 @@
  */
 
 #include <tinyxml2.h>
+#include <SDL2/SDL.h>
 #include <tarte/Exception.h>
 
 #include "TextArea.h"
@@ -236,6 +237,18 @@ void TextArea::onTextInput(float const& timeMs, std::string const& text)
 void TextArea::onTextEdit(float const& timeMs, std::string const& text, int const start, int const length)
 {
 
+}
+
+bool TextArea::onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym)
+{
+	if(sym.scancode == SDL_SCANCODE_BACKSPACE) {
+		this->editState_.pop_back();
+	}
+	return true;
+}
+bool TextArea::onKeyUp(float const& timeMs, SDL_Keysym const& sym)
+{
+	return true;
 }
 
 }}

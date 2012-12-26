@@ -111,5 +111,18 @@ void ActionMediator::onTextEdit(float const& timeMs, std::string const& text, in
 	}
 }
 
+void ActionMediator::onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym)
+{
+	if(this->lastSession_){
+		this->lastSession_->onKeyDown(timeMs, isRepeat, sym);
+	}
+}
+void ActionMediator::onKeyUp(float const& timeMs, SDL_Keysym const& sym)
+{
+	if(this->lastSession_){
+		this->lastSession_->onKeyUp(timeMs, sym);
+	}
+}
+
 
 }}
