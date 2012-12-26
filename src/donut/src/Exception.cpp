@@ -43,7 +43,7 @@ void DonutException::init(const char* file, const size_t line, std::string const
 {
 	va_list lst;
 	va_start(lst, fmt);
-	init(file, line, fmt);
+	init(file, line, fmt, lst);
 	va_end(lst);
 }
 

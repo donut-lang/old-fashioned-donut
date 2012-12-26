@@ -92,6 +92,17 @@ TEST(StringUtilTest, ToUpperTest)
 	ASSERT_EQ(" UPPER ", toUpper(" upper "));
 }
 
+TEST(StringUtilTest, BreakChar)
+{
+	std::vector<std::string> chars(breakChar("あいうえお"));
+	ASSERT_EQ(5, chars.size());
+	ASSERT_EQ("あ", chars[0]);
+	ASSERT_EQ("い", chars[1]);
+	ASSERT_EQ("う", chars[2]);
+	ASSERT_EQ("え", chars[3]);
+	ASSERT_EQ("お", chars[4]);
+}
+
 TEST(StringUtilTest, ParseIntTest)
 {
 	ASSERT_EQ(10, parseAs<int>("10"));

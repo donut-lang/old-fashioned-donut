@@ -108,7 +108,7 @@ tinyxml2::XMLElement* XValue::toXML( tinyxml2::XMLDocument* doc )
 		return (*this->spirit_.object_)->toXML(doc);
 	case BinaryT: {
 		tinyxml2::XMLElement* elm = doc->NewElement("xbinary");
-		elm->InsertEndChild(doc->NewText(encodeBase64(*(this->spirit_.binary_)).c_str()));
+		elm->InsertEndChild(doc->NewText(base64::encode(*(this->spirit_.binary_)).c_str()));
 		return elm;
 	}
 	case StringT: {
