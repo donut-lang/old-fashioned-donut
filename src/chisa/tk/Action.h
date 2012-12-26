@@ -29,11 +29,11 @@ namespace tk {
 class World;
 class Element;
 
-class GestureListener {
-	DISABLE_COPY_AND_ASSIGN(GestureListener);
+class ActionListener {
+	DISABLE_COPY_AND_ASSIGN(ActionListener);
 public:
-	GestureListener() = default;
-	virtual ~GestureListener() noexcept = default;
+	ActionListener() = default;
+	virtual ~ActionListener() noexcept = default;
 public:
 	virtual bool onDownRaw(float const& timeMs, geom::Point const& ptInScreen){return false;};
 	virtual bool onUpRaw(float const& timeMs, geom::Point const& ptInScreen){return false;};
@@ -60,12 +60,12 @@ public:
 	// virtual void onTextEdit(float const& timeMs, std::string const& text, int const start, int const length) override;
 };
 
-class GestureSession {
-	DISABLE_COPY_AND_ASSIGN(GestureSession);
+class ActionSession {
+	DISABLE_COPY_AND_ASSIGN(ActionSession);
 	DEFINE_MEMBER_REF(private, Logger, log)
 public:
-	GestureSession(Logger& log, const unsigned int pointerIndex, HandlerW<Element> targetElement, geom::Point const& startPoint, const float startTimeMs);
-	virtual ~GestureSession();
+	ActionSession(Logger& log, const unsigned int pointerIndex, HandlerW<Element> targetElement, geom::Point const& startPoint, const float startTimeMs);
+	virtual ~ActionSession();
 private:
 	//static constexpr float MaxFlingVelocity=4000;
 	static constexpr float MinFlingVelocity=500.0f/1000;
@@ -101,19 +101,19 @@ private:
 	void invokeTextEdit(float const& timeMs, std::string const& text, int const start, int const length);
 };
 
-class GestureMediator {
-	DISABLE_COPY_AND_ASSIGN(GestureMediator);
+class ActionMediator {
+	DISABLE_COPY_AND_ASSIGN(ActionMediator);
 	DEFINE_MEMBER_REF(private, Logger, log)
 	DEFINE_MEMBER_CONST(private, HandlerW<World>, world)
 private:
 	static constexpr std::size_t MaxTouxhPoint = 5;
-	GestureSession* session_[MaxTouxhPoint];
-	GestureSession* lastSession_;
+	ActionSession* session_[MaxTouxhPoint];
+	ActionSession* lastSession_;
 private:
 	void releaseSession(float const& timeMs, unsigned int const pointerIndex);
 public:
-	GestureMediator(Logger& log, const HandlerW<World> world);
-	virtual ~GestureMediator();
+	ActionMediator(Logger& log, const HandlerW<World> world);
+	virtual ~ActionMediator();
 public:
 	void onTouchDown(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
 	void onTouchUp(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);

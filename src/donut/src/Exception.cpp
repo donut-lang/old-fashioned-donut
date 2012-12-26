@@ -23,7 +23,7 @@ namespace donut {
 
 DonutException::DonutException(const char* file, const size_t line) throw()
 {
-	init(file, line, "", va_list());
+	init(file, line, "");
 }
 
 DonutException::DonutException(const char* file, const size_t line, std::string const& fmt, ...) noexcept
@@ -37,6 +37,14 @@ DonutException::DonutException(const char* file, const size_t line, std::string 
 DonutException::DonutException(const char* file, const size_t line, std::string const& fmt, va_list lst) noexcept
 {
 	init(file, line, fmt, lst);
+}
+
+void DonutException::init(const char* file, const size_t line, std::string const& fmt, ...) noexcept
+{
+	va_list lst;
+	va_start(lst, fmt);
+	init(file, line, fmt);
+	va_end(lst);
 }
 
 void DonutException::init(const char* file, const size_t line, std::string const& fmt, va_list lst) noexcept

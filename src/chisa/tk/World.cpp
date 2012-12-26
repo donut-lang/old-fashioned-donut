@@ -22,7 +22,7 @@
 #include "element/WidgetElement.h"
 #include "widget/WidgetFactory.h"
 #include "Universe.h"
-#include "Gesture.h"
+#include "Action.h"
 #include "../gl/DrawableManager.h"
 
 namespace chisa {
@@ -84,7 +84,7 @@ void World::init()
 		this->widgetFactory_ = new WidgetFactory(this->log_, self());
 		universe->hexe()->registerWidgets(*this->widgetFactory_);
 	}
-	this->gestureMediator_ = new GestureMediator(this->log_, self());
+	this->gestureMediator_ = new ActionMediator(this->log_, self());
 	this->pushElement("main");
 }
 

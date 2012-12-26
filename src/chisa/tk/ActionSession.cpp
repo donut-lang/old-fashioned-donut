@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Gesture.h"
+#include "Action.h"
 #include "World.h"
 #include "Element.h"
 #include <algorithm>
@@ -26,7 +26,7 @@ namespace tk {
 
 static const std::string TAG("GestureSession");
 
-GestureSession::GestureSession(Logger& log, const unsigned int pointerIndex, HandlerW<Element> targetElement, geom::Point const& startPoint, const float startTimeMs)
+ActionSession::ActionSession(Logger& log, const unsigned int pointerIndex, HandlerW<Element> targetElement, geom::Point const& startPoint, const float startTimeMs)
 :log_(log)
 ,target_(targetElement)
 ,pointerIndex_(pointerIndex)
@@ -64,11 +64,11 @@ GestureSession::GestureSession(Logger& log, const unsigned int pointerIndex, Han
 	}
 }
 
-GestureSession::~GestureSession()
+ActionSession::~ActionSession()
 {
 }
 
-void GestureSession::onTouchUp(float const& timeMs, geom::Point const& pt)
+void ActionSession::onTouchUp(float const& timeMs, geom::Point const& pt)
 {
 	this->lastTimeMs_ = timeMs;
 	this->lastPoint_ = pt;
@@ -90,7 +90,7 @@ void GestureSession::onTouchUp(float const& timeMs, geom::Point const& pt)
 	}
 }
 
-void GestureSession::onTouchMove(float const& timeMs, geom::Point const& pt)
+void ActionSession::onTouchMove(float const& timeMs, geom::Point const& pt)
 {
 	this->invokeMoveRaw(timeMs, pt);
 	this->invokeScroll(timeMs, this->lastPoint_, pt, pt-this->lastPoint_);
@@ -99,34 +99,34 @@ void GestureSession::onTouchMove(float const& timeMs, geom::Point const& pt)
 	this->lastPoint_ = pt;
 }
 
-void GestureSession::onScroll(float const& timeMs, float const ratio)
+void ActionSession::onScroll(float const& timeMs, float const ratio)
 {
 	geom::Distance d(0, ratio);
 	this->lastTimeMs_ = timeMs;
 	this->invokeScroll(timeMs, this->lastPoint_, this->lastPoint_, d);
 }
 
-void GestureSession::onTextInput(float const& timeMs, std::string const& text)
+void ActionSession::onTextInput(float const& timeMs, std::string const& text)
 {
 	this->invokeTextInput(timeMs, text);
 }
-void GestureSession::onTextEdit(float const& timeMs, std::string const& text, int const& start, int const& length)
+void ActionSession::onTextEdit(float const& timeMs, std::string const& text, int const& start, int const& length)
 {
 	this->invokeTextEdit(timeMs, text, start, length);
 }
 
-void GestureSession::onFocusGained(float const& timeMs)
+void ActionSession::onFocusGained(float const& timeMs)
 {
 	this->lastTimeMs_ = timeMs;
 	this->invokeFocusGained(timeMs);
 }
-void GestureSession::onFocusLost(float const& timeMs)
+void ActionSession::onFocusLost(float const& timeMs)
 {
 	this->lastTimeMs_ = timeMs;
 	this->invokeFocusLost(timeMs);
 }
 
-void GestureSession::invokeDownRaw(float const& timeMs, geom::Point const& pt)
+void ActionSession::invokeDownRaw(float const& timeMs, geom::Point const& pt)
 {
 	for(HandlerW<Element> const& it : this->elementChain_) {
 		if(Handler<Element> target = it.lock()){
@@ -140,7 +140,7 @@ void GestureSession::invokeDownRaw(float const& timeMs, geom::Point const& pt)
 	}
 }
 
-void GestureSession::invokeUpRaw(float const& timeMs, geom::Point const& pt)
+void ActionSession::invokeUpRaw(float const& timeMs, geom::Point const& pt)
 {
 	for(HandlerW<Element> const& it : this->elementChain_) {
 		if(Handler<Element> target = it.lock()){
@@ -154,7 +154,7 @@ void GestureSession::invokeUpRaw(float const& timeMs, geom::Point const& pt)
 	}
 }
 
-void GestureSession::invokeMoveRaw(float const& timeMs, geom::Point const& pt)
+void ActionSession::invokeMoveRaw(float const& timeMs, geom::Point const& pt)
 {
 	for(HandlerW<Element> const& it : this->elementChain_) {
 		if(Handler<Element> target = it.lock()){
@@ -165,7 +165,7 @@ void GestureSession::invokeMoveRaw(float const& timeMs, geom::Point const& pt)
 	}
 }
 
-void GestureSession::invokeFling(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity)
+void ActionSession::invokeFling(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity)
 {
 	for(HandlerW<Element> const& it : this->elementChain_) {
 		if(Handler<Element> target = it.lock()){
@@ -176,7 +176,7 @@ void GestureSession::invokeFling(float const& timeMs, geom::Point const& start, 
 	}
 }
 
-void GestureSession::invokeScroll(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance)
+void ActionSession::invokeScroll(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance)
 {
 	for(HandlerW<Element> const& it : this->elementChain_) {
 		if(Handler<Element> target = it.lock()){
@@ -189,7 +189,7 @@ void GestureSession::invokeScroll(float const& timeMs, geom::Point const& start,
 
 
 
-void GestureSession::invokeZoom(float const& timeMs, geom::Point const& center, const float ratio)
+void ActionSession::invokeZoom(float const& timeMs, geom::Point const& center, const float ratio)
 {
 	for(HandlerW<Element> const& it : this->elementChain_) {
 		if(Handler<Element> target = it.lock()){
@@ -200,7 +200,7 @@ void GestureSession::invokeZoom(float const& timeMs, geom::Point const& center, 
 	}
 }
 
-void GestureSession::invokeFocusGained(float const& timeMs)
+void ActionSession::invokeFocusGained(float const& timeMs)
 {
 	for(HandlerW<Element> const& it : this->elementChain_) {
 		if(Handler<Element> target = it.lock()){
@@ -209,7 +209,7 @@ void GestureSession::invokeFocusGained(float const& timeMs)
 	}
 }
 
-void GestureSession::invokeFocusLost(float const& timeMs)
+void ActionSession::invokeFocusLost(float const& timeMs)
 {
 	for(HandlerW<Element> const& it : this->elementChain_) {
 		if(Handler<Element> target = it.lock()){
@@ -218,7 +218,7 @@ void GestureSession::invokeFocusLost(float const& timeMs)
 	}
 }
 
-void GestureSession::invokeTextInput(float const& timeMs, std::string const& text)
+void ActionSession::invokeTextInput(float const& timeMs, std::string const& text)
 {
 	for(HandlerW<Element> const& it : this->elementChain_) {
 		if(Handler<Element> target = it.lock()){
@@ -227,7 +227,7 @@ void GestureSession::invokeTextInput(float const& timeMs, std::string const& tex
 	}
 }
 
-void GestureSession::invokeTextEdit(float const& timeMs, std::string const& text, int const start, int const length)
+void ActionSession::invokeTextEdit(float const& timeMs, std::string const& text, int const start, int const length)
 {
 	for(HandlerW<Element> const& it : this->elementChain_) {
 		if(Handler<Element> target = it.lock()){

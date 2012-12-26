@@ -32,6 +32,7 @@ private:
 	size_t _line;
 protected:
 	void init(const char* file, const size_t line, std::string const& fmt, va_list lst) noexcept;
+	void init(const char* file, const size_t line, std::string const& fmt, ...) noexcept;
 public:
 	Exception(const char* file, const size_t line) noexcept;
 	Exception(const char* file, const size_t line, std::string const& fmt, ...) noexcept;
