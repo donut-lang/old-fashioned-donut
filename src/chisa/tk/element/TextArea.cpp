@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <sstream>
 #include <tinyxml2.h>
 #include <SDL2/SDL.h>
 #include <tarte/Exception.h>
@@ -282,6 +283,7 @@ void TextArea::onTextInput(float const& timeMs, std::string const& text)
 }
 void TextArea::onTextEdit(float const& timeMs, std::string const& text, int const start, int const length)
 {
+	std::cout << text <<std:: endl;
 	std::vector<std::string> lst(::tarte::breakChar(text));
 	auto itstr = lst.begin();
 	auto itspr = this->editListEditing_.begin();
@@ -305,16 +307,20 @@ bool TextArea::onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& s
 		if(!this->editListBefore_.empty()){
 			this->editListBefore_.pop_back();
 		}
+	}else if(sym.scancode == SDL_SCANCODE_DELETE) {
+			if(!this->editListAfter_.empty()){
+				this->editListAfter_.pop_front();
+			}
 	}else if(sym.scancode == SDL_SCANCODE_LEFT){
 		if(!this->editListBefore_.empty()){
 			Handler<gl::TextDrawable> d(this->editListBefore_.back());
 			this->editListBefore_.pop_back();
-			this->editListAfter_.insert(this->editListAfter_.begin(), d);
+			this->editListAfter_.push_front(d);
 		}
 	} else if(sym.scancode == SDL_SCANCODE_RIGHT){
 		if(!this->editListAfter_.empty()){
 			Handler<gl::TextDrawable> d(this->editListAfter_.front());
-			this->editListAfter_.erase(this->editListAfter_.begin());
+			this->editListAfter_.pop_front();
 			this->editListBefore_.push_back(d);
 		}
 	}
