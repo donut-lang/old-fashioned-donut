@@ -39,8 +39,11 @@ private: /* 変化するリソース */
 private: /* 描画のための一時的なリソース */
 	Handler<gl::TextDrawable> textImage_;
 	Handler<gl::TextDrawable> descImage_;
-	std::vector<Handler<gl::TextDrawable> > editState_;
-	std::size_t editPos_;
+	std::vector<Handler<gl::TextDrawable> > editListBefore_;
+	std::vector<Handler<gl::TextDrawable> > editListEditing_;
+	int editStart_;
+	int editLength_;
+	std::vector<Handler<gl::TextDrawable> > editListAfter_;
 public:
 	void text(std::string const& text);
 	void description(std::string const& text);
@@ -55,7 +58,7 @@ private:
 	Handler<gl::TextDrawable> descImage();
 	void onClick();
 	void startEditing();
-	void appendEditingText(std::string const& text);
+	void appendEditingText(std::vector<Handler<gl::TextDrawable> >& append, std::vector<std::string> const& lst);
 	void stopEditing();
 protected:
 	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override final;

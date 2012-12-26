@@ -103,6 +103,15 @@ TEST(StringUtilTest, BreakChar)
 	ASSERT_EQ("お", (std::string&)chars[4]);
 }
 
+TEST(StringUtilTest, MatchString)
+{
+	ASSERT_EQ(3, matchString("abc","abc"));
+	ASSERT_EQ(3, matchString("abc","abcdef"));
+	ASSERT_EQ(3, matchString("abcdef","abc"));
+	ASSERT_EQ(2, matchString("abc","abz"));
+	ASSERT_EQ(0, matchString("abc","xyz"));
+}
+
 TEST(StringUtilTest, Join)
 {
 	std::vector<std::string> chars = {"あ","い","う",""};

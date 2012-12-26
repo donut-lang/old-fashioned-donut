@@ -160,7 +160,18 @@ std::vector<std::string> breakChar(std::string const& str_)
 	}
 	delete bi;
 	return list;
+}
 
+std::size_t matchString(std::string const& a, std::string const& b)
+{
+	std::size_t t = 0;
+	for(std::string::value_type const& c : a){
+		if(c != b[t]) {
+			break;
+		}
+		++t;
+	}
+	return t;
 }
 
 #define PARSE_STRTO(TYPE, FUNC) \
