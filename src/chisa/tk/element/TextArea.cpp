@@ -40,7 +40,6 @@ CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(TextArea, Element)
 ,text_()
 ,textImage_()
 ,descImage_()
-,editPos_(0)
 {
 	this->margin(geom::Space(2.5f));
 	this->padding(geom::Space(2.5f));
@@ -60,15 +59,49 @@ std::string TextArea::toString() const
 void TextArea::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
 {
 	canvas.fillRect(gl::White, screenArea);
-	canvas.drawRect(2.0f, gl::Black, screenArea);
 	if( this->onFocused() ) {
+		canvas.drawRect(2.0f, gl::DarkYellow, screenArea);
 		geom::Distance pos(screenArea.point());
-		for(Handler<gl::TextDrawable> const& d : this->editState_) {
-			Handler<gl::Sprite> spr(d->sprite());
-			canvas.drawSprite(spr, pos+geom::Distance(0, screenArea.height() - Space - spr->height()));
-			pos.x(pos.x() + d->width());
+		if(this->editListEditing_.empty()){
+			for(Handler<gl::TextDrawable> const& d : this->editListBefore_) {
+				Handler<gl::Sprite> spr(d->sprite());
+				canvas.drawSprite(spr, pos+geom::Distance(0, screenArea.height() - Space - spr->height()));
+				pos.x(pos.x() + d->width());
+			}
+			for(Handler<gl::TextDrawable> const& d : this->editListAfter_) {
+				Handler<gl::Sprite> spr(d->sprite());
+				canvas.drawSprite(spr, pos+geom::Distance(0, screenArea.height() - Space - spr->height()));
+				pos.x(pos.x() + d->width());
+			}
+		}else{
+			for(Handler<gl::TextDrawable> const& d : this->editListBefore_) {
+				Handler<gl::Sprite> spr(d->sprite());
+				canvas.drawSprite(spr, pos+geom::Distance(0, screenArea.height() - Space - spr->height()));
+				pos.x(pos.x() + d->width());
+			}
+			int cnt = 0;
+			geom::Area editArea;
+			for(Handler<gl::TextDrawable> const& d : this->editListEditing_) {
+				if(this->editStart_ == cnt) {
+					editArea.point() = pos;
+				}
+				Handler<gl::Sprite> spr(d->sprite());
+				canvas.drawSprite(spr, pos+geom::Distance(0, screenArea.height() - Space - spr->height()));
+				pos.x(pos.x() + d->width());
+				if(this->editStart_+this->editLength_ == cnt) {
+					editArea.box() = geom::Box(pos.x()-editArea.x(), screenArea.height());
+					canvas.fillRect(gl::Black, editArea);
+				}
+				++cnt;
+			}
+			for(Handler<gl::TextDrawable> const& d : this->editListAfter_) {
+				Handler<gl::Sprite> spr(d->sprite());
+				canvas.drawSprite(spr, pos+geom::Distance(0, screenArea.height() - Space - spr->height()));
+				pos.x(pos.x() + d->width());
+			}
 		}
 	}else{
+		canvas.drawRect(2.0f, gl::Black, screenArea);
 		if(this->text_.empty()) {
 			Handler<gl::Sprite> spr(this->descImage()->sprite());
 			canvas.drawSprite(spr, screenArea.point()+(screenArea.box() - spr->size())/2.0f);
@@ -179,16 +212,17 @@ bool TextArea::onSingleTapUp(float const& timeMs, geom::Point const& ptInScreen)
 
 void TextArea::startEditing()
 {
-	this->editState_.clear();
-	this->appendEditingText(this->text_);
+	this->editListBefore_.clear();
+	this->editListAfter_.clear();
+	this->appendEditingText(this->editListBefore_, ::tarte::breakChar(this->text_));
 }
 
-void TextArea::appendEditingText(std::string const& text)
+void TextArea::appendEditingText(std::vector<Handler<gl::TextDrawable> >& append, std::vector<std::string> const& lst)
 {
 	if( Handler<World> w = this->world().lock() ){
 		Handler<gl::DrawableManager> mgr ( w->drawableManager() );
-		for(std::string const& c : ::tarte::breakChar(text)){
-			this->editState_.push_back(mgr->queryText(
+		for(std::string const& c : lst){
+			append.push_back(mgr->queryText(
 				c,
 				this->textSize_,
 				Handler<gl::Font>(),
@@ -205,11 +239,15 @@ void TextArea::appendEditingText(std::string const& text)
 void TextArea::stopEditing()
 {
 	std::stringstream ss;
-	for(Handler<gl::TextDrawable> const& d : this->editState_) {
+	for(Handler<gl::TextDrawable> const& d : this->editListBefore_) {
+		ss << d->str();
+	}
+	for(Handler<gl::TextDrawable> const& d : this->editListAfter_) {
 		ss << d->str();
 	}
 	this->text(ss.str());
-	this->editState_.clear();
+	this->editListBefore_.clear();
+	this->editListAfter_.clear();
 }
 
 void TextArea::onFocusGained(float const& timeMs)
@@ -232,17 +270,29 @@ void TextArea::onFocusLost(float const& timeMs)
 
 void TextArea::onTextInput(float const& timeMs, std::string const& text)
 {
-	this->appendEditingText(text);
+	this->appendEditingText(this->editListBefore_, ::tarte::breakChar(text));
 }
 void TextArea::onTextEdit(float const& timeMs, std::string const& text, int const start, int const length)
 {
-
+	std::size_t cnt=0;
+	std::vector<std::string> lst(::tarte::breakChar(text));
+	auto it = lst.begin();
+	for(; it != lst.end(); ++it){
+		std::string const& ch = *it;
+		if(this->editListEditing_.size() <= cnt || ((Handler<gl::TextDrawable>const&)this->editListEditing_[cnt])->str() != ch) {
+			break;
+		}
+		++cnt;
+	}
+	this->editListEditing_.erase(this->editListEditing_.begin()+cnt, this->editListEditing_.end());
+	lst.erase(lst.begin(), it);
+	this->appendEditingText(this->editListEditing_, lst);
 }
 
 bool TextArea::onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym)
 {
 	if(sym.scancode == SDL_SCANCODE_BACKSPACE) {
-		this->editState_.pop_back();
+		this->editListBefore_.pop_back();
 	}
 	return true;
 }

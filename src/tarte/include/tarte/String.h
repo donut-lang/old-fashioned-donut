@@ -42,6 +42,7 @@ std::string toLower(std::string const& str);
 std::string toUpper(std::string const& str);
 std::string join(std::vector<std::string> const& lst);
 std::string join(std::vector<std::string> const& lst, std::string const& sep);
+std::size_t matchString(std::string const& a, std::string const& b);
 
 std::vector<std::string> breakChar(std::string const& str_);
 
