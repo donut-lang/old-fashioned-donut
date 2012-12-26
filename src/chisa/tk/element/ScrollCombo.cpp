@@ -149,18 +149,18 @@ void ScrollCombo::idle(const float delta_ms)
 	}
 }
 
-bool ScrollCombo::onDownRaw(const float timeMs, geom::Point const& ptInScreen)
+bool ScrollCombo::onDownRaw(float const& timeMs, geom::Point const& ptInScreen)
 {
 	++this->pushedCnt_;
 	return false;
 }
-bool ScrollCombo::onUpRaw(const float timeMs, geom::Point const& ptInScreen)
+bool ScrollCombo::onUpRaw(float const& timeMs, geom::Point const& ptInScreen)
 {
 	--this->pushedCnt_;
 	return false;
 }
 
-bool ScrollCombo::onScroll(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance)
+bool ScrollCombo::onScroll(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance)
 {
 	geom::Point const& ptStart(this->scrollOffset_);
 	geom::Point const ptEnd(this->scrollOffset_+this->size());

@@ -138,24 +138,24 @@ bool AbstractButton::notifyViewRefreshedImpl()
 	return true;
 }
 
-bool AbstractButton::onDownRaw(const float timeMs, geom::Point const& ptInScreen)
+bool AbstractButton::onDownRaw(float const& timeMs, geom::Point const& ptInScreen)
 {
 	++this->pushedCnt_;
 	return false;
 }
 
-bool AbstractButton::onUpRaw(const float timeMs, geom::Point const& ptInScreen)
+bool AbstractButton::onUpRaw(float const& timeMs, geom::Point const& ptInScreen)
 {
 	--this->pushedCnt_;
 	return false;
 }
 
-bool AbstractButton::onMoveRaw(const float timeMs, geom::Point const& ptInScreen)
+bool AbstractButton::onMoveRaw(float const& timeMs, geom::Point const& ptInScreen)
 {
 	return true;
 }
 
-bool AbstractButton::onSingleTapUp(const float timeMs, geom::Point const& ptInScreen)
+bool AbstractButton::onSingleTapUp(float const& timeMs, geom::Point const& ptInScreen)
 {
 	if(this->screenArea().contain(ptInScreen)){
 		this->onClick();

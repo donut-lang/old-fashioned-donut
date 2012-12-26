@@ -92,33 +92,47 @@ void Universe::notifyWorldEnd(HandlerW<World> me)
 		log().w(TAG, "notified world end, but world was already dead.");
 	}
 }
-void Universe::onTouchDown(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
+void Universe::onTouchDown(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
 {
 	if(Handler<World> topWorld = this->worldStack.top()){
 		topWorld->onTouchDown(timeMs, pointerIndex, screenPoint);
 	}
 }
 
-void Universe::onTouchUp(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
+void Universe::onTouchUp(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
 {
 	if(Handler<World> topWorld = this->worldStack.top()){
 		topWorld->onTouchUp(timeMs, pointerIndex, screenPoint);
 	}
 }
 
-void Universe::onTouchMove(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
+void Universe::onTouchMove(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
 {
 	if(Handler<World> topWorld = this->worldStack.top()){
 		topWorld->onTouchMove(timeMs, pointerIndex, screenPoint);
 	}
 }
 
-void Universe::onScroll(const float timeMs, const float delta)
+void Universe::onScroll(float const& timeMs, const float delta)
 {
 	if(Handler<World> topWorld = this->worldStack.top()){
 		topWorld->onScroll(timeMs, delta);
 	}
 }
+
+void Universe::onTextInput(float const& timeMs, std::string const& text)
+{
+	if(Handler<World> topWorld = this->worldStack.top()){
+		topWorld->onTextInput(timeMs, text);
+	}
+}
+void Universe::onTextEdit(float const& timeMs, std::string const& text, int start, int length)
+{
+	if(Handler<World> topWorld = this->worldStack.top()){
+		topWorld->onTextEdit(timeMs, text, start, length);
+	}
+}
+
 
 void Universe::startIME(geom::Area const& area)
 {

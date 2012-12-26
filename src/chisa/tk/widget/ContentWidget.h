@@ -43,10 +43,10 @@ public:
 	virtual void reshape(geom::Box const& areaSize) override;
 	virtual geom::Box measure(geom::Box const& constraintSize) override;
 public:
-	virtual bool onDownRaw(const float timeMs, geom::Point const& ptInWidget) override;
-	virtual bool onUpRaw(const float timeMs, geom::Point const& ptInWidget) override;
-	virtual bool onSingleTapUp(const float timeMs, geom::Point const& ptInWidget) override;
-	virtual bool onZoom(const float timeMs, geom::Point const& center, const float ratio) override;
+	virtual bool onDownRaw(float const& timeMs, geom::Point const& ptInWidget) override;
+	virtual bool onUpRaw(float const& timeMs, geom::Point const& ptInWidget) override;
+	virtual bool onSingleTapUp(float const& timeMs, geom::Point const& ptInWidget) override;
+	virtual bool onZoom(float const& timeMs, geom::Point const& center, const float ratio) override;
 };
 
 }}

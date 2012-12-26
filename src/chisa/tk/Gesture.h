@@ -35,25 +35,29 @@ public:
 	GestureListener() = default;
 	virtual ~GestureListener() noexcept = default;
 public:
-	virtual bool onDownRaw(const float timeMs, geom::Point const& ptInScreen){return false;};
-	virtual bool onUpRaw(const float timeMs, geom::Point const& ptInScreen){return false;};
-	virtual bool onMoveRaw(const float timeMs, geom::Point const& ptInScreen){return false;};
-	virtual bool onSingleTapUp(const float timeMs, geom::Point const& ptInScreen){return false;};
-	virtual bool onFling(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity){return false;};
-	virtual bool onScroll(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance){return false;};
-	virtual bool onZoom(const float timeMs, geom::Point const& center, const float ratio){return false;};
-	virtual void onFocusGained(const float timeMs){};
-	virtual void onFocusLost(const float timeMs){};
+	virtual bool onDownRaw(float const& timeMs, geom::Point const& ptInScreen){return false;};
+	virtual bool onUpRaw(float const& timeMs, geom::Point const& ptInScreen){return false;};
+	virtual bool onMoveRaw(float const& timeMs, geom::Point const& ptInScreen){return false;};
+	virtual bool onSingleTapUp(float const& timeMs, geom::Point const& ptInScreen){return false;};
+	virtual bool onFling(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity){return false;};
+	virtual bool onScroll(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance){return false;};
+	virtual bool onZoom(float const& timeMs, geom::Point const& center, const float ratio){return false;};
+	virtual void onFocusGained(float const& timeMs){};
+	virtual void onFocusLost(float const& timeMs){};
+	virtual void onTextInput(float const& timeMs, std::string const& text){};
+	virtual void onTextEdit(float const& timeMs, std::string const& text, int const start, int const length){};
 	// 実装用
-	//	virtual bool onDownRaw(const float timeMs, geom::Point const& ptInScreen) override;
-	//	virtual bool onUpRaw(const float timeMs, geom::Point const& ptInScreen) override;
-	//	virtual bool onMoveRaw(const float timeMs, geom::Point const& ptInScreen) override;
-	//	virtual bool onSingleTapUp(const float timeMs, geom::Point const& ptInScreen) override;
-	//	virtual bool onFling(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity) override;
-	//	virtual bool onScroll(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance) override;
-	//	virtual bool onZoom(const float timeMs, geom::Point const& center, const float ratio) override;
-	// virtual bool onFocusGained(const float timeMs) override;
-	// virtual bool onFocusLost(const float timeMs) override;
+	//	virtual bool onDownRaw(float const& timeMs, geom::Point const& ptInScreen) override;
+	//	virtual bool onUpRaw(float const& timeMs, geom::Point const& ptInScreen) override;
+	//	virtual bool onMoveRaw(float const& timeMs, geom::Point const& ptInScreen) override;
+	//	virtual bool onSingleTapUp(float const& timeMs, geom::Point const& ptInScreen) override;
+	//	virtual bool onFling(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity) override;
+	//	virtual bool onScroll(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance) override;
+	//	virtual bool onZoom(float const& timeMs, geom::Point const& center, const float ratio) override;
+	// virtual bool onFocusGained(float const& timeMs) override;
+	// virtual bool onFocusLost(float const& timeMs) override;
+	// virtual void onTextInput(float const& timeMs, std::string const& text) override;
+	// virtual void onTextEdit(float const& timeMs, std::string const& text, int const start, int const length) override;
 };
 
 class GestureSession {
@@ -77,20 +81,24 @@ private:
 private:
 	geom::Distance totalMoved_;
 public:
-	void onTouchUp(const float timeMs, geom::Point const& pt);
-	void onTouchMove(const float timeMs, geom::Point const& pt);
-	void onScroll(const float timeMs, float const ratio);
-	void onFocusGained(const float timeMs);
-	void onFocusLost(const float timeMs);
+	void onTouchUp(float const& timeMs, geom::Point const& pt);
+	void onTouchMove(float const& timeMs, geom::Point const& pt);
+	void onScroll(float const& timeMs, float const ratio);
+	void onFocusGained(float const& timeMs);
+	void onFocusLost(float const& timeMs);
+	void onTextInput(float const& timeMs, std::string const& text);
+	void onTextEdit(float const& timeMs, std::string const& text, int const& start, int const& length);
 private:
-	void invokeDownRaw(const float timeMs, geom::Point const& pt);
-	void invokeUpRaw(const float timeMs, geom::Point const& pt);
-	void invokeMoveRaw(const float timeMs, geom::Point const& pt);
-	void invokeFling(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity);
-	void invokeScroll(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance);
-	void invokeZoom(const float timeMs, geom::Point const& center, const float ratio);
-	void invokeFocusGained(const float timeMs);
-	void invokeFocusLost(const float timeMs);
+	void invokeDownRaw(float const& timeMs, geom::Point const& pt);
+	void invokeUpRaw(float const& timeMs, geom::Point const& pt);
+	void invokeMoveRaw(float const& timeMs, geom::Point const& pt);
+	void invokeFling(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity);
+	void invokeScroll(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance);
+	void invokeZoom(float const& timeMs, geom::Point const& center, const float ratio);
+	void invokeFocusGained(float const& timeMs);
+	void invokeFocusLost(float const& timeMs);
+	void invokeTextInput(float const& timeMs, std::string const& text);
+	void invokeTextEdit(float const& timeMs, std::string const& text, int const start, int const length);
 };
 
 class GestureMediator {
@@ -102,15 +110,17 @@ private:
 	GestureSession* session_[MaxTouxhPoint];
 	GestureSession* lastSession_;
 private:
-	void releaseSession(const float timeMs, unsigned int const pointerIndex);
+	void releaseSession(float const& timeMs, unsigned int const pointerIndex);
 public:
 	GestureMediator(Logger& log, const HandlerW<World> world);
 	virtual ~GestureMediator();
 public:
-	void onTouchDown(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
-	void onTouchUp(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
-	void onTouchMove(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
-	void onScroll(const float timeMs, const float ratio);
+	void onTouchDown(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
+	void onTouchUp(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
+	void onTouchMove(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
+	void onScroll(float const& timeMs, const float ratio);
+	void onTextInput(float const& timeMs, std::string const& text);
+	void onTextEdit(float const& timeMs, std::string const& text, int const start, int const length);
 };
 
 }}

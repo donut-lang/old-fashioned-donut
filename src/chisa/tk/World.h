@@ -126,13 +126,15 @@ public:
 		}
 	}
 	/******************************************************************************
-	 * タッチイベント。Universeから移譲されてくる
+	 * ユーザーアクション。Universeから移譲されてくる
 	 ******************************************************************************/
 public:
-	void onTouchDown(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenVector);
-	void onTouchUp(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenVector);
-	void onTouchMove(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenVector);
-	void onScroll(const float timeMs, const float delta);
+	void onTouchDown(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenVector);
+	void onTouchUp(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenVector);
+	void onTouchMove(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenVector);
+	void onScroll(float const& timeMs, const float delta);
+	void onTextInput(float const& timeMs, std::string const& text);
+	void onTextEdit(float const& timeMs, std::string const& text, int start, int length);
 
 	/******************************************************************************
 	 * 生成

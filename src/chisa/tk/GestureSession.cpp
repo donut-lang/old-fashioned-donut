@@ -68,7 +68,7 @@ GestureSession::~GestureSession()
 {
 }
 
-void GestureSession::onTouchUp(const float timeMs, geom::Point const& pt)
+void GestureSession::onTouchUp(float const& timeMs, geom::Point const& pt)
 {
 	this->lastTimeMs_ = timeMs;
 	this->lastPoint_ = pt;
@@ -90,7 +90,7 @@ void GestureSession::onTouchUp(const float timeMs, geom::Point const& pt)
 	}
 }
 
-void GestureSession::onTouchMove(const float timeMs, geom::Point const& pt)
+void GestureSession::onTouchMove(float const& timeMs, geom::Point const& pt)
 {
 	this->invokeMoveRaw(timeMs, pt);
 	this->invokeScroll(timeMs, this->lastPoint_, pt, pt-this->lastPoint_);
@@ -99,25 +99,34 @@ void GestureSession::onTouchMove(const float timeMs, geom::Point const& pt)
 	this->lastPoint_ = pt;
 }
 
-void GestureSession::onScroll(const float timeMs, float const ratio)
+void GestureSession::onScroll(float const& timeMs, float const ratio)
 {
 	geom::Distance d(0, ratio);
 	this->lastTimeMs_ = timeMs;
 	this->invokeScroll(timeMs, this->lastPoint_, this->lastPoint_, d);
 }
 
-void GestureSession::onFocusGained(const float timeMs)
+void GestureSession::onTextInput(float const& timeMs, std::string const& text)
+{
+	this->invokeTextInput(timeMs, text);
+}
+void GestureSession::onTextEdit(float const& timeMs, std::string const& text, int const& start, int const& length)
+{
+	this->invokeTextEdit(timeMs, text, start, length);
+}
+
+void GestureSession::onFocusGained(float const& timeMs)
 {
 	this->lastTimeMs_ = timeMs;
 	this->invokeFocusGained(timeMs);
 }
-void GestureSession::onFocusLost(const float timeMs)
+void GestureSession::onFocusLost(float const& timeMs)
 {
 	this->lastTimeMs_ = timeMs;
 	this->invokeFocusLost(timeMs);
 }
 
-void GestureSession::invokeDownRaw(const float timeMs, geom::Point const& pt)
+void GestureSession::invokeDownRaw(float const& timeMs, geom::Point const& pt)
 {
 	for(HandlerW<Element> const& it : this->elementChain_) {
 		if(Handler<Element> target = it.lock()){
@@ -131,7 +140,7 @@ void GestureSession::invokeDownRaw(const float timeMs, geom::Point const& pt)
 	}
 }
 
-void GestureSession::invokeUpRaw(const float timeMs, geom::Point const& pt)
+void GestureSession::invokeUpRaw(float const& timeMs, geom::Point const& pt)
 {
 	for(HandlerW<Element> const& it : this->elementChain_) {
 		if(Handler<Element> target = it.lock()){
@@ -145,7 +154,7 @@ void GestureSession::invokeUpRaw(const float timeMs, geom::Point const& pt)
 	}
 }
 
-void GestureSession::invokeMoveRaw(const float timeMs, geom::Point const& pt)
+void GestureSession::invokeMoveRaw(float const& timeMs, geom::Point const& pt)
 {
 	for(HandlerW<Element> const& it : this->elementChain_) {
 		if(Handler<Element> target = it.lock()){
@@ -156,7 +165,7 @@ void GestureSession::invokeMoveRaw(const float timeMs, geom::Point const& pt)
 	}
 }
 
-void GestureSession::invokeFling(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity)
+void GestureSession::invokeFling(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity)
 {
 	for(HandlerW<Element> const& it : this->elementChain_) {
 		if(Handler<Element> target = it.lock()){
@@ -167,7 +176,7 @@ void GestureSession::invokeFling(const float timeMs, geom::Point const& start, g
 	}
 }
 
-void GestureSession::invokeScroll(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance)
+void GestureSession::invokeScroll(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance)
 {
 	for(HandlerW<Element> const& it : this->elementChain_) {
 		if(Handler<Element> target = it.lock()){
@@ -178,7 +187,9 @@ void GestureSession::invokeScroll(const float timeMs, geom::Point const& start, 
 	}
 }
 
-void GestureSession::invokeZoom(const float timeMs, geom::Point const& center, const float ratio)
+
+
+void GestureSession::invokeZoom(float const& timeMs, geom::Point const& center, const float ratio)
 {
 	for(HandlerW<Element> const& it : this->elementChain_) {
 		if(Handler<Element> target = it.lock()){
@@ -189,27 +200,39 @@ void GestureSession::invokeZoom(const float timeMs, geom::Point const& center, c
 	}
 }
 
-void GestureSession::invokeFocusGained(const float timeMs)
+void GestureSession::invokeFocusGained(float const& timeMs)
 {
 	for(HandlerW<Element> const& it : this->elementChain_) {
 		if(Handler<Element> target = it.lock()){
-			if(this->log().t()){
-				this->log().t(TAG, "Touch Session ending: %f index: %d element: %s", this->lastTimeMs_, this->pointerIndex_, target->toString().c_str());
-			}
 			target->onFocusGained(timeMs);
 		}
 	}
 }
-void GestureSession::invokeFocusLost(const float timeMs)
+
+void GestureSession::invokeFocusLost(float const& timeMs)
 {
 	for(HandlerW<Element> const& it : this->elementChain_) {
 		if(Handler<Element> target = it.lock()){
-			if(this->log().t()){
-				this->log().t(TAG, "Touch Session ending: %f index: %d element: %s", this->lastTimeMs_, this->pointerIndex_, target->toString().c_str());
-			}
 			target->onFocusLost(timeMs);
 		}
 	}
 }
 
+void GestureSession::invokeTextInput(float const& timeMs, std::string const& text)
+{
+	for(HandlerW<Element> const& it : this->elementChain_) {
+		if(Handler<Element> target = it.lock()){
+			target->onTextInput(timeMs, text);
+		}
+	}
+}
+
+void GestureSession::invokeTextEdit(float const& timeMs, std::string const& text, int const start, int const length)
+{
+	for(HandlerW<Element> const& it : this->elementChain_) {
+		if(Handler<Element> target = it.lock()){
+			target->onTextEdit(timeMs, text, start, length);
+		}
+	}
+}
 }}

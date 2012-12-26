@@ -79,13 +79,15 @@ public:
 public:
 	Handler<gl::DrawableManager> drawableManager() const;
 	/******************************************************************************
-	 * タッチイベント
+	 * ユーザーアクション
 	 ******************************************************************************/
 public:
-	void onTouchDown(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
-	void onTouchUp(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
-	void onTouchMove(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
-	void onScroll(const float timeMs, const float delta);
+	void onTouchDown(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
+	void onTouchUp(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
+	void onTouchMove(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
+	void onScroll(float const& timeMs, const float delta);
+	void onTextInput(float const& timeMs, std::string const& text);
+	void onTextEdit(float const& timeMs, std::string const& text, int start, int length);
 	/******************************************************************************
 	 * タッチイベント
 	 ******************************************************************************/
