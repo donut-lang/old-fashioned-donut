@@ -63,10 +63,10 @@ protected:
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
 	virtual bool notifyViewRefreshedImpl() override;
 public:
-	virtual bool onMoveRaw(const float timeMs, geom::Point const& ptInScreen) override;
-	virtual bool onSingleTapUp(const float timeMs, geom::Point const& ptInScreen) override;
-	virtual void onFocusGained(const float timeMs) override;
-	virtual void onFocusLost(const float timeMs) override;
+	virtual bool onMoveRaw(float const& timeMs, geom::Point const& ptInScreen) override;
+	virtual bool onSingleTapUp(float const& timeMs, geom::Point const& ptInScreen) override;
+	virtual void onFocusGained(float const& timeMs) override;
+	virtual void onFocusLost(float const& timeMs) override;
 };
 
 }}

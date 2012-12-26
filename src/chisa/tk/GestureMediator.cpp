@@ -48,7 +48,7 @@ GestureMediator::~GestureMediator()
 	}
 }
 
-void GestureMediator::releaseSession(const float timeMs, unsigned int const pointerIndex)
+void GestureMediator::releaseSession(float const& timeMs, unsigned int const pointerIndex)
 {
 	if(this->lastSession_){
 		this->lastSession_->onFocusLost(timeMs);
@@ -59,7 +59,7 @@ void GestureMediator::releaseSession(const float timeMs, unsigned int const poin
 	this->lastSession_->onFocusGained(timeMs);
 }
 
-void GestureMediator::onTouchDown(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
+void GestureMediator::onTouchDown(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
 {
 	if(this->session_[pointerIndex]){
 		this->log().e(TAG, "oops. touch down occcured, but there is already a GestureSession for pointerIndex: %d", pointerIndex);
@@ -71,7 +71,7 @@ void GestureMediator::onTouchDown(const float timeMs, const unsigned int pointer
 	}
 }
 
-void GestureMediator::onTouchUp(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
+void GestureMediator::onTouchUp(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
 {
 	if(!this->session_[pointerIndex]){
 		this->log().e(TAG, "oops. touch up occcured, but there is no GestureSession for pointerIndex: %d", pointerIndex);
@@ -82,7 +82,7 @@ void GestureMediator::onTouchUp(const float timeMs, const unsigned int pointerIn
 	session->onTouchUp(timeMs, screenPoint);
 }
 
-void GestureMediator::onTouchMove(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
+void GestureMediator::onTouchMove(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
 {
 	if(!this->session_[pointerIndex]){
 		this->log().e(TAG, "oops. touch move occured, but there is no GestureSession for pointerIndex: %d", pointerIndex);
@@ -91,11 +91,25 @@ void GestureMediator::onTouchMove(const float timeMs, const unsigned int pointer
 	this->session_[pointerIndex]->onTouchMove(timeMs, screenPoint);
 }
 
-void GestureMediator::onScroll(const float timeMs, const float ratio)
+void GestureMediator::onScroll(float const& timeMs, const float ratio)
 {
 	if(this->lastSession_){
 		this->lastSession_->onScroll(timeMs, ratio);
 	}
 }
+
+void GestureMediator::onTextInput(float const& timeMs, std::string const& text)
+{
+	if(this->lastSession_){
+		this->lastSession_->onTextInput(timeMs, text);
+	}
+}
+void GestureMediator::onTextEdit(float const& timeMs, std::string const& text, int const start, int const length)
+{
+	if(this->lastSession_){
+		this->lastSession_->onTextEdit(timeMs, text, start, length);
+	}
+}
+
 
 }}

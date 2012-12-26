@@ -54,13 +54,13 @@ private:
 private:
 	geom::Point calcPtInWidget(geom::Point const& ptInScreen);
 public:
-	virtual bool onDownRaw(const float timeMs, geom::Point const& ptInScreen) override;
-	virtual bool onUpRaw(const float timeMs, geom::Point const& ptInScreen) override;
-	virtual bool onMoveRaw(const float timeMs, geom::Point const& ptInScreen) override;
-	virtual bool onSingleTapUp(const float timeMs, geom::Point const& ptInScreen) override;
-	virtual bool onFling(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity) override;
-	virtual bool onScroll(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance) override;
-	virtual bool onZoom(const float timeMs, geom::Point const& center, const float ratio) override;
+	virtual bool onDownRaw(float const& timeMs, geom::Point const& ptInScreen) override;
+	virtual bool onUpRaw(float const& timeMs, geom::Point const& ptInScreen) override;
+	virtual bool onMoveRaw(float const& timeMs, geom::Point const& ptInScreen) override;
+	virtual bool onSingleTapUp(float const& timeMs, geom::Point const& ptInScreen) override;
+	virtual bool onFling(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity) override;
+	virtual bool onScroll(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance) override;
+	virtual bool onZoom(float const& timeMs, geom::Point const& center, const float ratio) override;
 
 };
 

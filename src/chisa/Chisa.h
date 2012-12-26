@@ -47,6 +47,8 @@ public:
 	void pointerUp(float const& timeMs, unsigned int const& pointerIndex, geom::Point const& screenPoint);
 	void pointerMove(float const& timeMs, unsigned int const& pointerIndex, geom::Point const& screenPoint);
 	void pointerScroll(float const& timeMs, float const& ratio);
+	void textInput(float const& timeMs, std::string const& text);
+	void textEdit(float const& timeMs, std::string const& text, int const& start, int const& length);
 };
 
 }

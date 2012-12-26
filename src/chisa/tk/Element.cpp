@@ -204,12 +204,12 @@ bool Element::notifyViewRefreshedImpl()
 	return false;
 }
 
-void Element::onFocusGained(const float timeMs)
+void Element::onFocusGained(float const& timeMs)
 {
 	this->onFocused_ = true;
 }
 
-void Element::onFocusLost(const float timeMs)
+void Element::onFocusLost(float const& timeMs)
 {
 	this->onFocused_ = false;
 }

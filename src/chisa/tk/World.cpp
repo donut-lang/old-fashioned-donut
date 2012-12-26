@@ -196,31 +196,44 @@ Handler<gl::DrawableManager> World::drawableManager() const
 	}
 }
 
-void World::onTouchDown(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
+void World::onTouchDown(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
 {
 	if(this->gestureMediator_){
 		this->gestureMediator_->onTouchDown(timeMs, pointerIndex, screenPoint);
 	}
 }
 
-void World::onTouchUp(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
+void World::onTouchUp(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
 {
 	if(this->gestureMediator_){
 		this->gestureMediator_->onTouchUp(timeMs, pointerIndex, screenPoint);
 	}
 }
 
-void World::onTouchMove(const float timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
+void World::onTouchMove(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
 {
 	if(this->gestureMediator_){
 		this->gestureMediator_->onTouchMove(timeMs, pointerIndex, screenPoint);
 	}
 }
 
-void World::onScroll(const float timeMs, const float delta)
+void World::onScroll(float const& timeMs, const float delta)
 {
 	if(this->gestureMediator_){
 		this->gestureMediator_->onScroll(timeMs, delta);
+	}
+}
+
+void World::onTextInput(float const& timeMs, std::string const& text)
+{
+	if(this->gestureMediator_){
+		this->gestureMediator_->onTextInput(timeMs, text);
+	}
+}
+void World::onTextEdit(float const& timeMs, std::string const& text, int start, int length)
+{
+	if(this->gestureMediator_){
+		this->gestureMediator_->onTextEdit(timeMs, text, start, length);
 	}
 }
 

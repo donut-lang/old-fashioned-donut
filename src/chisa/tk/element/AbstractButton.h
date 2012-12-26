@@ -64,10 +64,10 @@ protected: /* 子クラスの実装すべきメソッド */
 	virtual bool isOn() const noexcept = 0;
 	virtual void onClick();
 public:
-	virtual bool onDownRaw(const float timeMs, geom::Point const& ptInScreen) override;
-	virtual bool onUpRaw(const float timeMs, geom::Point const& ptInScreen) override;
-	virtual bool onMoveRaw(const float timeMs, geom::Point const& ptInScreen) override;
-	virtual bool onSingleTapUp(const float timeMs, geom::Point const& ptInScreen) override;
+	virtual bool onDownRaw(float const& timeMs, geom::Point const& ptInScreen) override;
+	virtual bool onUpRaw(float const& timeMs, geom::Point const& ptInScreen) override;
+	virtual bool onMoveRaw(float const& timeMs, geom::Point const& ptInScreen) override;
+	virtual bool onSingleTapUp(float const& timeMs, geom::Point const& ptInScreen) override;
 };
 
 }}

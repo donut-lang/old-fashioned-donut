@@ -69,22 +69,22 @@ geom::Box ContentWidget::measure(geom::Box const& constraintSize)
 	return geom::Box(geom::max(constraintSize.width(), this->lastSize().width()), geom::max(constraintSize.height(), this->lastSize().height()));
 }
 
-bool ContentWidget::onDownRaw(const float timeMs, geom::Point const& ptInWidget)
+bool ContentWidget::onDownRaw(float const& timeMs, geom::Point const& ptInWidget)
 {
 	return true;
 }
 
-bool ContentWidget::onUpRaw(const float timeMs, geom::Point const& ptInWidget)
+bool ContentWidget::onUpRaw(float const& timeMs, geom::Point const& ptInWidget)
 {
 	return true;
 }
 
-bool ContentWidget::onSingleTapUp(const float timeMs, geom::Point const& ptInWidget)
+bool ContentWidget::onSingleTapUp(float const& timeMs, geom::Point const& ptInWidget)
 {
 	return true;
 }
 
-bool ContentWidget::onZoom(const float timeMs, geom::Point const& center, const float ratio)
+bool ContentWidget::onZoom(float const& timeMs, geom::Point const& center, const float ratio)
 {
 	return true;
 }

@@ -52,9 +52,9 @@ private:
 	virtual void layoutImpl(geom::Box const& size) override;
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
 public:
-	virtual bool onDownRaw(const float timeMs, geom::Point const& ptInScreen) override;
-	virtual bool onUpRaw(const float timeMs, geom::Point const& ptInScreen) override;
-	virtual bool onScroll(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance) override;
+	virtual bool onDownRaw(float const& timeMs, geom::Point const& ptInScreen) override;
+	virtual bool onUpRaw(float const& timeMs, geom::Point const& ptInScreen) override;
+	virtual bool onScroll(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance) override;
 };
 
 }}

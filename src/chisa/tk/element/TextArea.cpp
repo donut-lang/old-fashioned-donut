@@ -155,12 +155,12 @@ bool TextArea::notifyViewRefreshedImpl()
 	return true;
 }
 
-bool TextArea::onMoveRaw(const float timeMs, geom::Point const& ptInScreen)
+bool TextArea::onMoveRaw(float const& timeMs, geom::Point const& ptInScreen)
 {
 	return true;
 }
 
-bool TextArea::onSingleTapUp(const float timeMs, geom::Point const& ptInScreen)
+bool TextArea::onSingleTapUp(float const& timeMs, geom::Point const& ptInScreen)
 {
 	if(this->screenArea().contain(ptInScreen)){
 		this->onClick();
@@ -180,7 +180,7 @@ void TextArea::stopEditing()
 
 }
 
-void TextArea::onFocusGained(const float timeMs)
+void TextArea::onFocusGained(float const& timeMs)
 {
 	Element::onFocusGained(timeMs);
 	if( auto world = this->world().lock() ) {
@@ -188,7 +188,7 @@ void TextArea::onFocusGained(const float timeMs)
 	}
 }
 
-void TextArea::onFocusLost(const float timeMs)
+void TextArea::onFocusLost(float const& timeMs)
 {
 	Element::onFocusLost(timeMs);
 	if( auto world = this->world().lock() ) {

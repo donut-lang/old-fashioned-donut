@@ -113,8 +113,10 @@ private:
 			case SDL_QUIT:
 				return false;
 			case SDL_TEXTINPUT:
+				chisa.textInput(ev.text.timestamp, ev.text.text);
 				break;
 			case SDL_TEXTEDITING:
+				chisa.textEdit(ev.edit.timestamp, ev.edit.text, ev.edit.start, ev.edit.length);
 				break;
 			default:
 				break;

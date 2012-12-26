@@ -94,4 +94,14 @@ void Chisa::pointerScroll(float const& timeMs, float const& ratio)
 	this->universe_->onScroll(timeMs, ratio);
 }
 
+void Chisa::textInput(float const& timeMs, std::string const& text)
+{
+	this->universe_->onTextInput(timeMs, text);
+}
+void Chisa::textEdit(float const& timeMs, std::string const& text, int const& start, int const& length)
+{
+	this->universe_->onTextEdit(timeMs, text, start, length);
+}
+
+
 }

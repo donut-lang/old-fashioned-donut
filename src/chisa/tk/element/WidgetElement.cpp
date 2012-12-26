@@ -213,37 +213,37 @@ geom::Point WidgetElement::calcPtInWidget(geom::Point const& ptInScreen)
 	return geom::Point(this->widgetDrawnArea().point() + delta / this->widgetScale());
 }
 
-bool WidgetElement::onDownRaw(const float timeMs, geom::Point const& ptInScreen)
+bool WidgetElement::onDownRaw(float const& timeMs, geom::Point const& ptInScreen)
 {
 	return widget_->onDownRaw(timeMs, calcPtInWidget(ptInScreen));
 }
 
-bool WidgetElement::onUpRaw(const float timeMs, geom::Point const& ptInScreen)
+bool WidgetElement::onUpRaw(float const& timeMs, geom::Point const& ptInScreen)
 {
 	return widget_->onUpRaw(timeMs, calcPtInWidget(ptInScreen));
 }
 
-bool WidgetElement::onMoveRaw(const float timeMs, geom::Point const& ptInScreen)
+bool WidgetElement::onMoveRaw(float const& timeMs, geom::Point const& ptInScreen)
 {
 	return widget_->onMoveRaw(timeMs, calcPtInWidget(ptInScreen));
 }
 
-bool WidgetElement::onSingleTapUp(const float timeMs, geom::Point const& ptInScreen)
+bool WidgetElement::onSingleTapUp(float const& timeMs, geom::Point const& ptInScreen)
 {
 	return widget_->onSingleTapUp(timeMs, calcPtInWidget(ptInScreen));
 }
 
-bool WidgetElement::onFling(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity)
+bool WidgetElement::onFling(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity)
 {
 	return widget_->onFling(timeMs, calcPtInWidget(start), calcPtInWidget(end), velocity / this->widgetScale());
 }
 
-bool WidgetElement::onScroll(const float timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance)
+bool WidgetElement::onScroll(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance)
 {
 	return widget_->onScroll(timeMs, calcPtInWidget(start), calcPtInWidget(end), distance / this->widgetScale());
 }
 
-bool WidgetElement::onZoom(const float timeMs, geom::Point const& center, const float ratio)
+bool WidgetElement::onZoom(float const& timeMs, geom::Point const& center, const float ratio)
 {
 	return widget_->onZoom(timeMs, calcPtInWidget(center), ratio);
 }
