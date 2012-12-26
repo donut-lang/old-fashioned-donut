@@ -60,8 +60,8 @@ private:
 	Handler<gl::TextDrawable> textImage();
 	Handler<gl::TextDrawable> descImage();
 	void onClick();
-	void startEditing();
-	void appendEditingText(std::vector<Handler<gl::TextDrawable> >& append, std::vector<std::string> const& lst);
+	void startEditing(float const width);
+	Handler<gl::TextDrawable> createEditingText(Handler<gl::DrawableManager> const& mgr, std::string const& str);
 	void stopEditing();
 protected:
 	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override final;
@@ -72,7 +72,7 @@ protected:
 public:
 	virtual bool onMoveRaw(float const& timeMs, geom::Point const& ptInScreen) override;
 	virtual bool onSingleTapUp(float const& timeMs, geom::Point const& ptInScreen) override;
-	virtual void onFocusGained(float const& timeMs) override;
+	virtual void onFocusGained(float const& timeMs, geom::Point const& lastPtInScreen) override;
 	virtual void onFocusLost(float const& timeMs) override;
 	virtual void onTextInput(float const& timeMs, std::string const& text) override;
 	virtual void onTextEdit(float const& timeMs, std::string const& text, int const start, int const length) override;

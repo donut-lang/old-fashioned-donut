@@ -213,7 +213,7 @@ void ActionSession::invokeFocusGained(float const& timeMs)
 {
 	for(HandlerW<Element> const& it : this->elementChain_) {
 		if(Handler<Element> target = it.lock()){
-			target->onFocusGained(timeMs);
+			target->onFocusGained(timeMs, this->lastPoint_);
 		}
 	}
 }
