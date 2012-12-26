@@ -41,16 +41,12 @@ std::string toString(const bool val);
 std::string toLower(std::string const& str);
 std::string toUpper(std::string const& str);
 
+std::vector<std::string> breakChar(std::string const& str_);
+
 template <typename T>
 T parseAs(std::string const& str, int radix, bool* succeed=nullptr);
 template <typename T>
 T parseAs(std::string const& str, bool* succeed=nullptr);
-
-std::string encodeBase64( std::vector<char> const& data );
-std::string encodeBase64( std::string const& data );
-std::string encodeBase64( const char* data, const std::size_t length);
-std::vector<char> decodeBase64( std::string const& str );
-std::string decodeBase64AsString( std::string const& str );
 
 std::string decodePercent(std::string const& str);
 void split(std::string const& str, std::string const& sep, std::vector<std::string>& list);
