@@ -278,7 +278,7 @@ template<> XValue& XObject::set<XValue>(std::string const& name, XValue const& o
 template <> XValue XValue::fromString<XValue::UInt>(std::string const& str)
 {
 	bool success = false;
-	XValue::UInt val = parseAsInt<XValue::UInt>(str, 0, &success);
+	XValue::UInt val = parseAs<XValue::UInt>(str, 0, &success);
 	if(!success){
 		TARTE_EXCEPTION(Exception, "Failed to convert %s to UInt.", str.c_str());
 	}
@@ -287,7 +287,7 @@ template <> XValue XValue::fromString<XValue::UInt>(std::string const& str)
 template <> XValue XValue::fromString<XValue::SInt>(std::string const& str)
 {
 	bool success = false;
-	XValue::SInt val = parseAsInt<XValue::SInt>(str, 0, &success);
+	XValue::SInt val = parseAs<XValue::SInt>(str, 0, &success);
 	if(!success){
 		TARTE_EXCEPTION(Exception, "Failed to convert %s to SInt.", str.c_str());
 	}

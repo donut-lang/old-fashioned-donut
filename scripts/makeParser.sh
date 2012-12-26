@@ -2,7 +2,7 @@
 DIRNAME=$(cd $(dirname $0);cd ..;pwd)
 
 ANTLR=${DIRNAME}/external/antlr/antlr-3.4-complete.jar
-ANTLR_SRC=${DIRNAME}/src/donut/parser
+ANTLR_SRC=${DIRNAME}/src/donut/src/parser
 ANTLR_OUT=${ANTLR_SRC}/output
 
 if [ "$MSYSTEM" = "MINGW32" ] ; then

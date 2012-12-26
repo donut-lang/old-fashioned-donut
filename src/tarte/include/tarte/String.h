@@ -42,7 +42,7 @@ std::string toLower(std::string const& str);
 std::string toUpper(std::string const& str);
 
 template <typename T>
-T parseAsInt(std::string const& str, int radix=0, bool* succeed=nullptr);
+T parseAs(std::string const& str, int radix, bool* succeed=nullptr);
 template <typename T>
 T parseAs(std::string const& str, bool* succeed=nullptr);
 

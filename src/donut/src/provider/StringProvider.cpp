@@ -31,7 +31,7 @@ StringProvider::StringProvider(Handler<Heap> const& heap )
 :HeapProviderImpl<StringObject>(heap, "String")
 {
 	this->registerPureNativeClosure("toInteger", std::function<int(StringObject*)>([&](StringObject* self) {
-		return parseAsInt<int>(self->toString(this->heap().lock()), 0);
+		return parseAs<int>(self->toString(this->heap().lock()), 0);
 	}));
 	this->registerPureNativeClosure("toFloat", std::function<float(StringObject*)>([&](StringObject* self) {
 		return parseAs<float>(self->toString(this->heap().lock()));

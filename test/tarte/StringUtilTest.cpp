@@ -94,13 +94,13 @@ TEST(StringUtilTest, ToUpperTest)
 
 TEST(StringUtilTest, ParseIntTest)
 {
-	ASSERT_EQ(10, parseAsInt<int>("10"));
-	ASSERT_EQ(10, parseAsInt<int>("10",0));
-	ASSERT_EQ(16, parseAsInt<int>("0x10"));
-	ASSERT_EQ(8, parseAsInt<int>("010"));
-	ASSERT_EQ(10, parseAsInt<int>("10",10));
-	ASSERT_EQ(8, parseAsInt<int>("10",8));
-	ASSERT_EQ(16, parseAsInt<int>("10",16));
+	ASSERT_EQ(10, parseAs<int>("10"));
+	ASSERT_EQ(10, parseAs<int>("10",0));
+	ASSERT_EQ(16, parseAs<int>("0x10"));
+	ASSERT_EQ(8, parseAs<int>("010"));
+	ASSERT_EQ(10, parseAs<int>("10",10));
+	ASSERT_EQ(8, parseAs<int>("10",8));
+	ASSERT_EQ(16, parseAs<int>("10",16));
 }
 
 TEST(StringUtilTest, ParseFloatTest)
