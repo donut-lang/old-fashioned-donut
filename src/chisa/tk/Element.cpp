@@ -204,7 +204,7 @@ bool Element::notifyViewRefreshedImpl()
 	return false;
 }
 
-void Element::onFocusGained(float const& timeMs)
+void Element::onFocusGained(float const& timeMs, geom::Point const& lastPtInScreen)
 {
 	this->onFocused_ = true;
 }

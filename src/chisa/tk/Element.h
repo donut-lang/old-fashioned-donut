@@ -115,7 +115,7 @@ public: /* 実装メソッド */
 	virtual void layoutImpl(geom::Box const& size) = 0;
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) = 0;
 	virtual bool notifyViewRefreshedImpl();
-	virtual void onFocusGained(float const& timeMs) override;
+	virtual void onFocusGained(float const& timeMs, geom::Point const& lastPtInScreen) override;
 	virtual void onFocusLost(float const& timeMs) override;
 protected:
 	Element(Logger& log, HandlerW<World> world, HandlerW<Element> parent);

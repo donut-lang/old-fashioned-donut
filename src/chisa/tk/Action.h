@@ -44,7 +44,7 @@ public:
 	virtual bool onFling(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity){return false;};
 	virtual bool onScroll(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance){return false;};
 	virtual bool onZoom(float const& timeMs, geom::Point const& center, const float ratio){return false;};
-	virtual void onFocusGained(float const& timeMs){};
+	virtual void onFocusGained(float const& timeMs, geom::Point const& lastPtInScreen){};
 	virtual void onFocusLost(float const& timeMs){};
 	virtual void onTextInput(float const& timeMs, std::string const& text){};
 	virtual void onTextEdit(float const& timeMs, std::string const& text, int const start, int const length){};
@@ -58,7 +58,7 @@ public:
 	//	virtual bool onFling(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity) override;
 	//	virtual bool onScroll(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance) override;
 	//	virtual bool onZoom(float const& timeMs, geom::Point const& center, const float ratio) override;
-	// virtual bool onFocusGained(float const& timeMs) override;
+	// virtual bool onFocusGained(float const& timeMs, geom::Point const& lastPtInScreen) override;
 	// virtual bool onFocusLost(float const& timeMs) override;
 	// virtual void onTextInput(float const& timeMs, std::string const& text) override;
 	// virtual void onTextEdit(float const& timeMs, std::string const& text, int const start, int const length) override;
