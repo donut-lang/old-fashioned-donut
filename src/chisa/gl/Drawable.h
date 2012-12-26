@@ -156,6 +156,8 @@ public:
 	virtual void draw(Canvas& canvas, geom::Area const& area, const float depth=0.0f) override;
 	virtual std::string toString() const override;
 	Handler<gl::Sprite> sprite();
+public:
+	inline std::string const& str() const noexcept { return this->str_; };
 };
 
 }}

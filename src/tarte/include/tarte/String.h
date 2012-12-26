@@ -40,6 +40,8 @@ std::string toString(const double val);
 std::string toString(const bool val);
 std::string toLower(std::string const& str);
 std::string toUpper(std::string const& str);
+std::string join(std::vector<std::string> const& lst);
+std::string join(std::vector<std::string> const& lst, std::string const& sep);
 
 std::vector<std::string> breakChar(std::string const& str_);
 

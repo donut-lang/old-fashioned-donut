@@ -31,12 +31,15 @@ namespace tk {
 const std::string TextArea::AttrName::Description("desc");
 const std::string TextArea::AttrName::TextSize("text-size");
 
+static constexpr float Space = 1.5f;
+
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(TextArea, Element)
 ,textSize_(32.0f)
 ,description_()
 ,text_()
 ,textImage_()
 ,descImage_()
+,editPos_(0)
 {
 	this->margin(geom::Space(2.5f));
 	this->padding(geom::Space(2.5f));
@@ -58,14 +61,19 @@ void TextArea::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom
 	canvas.fillRect(gl::White, screenArea);
 	canvas.drawRect(2.0f, gl::Black, screenArea);
 	if( this->onFocused() ) {
-
+		geom::Distance pos(screenArea.point());
+		for(Handler<gl::TextDrawable> const& d : this->editState_) {
+			Handler<gl::Sprite> spr(d->sprite());
+			canvas.drawSprite(spr, pos+geom::Distance(0, screenArea.height() - Space - spr->height()));
+			pos.x(pos.x() + d->width());
+		}
 	}else{
 		if(this->text_.empty()) {
 			Handler<gl::Sprite> spr(this->descImage()->sprite());
 			canvas.drawSprite(spr, screenArea.point()+(screenArea.box() - spr->size())/2.0f);
 		}else{
 			Handler<gl::Sprite> spr(this->textImage()->sprite());
-			canvas.drawSprite(spr, screenArea.point()+geom::Distance(1.5f, 1.5f));
+			canvas.drawSprite(spr, screenArea.point()+geom::Distance(Space, Space));
 		}
 	}
 }
@@ -107,7 +115,7 @@ Handler<gl::TextDrawable> TextArea::descImage()
 
 geom::Box TextArea::measureImpl(geom::Box const& constraint)
 {
-	return this->descImage()->size() + geom::Box(3.0f, 3.0f);
+	return this->descImage()->size() + geom::Box(Space*2, Space*2);
 }
 
 void TextArea::layoutImpl(geom::Box const& size)
@@ -171,13 +179,36 @@ bool TextArea::onSingleTapUp(float const& timeMs, geom::Point const& ptInScreen)
 void TextArea::startEditing()
 {
 	this->editState_.clear();
-	for(std::string::value_type& c : this->text_){
+	this->appendEditingText(this->text_);
+}
+
+void TextArea::appendEditingText(std::string const& text)
+{
+	if( Handler<World> w = this->world().lock() ){
+		Handler<gl::DrawableManager> mgr ( w->drawableManager() );
+		for(std::string const& c : ::tarte::breakChar(text)){
+			this->editState_.push_back(mgr->queryText(
+				c,
+				this->textSize_,
+				Handler<gl::Font>(),
+				gl::TextDrawable::Style::Bold,
+				gl::TextDrawable::Decoration::None,
+				this->foregroundColor(),
+				gl::Transparent
+			));
+		}
 	}
 }
 
+
 void TextArea::stopEditing()
 {
-
+	std::stringstream ss;
+	for(Handler<gl::TextDrawable> const& d : this->editState_) {
+		ss << d->str();
+	}
+	this->text(ss.str());
+	this->editState_.clear();
 }
 
 void TextArea::onFocusGained(float const& timeMs)
@@ -185,6 +216,7 @@ void TextArea::onFocusGained(float const& timeMs)
 	Element::onFocusGained(timeMs);
 	if( auto world = this->world().lock() ) {
 		world->startIME(this->screenArea());
+		this->startEditing();
 	}
 }
 
@@ -193,7 +225,17 @@ void TextArea::onFocusLost(float const& timeMs)
 	Element::onFocusLost(timeMs);
 	if( auto world = this->world().lock() ) {
 		world->stopIME();
+		this->stopEditing();
 	}
+}
+
+void TextArea::onTextInput(float const& timeMs, std::string const& text)
+{
+	this->appendEditingText(text);
+}
+void TextArea::onTextEdit(float const& timeMs, std::string const& text, int const start, int const length)
+{
+
 }
 
 }}
