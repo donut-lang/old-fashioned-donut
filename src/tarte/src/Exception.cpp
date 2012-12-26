@@ -23,8 +23,7 @@ namespace tarte {
 
 Exception::Exception(const char* file, const size_t line) throw()
 {
-	va_list list;
-	init(file, line, "", list);
+	init(file, line, "", va_list());
 }
 
 Exception::Exception(const char* file, const size_t line, std::string const& fmt, ...) noexcept
