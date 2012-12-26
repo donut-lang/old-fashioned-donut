@@ -70,6 +70,8 @@ public:
 	virtual void onFocusLost(float const& timeMs) override;
 	virtual void onTextInput(float const& timeMs, std::string const& text) override;
 	virtual void onTextEdit(float const& timeMs, std::string const& text, int const start, int const length) override;
+	virtual bool onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym) override;
+	virtual bool onKeyUp(float const& timeMs, SDL_Keysym const& sym) override;
 };
 
 }}

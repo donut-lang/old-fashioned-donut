@@ -22,6 +22,8 @@
 #include <tarte/Logger.h>
 #include "../geom/Vector.h"
 
+struct SDL_Keysym;
+
 namespace chisa {
 using namespace tarte;
 
@@ -46,6 +48,8 @@ public:
 	virtual void onFocusLost(float const& timeMs){};
 	virtual void onTextInput(float const& timeMs, std::string const& text){};
 	virtual void onTextEdit(float const& timeMs, std::string const& text, int const start, int const length){};
+	virtual bool onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym){return false;};
+	virtual bool onKeyUp(float const& timeMs, SDL_Keysym const& sym){return false;};
 	// 実装用
 	//	virtual bool onDownRaw(float const& timeMs, geom::Point const& ptInScreen) override;
 	//	virtual bool onUpRaw(float const& timeMs, geom::Point const& ptInScreen) override;
@@ -58,6 +62,8 @@ public:
 	// virtual bool onFocusLost(float const& timeMs) override;
 	// virtual void onTextInput(float const& timeMs, std::string const& text) override;
 	// virtual void onTextEdit(float const& timeMs, std::string const& text, int const start, int const length) override;
+	// virtual bool onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym) override;
+	// virtual bool onKeyUp(float const& timeMs, SDL_Keysym const& sym) override;
 };
 
 class ActionSession {
@@ -88,6 +94,8 @@ public:
 	void onFocusLost(float const& timeMs);
 	void onTextInput(float const& timeMs, std::string const& text);
 	void onTextEdit(float const& timeMs, std::string const& text, int const& start, int const& length);
+	void onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym);
+	void onKeyUp(float const& timeMs, SDL_Keysym const& sym);
 private:
 	void invokeDownRaw(float const& timeMs, geom::Point const& pt);
 	void invokeUpRaw(float const& timeMs, geom::Point const& pt);
@@ -99,6 +107,8 @@ private:
 	void invokeFocusLost(float const& timeMs);
 	void invokeTextInput(float const& timeMs, std::string const& text);
 	void invokeTextEdit(float const& timeMs, std::string const& text, int const start, int const length);
+	void invokeKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym);
+	void invokeKeyUp(float const& timeMs, SDL_Keysym const& sym);
 };
 
 class ActionMediator {
@@ -121,6 +131,8 @@ public:
 	void onScroll(float const& timeMs, const float ratio);
 	void onTextInput(float const& timeMs, std::string const& text);
 	void onTextEdit(float const& timeMs, std::string const& text, int const start, int const length);
+	void onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym);
+	void onKeyUp(float const& timeMs, SDL_Keysym const& sym);
 };
 
 }}

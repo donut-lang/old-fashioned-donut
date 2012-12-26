@@ -133,6 +133,18 @@ void Universe::onTextEdit(float const& timeMs, std::string const& text, int star
 	}
 }
 
+void Universe::onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym)
+{
+	if(Handler<World> topWorld = this->worldStack.top()){
+		topWorld->onKeyDown(timeMs, isRepeat, sym);
+	}
+}
+void Universe::onKeyUp(float const& timeMs, SDL_Keysym const& sym)
+{
+	if(Handler<World> topWorld = this->worldStack.top()){
+		topWorld->onKeyUp(timeMs, sym);
+	}
+}
 
 void Universe::startIME(geom::Area const& area)
 {

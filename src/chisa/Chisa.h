@@ -49,6 +49,8 @@ public:
 	void pointerScroll(float const& timeMs, float const& ratio);
 	void textInput(float const& timeMs, std::string const& text);
 	void textEdit(float const& timeMs, std::string const& text, int const& start, int const& length);
+	void keyDown(float const& timeMs, const bool isRepeat, SDL_Keysym const& sym);
+	void keyUp(float const& timeMs, SDL_Keysym const& sym);
 };
 
 }

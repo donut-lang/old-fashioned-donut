@@ -237,4 +237,17 @@ void World::onTextEdit(float const& timeMs, std::string const& text, int start, 
 	}
 }
 
+void World::onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym)
+{
+	if(this->gestureMediator_){
+		this->gestureMediator_->onKeyDown(timeMs, isRepeat, sym);
+	}
+}
+void World::onKeyUp(float const& timeMs, SDL_Keysym const& sym)
+{
+	if(this->gestureMediator_){
+		this->gestureMediator_->onKeyUp(timeMs, sym);
+	}
+}
+
 }}
