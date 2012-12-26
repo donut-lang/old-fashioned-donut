@@ -31,7 +31,7 @@ class PredefinedSymRenderer {
 	DEFINE_MEMBER_REF(private, Logger, log);
 private:
 	Handler<DrawableManager> drawableManager_;
-	std::map<unsigned int, Handler<Sprite> > spriteTable_;
+	std::map<unsigned int, Handler<TextDrawable> > spriteTable_;
 	float maxWidth_;
 	float maxHeight_;
 private:

@@ -221,7 +221,7 @@ TextDrawable::TextDrawable(HandlerW<DrawableManager> manager, std::string const&
 :Drawable(manager)
 ,str_(str)
 ,vertical_(vertical)
-,size_(size)
+,fontSize_(size)
 ,font_(font)
 ,style_(style)
 ,deco_(deco)
@@ -239,14 +239,16 @@ void TextDrawable::revalidate()
 	cairo_font_options_t* opt = cairo_font_options_create();
 	cairo_font_face_t* face = cairo_ft_font_face_create_for_ft_face(session.face(), 0);
 	{
-		TextDrawable::setupCairo(cr, face, opt, size_, style_);
+		TextDrawable::setupCairo(cr, face, opt, fontSize_, style_);
 		cairo_text_extents_t ext;
 		cairo_text_extents(cr, str_.c_str(), &ext);
-		auto offset = geom::Vector(ext.x_bearing, -ext.y_bearing);
-		auto size = geom::Box(ext.x_advance+ext.x_bearing, ext.height+ext.y_advance);
-		this->renderInfo_ = geom::Area(offset, size);
+		Font::calcLineInfo(session.face(), fontSize_, this->font_ascent_, this->font_descent_, this->font_height_);
+		this->tbearing_ = geom::Vector(ext.x_bearing, ext.y_bearing);
+		this->tadvance_ = geom::Vector(ext.x_advance, ext.y_advance);
+		this->tsize_ = geom::Box(ext.width, ext.height);
+		this->size_ = geom::Box(ext.x_advance, this->font_height_);
 		if(this->vertical_){
-			this->renderInfo_ = this->renderInfo_.flip();
+			this->size_ = this->size_.flip();
 		}
 	}
 	cairo_font_face_destroy(face);
@@ -261,10 +263,16 @@ Handler<gl::Sprite> TextDrawable::sprite()
 		return this->sprite_;
 	}
 	if(Handler<DrawableManager> mgr = this->manager().lock()){
-		const int width = static_cast<int>(std::ceil(this->renderInfo_.width()));
-		const int height = static_cast<int>(std::ceil(this->renderInfo_.height()));
-		this->sprite_ = mgr->queryRawSprite(width, height);
-	}else{
+		if(this->vertical_){
+			const int width = static_cast<int>(std::ceil(this->tsize_.height()));
+			const int height = static_cast<int>(std::ceil(this->tsize_.width()));
+			this->sprite_ = mgr->queryRawSprite(width, height);
+		}else{
+			const int width = static_cast<int>(std::ceil(this->tsize_.width()));
+			const int height = static_cast<int>(std::ceil(this->tsize_.height()));
+			this->sprite_ = mgr->queryRawSprite(width, height);
+		}
+	} else {
 		return this->sprite_;
 	}
 #if IS_BIG_ENDIAN
@@ -281,19 +289,19 @@ Handler<gl::Sprite> TextDrawable::sprite()
 
 		//データは使いまわしているので一旦サーフェイスの中身を削除する
 		cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
-		cairo::setColor(cr, this->backColor_);
+		//	cairo::setColor(cr, this->backColor_);
+		cairo::setColor(cr, gl::White);
 		cairo_paint(cr);
 
-		TextDrawable::setupCairo(cr, face, opt, this->size_, this->style_);
+		TextDrawable::setupCairo(cr, face, opt, this->fontSize_, this->style_);
 
 		cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
 		if(this->vertical_){
-			cairo_move_to(cr, 0.0f, 0.0f);
 			cairo_rotate(cr, PI/2.0f);
-		}else{
-			cairo_move_to(cr, this->renderInfo_.x(), this->renderInfo_.y());
+			cairo_translate(cr, 0, -this->tsize_.height());
 		}
 
+		cairo_move_to(cr, -this->tbearing_.x(), -this->tbearing_.y());
 		cairo::setColor(cr, this->color_);
 		//cairo_show_text(cr, this->str_.c_str());
 		cairo_text_path(cr, this->str_.c_str());
@@ -303,31 +311,18 @@ Handler<gl::Sprite> TextDrawable::sprite()
 		cairo_set_antialias(cr, CAIRO_ANTIALIAS_NONE);
 		switch( this->deco_ ){
 		case Strike:{
-			if(this->vertical_){
-				const float hw = this->renderInfo_.width()/2;
-				cairo_move_to(cr, hw, 0);
-				cairo_line_to(cr, hw, this->renderInfo_.height());
-				cairo_stroke(cr);
-			}else{
-				const float hh = this->renderInfo_.height()/2;
-				cairo_move_to(cr, 0, hh);
-				cairo_line_to(cr, this->renderInfo_.width(), hh);
-				cairo_stroke(cr);
-			}
+			const float hh = this->tsize_.height()/2;
+			cairo_move_to(cr, 0, hh);
+			cairo_line_to(cr, this->tsize_.width(), hh);
+			cairo_stroke(cr);
 			break;
 		}
 		case Underline: {
 			const float width = cairo_get_line_width(cr)/2;
-			if(this->vertical_){
-				cairo_move_to(cr, width, 0);
-				cairo_line_to(cr, width, this->renderInfo_.height()-width);
-				cairo_stroke(cr);
-			}else{
-				const float h = this->renderInfo_.height()-width;
-				cairo_move_to(cr, 0, h);
-				cairo_line_to(cr, this->renderInfo_.width(), h);
-				cairo_stroke(cr);
-			}
+			const float h = this->tsize_.height()-width;
+			cairo_move_to(cr, 0, h);
+			cairo_line_to(cr, this->tsize_.width(), h);
+			cairo_stroke(cr);
 			break;
 		}
 		case None: {
@@ -353,17 +348,34 @@ Handler<TextDrawable> TextDrawable::create(HandlerW<DrawableManager> manager, st
 
 geom::Box TextDrawable::size()
 {
-	return this->renderInfo_.box();
+	return this->size_;
 }
 
 void TextDrawable::draw(Canvas& canvas, geom::Area const& area, const float depth)
 {
-	canvas.drawSprite(this->sprite(), area.point(), depth);
+	if(this->vertical_) {
+		geom::Distance off(this->font_height_ - (this->font_ascent_+(this->tsize_.height()+this->bearing().y())), this->bearing().x());
+		canvas.drawSprite(this->sprite(), area.point()+off, depth);
+	}else{
+		geom::Distance off(this->bearing().x(), this->font_ascent_+this->bearing().y());
+		canvas.drawSprite(this->sprite(), area.point()+off, depth);
+	}
+}
+
+void TextDrawable::draw(Canvas& canvas, geom::Point const& pt, const float depth)
+{
+	if(this->vertical_) {
+		geom::Distance off(this->font_height_ - (this->font_ascent_+(this->tsize_.height()+this->bearing().y())), this->bearing().x());
+		canvas.drawSprite(this->sprite(), pt+off, depth);
+	}else{
+		geom::Distance off(this->bearing().x(), this->font_ascent_+this->bearing().y());
+		canvas.drawSprite(this->sprite(), pt+off, depth);
+	}
 }
 
 std::string TextDrawable::toString() const
 {
-	return ::tarte::format("(TextDrawable %p str:\"%p\" size: %d)", this, this->str_.c_str(), size_);
+	return ::tarte::format("(TextDrawable %p str:\"%p\" size: %d)", this, this->str_.c_str(), fontSize_);
 }
 
 void TextDrawable::setupCairo(cairo_t* cairo, cairo_font_face_t* face, cairo_font_options_t* opt, float size, Style style)

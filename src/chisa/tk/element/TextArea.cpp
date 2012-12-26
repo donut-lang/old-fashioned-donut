@@ -75,26 +75,22 @@ void TextArea::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom
 		gl::Color cursorColor(0,0,0,std::abs(std::cos(cursorCounter_/500.0f)));
 		if(this->editListEditing_.empty()){
 			for(Handler<gl::TextDrawable> const& d : this->editListBefore_) {
-				Handler<gl::Sprite> spr(d->sprite());
-				canvas.drawSprite(spr, pos+geom::Distance(0, textArea.height() - spr->height()));
+				d->draw(canvas, pos+geom::Distance(0, textArea.height() - d->height()));
 				pos.x(pos.x() + d->width());
 			}
 			canvas.drawLine(3, cursorColor, pos, pos+geom::Box(0, textArea.height()));
 			for(Handler<gl::TextDrawable> const& d : this->editListAfter_) {
-				Handler<gl::Sprite> spr(d->sprite());
-				canvas.drawSprite(spr, pos+geom::Distance(0, textArea.height() - spr->height()));
+				d->draw(canvas, pos+geom::Distance(0, textArea.height() - d->height()));
 				pos.x(pos.x() + d->width());
 			}
 		}else{
 			for(Handler<gl::TextDrawable> const& d : this->editListBefore_) {
-				Handler<gl::Sprite> spr(d->sprite());
-				canvas.drawSprite(spr, pos+geom::Distance(0, textArea.height() - spr->height()));
+				d->draw(canvas, pos+geom::Distance(0, textArea.height() - d->height()));
 				pos.x(pos.x() + d->width());
 			}
 			geom::Point lineStart(pos.x(), pos.y()+textArea.height());
 			for(Handler<gl::TextDrawable> const& d : this->editListEditing_) {
-				Handler<gl::Sprite> spr(d->sprite());
-				canvas.drawSprite(spr, pos+geom::Distance(0, textArea.height() - spr->height()));
+				d->draw(canvas, pos+geom::Distance(0, textArea.height() - d->height()));
 				pos.x(pos.x() + d->width());
 			}
 			geom::Point lineEnd(pos.x(), pos.y()+textArea.height());
@@ -102,19 +98,18 @@ void TextArea::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom
 
 			canvas.drawLine(3, cursorColor, pos, pos+geom::Box(0, textArea.height()));
 			for(Handler<gl::TextDrawable> const& d : this->editListAfter_) {
-				Handler<gl::Sprite> spr(d->sprite());
-				canvas.drawSprite(spr, pos+geom::Distance(0, textArea.height() - spr->height()));
+				d->draw(canvas, pos+geom::Distance(0, textArea.height() - d->height()));
 				pos.x(pos.x() + d->width());
 			}
 		}
 	}else{
 		canvas.drawRect(2.0f, gl::Black, screenArea);
 		if(this->text_.empty()) {
-			Handler<gl::Sprite> spr(this->descImage()->sprite());
-			canvas.drawSprite(spr, textArea.point()+(textArea.box() - spr->size())/2.0f);
+			Handler<gl::TextDrawable> spr(this->descImage());
+			spr->draw(canvas, textArea.point()+(textArea.box() - spr->size())/2.0f);
 		}else{
-			Handler<gl::Sprite> spr(this->textImage()->sprite());
-			canvas.drawSprite(spr, textArea.point());
+			Handler<gl::TextDrawable> spr(this->textImage());
+			spr->draw(canvas, textArea.point());
 		}
 	}
 }
@@ -229,12 +224,12 @@ void TextArea::startEditing(float const width)
 		auto it = lst.begin();
 		for(;it != lst.end(); ++it) {
 			Handler<gl::TextDrawable> t(this->createEditingText(mgr, (std::string const&)*it));
-			if(left > t->sprite()->width()) {
+			if(left > t->width()) {
 				this->editListBefore_.push_back(t);
 			}else{
 				this->editListAfter_.push_back(t);
 			}
-			left -= t->sprite()->width();
+			left -= t->width();
 		}
 	}
 }
@@ -295,7 +290,6 @@ void TextArea::onTextInput(float const& timeMs, std::string const& text)
 }
 void TextArea::onTextEdit(float const& timeMs, std::string const& text, int const start, int const length)
 {
-	std::cout << text <<std:: endl;
 	std::vector<std::string> lst(::tarte::breakChar(text));
 	auto itstr = lst.begin();
 	auto itspr = this->editListEditing_.begin();

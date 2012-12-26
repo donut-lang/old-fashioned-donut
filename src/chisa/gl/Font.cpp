@@ -69,6 +69,26 @@ std::string Font::style() const noexcept
 	}
 }
 
+#define FLOAT_TO_26_6(d) ((FT_F26Dot6)((d) * 64.0))
+#define FLOAT_FROM_26_6(t) ((float)(t) / 64.0)
+
+void Font::calcLineInfo(FT_Face face, float const& fontSize, float& ascent, float& descent, float& height)
+{
+	FT_Size_RequestRec rec;
+	rec.type = FT_SIZE_REQUEST_TYPE_NOMINAL;
+	rec.height = FLOAT_TO_26_6(fontSize);
+	rec.width = FLOAT_TO_26_6(fontSize);
+	rec.horiResolution = 0;
+	rec.vertResolution = 0;
+	FT_Request_Size(face, &rec);
+
+	FT_Size_Metrics* metrics = &face->size->metrics;
+	float const ratio=(float)face->size->metrics.y_ppem / (float)face->units_per_EM;
+	ascent = metrics->ascender * ratio;
+	descent = metrics->descender * ratio;
+	height = metrics->height * ratio;
+}
+
 void Font::analyzeFontName(std::string const& name, std::string& family, std::string& style) noexcept
 {
 	std::string::size_type const idx = name.find(':');
