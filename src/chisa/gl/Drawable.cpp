@@ -289,8 +289,7 @@ Handler<gl::Sprite> TextDrawable::sprite()
 
 		//データは使いまわしているので一旦サーフェイスの中身を削除する
 		cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
-		//	cairo::setColor(cr, this->backColor_);
-		cairo::setColor(cr, gl::White);
+		cairo::setColor(cr, this->backColor_);
 		cairo_paint(cr);
 
 		TextDrawable::setupCairo(cr, face, opt, this->fontSize_, this->style_);
@@ -303,8 +302,8 @@ Handler<gl::Sprite> TextDrawable::sprite()
 
 		cairo_move_to(cr, -this->tbearing_.x(), -this->tbearing_.y());
 		cairo::setColor(cr, this->color_);
-		//cairo_show_text(cr, this->str_.c_str());
-		cairo_text_path(cr, this->str_.c_str());
+		cairo_show_text(cr, this->str_.c_str());
+		//cairo_text_path(cr, this->str_.c_str());
 		cairo_fill(cr);
 
 		cairo_identity_matrix(cr);

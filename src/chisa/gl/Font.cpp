@@ -82,11 +82,10 @@ void Font::calcLineInfo(FT_Face face, float const& fontSize, float& ascent, floa
 	rec.vertResolution = 0;
 	FT_Request_Size(face, &rec);
 
-	FT_Size_Metrics* metrics = &face->size->metrics;
-	float const ratio=(float)face->size->metrics.y_ppem / (float)face->units_per_EM;
-	ascent = metrics->ascender * ratio;
-	descent = metrics->descender * ratio;
-	height = metrics->height * ratio;
+	FT_Size_Metrics const& metrics = face->size->metrics;
+	ascent = FLOAT_FROM_26_6(metrics.ascender);
+	descent = FLOAT_FROM_26_6(metrics.descender);
+	height = FLOAT_FROM_26_6(metrics.height);
 }
 
 void Font::analyzeFontName(std::string const& name, std::string& family, std::string& style) noexcept
