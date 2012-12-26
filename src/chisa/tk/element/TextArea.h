@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include <deque>
 #include "../Element.h"
 #include "../../gl/Drawable.h"
 
@@ -43,7 +44,7 @@ private: /* 描画のための一時的なリソース */
 	std::vector<Handler<gl::TextDrawable> > editListEditing_;
 	int editStart_;
 	int editLength_;
-	std::vector<Handler<gl::TextDrawable> > editListAfter_;
+	std::deque<Handler<gl::TextDrawable> > editListAfter_;
 	float cursorCounter_;
 public:
 	void text(std::string const& text);
