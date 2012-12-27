@@ -172,16 +172,6 @@ void TextContext::popFont()
 	this->face_ = cairo_ft_font_face_create_for_ft_face(rfs.face(),0);
 }
 
-geom::Box TextContext::measure(std::string const& strUtf8)
-{
-	gl::TextDrawable::setupCairo(this->cairo_, this->face_, this->nullOption_, this->nowSize(), this->nowStyle());
-	cairo_text_extents_t ext;
-	cairo_text_extents(this->cairo_, strUtf8.c_str(), &ext);
-	//auto offset = geom::Vector(ext.x_bearing, -ext.y_bearing);
-	auto size = geom::Box(ext.x_advance, ext.height+ext.y_advance);
-	return size;
-}
-
 Handler<TextDrawableObject> TextContext::create(std::string const& strUtf8, Node* parentNode, const float relDepth )
 {
 	return Handler<TextDrawableObject> ( new TextDrawableObject (

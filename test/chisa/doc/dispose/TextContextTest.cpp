@@ -46,24 +46,14 @@ public:
 };
 
 
-TEST_F(TextContextTest, BasicTest)
-{
-	geom::Box aa = r->measure("a");
-	ASSERT_LE(0, aa.width());
-	ASSERT_LE(0, aa.height());
-	Handler<TextDrawableObject> cmd = r->create("a", nullptr, 1);
-	ASSERT_FLOAT_EQ(aa.width(), cmd->width());
-	ASSERT_FLOAT_EQ(aa.height(), cmd->height());
-}
-
 TEST_F(TextContextTest, EmptySpaceTest)
 {
 
-	geom::Box aa = r->measure("a");
-	geom::Box ab = r->measure("b");
+	Handler<TextDrawableObject> aa = r->create("a", nullptr, 1);
+	Handler<TextDrawableObject> ab = r->create("b", nullptr, 1);
 	Handler<TextDrawableObject> cmd = r->create("ab", nullptr, 1);
-	ASSERT_FLOAT_EQ(aa.width()+ab.width(), cmd->width());
-	ASSERT_FLOAT_EQ(geom::max(aa.height(), ab.height()), cmd->height());
+	ASSERT_FLOAT_EQ(aa->width()+ab->width(), cmd->width());
+	ASSERT_FLOAT_EQ(geom::max(aa->height(), ab->height()), cmd->height());
 }
 
 TEST_F(TextContextTest, StylePushTest)

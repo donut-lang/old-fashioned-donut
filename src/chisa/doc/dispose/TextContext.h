@@ -69,7 +69,6 @@ public:
 	std::string nowFont() const;
 	void popFont();
 public:
-	geom::Box measure(std::string const& strUtf8);
 	Handler<TextDrawableObject> create(std::string const& strUtf8, Node* parentNode, const float relDepth );
 public:
 	TextContext(Logger& log, Handler<RenderTree> renderTree);
