@@ -48,7 +48,7 @@ private: /* 描画のための一時的なリソース */
 	int editStart_;
 	int editLength_;
 	std::deque<Handler<gl::TextDrawable> > editListAfter_;
-	float cursorCounter_;
+	float cursorTimer_;
 public:
 	void text(std::string const& text);
 	void description(std::string const& text);

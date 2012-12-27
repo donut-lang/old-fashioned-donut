@@ -46,7 +46,7 @@ CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(TextArea, Element)
 ,editListAfterWidth_(0)
 ,editStart_(0)
 ,editLength_(0)
-,cursorCounter_(0)
+,cursorTimer_(0)
 {
 	this->margin(geom::Space(2.5f));
 	this->padding(geom::Space(2.5f));
@@ -65,7 +65,7 @@ std::string TextArea::toString() const
 
 void TextArea::idle(const float delta_ms)
 {
-	cursorCounter_+=delta_ms;
+	cursorTimer_+=delta_ms/500.0f;
 }
 
 void TextArea::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
@@ -75,7 +75,7 @@ void TextArea::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom
 	geom::Distance pos(textArea.point());
 	if( this->editing_ ) {
 		canvas.drawRect(2.0f, gl::DarkYellow, screenArea);
-		gl::Color cursorColor(0,0,0,std::abs(std::cos(cursorCounter_/500.0f)));
+		gl::Color cursorColor(0,0,0,std::abs(std::cos(cursorTimer_)));
 		if(this->editListEditing_.empty()){
 			for(Handler<gl::TextDrawable> const& d : this->editListBefore_) {
 				d->draw(canvas, pos);
@@ -221,7 +221,7 @@ void TextArea::startEditing(float const width)
 	this->editListEditing_.clear();
 	this->editStart_=0;
 	this->editLength_=0;
-	this->cursorCounter_=0;
+	this->cursorTimer_=0;
 	this->editListBeforeWidth_ = 0;
 	this->editListAfterWidth_ = 0;
 	float left=width;
@@ -494,32 +494,32 @@ bool TextArea::onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& s
 	switch (sym.scancode) {
 	case SDL_SCANCODE_BACKSPACE:
 		if(!this->deleteCursorBefore()){
-			this->cursorCounter_ = 0;
+			this->cursorTimer_ = 0;
 		}
 		break;
 	case SDL_SCANCODE_DELETE:
 		if(!this->deleteCursorAfter()){
-			this->cursorCounter_ = 0;
+			this->cursorTimer_ = 0;
 		}
 		break;
 	case SDL_SCANCODE_LEFT:
 		if(!this->moveCursorLeft(sym.mod & KMOD_SHIFT)){
-			this->cursorCounter_ = 0;
+			this->cursorTimer_ = 0;
 		}
 		break;
 	case SDL_SCANCODE_RIGHT:
 		if(!this->moveCursorRight(sym.mod & KMOD_SHIFT)){
-			this->cursorCounter_ = 0;
+			this->cursorTimer_ = 0;
 		}
 		break;
 	case SDL_SCANCODE_UP:
 		if(!this->moveCursorBegin(sym.mod & KMOD_SHIFT)){
-			this->cursorCounter_ = 0;
+			this->cursorTimer_ = 0;
 		}
 		break;
 	case SDL_SCANCODE_DOWN:
 		if(!this->moveCursorEnd(sym.mod & KMOD_SHIFT)){
-			this->cursorCounter_ = 0;
+			this->cursorTimer_ = 0;
 		}
 		break;
 	default:
