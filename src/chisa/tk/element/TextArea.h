@@ -41,16 +41,17 @@ private: /* 描画のための一時的なリソース */
 	bool editing_;
 	Handler<gl::TextDrawable> textImage_;
 	Handler<gl::TextDrawable> descImage_;
-	std::vector<Handler<gl::TextDrawable> > editListBefore_;
-	std::vector<Handler<gl::TextDrawable> > editListEditing_;
-	geom::Area textArea_;
-	float textOffset_;
-	float editListBeforeWidth_;
-	float editListAfterWidth_;
-	int editLength_;
-	float editWidth_;
-	std::deque<Handler<gl::TextDrawable> > editListAfter_;
-	float cursorTimer_;
+private:
+	std::vector<Handler<gl::TextDrawable> > editListBefore_; //カーソル前の文字列
+	std::vector<Handler<gl::TextDrawable> > editListEditing_; //今まさにIMEで入力している文字列バッファ
+	geom::Area textArea_; //最後表示した時のテキストエリア
+	float textOffset_; //テキストが表示エリアをはみ出した時のためのオフセット
+	float editListBeforeWidth_; //カーソル前のテキストの長さ
+	float editListAfterWidth_; //カーソル後のテキストの長さ
+	int editLength_; //カーソルから何文字分セレクトしているか。マイナスもあり得るよ
+	float editWidth_; //セレクトしてる分のテキストの長さ
+	std::deque<Handler<gl::TextDrawable> > editListAfter_; //カーソル後の文字列
+	float cursorTimer_; //カーソルの表示用タイマ
 public:
 	void text(std::string const& text);
 	void description(std::string const& text);
