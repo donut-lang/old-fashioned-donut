@@ -134,7 +134,7 @@ void TextArea::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom
 			spr->draw(canvas, textArea.point()+(textArea.box() - spr->size())/2.0f);
 		}else{
 			Handler<gl::TextDrawable> spr(this->textImage());
-			spr->draw(canvas, textArea.point());
+			spr->draw(canvas, pos);
 		}
 	}
 }
