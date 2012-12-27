@@ -24,6 +24,10 @@
 
 namespace tarte {
 
+/**********************************************************************************************************************
+ * Handler
+ **********************************************************************************************************************/
+
 template<class S>
 class Handler
 {
@@ -31,6 +35,12 @@ private:
 	S* sprite;
 	//void *operator new(std::size_t) = delete;
 	//void operator delete(void* pv) = delete;
+	template <typename T, typename U> friend constexpr bool operator==(Handler<T> const& a, Handler<U> const& b) noexcept;
+	template <typename T, typename U> friend constexpr bool operator!=(Handler<T> const& a, Handler<U> const& b) noexcept;
+	template <typename T, typename U> friend constexpr bool operator>(Handler<T> const& a, Handler<U> const& b) noexcept;
+	template <typename T, typename U> friend constexpr bool operator<(Handler<T> const& a, Handler<U> const& b) noexcept;
+	template <typename T, typename U> friend constexpr bool operator>=(Handler<T> const& a, Handler<U> const& b) noexcept;
+	template <typename T, typename U> friend constexpr bool operator<(Handler<T> const& a, Handler<U> const& b) noexcept;
 public:
 	typedef S value_type;
 	inline static Handler<S> __internal__fromRawPointerWithoutCheck(S* const sprite) noexcept
@@ -151,6 +161,10 @@ public:
 	inline int refcount() const noexcept { return this->sprite ? this->sprite->refcount_ : 0; };
 };
 
+/**********************************************************************************************************************
+ * WeakHandler
+ **********************************************************************************************************************/
+
 namespace internal {
 class WeakHandlerEntity {
 private:
@@ -208,6 +222,12 @@ class HandlerW
 private:
 	S* sprite;
 	internal::WeakHandlerEntity* entity;
+	template <typename T, typename U> friend constexpr bool operator==(HandlerW<T> const& a, HandlerW<U> const& b) noexcept;
+	template <typename T, typename U> friend constexpr bool operator!=(HandlerW<T> const& a, HandlerW<U> const& b) noexcept;
+	template <typename T, typename U> friend constexpr bool operator>(HandlerW<T> const& a, HandlerW<U> const& b) noexcept;
+	template <typename T, typename U> friend constexpr bool operator<(HandlerW<T> const& a, HandlerW<U> const& b) noexcept;
+	template <typename T, typename U> friend constexpr bool operator>=(HandlerW<T> const& a, HandlerW<U> const& b) noexcept;
+	template <typename T, typename U> friend constexpr bool operator<(HandlerW<T> const& a, HandlerW<U> const& b) noexcept;
 public:
 	HandlerW()
 	:sprite(nullptr)
@@ -284,8 +304,6 @@ public:
 	{
 		if(this->entity){
 			this->entity->decref();
-			this->sprite = nullptr;
-			this->entity = nullptr;
 		}
 		this->sprite = other.sprite;
 		this->entity = other.entity;
@@ -298,8 +316,6 @@ public:
 	{
 		if(this->entity){
 			this->entity->decref();
-			this->sprite = nullptr;
-			this->entity = nullptr;
 		}
 		this->sprite = other.sprite;
 		this->entity = other.entity;
@@ -336,11 +352,9 @@ public:
 	inline int refcount() const noexcept { return this->entity ? this->entity->refcount() : 0; };
 };
 
-template<class T>
-void swap(Handler<T>& a, Handler<T>& b) noexcept
-{
-	a.swap(b);
-}
+/**********************************************************************************************************************
+ * Handler Body
+ **********************************************************************************************************************/
 
 template <bool atomic=false>
 struct _HandlerBodyTypes{
@@ -406,40 +420,100 @@ protected:
 	}
 };
 
-template<class T, class U>
-bool operator==(Handler<T> const& a, Handler<U> const& b) noexcept
+/**********************************************************************************************************************
+ * Swap
+ **********************************************************************************************************************/
+
+template<class T>
+inline void swap(Handler<T>& a, Handler<T>& b) noexcept
 {
-	return a.get() == b.get();
+	a.swap(b);
+}
+
+template<class T>
+inline void swap(HandlerW<T>& a, HandlerW<T>& b) noexcept
+{
+	a.swap(b);
+}
+
+/**********************************************************************************************************************
+ * Handler Compare
+ **********************************************************************************************************************/
+
+template<class T, class U>
+constexpr inline bool operator==(Handler<T> const& a, Handler<U> const& b) noexcept
+{
+	return a.sprite == b.sprite;
 }
 
 template<class T, class U>
-bool operator!=(Handler<T> const& a, Handler<U> const& b) noexcept
+constexpr inline bool operator!=(Handler<T> const& a, Handler<U> const& b) noexcept
 {
-	return a.get() != b.get();
+	return a.sprite != b.sprite;
 }
 
 template<class T, class U>
-bool operator<(Handler<T> const& a, Handler<U> const& b) noexcept
+constexpr inline bool operator<(Handler<T> const& a, Handler<U> const& b) noexcept
 {
-	return a.get() < b.get();
+	return a.sprite < b.sprite;
 }
 
 template<class T, class U>
-bool operator<=(Handler<T> const& a, Handler<U> const& b) noexcept
+constexpr inline bool operator<=(Handler<T> const& a, Handler<U> const& b) noexcept
 {
-	return a.get() <= b.get();
+	return a.sprite <= b.sprite;
 }
 
 template<class T, class U>
-bool operator>(Handler<T> const& a, Handler<U> const& b) noexcept
+constexpr inline bool operator>(Handler<T> const& a, Handler<U> const& b) noexcept
 {
-	return a.get() > b.get();
+	return a.sprite > b.sprite;
 }
 
 template<class T, class U>
-bool operator>=(Handler<T> const& a, Handler<U> const& b) noexcept
+constexpr inline bool operator>=(Handler<T> const& a, Handler<U> const& b) noexcept
 {
-	return a.get() >= b.get();
+	return a.sprite >= b.sprite;
+}
+
+/**********************************************************************************************************************
+ * WeakHandler Compare
+ **********************************************************************************************************************/
+
+template<class T, class U>
+constexpr inline bool operator==(HandlerW<T> const& a, HandlerW<U> const& b) noexcept
+{
+	return a.sprite == b.sprite;
+}
+
+template<class T, class U>
+constexpr inline bool operator!=(HandlerW<T> const& a, HandlerW<U> const& b) noexcept
+{
+	return a.sprite != b.sprite;
+}
+
+template<class T, class U>
+constexpr inline bool operator<(HandlerW<T> const& a, HandlerW<U> const& b) noexcept
+{
+	return a.sprite < b.sprite;
+}
+
+template<class T, class U>
+constexpr inline bool operator<=(HandlerW<T> const& a, HandlerW<U> const& b) noexcept
+{
+	return a.sprite <= b.sprite;
+}
+
+template<class T, class U>
+constexpr inline bool operator>(HandlerW<T> const& a, HandlerW<U> const& b) noexcept
+{
+	return a.sprite > b.sprite;
+}
+
+template<class T, class U>
+constexpr inline bool operator>=(HandlerW<T> const& a, HandlerW<U> const& b) noexcept
+{
+	return a.sprite >= b.sprite;
 }
 
 }
