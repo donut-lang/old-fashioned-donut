@@ -45,8 +45,8 @@ private: /* 描画のための一時的なリソース */
 	std::vector<Handler<gl::TextDrawable> > editListEditing_;
 	float editListBeforeWidth_;
 	float editListAfterWidth_;
-	int editStart_;
 	int editLength_;
+	float editWidth_;
 	std::deque<Handler<gl::TextDrawable> > editListAfter_;
 	float cursorTimer_;
 public:
