@@ -334,6 +334,10 @@ void TextArea::fixCursorBackward()
 
 bool TextArea::moveCursorLeft(bool select)
 {
+	if(!select){
+		this->editLength_ = 0;
+		this->editWidth_ = 0;
+	}
 	if(this->editListBefore_.empty()){
 		return false;
 	}
@@ -341,9 +345,6 @@ bool TextArea::moveCursorLeft(bool select)
 	if(select){
 		this->editWidth_ += (editLength_ >= 0) ? d->width() : -d->width();
 		++this->editLength_;
-	}else{
-		this->editLength_ = 0;
-		this->editWidth_ = 0;
 	}
 	this->editListBefore_.pop_back();
 	this->editListAfter_.push_front(d);
@@ -354,6 +355,10 @@ bool TextArea::moveCursorLeft(bool select)
 }
 bool TextArea::moveCursorRight(bool select)
 {
+	if(!select){
+		this->editLength_ = 0;
+		this->editWidth_ = 0;
+	}
 	if(this->editListAfter_.empty()){
 		return false;
 	}
@@ -361,9 +366,6 @@ bool TextArea::moveCursorRight(bool select)
 	if(select){
 		--this->editLength_;
 		this->editWidth_ += (editLength_ >= 0) ? -d->width() : d->width();
-	}else{
-		this->editLength_ = 0;
-		this->editWidth_ = 0;
 	}
 	this->editListAfter_.pop_front();
 	this->editListBefore_.push_back(d);
@@ -375,13 +377,21 @@ bool TextArea::moveCursorRight(bool select)
 
 bool TextArea::moveCursorBegin(bool select)
 {
+	if(!select){
+		this->editLength_ = 0;
+		this->editWidth_ = 0;
+	}
 	if(this->editListBefore_.empty()){
 		return false;
 	}
 	if(select){
-		this->editLength_ += std::distance(this->editListBefore_.begin(), this->editListBefore_.end());
-	}else{
-		this->editLength_ = 0;
+		if(editLength_ >= 0) {
+			this->editWidth_ += this->editListBeforeWidth_;
+			this->editLength_ += std::distance(this->editListBefore_.begin(), this->editListBefore_.end());
+		}else{
+			this->editWidth_ = this->editListBeforeWidth_-this->editWidth_;
+			this->editLength_ += std::distance(this->editListBefore_.begin(), this->editListBefore_.end());
+		}
 	}
 	this->editListAfter_.insert(this->editListAfter_.begin(), this->editListBefore_.begin(), this->editListBefore_.end());
 	this->editListBefore_.clear();
@@ -393,13 +403,21 @@ bool TextArea::moveCursorBegin(bool select)
 
 bool TextArea::moveCursorEnd(bool select)
 {
+	if(!select){
+		this->editLength_ = 0;
+		this->editWidth_ = 0;
+	}
 	if(this->editListAfter_.empty()) {
 		return false;
 	}
 	if(select){
-		this->editLength_ -= std::distance(this->editListAfter_.begin(), this->editListAfter_.end());
-	}else{
-		this->editLength_ = 0;
+		if(editLength_ >= 0) {
+			this->editWidth_ = this->editListAfterWidth_-this->editWidth_;
+			this->editLength_ = -(std::distance(this->editListAfter_.begin(), this->editListAfter_.end())-this->editLength_);
+		}else{
+			this->editWidth_ += this->editListAfterWidth_;
+			this->editLength_ -= std::distance(this->editListAfter_.begin(), this->editListAfter_.end());
+		}
 	}
 	this->editListBefore_.insert(this->editListBefore_.end(), this->editListAfter_.begin(), this->editListAfter_.end());
 	this->editListAfter_.clear();
@@ -421,6 +439,7 @@ bool TextArea::deleteCursorBefore()
 	this->editListBeforeWidth_ -= d->width();
 	this->editListBefore_.pop_back();
 	this->editLength_ = 0;
+	this->editWidth_ = 0;
 	this->fixCursorBackward();
 	return true;
 }
@@ -436,6 +455,7 @@ bool TextArea::deleteCursorAfter()
 	this->editListAfterWidth_ -= d->width();
 	this->editListAfter_.pop_front();
 	this->editLength_ = 0;
+	this->editWidth_ = 0;
 	return true;
 }
 
@@ -460,6 +480,7 @@ bool TextArea::deleteSelected()
 		return false;
 	}
 	this->editLength_ = 0;
+	this->editWidth_ = 0;
 	return true;
 }
 
