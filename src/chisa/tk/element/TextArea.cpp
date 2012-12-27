@@ -42,6 +42,7 @@ CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(TextArea, Element)
 ,editing_(false)
 ,textImage_()
 ,descImage_()
+,textOffset_(0)
 ,editListBeforeWidth_(0)
 ,editListAfterWidth_(0)
 ,editLength_(0)
@@ -71,8 +72,8 @@ void TextArea::idle(const float delta_ms)
 void TextArea::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
 {
 	canvas.fillRect(gl::White, screenArea);
-	geom::Area textArea(TextMargin.apply(screenArea));
-	geom::Distance pos(textArea.point());
+	geom::Area const textArea(this->textArea_ = TextMargin.apply(screenArea));
+	geom::Distance pos(textArea.x()+textOffset_, textArea.y());
 	if( this->editing_ ) {
 		canvas.drawRect(2.0f, gl::DarkYellow, screenArea);
 		gl::Color cursorColor(0,0,0,std::abs(std::cos(cursorTimer_)));
@@ -166,7 +167,6 @@ geom::Box TextArea::measureImpl(geom::Box const& constraint)
 
 void TextArea::layoutImpl(geom::Box const& size)
 {
-	// XXX: What to do?
 }
 
 void TextArea::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)
@@ -296,6 +296,21 @@ void TextArea::moveSelection(float width)
 	}
 }
 
+void TextArea::fixCursorForward()
+{
+	float delta = this->textOffset_+this->editListBeforeWidth_ - this->textArea_.width();
+	if(delta > 0){
+		this->textOffset_-=delta;
+	}
+}
+void TextArea::fixCursorBackward()
+{
+	float delta = this->textOffset_+this->editListBeforeWidth_;
+	if(delta < 0){
+		this->textOffset_-=delta;
+	}
+}
+
 bool TextArea::moveCursorLeft(bool select)
 {
 	if(this->editListBefore_.empty()){
@@ -313,6 +328,7 @@ bool TextArea::moveCursorLeft(bool select)
 	this->editListAfter_.push_front(d);
 	this->editListBeforeWidth_ -= d->width();
 	this->editListAfterWidth_ += d->width();
+	this->fixCursorBackward();
 	return true;
 }
 bool TextArea::moveCursorRight(bool select)
@@ -332,6 +348,7 @@ bool TextArea::moveCursorRight(bool select)
 	this->editListBefore_.push_back(d);
 	this->editListBeforeWidth_ += d->width();
 	this->editListAfterWidth_ -= d->width();
+	this->fixCursorForward();
 	return true;
 }
 
@@ -349,6 +366,7 @@ bool TextArea::moveCursorBegin(bool select)
 	this->editListBefore_.clear();
 	this->editListAfterWidth_ += this->editListBeforeWidth_;
 	this->editListBeforeWidth_ = 0;
+	this->fixCursorBackward();
 	return true;
 }
 
@@ -366,6 +384,7 @@ bool TextArea::moveCursorEnd(bool select)
 	this->editListAfter_.clear();
 	this->editListBeforeWidth_ += this->editListAfterWidth_;
 	this->editListAfterWidth_ = 0;
+	this->fixCursorForward();
 	return true;
 }
 
@@ -381,6 +400,7 @@ bool TextArea::deleteCursorBefore()
 	this->editListBeforeWidth_ -= d->width();
 	this->editListBefore_.pop_back();
 	this->editLength_ = 0;
+	this->fixCursorBackward();
 	return true;
 }
 bool TextArea::deleteCursorAfter()
@@ -470,6 +490,7 @@ void TextArea::onTextInput(float const& timeMs, std::string const& text)
 			Handler<gl::TextDrawable> d(this->createEditingText(mgr, str));
 			this->editListBefore_.push_back(d);
 			this->editListBeforeWidth_ += d->width();
+			this->fixCursorForward();
 		}
 	}
 }
