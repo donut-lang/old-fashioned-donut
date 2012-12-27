@@ -86,18 +86,28 @@ void TextArea::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom
 				}
 			}
 			for(Handler<gl::TextDrawable> const& d : this->editListBefore_) {
-				d->draw(canvas, pos);
-				pos.x(pos.x() + d->width());
+				float const xend = pos.x() + d->width();
+				if(xend > textArea.x()) {
+					d->draw(canvas, pos);
+				}
+				pos.x(xend);
 			}
 			canvas.drawLine(3, cursorColor, pos, pos+geom::Box(0, textArea.height()));
+			float const areaEnd = textArea.x()+textArea.width();
 			for(Handler<gl::TextDrawable> const& d : this->editListAfter_) {
+				if(pos.x() >= areaEnd) {
+					break;
+				}
 				d->draw(canvas, pos);
 				pos.x(pos.x() + d->width());
 			}
 		}else{
 			for(Handler<gl::TextDrawable> const& d : this->editListBefore_) {
-				d->draw(canvas, pos);
-				pos.x(pos.x() + d->width());
+				float const xend = pos.x() + d->width();
+				if(xend > textArea.x()) {
+					d->draw(canvas, pos);
+				}
+				pos.x(xend);
 			}
 			geom::Point lineStart(pos.x(), pos.y()+textArea.height());
 			for(Handler<gl::TextDrawable> const& d : this->editListEditing_) {
@@ -108,7 +118,11 @@ void TextArea::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom
 			canvas.drawLine(1, gl::Black, lineStart, lineEnd);
 
 			canvas.drawLine(3, cursorColor, pos, pos+geom::Box(0, textArea.height()));
+			float const areaEnd = textArea.x()+textArea.width();
 			for(Handler<gl::TextDrawable> const& d : this->editListAfter_) {
+				if(pos.x() >= areaEnd) {
+					break;
+				}
 				d->draw(canvas, pos);
 				pos.x(pos.x() + d->width());
 			}
@@ -208,16 +222,16 @@ bool TextArea::notifyViewRefreshedImpl()
 bool TextArea::onDownRaw(float const& timeMs, geom::Point const& ptInScreen)
 {
 	if(this->editing_){
-		this->startSelection(ptInScreen.x()-this->screenArea().x());
+		this->startSelection(ptInScreen.x()-this->textArea_.x()-this->textOffset_);
 	}else{
-		this->startEditing(ptInScreen.x()-this->screenArea().x());
+		this->startEditing(ptInScreen.x()-this->textArea_.x()-this->textOffset_);
 	}
 	return true;
 }
 
 bool TextArea::onMoveRaw(float const& timeMs, geom::Point const& ptInScreen)
 {
-	this->moveSelection(ptInScreen.x()-this->screenArea().x());
+	this->moveSelection(ptInScreen.x()-this->textArea_.x()-this->textOffset_);
 	return true;
 }
 
@@ -280,6 +294,8 @@ void TextArea::startSelection(float width)
 			break;
 		}
 	}
+	this->editLength_ = 0;
+	this->editWidth_ = 0;
 }
 
 void TextArea::moveSelection(float width)
@@ -485,6 +501,7 @@ void TextArea::onFocusLost(float const& timeMs)
 void TextArea::onTextInput(float const& timeMs, std::string const& text)
 {
 	if(Handler<World> w = this->world().lock()) {
+		this->deleteSelected();
 		Handler<gl::DrawableManager> mgr(w->drawableManager());
 		for(std::string const& str : ::tarte::breakChar(text)){
 			Handler<gl::TextDrawable> d(this->createEditingText(mgr, str));
