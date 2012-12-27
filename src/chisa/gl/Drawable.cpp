@@ -309,7 +309,6 @@ Handler<gl::Sprite> TextDrawable::sprite()
 		cairo_text_path(cr, this->str_.c_str());
 		cairo_fill(cr);
 
-		cairo_identity_matrix(cr);
 		cairo_set_antialias(cr, CAIRO_ANTIALIAS_NONE);
 		switch( this->deco_ ){
 		case Strike:{
