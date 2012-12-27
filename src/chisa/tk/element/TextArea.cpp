@@ -360,28 +360,30 @@ bool TextArea::moveCursorEnd(bool select)
 
 bool TextArea::deleteCursorBefore()
 {
+	if(this->deleteSelected()){
+		return true;
+	}
 	if(this->editListBefore_.empty()){
 		return false;
 	}
-	if(!this->deleteSelected()){
-		Handler<gl::TextDrawable> const& d(this->editListBefore_.back());
-		this->editListBeforeWidth_ -= d->width();
-		this->editListBefore_.pop_back();
-		this->editLength_ = 0;
-	}
+	Handler<gl::TextDrawable> const& d(this->editListBefore_.back());
+	this->editListBeforeWidth_ -= d->width();
+	this->editListBefore_.pop_back();
+	this->editLength_ = 0;
 	return true;
 }
 bool TextArea::deleteCursorAfter()
 {
+	if(this->deleteSelected()){
+		return true;
+	}
 	if(this->editListAfter_.empty()){
 		return false;
 	}
-	if(!this->deleteSelected()){
-		Handler<gl::TextDrawable> const& d(this->editListAfter_.front());
-		this->editListAfterWidth_ -= d->width();
-		this->editListAfter_.pop_front();
-		this->editLength_ = 0;
-	}
+	Handler<gl::TextDrawable> const& d(this->editListAfter_.front());
+	this->editListAfterWidth_ -= d->width();
+	this->editListAfter_.pop_front();
+	this->editLength_ = 0;
 	return true;
 }
 
@@ -395,13 +397,13 @@ bool TextArea::deleteSelected()
 		}
 		this->editListBefore_.erase(first, this->editListBefore_.end());
 	}else if(this->editLength_ > 0){
-		std::deque<Handler<gl::TextDrawable> >::iterator end = this->editListAfter_.begin()+this->editLength_;
-		std::cout << this->editLength_ << std::endl;
-		for(std::deque<Handler<gl::TextDrawable> >::iterator it = this->editListAfter_.begin(); it != end;++it){
-			Handler<gl::TextDrawable> const& d(*it);
+		int cnt = this->editLength_;
+		while(cnt > 0 && !this->editListAfter_.empty()) {
+			Handler<gl::TextDrawable> const& d(this->editListAfter_.front());
 			this->editListAfterWidth_ -= d->width();
+			this->editListAfter_.pop_front();
+			cnt--;
 		}
-		this->editListAfter_.erase(this->editListAfter_.begin(), end);
 	}else{
 		return false;
 	}
