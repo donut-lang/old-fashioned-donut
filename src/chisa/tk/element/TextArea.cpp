@@ -221,6 +221,9 @@ bool TextArea::notifyViewRefreshedImpl()
 
 bool TextArea::onDownRaw(float const& timeMs, geom::Point const& ptInScreen)
 {
+	if(this->editing_){
+		this->startSelection(ptInScreen.x()-this->textArea_.x()-this->textOffset_);
+	}
 	return true;
 }
 
@@ -232,9 +235,7 @@ bool TextArea::onMoveRaw(float const& timeMs, geom::Point const& ptInScreen)
 
 bool TextArea::onSingleTapUp(float const& timeMs, geom::Point const& ptInScreen)
 {
-	if(this->editing_){
-		this->startSelection(ptInScreen.x()-this->textArea_.x()-this->textOffset_);
-	}else{
+	if(!this->editing_){
 		this->startEditing(ptInScreen.x()-this->textArea_.x()-this->textOffset_);
 	}
 	return true;
