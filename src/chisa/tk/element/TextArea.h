@@ -43,6 +43,8 @@ private: /* 描画のための一時的なリソース */
 	Handler<gl::TextDrawable> descImage_;
 	std::vector<Handler<gl::TextDrawable> > editListBefore_;
 	std::vector<Handler<gl::TextDrawable> > editListEditing_;
+	geom::Area textArea_;
+	float textOffset_;
 	float editListBeforeWidth_;
 	float editListAfterWidth_;
 	int editLength_;
@@ -73,6 +75,8 @@ private:
 	void moveSelection(float width);
 
 	//カーソルの移動、削除
+	void fixCursorForward();
+	void fixCursorBackward();
 	bool moveCursorLeft(bool select);
 	bool moveCursorRight(bool select);
 	bool moveCursorBegin(bool select);
