@@ -33,6 +33,7 @@ CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(WidgetElement, Element)
 ,fitMode_(Center)
 ,widgetScale_(1.0f, 1.0f)
 {
+	//this->backgroundColor(gl::Black);
 }
 
 WidgetElement::~WidgetElement() noexcept
