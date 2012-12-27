@@ -75,22 +75,22 @@ void TextArea::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom
 		gl::Color cursorColor(0,0,0,std::abs(std::cos(cursorCounter_/500.0f)));
 		if(this->editListEditing_.empty()){
 			for(Handler<gl::TextDrawable> const& d : this->editListBefore_) {
-				d->draw(canvas, pos+geom::Distance(0, textArea.height() - d->height()));
+				d->draw(canvas, pos);
 				pos.x(pos.x() + d->width());
 			}
 			canvas.drawLine(3, cursorColor, pos, pos+geom::Box(0, textArea.height()));
 			for(Handler<gl::TextDrawable> const& d : this->editListAfter_) {
-				d->draw(canvas, pos+geom::Distance(0, textArea.height() - d->height()));
+				d->draw(canvas, pos);
 				pos.x(pos.x() + d->width());
 			}
 		}else{
 			for(Handler<gl::TextDrawable> const& d : this->editListBefore_) {
-				d->draw(canvas, pos+geom::Distance(0, textArea.height() - d->height()));
+				d->draw(canvas, pos);
 				pos.x(pos.x() + d->width());
 			}
 			geom::Point lineStart(pos.x(), pos.y()+textArea.height());
 			for(Handler<gl::TextDrawable> const& d : this->editListEditing_) {
-				d->draw(canvas, pos+geom::Distance(0, textArea.height() - d->height()));
+				d->draw(canvas, pos);
 				pos.x(pos.x() + d->width());
 			}
 			geom::Point lineEnd(pos.x(), pos.y()+textArea.height());
@@ -98,7 +98,7 @@ void TextArea::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom
 
 			canvas.drawLine(3, cursorColor, pos, pos+geom::Box(0, textArea.height()));
 			for(Handler<gl::TextDrawable> const& d : this->editListAfter_) {
-				d->draw(canvas, pos+geom::Distance(0, textArea.height() - d->height()));
+				d->draw(canvas, pos);
 				pos.x(pos.x() + d->width());
 			}
 		}
@@ -250,6 +250,7 @@ Handler<gl::TextDrawable> TextArea::createEditingText(Handler<gl::DrawableManage
 void TextArea::stopEditing()
 {
 	std::stringstream ss;
+	this->editListEditing_.clear();
 	for(Handler<gl::TextDrawable> const& d : this->editListBefore_) {
 		ss << d->str();
 	}
@@ -294,6 +295,7 @@ void TextArea::onTextEdit(float const& timeMs, std::string const& text, int cons
 	auto itstr = lst.begin();
 	auto itspr = this->editListEditing_.begin();
 	std::size_t cnt=0;
+	// 一致する部分を探す。一致してる部分は描画しない。
 	for(; itstr != lst.end() && itspr != this->editListEditing_.end(); ++itstr, ++itspr){
 		std::string const& ch = *itstr;
 		Handler<gl::TextDrawable>const& spr=*itspr;
@@ -302,7 +304,9 @@ void TextArea::onTextEdit(float const& timeMs, std::string const& text, int cons
 		}
 		++cnt;
 	}
+	// 一致してない部分以降を削除
 	this->editListEditing_.erase(itspr, this->editListEditing_.end());
+	// 一致してない部分を追加
 	if(Handler<World> w = this->world().lock()) {
 		Handler<gl::DrawableManager> mgr(w->drawableManager());
 		for(;itstr != lst.end(); ++itstr){
@@ -314,26 +318,41 @@ void TextArea::onTextEdit(float const& timeMs, std::string const& text, int cons
 
 bool TextArea::onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym)
 {
-	if(sym.scancode == SDL_SCANCODE_BACKSPACE) {
+	switch (sym.scancode) {
+	case SDL_SCANCODE_BACKSPACE:
 		if(!this->editListBefore_.empty()){
 			this->editListBefore_.pop_back();
 		}
-	}else if(sym.scancode == SDL_SCANCODE_DELETE) {
-			if(!this->editListAfter_.empty()){
-				this->editListAfter_.pop_front();
-			}
-	}else if(sym.scancode == SDL_SCANCODE_LEFT){
+		break;
+	case SDL_SCANCODE_DELETE:
+		if(!this->editListAfter_.empty()){
+			this->editListAfter_.pop_front();
+		}
+		break;
+	case SDL_SCANCODE_LEFT:
 		if(!this->editListBefore_.empty()){
 			Handler<gl::TextDrawable> d(this->editListBefore_.back());
 			this->editListBefore_.pop_back();
 			this->editListAfter_.push_front(d);
 		}
-	} else if(sym.scancode == SDL_SCANCODE_RIGHT){
+		break;
+	case SDL_SCANCODE_RIGHT:
 		if(!this->editListAfter_.empty()){
 			Handler<gl::TextDrawable> d(this->editListAfter_.front());
 			this->editListAfter_.pop_front();
 			this->editListBefore_.push_back(d);
 		}
+		break;
+	case SDL_SCANCODE_UP:
+		this->editListAfter_.insert(this->editListAfter_.begin(), this->editListBefore_.begin(), this->editListBefore_.end());
+		this->editListBefore_.clear();
+		break;
+	case SDL_SCANCODE_DOWN:
+		this->editListBefore_.insert(this->editListBefore_.end(), this->editListAfter_.begin(), this->editListAfter_.end());
+		this->editListAfter_.clear();
+		break;
+	default:
+		break;
 	}
 	return true;
 }
