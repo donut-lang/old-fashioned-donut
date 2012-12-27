@@ -52,19 +52,20 @@ void NesMemoryWidget::render(chisa::gl::Canvas& cv, chisa::geom::Area const& are
 	using namespace chisa;
 	Handler<NesGeist> geist = this->geist_.lock();
 	float const symwidth(numRenderer_.maxWidth());
-	float const dwidth(symwidth*2);
-	float const dheight(numRenderer_.maxHeight());
+	float const dwidth(symwidth*2+2);
+	float const dheight(numRenderer_.maxHeight()+2);
 
 	int const rowStart = geom::max(0, area.y() / dheight);
-	int const colStart = geom::max(0, area.x()-this->addrWidth_ / dwidth );
+	int const colStart = geom::max(0, (area.x()-this->addrWidth_) / dwidth );
 	int const rowEnd = std::ceil( (area.y()+area.height()) / dheight );
-	int const colEnd = std::ceil( (area.x()+area.width() - this->addrWidth_) / dwidth );
+	int const colEnd = geom::min(15, std::ceil( (area.x()+area.width() - this->addrWidth_) / dwidth ));
 
 
 	std::vector<unsigned int> addr_sym(4);
 	std::vector<unsigned int> num(2);
 	for(int y=rowStart; y <= rowEnd;++y) {
 		float const rowOffset = y*dheight;
+		cv.drawLine(2, gl::White, geom::Point(0,rowOffset)-area.point(), geom::Point(area.width(),rowOffset)-area.point());
 
 		this->numRenderer_.renderSym(cv, geom::Point(0,rowOffset)-area.point(), 16, 0.0f);
 
@@ -85,6 +86,11 @@ void NesMemoryWidget::render(chisa::gl::Canvas& cv, chisa::geom::Area const& are
 			this->numRenderer_.renderSyms(cv, pt-area.point(), num, 0.0f);
 		}
 	}
+	cv.fillRect(gl::White, geom::Area(this->addrWidth_-symwidth,0, symwidth, area.height()));
+	for(int x=colStart; x <= colEnd;++x) {
+		float const colOffset = this->addrWidth_ + (x+1)*dwidth-1;
+		cv.drawLine(2, gl::White, geom::Point(colOffset,0), geom::Point(colOffset,area.height()));
+	}
 }
 
 void NesMemoryWidget::idle(const float delta_ms)
@@ -97,7 +103,7 @@ void NesMemoryWidget::reshape(chisa::geom::Box const& areaSize)
 
 chisa::geom::Box NesMemoryWidget::measure(chisa::geom::Box const& constraintSize)
 {
-	chisa::geom::Box memAreaSize(this->numRenderer_.maxWidth()*32+this->addrWidth_, this->numRenderer_.maxHeight()*(65535/16));
+	chisa::geom::Box memAreaSize((this->numRenderer_.maxWidth()+1)*32+this->addrWidth_, (this->numRenderer_.maxHeight()+2)*(65535/16)-2);
 	return memAreaSize;
 }
 

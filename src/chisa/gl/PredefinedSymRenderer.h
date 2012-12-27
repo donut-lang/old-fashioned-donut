@@ -35,7 +35,9 @@ private:
 	float maxWidth_;
 	float maxHeight_;
 private:
-
+	float size_;
+	gl::Color color_;
+	gl::Color backgroundColor_;
 public:
 	typedef unsigned int Symbol;
 	typedef std::vector<Symbol> SymList;
