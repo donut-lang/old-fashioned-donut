@@ -517,6 +517,7 @@ void TextArea::onTextEdit(float const& timeMs, std::string const& text, int cons
 	auto itstr = lst.begin();
 	auto itspr = this->editListEditing_.begin();
 	std::size_t cnt=0;
+	float width=0;
 	// 一致する部分を探す。一致してる部分は描画しない。
 	for(; itstr != lst.end() && itspr != this->editListEditing_.end(); ++itstr, ++itspr){
 		std::string const& ch = *itstr;
@@ -524,6 +525,7 @@ void TextArea::onTextEdit(float const& timeMs, std::string const& text, int cons
 		if(spr->str() != ch) {
 			break;
 		}
+		width += spr->width();
 		++cnt;
 	}
 	// 一致してない部分以降を削除
@@ -533,9 +535,12 @@ void TextArea::onTextEdit(float const& timeMs, std::string const& text, int cons
 		Handler<gl::DrawableManager> mgr(w->drawableManager());
 		for(;itstr != lst.end(); ++itstr){
 			std::string const& str = *itstr;
-			this->editListEditing_.push_back(this->createEditingText(mgr, str));
+			Handler<gl::TextDrawable> spr(this->createEditingText(mgr, str));
+			this->editListEditing_.push_back(spr);
+			width += spr->width();
 		}
 	}
+	this->textOffset_ = textArea_.width() - this->editListBeforeWidth_ - width;
 }
 
 bool TextArea::onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym)
