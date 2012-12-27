@@ -42,6 +42,8 @@ CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(TextArea, Element)
 ,textImage_()
 ,descImage_()
 ,editing_(false)
+,editListBeforeWidth_(0)
+,editListAfterWidth_(0)
 ,editStart_(0)
 ,editLength_(0)
 ,cursorCounter_(0)
@@ -198,12 +200,17 @@ bool TextArea::notifyViewRefreshedImpl()
 
 bool TextArea::onDownRaw(float const& timeMs, geom::Point const& ptInScreen)
 {
-	this->startEditing(ptInScreen.x()-this->screenArea().x());
+	if(this->editing_){
+		this->startSelection(ptInScreen.x()-this->screenArea().x());
+	}else{
+		this->startEditing(ptInScreen.x()-this->screenArea().x());
+	}
 	return true;
 }
 
 bool TextArea::onMoveRaw(float const& timeMs, geom::Point const& ptInScreen)
 {
+	this->moveSelection(ptInScreen.x()-this->screenArea().x());
 	return true;
 }
 
@@ -215,6 +222,8 @@ void TextArea::startEditing(float const width)
 	this->editStart_=0;
 	this->editLength_=0;
 	this->cursorCounter_=0;
+	this->editListBeforeWidth_ = 0;
+	this->editListAfterWidth_ = 0;
 	float left=width;
 	if(Handler<World> w = this->world().lock()) {
 		Handler<gl::DrawableManager> mgr(w->drawableManager());
@@ -224,8 +233,10 @@ void TextArea::startEditing(float const width)
 			Handler<gl::TextDrawable> t(this->createEditingText(mgr, (std::string const&)*it));
 			if(left > t->width()) {
 				this->editListBefore_.push_back(t);
+				this->editListBeforeWidth_ += t->width();
 			}else{
 				this->editListAfter_.push_back(t);
+				this->editListAfterWidth_ += t->width();
 			}
 			left -= t->width();
 		}
@@ -248,6 +259,154 @@ void TextArea::stopEditing()
 	this->editListAfter_.clear();
 	this->editListEditing_.clear();
 	this->editing_ = false;
+}
+
+void TextArea::startSelection(float width)
+{
+	while(this->editListBeforeWidth_ < width) {
+		if(!moveCursorRight(false)){
+			break;
+		}
+	}
+	while(width < this->editListBeforeWidth_) {
+		if(!moveCursorLeft(false)){
+			break;
+		}
+	}
+}
+
+void TextArea::moveSelection(float width)
+{
+	while(this->editListBeforeWidth_ < width) {
+		if(!moveCursorRight(true)){
+			break;
+		}
+	}
+	while(width < this->editListBeforeWidth_) {
+		if(!moveCursorLeft(true)){
+			break;
+		}
+	}
+}
+
+bool TextArea::moveCursorLeft(bool select)
+{
+	if(this->editListBefore_.empty()){
+		return false;
+	}
+	Handler<gl::TextDrawable> d(this->editListBefore_.back());
+	if(select){
+		++this->editLength_;
+	}else{
+		this->editLength_ = 0;
+	}
+	this->editListBefore_.pop_back();
+	this->editListAfter_.push_front(d);
+	this->editListBeforeWidth_ -= d->width();
+	this->editListAfterWidth_ += d->width();
+	return true;
+}
+bool TextArea::moveCursorRight(bool select)
+{
+	if(this->editListAfter_.empty()){
+		return false;
+	}
+	Handler<gl::TextDrawable> d(this->editListAfter_.front());
+	if(select){
+		--this->editLength_;
+	}else{
+		this->editLength_ = 0;
+	}
+	this->editListAfter_.pop_front();
+	this->editListBefore_.push_back(d);
+	this->editListBeforeWidth_ += d->width();
+	this->editListAfterWidth_ -= d->width();
+	return true;
+}
+
+bool TextArea::moveCursorBegin(bool select)
+{
+	if(this->editListBefore_.empty()){
+		return false;
+	}
+	if(select){
+		this->editLength_ += std::distance(this->editListBefore_.begin(), this->editListBefore_.end());
+	}else{
+		this->editLength_ = 0;
+	}
+	this->editListAfter_.insert(this->editListAfter_.begin(), this->editListBefore_.begin(), this->editListBefore_.end());
+	this->editListBefore_.clear();
+	this->editListAfterWidth_ += this->editListBeforeWidth_;
+	this->editListBeforeWidth_ = 0;
+	return true;
+}
+
+bool TextArea::moveCursorEnd(bool select)
+{
+	if(this->editListAfter_.empty()) {
+		return false;
+	}
+	if(select){
+		this->editLength_ -= std::distance(this->editListAfter_.begin(), this->editListAfter_.end());
+	}else{
+		this->editLength_ = 0;
+	}
+	this->editListBefore_.insert(this->editListBefore_.end(), this->editListAfter_.begin(), this->editListAfter_.end());
+	this->editListAfter_.clear();
+	this->editListBeforeWidth_ += this->editListAfterWidth_;
+	this->editListAfterWidth_ = 0;
+	return true;
+}
+
+bool TextArea::deleteCursorBefore()
+{
+	if(this->editListBefore_.empty()){
+		return false;
+	}
+	if(!this->deleteSelected()){
+		Handler<gl::TextDrawable> const& d(this->editListBefore_.back());
+		this->editListBeforeWidth_ -= d->width();
+		this->editListBefore_.pop_back();
+		this->editLength_ = 0;
+	}
+	return true;
+}
+bool TextArea::deleteCursorAfter()
+{
+	if(this->editListAfter_.empty()){
+		return false;
+	}
+	if(!this->deleteSelected()){
+		Handler<gl::TextDrawable> const& d(this->editListAfter_.front());
+		this->editListAfterWidth_ -= d->width();
+		this->editListAfter_.pop_front();
+		this->editLength_ = 0;
+	}
+	return true;
+}
+
+bool TextArea::deleteSelected()
+{
+	if(this->editLength_ < 0) {
+		std::vector<Handler<gl::TextDrawable> >::iterator first = this->editListBefore_.end() + this->editLength_;
+		for(std::vector<Handler<gl::TextDrawable> >::iterator it = first; it != this->editListBefore_.end();++it){
+			Handler<gl::TextDrawable> const& d(*it);
+			this->editListBeforeWidth_ -= d->width();
+		}
+		this->editListBefore_.erase(first, this->editListBefore_.end());
+	}else if(this->editLength_ > 0){
+		std::deque<Handler<gl::TextDrawable> >::iterator end = this->editListAfter_.begin()+this->editLength_;
+		std::cout << this->editLength_ << std::endl;
+		for(std::deque<Handler<gl::TextDrawable> >::iterator it = this->editListAfter_.begin(); it != end;++it){
+			Handler<gl::TextDrawable> const& d(*it);
+			this->editListAfterWidth_ -= d->width();
+		}
+		this->editListAfter_.erase(this->editListAfter_.begin(), end);
+	}else{
+		return false;
+	}
+	this->editLength_ = 0;
+	return true;
 }
 
 void TextArea::startInput()
@@ -286,7 +445,6 @@ void TextArea::onFocusGained(float const& timeMs, geom::Point const& lastPtInScr
 void TextArea::onFocusLost(float const& timeMs)
 {
 	Element::onFocusLost(timeMs);
-	std::cout << "lost" << std::endl;
 	this->stopInput();
 	this->stopEditing();
 }
@@ -296,7 +454,9 @@ void TextArea::onTextInput(float const& timeMs, std::string const& text)
 	if(Handler<World> w = this->world().lock()) {
 		Handler<gl::DrawableManager> mgr(w->drawableManager());
 		for(std::string const& str : ::tarte::breakChar(text)){
-			this->editListBefore_.push_back(this->createEditingText(mgr, str));
+			Handler<gl::TextDrawable> d(this->createEditingText(mgr, str));
+			this->editListBefore_.push_back(d);
+			this->editListBeforeWidth_ += d->width();
 		}
 	}
 }
@@ -331,51 +491,33 @@ bool TextArea::onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& s
 {
 	switch (sym.scancode) {
 	case SDL_SCANCODE_BACKSPACE:
-		if(this->editListBefore_.empty()){
+		if(!this->deleteCursorBefore()){
 			this->cursorCounter_ = 0;
-		}else{
-			this->editListBefore_.pop_back();
 		}
 		break;
 	case SDL_SCANCODE_DELETE:
-		if(this->editListAfter_.empty()){
+		if(!this->deleteCursorAfter()){
 			this->cursorCounter_ = 0;
-		}else{
-			this->editListAfter_.pop_front();
 		}
 		break;
 	case SDL_SCANCODE_LEFT:
-		if(this->editListBefore_.empty()){
+		if(!this->moveCursorLeft(sym.mod & KMOD_SHIFT)){
 			this->cursorCounter_ = 0;
-		}else{
-			Handler<gl::TextDrawable> d(this->editListBefore_.back());
-			this->editListBefore_.pop_back();
-			this->editListAfter_.push_front(d);
 		}
 		break;
 	case SDL_SCANCODE_RIGHT:
-		if(this->editListAfter_.empty()){
+		if(!this->moveCursorRight(sym.mod & KMOD_SHIFT)){
 			this->cursorCounter_ = 0;
-		}else{
-			Handler<gl::TextDrawable> d(this->editListAfter_.front());
-			this->editListAfter_.pop_front();
-			this->editListBefore_.push_back(d);
 		}
 		break;
 	case SDL_SCANCODE_UP:
-		if(this->editListBefore_.empty()){
+		if(!this->moveCursorBegin(sym.mod & KMOD_SHIFT)){
 			this->cursorCounter_ = 0;
-		}else{
-			this->editListAfter_.insert(this->editListAfter_.begin(), this->editListBefore_.begin(), this->editListBefore_.end());
-			this->editListBefore_.clear();
 		}
 		break;
 	case SDL_SCANCODE_DOWN:
-		if(this->editListAfter_.empty()) {
+		if(!this->moveCursorEnd(sym.mod & KMOD_SHIFT)){
 			this->cursorCounter_ = 0;
-		} else {
-			this->editListBefore_.insert(this->editListBefore_.end(), this->editListAfter_.begin(), this->editListAfter_.end());
-			this->editListAfter_.clear();
 		}
 		break;
 	default:
