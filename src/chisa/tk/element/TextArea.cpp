@@ -41,6 +41,7 @@ CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(TextArea, Element)
 ,text_()
 ,textImage_()
 ,descImage_()
+,editing_(false)
 ,editStart_(0)
 ,editLength_(0)
 ,cursorCounter_(0)
@@ -70,7 +71,7 @@ void TextArea::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom
 	canvas.fillRect(gl::White, screenArea);
 	geom::Area textArea(TextMargin.apply(screenArea));
 	geom::Distance pos(textArea.point());
-	if( this->onFocused() ) {
+	if( this->editing_ ) {
 		canvas.drawRect(2.0f, gl::DarkYellow, screenArea);
 		gl::Color cursorColor(0,0,0,std::abs(std::cos(cursorCounter_/500.0f)));
 		if(this->editListEditing_.empty()){
@@ -189,13 +190,15 @@ void TextArea::textSize(float const& size)
 	}
 }
 
-void TextArea::onClick()
-{
-}
-
 bool TextArea::notifyViewRefreshedImpl()
 {
 	this->textImage_.reset();
+	return true;
+}
+
+bool TextArea::onDownRaw(float const& timeMs, geom::Point const& ptInScreen)
+{
+	this->startEditing(ptInScreen.x()-this->screenArea().x());
 	return true;
 }
 
@@ -204,18 +207,13 @@ bool TextArea::onMoveRaw(float const& timeMs, geom::Point const& ptInScreen)
 	return true;
 }
 
-bool TextArea::onSingleTapUp(float const& timeMs, geom::Point const& ptInScreen)
-{
-	if(this->screenArea().contain(ptInScreen)){
-		this->onClick();
-	}
-	return true;
-}
-
 void TextArea::startEditing(float const width)
 {
 	this->editListBefore_.clear();
 	this->editListAfter_.clear();
+	this->editListEditing_.clear();
+	this->editStart_=0;
+	this->editLength_=0;
 	this->cursorCounter_=0;
 	float left=width;
 	if(Handler<World> w = this->world().lock()) {
@@ -232,19 +230,7 @@ void TextArea::startEditing(float const width)
 			left -= t->width();
 		}
 	}
-}
-
-Handler<gl::TextDrawable> TextArea::createEditingText(Handler<gl::DrawableManager> const& mgr, std::string const& str)
-{
-	return mgr->queryText(
-			str,
-			this->textSize_,
-			Handler<gl::Font>(),
-			gl::TextDrawable::Style::Bold,
-			gl::TextDrawable::Decoration::None,
-			this->foregroundColor(),
-			gl::Transparent
-	);
+	this->editing_ = true;
 }
 
 void TextArea::stopEditing()
@@ -260,24 +246,49 @@ void TextArea::stopEditing()
 	this->text(ss.str());
 	this->editListBefore_.clear();
 	this->editListAfter_.clear();
+	this->editListEditing_.clear();
+	this->editing_ = false;
+}
+
+void TextArea::startInput()
+{
+	if( auto world = this->world().lock() ) {
+		world->startIME(this->screenArea());
+	}
+}
+
+void TextArea::stopInput()
+{
+	if( auto world = this->world().lock() ) {
+		world->stopIME();
+	}
+}
+
+Handler<gl::TextDrawable> TextArea::createEditingText(Handler<gl::DrawableManager> const& mgr, std::string const& str)
+{
+	return mgr->queryText(
+			str,
+			this->textSize_,
+			Handler<gl::Font>(),
+			gl::TextDrawable::Style::Bold,
+			gl::TextDrawable::Decoration::None,
+			this->foregroundColor(),
+			gl::Transparent
+	);
 }
 
 void TextArea::onFocusGained(float const& timeMs, geom::Point const& lastPtInScreen)
 {
 	Element::onFocusGained(timeMs, lastPtInScreen);
-	if( auto world = this->world().lock() ) {
-		world->startIME(this->screenArea());
-		this->startEditing(lastPtInScreen.x() - this->screenArea().x());
-	}
+	this->startInput();
 }
 
 void TextArea::onFocusLost(float const& timeMs)
 {
 	Element::onFocusLost(timeMs);
-	if( auto world = this->world().lock() ) {
-		world->stopIME();
-		this->stopEditing();
-	}
+	std::cout << "lost" << std::endl;
+	this->stopInput();
+	this->stopEditing();
 }
 
 void TextArea::onTextInput(float const& timeMs, std::string const& text)

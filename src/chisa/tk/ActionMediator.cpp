@@ -50,13 +50,17 @@ ActionMediator::~ActionMediator()
 
 void ActionMediator::releaseSession(float const& timeMs, unsigned int const pointerIndex)
 {
-	if(this->lastSession_){
-		this->lastSession_->onFocusLost(timeMs);
-		delete this->lastSession_;
-	}
-	this->lastSession_ = this->session_[pointerIndex];
+	ActionSession* const before = this->lastSession_; //can be null
+	ActionSession* const after = this->session_[pointerIndex]; //must not null
 	this->session_[pointerIndex] = nullptr;
-	this->lastSession_->onFocusGained(timeMs);
+	this->lastSession_ = after;
+	if(before){
+		before->onFocusLost(timeMs, after);
+	}
+	after->onFocusGained(timeMs, before);
+	if(before){
+		delete before;
+	}
 }
 
 void ActionMediator::onTouchDown(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)

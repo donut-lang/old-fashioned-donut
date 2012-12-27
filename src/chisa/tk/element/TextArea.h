@@ -38,6 +38,7 @@ private: /* 設定されうるリソース */
 private: /* 変化するリソース */
 	std::string text_;
 private: /* 描画のための一時的なリソース */
+	bool editing_;
 	Handler<gl::TextDrawable> textImage_;
 	Handler<gl::TextDrawable> descImage_;
 	std::vector<Handler<gl::TextDrawable> > editListBefore_;
@@ -59,10 +60,12 @@ private:
 	virtual std::string toString() const override final;
 	Handler<gl::TextDrawable> textImage();
 	Handler<gl::TextDrawable> descImage();
-	void onClick();
 	void startEditing(float const width);
 	Handler<gl::TextDrawable> createEditingText(Handler<gl::DrawableManager> const& mgr, std::string const& str);
 	void stopEditing();
+
+	void startInput();
+	void stopInput();
 protected:
 	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override final;
 	virtual geom::Box measureImpl(geom::Box const& constraint) override;
@@ -70,14 +73,14 @@ protected:
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
 	virtual bool notifyViewRefreshedImpl() override;
 public:
-	virtual bool onMoveRaw(float const& timeMs, geom::Point const& ptInScreen) override;
-	virtual bool onSingleTapUp(float const& timeMs, geom::Point const& ptInScreen) override;
-	virtual void onFocusGained(float const& timeMs, geom::Point const& lastPtInScreen) override;
-	virtual void onFocusLost(float const& timeMs) override;
-	virtual void onTextInput(float const& timeMs, std::string const& text) override;
-	virtual void onTextEdit(float const& timeMs, std::string const& text, int const start, int const length) override;
-	virtual bool onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym) override;
-	virtual bool onKeyUp(float const& timeMs, SDL_Keysym const& sym) override;
+	virtual bool onDownRaw(float const& timeMs, geom::Point const& ptInScreen) override final;
+	virtual bool onMoveRaw(float const& timeMs, geom::Point const& ptInScreen) override final;
+	virtual void onFocusGained(float const& timeMs, geom::Point const& lastPtInScreen) override final;
+	virtual void onFocusLost(float const& timeMs) override final;
+	virtual void onTextInput(float const& timeMs, std::string const& text) override final;
+	virtual void onTextEdit(float const& timeMs, std::string const& text, int const start, int const length) override final;
+	virtual bool onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym) override final;
+	virtual bool onKeyUp(float const& timeMs, SDL_Keysym const& sym) override final;
 };
 
 }}
