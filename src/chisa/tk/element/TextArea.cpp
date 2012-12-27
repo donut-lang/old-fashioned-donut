@@ -39,13 +39,13 @@ CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(TextArea, Element)
 ,textSize_(32.0f)
 ,description_()
 ,text_()
+,editing_(false)
 ,textImage_()
 ,descImage_()
-,editing_(false)
 ,editListBeforeWidth_(0)
 ,editListAfterWidth_(0)
-,editStart_(0)
 ,editLength_(0)
+,editWidth_(0)
 ,cursorTimer_(0)
 {
 	this->margin(geom::Space(2.5f));
@@ -77,6 +77,13 @@ void TextArea::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom
 		canvas.drawRect(2.0f, gl::DarkYellow, screenArea);
 		gl::Color cursorColor(0,0,0,std::abs(std::cos(cursorTimer_)));
 		if(this->editListEditing_.empty()){
+			{ //selected
+				if(this->editLength_ > 0) {
+					canvas.fillRect(gl::LightBlue, geom::Area(pos.x()+this->editListBeforeWidth_, pos.y(), editWidth_, textArea.height()));
+				}else if(this->editLength_ < 0){
+					canvas.fillRect(gl::LightBlue, geom::Area(pos.x()+this->editListBeforeWidth_-editWidth_, pos.y(), editWidth_, textArea.height()));
+				}
+			}
 			for(Handler<gl::TextDrawable> const& d : this->editListBefore_) {
 				d->draw(canvas, pos);
 				pos.x(pos.x() + d->width());
@@ -219,8 +226,8 @@ void TextArea::startEditing(float const width)
 	this->editListBefore_.clear();
 	this->editListAfter_.clear();
 	this->editListEditing_.clear();
-	this->editStart_=0;
 	this->editLength_=0;
+	this->editWidth_ = 0;
 	this->cursorTimer_=0;
 	this->editListBeforeWidth_ = 0;
 	this->editListAfterWidth_ = 0;
@@ -296,9 +303,11 @@ bool TextArea::moveCursorLeft(bool select)
 	}
 	Handler<gl::TextDrawable> d(this->editListBefore_.back());
 	if(select){
+		this->editWidth_ += (editLength_ >= 0) ? d->width() : -d->width();
 		++this->editLength_;
 	}else{
 		this->editLength_ = 0;
+		this->editWidth_ = 0;
 	}
 	this->editListBefore_.pop_back();
 	this->editListAfter_.push_front(d);
@@ -314,8 +323,10 @@ bool TextArea::moveCursorRight(bool select)
 	Handler<gl::TextDrawable> d(this->editListAfter_.front());
 	if(select){
 		--this->editLength_;
+		this->editWidth_ += (editLength_ >= 0) ? -d->width() : d->width();
 	}else{
 		this->editLength_ = 0;
+		this->editWidth_ = 0;
 	}
 	this->editListAfter_.pop_front();
 	this->editListBefore_.push_back(d);
