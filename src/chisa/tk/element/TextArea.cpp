@@ -320,36 +320,52 @@ bool TextArea::onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& s
 {
 	switch (sym.scancode) {
 	case SDL_SCANCODE_BACKSPACE:
-		if(!this->editListBefore_.empty()){
+		if(this->editListBefore_.empty()){
+			this->cursorCounter_ = 0;
+		}else{
 			this->editListBefore_.pop_back();
 		}
 		break;
 	case SDL_SCANCODE_DELETE:
-		if(!this->editListAfter_.empty()){
+		if(this->editListAfter_.empty()){
+			this->cursorCounter_ = 0;
+		}else{
 			this->editListAfter_.pop_front();
 		}
 		break;
 	case SDL_SCANCODE_LEFT:
-		if(!this->editListBefore_.empty()){
+		if(this->editListBefore_.empty()){
+			this->cursorCounter_ = 0;
+		}else{
 			Handler<gl::TextDrawable> d(this->editListBefore_.back());
 			this->editListBefore_.pop_back();
 			this->editListAfter_.push_front(d);
 		}
 		break;
 	case SDL_SCANCODE_RIGHT:
-		if(!this->editListAfter_.empty()){
+		if(this->editListAfter_.empty()){
+			this->cursorCounter_ = 0;
+		}else{
 			Handler<gl::TextDrawable> d(this->editListAfter_.front());
 			this->editListAfter_.pop_front();
 			this->editListBefore_.push_back(d);
 		}
 		break;
 	case SDL_SCANCODE_UP:
-		this->editListAfter_.insert(this->editListAfter_.begin(), this->editListBefore_.begin(), this->editListBefore_.end());
-		this->editListBefore_.clear();
+		if(this->editListBefore_.empty()){
+			this->cursorCounter_ = 0;
+		}else{
+			this->editListAfter_.insert(this->editListAfter_.begin(), this->editListBefore_.begin(), this->editListBefore_.end());
+			this->editListBefore_.clear();
+		}
 		break;
 	case SDL_SCANCODE_DOWN:
-		this->editListBefore_.insert(this->editListBefore_.end(), this->editListAfter_.begin(), this->editListAfter_.end());
-		this->editListAfter_.clear();
+		if(this->editListAfter_.empty()) {
+			this->cursorCounter_ = 0;
+		} else {
+			this->editListBefore_.insert(this->editListBefore_.end(), this->editListAfter_.begin(), this->editListAfter_.end());
+			this->editListAfter_.clear();
+		}
 		break;
 	default:
 		break;
