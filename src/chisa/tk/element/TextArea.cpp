@@ -221,17 +221,22 @@ bool TextArea::notifyViewRefreshedImpl()
 
 bool TextArea::onDownRaw(float const& timeMs, geom::Point const& ptInScreen)
 {
-	if(this->editing_){
-		this->startSelection(ptInScreen.x()-this->textArea_.x()-this->textOffset_);
-	}else{
-		this->startEditing(ptInScreen.x()-this->textArea_.x()-this->textOffset_);
-	}
 	return true;
 }
 
 bool TextArea::onMoveRaw(float const& timeMs, geom::Point const& ptInScreen)
 {
 	this->moveSelection(ptInScreen.x()-this->textArea_.x()-this->textOffset_);
+	return true;
+}
+
+bool TextArea::onSingleTapUp(float const& timeMs, geom::Point const& ptInScreen)
+{
+	if(this->editing_){
+		this->startSelection(ptInScreen.x()-this->textArea_.x()-this->textOffset_);
+	}else{
+		this->startEditing(ptInScreen.x()-this->textArea_.x()-this->textOffset_);
+	}
 	return true;
 }
 
@@ -494,8 +499,10 @@ void TextArea::onFocusGained(float const& timeMs, geom::Point const& lastPtInScr
 void TextArea::onFocusLost(float const& timeMs)
 {
 	Element::onFocusLost(timeMs);
-	this->stopInput();
-	this->stopEditing();
+	if(this->editing_){
+		this->stopInput();
+		this->stopEditing();
+	}
 }
 
 void TextArea::onTextInput(float const& timeMs, std::string const& text)
