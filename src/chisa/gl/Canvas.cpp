@@ -77,11 +77,6 @@ void Canvas::scissor(geom::Area const& area)
 	glScissor(area.x(), this->height_-area.height()-area.y(),area.width(), area.height());
 }
 
-void Canvas::scissorReset()
-{
-	glScissor(0,0,this->width_,this->height_);
-}
-
 void Canvas::drawSprite(Handler<Sprite> sprite, geom::Point const& pt, const float depth, Color const& color)
 {
 	sprite->drawImpl(this, pt, color, depth);
@@ -176,13 +171,24 @@ void Canvas::setColor(Color const& color)
 
 Canvas::ScissorScope::ScissorScope(Canvas& canvas, geom::Area const& area)
 :canvas_(canvas)
+,area_(area)
+,orig_(canvas.nowScissor_)
 {
+	this->canvas_.nowScissor_ = this;
 	this->canvas_.scissor(area);
+	if(!this->orig_){
+		glEnable(GL_SCISSOR_TEST);
+	}
 }
 
 Canvas::ScissorScope::~ScissorScope()
 {
-	this->canvas_.scissorReset();
+	this->canvas_.nowScissor_ = orig_;
+	if(orig_){
+		this->canvas_.scissor(orig_->area_);
+	}else{
+		glDisable(GL_SCISSOR_TEST);
+	}
 }
 
 Canvas::AffineScope::AffineScope(Canvas& canvas)

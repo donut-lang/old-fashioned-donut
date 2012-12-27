@@ -55,14 +55,12 @@ public:
 	void fillRect(Color const& color, geom::Area const& area, const float depth=0.0f);
 	void drawTexture(unsigned int texId, geom::Point const& pt, geom::IntBox const& texSize, geom::Area const& spriteArea, const float depth, Color const& color);
 	void drawTexture(unsigned int texId, geom::Point const& pt, geom::IntBox const& texSize, geom::IntBox const& spriteSize, const float depth, Color const& color);
-private:
-	void scissor(geom::Area const& area);
-	void scissorReset();
-	void setColor(Color const& color);
 public:
 	class ScissorScope {
 	private:
 		Canvas& canvas_;
+		geom::Area area_;
+		ScissorScope* const orig_;
 	public:
 		ScissorScope(Canvas& canvas, geom::Area const& area);
 		virtual ~ScissorScope();
@@ -74,6 +72,10 @@ public:
 		AffineScope(Canvas& canvas);
 		virtual ~AffineScope();
 	};
+private:
+	ScissorScope* nowScissor_;
+	void scissor(geom::Area const& area);
+	void setColor(Color const& color);
 };
 
 }}
