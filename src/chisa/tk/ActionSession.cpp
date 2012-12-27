@@ -62,6 +62,8 @@ ActionSession::ActionSession(Logger& log, const unsigned int pointerIndex, Handl
 			break;
 		}
 	}
+	this->elementChainSorted_.insert(this->elementChainSorted_.end(), this->elementChain_.begin(), this->elementChain_.end());
+	std::sort(this->elementChainSorted_.begin(), this->elementChainSorted_.end());
 }
 
 ActionSession::~ActionSession()
@@ -124,15 +126,15 @@ void ActionSession::onKeyUp(float const& timeMs, SDL_Keysym const& sym)
 	this->invokeKeyUp(timeMs, sym);
 }
 
-void ActionSession::onFocusGained(float const& timeMs)
+void ActionSession::onFocusGained(float const& timeMs, ActionSession* const last)
 {
 	this->lastTimeMs_ = timeMs;
-	this->invokeFocusGained(timeMs);
+	this->invokeFocusGained(timeMs,last);
 }
-void ActionSession::onFocusLost(float const& timeMs)
+void ActionSession::onFocusLost(float const& timeMs, ActionSession* const last)
 {
 	this->lastTimeMs_ = timeMs;
-	this->invokeFocusLost(timeMs);
+	this->invokeFocusLost(timeMs,last);
 }
 
 void ActionSession::invokeDownRaw(float const& timeMs, geom::Point const& pt)
@@ -209,18 +211,28 @@ void ActionSession::invokeZoom(float const& timeMs, geom::Point const& center, c
 	}
 }
 
-void ActionSession::invokeFocusGained(float const& timeMs)
+void ActionSession::invokeFocusGained(float const& timeMs, ActionSession* const last)
 {
-	for(HandlerW<Element> const& it : this->elementChain_) {
+	std::vector<HandlerW<Element> > gained;
+	if(last){
+		std::set_difference(this->elementChainSorted_.begin(), this->elementChainSorted_.end(), last->elementChainSorted_.begin(), last->elementChainSorted_.end(), std::back_inserter(gained));
+	}
+	std::vector<HandlerW<Element> > const& targets(last ? gained : this->elementChain_);
+	for(HandlerW<Element> const& it : targets) {
 		if(Handler<Element> target = it.lock()){
 			target->onFocusGained(timeMs, this->lastPoint_);
 		}
 	}
 }
 
-void ActionSession::invokeFocusLost(float const& timeMs)
+void ActionSession::invokeFocusLost(float const& timeMs, ActionSession* const last)
 {
-	for(HandlerW<Element> const& it : this->elementChain_) {
+	std::vector<HandlerW<Element> > lost;
+	if(last){
+		std::set_difference(this->elementChainSorted_.begin(), this->elementChainSorted_.end(), last->elementChainSorted_.begin(), last->elementChainSorted_.end(), std::back_inserter(lost));
+	}
+	std::vector<HandlerW<Element> > const& targets(last ? lost : this->elementChain_);
+	for(HandlerW<Element> const& it : targets) {
 		if(Handler<Element> target = it.lock()){
 			target->onFocusLost(timeMs);
 		}

@@ -78,6 +78,7 @@ private:
 private:
 	HandlerW<Element> target_;
 	std::vector<HandlerW<Element> > elementChain_;
+	std::vector<HandlerW<Element> > elementChainSorted_;
 	typedef std::vector<HandlerW<Element> >::iterator ElementIterator;
 	const unsigned int pointerIndex_;
 	const geom::Point startPoint_;
@@ -90,8 +91,8 @@ public:
 	void onTouchUp(float const& timeMs, geom::Point const& pt);
 	void onTouchMove(float const& timeMs, geom::Point const& pt);
 	void onScroll(float const& timeMs, float const ratio);
-	void onFocusGained(float const& timeMs);
-	void onFocusLost(float const& timeMs);
+	void onFocusGained(float const& timeMs, ActionSession* const last);
+	void onFocusLost(float const& timeMs, ActionSession* const last);
 	void onTextInput(float const& timeMs, std::string const& text);
 	void onTextEdit(float const& timeMs, std::string const& text, int const& start, int const& length);
 	void onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym);
@@ -103,8 +104,8 @@ private:
 	void invokeFling(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity);
 	void invokeScroll(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance);
 	void invokeZoom(float const& timeMs, geom::Point const& center, const float ratio);
-	void invokeFocusGained(float const& timeMs);
-	void invokeFocusLost(float const& timeMs);
+	void invokeFocusGained(float const& timeMs,ActionSession* const last);
+	void invokeFocusLost(float const& timeMs, ActionSession* const last);
 	void invokeTextInput(float const& timeMs, std::string const& text);
 	void invokeTextEdit(float const& timeMs, std::string const& text, int const start, int const length);
 	void invokeKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym);
