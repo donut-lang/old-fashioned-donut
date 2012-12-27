@@ -43,6 +43,8 @@ private: /* 描画のための一時的なリソース */
 	Handler<gl::TextDrawable> descImage_;
 	std::vector<Handler<gl::TextDrawable> > editListBefore_;
 	std::vector<Handler<gl::TextDrawable> > editListEditing_;
+	float editListBeforeWidth_;
+	float editListAfterWidth_;
 	int editStart_;
 	int editLength_;
 	std::deque<Handler<gl::TextDrawable> > editListAfter_;
@@ -66,6 +68,18 @@ private:
 
 	void startInput();
 	void stopInput();
+
+	void startSelection(float width);
+	void moveSelection(float width);
+
+	//カーソルの移動、削除
+	bool moveCursorLeft(bool select);
+	bool moveCursorRight(bool select);
+	bool moveCursorBegin(bool select);
+	bool moveCursorEnd(bool select);
+	bool deleteCursorBefore();
+	bool deleteCursorAfter();
+	bool deleteSelected();
 protected:
 	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override final;
 	virtual geom::Box measureImpl(geom::Box const& constraint) override;
