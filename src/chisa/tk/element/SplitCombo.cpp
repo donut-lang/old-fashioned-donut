@@ -121,7 +121,7 @@ void SplitCombo::renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geo
 			break;
 		}
 		const float drawnStart = std::max(drawnStartOffset - offset, 0.0f);
-		const float drawnSize = std::min(size-drawnStart, drawnEndOffset-offset-drawnStart);
+		const float drawnSize = std::min(size-drawnStart, drawnEndOffset-offset);
 
 		geom::Box drawnBox(mask.box());
 		(drawnBox.*changed_setter)(drawnSize);
@@ -130,7 +130,7 @@ void SplitCombo::renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geo
 		(drawnPoint.*point_setter)(drawnStart);
 
 		geom::Point screenPoint(ptInRoot);
-		(screenPoint.*point_setter)(screenStart+offset+drawnStart-drawnStartOffset);
+		(screenPoint.*point_setter)(screenStart+offset-drawnStartOffset);
 
 		ctx.first->render(canvas, screenPoint, geom::Area(drawnPoint, drawnBox));
 		offset += size;

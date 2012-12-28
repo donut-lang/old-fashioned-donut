@@ -84,7 +84,7 @@ std::string ScrollCombo::toString() const
 
 void ScrollCombo::renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
-	const geom::Area logicalArea(this->scrollOffset_+mask.point(), mask.box());
+	const geom::Area logicalArea(mask.point()+this->scrollOffset_, mask.box());
 	this->frontChild()->render(canvas, ptInRoot-this->scrollOffset_, logicalArea);
 	if(this->lastMovedFrom_ < ScrollBarTimeOut){
 		const float alpha = (ScrollBarTimeOut - this->lastMovedFrom_) / ScrollBarTimeOut;
