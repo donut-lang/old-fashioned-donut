@@ -259,7 +259,7 @@ void SplitCombo::layoutImpl(geom::Distance const& offsetFromParent, geom::Box co
 		geom::Box box;
 		(box.*changed_setter)(ctx.size);
 		(box.*fixed_setter)((size.*fixed_getter)());
-		(box.*changed_setter)(ctx.size+(box.*changed_getter)());
+		(offset.*changed_setter)(ctx.size+(box.*changed_getter)());
 		it.first->layout(offset, box);
 	}
 }
