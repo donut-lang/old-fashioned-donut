@@ -55,9 +55,13 @@ Color ColorDrawable::color() const noexcept
 
 void ColorDrawable::draw(Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask, const float depth)
 {
-	geom::Area orig(ptInRoot, size_);
-	geom::Area masked(mask.point()+ptInRoot, mask.box());
-	canvas.fillRect(this->color_, orig.intersect(masked), depth);
+	if(size_.isSpecified()) {
+		geom::Area const orig(ptInRoot, size_);
+		geom::Area const masked(ptInRoot+mask.point(), mask.box());
+		canvas.fillRect(this->color_, orig.intersect(masked), depth);
+	}else{
+		canvas.fillRect(this->color_, geom::Area(mask.point()+ptInRoot, mask.box()), depth);
+	}
 }
 
 Handler<Drawable> ColorDrawable::create( HandlerW<DrawableManager> manager, geom::Box const& size, std::string const& repl )
