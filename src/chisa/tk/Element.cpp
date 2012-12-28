@@ -149,7 +149,7 @@ void Element::render(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area
 	// パディングとマージンを計算
 	geom::Area const contentsAreaInRoot(ptInRoot, size_);
 	geom::Area const marginedContentsAreaInRoot(this->margin_.apply(contentsAreaInRoot));
-	geom::Area const paddedContentsAreaInRoot(this->padding_.apply(contentsAreaInRoot));
+	geom::Area const paddedContentsAreaInRoot(this->padding_.apply(marginedContentsAreaInRoot));
 
 	// 中身のエリアと、その衝突判定
 	geom::Area const contentArea(marginAndPdding.apply(geom::Area(geom::ZERO, size_)));
@@ -175,10 +175,12 @@ void Element::render(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area
 void Element::layout(geom::Distance const& offsetFromParent, geom::Box const& size)
 {
 	this->offsetFromParent_ = offsetFromParent;
+	this->innerSize_ = size-(this->margin_.totalSpace()+this->padding_.totalSpace());
+	this->innerOffsetFromParent_ = offsetFromParent+this->margin_.offset()+this->padding_.offset();
 	this->size_ = size;
 	this->layoutImpl(
-			offsetFromParent+this->margin_.offset()+this->padding_.offset(),
-			size-(this->margin_.totalSpace()+this->padding_.totalSpace()));
+			this->innerOffsetFromParent_,
+			this->innerSize_);
 }
 
 bool Element::isValidationRoot() const noexcept

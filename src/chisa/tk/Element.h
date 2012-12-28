@@ -74,7 +74,9 @@ private: /* ツリー */
 	bool relayoutRequested_;
 private: /* 画面描画情報 */
 	geom::Box size_;
+	geom::Box innerSize_;
 	geom::Distance offsetFromParent_;
+	geom::Distance innerOffsetFromParent_;
 	geom::Point lastPositionInRoot_;
 	geom::Area lastDrawnAreaInRoot_;
 	geom::Point lastInnerPositionInRoot_;
@@ -87,6 +89,7 @@ public:
 	inline geom::Area const& lastInnerDrawnAreaInRoot() const noexcept { return this->lastInnerDrawnAreaInRoot_; };
 
 	inline geom::Box const& size() const noexcept { return this->size_; };
+	inline geom::Box const& innerSize() const noexcept { return this->innerSize_; };
 	inline geom::Distance const& offsetFromParent() const noexcept { return this->offsetFromParent_; };
 public:
 	void margin(geom::Space const& m);

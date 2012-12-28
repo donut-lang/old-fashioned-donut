@@ -89,21 +89,21 @@ void ScrollCombo::renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, ge
 	if(this->lastMovedFrom_ < ScrollBarTimeOut){
 		const float alpha = (ScrollBarTimeOut - this->lastMovedFrom_) / ScrollBarTimeOut;
 		if((this->scrollMode_ & Vertical)){
-			const float scrollMax = size().height() - this->childSize_.height();
+			const float scrollMax = innerSize().height() - this->childSize_.height();
 			const float scrollRatio = this->scrollOffset_.y() / scrollMax;
-			const float x = ptInRoot.x()+size().width()-7.0f;
-			const float len = (size().height()-4.0f) * size().height() / this->childSize_.height();
-			const float y = ptInRoot.y()+2.0f - (size().height()-len-4.0f) * scrollRatio;
-			canvas.drawLine(5.0f, gl::Color(.5f, .5f, .5f, alpha), geom::Point(x, std::max(y, ptInRoot.y())), geom::Point(x, std::min(y+len, ptInRoot.y()+size().height())), 1.0f);
+			const float x = ptInRoot.x()+innerSize().width()-7.0f;
+			const float len = (innerSize().height()-4.0f) * innerSize().height() / this->childSize_.height();
+			const float y = ptInRoot.y()+2.0f - (innerSize().height()-len-4.0f) * scrollRatio;
+			canvas.drawLine(5.0f, gl::Color(.5f, .5f, .5f, alpha), geom::Point(x, std::max(y, ptInRoot.y())), geom::Point(x, std::min(y+len, ptInRoot.y()+innerSize().height())), 1.0f);
 		}
 		if((this->scrollMode_ & Horizontal)){
-			const float scrollMax = size().width() - this->childSize_.width();
+			const float scrollMax = innerSize().width() - this->childSize_.width();
 			const float scrollRatio = this->scrollOffset_.x() / scrollMax;
 
-			const float y = ptInRoot.y()+size().height()-7.0f;
-			const float len = (size().width()-4.0f) * size().width() / this->childSize_.width();
-			const float x = ptInRoot.x()+2.0f - (size().width()-len-4.0f) * scrollRatio;
-			canvas.drawLine(5.0f, gl::Color(.5f, .5f, .5f, alpha), geom::Point(std::max(x, ptInRoot.x()), y), geom::Point(std::min(x+len, ptInRoot.x()+size().width()), y), 1.0f);
+			const float y = ptInRoot.y()+innerSize().height()-7.0f;
+			const float len = (innerSize().width()-4.0f) * innerSize().width() / this->childSize_.width();
+			const float x = ptInRoot.x()+2.0f - (innerSize().width()-len-4.0f) * scrollRatio;
+			canvas.drawLine(5.0f, gl::Color(.5f, .5f, .5f, alpha), geom::Point(std::max(x, ptInRoot.x()), y), geom::Point(std::min(x+len, ptInRoot.x()+innerSize().width()), y), 1.0f);
 		}
 	}
 }
@@ -131,7 +131,7 @@ void ScrollCombo::idle(const float delta_ms)
 	Super::idle(delta_ms);
 	if(this->pushedCnt_ == 0){
 		geom::Point ptStart(this->scrollOffset_);
-		geom::Point ptEnd(this->scrollOffset_+this->size());
+		geom::Point ptEnd(this->scrollOffset_+this->innerSize());
 		if((this->scrollMode_ & Horizontal) && ptStart.x() < 0){
 			this->scrollOffset_.x(this->scrollOffset_.x() - (ptStart.x()*delta_ms/100));
 		}
@@ -162,7 +162,7 @@ bool ScrollCombo::onUpRaw(float const& timeMs, geom::Point const& ptInScreen)
 bool ScrollCombo::onScroll(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance)
 {
 	geom::Point const& ptStart(this->scrollOffset_);
-	geom::Point const ptEnd(this->scrollOffset_+this->size());
+	geom::Point const ptEnd(this->scrollOffset_+this->innerSize());
 	if(this->scrollMode_ & Vertical) {
 		if (ptStart.y() < 0 || ptEnd.y() > this->childSize_.height()) {
 			this->scrollOffset_.y(this->scrollOffset_.y() - (distance.y() / 2.0f));

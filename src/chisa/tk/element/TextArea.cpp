@@ -71,7 +71,7 @@ void TextArea::idle(const float delta_ms)
 
 void TextArea::renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
-	geom::Area screenArea(ptInRoot+mask.point(), mask.box());
+	geom::Area screenArea(ptInRoot, innerSize());
 	canvas.fillRect(gl::White, screenArea);
 	geom::Area const textArea(this->textArea_ = TextMargin.apply(screenArea));
 	geom::Distance pos(textArea.x()+textOffset_, textArea.y());

@@ -62,8 +62,8 @@ void Button::shadowDepth(float const& depth)
 
 void Button::renderOn(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
-	canvas.fillRect(this->shadowColor_, geom::Area(ptInRoot, geom::Box(size().width(), shadowDepth_)) );
-	canvas.fillRect(this->shadowColor_, geom::Area(ptInRoot, geom::Box(shadowDepth_, size().height())) );
+	canvas.fillRect(this->shadowColor_, geom::Area(ptInRoot, geom::Box(innerSize().width(), shadowDepth_)) );
+	canvas.fillRect(this->shadowColor_, geom::Area(ptInRoot, geom::Box(shadowDepth_, innerSize().height())) );
 
 	geom::Distance const offset(this->renderOffset_+geom::Distance(shadowDepth_, shadowDepth_));
 	geom::Area const buttonMask(mask.point()-offset, mask.box());
@@ -71,8 +71,8 @@ void Button::renderOn(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Are
 }
 void Button::renderOff(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
-	canvas.fillRect(this->shadowColor_, geom::Area(ptInRoot+geom::Distance(0, size().height()-shadowDepth_), geom::Box(size().width(), shadowDepth_)) );
-	canvas.fillRect(this->shadowColor_, geom::Area(ptInRoot+geom::Distance(size().width()-shadowDepth_, 0), geom::Box(shadowDepth_, size().height())) );
+	canvas.fillRect(this->shadowColor_, geom::Area(ptInRoot+geom::Distance(0, innerSize().height()-shadowDepth_), geom::Box(innerSize().width(), shadowDepth_)) );
+	canvas.fillRect(this->shadowColor_, geom::Area(ptInRoot+geom::Distance(innerSize().width()-shadowDepth_, 0), geom::Box(shadowDepth_, innerSize().height())) );
 
 	geom::Distance const offset(this->renderOffset_);
 	geom::Area const buttonMask(mask.point()-offset, mask.box());
