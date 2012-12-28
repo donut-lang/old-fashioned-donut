@@ -36,7 +36,7 @@ void RenderTree::render(gl::Canvas& canvas, geom::Area const& area, float depth)
 	for(Handler<RenderObject>& obj : this->objects_){
 		geom::Area const intersect(obj->area().intersect(area));
 		if (!intersect.empty()) {
-			obj->render(canvas, area.point(), depth+obj->relDepth());
+			obj->render(canvas, depth+obj->relDepth());
 		}else{
 			//obj->onHidden();
 		}
