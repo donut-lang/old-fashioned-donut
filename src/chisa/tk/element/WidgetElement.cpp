@@ -64,22 +64,21 @@ void WidgetElement::idle(const float delta_ms)
 	}
 	this->widget()->idle(delta_ms);
 }
-void WidgetElement::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
+void WidgetElement::renderImpl(gl::Canvas& canvas, geom::Point const& ptInScreen, geom::Area const& mask)
 {
 	if(!widget()){
 		return;
 	}
 	gl::Canvas::AffineScope as(canvas);
-	gl::Canvas::ScissorScope ss(canvas, screenArea);
+	gl::Canvas::ScissorScope ss(canvas, geom::Area(ptInScreen+mask.point(), mask.box()));
 	//スクリーン上の位置に移動
-	canvas.translate(screenArea.point());
+	canvas.translate(ptInScreen);
 	//areaからウィジットが実際にレンダリングされる位置を計算
 	canvas.scale(this->widgetScale());
 	//描画を投げる
 	//TODO: offsetが0を下回るかもしれない。
-	geom::Point offset(area.point()-this->widgetOffset());
-	using namespace chisa::geom;
-	geom::Box size(min(area.box(), widgetSizeReal()-offset));
+	geom::Point offset(mask.point()-this->widgetOffset());
+	geom::Box size(min(mask.box(), widgetSizeReal()-offset));
 	this->widgetDrawnArea(geom::Area(offset / this->widgetScale(), size/this->widgetScale()));
 	widget()->render(canvas, this->widgetDrawnArea());
 }
@@ -141,7 +140,7 @@ float WidgetElement::calcScale(geom::Box const& widget, geom::Box const& constra
 	);
 }
 
-void WidgetElement::layoutImpl(geom::Box const& size)
+void WidgetElement::layoutImpl(geom::Distance const& offsetFromParent, geom::Box const& size)
 {
 	if(!widget()){
 		return;
@@ -210,7 +209,7 @@ void WidgetElement::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElem
 
 geom::Point WidgetElement::calcPtInWidget(geom::Point const& ptInScreen)
 {
-	const geom::Point delta = ptInScreen - this->screenArea().point();
+	const geom::Point delta = ptInScreen - this->lastInnerPositionInRoot();
 	return geom::Point(this->widgetDrawnArea().point() + delta / this->widgetScale());
 }
 

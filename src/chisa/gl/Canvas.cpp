@@ -33,6 +33,7 @@ Canvas::Canvas(Logger& log)
 :log_(log)
 ,width_(NAN)
 ,height_(NAN)
+,nowScissor_(nullptr)
 {
 
 }
@@ -77,37 +78,35 @@ void Canvas::scissor(geom::Area const& area)
 	glScissor(area.x(), this->height_-area.height()-area.y(),area.width(), area.height());
 }
 
-void Canvas::drawSprite(Handler<Sprite> sprite, geom::Point const& pt, const float depth, Color const& color)
+void Canvas::drawSprite(Handler<Sprite> sprite, geom::Point const& ptInRoot, const float depth, Color const& color)
 {
-	sprite->drawImpl(this, pt, color, depth);
+	sprite->drawImpl(this, ptInRoot, depth, color);
 }
-void Canvas::drawSprite(Handler<Sprite> sprite, geom::Point const& pt, geom::Area const& spriteArea, const float depth, Color const& color)
+void Canvas::drawSprite(Handler<Sprite> sprite, geom::Point const& ptInRoot, geom::Area const& mask, const float depth, Color const& color)
 {
-	sprite->drawImpl(this, pt, spriteArea, color, depth);
+	sprite->drawImpl(this, ptInRoot, mask, depth, color);
 }
-void Canvas::drawTexture(unsigned int texId, geom::Point const& pt, geom::IntBox const& texSize, geom::Area const& spriteArea, const float depth, Color const& color)
+void Canvas::drawTexture(unsigned int texId, geom::Area const& areaInRoot, geom::Area const& coordinateInSprite, const float depth, Color const& color)
 {
-	const float width = spriteArea.width();
-	const float height = spriteArea.height();
+	const float x=areaInRoot.x();
+	const float y=areaInRoot.x();
+	const float width = areaInRoot.width();
+	const float height = areaInRoot.height();
 
-	const float top = spriteArea.y()/texSize.height();
-	const float left = spriteArea.x()/texSize.width();
-	const float right = (spriteArea.x()+width)/texSize.width();
-	const float bottom = (spriteArea.y()+height)/texSize.height();
+	const float top = coordinateInSprite.y();
+	const float left = coordinateInSprite.x();
+	const float right = coordinateInSprite.x()+coordinateInSprite.width();
+	const float bottom = coordinateInSprite.y()+coordinateInSprite.height();
 	glBindTexture(GL_TEXTURE_2D, texId);
 	glEnable(GL_TEXTURE_2D);
 	this->setColor(color);
 	glBegin(GL_POLYGON);
-		glTexCoord2f(left, top   );glVertex3f(pt.x()      , pt.y(), depth);
-		glTexCoord2f(left, bottom);glVertex3f(pt.x()      , pt.y()+height, depth);
-		glTexCoord2f(right,bottom);glVertex3f(pt.x()+width, pt.y()+height, depth);
-		glTexCoord2f(right,top   );glVertex3f(pt.x()+width, pt.y(),depth);
+		glTexCoord2f(left ,top   );glVertex3f(x      , y       , depth);
+		glTexCoord2f(left ,bottom);glVertex3f(x      , y+height, depth);
+		glTexCoord2f(right,bottom);glVertex3f(x+width, y+height, depth);
+		glTexCoord2f(right,top   );glVertex3f(x+width, y       , depth);
 	glEnd();
 	glDisable(GL_TEXTURE_2D);
-}
-void Canvas::drawTexture(unsigned int texId, geom::Point const& pt, geom::IntBox const& texSize, geom::IntBox const& spriteSize, const float depth, Color const& color)
-{
-	this->drawTexture(texId, pt, texSize, geom::Area(geom::ZERO, spriteSize), depth, color);
 }
 
 void Canvas::drawLine(const float width, Color const& color, geom::Point const& start, geom::Point const& end, const float depth)

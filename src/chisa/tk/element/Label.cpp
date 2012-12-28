@@ -54,9 +54,9 @@ std::string Label::toString() const
 	return ::tarte::format("(Label text:\"%s\" %p)", this->text_.c_str(), this);
 }
 
-void Label::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
+void Label::renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
-	this->textImage()->draw(canvas, screenArea);
+	this->textImage()->draw(canvas, ptInRoot, mask);
 }
 Handler<gl::TextDrawable> Label::textImage()
 {
@@ -92,7 +92,7 @@ geom::Box Label::measureImpl(geom::Box const& constraint)
 	return this->textImage()->size();
 }
 
-void Label::layoutImpl(geom::Box const& size)
+void Label::layoutImpl(geom::Distance const& offsetFromParent, geom::Box const& size)
 {
 }
 void Label::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)

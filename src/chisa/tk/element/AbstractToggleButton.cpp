@@ -158,13 +158,13 @@ void AbstractToggleButton::layoutButtonContent(geom::Box const& size)
 {
 	this->renderOffset_ = ((size-this->textImage()->size())/2);
 }
-void AbstractToggleButton::renderOn(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
+void AbstractToggleButton::renderOn(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
-	this->textImage()->draw(canvas, geom::Area(screenArea.point()+this->renderOffset_, area.box()), .001);
+	this->textImage()->draw(canvas, ptInRoot, mask);
 }
-void AbstractToggleButton::renderOff(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
+void AbstractToggleButton::renderOff(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
-	this->textImage()->draw(canvas, geom::Area(screenArea.point()+this->renderOffset_, area.box()), .001);
+	this->textImage()->draw(canvas, ptInRoot, mask);
 }
 
 

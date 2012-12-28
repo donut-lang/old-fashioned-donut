@@ -49,9 +49,9 @@ protected:
 	virtual std::string toString() const override;
 	Handler<gl::TextDrawable> textImage();
 protected:
-	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override final;
+	virtual void renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask) override final;
 	virtual geom::Box measureImpl(geom::Box const& constraint) override;
-	virtual void layoutImpl(geom::Box const& size) override;
+	virtual void layoutImpl(geom::Distance const& offsetFromParent, geom::Box const& size) override;
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
 	virtual bool notifyViewRefreshedImpl() override;
 };

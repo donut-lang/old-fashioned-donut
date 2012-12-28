@@ -34,7 +34,7 @@ RenderObject::RenderObject(HandlerW<RenderTree> parentTree, Node* parentNode, co
 
 void RenderObject::render(gl::Canvas& canvas, geom::Point const& offset, const float depth)
 {
-	this->drawable()->draw(canvas, geom::Area(this->area_.point()-offset, this->area_.box()), depth+this->relDepth_);
+	this->drawable()->draw(canvas, this->area_.point()-offset, geom::Area(geom::ZERO, this->area_.box()), depth+this->relDepth_);
 }
 void RenderObject::onHidden()
 {

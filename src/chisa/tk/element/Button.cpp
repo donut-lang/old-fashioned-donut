@@ -60,17 +60,23 @@ void Button::shadowDepth(float const& depth)
 	}
 }
 
-void Button::renderOn(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
+void Button::renderOn(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
-	canvas.fillRect(this->shadowColor_, geom::Area(screenArea.point(), geom::Box(screenArea.width(), shadowDepth_)),.001);
-	canvas.fillRect(this->shadowColor_, geom::Area(screenArea.point(), geom::Box(shadowDepth_, screenArea.height())),.001);
-	this->textImage()->draw(canvas, geom::Area(screenArea.point()+this->renderOffset_+geom::Distance(shadowDepth_, shadowDepth_), area.box()), .001);
+	canvas.fillRect(this->shadowColor_, geom::Area(ptInRoot, geom::Box(size().width(), shadowDepth_)) );
+	canvas.fillRect(this->shadowColor_, geom::Area(ptInRoot, geom::Box(shadowDepth_, size().height())) );
+
+	geom::Distance const offset(this->renderOffset_+geom::Distance(shadowDepth_, shadowDepth_));
+	geom::Area const buttonMask(mask.point()-offset, mask.box());
+	this->textImage()->draw(canvas, ptInRoot+offset, buttonMask);
 }
-void Button::renderOff(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
+void Button::renderOff(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
-	canvas.fillRect(this->shadowColor_, geom::Area(screenArea.point()+geom::Distance(0, screenArea.height()-shadowDepth_), geom::Box(screenArea.width(), shadowDepth_)),.001);
-	canvas.fillRect(this->shadowColor_, geom::Area(screenArea.point()+geom::Distance(screenArea.width()-shadowDepth_, 0), geom::Box(shadowDepth_, screenArea.height())),.001);
-	this->textImage()->draw(canvas, geom::Area(screenArea.point()+this->renderOffset_, area.box()), .001);
+	canvas.fillRect(this->shadowColor_, geom::Area(ptInRoot+geom::Distance(0, size().height()-shadowDepth_), geom::Box(size().width(), shadowDepth_)) );
+	canvas.fillRect(this->shadowColor_, geom::Area(ptInRoot+geom::Distance(size().width()-shadowDepth_, 0), geom::Box(shadowDepth_, size().height())) );
+
+	geom::Distance const offset(this->renderOffset_);
+	geom::Area const buttonMask(mask.point()-offset, mask.box());
+	this->textImage()->draw(canvas, ptInRoot+offset, buttonMask);
 }
 bool Button::isOn() const noexcept
 {

@@ -51,16 +51,16 @@ protected:
 	int pushedCount() const noexcept { return this->pushedCnt_; };
 	Handler<gl::TextDrawable> textImage();
 protected:
-	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override final;
+	virtual void renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask) override;
 	virtual geom::Box measureImpl(geom::Box const& constraint) override;
-	virtual void layoutImpl(geom::Box const& size) override;
+	virtual void layoutImpl(geom::Distance const& offsetFromParent, geom::Box const& size) override;
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
 	virtual bool notifyViewRefreshedImpl() override;
 protected: /* 子クラスの実装すべきメソッド */
 	virtual geom::Box measureButtonContent(geom::Box const& constraint) = 0;
 	virtual void layoutButtonContent(geom::Box const& size) = 0;
-	virtual void renderOn(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) = 0;
-	virtual void renderOff(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) = 0;
+	virtual void renderOn(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask) = 0;
+	virtual void renderOff(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask) = 0;
 	virtual bool isOn() const noexcept = 0;
 	virtual void onClick();
 public:

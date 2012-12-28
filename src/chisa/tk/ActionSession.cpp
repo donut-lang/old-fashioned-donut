@@ -85,7 +85,7 @@ void ActionSession::onTouchUp(float const& timeMs, geom::Point const& pt)
 		return;
 	}
 	if( Handler<Element> target = this->target_.lock() ){
-		if(target->screenArea().contain(pt)){
+		if(target->lastDrawnAreaInRoot().contain(pt)){
 			target->onSingleTapUp(timeMs, pt);
 			return;
 		}

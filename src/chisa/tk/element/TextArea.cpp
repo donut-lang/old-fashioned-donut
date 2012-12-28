@@ -69,8 +69,9 @@ void TextArea::idle(const float delta_ms)
 	cursorTimer_+=delta_ms/500.0f;
 }
 
-void TextArea::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
+void TextArea::renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
+	geom::Area screenArea(ptInRoot+mask.point(), mask.box());
 	canvas.fillRect(gl::White, screenArea);
 	geom::Area const textArea(this->textArea_ = TextMargin.apply(screenArea));
 	geom::Distance pos(textArea.x()+textOffset_, textArea.y());
@@ -179,7 +180,7 @@ geom::Box TextArea::measureImpl(geom::Box const& constraint)
 	return this->descImage()->size() + TextMargin.totalSpace();
 }
 
-void TextArea::layoutImpl(geom::Box const& size)
+void TextArea::layoutImpl(geom::Distance const& offsetFromParent, geom::Box const& size)
 {
 }
 
@@ -488,7 +489,7 @@ bool TextArea::deleteSelected()
 void TextArea::startInput()
 {
 	if( auto world = this->world().lock() ) {
-		world->startIME(this->screenArea());
+		world->startIME(this->lastDrawnAreaInRoot());
 	}
 }
 

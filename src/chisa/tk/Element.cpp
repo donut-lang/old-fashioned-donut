@@ -118,7 +118,7 @@ Handler<Element> Element::findElementById(std::string const& id)
 
 Handler<Element> Element::findElementByPoint(geom::Vector const& screenPoint)
 {
-	return this->screenArea().contain(screenPoint) ? this->self() : Handler<Element>();
+	return this->lastDrawnAreaInRoot().contain(screenPoint) ? this->self() : Handler<Element>();
 }
 
 
@@ -133,34 +133,52 @@ geom::Box Element::measure(geom::Box const& constraint)
 	return this->measureImpl(constraint-total)+total;
 }
 
-void Element::render(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
+void Element::render(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
 	if( this->relayoutRequested_ ){
 		this->forceRelayout();
 	}
-	this->screenArea(screenArea);
-	this->drawnArea(area);
-	if( //描画範囲にないので書く必要性がありません。
-		area.height()+area.y() <= 0 ||
-		area.width()+area.x() <= 0 ||
-		area.x() >= this->size().width() ||
-		area.y() >= this->size().height() ){
-		return;
-	}
-	geom::Area const marginedScreenArea(this->margin_.apply(screenArea));
-	geom::Area const marginedArea(this->margin_.apply(area));
-	canvas.fillRect(this->backgroundColor_, marginedScreenArea);
-	geom::Area const paddedScreenArea(this->margin_.apply(marginedScreenArea));
-	geom::Area const paddedArea(this->margin_.apply(marginedArea));
-	canvas.drawRect(this->edgeWidth_, this->edgeColor_, paddedScreenArea);
 
-	this->renderImpl(canvas, paddedScreenArea, paddedArea);
+	//このエレメントの描かれる仮想的な位置(一部は隠れているかもしれない）
+	this->lastPositionInRoot_ = ptInRoot;
+	//このエレメントの描かれる、仮想的な位置のうちの実際の位置
+	this->lastDrawnAreaInRoot_ = geom::Area(ptInRoot+mask.point(), mask.box());
+
+	geom::Space const marginAndPdding( this->padding_+this->margin_ );
+
+	// パディングとマージンを計算
+	geom::Area const contentsAreaInRoot(ptInRoot, size_);
+	geom::Area const marginedContentsAreaInRoot(this->margin_.apply(contentsAreaInRoot));
+	geom::Area const paddedContentsAreaInRoot(this->padding_.apply(contentsAreaInRoot));
+
+	// 中身のエリアと、その衝突判定
+	geom::Area const contentArea(marginAndPdding.apply(geom::Area(geom::ZERO, size_)));
+	geom::Area const contentMask(contentArea.intersect(mask));
+
+	// 中身のエリアの仮想的な位置と、実際に描画された中身
+	this->lastInnerPositionInRoot_ = paddedContentsAreaInRoot.point();
+	this->lastInnerDrawnAreaInRoot_ = geom::Area(ptInRoot+contentMask.point(), contentMask.box());
+
+	//中身に掛かるマスクを計算するために、オフセットを取り除く
+	geom::Area const innerMask(contentMask.point()-marginAndPdding.offset(), contentMask.box());
+
+	{
+		gl::Canvas::ScissorScope scissor(canvas, this->lastDrawnAreaInRoot());
+
+
+		canvas.fillRect(this->backgroundColor_, marginedContentsAreaInRoot);
+		canvas.drawRect(this->edgeWidth_, this->edgeColor_, paddedContentsAreaInRoot);
+		this->renderImpl(canvas, paddedContentsAreaInRoot.point(), innerMask);
+	}
 }
 
-void Element::layout(geom::Box const& size)
+void Element::layout(geom::Distance const& offsetFromParent, geom::Box const& size)
 {
-	this->layoutImpl(size-(this->margin_.totalSpace()+this->padding_.totalSpace()));
-	this->size(size);
+	this->offsetFromParent_ = offsetFromParent;
+	this->size_ = size;
+	this->layoutImpl(
+			offsetFromParent+this->margin_.offset()+this->padding_.offset(),
+			size-(this->margin_.totalSpace()+this->padding_.totalSpace()));
 }
 
 bool Element::isValidationRoot() const noexcept
@@ -182,8 +200,8 @@ void Element::requestRelayout()
 
 void Element::forceRelayout()
 {
-	this->measure(this->size_);
-	this->layout(this->size_);
+	this->measure(this->size());
+	this->layout(this->offsetFromParent(), this->size());
 	this->notifyRelayoutFinished();
 }
 

@@ -65,9 +65,9 @@ public: /* バックグラウンドタスク */
 public: /* 実装メソッド */
 	virtual std::string toString() const override final;
 private:
-	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override;
+	virtual void renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask) override;
 	virtual geom::Box measureImpl(geom::Box const& constraint) override;
-	virtual void layoutImpl(geom::Box const& size) override;
+	virtual void layoutImpl(geom::Distance const& offsetFromParent, geom::Box const& size) override;
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
 private:
 	void updateButtonState(Handler<Element> const& elm, Handler<TabButton> const& btn);

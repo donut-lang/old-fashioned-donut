@@ -54,14 +54,15 @@ std::string AbstractButton::toString() const
 	return ::tarte::format("(AbstractButton text:\"%s\" %p)", this->text_.c_str(), this);
 }
 
-void AbstractButton::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
+void AbstractButton::renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
 	if(this->isOn()) {
-		this->renderOn(canvas, screenArea, area);
+		this->renderOn(canvas, ptInRoot, mask);
 	}else{
-		this->renderOff(canvas, screenArea, area);
+		this->renderOff(canvas, ptInRoot, mask);
 	}
 }
+
 Handler<gl::TextDrawable> AbstractButton::textImage()
 {
 	if(!this->textImage_){
@@ -96,9 +97,9 @@ geom::Box AbstractButton::measureImpl(geom::Box const& constraint)
 	return this->measureButtonContent(constraint);
 }
 
-void AbstractButton::layoutImpl(geom::Box const& size)
+void AbstractButton::layoutImpl(geom::Distance const& offsetFromParent, geom::Box const& size)
 {
-	return this->layoutButtonContent(size);
+	this->layoutButtonContent(size);
 }
 
 void AbstractButton::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)
@@ -157,7 +158,7 @@ bool AbstractButton::onMoveRaw(float const& timeMs, geom::Point const& ptInScree
 
 bool AbstractButton::onSingleTapUp(float const& timeMs, geom::Point const& ptInScreen)
 {
-	if(this->screenArea().contain(ptInScreen)){
+	if(this->lastInnerDrawnAreaInRoot().contain(ptInScreen)){
 		this->onClick();
 	}
 	return true;

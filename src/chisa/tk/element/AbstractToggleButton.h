@@ -60,8 +60,8 @@ protected: /* AbstractButtonの実装 */
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
 	virtual geom::Box measureButtonContent(geom::Box const& constraint) override;
 	virtual void layoutButtonContent(geom::Box const& size) override;
-	virtual void renderOn(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override;
-	virtual void renderOff(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override;
+	virtual void renderOn(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask) override;
+	virtual void renderOff(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask) override;
 	virtual bool isOn() const noexcept override;
 	virtual void onClick() override;
 protected:
