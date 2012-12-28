@@ -89,7 +89,7 @@ void Canvas::drawSprite(Handler<Sprite> sprite, geom::Point const& ptInRoot, geo
 void Canvas::drawTexture(unsigned int texId, geom::Area const& areaInRoot, geom::Area const& coordinateInSprite, const float depth, Color const& color)
 {
 	const float x=areaInRoot.x();
-	const float y=areaInRoot.x();
+	const float y=areaInRoot.y();
 	const float width = areaInRoot.width();
 	const float height = areaInRoot.height();
 

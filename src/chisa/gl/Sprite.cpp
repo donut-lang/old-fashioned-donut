@@ -73,6 +73,7 @@ void Sprite::drawImpl(Canvas* const canvas, geom::Point const& ptInRoot, geom::A
 {
 	this->flushBuffer();
 	geom::Area const drawn(geom::Area(geom::ZERO, size_).intersect(mask));
+	geom::Area const drawnInRoot(drawn.point()+ptInRoot, drawn.box());
 	geom::Area coordinate(drawn);
 	coordinate.x(coordinate.x() / this->origSize_.width());
 	coordinate.y(coordinate.y() / this->origSize_.height());
@@ -83,7 +84,7 @@ void Sprite::drawImpl(Canvas* const canvas, geom::Point const& ptInRoot, geom::A
 void Sprite::drawImpl(Canvas* const canvas, geom::Point const& ptInRoot, const float depth, Color const& color)
 {
 	this->flushBuffer();
-	geom::Area const drawn(geom::Area(geom::ZERO, size_));
+	geom::Area const drawn(geom::Area(ptInRoot, size_));
 	geom::Area coordinate(geom::Area(geom::ZERO, size_));
 	coordinate.x(coordinate.x() / this->origSize_.width());
 	coordinate.y(coordinate.y() / this->origSize_.height());
