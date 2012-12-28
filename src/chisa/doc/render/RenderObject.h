@@ -40,14 +40,17 @@ private:
 	Handler<gl::Drawable> drawable_;
 	HandlerW<gl::Drawable> drawablew_;
 private:
-	DEFINE_CONTAINER(public, public, geom::Area, area);
+	geom::Area area_;
 	DEFINE_MEMBER(public, public, float, relDepth);
 public:
 	RenderObject(HandlerW<RenderTree> parentTree, Node* parentNode, const float relDepth);
 	virtual ~RenderObject() noexcept = default;
+	inline geom::Area const& area() const noexcept { return this->area_; };
+	inline geom::Area& area() noexcept { return this->area_; };
+	inline void area(geom::Area const& narea) noexcept { this->area_=narea; };
 public:
 	bool onFree() noexcept { return false; };
-	void render(gl::Canvas& canvas, geom::Point const& offset, const float depth);
+	void render(gl::Canvas& canvas, const float depth);
 	void onHidden();
 	HandlerW<RenderTree> parentTree();
 	Node* parentNode();

@@ -65,9 +65,9 @@ void NesMemoryWidget::render(chisa::gl::Canvas& cv, chisa::geom::Area const& are
 	std::vector<unsigned int> num(2);
 	for(int y=rowStart; y <= rowEnd;++y) {
 		float const rowOffset = y*dheight;
-		cv.drawLine(2, gl::White, geom::Point(0,rowOffset)-area.point(), geom::Point(area.width(),rowOffset)-area.point());
+		cv.drawLine(2, gl::White, geom::Point(0,rowOffset), geom::Point(area.width(),rowOffset));
 
-		this->numRenderer_.renderSym(cv, geom::Point(0,rowOffset)-area.point(), 16, 0.0f);
+		this->numRenderer_.renderSym(cv, geom::Point(0,rowOffset), 16, 0.0f);
 
 		uint16_t const baseaddr = (y*16);
 		addr_sym[0] = ((baseaddr) >> 12) & 7;
@@ -75,7 +75,7 @@ void NesMemoryWidget::render(chisa::gl::Canvas& cv, chisa::geom::Area const& are
 		addr_sym[2] = ((baseaddr) >> 4) & 7;
 		addr_sym[3] = ((baseaddr) & 7);
 		geom::Point pt (symwidth, rowOffset);
-		this->numRenderer_.renderSyms(cv, pt-area.point(), addr_sym, 0.0f);
+		this->numRenderer_.renderSyms(cv, pt, addr_sym, 0.0f);
 
 		for(int x=colStart; x <= colEnd;++x) {
 			geom::Point pt (this->addrWidth_ + x*dwidth, rowOffset);
@@ -83,7 +83,7 @@ void NesMemoryWidget::render(chisa::gl::Canvas& cv, chisa::geom::Area const& are
 			uint8_t const val = geist->machine()->read(addr);
 			num[0] = val >> 4;
 			num[1] = val & 7;
-			this->numRenderer_.renderSyms(cv, pt-area.point(), num, 0.0f);
+			this->numRenderer_.renderSyms(cv, pt, num, 0.0f);
 		}
 	}
 	cv.fillRect(gl::White, geom::Area(this->addrWidth_-symwidth,0, symwidth, area.height()));
