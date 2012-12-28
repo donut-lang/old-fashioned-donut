@@ -70,10 +70,10 @@ void NesMemoryWidget::render(chisa::gl::Canvas& cv, chisa::geom::Area const& are
 		this->numRenderer_.renderSym(cv, geom::Point(0,rowOffset), 16, 0.0f);
 
 		uint16_t const baseaddr = (y*16);
-		addr_sym[0] = ((baseaddr) >> 12) & 7;
-		addr_sym[1] = ((baseaddr) >> 8) & 7;
-		addr_sym[2] = ((baseaddr) >> 4) & 7;
-		addr_sym[3] = ((baseaddr) & 7);
+		addr_sym[0] = ((baseaddr) >> 12) & 15;
+		addr_sym[1] = ((baseaddr) >> 8) & 15;
+		addr_sym[2] = ((baseaddr) >> 4) & 15;
+		addr_sym[3] = ((baseaddr) & 15);
 		geom::Point pt (symwidth, rowOffset);
 		this->numRenderer_.renderSyms(cv, pt, addr_sym, 0.0f);
 
