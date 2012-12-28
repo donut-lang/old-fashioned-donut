@@ -38,8 +38,8 @@ CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(AbstractButton, Element)
 ,textImage_()
 ,pushedCnt_(0)
 {
-	this->margin(geom::Space(2.5f));
-	this->padding(geom::Space(2.5f));
+	this->margin(geom::Space(3.0f));
+	this->padding(geom::Space(2.0f));
 	this->edgeWidth(1);
 	this->addAttribute(AttrName::Text, this->text_);
 	this->addAttribute(AttrName::TextSize, this->textSize_);
