@@ -141,11 +141,11 @@ public: /* ツリー操作 */
 		return Handler<Element>();
 	}
 	virtual Handler<Element> findElementByPoint(geom::Vector const& screenPoint) override final {
-		if(!this->screenArea().contain(screenPoint)){
+		if(!this->lastDrawnAreaInRoot().contain(screenPoint)){
 			return Handler<ElementGroup>();
 		}
 		for(ContainerType& child : this->children_) {
-			if(child.first->screenArea().contain(screenPoint)){
+			if(child.first->lastDrawnAreaInRoot().contain(screenPoint)){
 				return child.first->findElementByPoint(screenPoint);
 			}
 		}

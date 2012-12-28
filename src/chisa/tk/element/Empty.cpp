@@ -43,7 +43,7 @@ std::string Empty::toString() const
 	return ::tarte::format("(Empty %p)",this);
 }
 
-void Empty::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
+void Empty::renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
 	//何も描画しない
 }
@@ -53,7 +53,7 @@ geom::Box Empty::measureImpl(geom::Box const& constraint)
 	return geom::Box(geom::Unspecified, geom::Unspecified);
 }
 
-void Empty::layoutImpl(geom::Box const& size)
+void Empty::layoutImpl(geom::Distance const& offsetFromParent, geom::Box const& size)
 {
 	//何もしない
 }

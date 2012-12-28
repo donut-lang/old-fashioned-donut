@@ -91,7 +91,7 @@ void World::init()
 void World::render(gl::Canvas& canvas)
 {
 	if(Handler<Element> elm = this->elementStack_.top()){
-		elm->render(canvas, this->area(), geom::Area(0,0,this->area().width(), this->area().height()));
+		elm->render(canvas, geom::ZERO, geom::Area(0,0,this->area().width(), this->area().height()));
 	}
 }
 void World::idle(const float delta_ms)
@@ -105,7 +105,7 @@ void World::reshape(geom::Area const& area)
 {
 	if(Handler<Element> elm = this->elementStack_.top()){
 		elm->measure(area.box());
-		elm->layout(area.box());
+		elm->layout(geom::ZERO, area.box());
 	}
 	this->area(area);
 }

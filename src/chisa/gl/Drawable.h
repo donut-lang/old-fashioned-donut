@@ -45,7 +45,11 @@ public:
 	float width();
 	float height();
 	virtual geom::Box size() = 0;
-	virtual void draw(Canvas& canvas, geom::Area const& area, const float depth=0.0f) = 0;
+	virtual void draw(Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask, const float depth=0.0f) = 0;
+	virtual void draw(Canvas& canvas, geom::Point const& ptInRoot, const float depth=0.0f)
+	{
+		this->draw(canvas, ptInRoot, geom::Area(geom::ZERO, size()), depth);
+	}
 	virtual std::string toString() const = 0;
 };
 
@@ -57,7 +61,7 @@ protected:
 public:
 	virtual ~NullDrawable() noexcept = default;
 	virtual geom::Box size() override { return this->size_; };
-	virtual void draw(Canvas& canvas, geom::Area const& area, const float depth=0.0f) override {};
+	virtual void draw(Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask, const float depth=0.0f) override {};
 	virtual std::string toString() const override;
 	static Handler<Drawable> create( HandlerW<DrawableManager> manager, geom::Box const& size, std::string const& repl );
 };
@@ -73,7 +77,7 @@ public:
 public:
 	Color color() const noexcept;
 	virtual geom::Box size() override { return this->size_; };
-	virtual void draw(Canvas& canvas, geom::Area const& area, const float depth=0.0f) override;
+	virtual void draw(Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask, const float depth=0.0f) override;
 	virtual std::string toString() const override;
 };
 
@@ -89,7 +93,7 @@ public:
 	static Handler<Drawable> create(  HandlerW<DrawableManager> manager, geom::Box const& size, std::string const& repl );
 	Handler<gl::Sprite> sprite();
 	virtual geom::Box size() override;
-	virtual void draw(Canvas& canvas, geom::Area const& area, const float depth=0.0f) override;
+	virtual void draw(Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask, const float depth=0.0f) override;
 	virtual std::string toString() const override;
 };
 
@@ -103,7 +107,7 @@ public:
 	virtual ~RepeatDrawable() noexcept = default;
 	Handler<Drawable> child() const;
 	virtual geom::Box size() override;
-	virtual void draw(Canvas& canvas, geom::Area const& area, const float depth=0.0f) override;
+	virtual void draw(Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask, const float depth=0.0f) override;
 	virtual std::string toString() const override;
 };
 
@@ -117,7 +121,7 @@ public:
 	virtual ~StretchDrawable() noexcept = default;
 	Handler<Drawable> child() const;
 	virtual geom::Box size() override;
-	virtual void draw(Canvas& canvas, geom::Area const& area, const float depth=0.0f) override;
+	virtual void draw(Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask, const float depth=0.0f) override;
 	virtual std::string toString() const override;
 };
 
@@ -165,8 +169,8 @@ public:
 	static Handler<TextDrawable> create(HandlerW<DrawableManager> manager, std::string const& str, bool vertical, const float size, Handler<Font> font, TextDrawable::Style style, TextDrawable::Decoration deco, gl::Color const& color, gl::Color const& backColor);
 	virtual ~TextDrawable() noexcept = default;
 	virtual geom::Box size() override;
-	virtual void draw(Canvas& canvas, geom::Area const& area, const float depth=0.0f) override;
-	void draw(Canvas& canvas, geom::Point const& pt, const float depth=0.0f);
+	virtual void draw(Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask, const float depth=0.0f) override;
+	virtual void draw(Canvas& canvas, geom::Point const& ptInRoot, const float depth=0.0f) override;
 	virtual std::string toString() const override;
 public:
 	inline std::string const& str() const noexcept { return this->str_; };

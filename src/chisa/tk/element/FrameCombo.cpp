@@ -38,10 +38,10 @@ std::string FrameCombo::toString() const
 	return ::tarte::format("(FrameCombo %p with %d elements)", this, getChildCount());
 }
 
-void FrameCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
+void FrameCombo::renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
 	if( Handler<Element> elm = this->lastChild() ){
-		elm->render(	canvas,screenArea,area);
+		elm->render(canvas,ptInRoot,mask);
 	}
 }
 
@@ -53,10 +53,10 @@ geom::Box FrameCombo::measureImpl(geom::Box const& constraint)
 	return constraint;
 }
 
-void FrameCombo::layoutImpl(geom::Box const& size)
+void FrameCombo::layoutImpl(geom::Distance const& offsetFromParent, geom::Box const& size)
 {
 	if( Handler<Element> elm = this->lastChild() ){
-		elm->layout( size );
+		elm->layout(offsetFromParent, size);
 	}
 }
 

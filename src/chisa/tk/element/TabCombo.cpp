@@ -209,9 +209,9 @@ std::string TabCombo::toString() const
 	return ::tarte::format("(TabCombo %p with %d elements)", this, this->frame_->getChildCount());
 }
 
-void TabCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
+void TabCombo::renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
-	this->top_->render(canvas, screenArea, area);
+	this->top_->render(canvas, ptInRoot, mask);
 }
 
 geom::Box TabCombo::measureImpl(geom::Box const& constraint)
@@ -219,9 +219,9 @@ geom::Box TabCombo::measureImpl(geom::Box const& constraint)
 	return this->top_->measure(constraint);
 }
 
-void TabCombo::layoutImpl(geom::Box const& size)
+void TabCombo::layoutImpl(geom::Distance const& offsetFromParent, geom::Box const& size)
 {
-	this->top_->layout(size);
+	this->top_->layout(offsetFromParent, size);
 }
 
 void TabCombo::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)

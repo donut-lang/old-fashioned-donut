@@ -75,8 +75,8 @@ public:
 public: /* from Handler */
 	bool onFree() noexcept;
 public: /* from Canvas */
-	void drawImpl(Canvas* const canvas, geom::Point const& pt, geom::Area const& renderArea, Color const& color, const float depth);
-	void drawImpl(Canvas* const canvas, geom::Point const& pt, Color const& color, const float depth);
+	void drawImpl(Canvas* const canvas, geom::Point const& ptInRoot, geom::Area const& mask, const float depth, Color const& color);
+	void drawImpl(Canvas* const canvas, geom::Point const& ptInRoot, const float depth, Color const& color);
 };
 
 }}

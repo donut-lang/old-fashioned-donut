@@ -105,12 +105,12 @@ void SplitCombo::resetChildren()
 	this->totalSize_ = geom::Unspecified;
 }
 
-void SplitCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
+void SplitCombo::renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
-	const float boxSize = (area.box().*changed_getter)();
-	const float drawnStartOffset = (area.point().*point_getter)();
+	const float boxSize = (mask.box().*changed_getter)();
+	const float drawnStartOffset = (mask.point().*point_getter)();
 	const float drawnEndOffset = drawnStartOffset+boxSize;
-	const float screenStart = (screenArea.point().*point_getter)();
+	const float screenStart = ((ptInRoot+mask.point()).*point_getter)();
 	float offset = 0;
 	for(ContainerType& ctx: this->children()){
 		const float size = ctx.second.size;
@@ -123,16 +123,16 @@ void SplitCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, ge
 		const float drawnStart = std::max(drawnStartOffset - offset, 0.0f);
 		const float drawnSize = std::min(size-drawnStart, drawnEndOffset-offset-drawnStart);
 
-		geom::Box drawnBox(area.box());
+		geom::Box drawnBox(mask.box());
 		(drawnBox.*changed_setter)(drawnSize);
 
-		geom::Point drawnPoint(area.point());
+		geom::Point drawnPoint(mask.point());
 		(drawnPoint.*point_setter)(drawnStart);
 
-		geom::Point screenPoint(screenArea.point());
+		geom::Point screenPoint(ptInRoot);
 		(screenPoint.*point_setter)(screenStart+offset+drawnStart-drawnStartOffset);
 
-		ctx.first->render(canvas, geom::Area(screenPoint, drawnBox), geom::Area(drawnPoint, drawnBox));
+		ctx.first->render(canvas, screenPoint, geom::Area(drawnPoint, drawnBox));
 		offset += size;
 	}
 }
@@ -251,14 +251,16 @@ geom::Box SplitCombo::measureImpl(geom::Box const& constraint)
 	}
 }
 
-void SplitCombo::layoutImpl(geom::Box const& size)
+void SplitCombo::layoutImpl(geom::Distance const& offsetFromParent, geom::Box const& size)
 {
+	geom::Box offset(geom::ZERO);
 	for(ContainerType& it : this->children()){
 		SplitComboContext& ctx = it.second;
 		geom::Box box;
 		(box.*changed_setter)(ctx.size);
 		(box.*fixed_setter)((size.*fixed_getter)());
-		it.first->layout(box);
+		(box.*changed_setter)(ctx.size+(box.*changed_getter)());
+		it.first->layout(offset, box);
 	}
 }
 

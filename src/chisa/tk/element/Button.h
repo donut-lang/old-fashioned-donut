@@ -44,8 +44,8 @@ public:
 private:
 	virtual geom::Box measureButtonContent(geom::Box const& constraint) override final;
 	virtual void layoutButtonContent(geom::Box const& size) override final;
-	virtual void renderOn(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override final;
-	virtual void renderOff(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) override final;
+	virtual void renderOn(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask) override final;
+	virtual void renderOff(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask) override final;
 	virtual bool isOn() const noexcept override final;
 };
 

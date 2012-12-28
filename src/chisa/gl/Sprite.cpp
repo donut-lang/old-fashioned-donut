@@ -69,15 +69,27 @@ Sprite::~Sprite() noexcept (true)
 	}
 }
 
-void Sprite::drawImpl(Canvas* const canvas, geom::Point const& pt, geom::Area const& renderArea, Color const& color, const float depth)
+void Sprite::drawImpl(Canvas* const canvas, geom::Point const& ptInRoot, geom::Area const& mask, const float depth, Color const& color)
 {
 	this->flushBuffer();
-	canvas->drawTexture(this->texId_, pt, this->origSize(), renderArea, depth, color);
+	geom::Area const drawn(geom::Area(geom::ZERO, size_).intersect(mask));
+	geom::Area coordinate(drawn);
+	coordinate.x(coordinate.x() / this->origSize_.width());
+	coordinate.y(coordinate.y() / this->origSize_.height());
+	coordinate.width(coordinate.width() / this->origSize_.width());
+	coordinate.height(coordinate.height() / this->origSize_.height());
+	canvas->drawTexture(this->texId_, drawn, coordinate, depth, color);
 }
-void Sprite::drawImpl(Canvas* const canvas, geom::Point const& pt, Color const& color, const float depth)
+void Sprite::drawImpl(Canvas* const canvas, geom::Point const& ptInRoot, const float depth, Color const& color)
 {
 	this->flushBuffer();
-	canvas->drawTexture(this->texId_, pt, this->origSize(), this->size(), depth, color);
+	geom::Area const drawn(geom::Area(geom::ZERO, size_));
+	geom::Area coordinate(geom::Area(geom::ZERO, size_));
+	coordinate.x(coordinate.x() / this->origSize_.width());
+	coordinate.y(coordinate.y() / this->origSize_.height());
+	coordinate.width(coordinate.width() / this->origSize_.width());
+	coordinate.height(coordinate.height() / this->origSize_.height());
+	canvas->drawTexture(this->texId_, drawn, coordinate, depth, color);
 }
 
 void Sprite::flushBuffer()

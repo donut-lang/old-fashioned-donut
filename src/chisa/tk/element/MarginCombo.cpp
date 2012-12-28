@@ -54,13 +54,15 @@ std::string MarginCombo::toString() const
 	return ::tarte::format("(MarginCombo %p)", this);
 }
 
-void MarginCombo::renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area)
+void MarginCombo::renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
+	geom::Area newMask(margin_.apply(mask));
+	newMask.point() -= margin_.offset();
 	if(auto c = this->frontChild()){
 		c->render(
 			canvas,
-			geom::Area(screenArea.point()+this->margin_.offset(), screenArea.box()-this->margin_.totalSpace()),
-			geom::Area(area.point(), area.box()-this->margin_.totalSpace())
+			ptInRoot+this->margin_.offset(),
+			newMask
 		);
 	}
 }
@@ -73,10 +75,10 @@ geom::Box MarginCombo::measureImpl(geom::Box const& constraint)
 	return constraint;
 }
 
-void MarginCombo::layoutImpl(geom::Box const& size)
+void MarginCombo::layoutImpl(geom::Distance const& offsetFromParent, geom::Box const& size)
 {
 	if(auto c = this->frontChild()){
-		c->layout( size-this->margin_.totalSpace() );
+		c->layout( offsetFromParent+this->margin_.offset(), size-this->margin_.totalSpace() );
 	}
 }
 

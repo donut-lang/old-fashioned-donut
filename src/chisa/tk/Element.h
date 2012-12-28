@@ -73,10 +73,21 @@ private: /* ツリー */
 	gl::Color backgroundColor_;
 	bool relayoutRequested_;
 private: /* 画面描画情報 */
-	DEFINE_MEMBER(public, private, geom::Box, size); //現在の大きさ
-	DEFINE_MEMBER(public, private, geom::Area, screenArea); //画面上の占める位置
-	DEFINE_MEMBER(protected, private, geom::Area, drawnArea); //大きさの中で、レンダリングされている部分
+	geom::Box size_;
+	geom::Distance offsetFromParent_;
+	geom::Point lastPositionInRoot_;
+	geom::Area lastDrawnAreaInRoot_;
+	geom::Point lastInnerPositionInRoot_;
+	geom::Area lastInnerDrawnAreaInRoot_;
 	bool onFocused_;
+public:
+	inline geom::Point const& lastPositionInRoot() const noexcept { return this->lastPositionInRoot_; };
+	inline geom::Area const& lastDrawnAreaInRoot() const noexcept { return this->lastDrawnAreaInRoot_; };
+	inline geom::Point const& lastInnerPositionInRoot() const noexcept { return this->lastInnerPositionInRoot_; };
+	inline geom::Area const& lastInnerDrawnAreaInRoot() const noexcept { return this->lastInnerDrawnAreaInRoot_; };
+
+	inline geom::Box const& size() const noexcept { return this->size_; };
+	inline geom::Distance const& offsetFromParent() const noexcept { return this->offsetFromParent_; };
 public:
 	void margin(geom::Space const& m);
 	void padding(geom::Space const& p);
@@ -91,9 +102,9 @@ public:
 	inline gl::Color const& backgroundColor() const noexcept { return this->backgroundColor_; };
 	inline bool onFocused() const noexcept { return this->onFocused_; };
 public: /* レンダリング(非virtual) */
-	void render(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area);
+	void render(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask);
 	geom::Box measure(geom::Box const& constraint);
-	void layout(geom::Box const& size);
+	void layout(geom::Distance const& offsetFromParent, geom::Box const& size);
 	virtual bool isValidationRoot() const noexcept;
 	void requestRelayout();
 	virtual void notifyRelayoutFinished();
@@ -110,9 +121,9 @@ public: /* バックグラウンドタスク */
 	virtual void idle(const float delta_ms);
 public: /* 実装メソッド */
 	virtual std::string toString() const;
-	virtual void renderImpl(gl::Canvas& canvas, geom::Area const& screenArea, geom::Area const& area) = 0;
+	virtual void renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask) = 0;
 	virtual geom::Box measureImpl(geom::Box const& constraint) = 0;
-	virtual void layoutImpl(geom::Box const& size) = 0;
+	virtual void layoutImpl(geom::Distance const& offsetFromParent, geom::Box const& size) = 0;
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) = 0;
 	virtual bool notifyViewRefreshedImpl();
 	virtual void onFocusGained(float const& timeMs, geom::Point const& lastPtInScreen) override;

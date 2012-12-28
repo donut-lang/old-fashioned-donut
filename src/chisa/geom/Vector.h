@@ -69,11 +69,17 @@ public:\
 			return operator_minus_assign(*this, b);\
 	};
 #define ENABLE_MD(Klass,OtherKlass,Result)\
+	ENABLE_MUL(Klass, OtherKlass, Result);\
+	ENABLE_DIV(Klass, OtherKlass, Result);
+
+#define ENABLE_MUL(Klass,OtherKlass,Result)\
 	public:\
 	inline constexpr Result operator*(OtherKlass const& b) const noexcept{\
 		return this->operator_mult<Result, OtherKlass>(b);\
-	};\
-	inline Result operator/(OtherKlass const& b) const noexcept{\
+	};
+#define ENABLE_DIV(Klass,OtherKlass,Result)\
+	public:\
+	inline constexpr Result operator/(OtherKlass const& b) const noexcept{\
 		return this->operator_div<Result, OtherKlass>(b);\
 	};
 #define ENABLE_MD_ASSIGN(Klass,OtherKlass)\
@@ -244,6 +250,7 @@ protected:
 		return this->x_*other.x_+this->y_*other.y_;
 	}
 };
+
 class ScaleVector : public BaseVector<ScaleVector, float> {
 	SETUP(ScaleVector)
 public:
@@ -264,6 +271,7 @@ public:
 	ENABLE_PM(Vector , Vector , Vector );
 	ENABLE_PM_ASSIGN(Vector, Vector);
 	ENABLE_MD(Vector, ScaleVector, Vector);
+	ENABLE_DIV(Vector, Vector, ScaleVector);
 	ENABLE_MD_ASSIGN(Vector, ScaleVector);
 	ENABLE_MD_FLOAT(Vector);
 	inline constexpr bool near(Vector const& other, const ValType precision) const noexcept{

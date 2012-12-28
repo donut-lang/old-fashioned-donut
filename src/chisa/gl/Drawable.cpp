@@ -53,9 +53,10 @@ Color ColorDrawable::color() const noexcept
 	return this->color_;
 }
 
-void ColorDrawable::draw(Canvas& canvas, geom::Area const& area, const float depth)
+void ColorDrawable::draw(Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask, const float depth)
 {
-	canvas.fillRect(this->color_, area.intersect(geom::Area(area.point(), geom::min(area.box(), size_))), depth);
+	geom::Area orig(ptInRoot, size_);
+	canvas.fillRect(this->color_, orig.intersect(mask), depth);
 }
 
 Handler<Drawable> ColorDrawable::create( HandlerW<DrawableManager> manager, geom::Box const& size, std::string const& repl )
@@ -93,10 +94,11 @@ geom::Box ImageDrawable::size()
 	return spr ? geom::min(geom::Box(spr->size()), this->size_) : size_;
 }
 
-void ImageDrawable::draw(Canvas& canvas, geom::Area const& area, const float depth)
+void ImageDrawable::draw(Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask, const float depth)
 {
 	if(this->sprite_){
-		canvas.drawSprite(this->sprite_, area.point(), geom::Area(geom::ZERO, geom::min(area.box(), this->size())), depth);
+		geom::Area orig(ptInRoot, size_);
+		canvas.drawSprite(this->sprite_, ptInRoot, orig.intersect(mask), depth);
 	}
 }
 
@@ -130,21 +132,23 @@ geom::Box RepeatDrawable::size()
 	return this->size_;
 }
 
-void RepeatDrawable::draw(Canvas& canvas, geom::Area const& area, const float depth)
+void RepeatDrawable::draw(Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask, const float depth)
 {
-	geom::Area rendered(area.intersect(geom::Area(area.point(), geom::min(size_, area.box()))));
-	float y=rendered.y();
-	const float mx = rendered.width()+rendered.x();
-	const float my = rendered.height()+rendered.y();
+	geom::Area const rmask(mask.intersect(geom::Area(geom::ZERO, size_)));
+	const float ex = mask.x()+mask.width();
+	const float ey = mask.y()+mask.height();
+
 	const float cy = this->child_->height();
 	const float cx = this->child_->width();
-	while(y < my){
-		float x=rendered.x();
-		while(x < mx){
-			this->child_->draw(canvas, geom::Area(x,y, geom::min(cx,mx-x), geom::min(cy,my-y)),depth);
-			x+=cy;
+
+	for(float dy=0;dy<ey; dy+=cy) {
+		for(float dx=0;dx<ex; dx+=cx) {
+			geom::Area carea(dx,dy,cx,cy);
+			geom::Area cmask(carea.intersect(mask));
+			if(!cmask.empty()){
+				this->child_->draw(canvas, ptInRoot+geom::Point(dx,dy), cmask, depth);
+			}
 		}
-		y += cy;
 	}
 }
 
@@ -179,16 +183,14 @@ geom::Box StretchDrawable::size()
 	return this->size_;
 }
 
-void StretchDrawable::draw(Canvas& canvas, geom::Area const& area, const float depth)
+void StretchDrawable::draw(Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask, const float depth)
 {
-	geom::Area rendered(area.intersect(geom::Area(area.point(), geom::min(area.box(), size_))));
 	Canvas::AffineScope as(canvas);
 	{
-		canvas.translate(area.point());
-		float const scaleX = this->child_->width() / rendered.width();
-		float const scaleY = this->child_->height() / rendered.height();
-		canvas.scale(geom::ScaleVector(scaleX, scaleY));
-		this->child_->draw(canvas, geom::Area(geom::ZERO, this->child_->size()), depth);
+		canvas.translate(ptInRoot);
+		geom::ScaleVector scale(child_->size() / size_);
+		canvas.scale(scale);
+		this->child_->draw(canvas, geom::ZERO, mask*scale, depth);
 	}
 }
 Handler<Drawable> StretchDrawable::create( HandlerW<DrawableManager> manager, geom::Box const& size, std::string const& repl )
@@ -352,25 +354,28 @@ geom::Box TextDrawable::size()
 	return this->size_;
 }
 
-void TextDrawable::draw(Canvas& canvas, geom::Area const& area, const float depth)
+void TextDrawable::draw(Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask, const float depth)
 {
 	if(this->vertical_) {
 		geom::Distance off(this->font_height_ - (this->font_ascent_+(this->tsize_.height()+this->bearing().y())), this->bearing().x());
-		canvas.drawSprite(this->sprite(), area.point()+off, depth);
+		geom::Area const tmask(mask.point()-off, mask.box());
+		geom::Box const sprSize(this->sprite()->size());
+		canvas.drawSprite(this->sprite(), ptInRoot+off, geom::Area(geom::ZERO, sprSize).intersect(tmask), depth);
 	}else{
 		geom::Distance off(this->bearing().x(), this->font_ascent_+this->bearing().y());
-		canvas.drawSprite(this->sprite(), area.point()+off, depth);
+		geom::Area const tmask(mask.point()-off, mask.box());
+		geom::Box const sprSize(this->sprite()->size());
+		canvas.drawSprite(this->sprite(), ptInRoot+off, geom::Area(geom::ZERO, sprSize).intersect(tmask), depth);
 	}
 }
-
-void TextDrawable::draw(Canvas& canvas, geom::Point const& pt, const float depth)
+void TextDrawable::draw(Canvas& canvas, geom::Point const& ptInRoot, const float depth)
 {
 	if(this->vertical_) {
 		geom::Distance off(this->font_height_ - (this->font_ascent_+(this->tsize_.height()+this->bearing().y())), this->bearing().x());
-		canvas.drawSprite(this->sprite(), pt+off, depth);
+		canvas.drawSprite(this->sprite(), ptInRoot+off, depth);
 	}else{
 		geom::Distance off(this->bearing().x(), this->font_ascent_+this->bearing().y());
-		canvas.drawSprite(this->sprite(), pt+off, depth);
+		canvas.drawSprite(this->sprite(), ptInRoot+off, depth);
 	}
 }
 
