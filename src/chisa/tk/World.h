@@ -40,7 +40,7 @@ namespace tk {
 class Element;
 class Widget;
 class ActionMediator;
-
+class Heaven;
 class WidgetElement;
 class ElementFactory;
 
@@ -54,6 +54,7 @@ private:
 	TaskHandler taskHandler_;
 	Handler< ::donut::Donut> donut_;
 	Stack<Handler<Element> > elementStack_;
+	Handler<Heaven> heaven_;
 	std::unordered_map<std::string, WidgetElement*> widgetMap_;
 	DEFINE_MEMBER(private, private, geom::Area, area);
 private:

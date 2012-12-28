@@ -18,6 +18,7 @@
 
 #include "World.h"
 #include "Element.h"
+#include "Heaven.h"
 #include "element/ElementFactory.h"
 #include "element/WidgetElement.h"
 #include "widget/WidgetFactory.h"
@@ -35,6 +36,7 @@ World::World(Logger& log, HandlerW<Universe> _universe, std::string const& world
 ,universe_(_universe)
 ,name_(worldname)
 ,taskHandler_(log)
+,heaven_()
 ,doc_(nullptr)
 ,geist_(nullptr)
 ,elementFactory_(nullptr)
@@ -67,11 +69,12 @@ World::~World() noexcept
 
 void World::init()
 {
+	Handler<World> self(this->self());
 	if(Handler<Universe> universe = this->universe_.lock()){
 		const std::string filename(universe->resolveWorldFilepath(this->name_, "layout.xml"));
 		this->doc_ = new tinyxml2::XMLDocument();
 		this->doc_->LoadFile(filename.c_str());
-		this->elementFactory_ = new ElementFactory(this->log_, self(), filename, this->doc_, false);
+		this->elementFactory_ = new ElementFactory(this->log_, self, filename, this->doc_, false);
 
 		if( const char* geistName = this->doc_->RootElement()->Attribute("geist", nullptr)){
 			universe->hexe()->registerElements(*this->elementFactory_);
@@ -81,10 +84,11 @@ void World::init()
 				log().t(TAG, "Geist not specified for: %s", this->name().c_str());
 			}
 		}
-		this->widgetFactory_ = new WidgetFactory(this->log_, self());
+		this->widgetFactory_ = new WidgetFactory(this->log_, self);
 		universe->hexe()->registerWidgets(*this->widgetFactory_);
 	}
-	this->gestureMediator_ = new ActionMediator(this->log_, self());
+	this->gestureMediator_ = new ActionMediator(this->log_, self);
+	this->heaven_ = Handler<Heaven>(new Heaven(self));
 	this->pushElement("main");
 }
 
