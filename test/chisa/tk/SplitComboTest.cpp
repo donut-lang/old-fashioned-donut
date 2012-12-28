@@ -84,7 +84,7 @@ TEST_F(HorizontalComboTest, BasicLayoutTest)
 	Handler<ElementGroup> root = factory.parseTree("test").cast<ElementGroup>();
 
 	root->measure(geom::Box(100, 100));
-	root->layout(geom::Box(100, 100));
+	root->layout(geom::ZERO, geom::Box(100, 100));
 
 	ASSERT_EQ(3, root->getChildCount());
 
@@ -113,7 +113,7 @@ TEST_F(HorizontalComboTest, MixedTest)
 	Handler<ElementGroup> root = factory.parseTree("test").cast<ElementGroup>();
 
 	root->measure(geom::Box(100, 100));
-	root->layout(geom::Box(100, 100));
+	root->layout(geom::ZERO, geom::Box(100, 100));
 
 	ASSERT_EQ(3, root->getChildCount());
 
