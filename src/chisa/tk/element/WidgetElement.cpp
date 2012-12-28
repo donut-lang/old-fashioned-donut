@@ -72,7 +72,7 @@ void WidgetElement::renderImpl(gl::Canvas& canvas, geom::Point const& ptInScreen
 	gl::Canvas::AffineScope as(canvas);
 	gl::Canvas::ScissorScope ss(canvas, geom::Area(ptInScreen+mask.point(), mask.box()));
 	//スクリーン上の位置に移動
-	canvas.translate(ptInScreen);
+	canvas.translate(ptInScreen+this->widgetOffset());
 	//areaからウィジットが実際にレンダリングされる位置を計算
 	canvas.scale(this->widgetScale());
 	//描画を投げる
@@ -210,7 +210,7 @@ void WidgetElement::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElem
 geom::Point WidgetElement::calcPtInWidget(geom::Point const& ptInScreen)
 {
 	const geom::Point delta = ptInScreen - this->lastInnerPositionInRoot();
-	return geom::Point(this->widgetDrawnArea().point() + delta / this->widgetScale());
+	return geom::Point( delta / this->widgetScale() );
 }
 
 bool WidgetElement::onDownRaw(float const& timeMs, geom::Point const& ptInScreen)
