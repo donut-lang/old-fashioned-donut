@@ -80,7 +80,7 @@ void Sprite::drawImpl(Canvas* const canvas, geom::Point const& ptInRoot, geom::A
 	coordinate.height(coordinate.height() / this->origSize_.height());
 	canvas->drawTexture(
 			this->texId_,
-			geom::Area(drawn.point()+ptInRoot, drawn.box()),
+			geom::Area(ptInRoot+drawn.point(), drawn.box()),
 			coordinate,
 			depth,
 			color);
@@ -89,8 +89,6 @@ void Sprite::drawImpl(Canvas* const canvas, geom::Point const& ptInRoot, const f
 {
 	this->flushBuffer();
 	geom::Area coordinate(geom::Area(geom::ZERO, size_));
-	coordinate.x(coordinate.x() / this->origSize_.width());
-	coordinate.y(coordinate.y() / this->origSize_.height());
 	coordinate.width(coordinate.width() / this->origSize_.width());
 	coordinate.height(coordinate.height() / this->origSize_.height());
 	canvas->drawTexture(

@@ -54,7 +54,7 @@ ImageWidget::~ImageWidget()
 void ImageWidget::render(gl::Canvas& cv, geom::Area const& area)
 {
 	if(this->imageSprite_){
-		cv.drawSprite(this->imageSprite_, -area.point(), area);
+		cv.drawSprite(this->imageSprite_, geom::ZERO, area);
 	}
 }
 
