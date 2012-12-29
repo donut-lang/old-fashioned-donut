@@ -81,7 +81,7 @@ bool Provider::registerReactiveNativeClosure<ReactiveNativeClosureObject::Signat
 
 class HeapProvider : public Provider {
 	friend class Heap;
-	template <typename Derived, typename T> friend class HeapProviderImpl;
+	template <typename Derived, typename T> friend class HeapProviderBaseT;
 private:
 	HeapProvider( Handler<Heap> const& heap, std::string const& name ):Provider(heap, name){};
 	virtual HeapObject* __internal__createInstanceForLoading() = 0;
@@ -90,12 +90,12 @@ public:
 };
 
 template <typename Derived, typename T>
-class HeapProviderImpl : public HeapProvider {
+class HeapProviderBaseT : public HeapProvider {
 protected:
-	typedef HeapProviderImpl<Derived, T> Super;
-	HeapProviderImpl( Handler<Heap> const& heap, std::string const& name ):HeapProvider(heap, name){};
+	typedef HeapProviderBaseT<Derived, T> Super;
+	HeapProviderBaseT( Handler<Heap> const& heap, std::string const& name ):HeapProvider(heap, name){};
 public:
-	virtual ~HeapProviderImpl() noexcept = default;
+	virtual ~HeapProviderBaseT() noexcept = default;
 private:
 	virtual HeapObject* __internal__createInstanceForLoading() override {
 		return new T( static_cast<Derived*>(this) );

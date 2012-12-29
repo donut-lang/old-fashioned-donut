@@ -22,14 +22,14 @@
 namespace donut {
 
 class PureNativeClosureObject;
-class PureNativeClosureProvider final : public HeapProviderImpl<PureNativeClosureProvider, PureNativeClosureObject> {
+class PureNativeClosureProvider final : public HeapProviderBaseT<PureNativeClosureProvider, PureNativeClosureObject> {
 public:
 	PureNativeClosureProvider( Handler<Heap> const& heap );
 	virtual ~PureNativeClosureProvider() noexcept = default;
 };
 
 class ReactiveNativeClosureObject;
-class ReactiveNativeClosureProvider final : public HeapProviderImpl<ReactiveNativeClosureProvider, ReactiveNativeClosureObject> {
+class ReactiveNativeClosureProvider final : public HeapProviderBaseT<ReactiveNativeClosureProvider, ReactiveNativeClosureObject> {
 public:
 	ReactiveNativeClosureProvider( Handler<Heap> const& heap );
 	virtual ~ReactiveNativeClosureProvider() noexcept = default;

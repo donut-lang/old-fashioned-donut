@@ -22,7 +22,7 @@
 namespace donut {
 
 class FloatObject;
-class FloatProvider final : public HeapProviderImpl<FloatProvider, FloatObject> {
+class FloatProvider final : public HeapProviderBaseT<FloatProvider, FloatObject> {
 public:
 	FloatProvider(Handler<Heap> const& heap);
 	virtual ~FloatProvider() noexcept = default;
