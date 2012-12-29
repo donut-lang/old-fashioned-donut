@@ -109,6 +109,11 @@ void ReactiveNativeObject::registerReaction( timestamp_t time, XValue const& v )
 	this->index_ = this->reactions_.size();
 }
 
+std::string ReactiveNativeObject::reprImpl(Handler<Heap> const& heap) const
+{
+	return format("(ReactiveNativeObject for \"%s\" %p)", this->provider()->name().c_str(), this);
+}
+
 /**********************************************************************************
  * save/load
  **********************************************************************************/

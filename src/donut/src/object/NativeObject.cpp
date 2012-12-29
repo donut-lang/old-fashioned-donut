@@ -31,7 +31,7 @@ NativeObject::NativeObject(HeapProvider* const provider)
 
 std::string NativeObject::reprImpl(Handler<Heap> const& heap) const
 {
-	return format("(NativeObject %p)", this);
+	return format("(NativeObject for \"%s\" %p)", this->provider()->name().c_str(), this);
 }
 
 bool NativeObject::hasImpl(Handler<Heap> const& heap, std::string const& name) const

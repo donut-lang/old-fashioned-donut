@@ -228,7 +228,7 @@ protected:
 public:
 	virtual ~NativeObject() noexcept = default;
 protected:
-	virtual std::string reprImpl(Handler<Heap> const& heap) const = 0;
+	virtual std::string reprImpl(Handler<Heap> const& heap) const;
 protected:
 	virtual bool hasImpl(Handler<Heap> const& heap, std::string const& name) const override;
 	virtual bool hasOwnImpl(Handler<Heap> const& heap, std::string const& name) const override;
