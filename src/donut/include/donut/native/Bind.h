@@ -37,11 +37,9 @@ Handler<Object> bindArgumentPure(Handler<Heap> const& heap, std::vector<Handler<
 template <size_t idx, typename R, typename U, typename... Args>
 Handler<Object> bindArgumentPure(Handler<Heap> const& heap, std::vector<Handler<Object> > const& args, std::function<R(U val, Args... args)> const& funct)
 {
-	typename DecodeTraits<U>::return_type const val = native::Decoder<U>::exec( heap, args[idx] );
-	std::function<R(Args ... args)> const left ( [funct, val](Args... args) {
-		return funct(std::move(val), args...);
-	});
-	return bindArgumentPure<idx + 1, R> (heap, args, left);
+	return bindArgumentPure<idx + 1, R> (heap, args, std::function<R(Args ... args)>( [funct, &heap, &args](Args... largs) {
+		return funct(native::Decoder<U>::exec( heap, args[idx] ), largs...);
+	}));
 }
 
 template <typename R, typename S, typename... Args>
@@ -72,11 +70,9 @@ std::tuple<Handler<Object>, XValue> bindArgumentReactive(Handler<Heap> const& he
 template <size_t idx, typename R, typename U, typename... Args>
 std::tuple<Handler<Object>, XValue> bindArgumentReactive(Handler<Heap> const& heap, std::vector<Handler<Object> > const& args, std::function<std::tuple<R, XValue>(U val, Args... args)> const& funct)
 {
-	typename DecodeTraits<U>::return_type const val = native::Decoder<U>::exec( heap, args[idx] );
-	std::function<std::tuple<R, XValue>(Args ... args)> const left ( [funct, val](Args... args) {
-		return funct(std::move(val), args...);
-	});
-	return bindArgumentPure<idx + 1, R> (heap, args, left);
+	return bindArgumentPure<idx + 1, R> (heap, args, std::function<std::tuple<R, XValue>(Args ... args)>( [funct, &heap, &args](Args... largs) {
+		return funct(native::Decoder<U>::exec( heap, args[idx] ), largs...);
+	}));
 }
 
 template <typename R, typename S, typename... Args>
@@ -86,8 +82,11 @@ std::function<std::tuple<Handler<Object>, XValue>(Handler<Heap> const& heap, Han
 		if (args.size() != sizeof...(Args)) {
 			DONUT_EXCEPTION(Exception, "this reactive native closure needs %d arguments, but %d arguments applied.", sizeof...(Args), args.size());
 		}
-		std::function<std::tuple<R, XValue>(Args...)> self_applied ( [f, heap, self ](Args... args_){ return f(native::Decoder<S>::exec( heap, self ), args_...); } );
-		return bindArgumentReactive<0>(heap, args, self_applied);
+		return bindArgumentReactive<0>(heap, args, std::function<std::tuple<R, XValue>(Args...)>(
+						[f, heap, self ](Args... args_){
+							return f(native::Decoder<S>::exec( heap, self ), args_...);
+						}
+				));
 	};
 }
 }}
