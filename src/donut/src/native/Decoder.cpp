@@ -44,4 +44,10 @@ bool decode<bool>(Handler<Heap> const& heap, Handler<Object> obj)
 	return obj->toBool(heap);
 }
 
+template <>
+std::string decode<std::string>(Handler<Heap> const& heap, Handler<Object> obj)
+{
+	return obj->toString(heap);
+}
+
 }}

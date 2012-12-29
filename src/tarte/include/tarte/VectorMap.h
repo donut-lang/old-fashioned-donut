@@ -32,6 +32,8 @@ public:
 	typedef typename Vector::iterator Iterator;
 	typedef typename Vector::const_iterator ConstIterator;
 	typedef typename Vector::size_type SizeType;
+	typedef T Key;
+	typedef U Value;
 private:
 	Vector data_;
 	inline bool eq(T const& key, Pair const& p) const noexcept {

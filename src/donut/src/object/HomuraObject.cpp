@@ -77,7 +77,7 @@ Handler<Object> HomuraObject::setImpl(Handler<Heap> const& heap, std::string con
 Handler<Object> HomuraObject::getImpl(Handler<Heap> const& heap, std::string const& name) const
 {
 	auto it = this->slot_.find(name);
-	Object* const& p = (*it).second;
+	Object* const& p = ((VectorMap<std::string, Object*>::Pair)(*it)).second;
 	return (it != this->slot_.end()) ? Handler<Object>::__internal__fromRawPointerWithoutCheck(p) : this->NativeObject::getImpl(heap, name);
 }
 void HomuraObject::markImpl(Handler<Heap> const& heap, int color)
