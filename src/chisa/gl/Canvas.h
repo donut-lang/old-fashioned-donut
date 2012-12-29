@@ -48,8 +48,8 @@ public:
 	void translate(geom::Point const& pt);
 	void rotate(const float angle, geom::Point const& pt);
 	void scale(geom::ScaleVector const& scale);
-	void drawSprite(Handler<Sprite> sprite, geom::Point const& pt, const float depth = 0.0f, Color const& color=White);
-	void drawSprite(Handler<Sprite> sprite, geom::Point const& pt, geom::Area const& mask, const float depth = 0.0f, Color const& color=White);
+	void drawSprite(Handler<Sprite> const& sprite, geom::Point const& pt, const float depth = 0.0f, Color const& color=White);
+	void drawSprite(Handler<Sprite> const& sprite, geom::Point const& pt, geom::Area const& mask, const float depth = 0.0f, Color const& color=White);
 	void drawLine(const float width, Color const& color, geom::Point const& start, geom::Point const& end, const float depth=0.0f);
 	void drawRect(const float width, Color const& color, geom::Area const& area, const float depth=0.0f);
 	void fillRect(Color const& color, geom::Area const& area, const float depth=0.0f);

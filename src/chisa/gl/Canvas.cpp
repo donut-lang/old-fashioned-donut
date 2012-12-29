@@ -78,11 +78,11 @@ void Canvas::scissor(geom::Area const& area)
 	glScissor(area.x(), this->height_-area.height()-area.y(),area.width(), area.height());
 }
 
-void Canvas::drawSprite(Handler<Sprite> sprite, geom::Point const& ptInRoot, const float depth, Color const& color)
+void Canvas::drawSprite(Handler<Sprite> const& sprite, geom::Point const& ptInRoot, const float depth, Color const& color)
 {
 	sprite->drawImpl(this, ptInRoot, depth, color);
 }
-void Canvas::drawSprite(Handler<Sprite> sprite, geom::Point const& ptInRoot, geom::Area const& mask, const float depth, Color const& color)
+void Canvas::drawSprite(Handler<Sprite> const& sprite, geom::Point const& ptInRoot, geom::Area const& mask, const float depth, Color const& color)
 {
 	sprite->drawImpl(this, ptInRoot, mask, depth, color);
 }
