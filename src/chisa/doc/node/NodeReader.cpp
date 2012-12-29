@@ -17,7 +17,6 @@
  */
 
 #include <tarte/Exception.h>
-#include <tarte/TypeTraits.h>
 #include <tinyxml2.h>
 
 #include "NodeReader.h"
@@ -28,7 +27,7 @@ namespace doc {
 
 const std::string NodeReader::RootElementName("doc");
 
-template <typename T, bool = IsBaseOf<T, BlockNode>::result>
+template <typename T, typename U=void>
 struct Proxy {
 private:
 	NodeReader::TreeConstructor c;
@@ -45,7 +44,7 @@ public:
 };
 
 template <typename T>
-struct Proxy<T, true> {
+struct Proxy<T, typename std::enable_if<std::is_base_of<BlockNode, T>::value>::type> {
 private:
 	NodeReader::BlockConstructor c;
 public:
