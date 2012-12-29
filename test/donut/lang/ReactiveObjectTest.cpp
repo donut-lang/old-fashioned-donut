@@ -75,7 +75,7 @@ public:
 
 	}
 };
-class SampleProvider : public HeapProviderImpl<SampleProvider, SampleObject>{
+class SampleProvider : public HeapProviderBaseT<SampleProvider, SampleObject>{
 public:
 	SampleProvider(Handler<Heap> const& heap ):Super(heap, "SampleObject"){
 		this->registerReactiveNativeClosure("unrecoverable", std::function<std::tuple<std::string, XValue>(SampleObject*)>([](SampleObject* obj){
