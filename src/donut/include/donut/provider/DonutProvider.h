@@ -23,12 +23,12 @@ namespace donut {
 
 class DonutObject;
 class DonutClosureObject;
-class DonutProvider final : public HeapProviderImpl<DonutObject> {
+class DonutProvider final : public HeapProviderImpl<DonutProvider, DonutObject> {
 public:
 	DonutProvider( Handler<Heap> const& heap );
 	virtual ~DonutProvider() noexcept = default;
 };
-class DonutClosureProvider final : public HeapProviderImpl<DonutClosureObject> {
+class DonutClosureProvider final : public HeapProviderImpl<DonutClosureProvider, DonutClosureObject> {
 public:
 	DonutClosureProvider( Handler<Heap> const& heap );
 	virtual ~DonutClosureProvider() noexcept = default;

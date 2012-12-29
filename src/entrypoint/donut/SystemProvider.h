@@ -24,7 +24,7 @@ namespace donut_cli {
 using namespace donut;
 
 class SystemObject;
-class SystemProvider final : public HeapProviderImpl<SystemObject> {
+class SystemProvider final : public HeapProviderImpl<SystemProvider, SystemObject> {
 private:
 	std::vector<std::string> const args_;
 public:

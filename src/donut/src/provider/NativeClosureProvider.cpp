@@ -22,12 +22,12 @@
 namespace donut {
 
 PureNativeClosureProvider::PureNativeClosureProvider( Handler<Heap> const& heap )
-:HeapProviderImpl<PureNativeClosureObject>(heap, "PureNativeClosureObject")
+:Super(heap, "PureNativeClosureObject")
 {
 }
 
 ReactiveNativeClosureProvider::ReactiveNativeClosureProvider( Handler<Heap> const& heap )
-:HeapProviderImpl<ReactiveNativeClosureObject>(heap, "ReactiveNativeClosureObject")
+:Super(heap, "ReactiveNativeClosureObject")
 {
 }
 

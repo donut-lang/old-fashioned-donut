@@ -25,7 +25,7 @@ namespace donut {
 static const std::string TAG("HomuraProvider");
 
 HomuraProvider::HomuraProvider(Handler<Heap> const& heap)
-:HeapProviderImpl<HomuraObject>(heap, "Homura")
+:Super(heap, "Homura")
 {
 	this->registerPureNativeClosure("tick", std::function<timestamp_t(HomuraObject*)>([&](HomuraObject* hom) {
 		Handler<Heap> heap = this->heap().lock();
