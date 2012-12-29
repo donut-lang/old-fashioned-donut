@@ -37,7 +37,7 @@ Handler<Object> bindArgumentPure(Handler<Heap> const& heap, std::vector<Handler<
 template <size_t idx, typename R, typename U, typename... Args>
 Handler<Object> bindArgumentPure(Handler<Heap> const& heap, std::vector<Handler<Object> > const& args, std::function<R(U val, Args... args)> const& funct)
 {
-	U const val = native::Decoder<U>::exec( heap, args[idx] );
+	typename DecodeTraits<U>::return_type const val = native::Decoder<U>::exec( heap, args[idx] );
 	std::function<R(Args ... args)> const left ( [funct, val](Args... args) {
 		return funct(val, args...);
 	});
@@ -72,7 +72,7 @@ std::tuple<Handler<Object>, XValue> bindArgumentReactive(Handler<Heap> const& he
 template <size_t idx, typename R, typename U, typename... Args>
 std::tuple<Handler<Object>, XValue> bindArgumentReactive(Handler<Heap> const& heap, std::vector<Handler<Object> > const& args, std::function<std::tuple<R, XValue>(U val, Args... args)> const& funct)
 {
-	U const val = native::Decoder<U>::exec( heap, args[idx] );
+	typename DecodeTraits<U>::return_type const val = native::Decoder<U>::exec( heap, args[idx] );
 	std::function<std::tuple<R, XValue>(Args ... args)> const left ( [funct, val](Args... args) {
 		return funct(val, args...);
 	});
