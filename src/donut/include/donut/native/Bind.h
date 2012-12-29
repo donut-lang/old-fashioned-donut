@@ -49,8 +49,11 @@ std::function<Handler<Object>(Handler<Heap> const& heap, Handler<Object> const& 
 		if (args.size() != sizeof...(Args)) {
 			DONUT_EXCEPTION(Exception, "this pure native closure needs %d arguments, but %d arguments applied.", sizeof...(Args), args.size());
 		}
-		std::function<R(Args...)> self_applied ( [f, heap, self ](Args... args_){ return f(native::Decoder<S>::exec( heap, self ), args_...); } );
-		return bindArgumentPure<0>(heap, args, self_applied);
+		return bindArgumentPure<0>(heap, args, std::function<R(Args...)>(
+				[f, heap, self ](Args... args_){
+					return f(native::Decoder<S>::exec( heap, self ), args_...);
+				}
+			));
 	};
 }
 

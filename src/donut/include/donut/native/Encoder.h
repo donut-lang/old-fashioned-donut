@@ -17,7 +17,6 @@
  */
 
 #pragma once
-#include <tarte/TypeTraits.h>
 #include "../object/Object.h"
 
 namespace donut {
@@ -31,61 +30,54 @@ Handler<Object> encode(Handler<Heap> const& heap, T obj);
 
 //-----------------------------------------------------------------------------
 
-template <typename T, bool = IsBaseOf<T, Object>::result >
-struct PointerEncoder final {
-	static Handler<Object> exec(Handler<Heap> const& heap, T* obj) {
-		return encode<T*>( heap, obj );
-	}
-};
-
-template <typename T>
-struct PointerEncoder<T, true> final {
-	static Handler<Object> exec(Handler<Heap> const& heap, T* obj)
-	{
-		return Handler<Object>::__internal__fromRawPointerWithoutCheck( obj );
-	}
-};
-
-//-----------------------------------------------------------------------------
-
-template <typename T, bool = IsBaseOf<T, Object>::result >
-struct HandlerEncoder final {
-	static Handler<Object> exec(Handler<Heap> const& heap, Handler<T> obj)
-	{
-		return encode<Handler<T> >( heap, obj );
-	}
-};
-
-template <typename T>
-struct HandlerEncoder<T, true> final {
-	static Handler<Object> exec(Handler<Heap> const& heap, Handler<T> obj)
-	{
-		return obj;
-	}
-};
-
-//-----------------------------------------------------------------------------
-
-template <typename T>
+template <typename T, typename U=void>
 struct Encoder final{
 	static Handler<Object> exec(Handler<Heap> const& heap, T obj) {
 		return encode<T>(heap, obj);
 	}
 };
 
+//ポインタだが、Objectの派生でない
 template <typename T>
-struct Encoder<T*> final {
-	static Handler<Object> exec(Handler<Heap> const& heap, T* obj)
-	{
-		return PointerEncoder<T>::exec(heap, obj);
+struct Encoder<T, typename std::enable_if<
+	std::is_pointer<T>::value &&
+	!std::is_base_of<Object, typename std::remove_pointer<T>::type
+		>::value >::type> final {
+	static Handler<Object> exec(Handler<Heap> const& heap, T obj) {
+		return encode<T>(heap, obj);
 	}
 };
 
+//ポインタで、Objectの派生
 template <typename T>
-struct Encoder< Handler<T> > final {
+struct Encoder<T, typename std::enable_if<
+	std::is_pointer<T>::value &&
+	std::is_base_of<Object, typename std::remove_pointer<T>::type
+		>::value >::type> final {
+	static Handler<Object> exec(Handler<Heap> const& heap, T obj) {
+		return Handler<Object>::__internal__fromRawPointerWithoutCheck( obj );
+	}
+};
+
+//ハンドラだがオブジェクトではない
+template <typename T>
+struct Encoder< Handler<T>, typename std::enable_if<
+		!std::is_base_of<Object, T>::value
+			>::type> final {
 	static Handler<Object> exec(Handler<Heap> const& heap, Handler<T> obj)
 	{
-		return HandlerEncoder<T>::exec( heap, obj );
+		return encode<Handler<T> >( heap, obj );
+	}
+};
+
+//ハンドラでオブジェクト
+template <typename T>
+struct Encoder< Handler<T>, typename std::enable_if<
+		std::is_base_of<Object, T>::value
+			>::type> final {
+	static Handler<Object> exec(Handler<Heap> const& heap, Handler<T> obj)
+	{
+		return obj;
 	}
 };
 
