@@ -19,6 +19,7 @@
 #include <donut/object/Heap.h>
 #include <donut/object/HomuraObject.h>
 #include <donut/provider/HomuraProvider.h>
+#include <donut/Exception.h>
 
 namespace donut {
 
