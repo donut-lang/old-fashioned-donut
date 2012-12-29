@@ -43,9 +43,10 @@ public:
 public:
 	void registerReaction( timestamp_t time, XValue const& v );
 protected:
+	std::string reprImpl(Handler<Heap> const& heap) const;
+protected:
 	virtual void onFutureDiscarded(Handler<Heap> const& heap) {};
 	virtual void onHistoryDiscarded(Handler<Heap> const& heap) {};
-	virtual std::string reprImpl(Handler<Heap> const& heap) const override = 0;
 	virtual XValue onBack(Handler<Heap> const& heap, XValue const& val) = 0;
 	virtual XValue onForward(Handler<Heap> const& heap, XValue const& val) = 0;
 	virtual XValue saveImpl( Handler<Heap> const& heap ) override = 0;
