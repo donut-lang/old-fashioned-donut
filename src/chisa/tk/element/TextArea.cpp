@@ -570,7 +570,7 @@ void TextArea::onTextEdit(float const& timeMs, std::string const& text, int cons
 			width += spr->width();
 		}
 	}
-	this->textOffset_ = textArea_.width() - this->editListBeforeWidth_ - width;
+	this->textOffset_ = std::min(0.0f, size().width() - this->editListBeforeWidth_ - width);
 }
 
 bool TextArea::onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym)
