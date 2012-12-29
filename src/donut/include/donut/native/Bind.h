@@ -39,7 +39,7 @@ Handler<Object> bindArgumentPure(Handler<Heap> const& heap, std::vector<Handler<
 {
 	typename DecodeTraits<U>::return_type const val = native::Decoder<U>::exec( heap, args[idx] );
 	std::function<R(Args ... args)> const left ( [funct, val](Args... args) {
-		return funct(val, args...);
+		return funct(std::move(val), args...);
 	});
 	return bindArgumentPure<idx + 1, R> (heap, args, left);
 }
@@ -74,7 +74,7 @@ std::tuple<Handler<Object>, XValue> bindArgumentReactive(Handler<Heap> const& he
 {
 	typename DecodeTraits<U>::return_type const val = native::Decoder<U>::exec( heap, args[idx] );
 	std::function<std::tuple<R, XValue>(Args ... args)> const left ( [funct, val](Args... args) {
-		return funct(val, args...);
+		return funct(std::move(val), args...);
 	});
 	return bindArgumentPure<idx + 1, R> (heap, args, left);
 }
