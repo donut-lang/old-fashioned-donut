@@ -27,11 +27,6 @@ namespace donut {
 
 const std::string TAG("ReactiveNativeObject");
 
-std::string ReactiveNativeObject::reprImpl(Handler<Heap> const& heap) const
-{
-	return format("(ReactiveNativeObject: %p)", this);
-}
-
 int ReactiveNativeObject::findLowerIndex( timestamp_t const& t )
 {
 	auto it = std::lower_bound(this->reactions_.begin(), this->reactions_.end(), t, PairCompare<timestamp_t, XValue>());

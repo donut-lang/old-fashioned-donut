@@ -22,7 +22,7 @@
 namespace donut {
 
 class StringObject;
-class StringProvider final : public HeapProviderImpl<StringObject> {
+class StringProvider final : public HeapProviderImpl<StringProvider, StringObject> {
 public:
 	StringProvider(Handler<Heap> const& heap);
 	virtual ~StringProvider() noexcept = default;

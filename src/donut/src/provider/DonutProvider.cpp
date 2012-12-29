@@ -24,12 +24,12 @@ namespace donut {
 
 
 DonutProvider::DonutProvider( Handler<Heap> const& heap )
-:HeapProviderImpl<DonutObject>(heap, "DonutObject")
+:Super(heap, "DonutObject")
 {
 
 }
 DonutClosureProvider::DonutClosureProvider( Handler<Heap> const& heap )
-:HeapProviderImpl<DonutClosureObject>(heap,"DonutClosureObject")
+:Super(heap,"DonutClosureObject")
 {
 
 }

@@ -28,7 +28,7 @@ using namespace tarte;
 static const std::string TAG("StringProvider");
 
 StringProvider::StringProvider(Handler<Heap> const& heap )
-:HeapProviderImpl<StringObject>(heap, "String")
+:Super(heap, "String")
 {
 	this->registerPureNativeClosure("toInteger", std::function<int(StringObject*)>([&](StringObject* self) {
 		return parseAs<int>(self->toString(this->heap().lock()), 0);

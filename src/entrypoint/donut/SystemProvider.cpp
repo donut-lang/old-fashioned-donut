@@ -25,7 +25,7 @@ namespace donut_cli {
 static const std::string TAG("SystemProvider");
 
 SystemProvider::SystemProvider(Handler<Heap> const& heap, int argc, char** argv)
-:HeapProviderImpl<SystemObject>(heap, "System")
+:Super(heap, "System")
 ,args_(argv, argv+argc)
 {
 	this->registerPureNativeClosure("println", SystemObject::println);

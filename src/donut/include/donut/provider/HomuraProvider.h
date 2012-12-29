@@ -22,7 +22,7 @@
 namespace donut {
 
 class HomuraObject;
-class HomuraProvider final : public HeapProviderImpl<HomuraObject> {
+class HomuraProvider final : public HeapProviderImpl<HomuraProvider, HomuraObject> {
 public:
 	HomuraProvider(Handler<Heap> const& heap);
 	virtual ~HomuraProvider() noexcept = default;

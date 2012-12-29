@@ -27,7 +27,7 @@ using namespace tarte;
 static const std::string TAG("FloatProvider");
 
 FloatProvider::FloatProvider(Handler<Heap> const& heap)
-:HeapProviderImpl<FloatObject>(heap, "Float")
+:Super(heap, "Float")
 {
 	this->registerPureNativeClosure("opAdd", std::function<float(float, float)>([&](float self, float v) {
 		return self+v;
