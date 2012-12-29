@@ -338,7 +338,7 @@ void Heap::load(XValue const& data)
 			if(it == array->end()){
 				DONUT_EXCEPTION(Exception, "[BUG] Oops. Heap size mismatched while loading.");
 			}
-			Handler<XObject> const xobj ( (it++)->as<XObject>() );
+			Handler<XObject> const xobj ( ((XValue&)(*(it++))).as<XObject>() );
 			objectid_t id = xobj->get<objectid_t>("id");
 			if(id != obj->id()){
 				DONUT_EXCEPTION(Exception, "[BUG] Object ID mismatched while loading.");
