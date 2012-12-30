@@ -21,6 +21,7 @@
 #include <tarte/Handler.h>
 #include <tarte/XVal.h>
 #include <tarte/VectorMap.h>
+#include <tarte/Dynamic.h>
 #include "../object/NativeClosureObject.h"
 
 namespace donut {
@@ -94,6 +95,7 @@ class HeapProviderBaseT : public HeapProvider {
 protected:
 	typedef HeapProviderBaseT<Derived, T> Super;
 	HeapProviderBaseT( Handler<Heap> const& heap, std::string const& name ):HeapProvider(heap, name){};
+	HeapProviderBaseT( Handler<Heap> const& heap ):HeapProvider(heap, ::tarte::demangle<T>() ){};
 public:
 	virtual ~HeapProviderBaseT() noexcept = default;
 private:
