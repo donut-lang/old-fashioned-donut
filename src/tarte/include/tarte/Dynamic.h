@@ -33,12 +33,14 @@ std::string demangle(
 	return demangle(typeid(T));
 }
 
+//ポインタが全部取れるまで再帰
 template <typename T>
 std::string demangle(typename std::enable_if<std::is_pointer<T>::value >::type* = nullptr)
 {
 	return demangle<typename std::remove_pointer<T>::type>();
 }
 
+//リファレンスが取れるまで再帰
 template <typename T>
 std::string demangle(typename std::enable_if<std::is_reference<T>::value >::type* = nullptr)
 {
@@ -50,6 +52,7 @@ std::string demangle( T obj, typename std::enable_if<!std::is_pointer<T>::value 
 	return demangle(typeid(obj));
 }
 
+//ポインタを取り過ぎるとポリモルフィズムに対応できなくなっちゃうので再帰
 template <typename T>
 std::string demangle( T obj, typename std::enable_if<
 		std::is_pointer<T>::value &&
