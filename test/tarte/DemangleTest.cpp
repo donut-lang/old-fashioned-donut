@@ -32,6 +32,37 @@ TEST(DemangleTest, Literal)
 	ASSERT_EQ("int", demangle<int*>());
 	ASSERT_EQ("int", demangle<int**>());
 	ASSERT_EQ("int", demangle<int***>());
+
+	float f=0.0f;
+	ASSERT_EQ("float", demangle(f));
+}
+
+class __DemangleTest__Sample {
+
+};
+
+TEST(DemangleTest, Class)
+{
+	__DemangleTest__Sample s;
+	ASSERT_EQ("tarte::__DemangleTest__Sample", demangle(s));
+	ASSERT_EQ("tarte::__DemangleTest__Sample", demangle(&s));
+}
+
+template <typename T>
+class __DemangleTest__TemplateKlass {
+
+};
+
+TEST(DemangleTest, TemplateClass)
+{
+	__DemangleTest__TemplateKlass<__DemangleTest__Sample> s;
+	ASSERT_EQ("tarte::__DemangleTest__TemplateKlass<tarte::__DemangleTest__Sample>", demangle(s));
+}
+
+TEST(DemangleTest, RecusriveTemplateClass)
+{
+	tarte::__DemangleTest__TemplateKlass<__DemangleTest__TemplateKlass<__DemangleTest__Sample>> s;
+	ASSERT_EQ("tarte::__DemangleTest__TemplateKlass<tarte::__DemangleTest__TemplateKlass<__DemangleTest__Sample> >", demangle(s));
 }
 
 }

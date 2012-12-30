@@ -78,9 +78,10 @@ public:
 	virtual ~ElementFactory();
 private:
 	void init();
-public:
+public: /* 作成メソッド */
 	Handler<Element> parseTree(std::string const& layoutId);
 	Handler<Element> parseTree(HandlerW<Element> parent, tinyxml2::XMLElement* top);
+public: /* 登録 */
 	void registerElement(std::string const& elementName, ConstructorType constructor);
 	template <typename T>
 	void registerElement(std::string const& elementName)
