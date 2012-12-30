@@ -79,21 +79,21 @@ public:
 	virtual ~ElementFactory();
 private:
 	void init();
-	void registerElementWithElementName(std::string const& xmlElementName, ConstructorType constructor);
-	void registerElementProvider(std::string const& demangledElementName, Handler< ::donut::Provider> const& provider);
+	void registerLayout(std::string const& xmlElementName, ConstructorType constructor);
+	void registerProvider(std::string const& demangledElementName, Handler< ::donut::Provider> const& provider);
 public: /* 作成メソッド */
 	Handler<Element> parseTree(std::string const& layoutId);
 	Handler<Element> parseTree(HandlerW<Element> parent, tinyxml2::XMLElement* top);
 public: /* 登録 */
 	template <typename ElementKlass>
-	void registerElement(std::string const& xmlElementName)
+	void registerLayout(std::string const& xmlElementName)
 	{
-		this->registerElementWithElementName(xmlElementName, elementConstructor<ElementKlass>);
+		this->registerLayout(xmlElementName, elementConstructor<ElementKlass>);
 	}
 	template <typename ElementKlass>
 	void registerProvider(Handler< ::donut::Provider> const& provider)
 	{
-		this->registerElementWithElementName(::tarte::demangle<ElementKlass>(), provider);
+		this->registerProvider(::tarte::demangle<ElementKlass>(), provider);
 	}
 };
 
