@@ -62,7 +62,18 @@ TEST(DemangleTest, TemplateClass)
 TEST(DemangleTest, RecusriveTemplateClass)
 {
 	tarte::__DemangleTest__TemplateKlass<__DemangleTest__TemplateKlass<__DemangleTest__Sample>> s;
-	ASSERT_EQ("tarte::__DemangleTest__TemplateKlass<tarte::__DemangleTest__TemplateKlass<__DemangleTest__Sample> >", demangle(s));
+	ASSERT_EQ("tarte::__DemangleTest__TemplateKlass<tarte::__DemangleTest__TemplateKlass<tarte::__DemangleTest__Sample> >", demangle(s));
+}
+
+namespace {
+class AnomTest {
+};
+
+TEST(DemangleTest, AnomNameSpace)
+{
+	AnomTest s;
+	ASSERT_EQ("tarte::(anonymous namespace)::AnomTest", demangle(s));
+}
 }
 
 }
