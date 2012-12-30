@@ -62,7 +62,8 @@ public:
 private:
 	Logger& log_;
 	HandlerW<World> world_;
-	VectorMap<std::string, ConstructorType> elementMap_;
+	VectorMap<std::string, ConstructorType> tagToElementConstructorMap_;
+	VectorMap<std::string, Handler< ::donut::Provider> > demangledElementNameToDonutProviderMap_;
 public:
 	inline Logger& log() const { return log_; }
 	inline HandlerW<World> world() const { return world_; }
@@ -78,15 +79,21 @@ public:
 	virtual ~ElementFactory();
 private:
 	void init();
+	void registerElementWithElementName(std::string const& xmlElementName, ConstructorType constructor);
+	void registerElementProvider(std::string const& demangledElementName, Handler< ::donut::Provider> const& provider);
 public: /* 作成メソッド */
 	Handler<Element> parseTree(std::string const& layoutId);
 	Handler<Element> parseTree(HandlerW<Element> parent, tinyxml2::XMLElement* top);
 public: /* 登録 */
-	void registerElement(std::string const& elementName, ConstructorType constructor);
-	template <typename T>
-	void registerElement(std::string const& elementName)
+	template <typename ElementKlass>
+	void registerElement(std::string const& xmlElementName)
 	{
-		this->registerElement(elementName, elementConstructor<T>);
+		this->registerElementWithElementName(xmlElementName, elementConstructor<ElementKlass>);
+	}
+	template <typename ElementKlass>
+	void registerProvider(Handler< ::donut::Provider> const& provider)
+	{
+		this->registerElementWithElementName(::tarte::demangle<ElementKlass>(), provider);
 	}
 };
 

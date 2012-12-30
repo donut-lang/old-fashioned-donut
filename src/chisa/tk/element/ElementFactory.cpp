@@ -120,16 +120,26 @@ ElementFactory::~ElementFactory()
 	this->doc_ = nullptr;
 }
 
-void ElementFactory::registerElement(std::string const& elementName, ElementFactory::ConstructorType constructor)
+void ElementFactory::registerElementWithElementName(std::string const& xmlElementName, ElementFactory::ConstructorType constructor)
 {
-	this->elementMap_.update(elementName, constructor);
+	if(!this->tagToElementConstructorMap_.insert(xmlElementName, constructor)){
+		TARTE_EXCEPTION(Exception, "[BUG] Oops. XML Element Name \"%s\" is already registered");
+	}
 }
+
+void ElementFactory::registerElementProvider(std::string const& demangledElementName, Handler< ::donut::Provider> const& provider)
+{
+	if(!this->demangledElementNameToDonutProviderMap_.insert(demangledElementName, provider)){
+		TARTE_EXCEPTION(Exception, "[BUG] Oops. Provider for \"%s\" is already registered");
+	}
+}
+
 
 Handler<Element> ElementFactory::parseTree(HandlerW<Element> parent, XMLElement* top)
 {
 	const char* name = top->Name();
-	auto it = this->elementMap_.find(name);
-	if(this->elementMap_.end() == it){
+	auto it = this->tagToElementConstructorMap_.find(name);
+	if(this->tagToElementConstructorMap_.end() == it){
 		TARTE_EXCEPTION(Exception, "Unknwon Element: %s", name);
 	}
 	Handler<Element> elm(it->second(this->log(), this->world(), parent));
