@@ -34,10 +34,6 @@ class TextContext {
 private:
 	Handler<RenderTree> renderTree_;
 	Handler<gl::Font> font_;
-	cairo_font_face_t* face_;
-	cairo_surface_t* nullSurface_;
-	cairo_font_options_t* nullOption_;
-	cairo_t* cairo_;
 	std::vector<gl::TextDrawable::Style> styleStack_;
 	std::vector<gl::TextDrawable::Decoration> decoStack_;
 	std::vector<float> sizeStack_;
