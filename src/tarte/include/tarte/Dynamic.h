@@ -45,9 +45,27 @@ std::string demangle(typename std::enable_if<std::is_reference<T>::value >::type
 	return demangle<typename std::remove_reference<T>::type>();
 }
 template <typename T>
-std::string demangle( T obj )
+std::string demangle( T obj, typename std::enable_if<!std::is_pointer<T>::value >::type* = nullptr)
 {
-	return demangle<T>();
+	return demangle(typeid(obj));
+}
+
+template <typename T>
+std::string demangle( T obj, typename std::enable_if<
+		std::is_pointer<T>::value &&
+		std::is_pointer<typename std::remove_pointer<T>::type >::value
+			>::type* = nullptr)
+{
+	return demangle(*obj);
+}
+
+template <typename T>
+std::string demangle( T obj, typename std::enable_if<
+		std::is_pointer<T>::value &&
+		!std::is_pointer<typename std::remove_pointer<T>::type >::value
+			>::type* = nullptr)
+{
+	return demangle(typeid(*obj));
 }
 
 }

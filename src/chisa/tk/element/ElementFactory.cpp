@@ -136,14 +136,14 @@ void ElementFactory::registerProvider(std::string const& demangledElementName, H
 
 Handler<ElementProvider> ElementFactory::getProviderOf(Element* me)
 {
-	std::string const demangled(::tarte::demangle(*me));
-	VectorMap<std::string, Handler<ElementProvider> >::Iterator it =
-			this->demangledElementNameToDonutProviderMap_.find(demangled);
-	if(it == this->demangledElementNameToDonutProviderMap_.end()){
-		return Handler<ElementProvider>();
-	}
-	VectorMap<std::string, Handler<ElementProvider> >::Pair const& p(*it);
-	return p.second;
+//	std::string const demangled(::tarte::demangle(*me));
+//	VectorMap<std::string, Handler<ElementProvider> >::Iterator it =
+//			this->demangledElementNameToDonutProviderMap_.find(demangled);
+//	if(it == this->demangledElementNameToDonutProviderMap_.end()){
+//		return Handler<ElementProvider>();
+//	}
+//	VectorMap<std::string, Handler<ElementProvider> >::Pair const& p(*it);
+//	return p.second;
 }
 
 Handler<Element> ElementFactory::parseTree(HandlerW<Element> parent, XMLElement* top)
