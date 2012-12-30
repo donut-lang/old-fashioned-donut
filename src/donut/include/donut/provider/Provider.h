@@ -82,8 +82,7 @@ bool Provider::registerReactiveNativeClosure<ReactiveNativeClosureObject::Signat
 
 class HeapProvider : public Provider {
 	friend class Heap;
-	template <typename Derived, typename T> friend class HeapProviderBaseT;
-private:
+protected:
 	HeapProvider( Handler<Heap> const& heap, std::string const& name ):Provider(heap, name){};
 	virtual HeapObject* __internal__createInstanceForLoading() = 0;
 public:

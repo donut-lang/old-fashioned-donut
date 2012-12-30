@@ -25,15 +25,19 @@ namespace tk {
 
 const static std::string TAG("ElementObject");
 
-ElementProvider::ElementProvider(const Handler<Heap>& heap, const Handler<World>& world)
-:Super(heap, "chisa::tk::ElementObject")
+ElementProvider::ElementProvider( Handler<Heap> const& heap, std::string const& name, Handler<World> const& world )
+:HeapProvider(heap, name)
 ,world_(world)
 {
 }
 
 Handler<World> ElementProvider::world() const
 {
-	return world_.lock();
+	Handler<World> w( world_.lock() );
+	if(!w){
+		TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
+	}
+	return w;
 }
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -44,37 +48,13 @@ ElementObject::ElementObject(ElementProvider* provider)
 {
 }
 
-void ElementObject::bootstrap(const Handler<Heap>& heap)
+Handler<World> ElementObject::world() const
 {
-	this->ReactiveNativeObject::bootstrap(heap);
-}
-
-std::string ElementObject::reprImpl(const Handler<Heap>& heap) const
-{
-	return ::tarte::format("(ElementObject: %p)", this);
-}
-
-XValue ElementObject::onBack(const Handler<Heap>& heap, const XValue& val)
-{
-	//XXX
-	return XValue();
-}
-
-XValue ElementObject::onForward(const Handler<Heap>& heap, const XValue& val)
-{
-	//XXX
-	return XValue();
-}
-
-XValue ElementObject::saveImpl(const Handler<Heap>& heap)
-{
-	//XXX
-	return XValue();
-}
-
-void ElementObject::loadImpl(const Handler<Heap>& heap, const XValue& data)
-{
-	//XXX
+	Handler<World> w( world_.lock() );
+	if(!w){
+		TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
+	}
+	return w;
 }
 
 }}

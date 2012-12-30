@@ -246,8 +246,8 @@ Handler<ElementObject> Element::getElementObject(Handler< ::donut::Donut> const&
 	}
 	ElementFactory* factory = world->elementFactory();
 	Handler<ElementProvider> provider(factory->getProviderOf(this));
-	Handler<ElementObject> eobj ;//= provider->newInstance(donut->heap(), this);
-
+	Handler<ElementObject> eobj ( provider->newInstance(donut->heap(), this->self()) );
+	this->donutObject_ = eobj;
 	return eobj;
 }
 
