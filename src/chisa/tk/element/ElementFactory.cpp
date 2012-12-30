@@ -100,16 +100,16 @@ ElementFactory::ElementFactory(Logger& log, HandlerW<World> world, std::string c
 
 void ElementFactory::init()
 {
-	this->registerElement<SplitCombo>(ElemName::Horizontal);
-	this->registerElement<SplitCombo>(ElemName::Vertical);
-	this->registerElement<FrameCombo>(ElemName::Frame);
-	this->registerElement<Empty>(ElemName::Empty);
-	this->registerElement<ScrollCombo>(ElemName::Scroll);
-	this->registerElement<WidgetElement>(ElemName::WidgetWrapper);
-	this->registerElement<Button>(ElemName::Button);
-	this->registerElement<Label>(ElemName::Label);
-	this->registerElement<TabCombo>(ElemName::Tab);
-	this->registerElement<TextArea>(ElemName::TextArea);
+	this->registerLayout<SplitCombo>(ElemName::Horizontal);
+	this->registerLayout<SplitCombo>(ElemName::Vertical);
+	this->registerLayout<FrameCombo>(ElemName::Frame);
+	this->registerLayout<Empty>(ElemName::Empty);
+	this->registerLayout<ScrollCombo>(ElemName::Scroll);
+	this->registerLayout<WidgetElement>(ElemName::WidgetWrapper);
+	this->registerLayout<Button>(ElemName::Button);
+	this->registerLayout<Label>(ElemName::Label);
+	this->registerLayout<TabCombo>(ElemName::Tab);
+	this->registerLayout<TextArea>(ElemName::TextArea);
 }
 
 ElementFactory::~ElementFactory()
@@ -120,14 +120,14 @@ ElementFactory::~ElementFactory()
 	this->doc_ = nullptr;
 }
 
-void ElementFactory::registerElementWithElementName(std::string const& xmlElementName, ElementFactory::ConstructorType constructor)
+void ElementFactory::registerLayout(std::string const& xmlElementName, ElementFactory::ConstructorType constructor)
 {
 	if(!this->tagToElementConstructorMap_.insert(xmlElementName, constructor)){
 		TARTE_EXCEPTION(Exception, "[BUG] Oops. XML Element Name \"%s\" is already registered");
 	}
 }
 
-void ElementFactory::registerElementProvider(std::string const& demangledElementName, Handler< ::donut::Provider> const& provider)
+void ElementFactory::registerProvider(std::string const& demangledElementName, Handler< ::donut::Provider> const& provider)
 {
 	if(!this->demangledElementNameToDonutProviderMap_.insert(demangledElementName, provider)){
 		TARTE_EXCEPTION(Exception, "[BUG] Oops. Provider for \"%s\" is already registered");
