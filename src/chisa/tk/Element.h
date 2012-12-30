@@ -22,6 +22,7 @@
 #include <tarte/Handler.h>
 #include <tarte/VectorMap.h>
 #include <tarte/XMLAttrParser.h>
+#include <donut/Donut.h>
 #include "../geom/Vector.h"
 #include "../geom/Area.h"
 #include "../gl/Color.h"
@@ -41,7 +42,7 @@ class Canvas;
 
 namespace tk {
 class ElementFactory;
-
+class ElementObject;
 class World;
 
 class Element : public HandlerBody<Element>, public ActionListener {
@@ -82,6 +83,8 @@ private: /* 画面描画情報 */
 	geom::Point lastInnerPositionInRoot_;
 	geom::Area lastInnerDrawnAreaInRoot_;
 	bool onFocused_;
+private: /* どーなつとの接続 */
+	//HandlerW<ElementObject> donutObject_;
 public:
 	inline geom::Point const& lastPositionInRoot() const noexcept { return this->lastPositionInRoot_; };
 	inline geom::Area const& lastDrawnAreaInRoot() const noexcept { return this->lastDrawnAreaInRoot_; };
@@ -122,15 +125,20 @@ public: /* 木の生成 */
 	void loadXml(ElementFactory* const factory, tinyxml2::XMLElement* const element);
 public: /* バックグラウンドタスク */
 	virtual void idle(const float delta_ms);
-public: /* 実装メソッド */
+public:
 	virtual std::string toString() const;
+	virtual void onFocusGained(float const& timeMs, geom::Point const& lastPtInScreen) override;
+	virtual void onFocusLost(float const& timeMs) override;
+protected:  /* 子供が必ず実装するメソッド */
 	virtual void renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask) = 0;
 	virtual geom::Box measureImpl(geom::Box const& constraint) = 0;
 	virtual void layoutImpl(geom::Distance const& offsetFromParent, geom::Box const& size) = 0;
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) = 0;
 	virtual bool notifyViewRefreshedImpl();
-	virtual void onFocusGained(float const& timeMs, geom::Point const& lastPtInScreen) override;
-	virtual void onFocusLost(float const& timeMs) override;
+public: /* どーなつとの接続 */
+	//Handler<ElementObject> getElementObject(Handler< ::donut::Donut> const& donut);
+protected: /* どーなつとの接続 */
+	//virtual Handler<ElementObject> getElementObjectImpl(Handler< ::donut::Donut> const& donut);
 protected:
 	Element(Logger& log, HandlerW<World> world, HandlerW<Element> parent);
 	template <typename T> void addAttribute(std::string const& name, T& ptr)
