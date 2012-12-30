@@ -18,7 +18,8 @@
 
 #pragma once
 #include <string>
-#include <tarte/ClassUtil.h>
+#include <tarte/String.h>
+#include <tarte/Dynamic.h>
 #include <donut/Donut.h>
 #include <donut/object/ReactiveNativeObject.h>
 #include "../Element.h"
@@ -32,31 +33,75 @@ using namespace donut;
 class World;
 class Element;
 class ElementObject;
-class ElementProvider : public ::donut::HeapProviderBaseT<ElementProvider, ElementObject> {
+
+// すべて共通のポインタとして使えるようにするためのクラス
+class ElementProvider : public ::donut::HeapProvider {
 private:
 	HandlerW<World> world_;
+protected:
+	ElementProvider( Handler<Heap> const& heap, std::string const& name, Handler<World> const& world );
 public:
-	ElementProvider(Handler<Heap> const& heap, Handler<World> const& world);
 	virtual ~ElementProvider() noexcept = default;
 public:
 	Handler<World> world() const;
+	virtual Handler<ElementObject> newInstance(Handler< ::donut::Heap> const& heap, Handler<Element> const& element) = 0;
 };
 
 class ElementObject : public ReactiveNativeObject {
 private:
 	HandlerW<World> world_;
-	Handler<Element> element_;
-public:
+protected:
 	ElementObject(ElementProvider* provider);
 	virtual ~ElementObject() noexcept = default;
-public:
-	void bootstrap(Handler<Heap> const& heap);
+	inline Handler<World> world() const;
+};
+
+/**********************************************************************************************************************
+ * 実装用テンプレートクラス
+ **********************************************************************************************************************/
+
+template <typename DerivedProviderT, typename ObjectT, typename ElementT>
+class ElementProviderBaseT : public ElementProvider {
+protected:
+	typedef ElementProviderBaseT<DerivedProviderT, ObjectT, ElementT> Super;
+	ElementProviderBaseT( Handler<Heap> const& heap, std::string const& name ):HeapProvider(heap, name){};
+	ElementProviderBaseT( Handler<Heap> const& heap ):HeapProvider(heap, ::tarte::demangle<ObjectT>() ){};
+	virtual ~ElementProviderBaseT() noexcept = default;
 private:
-	virtual std::string reprImpl(Handler<Heap> const& heap) const override final;
-	virtual XValue onBack(Handler<Heap> const& heap, XValue const& val) override final;
-	virtual XValue onForward(Handler<Heap> const& heap, XValue const& val) override final;
-	virtual XValue saveImpl( Handler<Heap> const& heap ) override final;
-	virtual void loadImpl( Handler<Heap> const& heap, XValue const& data ) override final;
+	virtual HeapObject* __internal__createInstanceForLoading() override final {
+		return new ObjectT( static_cast<DerivedProviderT*>(this) );
+	}
+	virtual Handler<ElementObject> newInstance(Handler< ::donut::Heap> const& heap, Handler<Element> const& element) override final
+	{
+		Handler<ObjectT> t ( new ObjectT( static_cast<DerivedProviderT*>(this) ) );
+		t->bootstrap(heap, element.cast<ElementT>());
+		return t;
+	}
+};
+
+
+template <typename ProviderT, typename DerivedObjectT, typename ElementT>
+class ElementObjectBaseT : public ElementObject
+{
+private:
+	Handler<ElementT> const element_;
+protected:
+	inline ProviderT provider() const noexcept { return static_cast<ProviderT*>(this->ElementObject::provider()); };
+protected:
+	ElementObjectBaseT(ProviderT* provider)
+	:ElementObject(provider)
+	{
+	}
+	virtual ~ElementObjectBaseT() noexcept = default;
+public:
+	virtual std::string reprImpl(Handler<Heap> const& heap) const override {
+		return ::tarte::format("(ElementObject for \"%s\" %p)", ::tarte::demangle<DerivedObjectT>().c_str());
+	}
+public:
+	void bootstrap(Handler< ::donut::Heap> const& heap, Handler<ElementT> const& element) {
+		this->ElementObject::bootstrap(heap);
+		const_cast<Handler<ElementT>& >(this->element_) = element;
+	}
 };
 
 }}
