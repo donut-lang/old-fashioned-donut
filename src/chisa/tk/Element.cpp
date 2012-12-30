@@ -16,10 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <tinyxml2.h>
+#include "../gl/Canvas.h"
 #include "Element.h"
 #include "World.h"
-#include "../gl/Canvas.h"
-#include <tinyxml2.h>
+#include "donut/ElementObject.h"
 
 namespace chisa {
 namespace tk {
