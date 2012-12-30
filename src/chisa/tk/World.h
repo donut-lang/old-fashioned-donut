@@ -52,7 +52,6 @@ private:
 	HandlerW<Universe> const universe_;
 	DEFINE_MEMBER_CONST(public, std::string, name);
 	TaskHandler taskHandler_;
-	Handler< ::donut::Donut> donut_;
 	Stack<Handler<Element> > elementStack_;
 	Handler<Heaven> heaven_;
 	std::unordered_map<std::string, WidgetElement*> widgetMap_;
@@ -64,6 +63,7 @@ private:
 	DEFINE_MEMBER(public, private, ElementFactory*, elementFactory);
 	DEFINE_MEMBER(public, private, WidgetFactory*, widgetFactory);
 	DEFINE_MEMBER(private, private, ActionMediator*, gestureMediator);
+	DEFINE_MEMBER(public, private, Handler<Donut>, donut);
 public:
 	void render(gl::Canvas& canvas);
 	void idle(const float delta_ms);
