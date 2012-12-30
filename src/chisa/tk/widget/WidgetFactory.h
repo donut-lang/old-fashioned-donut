@@ -51,13 +51,13 @@ private:
 public:
 	WidgetFactory(Logger& log, HandlerW<World> world);
 	virtual ~WidgetFactory();
-public:
+public: /* 登録 */
 	void registerWidget(std::string const& klass, std::function<Widget*(Logger& log, HandlerW<World> world, tinyxml2::XMLElement* elem)> func);
 	template <typename WidgetKlass>
 	void registerWidget(std::string const& klass) {
 		this->registerWidget(klass, widgetConstructor<WidgetKlass>);
 	}
-
+public: /* 作成 */
 	Widget* createWidget(std::string const& klass, tinyxml2::XMLElement* elem);
 };
 
