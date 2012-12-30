@@ -130,6 +130,7 @@ std::string TextContext::nowFont() const
 
 void TextContext::popFont()
 {
+	this->fontStack_.pop_back();
 	const std::string name = this->fontStack_.back();
 	this->font_ = this->renderTree_->drawableManager()->queryFont(name);
 }
