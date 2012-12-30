@@ -26,6 +26,7 @@
 #include <tarte/ClassUtil.h>
 #include <tarte/VectorMap.h>
 #include "../Element.h"
+#include "../donut/ElementObject.h"
 
 namespace chisa {
 using namespace tarte;
@@ -63,7 +64,7 @@ private:
 	Logger& log_;
 	HandlerW<World> world_;
 	VectorMap<std::string, ConstructorType> tagToElementConstructorMap_;
-	VectorMap<std::string, Handler< ::donut::Provider> > demangledElementNameToDonutProviderMap_;
+	VectorMap<std::string, Handler<ElementProvider> > demangledElementNameToDonutProviderMap_;
 public:
 	inline Logger& log() const { return log_; }
 	inline HandlerW<World> world() const { return world_; }
@@ -80,10 +81,12 @@ public:
 private:
 	void init();
 	void registerLayout(std::string const& xmlElementName, ConstructorType constructor);
-	void registerProvider(std::string const& demangledElementName, Handler< ::donut::Provider> const& provider);
-public: /* 作成メソッド */
+	void registerProvider(std::string const& demangledElementName, Handler<ElementProvider> const& provider);
+public: /* Element作成メソッド */
 	Handler<Element> parseTree(std::string const& layoutId);
 	Handler<Element> parseTree(HandlerW<Element> parent, tinyxml2::XMLElement* top);
+public:
+	Handler<ElementProvider> getProviderOf(Element* me);
 public: /* 登録 */
 	template <typename ElementKlass>
 	void registerLayout(std::string const& xmlElementName)
@@ -91,7 +94,7 @@ public: /* 登録 */
 		this->registerLayout(xmlElementName, elementConstructor<ElementKlass>);
 	}
 	template <typename ElementKlass>
-	void registerProvider(Handler< ::donut::Provider> const& provider)
+	void registerProvider(Handler<ElementProvider> const& provider)
 	{
 		this->registerProvider(::tarte::demangle<ElementKlass>(), provider);
 	}

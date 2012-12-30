@@ -127,13 +127,24 @@ void ElementFactory::registerLayout(std::string const& xmlElementName, ElementFa
 	}
 }
 
-void ElementFactory::registerProvider(std::string const& demangledElementName, Handler< ::donut::Provider> const& provider)
+void ElementFactory::registerProvider(std::string const& demangledElementName, Handler<ElementProvider> const& provider)
 {
 	if(!this->demangledElementNameToDonutProviderMap_.insert(demangledElementName, provider)){
 		TARTE_EXCEPTION(Exception, "[BUG] Oops. Provider for \"%s\" is already registered");
 	}
 }
 
+Handler<ElementProvider> ElementFactory::getProviderOf(Element* me)
+{
+	std::string const demangled(::tarte::demangle(*me));
+	VectorMap<std::string, Handler<ElementProvider> >::Iterator it =
+			this->demangledElementNameToDonutProviderMap_.find(demangled);
+	if(it == this->demangledElementNameToDonutProviderMap_.end()){
+		return Handler<ElementProvider>();
+	}
+	VectorMap<std::string, Handler<ElementProvider> >::Pair const& p(*it);
+	return p.second;
+}
 
 Handler<Element> ElementFactory::parseTree(HandlerW<Element> parent, XMLElement* top)
 {

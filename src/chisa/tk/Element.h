@@ -84,7 +84,7 @@ private: /* 画面描画情報 */
 	geom::Area lastInnerDrawnAreaInRoot_;
 	bool onFocused_;
 private: /* どーなつとの接続 */
-	//HandlerW<ElementObject> donutObject_;
+	HandlerW<ElementObject> donutObject_;
 public:
 	inline geom::Point const& lastPositionInRoot() const noexcept { return this->lastPositionInRoot_; };
 	inline geom::Area const& lastDrawnAreaInRoot() const noexcept { return this->lastDrawnAreaInRoot_; };
@@ -136,9 +136,7 @@ protected:  /* 子供が必ず実装するメソッド */
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) = 0;
 	virtual bool notifyViewRefreshedImpl();
 public: /* どーなつとの接続 */
-	//Handler<ElementObject> getElementObject(Handler< ::donut::Donut> const& donut);
-protected: /* どーなつとの接続 */
-	//virtual Handler<ElementObject> getElementObjectImpl(Handler< ::donut::Donut> const& donut);
+	Handler<ElementObject> getElementObject(Handler< ::donut::Donut> const& donut);
 protected:
 	Element(Logger& log, HandlerW<World> world, HandlerW<Element> parent);
 	template <typename T> void addAttribute(std::string const& name, T& ptr)

@@ -61,9 +61,9 @@ private:
 	tinyxml2::XMLDocument* doc_;
 	DEFINE_MEMBER(public, private, Handler<WorldGeist>, geist);
 private:
-	ElementFactory* elementFactory_;
-	WidgetFactory* widgetFactory_;
-	ActionMediator* gestureMediator_;
+	DEFINE_MEMBER(public, private, ElementFactory*, elementFactory);
+	DEFINE_MEMBER(public, private, WidgetFactory*, widgetFactory);
+	DEFINE_MEMBER(private, private, ActionMediator*, gestureMediator);
 public:
 	void render(gl::Canvas& canvas);
 	void idle(const float delta_ms);
