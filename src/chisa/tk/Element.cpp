@@ -235,7 +235,7 @@ void Element::onFocusLost(float const& timeMs)
 	this->onFocused_ = false;
 }
 
-Handler<ElementObject> Element::getElementObject(Handler< ::donut::Donut> const& donut)
+Handler<ElementObject> Element::getElementObject()
 {
 	if(!this->donutObject_.expired()){
 		this->donutObject_.lock();
@@ -244,6 +244,7 @@ Handler<ElementObject> Element::getElementObject(Handler< ::donut::Donut> const&
 	if(!world){
 		TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
 	}
+	Handler<Donut> donut( world->donut() );
 	ElementFactory* factory = world->elementFactory();
 	Handler<ElementProvider> provider(factory->getProviderOf(this));
 	Handler<ElementObject> eobj ( provider->newInstance(donut->heap(), this->self()) );
