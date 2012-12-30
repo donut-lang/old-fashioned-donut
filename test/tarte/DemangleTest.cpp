@@ -113,6 +113,7 @@ TEST(DemangleTest, DerivedVirtualKlassTest)
 
 TEST(DemangleTest, DerivedKlassTest)
 {
+	// ポリモルフィックでないクラスは、ポインタを戻してもベースポインタにしかならない。
 	__DemangleTest__SampleDerived s;
 	__DemangleTest__Sample* p = &s;
 	ASSERT_NE(demangle(typeid(s)), demangle(typeid(*p)));
