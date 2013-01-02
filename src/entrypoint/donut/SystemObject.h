@@ -41,6 +41,7 @@ public:
 	static Handler<Object> println(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& arg);
 	static Handler<Object> print(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& arg);
 	static Handler<Object> args(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& arg);
+	static Handler<Object> readline(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& arg);
 public:
 	void bootstrap(Handler<Heap> const& heap);
 };

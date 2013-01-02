@@ -1,0 +1,17 @@
+//このあとの命令を使って、この時点まで時を戻せるようになります。
+save_time=Homura.tick();
+
+System.print("Please input password: ");
+//パスワードを読み込みます。
+passwd=System.readline();
+
+if(passwd == "abcdef"){
+  //パスワードの認証に成功しました。
+  System.println("Congratulation!");
+} else {
+  // 上で記録した時間まで、スクリプトエンジン全体を戻します。
+  System.println("Oops. Incorrect password.");
+  Homura.seek(save_time);
+};
+
+
