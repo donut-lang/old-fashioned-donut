@@ -3,7 +3,12 @@ DIRNAME=$(cd $(dirname $0);pwd)
 
 BUILDDIR=$DIRNAME/build
 
-if [ -f `which ccache` ] ; then
+if which clang++ 2&>1 > /dev/null ; then
+	echo "clang found."
+	export set CC='clang'
+	export set CXX='clang++'
+elif which ccache 2>&1 > /dev/null ; then
+	echo "ccache found."
 	export set CC='ccache gcc'
 	export set CXX='ccache g++'
 fi
