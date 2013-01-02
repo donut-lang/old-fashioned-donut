@@ -59,6 +59,13 @@ Handler<Object> SystemObject::print(Handler<Heap> const& heap, Handler<Object> c
 	return self;
 }
 
+Handler<Object> SystemObject::readline(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& arg)
+{
+	std::string result;
+	std::cin >> result;
+	return Handler<Object>(heap->createStringObject(result));
+}
+
 Handler<Object> SystemObject::args(Handler<Heap> const& heap, Handler<Object> const& _self, std::vector<Handler<Object> > const& arg)
 {
 	Handler<SystemObject> self(_self.cast<SystemObject>());

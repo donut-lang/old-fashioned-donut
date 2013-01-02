@@ -93,4 +93,58 @@ TEST(StringTest, ToBooleanYesNoBigTest)
 	SOURCE_TEST_FALSE("\"No\".toBoolean();");
 }
 
+TEST(StringTest, Compare)
+{
+	std::string const str1 = "abcdef";
+	std::string const str2 = "XYZabcc";
+
+	//違う文字列同士
+	ASSERT_TRUE((str1 > str2));
+	ASSERT_TRUE((str1 >= str2));
+	SOURCE_TEST_TRUE((std::string("\"")+str1+"\"> \""+str2+"\";"));
+	SOURCE_TEST_TRUE((std::string("\"")+str1+"\">=\""+str2+"\";"));
+
+	ASSERT_FALSE((str1 == str2));
+	SOURCE_TEST_FALSE((std::string("\"")+str1+"\"==\""+str2+"\";"));
+
+	ASSERT_TRUE((str1 != str2));
+	SOURCE_TEST_TRUE((std::string("\"")+str1+"\"!=\""+str2+"\";"));
+
+	ASSERT_FALSE(str1 < str2);
+	ASSERT_FALSE(str1 <= str2);
+	SOURCE_TEST_FALSE((std::string("\"")+str1+"\"< \""+str2+"\";"));
+	SOURCE_TEST_FALSE((std::string("\"")+str1+"\"<=\""+str2+"\";"));
+
+	//同じ文字列同士
+	ASSERT_FALSE((str1 < str1));
+	ASSERT_FALSE((str2 < str2));
+	SOURCE_TEST_FALSE((std::string("\"")+str1+"\"<\""+str1+"\";"));
+	SOURCE_TEST_FALSE((std::string("\"")+str2+"\"<\""+str2+"\";"));
+
+	ASSERT_FALSE((str1 > str1));
+	ASSERT_FALSE((str2 > str2));
+	SOURCE_TEST_FALSE((std::string("\"")+str1+"\">\""+str1+"\";"));
+	SOURCE_TEST_FALSE((std::string("\"")+str2+"\">\""+str2+"\";"));
+
+	ASSERT_TRUE((str1 >= str1));
+	ASSERT_TRUE((str2 >= str2));
+	SOURCE_TEST_TRUE((std::string("\"")+str1+"\">=\""+str1+"\";"));
+	SOURCE_TEST_TRUE((std::string("\"")+str2+"\">=\""+str2+"\";"));
+
+	ASSERT_TRUE((str1 <= str1));
+	ASSERT_TRUE((str2 <= str2));
+	SOURCE_TEST_TRUE((std::string("\"")+str1+"\"<=\""+str1+"\";"));
+	SOURCE_TEST_TRUE((std::string("\"")+str2+"\"<=\""+str2+"\";"));
+
+	ASSERT_TRUE((str1 == str1));
+	ASSERT_TRUE((str2 == str2));
+	SOURCE_TEST_TRUE((std::string("\"")+str1+"\"==\""+str1+"\";"));
+	SOURCE_TEST_TRUE((std::string("\"")+str2+"\"==\""+str2+"\";"));
+
+	ASSERT_FALSE((str1 != str1));
+	ASSERT_FALSE((str2 != str2));
+	SOURCE_TEST_FALSE((std::string("\"")+str1+"\"!=\""+str1+"\";"));
+	SOURCE_TEST_FALSE((std::string("\"")+str2+"\"!=\""+str2+"\";"));
+}
+
 }

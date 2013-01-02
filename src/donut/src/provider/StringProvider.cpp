@@ -44,6 +44,36 @@ StringProvider::StringProvider(Handler<Heap> const& heap )
 		std::string const ostr = other->toString(this->heap().lock());
 		return str + ostr;
 	}));
+	this->registerPureNativeClosure("opEq", std::function<bool(StringObject*,StringObject*)>([&](StringObject* self, StringObject* other) {
+		std::string const str = self->toString(this->heap().lock());
+		std::string const ostr = other->toString(this->heap().lock());
+		return str == ostr;
+	}));
+	this->registerPureNativeClosure("opNe", std::function<bool(StringObject*,StringObject*)>([&](StringObject* self, StringObject* other) {
+		std::string const str = self->toString(this->heap().lock());
+		std::string const ostr = other->toString(this->heap().lock());
+		return str != ostr;
+	}));
+	this->registerPureNativeClosure("opLt", std::function<bool(StringObject*,StringObject*)>([&](StringObject* self, StringObject* other) {
+		std::string const str = self->toString(this->heap().lock());
+		std::string const ostr = other->toString(this->heap().lock());
+		return str < ostr;
+	}));
+	this->registerPureNativeClosure("opLe", std::function<bool(StringObject*,StringObject*)>([&](StringObject* self, StringObject* other) {
+		std::string const str = self->toString(this->heap().lock());
+		std::string const ostr = other->toString(this->heap().lock());
+		return str <= ostr;
+	}));
+	this->registerPureNativeClosure("opGt", std::function<bool(StringObject*,StringObject*)>([&](StringObject* self, StringObject* other) {
+		std::string const str = self->toString(this->heap().lock());
+		std::string const ostr = other->toString(this->heap().lock());
+		return str > ostr;
+	}));
+	this->registerPureNativeClosure("opGe", std::function<bool(StringObject*,StringObject*)>([&](StringObject* self, StringObject* other) {
+		std::string const str = self->toString(this->heap().lock());
+		std::string const ostr = other->toString(this->heap().lock());
+		return str >= ostr;
+	}));
 	this->registerPureNativeClosure("opMul", std::function<std::string(StringObject*, int)>([&](StringObject* self, int times) {
 		std::string const str = self->toString(this->heap().lock());
 		std::stringstream ss;
