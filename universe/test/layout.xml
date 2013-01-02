@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<world geist="nes">
+	<horizontal id="main">
+		<vertical>
+			<tab id="frame" place="left">
+				<widget title="NES" widget-klass="nes-screen" fit="fit">
+					<xobject>
+						<xstring name="rom">__roms__/alter_ego/Alter_Ego.nes</xstring>
+					</xobject>
+				</widget>
+			</tab>
+			<scroll mode="vertical">
+				<vertical>
+					<textarea desc="テキストエリアサンプル" />
+					<button text="ボタン" />
+					<label text="ラベル" />
+					<widget title="NES" widget-klass="nes-memory" fit="expand">
+					</widget>
+				</vertical>
+			</scroll>
+		</vertical>
+		<scroll mode="vertical">
+			<vertical>
+				<widget widget-klass="content" fit="expand">
+					<doc>
+						<h1>ドキュメント</h1>
+						<p>
+						HTML風にテキストを記述するウィジットのサンプルです。
+						</p>
+						<h1 float="left"><font color="red">タイトルテスト</font></h1>
+						<p>
+						HTML風にテキストを記述するウィジットのサンプルです。
+						</p>
+						<p float="right">↓画像を表示するウィジットのサンプル</p>
+					</doc>
+				</widget>
+				<widget widget-klass="image" fit="center">
+					<xobject>
+						<xstring name="src">test/test.png</xstring>
+					</xobject>
+				</widget>
+			</vertical>
+		</scroll>
+	</horizontal>
+</world>
+
