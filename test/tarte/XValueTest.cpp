@@ -283,7 +283,7 @@ TEST(XValueTest, EnumTest)
 	}
 }
 
-TEST(XValueTest, EnumGetTest)
+TEST(XValueTest, EnumObjectGetTest)
 {
 	Handler<XObject> xobj(new XObject);
 	{
@@ -293,6 +293,28 @@ TEST(XValueTest, EnumGetTest)
 	{
 		SampleEnum v;
 		xobj->get("v", v);
+		ASSERT_EQ(SampleEnum::Y, v);
+	}
+	{
+		SampleEnum v;
+		v = xobj->get<decltype(v)>("v");
+		ASSERT_EQ(SampleEnum::Y, v);
+	}
+}
+TEST(XValueTest, EnumArrayGetTest)
+{
+	Handler<XArray> xarray(new XArray);
+	{
+		xarray->append(SampleEnum::Y);
+	}
+	{
+		SampleEnum v;
+		xarray->get(0, v);
+		ASSERT_EQ(SampleEnum::Y, v);
+	}
+	{
+		SampleEnum v;
+		v = xarray->get<decltype(v)>(0);
 		ASSERT_EQ(SampleEnum::Y, v);
 	}
 }

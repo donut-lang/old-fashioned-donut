@@ -110,6 +110,8 @@ public:
 	template <typename T> bool is() const noexcept;
 	template <typename T> typename _TypeAdapter<T>::return_type as();
 	template <typename T> typename _TypeAdapter<T>::return_const_type as() const;
+	template <typename T> typename _TypeAdapter<T>::return_type as(T& v);
+	template <typename T> typename _TypeAdapter<T>::return_const_type as(T& v) const;
 	std::string typeString() const noexcept;
 	void swap( XValue& o );
 private:
