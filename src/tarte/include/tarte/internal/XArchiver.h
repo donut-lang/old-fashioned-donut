@@ -123,4 +123,24 @@ PRIM_VAR(XObject);
 
 #undef PRIM_VAR
 
+template <>
+struct XSerializer<unsigned char, void> {
+	static XValue serialize(unsigned char& val) {
+		return XValue( val );
+	}
+	static void deserialize(unsigned char& val, XValue const& xval){
+		val = xval.as<XUInt>();
+	}
+};
+
+template <>
+struct XSerializer<char, void> {
+	static XValue serialize(char& val) {
+		return XValue( val );
+	}
+	static void deserialize(char& val, XValue const& xval){
+		val = xval.as<XSInt>();
+	}
+};
+
 }

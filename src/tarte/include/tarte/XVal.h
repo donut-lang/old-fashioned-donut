@@ -100,6 +100,7 @@ public:
 	inline XValue(Handler<XArray> const& val):type_(Type::ArrayT){ this->spirit_.array_= new Handler<Array>( val ); };
 	inline XValue(Handler<XObject> const& val):type_(Type::ObjectT){ this->spirit_.object_= new Handler<Object>( val ); };
 	explicit inline XValue(const char* const& val, std::size_t len):type_(Type::BinaryT){ this->spirit_.binary_ = new std::vector<char>(val, val+len); };
+	explicit inline XValue(const unsigned char* const& val, std::size_t len):type_(Type::BinaryT){ this->spirit_.binary_ = new std::vector<char>(reinterpret_cast<unsigned char const*>(val), reinterpret_cast<unsigned char const*>(val+len)); };
 	explicit inline XValue(Binary const& val):type_(Type::BinaryT){ this->spirit_.binary_ = new std::vector<char>(val); };
 	explicit inline XValue(String const& val):type_(Type::StringT){ this->spirit_.str_= new std::string(val); };
 	explicit inline XValue(const char* const& val):type_(Type::StringT){ this->spirit_.str_ = new std::string(val); };
@@ -133,6 +134,7 @@ public:
 	inline bool onFree() const noexcept { return false; };
 public:
 	template <typename T> typename _TypeAdapter<T>::return_type get( std::size_t const& idx );
+	template <typename T> typename _TypeAdapter<T>::return_type get( std::size_t const& idx, T& v );
 	template <typename T> bool has( std::size_t const& idx ) const;
 	template <typename T> typename _TypeAdapter<T>::return_type set( std::size_t const& idx, T const& obj );
 	template <typename T> typename _TypeAdapter<T>::return_type append( T const& obj );
@@ -155,6 +157,7 @@ public:
 	inline bool onFree() const noexcept { return false; };
 public:
 	template <typename T> typename _TypeAdapter<T>::return_type get( std::string const& name );
+	template <typename T> typename _TypeAdapter<T>::return_type get( std::string const& name, T& v );
 	template <typename T> typename _TypeAdapter<T>::return_type opt( std::string const& name );
 	template <typename T> bool has( std::string const& name );
 	template <typename T> typename _TypeAdapter<T>::return_type set( std::string const& name, T const& obj );

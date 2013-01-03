@@ -58,7 +58,7 @@ XArchiverOut::XArchiverOut()
 	this->index(0);
 }
 
-XArchiver& XArchiver::binary(char* const& bin, std::size_t const& len)
+XArchiver& XArchiver::binary(char* const bin, std::size_t const& len)
 {
 	if(decode_now_){
 		if(!bin){

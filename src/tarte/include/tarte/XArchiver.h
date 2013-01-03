@@ -40,7 +40,10 @@ protected:
 	inline Handler<XArray>& array( Handler<XArray> const& a ) noexcept { return this->array_ = a; };
 public:
 	template <typename T> XArchiver& operator &(T& val);
-	XArchiver& binary(char* const& bin, std::size_t const& len);
+	XArchiver& binary(char* const bin, std::size_t const& len);
+	XArchiver& binary(unsigned char* const bin, std::size_t const& len){
+		return binary(reinterpret_cast<char* const>(bin), len);
+	}
 };
 
 class XArchiverIn : public XArchiver {
@@ -135,11 +138,12 @@ struct XSerializer {
 //enumを持っている
 template <typename T>
 struct XSerializer<T, typename std::enable_if<std::is_enum<T>::value>::type> {
+	typedef typename _TypeAdapter<T>::spirit_type Type;
 	static XValue serialize(T& val){
-		return XValue(static_cast<XUInt>(val));
+		return XValue(static_cast<Type>(val));
 	}
 	static void deserialize(T& val, XValue const& xval){
-		val = static_cast<T>(xval.as<XUInt>());
+		val = static_cast<T>(xval.as<Type>());
 	}
 };
 
