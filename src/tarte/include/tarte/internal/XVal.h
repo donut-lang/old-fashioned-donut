@@ -151,16 +151,6 @@ template<> inline XValue& XObject::get<XValue>( std::string const& name ) {
 	return p.second;
 }
 
-template<typename T> typename _TypeAdapter<T>::return_type XObject::opt(std::string const& name)
-{
-	auto it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );
-	std::pair<std::string, XValue> const& p = *it;
-	if( it == this->map_.end() || p.first != name || !p.second.is<T>()){
-		return T();
-	}
-	return p.second.as<T>();
-}
-
 template<typename T> bool XObject::has(std::string const& name)
 {
 	auto it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );

@@ -135,11 +135,12 @@ public:
 	~XArray() noexcept = default;
 	inline bool onFree() const noexcept { return false; };
 public:
+	template <typename T> bool has( std::size_t const& idx ) const;
 	template <typename T> typename _TypeAdapter<T>::return_type get( std::size_t const& idx );
 	template <typename T> typename _TypeAdapter<T>::return_type get( std::size_t const& idx, T& v );
-	template <typename T> bool has( std::size_t const& idx ) const;
 	template <typename T> typename _TypeAdapter<T>::return_type set( std::size_t const& idx, T const& obj );
 	template <typename T> typename _TypeAdapter<T>::return_type append( T const& obj );
+public:
 	std::vector<XValue>::iterator begin(){ return this->list_.begin(); };
 	std::vector<XValue>::iterator end(){ return this->list_.end(); };
 	std::vector<XValue>::const_iterator cbegin(){ return this->list_.cbegin(); };
@@ -158,11 +159,11 @@ public:
 	~XObject() noexcept = default;
 	inline bool onFree() const noexcept { return false; };
 public:
+	template <typename T> bool has( std::string const& name );
 	template <typename T> typename _TypeAdapter<T>::return_type get( std::string const& name );
 	template <typename T> typename _TypeAdapter<T>::return_type get( std::string const& name, T& v );
-	template <typename T> typename _TypeAdapter<T>::return_type opt( std::string const& name );
-	template <typename T> bool has( std::string const& name );
 	template <typename T> typename _TypeAdapter<T>::return_type set( std::string const& name, T const& obj );
+public:
 	std::vector<std::pair<std::string, XValue> >::iterator begin(){ return this->map_.begin(); };
 	std::vector<std::pair<std::string, XValue> >::iterator end(){ return this->map_.end(); };
 	std::vector<std::pair<std::string, XValue> >::const_iterator cbegin(){ return this->map_.cbegin(); };
