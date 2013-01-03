@@ -33,7 +33,7 @@ public:
 	};
 private:
 	WidgetElement* borrowed_;
-	DEFINE_MEMBER(private, private, Widget*, widget);
+	DEFINE_MEMBER(public, private, Widget*, widget);
 	std::string widgetId_;
 	FitMode fitMode_;
 	DEFINE_MEMBER(private, private, geom::ScaleVector, widgetScale);
