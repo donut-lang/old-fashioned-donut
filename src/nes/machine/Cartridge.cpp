@@ -150,31 +150,7 @@ Cartridge* Cartridge::loadCartridge(VirtualMachine& vm, std::string const& filen
 	NesFile* nesFile = NULL;
 	try{
 		nesFile = new NesFile(filename);
-		const uint8_t mapperNo = nesFile->getMapperNo();
-		switch(mapperNo)
-		{
-			case 0: //mapper 0 = no mapper
-				return new Mapper0(vm, nesFile);
-			case 1: //mapper 1 = MMC1
-				return new Mapper1(vm, nesFile);
-			case 2: //mapper 2 = UxROM
-				return new Mapper2(vm, nesFile);
-			case 3: //mapper 3 = CNROM
-				return new Mapper3(vm, nesFile);
-			case 4: //mapper 4 = MMC3
-				return new Mapper4(vm, nesFile);
-			case 21: //mapper 21 = VRC4ac
-				return new Mapper21(vm, nesFile);
-			case 23: //mapper 23 = VRC4e
-				return new Mapper23(vm, nesFile);
-			case 25: //mapper 25 = VRC4bd
-				return new Mapper25(vm, nesFile);
-			default:
-			{
-				const uint32_t mapperNo32 = static_cast<uint32_t>(mapperNo);
-				throw EmulatorException("Not Supported Mapper: ") << mapperNo32 << "!";
-			}
-		}
+		return loadCartridge(vm, nesFile);
 	}catch(...){
 		if(nesFile != NULL){
 			delete nesFile;
@@ -184,21 +160,71 @@ Cartridge* Cartridge::loadCartridge(VirtualMachine& vm, std::string const& filen
 	return NULL;
 }
 
-void Cartridge::save(XArchiverOut& arc)
+Cartridge* Cartridge::loadCartridge(VirtualMachine& vm, NesFile* nesFile)
 {
-	arc & hasSram;
-	arc & sram;
-	arc & mirrorType;
-	arc & fourScreenVram;
-
+	const uint8_t mapperNo = nesFile->getMapperNo();
+	switch(mapperNo)
+	{
+		case 0: //mapper 0 = no mapper
+			return new Mapper0(vm, nesFile);
+		case 1: //mapper 1 = MMC1
+			return new Mapper1(vm, nesFile);
+		case 2: //mapper 2 = UxROM
+			return new Mapper2(vm, nesFile);
+		case 3: //mapper 3 = CNROM
+			return new Mapper3(vm, nesFile);
+		case 4: //mapper 4 = MMC3
+			return new Mapper4(vm, nesFile);
+		case 21: //mapper 21 = VRC4ac
+			return new Mapper21(vm, nesFile);
+		case 23: //mapper 23 = VRC4e
+			return new Mapper23(vm, nesFile);
+		case 25: //mapper 25 = VRC4bd
+			return new Mapper25(vm, nesFile);
+		default:
+		{
+			const uint32_t mapperNo32 = static_cast<uint32_t>(mapperNo);
+			throw EmulatorException("Not Supported Mapper: ") << mapperNo32 << "!";
+		}
+	}
 }
-void Cartridge::load(XArchiverIn& arc)
+
+Cartridge* Cartridge::load(VirtualMachine& vm, XValue const& val)
 {
-	arc & hasSram;
-	arc & sram;
-	arc & mirrorType;
-	arc & fourScreenVram;
+	Handler<XObject> xobj( val.as<XObject>() );
+	NesFile* file = new NesFile(xobj->get<XValue>("rom"));
+	Cartridge* self = loadCartridge(vm, file);
+	xobj->get("hasSram", self->hasSram);
+	{
+		XBinary bin = xobj->get<XBinary>("sram");
+		std::copy(bin.begin(), bin.end(), self->sram);
+	}
+	xobj->get("mirrorType", self->mirrorType);
+	{
+		XBinary bin = xobj->get<XBinary>("fourScreenVram");
+		std::copy(bin.begin(), bin.end(), self->fourScreenVram);
+	}
+	{
+		XArchiverIn in(xobj->get<XValue>("impl"));
+		self->loadImpl(in);
+	}
+	return self;
 }
-
+XValue Cartridge::save()
+{
+	Handler<XObject> xobj(new XObject);
+	xobj->set("hasSram", hasSram);
+	xobj->set("sram", XValue(sram, sizeof(sram)/sizeof(uint8_t)));
+	xobj->set("mirrorType", this->mirrorType);
+	xobj->set("fourScreenVram", XValue(this->fourScreenVram, sizeof(this->fourScreenVram)/sizeof(uint8_t)));
+	{
+		XArchiverOut out;
+		XValue v;
+		this->saveImpl(out);
+		out >> v;
+		xobj->set("impl", v);
+	}
+	return xobj;
+}
 
 }

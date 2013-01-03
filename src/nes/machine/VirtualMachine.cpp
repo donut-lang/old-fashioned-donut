@@ -125,7 +125,6 @@ void VirtualMachine::loadCartridge(const char* filename)
 
 void VirtualMachine::save(XArchiverOut& arc)
 {
-
 }
 void VirtualMachine::load(XArchiverIn& arc)
 {
