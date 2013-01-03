@@ -7,9 +7,10 @@
 
 #pragma once
 
-#include "../exception/EmulatorException.h"
 #include <stdio.h>
 #include <string.h>
+#include <tarte/XArchiver.h>
+#include "../exception/EmulatorException.h"
 
 namespace nes {
 
@@ -28,10 +29,7 @@ public:
 		firstIndex(0)
 	{
 	}
-	virtual ~AudioFairy()
-	{
-
-	}
+	virtual ~AudioFairy() noexcept = default;
 	inline bool pushAudio(int16_t sound)
 	{
 		const int nowFirstIndex = firstIndex;
@@ -43,6 +41,19 @@ public:
 		}else{
 			return false;
 		}
+	}
+public:
+	void save(::tarte::XArchiverOut& out){
+		out & soundBuffer;
+		out & lastIndex;
+		out & firstIndex;
+		this->saveImpl(out);
+	}
+	void load(::tarte::XArchiverIn& in){
+		in & soundBuffer;
+		in & lastIndex;
+		in & firstIndex;
+		this->loadImpl(in);
 	}
 protected:
 	inline int popAudio(int16_t* buff, int maxLength)
@@ -60,9 +71,10 @@ protected:
 			memcpy(&buff[first], &soundBuffer[0], sizeof(int16_t) * last);
 			firstIndex = last;
 		}
-
 		return copiedLength;
 	}
+	virtual void saveImpl(::tarte::XArchiverOut& arc) {};
+	virtual void loadImpl(::tarte::XArchiverIn& arc) {};
 };
 
 class DummyAudioFairy : public AudioFairy
