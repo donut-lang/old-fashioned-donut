@@ -66,9 +66,6 @@ public:
 		this->index(0);
 		return *this;
 	}
-	template <typename T> inline XArchiverIn& load(T& v) {
-		return this->operator>>(v);
-	}
 };
 
 class XArchiverOut : public XArchiver {
@@ -92,10 +89,6 @@ public:
 		this->operator &(t);
 		return *this;
 	}
-	template <typename T> inline XArchiverOut& save(T& t) {
-		this->operator <<(t);
-		return *this;
-	}
 	XValue toXValue(){
 		XValue v;
 		(*this) >> v;
@@ -107,10 +100,10 @@ public:
 template <typename T>
 class HasSerializer {
 	template <typename U>
-	static auto check(U u) -> decltype(u.serialize(std::declval<XArchiver&>()), std::true_type());
+	static auto check(U* u) -> decltype(u->serialize(std::declval<XArchiver&>()), std::true_type());
 	static auto check(...) -> decltype( std::false_type() );
 public:
-	typedef decltype(check(std::declval<T>())) check_func_decl;
+	typedef decltype(check(std::declval<T*>())) check_func_decl;
 	static const bool value = check_func_decl::value;
 };
 

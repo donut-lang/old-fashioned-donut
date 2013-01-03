@@ -126,12 +126,12 @@ void VirtualMachine::loadCartridge(const char* filename)
 XValue VirtualMachine::save()
 {
 	Handler<XObject> xobj(new XObject);
-	xobj->set("ram", XArchiverOut().save(this->ram).toXValue());
-	xobj->set("processor", XArchiverOut().save(this->processor).toXValue());
-	xobj->set("audio", XArchiverOut().save(this->audio).toXValue());
-	//xobj->set("video", this->video->save());
+	xobj->set("ram", (XArchiverOut() << this->ram).toXValue());
+	xobj->set("processor", (XArchiverOut() << this->processor).toXValue());
+	xobj->set("audio", (XArchiverOut() << this->audio).toXValue());
+	xobj->set("video", (XArchiverOut() << this->video).toXValue());
 	xobj->set("cartridge", this->cartridge->save());
-	xobj->set("ioPort", XArchiverOut().save(this->ioPort).toXValue());
+	xobj->set("ioPort", (XArchiverOut() << this->ioPort).toXValue());
 
 	xobj->set("clockDelta", this->clockDelta);
 	xobj->set("resetFlag", this->resetFlag);
@@ -145,16 +145,18 @@ void VirtualMachine::load(XValue const& data)
 		delete this->cartridge;
 	}
 	Handler<XObject> xobj(data.as<XObject>());
-	XArchiverIn(xobj->get<XValue>("ram")).load(this->ram);
-	XArchiverIn(xobj->get<XValue>("processor")).load(this->processor);
-	XArchiverIn(xobj->get<XValue>("audio")).load(this->audio);
+	XArchiverIn(xobj->get<XValue>("ram")) >> this->ram;
+	XArchiverIn(xobj->get<XValue>("processor")) >> this->processor;
+	XArchiverIn(xobj->get<XValue>("audio")) >> this->audio;
+	XArchiverIn(xobj->get<XValue>("video")) >> this->video;
 	this->cartridge = Cartridge::load(*this, xobj->get<XValue>("cartridge"));
-	XArchiverIn(xobj->get<XValue>("ioPort")).load(this->ioPort);
+	XArchiverIn(xobj->get<XValue>("ioPort")) >> this->ioPort;
 
 	xobj->get("clockDelta", this->clockDelta);
 	xobj->get("resetFlag", this->resetFlag);
 	xobj->get("hardResetFlag", this->hardResetFlag);
 	xobj->get("irqLine", this->irqLine);
+	//最後にビデオの接続。これでOK？
 	this->video.connectCartridge(this->cartridge);
 }
 

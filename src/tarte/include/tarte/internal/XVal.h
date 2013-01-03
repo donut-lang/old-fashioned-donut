@@ -88,7 +88,7 @@ template <> struct _TypeAdapter<short> { PROXY_ADAPTER(XSInt) };
 #undef PROXY_ADAPTER
 
 template <typename T> typename _TypeAdapter<T>::return_type XArray::get( std::size_t const& idx ) {
-	if( idx < 0 || idx >= list_.size() ){
+	if( idx >= list_.size() ){
 		TARTE_EXCEPTION(Exception, "idx: %d >= size: %d ", idx, list_.size());
 	}
 	XValue& val = list_[idx];
@@ -105,14 +105,14 @@ template <typename T> typename _TypeAdapter<T>::return_type XArray::get( std::si
 }
 
 template <typename T> bool XArray::has( std::size_t const& idx ) const {
-	if( idx < 0 || idx >= list_.size() ){
+	if( idx >= list_.size() ){
 		return false;
 	}
 	XValue const& val = list_[idx];
 	return val.is<T>();
 }
 template <typename T> typename _TypeAdapter<T>::return_type XArray::set( std::size_t const& idx, T const& obj ) {
-	if( idx < 0 || idx >= list_.size() ){
+	if( idx >= list_.size() ){
 		TARTE_EXCEPTION(Exception, "idx: %d >= size: %d ", idx, list_.size());
 	}
 	XValue& val = list_[idx];
