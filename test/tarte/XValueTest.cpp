@@ -258,6 +258,24 @@ TEST(XValueTest, BooleanTest)
 	}
 }
 
+TEST(XValueTest, IsAsTest)
+{
+	{
+		XValue v(-10);
+		ASSERT_TRUE(v.is<XSInt>());
+		ASSERT_FALSE(v.is<XUInt>());
+		ASSERT_EQ(-10, v.as<XSInt>());
+		int w;
+		unsigned int x;
+		ASSERT_ANY_THROW(v.as<XUInt>());
+		ASSERT_ANY_THROW(v.as(x));
+
+		ASSERT_EQ(-10, v.as<XSInt>());
+		ASSERT_NO_THROW(v.as(w));
+		ASSERT_EQ(-10, w);
+	}
+}
+
 namespace {
 
 enum SampleEnum{
@@ -268,7 +286,6 @@ TEST(XValueTest, EnumTest)
 {
 	tinyxml2::XMLDocument doc;
 	tinyxml2::XMLElement* e;
-	std::string str;
 	{
 		SampleEnum v = SampleEnum::Y;
 		XValue z(v);
@@ -279,7 +296,23 @@ TEST(XValueTest, EnumTest)
 	{
 		XValue z=XValue::fromXML(e);
 		ASSERT_TRUE(z.is<SampleEnum>());
+		ASSERT_TRUE(z.is<XValue>());
+		ASSERT_FALSE(z.is<XObject>());
+		ASSERT_FALSE(z.is<XArray>());
+		ASSERT_FALSE(z.is<XFloat>());
+		ASSERT_FALSE(z.is<XString>());
+	}
+	{
+		XValue z=XValue::fromXML(e);
+		ASSERT_TRUE(z.is<SampleEnum>());
 		ASSERT_EQ(SampleEnum::Y, z.as<SampleEnum>());
+	}
+	{
+		XValue z=XValue::fromXML(e);
+		SampleEnum v;
+		ASSERT_TRUE(z.is<SampleEnum>());
+		ASSERT_EQ(SampleEnum::Y, z.as<SampleEnum>(v));
+		ASSERT_EQ(SampleEnum::Y, v);
 	}
 }
 
@@ -291,16 +324,25 @@ TEST(XValueTest, EnumObjectGetTest)
 		xobj->set("v",v);
 	}
 	{
-		SampleEnum v;
-		xobj->get("v", v);
-		ASSERT_EQ(SampleEnum::Y, v);
+		ASSERT_TRUE(xobj->has<SampleEnum>("v"));
 	}
 	{
 		SampleEnum v;
-		v = xobj->get<decltype(v)>("v");
+		xobj->get("v", v);
 		ASSERT_EQ(SampleEnum::Y, v);
+
+		XString x;
+		ASSERT_ANY_THROW(xobj->get("v", x));
 	}
+	{
+		SampleEnum v = xobj->get<decltype(v)>("v");
+		ASSERT_EQ(SampleEnum::Y, v);
+
+		XString x;
+		ASSERT_ANY_THROW(x = xobj->get<decltype(x)>("v"));
 }
+}
+
 TEST(XValueTest, EnumArrayGetTest)
 {
 	Handler<XArray> xarray(new XArray);
@@ -308,14 +350,25 @@ TEST(XValueTest, EnumArrayGetTest)
 		xarray->append(SampleEnum::Y);
 	}
 	{
-		SampleEnum v;
-		xarray->get(0, v);
-		ASSERT_EQ(SampleEnum::Y, v);
+		ASSERT_TRUE(xarray->has<SampleEnum>(0));
+		ASSERT_TRUE(xarray->has<XValue>(0));
+		ASSERT_FALSE(xarray->has<XObject>(0));
+		ASSERT_FALSE(xarray->has<XFloat>(0));
 	}
 	{
 		SampleEnum v;
-		v = xarray->get<decltype(v)>(0);
+		xarray->get(0, v);
 		ASSERT_EQ(SampleEnum::Y, v);
+
+		XString x;
+		ASSERT_ANY_THROW(xarray->get(0, x));
+	}
+	{
+		SampleEnum v = xarray->get<decltype(v)>(0);
+		ASSERT_EQ(SampleEnum::Y, v);
+
+		XString x;
+		ASSERT_ANY_THROW(x = xarray->get<decltype(x)>(0));
 	}
 }
 
