@@ -272,6 +272,7 @@ TEST(XValueTest, EnumTest)
 	{
 		SampleEnum v = SampleEnum::Y;
 		XValue z(v);
+		ASSERT_TRUE(z.is<SampleEnum>());
 		e = z.toXML(&doc);
 		doc.InsertEndChild(e);
 	}
@@ -279,6 +280,20 @@ TEST(XValueTest, EnumTest)
 		XValue z=XValue::fromXML(e);
 		ASSERT_TRUE(z.is<SampleEnum>());
 		ASSERT_EQ(SampleEnum::Y, z.as<SampleEnum>());
+	}
+}
+
+TEST(XValueTest, EnumGetTest)
+{
+	Handler<XObject> xobj(new XObject);
+	{
+		SampleEnum v = SampleEnum::Y;
+		xobj->set("v",v);
+	}
+	{
+		SampleEnum v;
+		xobj->get("v", v);
+		ASSERT_EQ(SampleEnum::Y, v);
 	}
 }
 

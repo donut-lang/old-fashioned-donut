@@ -87,6 +87,13 @@ template <typename T> typename _TypeAdapter<T>::return_type XArray::get( std::si
 	}
 	return val.as<SpiritType>();
 }
+
+template <typename T> typename _TypeAdapter<T>::return_type XArray::get( std::size_t const& idx, T& v ) {
+	typename _TypeAdapter<T>::return_type const r = this->get<T>(idx);
+	v = static_cast<T>(r);
+	return r;
+}
+
 template <typename T> bool XArray::has( std::size_t const& idx ) const {
 	typedef typename _TypeAdapter<T>::spirit_type SpiritType;
 	if( idx < 0 || idx >= list_.size() ){
@@ -121,6 +128,12 @@ template<typename T> typename _TypeAdapter<T>::return_type XObject::get( std::st
 		TARTE_EXCEPTION(Exception, "Object: \"%s\" type mismatch required: %s actual: %s.", name.c_str(), XValue(typename _TypeAdapter<T>::init_type()).typeString().c_str(), it->second.typeString().c_str());
 	}
 	return p.second.as<SpiritType>();
+}
+
+template<typename T> typename _TypeAdapter<T>::return_type XObject::get( std::string const& name, T& v ) {
+	typename _TypeAdapter<T>::return_type const r = this->get<T>(name);
+	v = static_cast<T>(r);
+	return r;
 }
 
 template<> inline XValue& XObject::get<XValue>( std::string const& name ) {
