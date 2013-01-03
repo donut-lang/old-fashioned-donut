@@ -52,12 +52,12 @@ public:
 	explicit XArchiverIn(XValue const& v);
 	explicit XArchiverIn(Handler<XArray> const& a):XArchiver(a){}
 public:
-	inline XArchiver& operator<<(XValue const& val){
+	inline XArchiverIn& operator<<(XValue const& val){
 		this->array(val.as<XArray>());
 		this->index(0);
 		return *this;
 	}
-	template <typename T> inline XArchiver& operator>>(T& t){
+	template <typename T> inline XArchiverIn& operator>>(T& t){
 		if( !this->array() ){
 			TARTE_EXCEPTION(Exception, "[BUG] Please load xvalue first.");
 		}
@@ -66,13 +66,16 @@ public:
 		this->index(0);
 		return *this;
 	}
+	template <typename T> inline XArchiverIn& load(T& v) {
+		return this->operator>>(v);
+	}
 };
 
 class XArchiverOut : public XArchiver {
 public:
 	explicit XArchiverOut();
 public:
-	inline XArchiver& operator>>(XValue& val){
+	inline XArchiverOut& operator>>(XValue& val){
 		if( !this->array() ){
 			TARTE_EXCEPTION(Exception, "[BUG] Please serialize objects first.");
 		}
@@ -81,12 +84,22 @@ public:
 		this->index(0);
 		return *this;
 	}
-	template <typename T> inline XArchiver& operator<<(T& t){
+	template <typename T> inline XArchiverOut& operator<<(T& t){
 		if( !this->array() ){
 			this->array(Handler<XArray>(new XArray));
 			this->index(0);
 		}
-		return this->operator &(t);
+		this->operator &(t);
+		return *this;
+	}
+	template <typename T> inline XArchiverOut& save(T& t) {
+		this->operator <<(t);
+		return *this;
+	}
+	XValue toXValue(){
+		XValue v;
+		(*this) >> v;
+		return v;
 	}
 };
 
@@ -104,28 +117,28 @@ public:
 template <typename T>
 class HasSaveLoad {
 	template <typename U>
-	static auto checkSave(U u) -> decltype(u.save(std::declval<XArchiverOut&>()), std::true_type());
+	static auto checkSave(U* u) -> decltype(u->save(std::declval<XArchiverOut&>()), std::true_type());
 	static auto checkSave(...) -> decltype( std::false_type() );
 	template <typename U>
-	static auto checkLoad(U u) -> decltype(u.load(std::declval<XArchiverIn&>()), std::true_type());
+	static auto checkLoad(U* u) -> decltype(u->load(std::declval<XArchiverIn&>()), std::true_type());
 	static auto checkLoad(...) -> decltype( std::false_type() );
 public:
-	typedef decltype(checkSave(std::declval<T>())) check_save_decl;
-	typedef decltype(checkLoad(std::declval<T>())) check_load_decl;
+	typedef decltype(checkSave(std::declval<T*>())) check_save_decl;
+	typedef decltype(checkLoad(std::declval<T*>())) check_load_decl;
 	static const bool value = check_save_decl::value && check_load_decl::value;
 };
 
 template <typename T>
 class HasXValueSaveLoad {
 	template <typename U>
-	static auto checkSave(U u) -> typename std::enable_if<std::is_same<decltype(u.save()), XValue>::value, std::true_type>::type;
+	static auto checkSave(U* u) -> typename std::enable_if<std::is_same<decltype(u->save()), XValue>::value, std::true_type>::type;
 	static auto checkSave(...) -> decltype( std::false_type() );
 	template <typename U>
-	static auto checkLoad(U u) -> decltype(u.load(std::declval<XValue const&>()), std::true_type());
+	static auto checkLoad(U* u) -> decltype(u->load(std::declval<XValue const&>()), std::true_type());
 	static auto checkLoad(...) -> decltype( std::false_type() );
 public:
-	typedef decltype(checkSave(std::declval<T>())) check_save_decl;
-	typedef decltype(checkLoad(std::declval<T>())) check_load_decl;
+	typedef decltype(checkSave(std::declval<T*>())) check_save_decl;
+	typedef decltype(checkLoad(std::declval<T*>())) check_load_decl;
 	static const bool value = check_save_decl::value && check_load_decl::value;
 };
 

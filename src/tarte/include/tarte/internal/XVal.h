@@ -80,6 +80,10 @@ template <> struct _TypeAdapter<Handler<XObject> > { PROXY_ADAPTER(XObject) };
 template <> struct _TypeAdapter<const char*> { PROXY_ADAPTER(XString) };
 template <std::size_t N> struct _TypeAdapter<const char[N]> { PROXY_ADAPTER(XString) };
 template <std::size_t N> struct _TypeAdapter<char[N]> { PROXY_ADAPTER(XString) };
+template <> struct _TypeAdapter<unsigned char> { PROXY_ADAPTER(XUInt) };
+template <> struct _TypeAdapter<char> { PROXY_ADAPTER(XSInt) };
+template <> struct _TypeAdapter<unsigned short> { PROXY_ADAPTER(XUInt) };
+template <> struct _TypeAdapter<short> { PROXY_ADAPTER(XSInt) };
 
 #undef PROXY_ADAPTER
 

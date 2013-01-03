@@ -324,6 +324,50 @@ class Video
 		inline void writeSpriteDataRegister(uint8_t value);
 
 		inline void startVBlank();
+	public:
+		template <typename Archiver>
+		void serialize(Archiver& arc){
+			arc & videoFairy;
+			arc & isEven;
+			arc & nowY;
+			arc & nowX;
+			arc & spRam;
+			arc & internalVram;
+			arc & palette;
+			arc & screenBuffer;
+
+			arc & spriteTable;
+			arc & spriteHitCnt;
+
+			/* PPU Control Register 1 */
+			arc & executeNMIonVBlank;
+			arc & spriteHeight;
+			arc & patternTableAddressBackground;
+			arc & patternTableAddress8x8Sprites;
+			arc & vramIncrementSize;
+
+			/* PPU Control Register 2 */
+			arc & colorEmphasis;
+			arc & spriteVisibility;
+			arc & backgroundVisibility;
+			arc & spriteClipping;
+			arc & backgroundClipping;
+			arc & paletteMask;
+
+			/* PPU Status Register */
+			arc & nowOnVBnank;
+			arc & sprite0Hit;
+			arc & lostSprites;
+
+			/* addressControl */
+			arc & vramBuffer;
+			arc & spriteAddr;
+			arc & vramAddrRegister;
+			arc & vramAddrReloadRegister;
+			arc & horizontalScrollBits;
+			arc & scrollRegisterWritten;
+			arc & vramAddrRegisterWritten;
+		}
 };
 
 class Ram
@@ -639,8 +683,8 @@ class VirtualMachine final
 	public:
 		inline Processor const* getProcessor() const noexcept { return &processor; };
 	public:
-		void save(XArchiverOut& arc);
-		void load(XArchiverIn& arc);
+		XValue save();
+		void load(XValue const& data);
 };
 
 }
