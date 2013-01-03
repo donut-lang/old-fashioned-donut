@@ -19,6 +19,7 @@
 #pragma once
 
 #include <algorithm>
+#include "../Exception.h"
 
 namespace tarte {
 
@@ -236,6 +237,19 @@ inline typename _TypeAdapter<T>::return_type XValue::as() {
 template <typename T>
 inline typename _TypeAdapter<T>::return_const_type XValue::as() const {
 	return this->asImpl<typename _TypeAdapter<T>::spirit_type>();
+};
+
+template <typename T>
+inline typename _TypeAdapter<T>::return_type XValue::as(T& v) {
+	typename _TypeAdapter<T>::return_type const r = this->asImpl<typename _TypeAdapter<T>::spirit_type>();
+	v = r;
+	return r;
+};
+template <typename T>
+inline typename _TypeAdapter<T>::return_const_type XValue::as(T& v) const {
+	typename _TypeAdapter<T>::return_const_type const r = this->asImpl<typename _TypeAdapter<T>::spirit_type>();
+	v = r;
+	return r;
 };
 
 template <> XValue& XObject::set<XValue>(std::string const& name, XValue const& obj);
