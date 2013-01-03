@@ -3,7 +3,7 @@ DIRNAME=$(cd $(dirname $0);pwd)
 
 BUILDDIR=$DIRNAME/build
 
-if which clang++ 2&>1 > /dev/null ; then
+if which clang++ 2>&1 > /dev/null ; then
 	echo "clang found."
 	export set CC='clang'
 	export set CXX='clang++'
@@ -34,9 +34,10 @@ fi
 
 TARGET=$1
 if [ -z $TARGET ] ; then
-TARGET="build"
+	TARGET="build"
+else
+	shift
 fi
-shift
 
 BLD_WAF_CMD="python waf --out $BUILDDIR --progress ${TARGET}_${MODE} $*"
 if [ ! -d $BUILDDIR ] ; then
