@@ -120,6 +120,9 @@ PRIM_VAR(XFloat);
 PRIM_VAR(XBool);
 PRIM_VAR(XArray);
 PRIM_VAR(XObject);
+PRIM_VAR(XBinary);
+PRIM_VAR(Handler<XObject>);
+PRIM_VAR(Handler<XArray>);
 
 #undef PRIM_VAR
 
@@ -140,5 +143,6 @@ PRIMITIVE_PROXY(unsigned short, XUInt);
 PRIMITIVE_PROXY(short, XSInt);
 PRIMITIVE_PROXY(unsigned long, XUInt);
 PRIMITIVE_PROXY(long, XSInt);
+
 
 }

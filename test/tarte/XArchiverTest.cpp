@@ -311,4 +311,30 @@ TEST(XArchiveTest, XSaveLoadTest)
 	ASSERT_EQ(3, sample2.z);
 }
 
+TEST(XArchiveTest, RawXValue)
+{
+	std::string src;
+	tinyxml2::XMLDocument doc;
+	tinyxml2::XMLElement* e;
+	{
+		Handler<XObject> obj(new XObject);
+		obj->set("1", 1);
+		obj->set("2", 2);
+		obj->set("3", 3);
+		XArchiverOut out;
+		out << obj;
+		e = out.toXValue().toXML(&doc);
+		doc.InsertFirstChild(e);
+	}
+	{
+		XArchiverIn in(XValue::fromXML(e));
+		Handler<XObject> obj;
+		in >> obj;
+		ASSERT_EQ(1, obj->get<decltype(1)>("1"));
+		ASSERT_EQ(2, obj->get<decltype(2)>("2"));
+		ASSERT_EQ(3, obj->get<decltype(3)>("3"));
+	}
+
+}
+
 }}
