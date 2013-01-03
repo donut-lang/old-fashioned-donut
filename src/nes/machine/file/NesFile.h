@@ -9,6 +9,7 @@
 #include <cstddef>
 #include <stdint.h>
 #include <stdio.h>
+#include <tarte/XVal.h>
 
 namespace nes {
 
@@ -24,6 +25,7 @@ public:
 	};
 public:
 	explicit NesFile(std::string const& filename);
+	explicit NesFile(tarte::XValue const& val);
 	~NesFile();
 	inline MirrorType getMirrorType() const
 	{
@@ -99,8 +101,8 @@ public:
 		arc & chrSize;
 		arc & prgPageCnt;
 		arc & chrPageCnt;
-		arc.binary(prgRom, prgSize);
-		arc.binary(chrRom, chrSize);
+		arc.binary(const_cast<uint8_t*>(prgRom), prgSize);
+		arc.binary(const_cast<uint8_t*>(chrRom), chrSize);
 	}
 };
 

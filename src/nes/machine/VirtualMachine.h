@@ -30,6 +30,8 @@ public:
 		SRAM_SIZE = 8192
 	};
 	static Cartridge* loadCartridge(VirtualMachine& vm, std::string const& filename);
+private:
+	static Cartridge* loadCartridge(VirtualMachine& vm, NesFile* file);
 public:
 	explicit Cartridge(VirtualMachine& vm, const NesFile* nesFile = 0);
 	virtual ~Cartridge();
@@ -80,9 +82,12 @@ private:
 	uint8_t* vramMirroring[4];
 	uint8_t* internalVram;
 	uint8_t fourScreenVram[4096];
-public:
-	virtual void save(XArchiverOut& arc);
-	virtual void load(XArchiverIn& arc);
+public: /* セーブ・ロード用 */
+	static Cartridge* load(VirtualMachine& vm, XValue const& val);
+	XValue save();
+public: /* セーブ・ロード実装用 */
+	virtual void saveImpl(XArchiverOut& arc) {};
+	virtual void loadImpl(XArchiverIn& arc) {};
 };
 
 class IOPort

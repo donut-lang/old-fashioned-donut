@@ -1,6 +1,7 @@
 
 #include <fstream>
 #include <string.h>
+#include <tarte/XArchiver.h>
 #include "./NesFile.h"
 #include "../exception/EmulatorException.h"
 
@@ -9,8 +10,8 @@ namespace nes {
 NesFile::NesFile(std::string const& filename) :
 filename(filename),
 mapperNo(0),
-prgRom(NULL),
-chrRom(NULL),
+prgRom(nullptr),
+chrRom(nullptr),
 mirrorType(HORIZONTAL),
 trainerFlag(false),
 sramFlag(false),
@@ -20,6 +21,23 @@ prgPageCnt(0),
 chrPageCnt(0)
 {
 	this->loadFile();
+}
+
+NesFile::NesFile(tarte::XValue const& val) :
+filename("<FROM XVAL NOW LOADING>"),
+mapperNo(0),
+prgRom(nullptr),
+chrRom(nullptr),
+mirrorType(HORIZONTAL),
+trainerFlag(false),
+sramFlag(false),
+prgSize(0),
+chrSize(0),
+prgPageCnt(0),
+chrPageCnt(0)
+{
+	::tarte::XArchiverIn in(val);
+	this->serialize(in);
 }
 
 NesFile::~NesFile()
