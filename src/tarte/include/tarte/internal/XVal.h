@@ -19,6 +19,7 @@
 #pragma once
 
 #include <algorithm>
+#include "../EnumProxy.h"
 #include "../Exception.h"
 
 namespace tarte {
@@ -68,7 +69,12 @@ DEF_TYPE(XBinary);
 template <typename T> struct _TypeAdapter<T&> { PROXY_ADAPTER(T) };
 template <typename T> struct _TypeAdapter<T const&> { PROXY_ADAPTER(T) };
 template <typename T> struct _TypeAdapter<T const> { PROXY_ADAPTER(T) };
-template <typename T> struct _TypeAdapter<T, typename std::enable_if<std::is_enum<T>::value>::type> { PROXY_ADAPTER(XSInt) };
+template <typename T> struct _TypeAdapter<T, typename std::enable_if<std::is_enum<T>::value>::type> {
+	typedef typename _TypeAdapter<XSInt>::spirit_type spirit_type;
+	typedef typename _TypeAdapter<XSInt>::init_type init_type;
+	typedef EnumProxy<T>      return_type;
+	typedef ConstEnumProxy<T> return_const_type;
+};
 template <> struct _TypeAdapter<Handler<XArray> > { PROXY_ADAPTER(XArray) };
 template <> struct _TypeAdapter<Handler<XObject> > { PROXY_ADAPTER(XObject) };
 template <> struct _TypeAdapter<const char*> { PROXY_ADAPTER(XString) };
@@ -78,62 +84,57 @@ template <std::size_t N> struct _TypeAdapter<char[N]> { PROXY_ADAPTER(XString) }
 #undef PROXY_ADAPTER
 
 template <typename T> typename _TypeAdapter<T>::return_type XArray::get( std::size_t const& idx ) {
-	typedef typename _TypeAdapter<T>::spirit_type SpiritType;
 	if( idx < 0 || idx >= list_.size() ){
 		TARTE_EXCEPTION(Exception, "idx: %d >= size: %d ", idx, list_.size());
 	}
 	XValue& val = list_[idx];
-	if( !val.is<SpiritType>() ) {
+	if( !val.is<T>() ) {
 		TARTE_EXCEPTION(Exception, "Array: \"%d\" type mismatch required: %s actual: %s.", idx, XValue(typename _TypeAdapter<T>::init_type()).typeString().c_str(), val.typeString().c_str());
 	}
-	return val.as<SpiritType>();
+	return val.as<T>();
 }
 
 template <typename T> typename _TypeAdapter<T>::return_type XArray::get( std::size_t const& idx, T& v ) {
 	typename _TypeAdapter<T>::return_type const r = this->get<T>(idx);
-	v = static_cast<T>(r);
+	v = r;
 	return r;
 }
 
 template <typename T> bool XArray::has( std::size_t const& idx ) const {
-	typedef typename _TypeAdapter<T>::spirit_type SpiritType;
 	if( idx < 0 || idx >= list_.size() ){
 		return false;
 	}
 	XValue const& val = list_[idx];
-	return val.is<SpiritType>();
+	return val.is<T>();
 }
 template <typename T> typename _TypeAdapter<T>::return_type XArray::set( std::size_t const& idx, T const& obj ) {
-	typedef typename _TypeAdapter<T>::spirit_type SpiritType;
 	if( idx < 0 || idx >= list_.size() ){
 		TARTE_EXCEPTION(Exception, "idx: %d >= size: %d ", idx, list_.size());
 	}
 	XValue& val = list_[idx];
 	val = XValue(obj);
-	return val.as<SpiritType>();
+	return val.as<T>();
 }
 template <typename T> typename _TypeAdapter<T>::return_type XArray::append( T const& obj ) {
-	typedef typename _TypeAdapter<T>::spirit_type SpiritType;
 	this->list_.push_back(XValue(obj));
-	return this->list_.back().as<SpiritType>();
+	return this->list_.back().as<T>();
 }
 
 template<typename T> typename _TypeAdapter<T>::return_type XObject::get( std::string const& name ) {
-	typedef typename _TypeAdapter<T>::spirit_type SpiritType;
 	auto it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );
 	std::pair<std::string, XValue>& p = *it;
 	if( it == this->map_.end() || p.first != name){
 		TARTE_EXCEPTION(Exception, "Object: \"%s\" not found.", name.c_str());
 	}
-	if( !p.second.is<SpiritType>() ) {
+	if( !p.second.is<T>() ) {
 		TARTE_EXCEPTION(Exception, "Object: \"%s\" type mismatch required: %s actual: %s.", name.c_str(), XValue(typename _TypeAdapter<T>::init_type()).typeString().c_str(), it->second.typeString().c_str());
 	}
-	return p.second.as<SpiritType>();
+	return p.second.as<T>();
 }
 
 template<typename T> typename _TypeAdapter<T>::return_type XObject::get( std::string const& name, T& v ) {
 	typename _TypeAdapter<T>::return_type const r = this->get<T>(name);
-	v = static_cast<T>(r);
+	v = r;
 	return r;
 }
 
@@ -148,13 +149,12 @@ template<> inline XValue& XObject::get<XValue>( std::string const& name ) {
 
 template<typename T> typename _TypeAdapter<T>::return_type XObject::opt(std::string const& name)
 {
-	typedef typename _TypeAdapter<T>::spirit_type SpiritType;
 	auto it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );
 	std::pair<std::string, XValue> const& p = *it;
 	if( it == this->map_.end() || p.first != name || !p.second.is<T>()){
 		return T();
 	}
-	return p.second.as<SpiritType>();
+	return p.second.as<T>();
 }
 
 template<typename T> bool XObject::has(std::string const& name)
@@ -168,15 +168,14 @@ template<typename T> bool XObject::has(std::string const& name)
 }
 template<typename T> typename _TypeAdapter<T>::return_type XObject::set(std::string const& name, T const& obj)
 {
-	typedef typename _TypeAdapter<T>::spirit_type SpiritType;
 	auto it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );
 	std::pair<std::string, XValue>& p = *it;
 	if( it == this->map_.end() || p.first != name) {
 		it = this->map_.insert(it, std::pair<std::string, XValue>(name, XValue(obj)));
-		return it->second.as<SpiritType>();
+		return it->second.as<T>();
 	}else{
 		p.second = XValue(obj);
-		return p.second.as<SpiritType>();
+		return p.second.as<T>();
 	}
 }
 
@@ -241,13 +240,13 @@ inline typename _TypeAdapter<T>::return_const_type XValue::as() const {
 
 template <typename T>
 inline typename _TypeAdapter<T>::return_type XValue::as(T& v) {
-	typename _TypeAdapter<T>::return_type const r = this->asImpl<typename _TypeAdapter<T>::spirit_type>();
+	typename _TypeAdapter<T>::return_type const r = this->as<T>();
 	v = r;
 	return r;
 };
 template <typename T>
 inline typename _TypeAdapter<T>::return_const_type XValue::as(T& v) const {
-	typename _TypeAdapter<T>::return_const_type const r = this->asImpl<typename _TypeAdapter<T>::spirit_type>();
+	typename _TypeAdapter<T>::return_const_type const r = this->as<T>();
 	v = r;
 	return r;
 };

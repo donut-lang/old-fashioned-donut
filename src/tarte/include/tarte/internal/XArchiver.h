@@ -123,24 +123,22 @@ PRIM_VAR(XObject);
 
 #undef PRIM_VAR
 
-template <>
-struct XSerializer<unsigned char, void> {
-	static XValue serialize(unsigned char& val) {
-		return XValue( val );
-	}
-	static void deserialize(unsigned char& val, XValue const& xval){
-		val = xval.as<XUInt>();
-	}
+#define PRIMITIVE_PROXY(FROM, TO) \
+template <>\
+struct XSerializer<FROM, void> {\
+	static XValue serialize(FROM& val) {\
+		return XValue( static_cast<TO>(val) );\
+	}\
+	static void deserialize(FROM& val, XValue const& xval){\
+		val = static_cast<FROM>(xval.as<TO>());\
+	}\
 };
 
-template <>
-struct XSerializer<char, void> {
-	static XValue serialize(char& val) {
-		return XValue( val );
-	}
-	static void deserialize(char& val, XValue const& xval){
-		val = xval.as<XSInt>();
-	}
-};
+PRIMITIVE_PROXY(unsigned char, XUInt);
+PRIMITIVE_PROXY(char, XSInt);
+PRIMITIVE_PROXY(unsigned short, XUInt);
+PRIMITIVE_PROXY(short, XSInt);
+PRIMITIVE_PROXY(unsigned long, XUInt);
+PRIMITIVE_PROXY(long, XSInt);
 
 }

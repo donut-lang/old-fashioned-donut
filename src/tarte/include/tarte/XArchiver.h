@@ -138,12 +138,11 @@ struct XSerializer {
 //enumを持っている
 template <typename T>
 struct XSerializer<T, typename std::enable_if<std::is_enum<T>::value>::type> {
-	typedef typename _TypeAdapter<T>::spirit_type Type;
 	static XValue serialize(T& val){
-		return XValue(static_cast<Type>(val));
+		return XValue(val);
 	}
 	static void deserialize(T& val, XValue const& xval){
-		val = static_cast<T>(xval.as<Type>());
+		val = xval.as<T>();
 	}
 };
 
