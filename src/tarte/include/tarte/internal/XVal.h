@@ -68,6 +68,7 @@ DEF_TYPE(XBinary);
 	typedef typename _TypeAdapter<P_TYPE>::return_type return_type;\
 	typedef typename _TypeAdapter<P_TYPE>::return_const_type return_const_type;\
 
+// 参照とかconstとかは取り除く
 template <typename T> struct _TypeAdapter<T&> { PROXY_ADAPTER(T) };
 template <typename T> struct _TypeAdapter<T const&> { PROXY_ADAPTER(T) };
 template <typename T> struct _TypeAdapter<T const> { PROXY_ADAPTER(T) };
@@ -77,12 +78,17 @@ template <typename T> struct _TypeAdapter<T, typename std::enable_if<std::is_enu
 	typedef      EnumProxy<T>      return_type;
 	typedef ConstEnumProxy<T> return_const_type;
 };
+
+// Array / Handler
 template <> struct _TypeAdapter<Handler<XArray> > { PROXY_ADAPTER(XArray) };
 template <> struct _TypeAdapter<Handler<XObject> > { PROXY_ADAPTER(XObject) };
+
+// String
 template <> struct _TypeAdapter<const char*> { PROXY_ADAPTER(XString) };
 template <std::size_t N> struct _TypeAdapter<const char[N]> { PROXY_ADAPTER(XString) };
 template <std::size_t N> struct _TypeAdapter<char[N]> { PROXY_ADAPTER(XString) };
 
+// Integers
 #define INT_PROXY(TARGET, REAL, PROXY, CONST_PROXY) \
 template <> struct _TypeAdapter<TARGET> {\
 	typedef typename _TypeAdapter<REAL>::spirit_type spirit_type;\
@@ -99,6 +105,7 @@ INT_PROXY(signed short, XSInt, IntProxy, ConstIntProxy);
 
 #undef INT_PROXY
 
+// Binary
 template <> struct _TypeAdapter< std::vector<unsigned char> > {
 	typedef typename _TypeAdapter<XBinary>::spirit_type spirit_type;
 	typedef typename _TypeAdapter<XBinary>::init_type init_type;
