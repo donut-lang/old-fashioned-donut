@@ -17,8 +17,7 @@
  */
 
 #pragma once
-#include "XVal.h"
-#include "ClassUtil.h"
+#include "../ClassUtil.h"
 
 namespace tarte {
 

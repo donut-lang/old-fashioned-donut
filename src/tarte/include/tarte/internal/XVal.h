@@ -19,8 +19,8 @@
 #pragma once
 
 #include <algorithm>
-#include "../EnumProxy.h"
-#include "../VectorProxy.h"
+#include "EnumProxy.h"
+#include "VectorProxy.h"
 #include "../Exception.h"
 
 namespace tarte {

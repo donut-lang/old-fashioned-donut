@@ -79,7 +79,7 @@ private: /* internal data operations */
 	void copy(XValue const& o);
 public: /* copy/assign */
 	XValue(XValue const& o):type_(o.type_){ this->copy(o); }
-	XValue(XValue&& o):type_(o.type_){ this->grab(static_cast<XValue&&>(o)); }
+	XValue(XValue&& o):type_(o.type_){ this->grab(std::move(o)); }
 	XValue& operator=(XValue const& o){
 		this->remove();
 		this->type_ = o.type_;
@@ -89,7 +89,7 @@ public: /* copy/assign */
 	XValue& operator=(XValue&& o){
 		this->remove();
 		this->type_ = o.type_;
-		this->grab(static_cast<XValue&&>(o));
+		this->grab(std::move(o));
 		return *this;
 	}
 public: /* constructors */

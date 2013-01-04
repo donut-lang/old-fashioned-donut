@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#include "XVal.h"
-#include "ClassUtil.h"
+#include <vector>
+#include "../ClassUtil.h"
 
 namespace tarte {
 
@@ -103,7 +103,7 @@ public:
 	template <class InputIterator> auto assign(InputIterator first, InputIterator last) -> decltype(val.assign(first,last)) { return val.assign(first,last); }
 	auto assign(typename type::size_type n, const T& u) -> decltype(val.assign(n,u)) { return val.assign(n, u); }
 	auto push_back(const T& x) -> decltype(val.push_back(x)) { return val.push_back(x); }
-	template <class... Args> auto emplace_back(Args&&... args) -> decltype(val.emplace_back(static_cast<Args&&>(args)...)) { return val.emplace_back(static_cast<Args&&>(args)...); }
+	template <class... Args> auto emplace_back(Args&&... args) -> decltype(val.emplace_back(std::move(args)...)) { return val.emplace_back(std::move(args)...); }
 	auto pop_back() -> decltype(val.pop_back()) { return val.pop_back(); }
 	typename type::iterator insert(typename type::const_iterator position, const T& x) {
 		return reinterpret_cast<typename type::iterator>( val.insert(reinterpret_cast<typename std::vector<char>::iterator>(position), x) );
@@ -120,7 +120,12 @@ public:
 	template <class... Args>
 	typename type::iterator emplace(typename type::const_iterator position, Args&&... args)
 	{
-		return reinterpret_cast<typename type::iterator>(val.insert(reinterpret_cast<typename std::vector<char>::iterator>(position), static_cast<Args&&>(args)...));
+		return reinterpret_cast<typename type::iterator>(val.emplace(reinterpret_cast<typename std::vector<char>::iterator>(position), std::move(args)...));
+	}
+	template <class... Args>
+	void emplace_back(Args&&... args)
+	{
+		val.emplace_back(std::move(args)...);
 	}
 	typename type::iterator erase(typename type::const_iterator position)
 	{
