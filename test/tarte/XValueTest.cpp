@@ -16,9 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../TestCommon.h"
+#include <cmath>
+#include <cstdint>
 #include <tarte/XVal.h>
-#include <math.h>
+#include "../TestCommon.h"
 
 namespace tarte {
 
@@ -218,7 +219,8 @@ TEST(XValueTest, BinaryTest)
 		XValue p(orig, 256);
 		XBinary const& b = p.as<XBinary>();
 		for(int i=0;i<256;++i){
-			ASSERT_EQ(orig[i], b.at(i));
+			char const& c = b.at(i);
+			ASSERT_EQ(orig[i], c);
 		}
 		ASSERT_EQ(std::vector<char>(orig, orig+256), b);
 	}
@@ -580,6 +582,102 @@ TEST(XValueTest, SerializeDeserializeTest)
 	}
 }
 
+TEST(XValueTest, UnsignedCharTest)
+{
+#define TYPE unsigned char
+#define NOT_TYPE char
+#define VALUE 127
+#include "XValueTestTypes.inc.h"
+#undef TYPE
+#undef NOT_TYPE
+#undef VALUE
+}
+TEST(XValueTest, CharTest)
+{
+#define TYPE char
+#define NOT_TYPE unsigned char
+#define VALUE 127
+#include "XValueTestTypes.inc.h"
+#undef TYPE
+#undef NOT_TYPE
+#undef VALUE
+}
+TEST(XValueTest, SignedCharTest)
+{
+#define TYPE signed char
+#define NOT_TYPE unsigned char
+#define VALUE 127
+#include "XValueTestTypes.inc.h"
+#undef TYPE
+#undef NOT_TYPE
+#undef VALUE
+}
+
+TEST(XValueTest, ShortTest)
+{
+#define TYPE short
+#define NOT_TYPE unsigned short
+#define VALUE 0x7fff
+#include "XValueTestTypes.inc.h"
+#undef TYPE
+#undef NOT_TYPE
+#undef VALUE
+}
+
+TEST(XValueTest, UnsignedShortTest)
+{
+#define TYPE unsigned short
+#define NOT_TYPE short
+#define VALUE 0x7fff
+#include "XValueTestTypes.inc.h"
+#undef TYPE
+#undef NOT_TYPE
+#undef VALUE
+}
+
+TEST(XValueTest, Uint8Test)
+{
+#define TYPE uint8_t
+#define NOT_TYPE int8_t
+#define VALUE 127
+#include "XValueTestTypes.inc.h"
+#undef TYPE
+#undef NOT_TYPE
+#undef VALUE
+}
+
+TEST(XValueTest, Sint8Test)
+{
+#define TYPE int8_t
+#define NOT_TYPE uint8_t
+#define VALUE 127
+#include "XValueTestTypes.inc.h"
+#undef TYPE
+#undef NOT_TYPE
+#undef VALUE
+}
+
+TEST(XValueTest, Uint16Test)
+{
+#define TYPE uint16_t
+#define NOT_TYPE int16_t
+#define VALUE 0x7fff
+#include "XValueTestTypes.inc.h"
+#undef TYPE
+#undef NOT_TYPE
+#undef VALUE
+}
+
+TEST(XValueTest, Sint16Test)
+{
+#define TYPE int16_t
+#define NOT_TYPE uint16_t
+#define VALUE 0x7fff
+#include "XValueTestTypes.inc.h"
+#undef TYPE
+#undef NOT_TYPE
+#undef VALUE
+}
 
 }
 
