@@ -20,6 +20,7 @@
 
 #include <algorithm>
 #include "../EnumProxy.h"
+#include "../VectorProxy.h"
 #include "../Exception.h"
 
 namespace tarte {
@@ -72,7 +73,7 @@ template <typename T> struct _TypeAdapter<T const> { PROXY_ADAPTER(T) };
 template <typename T> struct _TypeAdapter<T, typename std::enable_if<std::is_enum<T>::value>::type> {
 	typedef typename _TypeAdapter<XSInt>::spirit_type spirit_type;
 	typedef typename _TypeAdapter<XSInt>::init_type init_type;
-	typedef EnumProxy<T>      return_type;
+	typedef      EnumProxy<T>      return_type;
 	typedef ConstEnumProxy<T> return_const_type;
 };
 template <> struct _TypeAdapter<Handler<XArray> > { PROXY_ADAPTER(XArray) };
@@ -85,8 +86,18 @@ template <> struct _TypeAdapter<char> { PROXY_ADAPTER(XSInt) };
 template <> struct _TypeAdapter<signed char> { PROXY_ADAPTER(XSInt) };
 template <> struct _TypeAdapter<unsigned short> { PROXY_ADAPTER(XUInt) };
 template <> struct _TypeAdapter<short> { PROXY_ADAPTER(XSInt) };
-template <> struct _TypeAdapter< std::vector<unsigned char> > { PROXY_ADAPTER(XBinary) };
-template <> struct _TypeAdapter< std::vector<signed char> > { PROXY_ADAPTER(XBinary) };
+template <> struct _TypeAdapter< std::vector<unsigned char> > {
+	typedef typename _TypeAdapter<XBinary>::spirit_type spirit_type;
+	typedef typename _TypeAdapter<XBinary>::init_type init_type;
+	typedef       VectorProxy<unsigned char>      return_type;
+	typedef const VectorProxy<unsigned char> return_const_type;
+};
+template <> struct _TypeAdapter< std::vector<signed char> > {
+	typedef typename _TypeAdapter<XBinary>::spirit_type spirit_type;
+	typedef typename _TypeAdapter<XBinary>::init_type init_type;
+	typedef       VectorProxy<signed char>      return_type;
+	typedef const VectorProxy<signed char> return_const_type;
+};
 
 #undef PROXY_ADAPTER
 
@@ -124,11 +135,12 @@ template <typename T> typename _TypeAdapter<T>::return_type XArray::set( std::si
 }
 template <typename T> typename _TypeAdapter<T>::return_type XArray::append( T const& obj ) {
 	this->list_.push_back(XValue(obj));
-	return this->list_.back().as<T>();
+	XValue& back = this->list_.back();
+	return back.as<T>();
 }
 
 template<typename T> typename _TypeAdapter<T>::return_type XObject::get( std::string const& name ) {
-	auto it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );
+	std::vector<std::pair<std::string, XValue> >::iterator const it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );
 	std::pair<std::string, XValue>& p = *it;
 	if( it == this->map_.end() || p.first != name){
 		TARTE_EXCEPTION(Exception, "Object: \"%s\" not found.", name.c_str());
@@ -146,7 +158,7 @@ template<typename T> typename _TypeAdapter<T>::return_type XObject::get( std::st
 }
 
 template<> inline XValue& XObject::get<XValue>( std::string const& name ) {
-	auto it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );
+	std::vector<std::pair<std::string, XValue> >::iterator const it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );
 	std::pair<std::string, XValue>& p = *it;
 	if( it == this->map_.end() || p.first != name){
 		TARTE_EXCEPTION(Exception, "Object: \"%s\" not found.", name.c_str());
@@ -156,7 +168,7 @@ template<> inline XValue& XObject::get<XValue>( std::string const& name ) {
 
 template<typename T> bool XObject::has(std::string const& name)
 {
-	auto it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );
+	std::vector<std::pair<std::string, XValue> >::iterator const it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );
 	std::pair<std::string, XValue> const& p = *it;
 	if( it == this->map_.end() || p.first != name || !p.second.is<T>()){
 		return false;
@@ -165,11 +177,12 @@ template<typename T> bool XObject::has(std::string const& name)
 }
 template<typename T> typename _TypeAdapter<T>::return_type XObject::set(std::string const& name, T const& obj)
 {
-	auto it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );
+	std::vector<std::pair<std::string, XValue> >::iterator it = std::lower_bound( this->map_.begin(), this->map_.end(), name, Comparator() );
 	std::pair<std::string, XValue>& p = *it;
 	if( it == this->map_.end() || p.first != name) {
 		it = this->map_.insert(it, std::pair<std::string, XValue>(name, XValue(obj)));
-		return it->second.as<T>();
+		XValue& b = ((std::pair<std::string, XValue>&)(*it)).second;
+		return b.as<T>();
 	}else{
 		p.second = XValue(obj);
 		return p.second.as<T>();
