@@ -213,6 +213,7 @@ Cartridge* Cartridge::load(VirtualMachine& vm, XValue const& val)
 XValue Cartridge::save()
 {
 	Handler<XObject> xobj(new XObject);
+	xobj->set("rom", (XArchiverOut() << const_cast<NesFile&>(*this->nesFile)).toXValue());
 	xobj->set("hasSram", hasSram);
 	xobj->set("sram", XValue(sram, sizeof(sram)/sizeof(uint8_t)));
 	xobj->set("mirrorType", this->mirrorType);

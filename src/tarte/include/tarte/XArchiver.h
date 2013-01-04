@@ -90,8 +90,9 @@ public:
 		return *this;
 	}
 	XValue toXValue(){
-		XValue v;
-		(*this) >> v;
+		Handler<XArray> v( this->array() );
+		this->array(Handler<XArray>());
+		this->index(0);
 		return v;
 	}
 };

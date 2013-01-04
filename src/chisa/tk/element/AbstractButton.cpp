@@ -25,6 +25,9 @@
 #include "../World.h"
 
 #include "ElementGroup.h"
+
+#include "../../../nes/NesGeist.h"
+
 namespace chisa {
 namespace tk {
 
@@ -129,8 +132,16 @@ void AbstractButton::setVertical(bool isVertical)
 	}
 }
 
+static XValue data=XValue();
 void AbstractButton::onClick()
 {
+	Handler< ::nes::NesGeist> geist = this->world().lock()->geist().cast<nes::NesGeist>();
+	if(data.is<XNull>()) {
+		data = geist->saveNES();
+		std::cout << "saved" << std::endl;
+	}else{
+		geist->loadNES(data);
+	}
 }
 
 bool AbstractButton::notifyViewRefreshedImpl()

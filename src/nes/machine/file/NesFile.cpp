@@ -37,7 +37,7 @@ prgPageCnt(0),
 chrPageCnt(0)
 {
 	::tarte::XArchiverIn in(val);
-	this->serialize(in);
+	in >> *this;
 }
 
 NesFile::~NesFile()

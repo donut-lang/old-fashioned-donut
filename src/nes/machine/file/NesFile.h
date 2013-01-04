@@ -101,7 +101,13 @@ public:
 		arc & chrSize;
 		arc & prgPageCnt;
 		arc & chrPageCnt;
+		if(!prgRom){
+			prgRom = new uint8_t[prgSize];
+		}
 		arc.binary(const_cast<uint8_t*>(prgRom), prgSize);
+		if(!chrRom){
+			chrRom = new uint8_t[chrSize];
+		}
 		arc.binary(const_cast<uint8_t*>(chrRom), chrSize);
 	}
 };
