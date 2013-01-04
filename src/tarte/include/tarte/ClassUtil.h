@@ -19,7 +19,6 @@
 #pragma once
 
 #define DISABLE_COPY_AND_ASSIGN(klass)\
-private:\
 	klass(klass const& other) = delete;\
 	klass(klass&& other) = delete;\
 	klass& operator=(klass const& other) = delete;\
