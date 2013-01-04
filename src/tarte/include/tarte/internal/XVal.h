@@ -89,14 +89,14 @@ template <> struct _TypeAdapter<short> { PROXY_ADAPTER(XSInt) };
 template <> struct _TypeAdapter< std::vector<unsigned char> > {
 	typedef typename _TypeAdapter<XBinary>::spirit_type spirit_type;
 	typedef typename _TypeAdapter<XBinary>::init_type init_type;
-	typedef       VectorProxy<unsigned char>      return_type;
-	typedef const VectorProxy<unsigned char> return_const_type;
+	typedef      VectorProxy<unsigned char>      return_type;
+	typedef ConstVectorProxy<unsigned char> return_const_type;
 };
 template <> struct _TypeAdapter< std::vector<signed char> > {
 	typedef typename _TypeAdapter<XBinary>::spirit_type spirit_type;
 	typedef typename _TypeAdapter<XBinary>::init_type init_type;
-	typedef       VectorProxy<signed char>      return_type;
-	typedef const VectorProxy<signed char> return_const_type;
+	typedef      VectorProxy<signed char>      return_type;
+	typedef ConstVectorProxy<signed char> return_const_type;
 };
 
 #undef PROXY_ADAPTER
