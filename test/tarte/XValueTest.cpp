@@ -679,5 +679,24 @@ TEST(XValueTest, Sint16Test)
 #undef VALUE
 }
 
+TEST(XValueTest, UnsignedCharVectorTest)
+{
+#define TYPE unsigned char
+#include "XValueTestBinaryTypes.inc.h"
+#undef TYPE
+}
+TEST(XValueTest, SignedCharVectorTest)
+{
+#define TYPE signed char
+#include "XValueTestBinaryTypes.inc.h"
+#undef TYPE
+}
+TEST(XValueTest, CharVectorTest)
+{
+#define TYPE char
+#include "XValueTestBinaryTypes.inc.h"
+#undef TYPE
+}
+
 }
 

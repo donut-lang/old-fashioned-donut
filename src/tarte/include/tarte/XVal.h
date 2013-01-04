@@ -108,8 +108,12 @@ public: /* constructors */
 
 	//binary
 	explicit inline XValue(const char* const& val, std::size_t len):type_(Type::BinaryT){ this->spirit_.binary_ = new Binary(val, val+len); };
-	explicit inline XValue(const unsigned char* const& val, std::size_t len):type_(Type::BinaryT){ this->spirit_.binary_ = new Binary(reinterpret_cast<unsigned char const*>(val), reinterpret_cast<unsigned char const*>(val+len)); };
+	explicit inline XValue(const unsigned char* const& val, std::size_t len):type_(Type::BinaryT){ this->spirit_.binary_ = new Binary(reinterpret_cast<char const*>(val), reinterpret_cast<char const*>(val+len)); };
+	explicit inline XValue(const signed char* const& val, std::size_t len):type_(Type::BinaryT){ this->spirit_.binary_ = new Binary(reinterpret_cast<char const*>(val), reinterpret_cast<char const*>(val+len)); };
+
 	explicit inline XValue(Binary const& val):type_(Type::BinaryT){ this->spirit_.binary_ = new std::vector<char>(val); };
+	explicit inline XValue(std::vector<unsigned char> const& val):type_(Type::BinaryT){ this->spirit_.binary_ = new Binary(reinterpret_cast<char const*>(&val[0]), reinterpret_cast<char const*>(&val[val.size()])); };
+	explicit inline XValue(std::vector<signed char> const& val):type_(Type::BinaryT){ this->spirit_.binary_ = new Binary(reinterpret_cast<char const*>(&val[0]), reinterpret_cast<char const*>(&val[val.size()])); };
 
 	// array, obj
 	inline XValue(Handler<XArray> const& val):type_(Type::ArrayT){ this->spirit_.array_= new Handler<Array>( val ); };

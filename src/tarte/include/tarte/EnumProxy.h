@@ -30,7 +30,7 @@ struct EnumProxy {
 	operator T() const {
 		return T(this->val);
 	}
-	EnumProxy<T>& operator=(T const& t){
+	EnumProxy<T>& operator=(T const& t) {
 		this->val = static_cast<int>(t);
 		return *this;
 	}
