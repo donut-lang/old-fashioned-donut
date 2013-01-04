@@ -698,5 +698,81 @@ TEST(XValueTest, CharVectorTest)
 #undef TYPE
 }
 
+template <typename SIGNED, typename UNSIGNED, int SIGNED_MAX, unsigned int UNSIGNED_MAX>
+void numtest(){
+	{
+		XValue v((SIGNED) SIGNED_MAX);
+		ASSERT_EQ(SIGNED_MAX, v.as<SIGNED>());
+		ASSERT_EQ(SIGNED_MAX, v.as<XSInt>());
+	}
+	{
+		XValue v((UNSIGNED) UNSIGNED_MAX);
+		ASSERT_EQ(UNSIGNED_MAX, v.as<UNSIGNED>());
+		ASSERT_EQ(UNSIGNED_MAX, v.as<XUInt>());
+	}
+	{
+		XValue v((XSInt)0x7fffffff);
+		v.as<SIGNED>() = 0;
+		ASSERT_EQ(0, v.as<SIGNED>());
+		ASSERT_EQ(0, v.as<XSInt>());
+	}
+	{
+		XValue v((XSInt)-0x7fffffff);
+		v.as<SIGNED>() = 0;
+		ASSERT_EQ(0, v.as<SIGNED>());
+		ASSERT_EQ(0, v.as<XSInt>());
+	}
+	{
+		XValue v((XSInt)-0x7fffffff);
+		v.as<SIGNED>() = SIGNED_MAX-1;
+		ASSERT_EQ(SIGNED_MAX-1, v.as<SIGNED>());
+		ASSERT_EQ(SIGNED_MAX-1, v.as<XSInt>());
+	}
+	{
+		XValue v((XUInt)0xffffffff);
+		v.as<UNSIGNED>() = 0;
+		ASSERT_EQ(0, v.as<UNSIGNED>());
+		ASSERT_EQ(0, v.as<XUInt>());
+	}
+	{
+		XValue v((XUInt)0xffffffff);
+		v.as<UNSIGNED>() = UNSIGNED_MAX+1;
+		ASSERT_EQ(0, v.as<UNSIGNED>());
+		ASSERT_EQ(0, v.as<XUInt>());
+	}
+	{
+		XValue v((XUInt)0xffffffff);
+		v.as<UNSIGNED>() = UNSIGNED_MAX-1;
+		ASSERT_EQ(UNSIGNED_MAX-1, v.as<UNSIGNED>());
+		ASSERT_EQ(UNSIGNED_MAX-1, v.as<XUInt>());
+	}
+}
+
+TEST(XValueTest, AsCharTest)
+{
+	{
+		XValue v((char)0x7f);
+		ASSERT_EQ(127, v.as<char>());
+	}
+	{
+		XValue v((char)0xff);
+		ASSERT_EQ((char)(0xff), v.as<char>());
+	}
+	{
+		XValue v((char)0xffff);
+		ASSERT_EQ((char)(0xff), v.as<char>());
+	}
+}
+
+TEST(XValueTest, AsSignedOrUnsignedCharTest)
+{
+	numtest<signed char, unsigned char, ((char)127), ((unsigned char)255)>();
+}
+
+TEST(XValueTest, AsShortTest)
+{
+	numtest<signed short, unsigned short, ((short)0x7fff), ((unsigned short)0xffff)>();
+}
+
 }
 
