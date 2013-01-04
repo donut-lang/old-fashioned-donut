@@ -82,6 +82,7 @@ template <std::size_t N> struct _TypeAdapter<const char[N]> { PROXY_ADAPTER(XStr
 template <std::size_t N> struct _TypeAdapter<char[N]> { PROXY_ADAPTER(XString) };
 template <> struct _TypeAdapter<unsigned char> { PROXY_ADAPTER(XUInt) };
 template <> struct _TypeAdapter<char> { PROXY_ADAPTER(XSInt) };
+template <> struct _TypeAdapter<signed char> { PROXY_ADAPTER(XSInt) };
 template <> struct _TypeAdapter<unsigned short> { PROXY_ADAPTER(XUInt) };
 template <> struct _TypeAdapter<short> { PROXY_ADAPTER(XSInt) };
 

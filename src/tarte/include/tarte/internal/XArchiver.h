@@ -139,8 +139,11 @@ struct XSerializer<FROM, void> {\
 
 PRIMITIVE_PROXY(unsigned char, XUInt);
 PRIMITIVE_PROXY(char, XSInt);
+PRIMITIVE_PROXY(signed char, XSInt);
+
 PRIMITIVE_PROXY(unsigned short, XUInt);
 PRIMITIVE_PROXY(short, XSInt);
+
 PRIMITIVE_PROXY(unsigned long, XUInt);
 PRIMITIVE_PROXY(long, XSInt);
 
