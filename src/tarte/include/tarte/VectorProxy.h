@@ -18,19 +18,26 @@
 
 #pragma once
 #include "XVal.h"
+#include "ClassUtil.h"
 
 namespace tarte {
 
 template <typename T>
-struct VectorProxy {
+class VectorProxy {
+	STACK_OBJECT(VectorProxy);
 	typedef std::vector<T> type;
 	std::vector<char>& val;
+public:
 	VectorProxy(std::vector<char>& t):val(t){}
+	VectorProxy(VectorProxy const&) = default;
+	VectorProxy(VectorProxy&&) = default;
+	VectorProxy& operator=(VectorProxy const&) = delete;
+	VectorProxy& operator=(VectorProxy&&) = delete;
 	~VectorProxy() = default;
 	operator T() const {
 		return type(this->val);
 	}
-	EnumProxy<T>& operator=(type const& t){
+	EnumProxy<T>& operator=(type const& t) {
 		val.assign(reinterpret_cast<char const*>(&t[0]), reinterpret_cast<char const*>(&t[t.size()]));
 		return *this;
 	}
@@ -124,6 +131,55 @@ public:
 		return reinterpret_cast<typename type::iterator>(val.erase(reinterpret_cast<typename std::vector<char>::iterator>(first), reinterpret_cast<typename std::vector<char>::iterator>(last)));
 	}
 	auto clear() -> decltype(val.clear()){ return val.clear(); }
+};
+
+template <typename T>
+class ConstVectorProxy {
+	STACK_OBJECT(ConstVectorProxy);
+	typedef std::vector<T> type;
+	std::vector<char> const& val;
+public:
+	ConstVectorProxy(std::vector<char> const& t):val(t){}
+	ConstVectorProxy(ConstVectorProxy const&) = default;
+	ConstVectorProxy(ConstVectorProxy&&) = default;
+	ConstVectorProxy& operator=(ConstVectorProxy const&) = delete;
+	ConstVectorProxy& operator=(ConstVectorProxy&&) = delete;
+	~ConstVectorProxy() = default;
+	operator T() const {
+		return type(this->val);
+	}
+public:
+	operator type() const{
+		return type(reinterpret_cast<typename type::const_pointer>(&val[0]), reinterpret_cast<typename type::const_pointer>(&val[val.size()]));
+	}
+public:
+	auto size() const noexcept -> decltype(val.size()) { return val.size(); };
+	auto max_size() const noexcept -> decltype(val.max_size()) { return val.size(); };
+	auto capacity() const noexcept -> decltype(val.capacity()) { return val.capacity(); };
+	auto empty() const noexcept -> decltype(val.empty()) { return val.empty(); };
+public:
+	typename type::const_iterator cbegin() noexcept {
+		return reinterpret_cast<typename type::const_iterator>(val.cbegin());
+	}
+	typename type::const_iterator cend() noexcept {
+		return reinterpret_cast<typename type::const_iterator>(val.cend());
+	}
+public:
+	typename type::const_reference operator[](typename std::vector<char>::size_type t) const {
+		return reinterpret_cast<typename type::const_reference>(val[t]);
+	}
+	typename type::const_reference at(typename std::vector<char>::size_type t) const {
+		return reinterpret_cast<typename type::const_reference>(val.at(t));
+	}
+	typename type::const_pointer data() const noexcept {
+		return reinterpret_cast<typename type::const_pointer>(val.data());
+	}
+	typename type::const_reference front() const noexcept {
+		return reinterpret_cast<typename type::const_reference>(val.front());
+	}
+	typename type::const_reference back() const noexcept {
+		return reinterpret_cast<typename type::const_reference>(val.back());
+	}
 };
 
 }

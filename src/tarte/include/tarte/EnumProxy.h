@@ -18,14 +18,22 @@
 
 #pragma once
 #include "XVal.h"
+#include "ClassUtil.h"
 
 namespace tarte {
 
 template <typename T>
-struct EnumProxy {
+class EnumProxy {
+	STACK_OBJECT(EnumProxy);
 	typedef T type;
 	int& val;
+public:
 	EnumProxy(int& t):val(t){}
+	EnumProxy(int const& t):val(reinterpret_cast<int&>(t)){}
+	EnumProxy(EnumProxy const&) = default;
+	EnumProxy(EnumProxy&&) = default;
+	EnumProxy& operator=(EnumProxy const&) = delete;
+	EnumProxy& operator=(EnumProxy&&) = delete;
 	~EnumProxy() = default;
 	operator T() const {
 		return T(this->val);
@@ -37,10 +45,16 @@ struct EnumProxy {
 };
 
 template <typename T>
-struct ConstEnumProxy {
+class ConstEnumProxy {
+	STACK_OBJECT(ConstEnumProxy);
 	typedef T type;
-	int const& val;
+	const int& val;
+public:
 	ConstEnumProxy(int const& t):val(t){}
+	ConstEnumProxy(ConstEnumProxy const&) = default;
+	ConstEnumProxy(ConstEnumProxy&&) = default;
+	ConstEnumProxy& operator=(ConstEnumProxy const&) = delete;
+	ConstEnumProxy& operator=(ConstEnumProxy&&) = delete;
 	~ConstEnumProxy() = default;
 	operator T() const {
 		return T(this->val);
