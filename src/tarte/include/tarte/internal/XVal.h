@@ -85,6 +85,8 @@ template <> struct _TypeAdapter<char> { PROXY_ADAPTER(XSInt) };
 template <> struct _TypeAdapter<signed char> { PROXY_ADAPTER(XSInt) };
 template <> struct _TypeAdapter<unsigned short> { PROXY_ADAPTER(XUInt) };
 template <> struct _TypeAdapter<short> { PROXY_ADAPTER(XSInt) };
+template <> struct _TypeAdapter< std::vector<unsigned char> > { PROXY_ADAPTER(XBinary) };
+template <> struct _TypeAdapter< std::vector<signed char> > { PROXY_ADAPTER(XBinary) };
 
 #undef PROXY_ADAPTER
 
@@ -176,6 +178,10 @@ template<typename T> typename _TypeAdapter<T>::return_type XObject::set(std::str
 
 
 #define FUNCT(TYPE, VAL) \
+		template <> void inline XValue::init(typename _TypeAdapter<XValue::TYPE>::init_type const& val) {\
+			this->type_ = XValue::Type::TYPE##T;\
+			VAL = val;\
+		}\
 		template <> inline bool XValue::isImpl<XValue::TYPE>() const noexcept {\
 			return this->type_ == XValue::Type::TYPE##T;\
 		};\
@@ -218,6 +224,13 @@ template <> inline typename _TypeAdapter<XValue>::return_const_type XValue::asIm
 template <> inline XValue XValue::fromString<XValue::String>(std::string const& str)
 {
 	return XValue((String)str);
+}
+
+template <typename T>
+inline XValue::XValue(T const& val)
+:type_(Type::NullT)
+{
+	this->init< typename _TypeAdapter<T>::init_type >(val);
 }
 
 template <typename T>

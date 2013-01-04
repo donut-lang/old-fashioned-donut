@@ -40,17 +40,17 @@ template <typename T, typename U=void> struct _TypeAdapter;
 
 class XValue {
 	STACK_OBJECT(XValue);
-public:
+public: /* data type decl */
 	enum Type {
 		NullT,
-		ArrayT,
-		BinaryT,
-		ObjectT,
-		StringT,
 		UIntT,
 		SIntT,
 		FloatT,
 		BoolT,
+		StringT,
+		BinaryT,
+		ArrayT,
+		ObjectT,
 	};
 	typedef std::nullptr_t Null;
 	typedef std::string String;
@@ -61,7 +61,7 @@ public:
 	typedef signed int SInt;
 	typedef float Float;
 	typedef bool Bool;
-private:
+private: /* internal data operations */
 	enum Type type_;
 	union {
 		Null null_;
@@ -77,7 +77,7 @@ private:
 	void remove();
 	void grab(XValue&& o);
 	void copy(XValue const& o);
-public:
+public: /* copy/assign */
 	XValue(XValue const& o):type_(o.type_){ this->copy(o); }
 	XValue(XValue&& o):type_(o.type_){ this->grab(static_cast<XValue&&>(o)); }
 	XValue& operator=(XValue const& o){
@@ -92,18 +92,31 @@ public:
 		this->grab(static_cast<XValue&&>(o));
 		return *this;
 	}
+public: /* constructors */
+	// default => null
 	explicit inline XValue():type_(Type::NullT){};
+	//literal types
+	explicit inline XValue(std::nullptr_t const& val):type_(Type::NullT){ this->spirit_.null_ = val; };
+	explicit inline XValue(UInt const& val):type_(Type::UIntT){ this->spirit_.uint_=val; };
+	explicit inline XValue(SInt const& val):type_(Type::SIntT){ this->spirit_.int_=val; };
 	explicit inline XValue(Float const& val):type_(Type::FloatT){ this->spirit_.float_=val; };
 	explicit inline XValue(Bool const& val):type_(Type::BoolT){ this->spirit_.bool_=val; };
-	explicit inline XValue(SInt const& val):type_(Type::SIntT){ this->spirit_.int_=val; };
-	explicit inline XValue(UInt const& val):type_(Type::UIntT){ this->spirit_.uint_=val; };
-	inline XValue(Handler<XArray> const& val):type_(Type::ArrayT){ this->spirit_.array_= new Handler<Array>( val ); };
-	inline XValue(Handler<XObject> const& val):type_(Type::ObjectT){ this->spirit_.object_= new Handler<Object>( val ); };
-	explicit inline XValue(const char* const& val, std::size_t len):type_(Type::BinaryT){ this->spirit_.binary_ = new std::vector<char>(val, val+len); };
-	explicit inline XValue(const unsigned char* const& val, std::size_t len):type_(Type::BinaryT){ this->spirit_.binary_ = new std::vector<char>(reinterpret_cast<unsigned char const*>(val), reinterpret_cast<unsigned char const*>(val+len)); };
-	explicit inline XValue(Binary const& val):type_(Type::BinaryT){ this->spirit_.binary_ = new std::vector<char>(val); };
+
+	//string
 	explicit inline XValue(String const& val):type_(Type::StringT){ this->spirit_.str_= new std::string(val); };
 	explicit inline XValue(const char* const& val):type_(Type::StringT){ this->spirit_.str_ = new std::string(val); };
+
+	//binary
+	explicit inline XValue(const char* const& val, std::size_t len):type_(Type::BinaryT){ this->spirit_.binary_ = new Binary(val, val+len); };
+	explicit inline XValue(const unsigned char* const& val, std::size_t len):type_(Type::BinaryT){ this->spirit_.binary_ = new Binary(reinterpret_cast<unsigned char const*>(val), reinterpret_cast<unsigned char const*>(val+len)); };
+	explicit inline XValue(Binary const& val):type_(Type::BinaryT){ this->spirit_.binary_ = new std::vector<char>(val); };
+
+	// array, obj
+	inline XValue(Handler<XArray> const& val):type_(Type::ArrayT){ this->spirit_.array_= new Handler<Array>( val ); };
+	inline XValue(Handler<XObject> const& val):type_(Type::ObjectT){ this->spirit_.object_= new Handler<Object>( val ); };
+
+	template <typename T> explicit inline XValue(T const& val);
+
 	~XValue() noexcept { this->remove(); }
 	inline bool onFree() const noexcept { return false; };
 public:
@@ -115,6 +128,7 @@ public:
 	std::string typeString() const noexcept;
 	void swap( XValue& o );
 private:
+	template <typename T> void init(T const& val);
 	template <typename T> bool isImpl() const noexcept;
 	template <typename T> typename _TypeAdapter<T>::return_type asImpl();
 	template <typename T> typename _TypeAdapter<T>::return_const_type asImpl() const;

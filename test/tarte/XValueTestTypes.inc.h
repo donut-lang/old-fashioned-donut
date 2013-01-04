@@ -35,7 +35,7 @@
 	TYPE var;\
 	NOT_TYPE nvar;\
 	ASSERT_ANY_THROW(x.as(nvar));\
-	ASSERT_EQ(-(VALUE), x.as(var));\
-	ASSERT_EQ(-(VALUE), var);\
+	ASSERT_EQ(static_cast<TYPE>(-(VALUE)), x.as(var));\
+	ASSERT_EQ(static_cast<TYPE>(-(VALUE)), var);\
 }
 
