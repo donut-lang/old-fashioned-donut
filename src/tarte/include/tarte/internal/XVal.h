@@ -20,6 +20,7 @@
 
 #include <algorithm>
 #include "EnumProxy.h"
+#include "IntProxy.h"
 #include "VectorProxy.h"
 #include "../Exception.h"
 
@@ -81,11 +82,23 @@ template <> struct _TypeAdapter<Handler<XObject> > { PROXY_ADAPTER(XObject) };
 template <> struct _TypeAdapter<const char*> { PROXY_ADAPTER(XString) };
 template <std::size_t N> struct _TypeAdapter<const char[N]> { PROXY_ADAPTER(XString) };
 template <std::size_t N> struct _TypeAdapter<char[N]> { PROXY_ADAPTER(XString) };
-template <> struct _TypeAdapter<unsigned char> { PROXY_ADAPTER(XUInt) };
-template <> struct _TypeAdapter<char> { PROXY_ADAPTER(XSInt) };
-template <> struct _TypeAdapter<signed char> { PROXY_ADAPTER(XSInt) };
-template <> struct _TypeAdapter<unsigned short> { PROXY_ADAPTER(XUInt) };
-template <> struct _TypeAdapter<short> { PROXY_ADAPTER(XSInt) };
+
+#define INT_PROXY(TARGET, REAL, PROXY, CONST_PROXY) \
+template <> struct _TypeAdapter<TARGET> {\
+	typedef typename _TypeAdapter<REAL>::spirit_type spirit_type;\
+	typedef typename _TypeAdapter<REAL>::init_type init_type;\
+	typedef       PROXY<TARGET>      return_type;\
+	typedef CONST_PROXY<TARGET> return_const_type;\
+}
+INT_PROXY(unsigned char, XUInt, UnsignedIntProxy, ConstUnsignedIntProxy);
+INT_PROXY(char, XSInt, IntProxy, ConstIntProxy);
+INT_PROXY(signed char, XSInt, IntProxy, ConstIntProxy);
+
+INT_PROXY(unsigned short, XUInt, UnsignedIntProxy, ConstUnsignedIntProxy);
+INT_PROXY(signed short, XSInt, IntProxy, ConstIntProxy);
+
+#undef INT_PROXY
+
 template <> struct _TypeAdapter< std::vector<unsigned char> > {
 	typedef typename _TypeAdapter<XBinary>::spirit_type spirit_type;
 	typedef typename _TypeAdapter<XBinary>::init_type init_type;

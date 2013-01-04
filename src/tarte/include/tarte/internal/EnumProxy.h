@@ -28,7 +28,6 @@ class EnumProxy {
 	int& val;
 public:
 	EnumProxy(int& t):val(t){}
-	EnumProxy(int const& t):val(reinterpret_cast<int&>(t)){}
 	EnumProxy(EnumProxy const&) = default;
 	EnumProxy(EnumProxy&&) = default;
 	EnumProxy& operator=(EnumProxy const&) = delete;
