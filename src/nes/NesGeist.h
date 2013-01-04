@@ -72,6 +72,9 @@ public:
 	void stopNES();
 	void loadNES(std::string const& abs_filename);
 	void startNES();
+public:
+	XValue saveNES();
+	void loadNES(XValue const& data);
 };
 
 }

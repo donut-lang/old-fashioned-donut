@@ -124,6 +124,25 @@ void NesGeist::startNES()
 	}
 }
 
+XValue NesGeist::saveNES()
+{
+	this->stopNES();
+	XValue const savedata = this->machine_->save();
+	this->startNES();
+	return savedata;
+}
+
+void NesGeist::loadNES(XValue const& data)
+{
+	this->stopNES();
+	this->machine_->load(data);
+	this->startNES();
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+// 実行スレッドの実装
+//---------------------------------------------------------------------------------------------------------------------
+
 NesGeist::Runner::Runner(NesGeist& parent)
 :parent_(parent)
 ,stop_(false)
