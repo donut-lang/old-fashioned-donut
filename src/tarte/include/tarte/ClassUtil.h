@@ -17,7 +17,7 @@
  */
 
 #pragma once
-
+#include <cstddef>
 #define DISABLE_COPY_AND_ASSIGN(klass)\
 	klass(klass const& other) = delete;\
 	klass(klass&& other) = delete;\
