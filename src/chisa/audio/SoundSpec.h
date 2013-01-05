@@ -18,6 +18,7 @@
 
 #pragma once
 #include <tuple>
+#include <climits>
 #include <tarte/ClassUtil.h>
 namespace chisa {
 
@@ -120,6 +121,48 @@ public:
 				this->frequency_ <= 0 ||
 				this->samples_ <= 0;
 	}
+	inline void swap(SoundSpec& o){
+		using std::swap;
+		swap(format_, o.format_);
+		swap(channels_, o.channels_);
+		swap(frequency_, o.frequency_);
+		swap(samples_, o.samples_);
+	}
+private:
+	static constexpr const unsigned int EndianMask = (1<<12);
+	static constexpr const unsigned int SignedMask = (1<<15);
+	static constexpr const unsigned int FloatMask = (1<<8);
+	static constexpr const unsigned int BitsizeMask = (0xff);
+public:
+	inline bool isBigEndian() const noexcept{
+		return this->format_ & EndianMask;
+	}
+	inline bool isLittleEndian() const noexcept{
+		return !(this->format_ & EndianMask);
+	}
+	inline bool isSigned() const noexcept{
+		return (this->format_ & SignedMask);
+	}
+	inline bool isUnsigned() const noexcept{
+		return !(this->format_ & SignedMask);
+	}
+	inline bool isFloat() const noexcept{
+		return (this->format_ & FloatMask);
+	}
+	inline bool isInt() const noexcept{
+		return !(this->format_ & FloatMask);
+	}
+	inline int bitLength() const noexcept{
+		return this->format_ & BitsizeMask;
+	}
+	inline int byteLength() const noexcept{
+		return ( bitLength() ) / CHAR_BIT;
+	}
 };
+
+inline void swap(SoundSpec& a,SoundSpec& b)
+{
+	a.swap(b);
+}
 
 }

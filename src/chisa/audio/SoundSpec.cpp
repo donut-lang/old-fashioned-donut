@@ -19,5 +19,4 @@
 #include "SoundSpec.h"
 
 namespace chisa {
-
 }

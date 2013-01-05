@@ -88,4 +88,23 @@ TEST(SoundSpecTest, Invalid)
 	ASSERT_TRUE(spec.isInvalid());
 }
 
+TEST(SoundSpecTest, SwapTest)
+{
+	SoundSpec spec1(SoundSpec::DataFormat::S16, 0, 2, 1);
+	SoundSpec spec2(SoundSpec::DataFormat::U16MSB, 0, 1, 0);
+
+	using std::swap;
+	swap(spec1, spec2);
+
+	ASSERT_EQ(SoundSpec::DataFormat::S16, spec2.format());
+	ASSERT_EQ(0,                          spec2.channels());
+	ASSERT_EQ(2,                          spec2.frequency());
+	ASSERT_EQ(1,                          spec2.samples());
+
+	ASSERT_EQ(SoundSpec::DataFormat::U16MSB, spec1.format());
+	ASSERT_EQ(0,                             spec1.channels());
+	ASSERT_EQ(1,                             spec1.frequency());
+	ASSERT_EQ(0,                             spec1.samples());
+}
+
 }
