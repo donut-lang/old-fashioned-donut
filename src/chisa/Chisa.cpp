@@ -44,7 +44,6 @@ void Chisa::start(std::string const& initialWorldName)
 {
 	this->universe_->createNewWorld(initialWorldName);
 	this->loop();
-
 }
 
 void Chisa::loop()
@@ -53,6 +52,7 @@ void Chisa::loop()
 	float last = fairy_->getTimeMs();
 	float delta = 0.0f;
 	float nextFrame = last+(1000.0f/60);
+	this->fairy_->quartet()->start();
 
 	while(running){
 		this->universe_->idle(delta);

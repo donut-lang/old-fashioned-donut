@@ -18,11 +18,12 @@
 
 #pragma once
 #include <tarte/Handler.h>
-#include "Quartet.h"
+#include "SoundSpec.h"
 
 namespace chisa {
 using namespace tarte;
 
+class Quartet;
 class Instrument : public HandlerBody<Instrument> {
 private:
 	HandlerW<Quartet> quartet_;
