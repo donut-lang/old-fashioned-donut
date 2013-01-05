@@ -41,8 +41,8 @@ public:
 	class Lock {
 		STACK_OBJECT(Lock);
 		DISABLE_COPY_AND_ASSIGN(Lock);
-	private:
 		Quartet& self_;
+	public:
 		inline Lock(Handler<Quartet> const& q) noexcept:self_(*q.get()) { self_.lock(); }
 		inline ~Lock() noexcept { self_.unlock(); }
 	};

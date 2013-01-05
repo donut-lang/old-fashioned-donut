@@ -210,7 +210,7 @@ private:
 	}
 	virtual Handler< ::chisa::Quartet> createQuartet() override final
 	{
-		return Handler< ::chisa::Quartet>( new SDLQuartet(SoundSpec(SoundSpec::DataFormat::S16SYS, 1, 441000, 8192)) );
+		return Handler< ::chisa::Quartet>( new SDLQuartet(SoundSpec(SoundSpec::DataFormat::S16SYS, 1, 44100, 8192)) );
 	}
 };
 

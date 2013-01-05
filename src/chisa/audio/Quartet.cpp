@@ -42,10 +42,10 @@ void Quartet::notifySoundSpec(SoundSpec::DataFormat format, unsigned int channel
 
 void Quartet::updateBufferSize()
 {
-	int num = this->realSpec_.samples() / this->realSpec_.byteLength();
+	int const samples = this->realSpec_.samples();
 	for(Player& player : this->players_){
 		SoundSpec const& spec(player.instrument->spec());
-		player.buffer.resize(spec.byteLength() * num);
+		player.buffer.resize(spec.byteLength() * samples);
 	}
 }
 
@@ -90,7 +90,7 @@ bool Quartet::addInstrument(Handler<Instrument> const& inst)
 		return false;
 	}else{
 		inst->onConnected(self(), this->realSpec_);
-		this->players_.push_back(Player(inst, inst->spec().byteLength()*(this->realSpec_.samples()/this->realSpec_.byteLength())));
+		this->players_.push_back(Player(inst, inst->spec().byteLength()*this->realSpec_.samples()));
 		return true;
 	}
 }
