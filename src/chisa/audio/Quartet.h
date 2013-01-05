@@ -75,6 +75,7 @@ public:
 	 ******************************************************************************************************************/
 protected:
 	inline std::vector<Player> const& players() const noexcept { return this->players_; };
+	inline std::vector<Player>& players() noexcept { return this->players_; };
 	void notifySoundSpec(SoundSpec::DataFormat format, unsigned int channels, unsigned int frequency, unsigned int samples);
 	void notifySoundSpec(SoundSpec const& spec);
 protected:

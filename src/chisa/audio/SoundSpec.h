@@ -121,7 +121,7 @@ public:
 				this->frequency_ <= 0 ||
 				this->samples_ <= 0;
 	}
-	inline bool isCompatible(SoundSpec const& o) const noexcept{
+	inline bool isCompatibleTo(SoundSpec const& o) const noexcept{
 		return format_ == o.format_ && channels_ == o.channels_ && frequency_ == o.frequency_;
 	}
 	inline void swap(SoundSpec& o){
