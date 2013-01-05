@@ -43,11 +43,11 @@ public:
 	}
 public:
 	void save(::tarte::XArchiverOut& out){
-		out & soundBuffer & lastIndex & firstIndex;
+		//out & soundBuffer & lastIndex & firstIndex;
 		this->saveImpl(out);
 	}
 	void load(::tarte::XArchiverIn& in){
-		in & soundBuffer & lastIndex & firstIndex;
+		//in & soundBuffer & lastIndex & firstIndex;
 		this->loadImpl(in);
 	}
 protected:

@@ -149,7 +149,7 @@ NesGeist::Instrument::Instrument(NesGeist& self)
 }
 ::chisa::SoundSpec NesGeist::Instrument::querySpec(::chisa::SoundSpec const& spec) noexcept
 {
-	return ::chisa::SoundSpec(::chisa::SoundSpec::DataFormat::S16SYS, 1, 441000, 8192);
+	return ::chisa::SoundSpec(::chisa::SoundSpec::DataFormat::S16SYS, 1, 44100, 8192);
 }
 
 void NesGeist::Instrument::playImpl(unsigned char *stream, int len)
