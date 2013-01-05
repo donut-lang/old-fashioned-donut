@@ -26,6 +26,7 @@
 #include "../Hexe.h"
 #include "../PlatformFairy.h"
 #include "Stack.h"
+#include "../audio/Quartet.h"
 
 namespace chisa {
 using namespace tarte;
@@ -96,6 +97,11 @@ public:
 public:
 	void startIME(geom::Area const& area);
 	void stopIME();
+	/******************************************************************************
+	 * サウンド
+	 ******************************************************************************/
+public:
+	Handler<Quartet> quartet() const;
 	/******************************************************************************
 	 * 生成
 	 ******************************************************************************/

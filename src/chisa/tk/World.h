@@ -23,6 +23,7 @@
 #include <donut/Donut.h>
 #include "../gl/Canvas.h"
 #include "../geom/Area.h"
+#include "../audio/Quartet.h"
 
 #include "Task.h"
 #include "Stack.h"
@@ -63,7 +64,7 @@ private:
 	DEFINE_MEMBER(public, private, ElementFactory*, elementFactory);
 	DEFINE_MEMBER(public, private, WidgetFactory*, widgetFactory);
 	DEFINE_MEMBER(private, private, ActionMediator*, gestureMediator);
-	DEFINE_MEMBER(public, private, Handler<Donut>, donut);
+	DEFINE_MEMBER(public, private, Handler< ::donut::Donut>, donut);
 public:
 	void render(gl::Canvas& canvas);
 	void idle(const float delta_ms);
@@ -138,7 +139,11 @@ public:
 	void onTextEdit(float const& timeMs, std::string const& text, int start, int length);
 	void onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym);
 	void onKeyUp(float const& timeMs, SDL_Keysym const& sym);
-
+	/******************************************************************************
+	 * サウンドマネジメント
+	 ******************************************************************************/
+public: /* サウンド */
+	Handler<Quartet> quartet() const;
 	/******************************************************************************
 	 * 生成
 	 ******************************************************************************/

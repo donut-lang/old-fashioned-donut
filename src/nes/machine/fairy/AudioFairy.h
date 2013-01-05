@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include <stdio.h>
-#include <string.h>
+#include <cstring>
 #include <tarte/XArchiver.h>
 #include "../exception/EmulatorException.h"
 
@@ -58,13 +57,13 @@ protected:
 		const int available = firstIndex <= nowLastIndex ? nowLastIndex-firstIndex : INTERNAL_BUFFER_SIZE-(firstIndex-nowLastIndex);
 		const int copiedLength = std::min(available, maxLength);
 		if(firstIndex + copiedLength < INTERNAL_BUFFER_SIZE){
-			memcpy(buff, &soundBuffer[firstIndex], sizeof(int16_t) * copiedLength);
+			std::memcpy(buff, &soundBuffer[firstIndex], sizeof(int16_t) * copiedLength);
 			firstIndex += copiedLength;
 		}else{
 			const int first = INTERNAL_BUFFER_SIZE-firstIndex;
 			const int last = copiedLength-first;
-			memcpy(buff, &soundBuffer[firstIndex], sizeof(int16_t) * first);
-			memcpy(&buff[first], &soundBuffer[0], sizeof(int16_t) * last);
+			std::memcpy(buff, &soundBuffer[firstIndex], sizeof(int16_t) * first);
+			std::memcpy(&buff[first], &soundBuffer[0], sizeof(int16_t) * last);
 			firstIndex = last;
 		}
 		return copiedLength;

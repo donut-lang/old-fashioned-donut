@@ -155,6 +155,14 @@ void Universe::stopIME()
 	this->platformFairy()->stopIME();
 }
 
+/******************************************************************************
+ * サウンド
+ ******************************************************************************/
+Handler<Quartet> Universe::quartet() const
+{
+	return this->platformFairy()->quartet();
+}
+
 Handler<chisa::WorldGeist> Universe::invokeWorldGeist(HandlerW<World> world, std::string const& nameOfGeist)
 {
 	if(log().t()){

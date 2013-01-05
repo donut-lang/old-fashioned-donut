@@ -34,10 +34,13 @@ NesGeist::NesGeist(chisa::Logger& log, chisa::HandlerW<chisa::tk::World> world)
 	if( chisa::Handler<chisa::tk::World> world = this->world_.lock() ){
 		this->spr_ = world->drawableManager()->queryRawSprite(256, 240);
 	}
+	this->inst_ = Handler<Instrument>(new Instrument(*this));
+	this->world()->quartet()->addInstrument(this->inst_);
 }
 
 NesGeist::~NesGeist() noexcept
 {
+	this->world()->quartet()->removeInstrument(inst_);
 	this->stopNES();
 	delete this->machine_;
 }
@@ -138,6 +141,22 @@ void NesGeist::loadNES(XValue const& data)
 	this->machine_->load(data);
 	this->startNES();
 }
+
+NesGeist::Instrument::Instrument(NesGeist& self)
+:self_(self)
+{
+
+}
+::chisa::SoundSpec NesGeist::Instrument::querySpec(::chisa::SoundSpec const& spec) noexcept
+{
+	return ::chisa::SoundSpec(::chisa::SoundSpec::DataFormat::S16SYS, 1, 441000, 8192);
+}
+
+void NesGeist::Instrument::playImpl(unsigned char *stream, int len)
+{
+	self_.popAudio(reinterpret_cast<int16_t*>(stream), len);
+}
+
 
 //---------------------------------------------------------------------------------------------------------------------
 // 実行スレッドの実装

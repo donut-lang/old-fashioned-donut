@@ -21,6 +21,7 @@
 #include "../chisa/Hexe.h"
 #include "../chisa/tk/Task.h"
 #include "../chisa/gl/Sprite.h"
+#include "../chisa/audio/Instrument.h"
 #include <tarte/Thread.h>
 #include <tarte/Logger.h>
 
@@ -41,6 +42,16 @@ private:
 	public:
 		void operator()();
 	};
+	class Instrument : public chisa::Instrument {
+	private:
+		NesGeist& self_;
+	public:
+		Instrument(NesGeist& self);
+		virtual ~Instrument() noexcept = default;
+	private:
+		virtual ::chisa::SoundSpec querySpec(::chisa::SoundSpec const& spec) noexcept override final;
+		virtual void playImpl(unsigned char *stream, int len) override final;
+	};
 public:
 	class Lock {
 		NesGeist& parent_;
@@ -58,6 +69,7 @@ private:
 	std::mutex frame_mutex_;
 	float time_ms_;
 	std::condition_variable cond_;
+	Handler<Instrument> inst_;
 public:
 	NesGeist(Logger& log, HandlerW<chisa::tk::World> world);
 	virtual ~NesGeist() noexcept;

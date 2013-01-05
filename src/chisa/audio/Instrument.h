@@ -29,16 +29,17 @@ private:
 	HandlerW<Quartet> quartet_;
 	SoundSpec spec_;
 public:
-	Instrument(Handler<Quartet> const& quartet);
+	Instrument();
 	virtual ~Instrument() noexcept = default;
 	inline bool onFree() const noexcept { return false; };
 public:
 	Handler<Quartet> quartet() const;
-public:
+	SoundSpec onConnected(Handler<Quartet> const& quartet, SoundSpec const& spec);
+	void onDisconnected();
 	SoundSpec spec() noexcept;
 	void play(unsigned char *stream, int len);
 protected:
-	virtual SoundSpec querySpec() noexcept = 0;
+	virtual SoundSpec querySpec(SoundSpec const& spec) noexcept = 0;
 	virtual void playImpl(unsigned char *stream, int len) = 0;
 };
 

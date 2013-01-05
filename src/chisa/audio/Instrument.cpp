@@ -21,21 +21,29 @@
 
 namespace chisa {
 
-Instrument::Instrument(Handler<Quartet> const& quartet)
-:quartet_(quartet)
+Instrument::Instrument()
 {
 }
+
 
 Handler<Quartet> Instrument::quartet() const
 {
 	return this->quartet_.lock();
 }
+SoundSpec Instrument::onConnected(Handler<Quartet> const& quartet, SoundSpec const& spec)
+{
+	this->quartet_ = quartet;
+	return this->spec_ = this->querySpec(spec);
+}
+
+void Instrument::onDisconnected()
+{
+	this->quartet_.reset();
+	SoundSpec().swap(this->spec_);
+}
 
 SoundSpec Instrument::spec() noexcept
 {
-	if(this->spec_.isInvalid()){
-		this->spec_ = this->querySpec();
-	}
 	return this->spec_;
 }
 void Instrument::play(unsigned char *stream, int len)
