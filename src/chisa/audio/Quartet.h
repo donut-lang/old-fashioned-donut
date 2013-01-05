@@ -38,6 +38,22 @@ public:
 		Handler<Instrument> instrument;
 		std::vector<unsigned char> buffer;
 	};
+private:
+	std::vector<Player> players_;
+	SoundSpec desiredSpec_;
+	SoundSpec realSpec_;
+	std::atomic<bool> startRequested_;
+	std::atomic<bool> stared_;
+public:
+	Quartet(SoundSpec const& desired);
+	virtual ~Quartet() noexcept = default;
+	inline bool onFree() const noexcept { return false; };
+public:
+	inline SoundSpec const& spec() const noexcept { return this->realSpec_; };
+	/******************************************************************************************************************
+	 * 外側からのインターフェイス
+	 ******************************************************************************************************************/
+public:
 	class Lock {
 		STACK_OBJECT(Lock);
 		DISABLE_COPY_AND_ASSIGN(Lock);
@@ -46,33 +62,17 @@ public:
 		inline Lock(Handler<Quartet> const& q) noexcept:self_(*q.get()) { self_.lock(); }
 		inline ~Lock() noexcept { self_.unlock(); }
 	};
-private:
-	std::vector<Player> players_;
-	SoundSpec desiredSpec_;
-	SoundSpec realSpec_;
-	std::atomic<bool> startRequested_;
-public:
-	Quartet(SoundSpec const& desired);
-	virtual ~Quartet() noexcept = default;
-	inline bool onFree() const noexcept { return false; };
-private:
-	void updateBufferSize();
-public:
-	inline SoundSpec const& spec() const noexcept { return this->realSpec_; };
-	inline unsigned int frequency() const noexcept { return this->realSpec_.frequency(); };
-	inline unsigned int channels() const noexcept { return this->realSpec_.channels(); };
-	inline unsigned int samples() const noexcept { return this->realSpec_.samples(); };
-	inline SoundSpec::DataFormat format() const noexcept { return this->realSpec_.format(); };
 public:
 	bool start();
 	bool stop();
 	void onPlay(unsigned char* stream, int len);
-	bool lock() noexcept;
-	bool unlock() noexcept;
 public:
 	bool addInstrument(Handler<Instrument> const& inst);
 	bool hasInstrument(Handler<Instrument> const& inst);
 	bool removeInstrument(Handler<Instrument> const& inst);
+	/******************************************************************************************************************
+	 * 実装用
+	 ******************************************************************************************************************/
 protected:
 	inline std::vector<Player> const& players() const noexcept { return this->players_; };
 	void notifySoundSpec(SoundSpec::DataFormat format, unsigned int channels, unsigned int frequency, unsigned int samples);
@@ -83,6 +83,15 @@ protected:
 	virtual void playImpl(unsigned char* stream, int len) = 0;
 	virtual bool lockImpl() noexcept = 0;
 	virtual bool unlockImpl() noexcept = 0;
+	/******************************************************************************************************************
+	 * 内部
+	 ******************************************************************************************************************/
+private:
+	void updateBufferSize();
+	bool lock() noexcept;
+	bool unlock() noexcept;
+	bool startInner();
+	bool stopInner();
 };
 
 
