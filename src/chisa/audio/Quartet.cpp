@@ -31,7 +31,7 @@ Quartet::Player::Player(Handler<Instrument> const& inst, std::size_t buflen)
 }
 
 Quartet::Quartet(SoundSpec const& desired)
-:desiredSpec_(desired)
+:desiredSpec_(desired), startRequested_(false)
 {
 }
 
@@ -89,6 +89,7 @@ bool Quartet::addInstrument(Handler<Instrument> const& inst)
 	if(this->hasInstrument(inst)){
 		return false;
 	}else{
+		inst->onConnected(self(), this->realSpec_);
 		this->players_.push_back(Player(inst, inst->spec().byteLength()*(this->realSpec_.samples()/this->realSpec_.byteLength())));
 		return true;
 	}
@@ -103,6 +104,8 @@ bool Quartet::removeInstrument(Handler<Instrument> const& inst)
 {
 	std::vector<Player>::iterator it = std::find_if(this->players_.begin(), this->players_.end(), PlayerFinder(inst));
 	if(it != this->players_.end()){
+		Player& p = *it;
+		p.instrument->onDisconnected();
 		this->players_.erase(it);
 		return true;
 	}else{ /* 持ってないですよ */

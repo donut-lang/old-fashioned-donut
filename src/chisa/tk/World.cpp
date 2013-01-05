@@ -254,4 +254,13 @@ void World::onKeyUp(float const& timeMs, SDL_Keysym const& sym)
 	}
 }
 
+Handler<Quartet> World::quartet() const
+{
+	if(Handler<Universe> univ = this->universe_.lock()){
+		return univ->quartet();
+	}
+	TARTE_EXCEPTION(Exception, "[BUG] Universe is already dead.");
+}
+
+
 }}

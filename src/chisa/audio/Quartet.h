@@ -21,6 +21,7 @@
 #include <tarte/Handler.h>
 #include <tarte/Platform.h>
 #include <tarte/ClassUtil.h>
+#include <tarte/Thread.h>
 #include "SoundSpec.h"
 #include "Instrument.h"
 
@@ -49,6 +50,7 @@ private:
 	std::vector<Player> players_;
 	SoundSpec desiredSpec_;
 	SoundSpec realSpec_;
+	std::atomic<bool> startRequested_;
 public:
 	Quartet(SoundSpec const& desired);
 	virtual ~Quartet() noexcept = default;
