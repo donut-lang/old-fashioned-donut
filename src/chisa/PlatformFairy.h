@@ -36,12 +36,20 @@ public:
 public:
 	virtual void init(std::string const& windowTitle, int width, int height, int redbits, int greenbits, int bluebits, int alphabits, int depthbits, int stencilbits ) = 0;
 	virtual void setTitle(std::string const& name) = 0;
+public: /* 画面操作 */
 	virtual void swapBuffer() = 0;
+public: /* リアル時間操作 */
 	virtual unsigned int getTimeMs() = 0;
 	virtual void sleepMs(unsigned int ms) = 0;
+public: /* イベントの処理を行わせるためのコールバック。falseを返すと、アプリ全体の実行を終了する。 */
 	virtual bool pollEvent(Chisa& chisa) = 0;
+public: /* IME */
 	virtual void startIME(geom::Area const& area) = 0;
 	virtual void stopIME() = 0;
+public: /* Audio */
+	Handler<Quartet> quartet(); //カルテットサブシステムの呼び出し
+protected:
+	//Handler<Quartet> createQuartet() = 0;
 };
 
 }
