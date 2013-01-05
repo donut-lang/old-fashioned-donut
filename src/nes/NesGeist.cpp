@@ -34,13 +34,16 @@ NesGeist::NesGeist(chisa::Logger& log, chisa::HandlerW<chisa::tk::World> world)
 	if( chisa::Handler<chisa::tk::World> world = this->world_.lock() ){
 		this->spr_ = world->drawableManager()->queryRawSprite(256, 240);
 	}
-	this->inst_ = Handler<Instrument>(new Instrument(*this));
-	this->world()->quartet()->addInstrument(this->inst_);
+	this->world()->quartet()->addInstrument(this->inst_ = Handler<Instrument>(new Instrument(*this)));
 }
 
 NesGeist::~NesGeist() noexcept
 {
-	this->world()->quartet()->removeInstrument(inst_);
+	if(Handler< ::chisa::tk::World> world = this->world()){
+		if(Handler< ::chisa::Quartet> quartet = world->quartet()){
+			quartet->removeInstrument(inst_);
+		}
+	}
 	this->stopNES();
 	delete this->machine_;
 }
