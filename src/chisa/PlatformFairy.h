@@ -52,7 +52,7 @@ public: /* IME */
 public: /* Audio */
 	Handler<Quartet> quartet(); //カルテットサブシステムの呼び出し
 protected:
-	Handler<Quartet> createQuartet() = 0;
+	virtual Handler<Quartet> createQuartet() = 0;
 };
 
 }

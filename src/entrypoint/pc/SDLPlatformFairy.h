@@ -140,9 +140,13 @@ private:
 		rect.h = area.height();
 		SDL_SetTextInputRect(&rect);
 	}
-	virtual void stopIME()
+	virtual void stopIME() override final
 	{
 		SDL_StopTextInput();
+	}
+	virtual Handler< ::chisa::Quartet> createQuartet() override final
+	{
+		return Handler< ::chisa::Quartet>();
 	}
 };
 
