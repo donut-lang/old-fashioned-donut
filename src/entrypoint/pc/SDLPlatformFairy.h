@@ -63,17 +63,99 @@ private:
 		SDL_PauseAudio(1);
 		return true;
 	}
+	std::vector<char> mixBuffer_;
 	virtual void playImpl(unsigned char* stream, int const len) override final
 	{
-		if(this->players().size() == 1 && this->spec() == ((Player const&)this->players().front()).instrument->spec()) {
-			std::vector<unsigned char> buffer = ((Player const&)this->players().front()).buffer;
-			std::copy(buffer.begin(), buffer.end(), stream);
+		//最適化：ミックスしなくていいしフォーマットは変換しなくていい
+		Player& first = this->players().front();
+		if(this->players().size() == 1) { //ミックスしなくていい
+			SoundSpec const& firstSpec = first.instrument->spec();
+			if(this->spec().isCompatibleTo(firstSpec)){ //変換もしなくていい
+				std::vector<unsigned char> buffer = ((Player const&)this->players().front()).buffer;
+				std::copy(buffer.begin(), buffer.end(), stream);
+			}else{ //変換必要
+				SDL_AudioCVT cvt;
+				int const result = SDL_BuildAudioCVT(&cvt,
+						SDL_AudioFormat(firstSpec.format()),
+						firstSpec.channels(),
+						firstSpec.frequency(),
+						SDL_AudioFormat(this->spec().format()),
+						this->spec().channels(),
+						this->spec().frequency()
+						);
+				if(result == 0){
+					TARTE_EXCEPTION(Exception, "[BUG] Oops. It is not need to convert.")
+				}else if(result < 0){
+					TARTE_EXCEPTION(Exception, "[BUG] Oops. This format is not compatible. SDL says: \"%s\"", SDL_GetError())
+				}
+				const unsigned int temporaryBufferSize = first.buffer.size() * cvt.len_mult;
+				bool needCopy = true;
+				if(temporaryBufferSize <= static_cast<unsigned int>(len)){
+					std::copy(first.buffer.begin(), first.buffer.end(), stream);
+					cvt.buf = stream;
+					cvt.len = first.buffer.size();
+					needCopy = false;
+				}else if(temporaryBufferSize <= first.buffer.size()){
+					cvt.buf = first.buffer.data();
+					cvt.len = first.buffer.size();
+				}else{
+					this->mixBuffer_.resize(temporaryBufferSize);
+					std::copy(first.buffer.begin(), first.buffer.end(), this->mixBuffer_.begin());
+					cvt.buf = reinterpret_cast<unsigned char*>(this->mixBuffer_.data());
+					cvt.len = first.buffer.size();
+				}
+				if(SDL_ConvertAudio(&cvt) != 0){
+					TARTE_EXCEPTION(Exception, "[BUG] Oops. Failed to convert audio. SDL says: \"%s\"", SDL_GetError())
+				}else if (cvt.len_cvt != len) {
+					TARTE_EXCEPTION(Exception, "[BUG] Oops. Buffer size does not match! converted: %d != stream: %d", cvt.len_cvt, stream);
+				}
+				if(needCopy){
+					std::memcpy(stream, cvt.buf, cvt.len_cvt);
+				}
+			}
 			return;
 		}
+		/**************************************************
+		 * 複数チャンネル
+		 **************************************************/
 		std::memset(stream, 0, len);
 		unsigned int const volume = 128/this->players().size();
 		for(Player const& player : this->players()){
-			SDL_MixAudioFormat(stream, player.buffer.data(), player.instrument->spec().format(), len, volume);
+			SoundSpec const& spec(player.instrument->spec());
+			if(spec.isCompatibleTo(this->spec())) { //変換必要なし
+				SDL_MixAudio(stream, player.buffer.data(), len, volume);
+				continue;
+			}
+			SDL_AudioCVT cvt;
+			int const result = SDL_BuildAudioCVT(&cvt,
+					SDL_AudioFormat(spec.format()),
+					spec.channels(),
+					spec.frequency(),
+					SDL_AudioFormat(this->spec().format()),
+					this->spec().channels(),
+					this->spec().frequency()
+					);
+			if(result == 0){
+				TARTE_EXCEPTION(Exception, "[BUG] Oops. It is not need to convert.")
+			}else if(result < 0){
+				TARTE_EXCEPTION(Exception, "[BUG] Oops. This format is not compatible. SDL says: \"%s\"", SDL_GetError())
+			}
+			const unsigned int temporaryBufferSize = first.buffer.size() * cvt.len_mult;
+			if(temporaryBufferSize <= first.buffer.size()){
+				cvt.buf = first.buffer.data();
+				cvt.len = first.buffer.size();
+			} else {
+				this->mixBuffer_.resize(temporaryBufferSize);
+				std::copy(first.buffer.begin(), first.buffer.end(), this->mixBuffer_.begin());
+				cvt.buf = reinterpret_cast<unsigned char*>(this->mixBuffer_.data());
+				cvt.len = first.buffer.size();
+			}
+			if(SDL_ConvertAudio(&cvt) != 0){
+				TARTE_EXCEPTION(Exception, "[BUG] Oops. Failed to convert audio. SDL says: \"%s\"", SDL_GetError())
+			}else if (cvt.len_cvt != len) {
+				TARTE_EXCEPTION(Exception, "[BUG] Oops. Buffer size does not match! converted: %d != stream: %d", cvt.len_cvt, stream);
+			}
+			SDL_MixAudio(stream, cvt.buf, cvt.len_cvt, volume);
 		}
 	}
 	virtual bool lockImpl() noexcept override final
