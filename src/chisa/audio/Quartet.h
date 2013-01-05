@@ -37,6 +37,14 @@ public:
 		Handler<Instrument> instrument;
 		std::vector<unsigned char> buffer;
 	};
+	class Lock {
+		STACK_OBJECT(Lock);
+		DISABLE_COPY_AND_ASSIGN(Lock);
+	private:
+		Quartet& self_;
+		inline Lock(Handler<Quartet> const& q) noexcept:self_(*q.get()) { self_.lock(); }
+		inline ~Lock() noexcept { self_.unlock(); }
+	};
 private:
 	std::vector<Player> instruments_;
 	SoundSpec desiredSpec_;
@@ -45,6 +53,8 @@ public:
 	Quartet(SoundSpec const& desired);
 	virtual ~Quartet() noexcept = default;
 	inline bool onFree() const noexcept { return false; };
+private:
+	void updateBufferSize();
 public:
 	inline unsigned int frequency() const noexcept { return this->realSpec_.frequency(); };
 	inline unsigned int channels() const noexcept { return this->realSpec_.channels(); };
@@ -53,6 +63,9 @@ public:
 public:
 	bool start();
 	bool stop();
+	void onPlay(unsigned char* stream, int len);
+	bool lock() noexcept;
+	bool unlock() noexcept;
 public:
 	bool addInstrument(Handler<Instrument> const& inst);
 	bool hasInstrument(Handler<Instrument> const& inst);
@@ -64,9 +77,9 @@ protected:
 protected:
 	virtual bool startImpl() = 0;
 	virtual bool stopImpl() = 0;
-	virtual bool addInstrumentImpl(Handler<Instrument> const& inst) { return false; };
-	virtual bool hasInstrumentImpl(Handler<Instrument> const& inst) { return false; };
-	virtual bool removeInstrumentImpl(Handler<Instrument> const& inst) { return false; };
+	virtual void playImpl(Handler<Instrument> const& inst) = 0;
+	virtual bool lockImpl() noexcept = 0;
+	virtual bool unlockImpl() noexcept = 0;
 };
 
 }

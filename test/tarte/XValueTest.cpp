@@ -19,6 +19,7 @@
 #include <cmath>
 #include <cstdint>
 #include <tarte/XVal.h>
+#include <tarte/TypeTraits.h>
 #include "../TestCommon.h"
 
 namespace tarte {
@@ -698,7 +699,7 @@ TEST(XValueTest, CharVectorTest)
 #undef TYPE
 }
 
-template <typename SIGNED, typename UNSIGNED, int SIGNED_MAX, unsigned int UNSIGNED_MAX>
+template <typename SIGNED, typename UNSIGNED, SIGNED SIGNED_MAX, UNSIGNED UNSIGNED_MAX>
 void numtest(){
 	{
 		XValue v((SIGNED) SIGNED_MAX);
@@ -731,12 +732,6 @@ void numtest(){
 	{
 		XValue v((XUInt)0xffffffff);
 		v.as<UNSIGNED>() = 0;
-		ASSERT_EQ(0, v.as<UNSIGNED>());
-		ASSERT_EQ(0, v.as<XUInt>());
-	}
-	{
-		XValue v((XUInt)0xffffffff);
-		v.as<UNSIGNED>() = UNSIGNED_MAX+1;
 		ASSERT_EQ(0, v.as<UNSIGNED>());
 		ASSERT_EQ(0, v.as<XUInt>());
 	}
