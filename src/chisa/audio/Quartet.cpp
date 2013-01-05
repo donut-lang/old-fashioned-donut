@@ -18,6 +18,7 @@
 
 #include <algorithm>
 #include <tarte/Exception.h>
+#include <cstring>
 #include "Quartet.h"
 #include "Instrument.h"
 
@@ -42,7 +43,7 @@ void Quartet::notifySoundSpec(SoundSpec::DataFormat format, unsigned int channel
 void Quartet::updateBufferSize()
 {
 	int num = this->realSpec_.samples() / this->realSpec_.byteLength();
-	for(Player& player : this->instruments_){
+	for(Player& player : this->players_){
 		SoundSpec const& spec(player.instrument->spec());
 		player.buffer.resize(spec.byteLength() * num);
 	}
@@ -88,21 +89,21 @@ bool Quartet::addInstrument(Handler<Instrument> const& inst)
 	if(this->hasInstrument(inst)){
 		return false;
 	}else{
-		this->instruments_.push_back(Player(inst, inst->spec().byteLength()*(this->realSpec_.samples()/this->realSpec_.byteLength())));
+		this->players_.push_back(Player(inst, inst->spec().byteLength()*(this->realSpec_.samples()/this->realSpec_.byteLength())));
 		return true;
 	}
 }
 
 bool Quartet::hasInstrument(Handler<Instrument> const& inst)
 {
-	std::vector<Player>::iterator it = std::find_if(this->instruments_.begin(), this->instruments_.end(), PlayerFinder(inst));
-	return it != this->instruments_.end();
+	std::vector<Player>::iterator it = std::find_if(this->players_.begin(), this->players_.end(), PlayerFinder(inst));
+	return it != this->players_.end();
 }
 bool Quartet::removeInstrument(Handler<Instrument> const& inst)
 {
-	std::vector<Player>::iterator it = std::find_if(this->instruments_.begin(), this->instruments_.end(), PlayerFinder(inst));
-	if(it != this->instruments_.end()){
-		this->instruments_.erase(it);
+	std::vector<Player>::iterator it = std::find_if(this->players_.begin(), this->players_.end(), PlayerFinder(inst));
+	if(it != this->players_.end()){
+		this->players_.erase(it);
 		return true;
 	}else{ /* 持ってないですよ */
 		return false;
@@ -111,10 +112,14 @@ bool Quartet::removeInstrument(Handler<Instrument> const& inst)
 
 void Quartet::onPlay(unsigned char* stream, int len)
 {
-	for(Player& player : this->instruments_){
+	if(this->players_.empty()){
+		std::memset(stream, 0, len);
+		return;
+	}
+	for(Player& player : this->players_){
 		player.instrument->play(player.buffer.data(), player.buffer.size());
 	}
-	this->onPlay(stream, len);
+	this->playImpl(stream, len);
 }
 
 }

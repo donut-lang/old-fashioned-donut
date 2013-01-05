@@ -22,11 +22,11 @@
 #include <tarte/Platform.h>
 #include <tarte/ClassUtil.h>
 #include "SoundSpec.h"
+#include "Instrument.h"
 
 namespace chisa {
 using namespace tarte;
 
-class Instrument;
 class Quartet : public HandlerBody<Quartet> {
 public:
 	struct Player{
@@ -46,7 +46,7 @@ public:
 		inline ~Lock() noexcept { self_.unlock(); }
 	};
 private:
-	std::vector<Player> instruments_;
+	std::vector<Player> players_;
 	SoundSpec desiredSpec_;
 	SoundSpec realSpec_;
 public:
@@ -56,6 +56,7 @@ public:
 private:
 	void updateBufferSize();
 public:
+	inline SoundSpec const& spec() const noexcept { return this->realSpec_; };
 	inline unsigned int frequency() const noexcept { return this->realSpec_.frequency(); };
 	inline unsigned int channels() const noexcept { return this->realSpec_.channels(); };
 	inline unsigned int samples() const noexcept { return this->realSpec_.samples(); };
@@ -71,15 +72,30 @@ public:
 	bool hasInstrument(Handler<Instrument> const& inst);
 	bool removeInstrument(Handler<Instrument> const& inst);
 protected:
-	inline std::vector<Player> const& instruments() const noexcept { return this->instruments_; };
+	inline std::vector<Player> const& players() const noexcept { return this->players_; };
 	void notifySoundSpec(SoundSpec::DataFormat format, unsigned int channels, unsigned int frequency, unsigned int samples);
 	void notifySoundSpec(SoundSpec const& spec);
 protected:
 	virtual bool startImpl() = 0;
 	virtual bool stopImpl() = 0;
-	virtual void playImpl(Handler<Instrument> const& inst) = 0;
+	virtual void playImpl(unsigned char* stream, int len) = 0;
 	virtual bool lockImpl() noexcept = 0;
 	virtual bool unlockImpl() noexcept = 0;
 };
+
+
+// 実装用
+/*
+class MyQuartet : public Quartet {
+	MyQuartet(SoundSpec const& desired);
+	virtual ~MyQuartet() noexcept = default;
+private:
+	virtual bool startImpl() override final;
+	virtual bool stopImpl() override final;
+	virtual void playImpl(unsigned char* stream, int len) override final;
+	virtual bool lockImpl() noexcept override final;
+	virtual bool unlockImpl() noexcept override final;
+};
+*/
 
 }

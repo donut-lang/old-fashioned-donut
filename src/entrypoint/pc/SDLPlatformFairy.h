@@ -22,8 +22,72 @@
 #include <tarte/Logger.h>
 
 #include "../../chisa/Chisa.h"
+#include "../../chisa/audio/Quartet.h"
 namespace chisa {
 using namespace tarte;
+
+
+class SDLQuartet : public ::chisa::Quartet {
+	static void __callback(void *userdata, Uint8 *stream, int len){
+		static_cast<SDLQuartet*>(userdata)->onPlay(stream, len);
+	}
+public:
+	SDLQuartet(SoundSpec const& desired)
+	:Quartet(desired){
+		SDL_AudioSpec spec;
+		spec.channels = desired.channels();
+		spec.format = desired.format();
+		spec.freq = desired.frequency();
+		spec.samples = desired.samples();
+		spec.callback = __callback;
+		spec.userdata = this;
+		SDL_AudioSpec obtained;
+		if(SDL_OpenAudio(&spec, &obtained) != 0){
+			TARTE_EXCEPTION(Exception, "[BUG] Failed to open audio. SDL says: \"%s\"", SDL_GetError());
+		}
+		this->notifySoundSpec(SoundSpec::DataFormat(obtained.format), obtained.channels, obtained.freq, obtained.samples);
+	}
+	virtual ~SDLQuartet() noexcept
+	{
+		SDL_PauseAudio(1);
+		SDL_CloseAudio();
+	}
+private:
+	virtual bool startImpl() override final
+	{
+		SDL_PauseAudio(0);
+		return true;
+	}
+	virtual bool stopImpl() override final
+	{
+		SDL_PauseAudio(1);
+		return true;
+	}
+	virtual void playImpl(unsigned char* stream, int const len) override final
+	{
+		if(this->players().size() == 1 && this->spec() == ((Player const&)this->players().front()).instrument->spec()) {
+			std::vector<unsigned char> buffer = ((Player const&)this->players().front()).buffer;
+			std::copy(buffer.begin(), buffer.end(), stream);
+			return;
+		}
+		std::memset(stream, 0, len);
+		unsigned int const volume = 128/this->players().size();
+		for(Player const& player : this->players()){
+			SDL_MixAudioFormat(stream, player.buffer.data(), player.instrument->spec().format(), len, volume);
+		}
+	}
+	virtual bool lockImpl() noexcept override final
+	{
+		SDL_LockAudio();
+		return true;
+	}
+	virtual bool unlockImpl() noexcept override final
+	{
+		SDL_UnlockAudio();
+		return true;
+	}
+};
+
 
 class SDLPlatformFairy : public PlatformFairy {
 private:
@@ -146,7 +210,7 @@ private:
 	}
 	virtual Handler< ::chisa::Quartet> createQuartet() override final
 	{
-		return Handler< ::chisa::Quartet>();
+		return Handler< ::chisa::Quartet>( new SDLQuartet(SoundSpec(SoundSpec::DataFormat::S16SYS, 1, 441000, 8192)) );
 	}
 };
 

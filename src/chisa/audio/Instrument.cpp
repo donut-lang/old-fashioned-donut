@@ -17,6 +17,7 @@
  */
 
 #include "Instrument.h"
+#include "Quartet.h"
 
 namespace chisa {
 
