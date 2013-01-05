@@ -23,12 +23,12 @@ namespace tarte {
 TEST(TypeTraitsTest, BasicTest){
 	static_assert(
 			std::is_same<
-				decltype(unary_function_return_type(&::isalnum)),
+				decltype(::tarte::unary_function_return_type(&::isalnum)),
 				decltype(::isalnum(1))
 				>::value, "Could not return type.");
 	static_assert(
 			std::is_same<
-				decltype(unary_function_argument_type(&::isalnum)),
+				decltype(::tarte::unary_function_argument_type(&::isalnum)),
 				int
 				>::value, "Could not argument type.");
 }
