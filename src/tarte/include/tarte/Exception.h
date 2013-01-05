@@ -44,6 +44,6 @@ public:
 	size_t line() const noexcept;
 };
 
-#define TARTE_EXCEPTION(Klass, ...) throw Klass(__FILE__, __LINE__, __VA_ARGS__);
+#define TARTE_EXCEPTION(Klass, ...) throw ::tarte::Klass(__FILE__, __LINE__, __VA_ARGS__);
 
 }

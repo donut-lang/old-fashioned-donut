@@ -17,6 +17,7 @@
  */
 
 #include <algorithm>
+#include <tarte/Exception.h>
 #include "Quartet.h"
 #include "Instrument.h"
 
@@ -35,11 +36,24 @@ Quartet::Quartet(SoundSpec const& desired)
 
 void Quartet::notifySoundSpec(SoundSpec::DataFormat format, unsigned int channels, unsigned int frequency, unsigned int samples)
 {
-	this->realSpec_ = SoundSpec(format, channels, frequency, samples);
+	this->notifySoundSpec(SoundSpec(format, channels, frequency, samples));
 }
+
+void Quartet::updateBufferSize()
+{
+	int num = this->realSpec_.samples() / this->realSpec_.byteLength();
+	for(Player& player : this->instruments_){
+		SoundSpec const& spec(player.instrument->spec());
+		player.buffer.resize(spec.byteLength() * num);
+	}
+}
+
 void Quartet::notifySoundSpec(SoundSpec const& spec)
 {
-	this->realSpec_ = spec;
+	if(this->realSpec_ != spec){
+		this->realSpec_ = spec;
+		this->updateBufferSize();
+	}
 }
 
 bool Quartet::start()
@@ -51,6 +65,14 @@ bool Quartet::stop()
 	return this->stopImpl();
 }
 
+bool Quartet::lock() noexcept
+{
+	return this->lockImpl();
+}
+bool Quartet::unlock() noexcept
+{
+	return this->unlockImpl();
+}
 struct PlayerFinder : public std::unary_function<Quartet::Player, bool> {
 private:
 	Handler<Instrument> const& player_;
@@ -63,39 +85,36 @@ public:
 
 bool Quartet::addInstrument(Handler<Instrument> const& inst)
 {
-	if(this->addInstrumentImpl(inst)){
-		return true;
-	}else if(this->hasInstrument(inst)){
+	if(this->hasInstrument(inst)){
 		return false;
 	}else{
-		this->instruments_.push_back(Player(inst, inst->spec().byteLength()*this->realSpec_.samples()));
+		this->instruments_.push_back(Player(inst, inst->spec().byteLength()*(this->realSpec_.samples()/this->realSpec_.byteLength())));
 		return true;
 	}
 }
 
 bool Quartet::hasInstrument(Handler<Instrument> const& inst)
 {
-	if(this->hasInstrumentImpl(inst)) {
-		return true;
-	}else{
-		std::vector<Player>::iterator it = std::find_if(this->instruments_.begin(), this->instruments_.end(), PlayerFinder(inst));
-		return it != this->instruments_.end();
-	}
+	std::vector<Player>::iterator it = std::find_if(this->instruments_.begin(), this->instruments_.end(), PlayerFinder(inst));
+	return it != this->instruments_.end();
 }
 bool Quartet::removeInstrument(Handler<Instrument> const& inst)
 {
-	if(this->removeInstrumentImpl(inst)){
+	std::vector<Player>::iterator it = std::find_if(this->instruments_.begin(), this->instruments_.end(), PlayerFinder(inst));
+	if(it != this->instruments_.end()){
+		this->instruments_.erase(it);
 		return true;
-	}else{
-		std::vector<Player>::iterator it = std::find_if(this->instruments_.begin(), this->instruments_.end(), PlayerFinder(inst));
-		if(it != this->instruments_.end()){
-			this->instruments_.erase(it);
-			return true;
-		}else{ /* 持ってないですよ */
-			return false;
-		}
+	}else{ /* 持ってないですよ */
+		return false;
 	}
 }
 
+void Quartet::onPlay(unsigned char* stream, int len)
+{
+	for(Player& player : this->instruments_){
+		player.instrument->play(player.buffer.data(), player.buffer.size());
+	}
+	this->onPlay(stream, len);
+}
 
 }
