@@ -23,6 +23,12 @@
 	klass(klass&& other) = delete;\
 	klass& operator=(klass const& other) = delete;\
 	klass& operator=(klass&& other) = delete;
+#define DEFAULT_COPY_AND_ASSIGN(klass)\
+public:\
+	klass(klass const& other) = default;\
+	klass(klass&& other) = default;\
+	klass& operator=(klass const& other) = default;\
+	klass& operator=(klass&& other) = default;
 
 #define STACK_OBJECT(Klass)\
 	void* operator new(std::size_t) = delete;\
