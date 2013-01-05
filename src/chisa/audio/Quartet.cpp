@@ -22,6 +22,12 @@
 
 namespace chisa {
 
+Quartet::Player::Player(Handler<Instrument> const& inst, std::size_t buflen)
+:instrument(inst), buffer(buflen)
+{
+
+}
+
 Quartet::Quartet(SoundSpec const& desired)
 :desiredSpec_(desired)
 {
@@ -44,6 +50,17 @@ bool Quartet::stop()
 {
 	return this->stopImpl();
 }
+
+struct PlayerFinder : public std::unary_function<Quartet::Player, bool> {
+private:
+	Handler<Instrument> const& player_;
+public:
+	PlayerFinder(Handler<Instrument> const& p):player_(p){};
+	bool operator()(Quartet::Player const& b) {
+		return player_ == b.instrument;
+	}
+};
+
 bool Quartet::addInstrument(Handler<Instrument> const& inst)
 {
 	if(this->addInstrumentImpl(inst)){
@@ -51,7 +68,7 @@ bool Quartet::addInstrument(Handler<Instrument> const& inst)
 	}else if(this->hasInstrument(inst)){
 		return false;
 	}else{
-		this->instruments_.push_back(inst);
+		this->instruments_.push_back(Player(inst, inst->spec().byteLength()*this->realSpec_.samples()));
 		return true;
 	}
 }
@@ -61,7 +78,7 @@ bool Quartet::hasInstrument(Handler<Instrument> const& inst)
 	if(this->hasInstrumentImpl(inst)) {
 		return true;
 	}else{
-		std::vector<Handler<Instrument> >::iterator it = std::find(this->instruments_.begin(), this->instruments_.end(), inst);
+		std::vector<Player>::iterator it = std::find_if(this->instruments_.begin(), this->instruments_.end(), PlayerFinder(inst));
 		return it != this->instruments_.end();
 	}
 }
@@ -70,7 +87,7 @@ bool Quartet::removeInstrument(Handler<Instrument> const& inst)
 	if(this->removeInstrumentImpl(inst)){
 		return true;
 	}else{
-		std::vector<Handler<Instrument> >::iterator it = std::find(this->instruments_.begin(), this->instruments_.end(), inst);
+		std::vector<Player>::iterator it = std::find_if(this->instruments_.begin(), this->instruments_.end(), PlayerFinder(inst));
 		if(it != this->instruments_.end()){
 			this->instruments_.erase(it);
 			return true;

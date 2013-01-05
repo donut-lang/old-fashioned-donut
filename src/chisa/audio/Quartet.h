@@ -29,8 +29,16 @@ using namespace tarte;
 class Instrument;
 class Quartet : public HandlerBody<Quartet> {
 public:
+	struct Player{
+		DEFAULT_COPY_AND_ASSIGN(Player);
+		Player() = delete;
+		Player(Handler<Instrument> const& inst, std::size_t buflen);
+		~Player() = default;
+		Handler<Instrument> instrument;
+		std::vector<unsigned char> buffer;
+	};
 private:
-	std::vector<Handler<Instrument> > instruments_;
+	std::vector<Player> instruments_;
 	SoundSpec desiredSpec_;
 	SoundSpec realSpec_;
 public:
@@ -38,10 +46,10 @@ public:
 	virtual ~Quartet() noexcept = default;
 	inline bool onFree() const noexcept { return false; };
 public:
-	virtual unsigned int frequency() const noexcept { return this->realSpec_.frequency(); };
-	virtual unsigned int channels() const noexcept { return this->realSpec_.channels(); };
-	virtual unsigned int samples() const noexcept { return this->realSpec_.samples(); };
-	virtual SoundSpec::DataFormat format() const noexcept { return this->realSpec_.format(); };
+	inline unsigned int frequency() const noexcept { return this->realSpec_.frequency(); };
+	inline unsigned int channels() const noexcept { return this->realSpec_.channels(); };
+	inline unsigned int samples() const noexcept { return this->realSpec_.samples(); };
+	inline SoundSpec::DataFormat format() const noexcept { return this->realSpec_.format(); };
 public:
 	bool start();
 	bool stop();
@@ -50,7 +58,7 @@ public:
 	bool hasInstrument(Handler<Instrument> const& inst);
 	bool removeInstrument(Handler<Instrument> const& inst);
 protected:
-	inline std::vector<Handler<Instrument> > const& instruments() const noexcept { return this->instruments_; };
+	inline std::vector<Player> const& instruments() const noexcept { return this->instruments_; };
 	void notifySoundSpec(SoundSpec::DataFormat format, unsigned int channels, unsigned int frequency, unsigned int samples);
 	void notifySoundSpec(SoundSpec const& spec);
 protected:
