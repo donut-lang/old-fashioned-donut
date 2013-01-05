@@ -31,49 +31,32 @@ Quartet::Player::Player(Handler<Instrument> const& inst, std::size_t buflen)
 }
 
 Quartet::Quartet(SoundSpec const& desired)
-:desiredSpec_(desired), startRequested_(false)
+:desiredSpec_(desired), startRequested_(false), stared_(false)
 {
 }
 
-void Quartet::notifySoundSpec(SoundSpec::DataFormat format, unsigned int channels, unsigned int frequency, unsigned int samples)
-{
-	this->notifySoundSpec(SoundSpec(format, channels, frequency, samples));
-}
-
-void Quartet::updateBufferSize()
-{
-	int const samples = this->realSpec_.samples();
-	for(Player& player : this->players_){
-		SoundSpec const& spec(player.instrument->spec());
-		player.buffer.resize(spec.byteLength() * samples);
-	}
-}
-
-void Quartet::notifySoundSpec(SoundSpec const& spec)
-{
-	if(this->realSpec_ != spec){
-		this->realSpec_ = spec;
-		this->updateBufferSize();
-	}
-}
+/******************************************************************************************************************
+ * 外側からのインターフェイス
+ ******************************************************************************************************************/
 
 bool Quartet::start()
 {
-	return this->startImpl();
+	bool expected = false;
+	if(this->startRequested_.compare_exchange_strong(expected,  true)) {
+		return this->startInner();
+	}
+	return false;
 }
 bool Quartet::stop()
 {
-	return this->stopImpl();
+	bool expected = true;
+	if(this->startRequested_.compare_exchange_strong(expected,  false)) {
+		return this->stopInner();
+	}else{
+		return false;
+	}
 }
 
-bool Quartet::lock() noexcept
-{
-	return this->lockImpl();
-}
-bool Quartet::unlock() noexcept
-{
-	return this->unlockImpl();
-}
 struct PlayerFinder : public std::unary_function<Quartet::Player, bool> {
 private:
 	Handler<Instrument> const& player_;
@@ -91,6 +74,9 @@ bool Quartet::addInstrument(Handler<Instrument> const& inst)
 	}else{
 		inst->onConnected(self(), this->realSpec_);
 		this->players_.push_back(Player(inst, inst->spec().byteLength()*this->realSpec_.samples()));
+		if(this->startRequested_.load()){
+			this->startInner();
+		}
 		return true;
 	}
 }
@@ -106,6 +92,9 @@ bool Quartet::removeInstrument(Handler<Instrument> const& inst)
 	if(it != this->players_.end()){
 		Player& p = *it;
 		p.instrument->onDisconnected();
+		if(!this->startRequested_.load()){
+			this->stop();
+		}
 		this->players_.erase(it);
 		return true;
 	}else{ /* 持ってないですよ */
@@ -123,6 +112,63 @@ void Quartet::onPlay(unsigned char* stream, int len)
 		player.instrument->play(player.buffer.data(), player.buffer.size());
 	}
 	this->playImpl(stream, len);
+}
+
+/******************************************************************************************************************
+ * 実装用
+ ******************************************************************************************************************/
+
+void Quartet::notifySoundSpec(SoundSpec::DataFormat format, unsigned int channels, unsigned int frequency, unsigned int samples)
+{
+	this->notifySoundSpec(SoundSpec(format, channels, frequency, samples));
+}
+void Quartet::notifySoundSpec(SoundSpec const& spec)
+{
+	if(this->realSpec_ != spec){
+		this->realSpec_ = spec;
+		this->updateBufferSize();
+	}
+}
+
+/**********************************************************************************************************************
+ * 内部実装
+ *********************************************************************************************************************/
+void Quartet::updateBufferSize()
+{
+	int const samples = this->realSpec_.samples();
+	for(Player& player : this->players_){
+		SoundSpec const& spec(player.instrument->spec());
+		player.buffer.resize(spec.byteLength() * samples);
+	}
+}
+
+bool Quartet::lock() noexcept
+{
+	return this->lockImpl();
+}
+bool Quartet::unlock() noexcept
+{
+	return this->unlockImpl();
+}
+
+bool Quartet::startInner()
+{
+	if(this->players_.empty()){
+		return false;
+	}
+	bool expected = false;
+	if(this->stared_.compare_exchange_strong(expected,  true)){
+		return this->startImpl();
+	}
+	return false;
+}
+bool Quartet::stopInner()
+{
+	bool expected = true;
+	if(this->stared_.compare_exchange_strong(expected,  false)){
+		return this->startImpl();
+	}
+	return false;
 }
 
 }
