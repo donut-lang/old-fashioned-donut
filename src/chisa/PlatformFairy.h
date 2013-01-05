@@ -20,6 +20,7 @@
 #include <tarte/Handler.h>
 #include <tarte/Logger.h>
 #include <tarte/ClassUtil.h>
+#include "audio/Quartet.h"
 #include "geom/Area.h"
 
 namespace chisa {
@@ -28,6 +29,8 @@ using namespace tarte;
 class Chisa;
 class PlatformFairy : public HandlerBody<PlatformFairy> {
 	DEFINE_MEMBER_REF(protected, Logger, log);
+private:
+	Handler<Quartet> quartet_;
 protected:
 	PlatformFairy(Logger& log):log_(log){};
 	virtual ~PlatformFairy() noexcept = default;
@@ -49,7 +52,7 @@ public: /* IME */
 public: /* Audio */
 	Handler<Quartet> quartet(); //カルテットサブシステムの呼び出し
 protected:
-	//Handler<Quartet> createQuartet() = 0;
+	Handler<Quartet> createQuartet() = 0;
 };
 
 }
