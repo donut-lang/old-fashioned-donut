@@ -113,6 +113,13 @@ public:
 				std::tie(this->format_, this->channels_, this->frequency_, this->samples_) <=
 				std::tie(    o.format_,     o.channels_,     o.frequency_,     o.samples_);
 	}
+	inline bool isInvalid() const noexcept{
+		return
+				this->format_ == DataFormat::INVALID ||
+				this->channels_ <= 0 ||
+				this->frequency_ <= 0 ||
+				this->samples_ <= 0;
+	}
 };
 
 }

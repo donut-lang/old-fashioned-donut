@@ -82,6 +82,10 @@ TEST(SoundSpecTest, Compare)
 	}
 }
 
-
+TEST(SoundSpecTest, Invalid)
+{
+	SoundSpec spec;
+	ASSERT_TRUE(spec.isInvalid());
+}
 
 }
