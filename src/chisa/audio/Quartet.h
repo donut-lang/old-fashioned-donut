@@ -60,6 +60,7 @@ public:
 		Quartet& self_;
 	public:
 		inline Lock(Handler<Quartet> const& q) noexcept:self_(*q.get()) { self_.lock(); }
+		inline Lock(Quartet& q) noexcept:self_(q) { self_.lock(); }
 		inline ~Lock() noexcept { self_.unlock(); }
 	};
 public:

@@ -69,37 +69,41 @@ public:
 
 bool Quartet::addInstrument(Handler<Instrument> const& inst)
 {
-	if(this->hasInstrument(inst)){
+	if(std::find_if(this->players_.begin(), this->players_.end(), PlayerFinder(inst)) != this->players_.end()){
 		return false;
-	}else{
+	}
+	{
+		Lock lock(*this);
 		inst->onConnected(self(), this->realSpec_);
 		this->players_.push_back(Player(inst, inst->spec().byteLength()*this->realSpec_.samples()));
-		if(this->startRequested_.load()){
-			this->startInner();
-		}
-		return true;
 	}
+	if(this->startRequested_.load()){
+		this->startInner();
+	}
+	return true;
 }
 
 bool Quartet::hasInstrument(Handler<Instrument> const& inst)
 {
-	std::vector<Player>::iterator it = std::find_if(this->players_.begin(), this->players_.end(), PlayerFinder(inst));
-	return it != this->players_.end();
+	return this->players_.end()
+			!= std::find_if(this->players_.begin(), this->players_.end(), PlayerFinder(inst));
 }
 bool Quartet::removeInstrument(Handler<Instrument> const& inst)
 {
-	std::vector<Player>::iterator it = std::find_if(this->players_.begin(), this->players_.end(), PlayerFinder(inst));
-	if(it != this->players_.end()){
-		Player& p = *it;
-		p.instrument->onDisconnected();
-		if(!this->startRequested_.load()){
-			this->stop();
-		}
-		this->players_.erase(it);
-		return true;
-	}else{ /* 持ってないですよ */
+	std::vector<Player>::iterator const it = std::find_if(this->players_.begin(), this->players_.end(), PlayerFinder(inst));
+	if(it == this->players_.end()){
 		return false;
 	}
+	{
+		Lock lock(*this);
+		Player& p = *it;
+		p.instrument->onDisconnected();
+		this->players_.erase(it);
+	}
+	if(this->players_.empty()){
+		this->stopInner();
+	}
+	return true;
 }
 
 void Quartet::onPlay(unsigned char* stream, int len)
@@ -136,6 +140,7 @@ void Quartet::notifySoundSpec(SoundSpec const& spec)
 void Quartet::updateBufferSize()
 {
 	int const samples = this->realSpec_.samples();
+	Lock lock(*this);
 	for(Player& player : this->players_){
 		SoundSpec const& spec(player.instrument->spec());
 		player.buffer.resize(spec.byteLength() * samples);
