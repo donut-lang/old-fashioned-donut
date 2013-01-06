@@ -54,7 +54,7 @@
 	for(std::size_t i = 0;i<10;++i){
 		ASSERT_EQ(uvar[i], var[i]);
 	}
-	delete uvar;
+	delete [] uvar;
 }
 { /* array - static */
 	TYPE uvar[10];
