@@ -451,16 +451,101 @@
    <insert_a_suppression_name_here>
    Memcheck:Leak
    fun:malloc
-   fun:permalloc
-   fun:_XrmInternalStringToQuark
-   fun:XrmInitialize
-   fun:InitDefaults
-   fun:XGetDefault
-   fun:_XcursorGetDisplayInfo
-   fun:XcursorSupportsARGB
-   fun:XcursorNoticeCreateBitmap
-   fun:XCreatePixmap
-   fun:_glfwPlatformOpenWindow
-   fun:glfwOpenWindow
+   fun:_dl_map_object
+   fun:dl_open_worker
+   fun:_dl_catch_error
+   fun:_dl_open
+   fun:dlopen_doit
+   fun:_dl_catch_error
+   fun:_dlerror_run
+   fun:dlopen@@GLIBC_2.2.5
+   obj:/usr/lib64/dri/fglrx_dri.so
+   obj:*
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   fun:malloc
+   fun:_cairo_ft_unscaled_font_map_lock
+   fun:_cairo_ft_unscaled_font_create_internal
+   fun:cairo_ft_font_face_create_for_ft_face
+   fun:_ZN5chisa2gl12TextDrawable10revalidateEv
+   fun:_ZN5chisa2gl12TextDrawableC1EN5tarte8HandlerWINS0_15DrawableManagerEEERKSsbfNS2_7HandlerINS0_4FontEEENS1_5StyleENS1_10DecorationERKNS0_5ColorESF_
+   fun:_ZN5chisa2gl12TextDrawable6createEN5tarte8HandlerWINS0_15DrawableManagerEEERKSsbfNS2_7HandlerINS0_4FontEEENS1_5StyleENS1_10DecorationERKNS0_5ColorESF_
+   fun:_ZN5chisa2gl15DrawableManager9queryTextERKSsfN5tarte7HandlerINS0_4FontEEENS0_12TextDrawable5StyleENS8_10DecorationERKNS0_5ColorESD_
+   fun:_ZN5chisa3doc18TextDrawableObject7realizeEv
+   fun:_ZN5chisa3doc12RenderObject8drawableEv
+   fun:_ZN5chisa3doc12RenderObject4sizeEv
+   fun:_ZN5chisa3doc12RenderObject5widthEv
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   fun:malloc
+   obj:*
+   fun:X11_GetDisplayBounds
+   fun:SDL_GetDisplayBounds
+   fun:SDL_CreateWindow
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   fun:malloc
+   fun:realloc
+   fun:d_growable_string_callback_adapter
+   fun:d_demangle_callback.constprop.15
+   fun:__cxa_demangle
+   fun:_ZN5tarte8demangleERKSt9type_info
+   fun:_ZN5tarte8demangleIPNS_22__DemangleTest__SampleEEESsT_PNSt9enable_ifIXaasrSt10is_pointerIS3_E5valuentsrS5_INSt14remove_pointerIS3_E4typeEE5valueEvE4typeE
+   fun:_ZN5tarte34DemangleTest_DerivedKlassTest_Test8TestBodyEv
+   fun:_ZN7testing8internal35HandleExceptionsInMethodIfSupportedINS_4TestEvEET0_PT_MS4_FS3_vEPKc
+   fun:_ZN7testing4Test3RunEv
+   fun:_ZN7testing8TestInfo3RunEv
+   fun:_ZN7testing8TestCase3RunEv
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   fun:malloc
+   fun:_ZN6icu_4810UnicodeSet10setPatternERKNS_13UnicodeStringE
+   fun:_ZN6icu_4810UnicodeSet12applyPatternERKNS_13UnicodeStringERNS_13ParsePositionEjPKNS_11SymbolTableER10UErrorCode
+   fun:_ZN6icu_4810UnicodeSet12applyPatternERKNS_13UnicodeStringEjPKNS_11SymbolTableER10UErrorCode
+   fun:_ZN6icu_4810UnicodeSetC1ERKNS_13UnicodeStringER10UErrorCode
+   fun:_ZN6icu_4815RegexStaticSetsC1EP10UErrorCode
+   fun:_ZN6icu_4815RegexStaticSets11initGlobalsEP10UErrorCode
+   fun:_ZN6icu_4812RegexCompileC1EPNS_12RegexPatternER10UErrorCode
+   fun:_ZN6icu_4812RegexPattern7compileERKNS_13UnicodeStringEjR11UParseErrorR10UErrorCode
+   fun:_ZN6icu_4812RegexMatcherC1ERKNS_13UnicodeStringES3_jR10UErrorCode
+   fun:_ZN5chisa3doc11shrinkSpaceERKSs
+   fun:_ZN5chisa3doc37DocumentUtilTest_ShrinkSpaceTest_Test8TestBodyEv
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   fun:malloc
+   fun:XInitThreads
+   fun:X11_CreateDevice
+   fun:SDL_VideoInit
+   fun:SDL_InitSubSystem
+   fun:SDL_Init
+   fun:main
+}

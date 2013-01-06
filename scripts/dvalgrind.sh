@@ -1,6 +1,6 @@
 #! /bin/sh
 DIRNAME=$(cd $(dirname $0);cd ..;pwd)
-PRG=${DIRNAME}/build/debug/chisa
+PRG=${DIRNAME}/build/debug/chisa_test
 GEN=--gen-suppressions=all
 
 #valgrind -v --track-origins=yes --error-limit=no --leak-check=yes\
