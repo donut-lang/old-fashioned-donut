@@ -66,13 +66,11 @@ private:
 	std::vector<char> mixBuffer_;
 	virtual void playImpl(unsigned char* stream, int const len) override final
 	{
-		//最適化：ミックスしなくていいしフォーマットは変換しなくていい
-		Player& first = this->players().front();
-		if(this->players().size() == 1) { //ミックスしなくていい
+		if(this->players().size() == 1) { //最適化：ミックスしなくていい
+			Player& first = this->players().front();
 			SoundSpec const& firstSpec = first.instrument->spec();
-			if(this->spec().isCompatibleTo(firstSpec)){ //変換もしなくていい
-				std::vector<unsigned char> buffer = ((Player const&)this->players().front()).buffer;
-				std::copy(buffer.begin(), buffer.end(), stream);
+			if(this->spec().isCompatibleTo(firstSpec)){ //最適化：変換もしなくていい
+				std::copy(first.buffer.begin(), first.buffer.end(), stream);
 			}else{ //変換必要
 				SDL_AudioCVT cvt;
 				int const result = SDL_BuildAudioCVT(&cvt,
@@ -120,7 +118,7 @@ private:
 		 **************************************************/
 		std::memset(stream, 0, len);
 		unsigned int const volume = 128/this->players().size();
-		for(Player const& player : this->players()){
+		for(Player& player : this->players()){
 			SoundSpec const& spec(player.instrument->spec());
 			if(spec.isCompatibleTo(this->spec())) { //変換必要なし
 				SDL_MixAudio(stream, player.buffer.data(), len, volume);
@@ -140,15 +138,15 @@ private:
 			}else if(result < 0){
 				TARTE_EXCEPTION(Exception, "[BUG] Oops. This format is not compatible. SDL says: \"%s\"", SDL_GetError())
 			}
-			const unsigned int temporaryBufferSize = first.buffer.size() * cvt.len_mult;
-			if(temporaryBufferSize <= first.buffer.size()){
-				cvt.buf = first.buffer.data();
-				cvt.len = first.buffer.size();
+			const unsigned int temporaryBufferSize = player.buffer.size() * cvt.len_mult;
+			if(temporaryBufferSize <= player.buffer.size()){
+				cvt.buf = player.buffer.data();
+				cvt.len = player.buffer.size();
 			} else {
 				this->mixBuffer_.resize(temporaryBufferSize);
-				std::copy(first.buffer.begin(), first.buffer.end(), this->mixBuffer_.begin());
+				std::copy(player.buffer.begin(), player.buffer.end(), this->mixBuffer_.begin());
 				cvt.buf = reinterpret_cast<unsigned char*>(this->mixBuffer_.data());
-				cvt.len = first.buffer.size();
+				cvt.len = player.buffer.size();
 			}
 			if(SDL_ConvertAudio(&cvt) != 0){
 				TARTE_EXCEPTION(Exception, "[BUG] Oops. Failed to convert audio. SDL says: \"%s\"", SDL_GetError())
