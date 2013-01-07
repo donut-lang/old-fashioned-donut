@@ -62,6 +62,7 @@ public:
 	};
 private:
 	VirtualMachine* machine_;
+	Debugger* debugger_;
 	std::thread* runner_t_;
 	Runner* runner_;
 	Handler<chisa::gl::Sprite> spr_;

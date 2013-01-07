@@ -596,30 +596,30 @@ public:
 	{
 		switch(addr & 0xE000){
 			case 0x0000:
-				return debugger_.memoryRead(addr, ram.read(addr));
+				return debugger_->memoryRead(addr, ram.read(addr));
 			case 0x2000:
-				return debugger_.memoryRead(addr, video.readReg(addr));
+				return debugger_->memoryRead(addr, video.readReg(addr));
 			case 0x4000:
 				//このへんは込み入ってるので、仕方ないからここで振り分け。
 				if(addr == 0x4015){
-					return debugger_.memoryRead(addr, audio.readReg(addr));
+					return debugger_->memoryRead(addr, audio.readReg(addr));
 				}else if(addr == 0x4016){
-					return debugger_.memoryRead(addr, ioPort.readInputReg1());
+					return debugger_->memoryRead(addr, ioPort.readInputReg1());
 				}else if(addr == 0x4017){
-					return debugger_.memoryRead(addr, ioPort.readInputReg2());
+					return debugger_->memoryRead(addr, ioPort.readInputReg2());
 				}else if(addr < 0x4018){
 					throw EmulatorException("[FIXME] Invalid addr: 0x") << std::hex << addr;
 				}else{
-					return debugger_.memoryRead(addr, cartridge->readRegisterArea(addr));
+					return debugger_->memoryRead(addr, cartridge->readRegisterArea(addr));
 				}
 			case 0x6000:
-				return debugger_.memoryRead(addr, cartridge->readSaveArea(addr));
+				return debugger_->memoryRead(addr, cartridge->readSaveArea(addr));
 			case 0x8000:
 			case 0xA000:
-				return debugger_.memoryRead(addr, cartridge->readBankLow(addr));
+				return debugger_->memoryRead(addr, cartridge->readBankLow(addr));
 			case 0xC000:
 			case 0xE000:
-				return debugger_.memoryRead(addr, cartridge->readBankHigh(addr));
+				return debugger_->memoryRead(addr, cartridge->readBankHigh(addr));
 			default:
 				throw EmulatorException("[FIXME] Invalid addr: 0x") << std::hex << addr;
 		}
@@ -680,13 +680,14 @@ private:
 
 	uint8_t irqLine;
 private:
-	Debugger& debugger_;
+	Debugger* debugger_;
 public:
 	inline Processor const* getProcessor() const noexcept { return &processor; };
 public: /* Save/Load */
 	XValue save();
 	void load(XValue const& data);
 public: /* Debugger */
+	void attatchDebugger(Debugger* debugger);
 	void onBreak() noexcept;
 };
 
