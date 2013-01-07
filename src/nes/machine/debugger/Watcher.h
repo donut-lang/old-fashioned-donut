@@ -33,6 +33,12 @@ public:
 	break_id_t id;
 	uint16_t addr_begin;
 	uint16_t addr_end;
+public:
+	template <typename Archiver>
+	void serialize(Archiver& arc){
+		arc & id & addr_begin & addr_end;
+	}
+public:
 	MemoryRange(break_id_t id, uint16_t addr_begin, uint16_t addr_end) noexcept
 	:id(id), addr_begin(addr_begin), addr_end(addr_end) {
 
@@ -78,6 +84,14 @@ private:
 	std::vector<MemoryRange> readBreaks_;
 	std::vector<MemoryRange> writeBreaks_;
 	std::vector<MemoryRange> execBreaks_;
+public:
+	template <typename Archiver>
+	void serialize(Archiver& arc){
+		arc & breakUniq_;
+		arc & readBreaks_;
+		arc & writeBreaks_;
+		arc & execBreaks_;
+	}
 public:
 	Watcher(VirtualMachine& vm);
 	~Watcher() noexcept = default;

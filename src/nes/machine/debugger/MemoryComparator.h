@@ -33,6 +33,12 @@ private:
 	VirtualMachine& vm_;
 	std::vector<bool> entry_;
 	std::vector<uint8_t> before_;
+public:
+template <typename Archiver>
+	void serialize(Archiver& arc){
+		arc & entry_;
+		arc & before_;
+	}
 private:
 	std::vector<uint8_t> getNowMemory() const;
 private:
