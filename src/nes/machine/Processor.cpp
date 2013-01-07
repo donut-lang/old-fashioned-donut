@@ -6,6 +6,7 @@ namespace nes {
 
 Processor::Processor(VirtualMachine& vm)
 :vm_(vm)
+,debugger_(vm.debugger())
 ,A(0)
 ,X(0)
 ,Y(0)
@@ -85,6 +86,8 @@ void Processor::run(uint16_t clockDelta)
 		needStatusRewrite = false;
 	}
 
+	this->debugger_.memoryExecute(this->PC);
+
 	const uint8_t opcode = this->read(this->PC);
 //	#define CPUTRACE
 	#ifdef CPUTRACE
@@ -102,7 +105,6 @@ void Processor::run(uint16_t clockDelta)
 	fflush(stdout);
 	#endif
 	this->PC++;
-
 	switch(opcode){
 		case 0x00: // BRK
 			this->BRK();
@@ -668,10 +670,6 @@ void Processor::run(uint16_t clockDelta)
 			throw EmulatorException("[FIXME] Invalid opcode: 0x") << std::hex << opcodeBig << " in 0x" << opcodePC;
 	}
 	consumeClock(CycleTable[opcode]);
-}
-
-Processor::~Processor()
-{
 }
 
 
