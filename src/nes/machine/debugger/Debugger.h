@@ -32,13 +32,20 @@ public:
 	~Debugger() noexcept = default;
 private:
 	uint8_t inline memoryRead(uint16_t const addr, uint8_t const value) noexcept {
-		return value;
+		return watcher_.onMemoryRead(addr, value);
 	}
 	uint8_t inline memoryWrite(uint16_t const addr, uint8_t now) noexcept {
-		return now;
+		return watcher_.onMemoryWrite(addr, now);
 	}
 	void inline memoryExecute(uint16_t const addr) noexcept {
-
+		watcher_.onMemoryExecute(addr);
+	}
+private:
+	uint8_t vramRead(uint16_t const addr, uint8_t const value){
+		return value;
+	}
+	uint8_t vramWrite(uint16_t const addr, uint8_t const value){
+		return value;
 	}
 public:
 	void inline processorExecute(uint16_t const addr) noexcept {
@@ -106,13 +113,6 @@ public:
 	}
 	uint8_t inline cartridgeWriteCPUBankHigh(uint16_t const addr, uint8_t const now) {
 		return cartridgeWriteCPU(addr, now);
-	}
-private:
-	uint8_t vramRead(uint16_t const addr, uint8_t const value){
-		return value;
-	}
-	uint8_t vramWrite(uint16_t const addr, uint8_t const value){
-		return value;
 	}
 public:
 	uint8_t videoReadPatternTable(uint16_t const addr, uint8_t const value) {

@@ -39,6 +39,10 @@ public:
 	}
 	~MemoryRange() noexcept = default;
 public:
+	bool contain(uint16_t const addr) const noexcept{
+		return addr_begin <= addr && addr < addr_end;
+	}
+public:
 	struct CompareByID final {
 		inline bool operator()(MemoryRange const& a, MemoryRange const& b){
 			return a.id < b.id;
@@ -86,6 +90,20 @@ public:
 	bool removeMemoryReadBreak(break_id_t id);
 	bool removeMemoryWriteBreak(break_id_t id);
 	bool removeMemoryExecBreak(break_id_t id);
+public:
+	uint8_t onMemoryRead(uint16_t const addr, uint8_t const value){
+		return value;
+	}
+	uint8_t onMemoryWrite(uint16_t const addr, uint8_t const value){
+		return value;
+	}
+	void onMemoryExecute(uint16_t const addr){
+		for(MemoryRange const& range : this->execBreaks_) {
+			if(range.contain(addr)){
+
+			}
+		}
+	}
 };
 
 }
