@@ -114,6 +114,17 @@ struct Instruction {
 //解決したアドレスとその値
 	uint16_t addr_;
 	uint16_t val_;
+public:
+	template <typename Archiver>
+	void serialize(Archiver& arc){
+		arc & op_;
+		arc & addrMode_;
+		arc & clock_;
+		arc & binLength_;
+		arc & bin;
+		arc & addr_;
+		arc & val_;
+	}
 };
 
 class VirtualMachine;
@@ -122,6 +133,10 @@ class Disassembler final {
 private:
 	static const uint32_t kInfoTable[0x100];
 	VirtualMachine& vm_;
+public:
+	template <typename Archiver>
+	void serialize(Archiver& arc){
+	}
 public:
 	Disassembler(VirtualMachine& vm);
 	~Disassembler() = default;

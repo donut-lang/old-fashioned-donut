@@ -30,6 +30,13 @@ private:
 	Watcher watcher_;
 	MemoryComparator comparator_;
 public:
+	template <typename Archiver>
+	void serialize(Archiver& arc){
+		arc & disasm_;
+		arc & watcher_;
+		arc & comparator_;
+	}
+public:
 	Debugger(VirtualMachine& vm);
 	~Debugger() noexcept = default;
 private:
