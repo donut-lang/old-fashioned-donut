@@ -123,6 +123,7 @@ NesTraceWidget::NesTraceWidget(chisa::Logger& log, chisa::HandlerW<chisa::tk::Wo
 	this->symRenderer_.registerSymbol(RightSqBracket,"[" );
 	this->symRenderer_.registerSymbol(LeftSqBracket ,"]" );
 	this->symRenderer_.registerSymbol(HexStart      ,"0x");
+	this->symRenderer_.registerSymbol(Eq            ,"=" );
 }
 
 NesTraceWidget::~NesTraceWidget()
@@ -144,7 +145,9 @@ void NesTraceWidget::reshape(chisa::geom::Box const& areaSize)
 
 chisa::geom::Box NesTraceWidget::measure(chisa::geom::Box const& constraintSize)
 {
-	return chisa::geom::Box(512, chisa::geom::Unspecified);
+	//$xxxx aa bb cc LDA $xxxx(=0xdddd)
+	// 33文字
+	return chisa::geom::Box(this->asmRenderer_.maxCharWidth()*33.0f, chisa::geom::Unspecified);
 }
 
 }
