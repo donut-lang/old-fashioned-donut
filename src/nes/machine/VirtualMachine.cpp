@@ -17,6 +17,7 @@ VirtualMachine::VirtualMachine(VideoFairy& videoFairy, AudioFairy& audioFairy, G
 ,resetFlag(false)
 ,hardResetFlag(false)
 ,irqLine(0)
+,debugger_(nullptr)
 {
 }
 
@@ -157,6 +158,12 @@ void VirtualMachine::load(XValue const& data)
 	xobj->get("irqLine", this->irqLine);
 	//最後にビデオの接続。これでOK？
 	this->video.connectCartridge(this->cartridge);
+}
+
+
+void VirtualMachine::attatchDebugger(Debugger* debugger)
+{
+	this->debugger_ = debugger;
 }
 
 }

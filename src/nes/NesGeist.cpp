@@ -26,11 +26,13 @@ NesGeist::NesGeist(chisa::Logger& log, chisa::HandlerW<chisa::tk::World> world)
 :chisa::WorldGeist(log, world)
 ,chisa::tk::Task(log)
 ,machine_(nullptr)
+,debugger_(nullptr)
 ,runner_t_(nullptr)
 ,runner_(nullptr)
 ,time_ms_(0.0f)
 {
 	this->machine_ = new VirtualMachine(*this, *this, this, nullptr);
+	this->machine_->attatchDebugger( this->debugger_ = new Debugger(*this->machine_) );
 	if( chisa::Handler<chisa::tk::World> world = this->world_.lock() ){
 		this->spr_ = world->drawableManager()->queryRawSprite(256, 240);
 	}
