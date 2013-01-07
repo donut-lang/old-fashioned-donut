@@ -137,6 +137,8 @@ XValue VirtualMachine::save()
 	xobj->set("resetFlag", this->resetFlag);
 	xobj->set("hardResetFlag", this->hardResetFlag);
 	xobj->set("irqLine", this->irqLine);
+
+	xobj->set("debugger", (XArchiverOut() << this->debugger_).toXValue());
 	return xobj;
 }
 void VirtualMachine::load(XValue const& data)
@@ -156,6 +158,7 @@ void VirtualMachine::load(XValue const& data)
 	xobj->get("resetFlag", this->resetFlag);
 	xobj->get("hardResetFlag", this->hardResetFlag);
 	xobj->get("irqLine", this->irqLine);
+	XArchiverIn(xobj->get<XValue>("debugger")) >> this->debugger_;
 	//最後にビデオの接続。これでOK？
 	this->video_.connectCartridge(this->cartridge_);
 }

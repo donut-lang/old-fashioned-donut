@@ -20,6 +20,7 @@
 #include <vector>
 #include <cstdint>
 #include <functional>
+#include <climits>
 #include <tarte/ClassUtil.h>
 
 namespace nes {
@@ -31,7 +32,7 @@ public:
 	~MemoryComparator() noexcept = default;
 private:
 	VirtualMachine& vm_;
-	std::vector<bool> entry_;
+	unsigned int entry_[2048/(CHAR_BIT * sizeof(unsigned int))];
 	std::vector<uint8_t> before_;
 public:
 template <typename Archiver>
@@ -47,9 +48,11 @@ private:
 		std::vector<uint8_t> now( this->getNowMemory() );
 		std::size_t const max = now.size();
 		for( uint16_t addr = 0; addr < max; ++addr ) {
-			auto flag = entry_[addr];
-			if(flag) {
-				flag = cmp(now[addr], before_[addr]);
+			const uint16_t idx = addr / (CHAR_BIT*sizeof(unsigned int));
+			const uint16_t mask_bit = addr % (CHAR_BIT*sizeof(unsigned int));
+			const unsigned int mask = 1 << mask_bit;
+			if( (entry_[idx] & mask) && (!cmp(now[addr], before_[addr])) ) {
+				entry_[idx] &= ~mask;
 			}
 		}
 		before_.swap(now);
@@ -59,9 +62,11 @@ private:
 		std::vector<uint8_t> now( this->getNowMemory() );
 		std::size_t const max = now.size();
 		for( uint16_t addr = 0; addr < max; ++addr ) {
-			auto flag = entry_[addr];
-			if(flag) {
-				flag = cmp(now[addr]);
+			const uint16_t idx = addr / (CHAR_BIT*sizeof(unsigned int));
+			const uint16_t mask_bit = addr % (CHAR_BIT*sizeof(unsigned int));
+			const unsigned int mask = 1 << mask_bit;
+			if( (entry_[idx] & mask) && (!cmp(now[addr])) ) {
+				entry_[idx] &= ~mask;
 			}
 		}
 		before_.swap(now);
