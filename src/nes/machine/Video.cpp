@@ -467,17 +467,17 @@ void Video::executeDMA(uint8_t const value)
 inline uint8_t Video::readVram(uint16_t const addr) const
 {
 	if((addr & 0x3f00) == 0x3f00){
-		return readPalette(addr);
+		return debugger_.videoReadPalette(addr, this->readPalette(addr));
 	}else{
-		return readVramExternal(addr);
+		return this->readVramExternal(addr);
 	}
 }
 inline void Video::writeVram(uint16_t const addr, uint8_t const value)
 {
 	if((addr & 0x3f00) == 0x3f00){
-		writePalette(addr, value);
+		this->writePalette(addr, debugger_.videoWritePalette(addr, value));
 	}else{
-		writeVramExternal(addr, value);
+		this->writeVramExternal(addr, value);
 	}
 }
 inline uint8_t Video::readVramExternal(uint16_t const addr) const
@@ -485,32 +485,32 @@ inline uint8_t Video::readVramExternal(uint16_t const addr) const
 	switch(addr & 0x3000)
 	{
 		case 0x0000:
-			return this->cartridge->readPatternTableLow(addr);
+			return debugger_.videoReadPatternTable(addr, this->cartridge->readPatternTableLow(addr));
 		case 0x1000:
-			return this->cartridge->readPatternTableHigh(addr);
+			return debugger_.videoReadPatternTable(addr, this->cartridge->readPatternTableHigh(addr));
 		case 0x2000:
-			return this->cartridge->readNameTable(addr);
+			return debugger_.videoReadNameTable(addr, this->cartridge->readNameTable(addr));
 		case 0x3000:
-			return this->cartridge->readNameTable(addr);
+			return debugger_.videoReadNameTable(addr, this->cartridge->readNameTable(addr));
 		default:
 			throw EmulatorException("Invalid vram access");
 	}
 }
-inline void Video::writeVramExternal(uint16_t const addr, uint8_t const value)
+inline void Video::writeVramExternal(uint16_t const addr, uint8_t const value_)
 {
 	switch(addr & 0x3000)
 	{
 		case 0x0000:
-			this->cartridge->writePatternTableLow(addr, value);
+			this->cartridge->writePatternTableLow(addr, debugger_.videoWritePatternTable(addr, value_));
 			break;
 		case 0x1000:
-			this->cartridge->writePatternTableHigh(addr, value);
+			this->cartridge->writePatternTableHigh(addr, debugger_.videoWritePatternTable(addr, value_));
 			break;
 		case 0x2000:
-			this->cartridge->writeNameTable(addr, value);
+			this->cartridge->writeNameTable(addr, debugger_.videoWriteNameTable(addr, value_));
 			break;
 		case 0x3000:
-			this->cartridge->writeNameTable(addr, value);
+			this->cartridge->writeNameTable(addr, debugger_.videoWriteNameTable(addr, value_));
 			break;
 		default:
 			throw EmulatorException("Invalid vram access");

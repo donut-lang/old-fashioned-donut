@@ -107,7 +107,32 @@ public:
 	uint8_t inline cartridgeWriteCPUBankHigh(uint16_t const addr, uint8_t const now) {
 		return cartridgeWriteCPU(addr, now);
 	}
+private:
+	uint8_t vramRead(uint16_t const addr, uint8_t const value){
+		return value;
+	}
+	uint8_t vramWrite(uint16_t const addr, uint8_t const value){
+		return value;
+	}
 public:
+	uint8_t videoReadPatternTable(uint16_t const addr, uint8_t const value) {
+		return vramRead(addr, value);
+	}
+	uint8_t videoWritePatternTable(uint16_t const addr, uint8_t const value) {
+		return vramWrite(addr, value);
+	}
+	uint8_t videoReadNameTable(uint16_t const addr, uint8_t const value) {
+		return vramRead(addr, value);
+	}
+	uint8_t videoWriteNameTable(uint16_t const addr, uint8_t const value) {
+		return vramWrite(addr, value);
+	}
+	uint8_t videoReadPalette(uint16_t const addr, uint8_t const value) {
+		return vramRead(addr, value);
+	}
+	uint8_t videoWritePalette(uint16_t const addr, uint8_t const value) {
+		return vramWrite(addr, value);
+	}
 
 };
 
