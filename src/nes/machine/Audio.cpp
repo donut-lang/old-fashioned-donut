@@ -195,6 +195,23 @@ uint8_t Audio::readReg(uint16_t const addr)
 
 	return ret;
 }
+uint8_t Audio::debuggerReadReg(uint16_t const addr)
+{
+	if(addr != 0x4015){
+		return 0;
+	}
+ 	// Clears the frame interrupt flag after being read (but not the DMC interrupt flag).
+	// If an interrupt flag was set at the same moment of the read, it will read back as 1 but it will not be cleared.
+	uint8_t ret =
+			(this->rectangle1.isEnabled()	? 1 : 0)
+			|	(this->rectangle2.isEnabled() ? 2 : 0)
+			|	(this->triangle.isEnabled() ? 4 : 0)
+			|	(this->noize.isEnabled()	? 8 : 0)
+			|	(this->digital.isEnabled() ? 16 : 0)
+			|	(this->vm_.isIRQpending(VirtualMachine::DEVICE_FRAMECNT) ? 64 : 0)
+			|	(this->vm_.isIRQpending(VirtualMachine::DEVICE_DMC) ? 128 : 0); //XXX: 副作用を避けるために先の関数から副作用を抜いた部分を持って来ました
+	return ret;
+}
 void Audio::writeReg(uint16_t const addr, uint8_t const value_)
 {
 	uint8_t const value = this->debugger_.audioWrite(addr, value_);
@@ -273,6 +290,82 @@ void Audio::writeReg(uint16_t const addr, uint8_t const value_)
 	}
 }
 
+void Audio::debuggerWriteReg(uint16_t const addr, uint8_t const value)
+{
+	switch(addr)
+	{
+	case 0x4000: //4000h - APU Volume/Decay Channel 1 (Rectangle)
+		rectangle1.analyzeVolumeRegister(value);
+		break;
+	case 0x4001: //4001h - APU Sweep Channel 1 (Rectangle)
+		rectangle1.analyzeSweepRegister(value);
+		break;
+	case 0x4002: //4002h - APU Frequency Channel 1 (Rectangle)
+		rectangle1.analyzeFrequencyRegister(value);
+		break;
+	case 0x4003: //4003h - APU Length Channel 1 (Rectangle)
+		rectangle1.analyzeLengthRegister(value);
+		break;
+	case 0x4004: //4004h - APU Volume/Decay Channel 2 (Rectangle)
+		rectangle2.analyzeVolumeRegister(value);
+		break;
+	case 0x4005: //4005h - APU Sweep Channel 2 (Rectangle)
+		rectangle2.analyzeSweepRegister(value);
+		break;
+	case 0x4006: //4006h - APU Frequency Channel 2 (Rectangle)
+		rectangle2.analyzeFrequencyRegister(value);
+		break;
+	case 0x4007: //4007h - APU Length Channel 2 (Rectangle)
+		rectangle2.analyzeLengthRegister(value);
+		break;
+	case 0x4008: //4008h - APU Linear Counter Channel 3 (Triangle)
+		triangle.analyzeLinearCounterRegister(value);
+		break;
+	case 0x4009: //4009h - APU N/A Channel 3 (Triangle)
+		//unused
+		break;
+	case 0x400A: //400Ah - APU Frequency Channel 3 (Triangle)
+		triangle.analyzeFrequencyRegister(value);
+		break;
+	case 0x400B: //400Bh - APU Length Channel 3 (Triangle)
+		triangle.analyzeLengthCounter(value);
+		break;
+	case 0x400C: //400Ch - APU Volume/Decay Channel 4 (Noise)
+		noize.analyzeVolumeRegister(value);
+		break;
+	case 0x400d: //400Dh - APU N/A Channel 4 (Noise)
+		//unused
+		break;
+	case 0x400e: //400Eh - APU Frequency Channel 4 (Noise)
+		noize.analyzeFrequencyRegister(value);
+		break;
+	case 0x400F: //400Fh - APU Length Channel 4 (Noise)
+		noize.analyzeLengthRegister(value);
+		break;
+	// ------------------------------------ DMC -----------------------------------------------------
+	case 0x4010: //4010h - DMC Play mode and DMA frequency
+		digital.analyzeFrequencyRegister(value);
+		break;
+	case 0x4011: //4011h - DMC Delta counter load register
+		digital.analyzeDeltaCounterRegister(value);
+		break;
+	case 0x4012: //4012h - DMC address load register
+		digital.analyzeSampleAddrRegister(value);
+		break;
+	case 0x4013: //4013h - DMC length register
+		digital.analyzeSampleLengthRegister(value);
+		break;
+	// ------------------------------ CTRL --------------------------------------------------
+	case 0x4015:
+		analyzeStatusRegister(value);
+		break;
+	case 0x4017:
+		analyzeLowFrequentryRegister(value);
+		break;
+	default:
+		throw EmulatorException("[FIXME] Invalid addr: 0x") << std::hex << addr << "for APU.";
+	}
+}
 void Audio::analyzeStatusRegister(uint8_t value)
 {
 	rectangle1.setEnabled((value & 1)==1);

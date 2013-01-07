@@ -333,6 +333,63 @@ uint8_t Video::readReg(uint16_t const addr)
 //			throw EmulatorException() << "Invalid addr: 0x" << std::hex << addr;
 	}
 }
+uint8_t Video::debuggerReadReg(uint16_t const addr)
+{
+	switch(addr & 0x07)
+	{
+		/* PPU Control and Status Registers */
+		//case 0x00: //2000h - PPU Control Register 1 (W)
+		//case 0x01: //2001h - PPU Control Register 2 (W)
+		case 0x02: //2002h - PPU Status Register (R)
+			return debuggerBuildPPUStatusRegister();
+		/* PPU SPR-RAM Access Registers */
+		//case 0x03: //2003h - SPR-RAM Address Register (W)
+		case 0x04: //2004h - SPR-RAM Data Register (Read/Write)
+			return debuggerReadSpriteDataRegister();
+		/* PPU VRAM Access Registers */
+		//case 0x05: //PPU Background Scrolling Offset (W2)
+		//case 0x06: //VRAM Address Register (W2)
+		case 0x07: //VRAM Read/Write Data Register (RW)
+			return debuggerReadVramDataRegister();
+		default:
+			return 0;
+//			throw EmulatorException() << "Invalid addr: 0x" << std::hex << addr;
+	}
+}
+void Video::debuggerWriteReg(uint16_t const addr, uint8_t const value)
+{
+	switch(addr & 0x07)
+	{
+		/* PPU Control and Status Registers */
+		case 0x00: //2000h - PPU Control Register 1 (W)
+			analyzePPUControlRegister1(value);
+			break;
+		case 0x01: //2001h - PPU Control Register 2 (W)
+			analyzePPUControlRegister2(value);
+			break;
+		//case 0x02: //2002h - PPU Status Register (R)
+		/* PPU SPR-RAM Access Registers */
+		case 0x03: //2003h - SPR-RAM Address Register (W)
+			analyzeSpriteAddrRegister(value);
+			break;
+		case 0x04: //2004h - SPR-RAM Data Register (Read/Write)
+			writeSpriteDataRegister(value);
+			break;
+		/* PPU VRAM Access Registers */
+		case 0x05: //PPU Background Scrolling Offset (W2)
+			analyzePPUBackgroundScrollingOffset(value);
+			break;
+		case 0x06: //VRAM Address Register (W2)
+			analyzeVramAddrRegister(value);
+			break;
+		case 0x07: //VRAM Read/Write Data Register (RW)
+			writeVramDataRegister(value);
+			break;
+		default:
+			throw EmulatorException() << "Invalid addr: 0x" << std::hex << addr;
+	}
+}
+
 void Video::writeReg(uint16_t const addr, uint8_t const value_)
 {
 	uint8_t const value = debugger_.videoWriteReg(addr, value_);
@@ -382,6 +439,19 @@ inline uint8_t Video::buildPPUStatusRegister()
 	return result;
 }
 
+inline uint8_t Video::debuggerBuildPPUStatusRegister()
+{
+	//from http://nocash.emubase.de/everynes.htm#pictureprocessingunitppu
+	//vramAddrRegisterWritten = false;
+	//scrollRegisterWritten = false;
+	//Reading resets the 1st/2nd-write flipflop (used by Port 2005h and 2006h).
+	uint8_t result =
+			((this->nowOnVBnank) ? 128 : 0)
+		|   ((this->sprite0Hit) ? 64 : 0)
+		|   ((this->lostSprites) ? 32 : 0);
+	//this->nowOnVBnank = false;
+	return result;
+}
 inline void Video::analyzePPUControlRegister1(uint8_t const value)
 {
 	executeNMIonVBlank = ((value & 0x80) == 0x80) ? true : false;
@@ -438,12 +508,32 @@ inline uint8_t Video::readVramDataRegister()
 		return ret;
 	}
 }
+
+inline uint8_t Video::debuggerReadVramDataRegister()
+{
+	if((vramAddrRegister & 0x3f00) == 0x3f00){
+		const uint8_t ret = readPalette(vramAddrRegister);
+		//vramBuffer = readVramExternal(vramAddrRegister); //ミラーされてるVRAMにも同時にアクセスしなければならない。
+		//vramAddrRegister = (vramAddrRegister + vramIncrementSize) & 0x3fff;
+		return ret;
+	}else{
+		const uint8_t ret = vramBuffer;
+		//vramBuffer = readVramExternal(vramAddrRegister);
+		//vramAddrRegister = (vramAddrRegister + vramIncrementSize) & 0x3fff;
+		return ret;
+	}
+}
+
 inline void Video::writeVramDataRegister(uint8_t const value)
 {
 	writeVram(vramAddrRegister, value);
 	vramAddrRegister = (vramAddrRegister + vramIncrementSize) & 0x3fff;
 }
 inline uint8_t Video::readSpriteDataRegister()
+{
+	return readSprite(spriteAddr); //The address is NOT auto-incremented after <reading> from 2004h.
+}
+inline uint8_t Video::debuggerReadSpriteDataRegister()
 {
 	return readSprite(spriteAddr); //The address is NOT auto-incremented after <reading> from 2004h.
 }
