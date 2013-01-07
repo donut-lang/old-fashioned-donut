@@ -126,10 +126,6 @@ NesTraceWidget::NesTraceWidget(chisa::Logger& log, chisa::HandlerW<chisa::tk::Wo
 	this->symRenderer_.registerSymbol(Eq            ,"=" );
 }
 
-NesTraceWidget::~NesTraceWidget()
-{
-}
-
 void NesTraceWidget::render(chisa::gl::Canvas& cv, chisa::geom::Area const& area)
 {
 }

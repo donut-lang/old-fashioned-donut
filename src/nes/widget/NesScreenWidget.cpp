@@ -39,10 +39,6 @@ NesScreenWidget::NesScreenWidget(chisa::Logger& log, chisa::HandlerW<chisa::tk::
 	}
 }
 
-NesScreenWidget::~NesScreenWidget()
-{
-}
-
 void NesScreenWidget::render(chisa::gl::Canvas& cv, chisa::geom::Area const& area)
 {
 	chisa::Handler<nes::NesGeist> geist = this->geist_.lock();

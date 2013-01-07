@@ -46,7 +46,7 @@ class Widget {
 	DEFINE_MEMBER(private, private, HandlerW<WidgetElement>, wrapper);
 public:
 	Widget(Logger& log, HandlerW<World> world, tinyxml2::XMLElement* element);
-	virtual ~Widget();
+	virtual ~Widget() noexcept = default;
 public:
 	void updateWrapper(HandlerW<WidgetElement> wrapper) { this->wrapper_ = wrapper; };
 public:
@@ -88,7 +88,7 @@ public:
 #define CHISA_WIDGET_SUBKLASS(Klass)\
 public:\
 Klass(CHISA_WIDGET_SUBKLASS_CONSTRUCTOR_PARAM_LIST);\
-virtual ~Klass();
+virtual ~Klass() noexcept = default;
 
 #define CHISA_WIDGET_SUBKLASS_CONSTRUCTOR_SETUP_BASE(Derived) Derived(CHISA_WIDGET_SUBKLASS_CONSTRUCTOR_PARAM_APPLY)
 

@@ -47,10 +47,6 @@ ImageWidget::ImageWidget(Logger& log, HandlerW<World> world, tinyxml2::XMLElemen
 	}
 }
 
-ImageWidget::~ImageWidget()
-{
-}
-
 void ImageWidget::render(gl::Canvas& cv, geom::Area const& area)
 {
 	if(this->imageSprite_){

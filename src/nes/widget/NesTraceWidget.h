@@ -49,7 +49,7 @@ private:
 	float addrWidth_;
 public:
 	NesTraceWidget(Logger& log, chisa::HandlerW<chisa::tk::World> world, tinyxml2::XMLElement* element);
-	virtual ~NesTraceWidget();
+	virtual ~NesTraceWidget() noexcept = default;
 public:
 	virtual void render(chisa::gl::Canvas& cv, chisa::geom::Area const& area) override;
 	virtual void idle(const float delta_ms) override;
