@@ -118,13 +118,13 @@ struct Instruction {
 
 class VirtualMachine;
 
-class Disassembler {
+class Disassembler final {
 private:
 	static const uint32_t kInfoTable[0x100];
-	VirtualMachine* const vm_;
+	VirtualMachine& vm_;
 public:
-	Disassembler(VirtualMachine* vm);
-	virtual ~Disassembler() = default;
+	Disassembler(VirtualMachine& vm);
+	~Disassembler() = default;
 public:
 	void decodeAt(uint16_t addr, Instruction* inst);
 };
