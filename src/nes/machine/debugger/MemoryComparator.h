@@ -21,23 +21,26 @@
 #include <cstdint>
 #include <functional>
 #include <tarte/ClassUtil.h>
-#include "../VirtualMachine.h"
 
 namespace nes {
 
+class VirtualMachine;
 class MemoryComparator final {
 public:
-	MemoryComparator(	VirtualMachine& vm);
+	MemoryComparator(VirtualMachine& vm);
 	~MemoryComparator() noexcept = default;
 private:
 	VirtualMachine& vm_;
 	std::vector<bool> entry_;
 	std::vector<uint8_t> before_;
+private:
+	std::vector<uint8_t> getNowMemory() const;
+private:
 	template <typename Functor>
 	inline void selectCompare( Functor const& cmp ) {
-		uint8_t (&ram)[Ram::WRAM_LENGTH] = vm_.ram().wram();
-		std::vector<uint8_t> now(ram, ram+Ram::WRAM_LENGTH);
-		for( uint16_t addr = 0; addr < Ram::WRAM_LENGTH; ++addr ) {
+		std::vector<uint8_t> now( this->getNowMemory() );
+		std::size_t const max = now.size();
+		for( uint16_t addr = 0; addr < max; ++addr ) {
 			auto flag = entry_[addr];
 			if(flag) {
 				flag = cmp(now[addr], before_[addr]);
@@ -47,9 +50,9 @@ private:
 	}
 	template <typename Functor>
 	inline void selectConst( Functor const& cmp ) {
-		uint8_t (&ram)[Ram::WRAM_LENGTH] = vm_.ram().wram();
-		std::vector<uint8_t> now(ram, ram+Ram::WRAM_LENGTH);
-		for( uint16_t addr = 0; addr < Ram::WRAM_LENGTH; ++addr ) {
+		std::vector<uint8_t> now( this->getNowMemory() );
+		std::size_t const max = now.size();
+		for( uint16_t addr = 0; addr < max; ++addr ) {
 			auto flag = entry_[addr];
 			if(flag) {
 				flag = cmp(now[addr]);

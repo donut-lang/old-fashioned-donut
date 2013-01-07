@@ -24,6 +24,7 @@ Debugger::Debugger(VirtualMachine& vm)
 :vm_(vm)
 ,disasm_(vm)
 ,watcher_(vm)
+,comparator_(vm)
 {
 
 }

@@ -17,6 +17,7 @@
  */
 
 #pragma once
+#include "MemoryComparator.h"
 #include "Disassembler.h"
 #include "Watcher.h"
 
@@ -27,6 +28,7 @@ private:
 	VirtualMachine& vm_;
 	Disassembler disasm_;
 	Watcher watcher_;
+	MemoryComparator comparator_;
 public:
 	Debugger(VirtualMachine& vm);
 	~Debugger() noexcept = default;
