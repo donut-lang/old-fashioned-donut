@@ -7,7 +7,8 @@
 namespace nes {
 
 VirtualMachine::VirtualMachine(VideoFairy& videoFairy, AudioFairy& audioFairy, GamepadFairy* player1, GamepadFairy* player2)
-:ram(*this)
+:debugger_(*this)
+,ram(*this)
 ,processor(*this)
 ,audio(*this, audioFairy)
 ,video(*this, videoFairy)
@@ -17,7 +18,6 @@ VirtualMachine::VirtualMachine(VideoFairy& videoFairy, AudioFairy& audioFairy, G
 ,resetFlag(false)
 ,hardResetFlag(false)
 ,irqLine(0)
-,debugger_(nullptr)
 {
 }
 
@@ -158,12 +158,6 @@ void VirtualMachine::load(XValue const& data)
 	xobj->get("irqLine", this->irqLine);
 	//最後にビデオの接続。これでOK？
 	this->video.connectCartridge(this->cartridge);
-}
-
-
-void VirtualMachine::attatchDebugger(Debugger* debugger)
-{
-	this->debugger_ = debugger;
 }
 
 }

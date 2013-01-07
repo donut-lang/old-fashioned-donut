@@ -5,7 +5,7 @@
 namespace nes {
 
 Processor::Processor(VirtualMachine& vm)
-:VM(vm)
+:vm_(vm)
 ,A(0)
 ,X(0)
 ,Y(0)
@@ -711,10 +711,10 @@ inline void Processor::onIRQ()
 
 inline uint8_t Processor::read(uint16_t addr)
 {
-	return VM.read(addr);
+	return vm_.read(addr);
 }
 inline void Processor::write(uint16_t addr, uint8_t value){
-	VM.write(addr, value);
+	vm_.write(addr, value);
 }
 
 
@@ -737,7 +737,7 @@ inline void Processor::updateFlagZN(const uint8_t val)
 
 inline void Processor::consumeClock(uint8_t clock)
 {
-	VM.consumeCpuClock(clock);
+	vm_.consumeCpuClock(clock);
 }
 
 // -- 以下、アドレッシングモード --

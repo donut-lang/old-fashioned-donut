@@ -6,7 +6,7 @@
 namespace nes {
 
 Video::Video(VirtualMachine& vm, VideoFairy& videoFairy)
-:VM(vm)
+:vm_(vm)
 ,cartridge(NULL)
 ,videoFairy(videoFairy)
 ,isEven(false)
@@ -79,9 +79,9 @@ void Video::run(uint16_t clockDelta)
 			// (NMI割り込みがレジスタを読み込みフラグをリセットしてしまう上、NMI割り込みが非常に長く、クリアしなくてもすでにVBLANKが終わった後に返ってくる)
 			//nowOnVBlankフラグの立ち上がり後、数クロックでNMIが発生。
 			if(executeNMIonVBlank){
-				this->VM.sendNMI();
+				this->vm_.sendNMI();
 			}
-			this->VM.sendVBlank();
+			this->vm_.sendVBlank();
 		}else if(this->nowY <= 261){
 			//nowVBlank.
 		}else if(this->nowY == 262){
@@ -459,9 +459,9 @@ void Video::executeDMA(uint8_t value)
 {
 	const uint16_t addrMask = value << 8;
 	for(uint16_t i=0;i<256;i++){
-		writeSpriteDataRegister(VM.read(addrMask | i));
+		writeSpriteDataRegister(vm_.read(addrMask | i));
 	}
-	this->VM.consumeCpuClock(514);
+	this->vm_.consumeCpuClock(514);
 }
 
 //-------------------- accessor ----------------------------

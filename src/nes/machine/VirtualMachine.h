@@ -77,7 +77,7 @@ protected:
 	void releaseIRQ();
 	const NesFile* const nesFile;
 private:
-	VirtualMachine& VM;
+	VirtualMachine& vm_;
 	bool hasSram;
 	uint8_t sram[SRAM_SIZE];
 	NesFile::MirrorType mirrorType;
@@ -95,7 +95,7 @@ public: /* セーブ・ロード実装用 */
 class IOPort final{
 public:
 	explicit IOPort(VirtualMachine& vm, GamepadFairy* pad1, GamepadFairy* pad2) :
-			VM(vm),
+			vm_(vm),
 			pad1Fairy(pad1 == 0 ? dummyPad : *pad1),
 			pad2Fairy(pad2 == 0 ? dummyPad : *pad2),
 			pad1Idx(GamepadFairy::A),
@@ -136,7 +136,7 @@ public:
 protected:
 private:
 	DummyGamepadFairy dummyPad;
-	VirtualMachine& VM;
+	VirtualMachine& vm_;
 	GamepadFairy& pad1Fairy;
 	GamepadFairy& pad2Fairy;
 	uint8_t pad1Idx;
@@ -169,7 +169,7 @@ public:
 	};
 protected:
 private:
-	VirtualMachine& VM;
+	VirtualMachine& vm_;
 	AudioFairy& audioFairy;
 	//
 	unsigned int clockCnt;
@@ -234,7 +234,7 @@ private:
 		scanlinePerScreen = 262,
 		defaultSpriteCnt = 8
 	};
-	VirtualMachine& VM;
+	VirtualMachine& vm_;
 	Cartridge* cartridge;
 	VideoFairy& videoFairy;
 	bool isEven;
@@ -376,9 +376,8 @@ public:
 		WRAM_LENGTH = 2048
 	};
 public:
-	explicit Ram(VirtualMachine& vm) : VM(vm)
-	{}
-	~Ram(){}
+	explicit Ram(VirtualMachine& vm);
+	~Ram() noexcept = default;
 	inline void onHardReset()
 	{
 		//from http://wiki.nesdev.com/w/index.php/CPU_power_up_state
@@ -393,15 +392,18 @@ public:
 	}
 	inline uint8_t read(uint16_t addr)
 	{
-		return wram[addr & 0x7ff];
+		return debugger_.memoryRead(addr, wram[addr & 0x7ff]);
 	}
 	inline void write(uint16_t addr, uint8_t value)
 	{
-		wram[addr & 0x7ff] = value;
+		uint16_t const addr_ = addr & 0x7ff;
+		uint8_t const old = wram[addr_];
+		debugger_.memoryWrite(addr, old, wram[addr_] = value);
 	}
 protected:
 private:
-	VirtualMachine& VM;
+	VirtualMachine& vm_;
+	Debugger& debugger_;
 	uint8_t wram[WRAM_LENGTH]; //2KB WRAM
 public:
 	template <typename Archiver>
@@ -439,7 +441,7 @@ private:
 	static const uint8_t ZNFlagCache[0x100];
 	static const uint8_t CycleTable[0x100];
 	//
-	VirtualMachine& VM;
+	VirtualMachine& vm_;
 	uint8_t A;
 	uint8_t X;
 	uint8_t Y;
@@ -596,30 +598,30 @@ public:
 	{
 		switch(addr & 0xE000){
 			case 0x0000:
-				return debugger_->memoryRead(addr, ram.read(addr));
+				return ram.read(addr);
 			case 0x2000:
-				return debugger_->memoryRead(addr, video.readReg(addr));
+				return video.readReg(addr);
 			case 0x4000:
 				//このへんは込み入ってるので、仕方ないからここで振り分け。
 				if(addr == 0x4015){
-					return debugger_->memoryRead(addr, audio.readReg(addr));
+					return audio.readReg(addr);
 				}else if(addr == 0x4016){
-					return debugger_->memoryRead(addr, ioPort.readInputReg1());
+					return ioPort.readInputReg1();
 				}else if(addr == 0x4017){
-					return debugger_->memoryRead(addr, ioPort.readInputReg2());
+					return ioPort.readInputReg2();
 				}else if(addr < 0x4018){
 					throw EmulatorException("[FIXME] Invalid addr: 0x") << std::hex << addr;
 				}else{
-					return debugger_->memoryRead(addr, cartridge->readRegisterArea(addr));
+					return cartridge->readRegisterArea(addr);
 				}
 			case 0x6000:
-				return debugger_->memoryRead(addr, cartridge->readSaveArea(addr));
+				return cartridge->readSaveArea(addr);
 			case 0x8000:
 			case 0xA000:
-				return debugger_->memoryRead(addr, cartridge->readBankLow(addr));
+				return cartridge->readBankLow(addr);
 			case 0xC000:
 			case 0xE000:
-				return debugger_->memoryRead(addr, cartridge->readBankHigh(addr));
+				return cartridge->readBankHigh(addr);
 			default:
 				throw EmulatorException("[FIXME] Invalid addr: 0x") << std::hex << addr;
 		}
@@ -666,6 +668,9 @@ private:
 		VIDEO_CLOCK_FACTOR = 4,
 	};
 	void consumeClock(uint32_t clock);
+private:
+	Debugger debugger_;
+private:
 	Ram ram;
 	Processor processor;
 	Audio audio;
@@ -679,15 +684,14 @@ private:
 	bool hardResetFlag;
 
 	uint8_t irqLine;
-private:
-	Debugger* debugger_;
 public:
 	inline Processor const* getProcessor() const noexcept { return &processor; };
 public: /* Save/Load */
 	XValue save();
 	void load(XValue const& data);
 public: /* Debugger */
-	void attatchDebugger(Debugger* debugger);
+	inline Debugger& debugger() noexcept { return this->debugger_; };
+	inline Debugger const& debugger() const noexcept { return this->debugger_; };
 	void onBreak() noexcept;
 };
 
