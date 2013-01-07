@@ -22,11 +22,6 @@ Audio::Audio(VirtualMachine& vm, AudioFairy& audioFairy)
 	//ctor
 }
 
-Audio::~Audio()
-{
-	//dtor
-}
-
 void Audio::run(uint16_t clockDelta)
 {
 	frameCnt += (clockDelta * FRAME_IRQ_RATE);
@@ -346,11 +341,6 @@ Rectangle::Rectangle(bool isFirstChannel)
 
 }
 
-Rectangle::~Rectangle()
-{
-
-}
-
 inline void Rectangle::analyzeVolumeRegister(uint8_t reg)
 {
 	decayCounter = volumeOrDecayRate = reg & 15;
@@ -504,11 +494,6 @@ Triangle::Triangle()
 {
 
 }
-Triangle::~Triangle()
-{
-
-}
-
 inline void Triangle::analyzeLinearCounterRegister(uint8_t value)
 {
 	enableLinearCounter = ((value & 128) == 128);
@@ -605,9 +590,6 @@ Noize::Noize()
 ,lengthCounter(0)
 //
 ,freqCounter(0)
-{
-}
-Noize::~Noize()
 {
 }
 
@@ -732,9 +714,7 @@ Digital::Digital(VirtualMachine& vm)
 {
 
 }
-Digital::~Digital(){
 
-}
 inline void Digital::analyzeFrequencyRegister(uint8_t value)
 {
 	irqEnabled = (value & 128) == 128;

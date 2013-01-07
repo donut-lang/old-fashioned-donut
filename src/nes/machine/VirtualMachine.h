@@ -103,10 +103,8 @@ public:
 	{
 
 	}
-	~IOPort()
-	{
+	~IOPort() noexcept = default;
 
-	}
 	inline  void onVBlank(){
 		pad1Fairy.onVBlank();
 		pad2Fairy.onVBlank();
@@ -155,7 +153,7 @@ public:
 class Audio final {
 public:
 	explicit Audio(VirtualMachine& vm, AudioFairy& audioFairy);
-	~Audio();
+	~Audio() noexcept = default;
 	void run(uint16_t clockDelta);
 	void onHardReset();
 	void onReset();
@@ -209,7 +207,7 @@ public:
 class Video final{
 public:
 	explicit Video(VirtualMachine& vm, VideoFairy& videoFairy);
-	~Video();
+	~Video() noexcept = default;
 	void run(uint16_t clockDelta);
 	void onHardReset();
 	void onReset();
@@ -392,18 +390,15 @@ public:
 	}
 	inline uint8_t read(uint16_t addr)
 	{
-		return debugger_.memoryRead(addr, wram[addr & 0x7ff]);
+		return wram[addr & 0x7ff];
 	}
 	inline void write(uint16_t addr, uint8_t value)
 	{
-		uint16_t const addr_ = addr & 0x7ff;
-		uint8_t const old = wram[addr_];
-		debugger_.memoryWrite(addr, old, wram[addr_] = value);
+		wram[addr & 0x7ff] = value;
 	}
 protected:
 private:
 	VirtualMachine& vm_;
-	Debugger& debugger_;
 	uint8_t wram[WRAM_LENGTH]; //2KB WRAM
 public:
 	template <typename Archiver>
@@ -416,7 +411,7 @@ class Processor
 {
 public:
 	explicit Processor(VirtualMachine& vm);
-	~Processor();
+	~Processor() noexcept = default;
 	void run(uint16_t clockDelta);
 	void onHardReset();
 	void onReset();
@@ -442,6 +437,7 @@ private:
 	static const uint8_t CycleTable[0x100];
 	//
 	VirtualMachine& vm_;
+	Debugger& debugger_;
 	uint8_t A;
 	uint8_t X;
 	uint8_t Y;

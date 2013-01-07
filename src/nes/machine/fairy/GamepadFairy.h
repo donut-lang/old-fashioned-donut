@@ -36,8 +36,8 @@ public:
 		MASK_RIGHT=128,
 		MASK_ALL=255,
 	};
-	GamepadFairy(){}
-	virtual ~GamepadFairy(){}
+	GamepadFairy() noexcept = default;
+	virtual ~GamepadFairy() noexcept = default;
 	virtual void onVBlank(){};
 	virtual void onUpdate() = 0;
 	virtual bool isPressed(uint8_t keyIdx) = 0;
@@ -49,8 +49,8 @@ private:
 class DummyGamepadFairy : public GamepadFairy
 {
 public:
-	DummyGamepadFairy(){}
-	virtual ~DummyGamepadFairy(){}
+	DummyGamepadFairy() noexcept = default;
+	virtual ~DummyGamepadFairy() noexcept = default;
 	virtual void onUpdate(){};
 	virtual bool isPressed(uint8_t keyIdx){return false;};
 };
