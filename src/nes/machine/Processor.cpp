@@ -4,18 +4,18 @@
 
 namespace nes {
 
-Processor::Processor(VirtualMachine& vm):
-	VM(vm),
-	A(0),
-	X(0),
-	Y(0),
-	PC(0),
-	SP(0),
-	P(0),
-	NMI(false),
-	IRQ(false),
-	needStatusRewrite(false),
-	newStatus(0)
+Processor::Processor(VirtualMachine& vm)
+:VM(vm)
+,A(0)
+,X(0)
+,Y(0)
+,PC(0)
+,SP(0)
+,P(0)
+,NMI(false)
+,IRQ(false)
+,needStatusRewrite(false)
+,newStatus(0)
 {
 }
 

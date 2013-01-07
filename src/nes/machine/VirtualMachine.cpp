@@ -6,19 +6,18 @@
 
 namespace nes {
 
-VirtualMachine::VirtualMachine(VideoFairy& videoFairy, AudioFairy& audioFairy, GamepadFairy* player1, GamepadFairy* player2) :
-ram(*this),
-processor(*this),
-audio(*this, audioFairy),
-video(*this, videoFairy),
-cartridge(NULL),
-ioPort(*this, player1, player2),
-clockDelta(0),
-resetFlag(false),
-hardResetFlag(false),
-irqLine(0)
+VirtualMachine::VirtualMachine(VideoFairy& videoFairy, AudioFairy& audioFairy, GamepadFairy* player1, GamepadFairy* player2)
+:ram(*this)
+,processor(*this)
+,audio(*this, audioFairy)
+,video(*this, videoFairy)
+,cartridge(NULL)
+,ioPort(*this, player1, player2)
+,clockDelta(0)
+,resetFlag(false)
+,hardResetFlag(false)
+,irqLine(0)
 {
-	//ctor
 }
 
 VirtualMachine::~VirtualMachine()

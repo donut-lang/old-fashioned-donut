@@ -17,12 +17,12 @@ namespace nes {
 using namespace tarte;
 
 //ダミー実装
-Cartridge::Cartridge(VirtualMachine& vm, const NesFile* nesFile) :
-	nesFile(nesFile),
-	VM(vm),
-	hasSram(nesFile->hasSram()),
-	mirrorType(nesFile->getMirrorType()),
-	internalVram(NULL)
+Cartridge::Cartridge(VirtualMachine& vm, const NesFile* nesFile)
+:nesFile(nesFile)
+,VM(vm)
+,hasSram(nesFile->hasSram())
+,mirrorType(nesFile->getMirrorType())
+,internalVram(NULL)
 {
 	if(nesFile == NULL){
 		throw EmulatorException("NES FILE CAN'T BE NULL!");

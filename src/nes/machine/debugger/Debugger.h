@@ -19,7 +19,6 @@
 #pragma once
 #include "Disassembler.h"
 #include "Watcher.h"
-#include "Fairy.h"
 
 namespace nes {
 
@@ -32,6 +31,12 @@ public:
 	Debugger(VirtualMachine& vm);
 	~Debugger() noexcept = default;
 public:
+	uint8_t inline memoryRead(uint16_t const addr, uint8_t const value) noexcept {
+
+		return value;
+	}
+	uint8_t memoryWrite(uint16_t const addr, uint8_t const old, uint8_t now) noexcept;
+	void memoryExecute(uint16_t const addr) noexcept;
 };
 
 }

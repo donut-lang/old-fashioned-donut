@@ -15,21 +15,21 @@ namespace nes {
 
 class EmulatorException
 {
-	public:
-		EmulatorException();
-		EmulatorException(const char* fmsg);
-		EmulatorException(std::string const& fmsg);
-		EmulatorException(EmulatorException const& src);
-		~EmulatorException();
-	private:
-		std::stringstream msg;
-	public:
-		const std::string getMessage() const;
-		template<typename T> EmulatorException& operator<<(T& val)
-		{
-			this->msg << val;
-			return *this;
-		}
+public:
+	EmulatorException();
+	EmulatorException(const char* fmsg);
+	EmulatorException(std::string const& fmsg);
+	EmulatorException(EmulatorException const& src);
+	~EmulatorException();
+private:
+	std::stringstream msg;
+public:
+	const std::string getMessage() const;
+	template<typename T> EmulatorException& operator<<(T& val)
+	{
+		this->msg << val;
+		return *this;
+	}
 };
 
 }
