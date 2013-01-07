@@ -43,6 +43,10 @@ public:
 	:id(id), addr_begin(addr_begin), addr_end(addr_end) {
 
 	}
+	MemoryRange() noexcept
+	:id(0), addr_begin(0), addr_end(0) {
+
+	}
 	~MemoryRange() noexcept = default;
 public:
 	bool contain(uint16_t const addr) const noexcept{
