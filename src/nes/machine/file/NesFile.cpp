@@ -7,18 +7,18 @@
 
 namespace nes {
 
-NesFile::NesFile(std::string const& filename) :
-filename(filename),
-mapperNo(0),
-prgRom(nullptr),
-chrRom(nullptr),
-mirrorType(HORIZONTAL),
-trainerFlag(false),
-sramFlag(false),
-prgSize(0),
-chrSize(0),
-prgPageCnt(0),
-chrPageCnt(0)
+NesFile::NesFile(std::string const& filename)
+:filename(filename)
+,mapperNo(0)
+,prgRom(nullptr)
+,chrRom(nullptr)
+,mirrorType(HORIZONTAL)
+,trainerFlag(false)
+,sramFlag(false)
+,prgSize(0)
+,chrSize(0)
+,prgPageCnt(0)
+,chrPageCnt(0)
 {
 	this->loadFile();
 }

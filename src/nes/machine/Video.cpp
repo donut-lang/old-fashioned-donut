@@ -5,35 +5,35 @@
 
 namespace nes {
 
-Video::Video(VirtualMachine& vm, VideoFairy& videoFairy):
-	VM(vm),
-	cartridge(NULL),
-	videoFairy(videoFairy),
-	isEven(false),
-	nowY(0),
-	nowX(0),
-	spriteHitCnt(0),
-	executeNMIonVBlank(false),
-	spriteHeight(8),
-	patternTableAddressBackground(0),
-	patternTableAddress8x8Sprites(0),
-	vramIncrementSize(1),
-	colorEmphasis(0),
-	spriteVisibility(false),
-	backgroundVisibility(false),
-	spriteClipping(false),
-	backgroundClipping(false),
-	paletteMask(0),
-	nowOnVBnank(false),
-	sprite0Hit(false),
-	lostSprites(false),
-	vramBuffer(0),
-	spriteAddr(0),
-	vramAddrRegister(0x0),
-	vramAddrReloadRegister(0),
-	horizontalScrollBits(0),
-	scrollRegisterWritten(false),
-	vramAddrRegisterWritten(false)
+Video::Video(VirtualMachine& vm, VideoFairy& videoFairy)
+:VM(vm)
+,cartridge(NULL)
+,videoFairy(videoFairy)
+,isEven(false)
+,nowY(0)
+,nowX(0)
+,spriteHitCnt(0)
+,executeNMIonVBlank(false)
+,spriteHeight(8)
+,patternTableAddressBackground(0)
+,patternTableAddress8x8Sprites(0)
+,vramIncrementSize(1)
+,colorEmphasis(0)
+,spriteVisibility(false)
+,backgroundVisibility(false)
+,spriteClipping(false)
+,backgroundClipping(false)
+,paletteMask(0)
+,nowOnVBnank(false)
+,sprite0Hit(false)
+,lostSprites(false)
+,vramBuffer(0)
+,spriteAddr(0)
+,vramAddrRegister(0x0)
+,vramAddrReloadRegister(0)
+,horizontalScrollBits(0)
+,scrollRegisterWritten(false)
+,vramAddrRegisterWritten(false)
 {
 	//ctor
 	memset(this->screenBuffer, 0x0, screenWidth * screenHeight * sizeof(uint8_t));
