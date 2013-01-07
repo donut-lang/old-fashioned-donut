@@ -199,7 +199,7 @@ public:
 class Digital
 {
 private:
-	VirtualMachine& VM;
+	VirtualMachine& vm_;
 
 	//
 	bool irqEnabled;

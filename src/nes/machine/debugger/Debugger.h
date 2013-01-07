@@ -35,7 +35,10 @@ public:
 
 		return value;
 	}
-	uint8_t memoryWrite(uint16_t const addr, uint8_t const old, uint8_t now) noexcept;
+	void inline memoryWrite(uint16_t const addr, uint8_t const old, uint8_t now) noexcept
+	{
+
+	}
 	void memoryExecute(uint16_t const addr) noexcept;
 };
 

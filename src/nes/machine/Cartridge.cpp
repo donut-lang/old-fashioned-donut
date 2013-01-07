@@ -19,7 +19,7 @@ using namespace tarte;
 //ダミー実装
 Cartridge::Cartridge(VirtualMachine& vm, const NesFile* nesFile)
 :nesFile(nesFile)
-,VM(vm)
+,vm_(vm)
 ,hasSram(nesFile->hasSram())
 ,mirrorType(nesFile->getMirrorType())
 ,internalVram(NULL)
@@ -138,11 +138,11 @@ void Cartridge::changeMirrorType(NesFile::MirrorType mirrorType)
 
 void Cartridge::reserveIRQ()
 {
-	VM.reserveIRQ(VirtualMachine::DEVICE_CARTRIDGE);
+	vm_.reserveIRQ(VirtualMachine::DEVICE_CARTRIDGE);
 }
 void Cartridge::releaseIRQ()
 {
-	VM.releaseIRQ(VirtualMachine::DEVICE_CARTRIDGE);
+	vm_.releaseIRQ(VirtualMachine::DEVICE_CARTRIDGE);
 }
 
 Cartridge* Cartridge::loadCartridge(VirtualMachine& vm, std::string const& filename)

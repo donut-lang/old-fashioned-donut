@@ -3,7 +3,7 @@
 namespace nes {
 
 Audio::Audio(VirtualMachine& vm, AudioFairy& audioFairy)
-:VM(vm)
+:vm_(vm)
 ,audioFairy(audioFairy)
 // ---
 ,clockCnt(0)
@@ -73,7 +73,7 @@ void Audio::run(uint16_t clockDelta)
 				this->triangle.onHalfFrame();
 				this->noize.onHalfFrame();
 				if(frameIRQenabled){
-					this->VM.reserveIRQ(VirtualMachine::DEVICE_FRAMECNT);
+					this->vm_.reserveIRQ(VirtualMachine::DEVICE_FRAMECNT);
 				}
 				frameIRQCnt = 0;
 				break;
@@ -152,7 +152,7 @@ void Audio::onHardReset()
 	leftClock = 0;
 
 	frameIRQenabled = true;
-	this->VM.releaseIRQ(VirtualMachine::DEVICE_FRAMECNT);
+	this->vm_.releaseIRQ(VirtualMachine::DEVICE_FRAMECNT);
 
 	isNTSCmode = true;
 	frameIRQCnt = 0;
@@ -192,9 +192,9 @@ uint8_t Audio::readReg(uint16_t addr)
 			|	(this->triangle.isEnabled() ? 4 : 0)
 			|	(this->noize.isEnabled()	? 8 : 0)
 			|	(this->digital.isEnabled() ? 16 : 0)
-			|	(this->VM.isIRQpending(VirtualMachine::DEVICE_FRAMECNT) ? 64 : 0)
+			|	(this->vm_.isIRQpending(VirtualMachine::DEVICE_FRAMECNT) ? 64 : 0)
 			|	(this->digital.isIRQActive() ? 128 : 0);
-	this->VM.releaseIRQ(VirtualMachine::DEVICE_FRAMECNT);
+	this->vm_.releaseIRQ(VirtualMachine::DEVICE_FRAMECNT);
 
 	return ret;
 }
@@ -299,7 +299,7 @@ void Audio::analyzeLowFrequentryRegister(uint8_t value)
 	}
 	if((value & 0x40) == 0x40){
 		frameIRQenabled = false;
-		VM.releaseIRQ(VirtualMachine::DEVICE_FRAMECNT);
+		vm_.releaseIRQ(VirtualMachine::DEVICE_FRAMECNT);
 	}
 }
 
@@ -716,7 +716,7 @@ const uint16_t Digital::FrequencyTable[16] = {
 };
 
 Digital::Digital(VirtualMachine& vm)
-:VM(vm)
+:vm_(vm)
 ,irqEnabled(false)
 ,loopEnabled(false)
 ,frequency(0)
@@ -739,7 +739,7 @@ inline void Digital::analyzeFrequencyRegister(uint8_t value)
 {
 	irqEnabled = (value & 128) == 128;
 	if(!irqEnabled){
-		VM.releaseIRQ(VirtualMachine::DEVICE_DMC);
+		vm_.releaseIRQ(VirtualMachine::DEVICE_DMC);
 	}
 	loopEnabled = (value & 64) == 64;
 	frequency = Digital::FrequencyTable[value & 0xf];
@@ -760,7 +760,7 @@ inline void Digital::next()
 {
 	if(sampleBufferLeft == 0){
 		sampleLength--;
-		sampleBuffer=VM.read(sampleAddr);
+		sampleBuffer=vm_.read(sampleAddr);
 
 		if(sampleAddr == 0xffff){
 			sampleAddr = 0x8000;
@@ -768,12 +768,12 @@ inline void Digital::next()
 			sampleAddr++;
 		}
 		sampleBufferLeft = 7;
-		VM.consumeCpuClock(4);
+		vm_.consumeCpuClock(4);
 		if(sampleLength == 0){
 			if(loopEnabled){
 				sampleLength = sampleLengthBuffer;
 			}else if(irqEnabled){
-				VM.reserveIRQ(VirtualMachine::DEVICE_DMC);
+				vm_.reserveIRQ(VirtualMachine::DEVICE_DMC);
 			}else{
 				return;
 			}
@@ -825,14 +825,14 @@ inline bool Digital::isIRQActive()
 	// 4015への書き込みでDMCもクリアする。。。
 	// http://twitter.com/#!/KiC6280/status/112744625491554304
 	// nesdevのフォーラムでもその書き込みばかり。
-	bool ret = VM.isIRQpending(VirtualMachine::DEVICE_DMC);
-	VM.releaseIRQ(VirtualMachine::DEVICE_DMC);
+	bool ret = vm_.isIRQpending(VirtualMachine::DEVICE_DMC);
+	vm_.releaseIRQ(VirtualMachine::DEVICE_DMC);
 	return ret;
 }
 inline void Digital::onHardReset()
 {
 	irqEnabled = false;
-	VM.releaseIRQ(VirtualMachine::DEVICE_DMC);
+	vm_.releaseIRQ(VirtualMachine::DEVICE_DMC);
 	loopEnabled = false;
 	frequency = 0;
 	deltaCounter = 0;
