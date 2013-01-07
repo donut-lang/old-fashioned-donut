@@ -49,6 +49,7 @@ public:
 	}
 	virtual ~SDLQuartet() noexcept
 	{
+		Lock lock(*this);
 		SDL_PauseAudio(1);
 		SDL_CloseAudio();
 	}
