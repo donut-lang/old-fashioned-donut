@@ -41,46 +41,39 @@ void Disassembler::decodeAt(uint16_t addr, Instruction* inst)
 			inst->binLength_ = 2;
 			inst->bin[1] = this->vm_.read(addr+1);
 			inst->addr_ = addr+1;
-			inst->val_ = inst->bin[1];
 			break;
 		case AddrMode::Zeropage:
 			inst->binLength_ = 2;
 			inst->bin[1] = this->vm_.read(addr+1);
 			inst->addr_ = inst->bin[1];
-			inst->val_ = this->vm_.read(inst->addr_);
 			break;
 		case AddrMode::ZeropageX:
 			inst->binLength_ = 2;
 			inst->bin[1] = this->vm_.read(addr+1);
 			inst->addr_ = (inst->bin[1] + this->vm_.processor().getX()) & 0xff;
-			inst->val_ = this->vm_.read(inst->addr_);
 			break;
 		case AddrMode::ZeropageY:
 			inst->binLength_ = 2;
 			inst->bin[1] = this->vm_.read(addr+1);
 			inst->addr_ = (inst->bin[1] + this->vm_.processor().getY()) & 0xff;
-			inst->val_ = this->vm_.read(inst->addr_);
 			break;
 		case AddrMode::Absolute:
 			inst->binLength_ = 3;
 			inst->bin[1] = this->vm_.read(addr+1);
 			inst->bin[2] = this->vm_.read(addr+2);
 			inst->addr_ = inst->bin[1] | (inst->bin[2] << 8);
-			inst->val_ = this->vm_.read(inst->addr_);
 			break;
 		case AddrMode::AbsoluteX:
 			inst->binLength_ = 3;
 			inst->bin[1] = this->vm_.read(addr+1);
 			inst->bin[2] = this->vm_.read(addr+2);
 			inst->addr_ = (inst->bin[1] | (inst->bin[2] << 8)) + this->vm_.processor().getX();
-			inst->val_ = this->vm_.read(inst->addr_);
 			break;
 		case AddrMode::AbsoluteY:
 			inst->binLength_ = 3;
 			inst->bin[1] = this->vm_.read(addr+1);
 			inst->bin[2] = this->vm_.read(addr+2);
 			inst->addr_ = (inst->bin[1] | (inst->bin[2] << 8)) + this->vm_.processor().getY();
-			inst->val_ = this->vm_.read(inst->addr_);
 			break;
 		case AddrMode::Indirect: {
 			inst->binLength_ = 3;
@@ -88,7 +81,6 @@ void Disassembler::decodeAt(uint16_t addr, Instruction* inst)
 			inst->bin[2] = this->vm_.read(addr+2);
 			const uint16_t base = inst->bin[1] | (inst->bin[2] << 8);
 			inst->addr_ = this->vm_.read(base) | (this->vm_.read((base & 0xff00) | ((base + 1) & 0x00ff)) << 8); //bug of NES
-			inst->val_ = this->vm_.read(inst->addr_);
 			break;
 		}
 		case AddrMode::IndirectX: {
@@ -96,7 +88,6 @@ void Disassembler::decodeAt(uint16_t addr, Instruction* inst)
 			inst->bin[1] = this->vm_.read(addr+1);
 			const uint16_t base = (this->vm_.read(inst->bin[1]) + this->vm_.processor().getX()) & 0xff;
 			inst->addr_ = this->vm_.read(base) | (this->vm_.read((base + 1) & 0xff) << 8);
-			inst->val_ = this->vm_.read(inst->addr_);
 			break;
 		}
 		case AddrMode::IndirectY: {
@@ -104,19 +95,16 @@ void Disassembler::decodeAt(uint16_t addr, Instruction* inst)
 			inst->bin[1] = this->vm_.read(addr+1);
 			const uint16_t base = inst->bin[1];
 			inst->addr_ = ((this->vm_.read(base) | (this->vm_.read((base + 1) & 0xff) << 8)) + this->vm_.processor().getY());
-			inst->val_ = this->vm_.read(inst->addr_);
 			break;
 		}
 		case AddrMode::Relative:
 			inst->binLength_ = 2;
 			inst->bin[1] = this->vm_.read(addr+1);
 			inst->addr_ = inst->bin[1] >= 128 ? ( addr+2+inst->bin[1] - 256 )  : addr+2+inst->bin[1];
-			inst->val_ = this->vm_.read(inst->addr_);
 			break;
 		case AddrMode::None:
 			inst->binLength_=1;
 			inst->addr_ = 0;
-			inst->val_ = 0;
 			break;
 		default:
 			TARTE_EXCEPTION(Exception, "[BUG] Oops. Unknown addr mode.");

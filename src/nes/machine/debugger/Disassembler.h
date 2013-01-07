@@ -113,7 +113,6 @@ struct Instruction {
 	unsigned char bin[3];
 //解決したアドレスとその値
 	uint16_t addr_;
-	uint16_t val_;
 public:
 	template <typename Archiver>
 	void serialize(Archiver& arc){
@@ -123,7 +122,6 @@ public:
 		arc & binLength_;
 		arc & bin;
 		arc & addr_;
-		arc & val_;
 	}
 };
 

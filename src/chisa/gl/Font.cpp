@@ -88,6 +88,21 @@ void Font::calcLineInfo(FT_Face face, float const& fontSize, float& ascent, floa
 	height = FLOAT_FROM_26_6(metrics.height);
 }
 
+void Font::calcCharInfo(FT_Face face, float const& fontSize, float& max_width, float& max_height)
+{
+	FT_Size_RequestRec rec;
+	rec.type = FT_SIZE_REQUEST_TYPE_NOMINAL;
+	rec.height = FLOAT_TO_26_6(fontSize);
+	rec.width = FLOAT_TO_26_6(fontSize);
+	rec.horiResolution = 0;
+	rec.vertResolution = 0;
+	FT_Request_Size(face, &rec);
+
+	FT_Size_Metrics const& metrics = face->size->metrics;
+	max_width = FLOAT_FROM_26_6(metrics.max_advance);
+	max_height = FLOAT_FROM_26_6(metrics.height);
+}
+
 void Font::analyzeFontName(std::string const& name, std::string& family, std::string& style) noexcept
 {
 	std::string::size_type const idx = name.find(':');

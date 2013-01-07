@@ -26,13 +26,17 @@ namespace gl {
 
 static const std::string TAG("PredefinedStringRenderer");
 
-PredefinedSymRenderer::PredefinedSymRenderer(Logger& log, Handler<DrawableManager> drawableManager)
+PredefinedSymRenderer::PredefinedSymRenderer(Logger& log, Handler<DrawableManager> drawableManager, float size)
 :log_(log)
 ,drawableManager_(drawableManager)
 ,maxWidth_(0)
 ,maxHeight_(0)
+,maxCharWidth_(0)
+,maxCharHeight_(0)
+,font_(drawableManager->queryFont())
+,size_(size)
 {
-
+	font_->calcCharInfo(size, this->maxCharWidth_, this->maxCharHeight_);
 }
 
 void PredefinedSymRenderer::registerSymbol( unsigned int symbol, std::string const& str )
