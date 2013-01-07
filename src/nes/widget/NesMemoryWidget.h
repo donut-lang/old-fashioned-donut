@@ -20,7 +20,7 @@ private:
 	float addrWidth_;
 public:
 	NesMemoryWidget(chisa::Logger& log, chisa::HandlerW<chisa::tk::World> _world, tinyxml2::XMLElement* element);
-	virtual ~NesMemoryWidget();
+	virtual ~NesMemoryWidget() noexcept = default;
 public:
 	virtual void render(chisa::gl::Canvas& cv, chisa::geom::Area const& area) override;
 	virtual void idle(const float delta_ms) override;

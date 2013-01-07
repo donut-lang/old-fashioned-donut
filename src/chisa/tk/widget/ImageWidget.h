@@ -36,7 +36,7 @@ private:
 	Handler<XObject> conf_;
 public:
 	ImageWidget(Logger& log, HandlerW<World> world, tinyxml2::XMLElement* element);
-	virtual ~ImageWidget();
+	virtual ~ImageWidget() noexcept = default;
 public:
 	virtual void render(gl::Canvas& cv, geom::Area const& area) override;
 	virtual void idle(const float delta_ms) override;

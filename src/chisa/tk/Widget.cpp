@@ -31,8 +31,4 @@ Widget::Widget(Logger& log, HandlerW<World> world, tinyxml2::XMLElement* element
 {
 }
 
-Widget::~Widget()
-{
-}
-
 }}

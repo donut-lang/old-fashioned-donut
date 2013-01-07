@@ -40,10 +40,6 @@ CHISA_WIDGET_SUBKLASS_CONSTRUCTOR_DEF(ContentWidget)
 	this->renderTree_ = Handler<doc::RenderTree>(new doc::RenderTree(this->log(), world.lock()->drawableManager()));
 }
 
-ContentWidget::~ContentWidget()
-{
-}
-
 void ContentWidget::render(gl::Canvas& cv, geom::Area const& area)
 {
 	this->renderTree_->render(cv, area, 0.0f);

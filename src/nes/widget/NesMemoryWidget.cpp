@@ -43,10 +43,6 @@ NesMemoryWidget::NesMemoryWidget(chisa::Logger& log, chisa::HandlerW<chisa::tk::
 	this->addrWidth_ = numRenderer_.maxWidth()*(1+4+1);
 }
 
-NesMemoryWidget::~NesMemoryWidget()
-{
-}
-
 void NesMemoryWidget::render(chisa::gl::Canvas& cv, chisa::geom::Area const& area)
 {
 	using namespace chisa;

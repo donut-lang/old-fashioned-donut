@@ -34,7 +34,7 @@ private:
 	Handler<XObject> conf_;
 public:
 	NesScreenWidget(Logger& log, chisa::HandlerW<chisa::tk::World> world, tinyxml2::XMLElement* element);
-	virtual ~NesScreenWidget();
+	virtual ~NesScreenWidget() noexcept = default;
 public:
 	virtual void render(chisa::gl::Canvas& cv, chisa::geom::Area const& area) override;
 	virtual void idle(const float delta_ms) override;
