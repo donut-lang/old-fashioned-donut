@@ -10,6 +10,7 @@
 #include <cstring>
 #include <tarte/XArchiver.h>
 #include "../exception/EmulatorException.h"
+#include <tarte/Thread.h>
 
 namespace nes {
 
@@ -20,8 +21,8 @@ private:
 		INTERNAL_BUFFER_SIZE = 0x40000,
 	};
 	int16_t soundBuffer[INTERNAL_BUFFER_SIZE];
-	int lastIndex;
-	int firstIndex;
+	std::atomic<int> lastIndex;
+	std::atomic<int> firstIndex;
 public:
 	AudioFairy():
 		lastIndex(0),
@@ -54,15 +55,16 @@ protected:
 	inline int popAudio(int16_t* buff, int maxLength)
 	{
 		const int nowLastIndex = lastIndex;
-		const int available = firstIndex <= nowLastIndex ? nowLastIndex-firstIndex : INTERNAL_BUFFER_SIZE-(firstIndex-nowLastIndex);
+		const int nowFirstIndex = firstIndex;
+		const int available = nowFirstIndex <= nowLastIndex ? nowLastIndex-nowFirstIndex : INTERNAL_BUFFER_SIZE-(nowFirstIndex-nowLastIndex);
 		const int copiedLength = std::min(available, maxLength);
-		if(firstIndex + copiedLength < INTERNAL_BUFFER_SIZE){
-			std::memcpy(buff, &soundBuffer[firstIndex], sizeof(int16_t) * copiedLength);
+		if(nowFirstIndex + copiedLength < INTERNAL_BUFFER_SIZE){
+			std::memcpy(buff, &soundBuffer[nowFirstIndex], sizeof(int16_t) * copiedLength);
 			firstIndex += copiedLength;
 		}else{
-			const int first = INTERNAL_BUFFER_SIZE-firstIndex;
+			const int first = INTERNAL_BUFFER_SIZE-nowFirstIndex;
 			const int last = copiedLength-first;
-			std::memcpy(buff, &soundBuffer[firstIndex], sizeof(int16_t) * first);
+			std::memcpy(buff, &soundBuffer[nowFirstIndex], sizeof(int16_t) * first);
 			std::memcpy(&buff[first], &soundBuffer[0], sizeof(int16_t) * last);
 			firstIndex = last;
 		}
