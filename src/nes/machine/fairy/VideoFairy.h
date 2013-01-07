@@ -24,7 +24,7 @@ public:
 	static const uint32_t nesPaletteARGB[64];
 	explicit VideoFairy(){}
 	virtual ~VideoFairy(){}
-	virtual void dispatchRendering(const uint8_t nesBuffer[screenHeight][screenWidth], const uint8_t paletteMask) = 0;
+	virtual void dispatchRendering(const uint8_t (&nesBuffer)[screenHeight][screenWidth], const uint8_t paletteMask) = 0;
 	virtual void save(::tarte::XArchiverOut & arc) {};
 	virtual void load(::tarte::XArchiverIn & arc) {};
 };

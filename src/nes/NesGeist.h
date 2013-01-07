@@ -76,7 +76,7 @@ public:
 	virtual std::string toString() const override;
 	inline VirtualMachine* machine() const noexcept { return this->machine_; };
 public:
-	virtual void dispatchRendering(const uint8_t nesBuffer[screenHeight][screenWidth], const uint8_t paletteMask) override;
+	virtual void dispatchRendering(const uint8_t (&nesBuffer)[screenHeight][screenWidth], const uint8_t paletteMask) override;
 	virtual void onUpdate() override;
 	virtual bool isPressed(uint8_t keyIdx) override;
 	virtual bool exec(const float delta_ms) override;

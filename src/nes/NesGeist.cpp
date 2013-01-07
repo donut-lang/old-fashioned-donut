@@ -56,7 +56,7 @@ std::string NesGeist::toString() const
 	return format("(NesGeist %p)", this);
 }
 
-void NesGeist::dispatchRendering(const uint8_t nesBuffer[screenHeight][screenWidth], const uint8_t paletteMask)
+void NesGeist::dispatchRendering(const uint8_t (&nesBuffer)[screenHeight][screenWidth], const uint8_t paletteMask)
 {
 	{
 		NesGeist::Lock lock(*this);
