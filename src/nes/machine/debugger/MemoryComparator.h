@@ -17,13 +17,62 @@
  */
 
 #pragma once
+#include <vector>
+#include <cstdint>
+#include <functional>
+#include <tarte/ClassUtil.h>
+#include "../VirtualMachine.h"
 
 namespace nes {
 
 class MemoryComparator final {
 public:
-	MemoryComparator();
+	MemoryComparator(	VirtualMachine& vm);
 	~MemoryComparator() noexcept = default;
+private:
+	VirtualMachine& vm_;
+	std::vector<bool> entry_;
+	std::vector<uint8_t> before_;
+	template <typename Functor>
+	inline void selectCompare( Functor const& cmp ) {
+		uint8_t (&ram)[Ram::WRAM_LENGTH] = vm_.ram().wram();
+		std::vector<uint8_t> now(ram, ram+Ram::WRAM_LENGTH);
+		for( uint16_t addr = 0; addr < Ram::WRAM_LENGTH; ++addr ) {
+			auto flag = entry_[addr];
+			if(flag) {
+				flag = cmp(now[addr], before_[addr]);
+			}
+		}
+		before_.swap(now);
+	}
+	template <typename Functor>
+	inline void selectConst( Functor const& cmp ) {
+		uint8_t (&ram)[Ram::WRAM_LENGTH] = vm_.ram().wram();
+		std::vector<uint8_t> now(ram, ram+Ram::WRAM_LENGTH);
+		for( uint16_t addr = 0; addr < Ram::WRAM_LENGTH; ++addr ) {
+			auto flag = entry_[addr];
+			if(flag) {
+				flag = cmp(now[addr]);
+			}
+		}
+		before_.swap(now);
+	}
+public:
+	void start();
+	void reset();
+public:
+	void selectEq(uint8_t val) { selectConst( std::bind2nd(std::equal_to<uint8_t>(), val) ); };
+	void selectEq() { selectCompare(std::equal_to<uint8_t>()); };
+	void selectNe(uint8_t val){ selectConst( std::bind2nd(std::not_equal_to<uint8_t>(), val) ); };
+	void selectNe() { selectCompare(std::not_equal_to<uint8_t>()); };
+	void selectGt(uint8_t val){ selectConst( std::bind2nd(std::greater<uint8_t>(), val) ); };
+	void selectGt() { selectCompare(std::greater<uint8_t>()); };
+	void selectGe(uint8_t val){ selectConst( std::bind2nd(std::greater_equal<uint8_t>(), val) ); };
+	void selectGe() { selectCompare(std::greater_equal<uint8_t>()); };
+	void selectLt(uint8_t val){ selectConst( std::bind2nd(std::less<uint8_t>(), val) ); };
+	void selectLt() { selectCompare(std::less<uint8_t>()); };
+	void selectLe(uint8_t val){ selectConst( std::bind2nd(std::less_equal<uint8_t>(), val) ); };
+	void selectLe() { selectCompare(std::less_equal<uint8_t>()); };
 };
 
 }

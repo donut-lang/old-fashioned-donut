@@ -101,6 +101,7 @@ public:
 		for(MemoryRange const& range : this->execBreaks_) {
 			if(range.contain(addr)){
 
+				break;
 			}
 		}
 	}

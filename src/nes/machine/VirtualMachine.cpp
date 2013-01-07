@@ -8,12 +8,12 @@ namespace nes {
 
 VirtualMachine::VirtualMachine(VideoFairy& videoFairy, AudioFairy& audioFairy, GamepadFairy* player1, GamepadFairy* player2)
 :debugger_(*this)
-,ram(*this)
-,processor(*this)
-,audio(*this, audioFairy)
-,video(*this, videoFairy)
-,cartridge(NULL)
-,ioPort(*this, player1, player2)
+,ram_(*this)
+,processor_(*this)
+,audio_(*this, audioFairy)
+,video_(*this, videoFairy)
+,cartridge_(NULL)
+,ioPort_(*this, player1, player2)
 ,clockDelta(0)
 ,resetFlag(false)
 ,hardResetFlag(false)
@@ -23,8 +23,8 @@ VirtualMachine::VirtualMachine(VideoFairy& videoFairy, AudioFairy& audioFairy, G
 
 VirtualMachine::~VirtualMachine()
 {
-	if(this->cartridge != NULL){
-		delete this->cartridge;
+	if(this->cartridge_ != NULL){
+		delete this->cartridge_;
 	}
 }
 void VirtualMachine::run()
@@ -33,26 +33,26 @@ void VirtualMachine::run()
 		this->clockDelta = 0;
 		this->hardResetFlag = false;
 
-		this->processor.onHardReset();
+		this->processor_.onHardReset();
 
-		this->cartridge->onHardReset();
+		this->cartridge_->onHardReset();
 
-		this->video.onHardReset();
+		this->video_.onHardReset();
 
-		this->audio.onHardReset();
+		this->audio_.onHardReset();
 
 		return;
 	}else if(this->resetFlag){
 		this->clockDelta = 0;
 		this->resetFlag = false;
 
-		this->processor.onReset();
+		this->processor_.onReset();
 
-		this->cartridge->onReset();
+		this->cartridge_->onReset();
 
-		this->video.onReset();
+		this->video_.onReset();
 
-		this->audio.onReset();
+		this->audio_.onReset();
 
 		return;
 	}
@@ -61,13 +61,13 @@ void VirtualMachine::run()
 	const int32_t videoClockDelta = this->clockDelta / VIDEO_CLOCK_FACTOR;
 	this->clockDelta  = 0;
 
-	this->processor.run(cpuClockDelta);
+	this->processor_.run(cpuClockDelta);
 
-	this->video.run(videoClockDelta);
+	this->video_.run(videoClockDelta);
 
-	this->cartridge->run(cpuClockDelta);
+	this->cartridge_->run(cpuClockDelta);
 
-	this->audio.run(cpuClockDelta);
+	this->audio_.run(cpuClockDelta);
 
 }
 
@@ -78,25 +78,25 @@ void VirtualMachine::consumeClock(uint32_t clock)
 
 void VirtualMachine::sendVBlank()
 {
-	this->ioPort.onVBlank();
+	this->ioPort_.onVBlank();
 }
 
 void VirtualMachine::sendNMI()
 {
-	this->processor.sendNMI();
+	this->processor_.sendNMI();
 }
 
 void VirtualMachine::reserveIRQ(uint8_t device)
 {
 	this->irqLine |= device;
-	this->processor.reserveIRQ();
+	this->processor_.reserveIRQ();
 }
 
 void VirtualMachine::releaseIRQ(uint8_t device)
 {
 	this->irqLine &= ~(device);
 	if(irqLine == 0){
-		this->processor.releaseIRQ();
+		this->processor_.releaseIRQ();
 	}
 }
 
@@ -116,22 +116,22 @@ void VirtualMachine::sendReset()
 
 void VirtualMachine::loadCartridge(const char* filename)
 {
-	if(this->cartridge){
-		delete this->cartridge;
+	if(this->cartridge_){
+		delete this->cartridge_;
 	}
-	this->cartridge = Cartridge::loadCartridge(*this, filename);
-	this->video.connectCartridge(this->cartridge);
+	this->cartridge_ = Cartridge::loadCartridge(*this, filename);
+	this->video_.connectCartridge(this->cartridge_);
 }
 
 XValue VirtualMachine::save()
 {
 	Handler<XObject> xobj(new XObject);
-	xobj->set("ram", (XArchiverOut() << this->ram).toXValue());
-	xobj->set("processor", (XArchiverOut() << this->processor).toXValue());
-	xobj->set("audio", (XArchiverOut() << this->audio).toXValue());
-	xobj->set("video", (XArchiverOut() << this->video).toXValue());
-	xobj->set("cartridge", this->cartridge->save());
-	xobj->set("ioPort", (XArchiverOut() << this->ioPort).toXValue());
+	xobj->set("ram", (XArchiverOut() << this->ram_).toXValue());
+	xobj->set("processor", (XArchiverOut() << this->processor_).toXValue());
+	xobj->set("audio", (XArchiverOut() << this->audio_).toXValue());
+	xobj->set("video", (XArchiverOut() << this->video_).toXValue());
+	xobj->set("cartridge", this->cartridge_->save());
+	xobj->set("ioPort", (XArchiverOut() << this->ioPort_).toXValue());
 
 	xobj->set("clockDelta", this->clockDelta);
 	xobj->set("resetFlag", this->resetFlag);
@@ -141,23 +141,23 @@ XValue VirtualMachine::save()
 }
 void VirtualMachine::load(XValue const& data)
 {
-	if(this->cartridge){
-		delete this->cartridge;
+	if(this->cartridge_){
+		delete this->cartridge_;
 	}
 	Handler<XObject> xobj(data.as<XObject>());
-	XArchiverIn(xobj->get<XValue>("ram")) >> this->ram;
-	XArchiverIn(xobj->get<XValue>("processor")) >> this->processor;
-	XArchiverIn(xobj->get<XValue>("audio")) >> this->audio;
-	XArchiverIn(xobj->get<XValue>("video")) >> this->video;
-	this->cartridge = Cartridge::load(*this, xobj->get<XValue>("cartridge"));
-	XArchiverIn(xobj->get<XValue>("ioPort")) >> this->ioPort;
+	XArchiverIn(xobj->get<XValue>("ram")) >> this->ram_;
+	XArchiverIn(xobj->get<XValue>("processor")) >> this->processor_;
+	XArchiverIn(xobj->get<XValue>("audio")) >> this->audio_;
+	XArchiverIn(xobj->get<XValue>("video")) >> this->video_;
+	this->cartridge_ = Cartridge::load(*this, xobj->get<XValue>("cartridge"));
+	XArchiverIn(xobj->get<XValue>("ioPort")) >> this->ioPort_;
 
 	xobj->get("clockDelta", this->clockDelta);
 	xobj->get("resetFlag", this->resetFlag);
 	xobj->get("hardResetFlag", this->hardResetFlag);
 	xobj->get("irqLine", this->irqLine);
 	//最後にビデオの接続。これでOK？
-	this->video.connectCartridge(this->cartridge);
+	this->video_.connectCartridge(this->cartridge_);
 }
 
 }
