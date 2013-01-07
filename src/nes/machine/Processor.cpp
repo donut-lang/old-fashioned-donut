@@ -86,7 +86,7 @@ void Processor::run(uint16_t clockDelta)
 		needStatusRewrite = false;
 	}
 
-	this->debugger_.memoryExecute(this->PC);
+	this->debugger_.processorExecute(this->PC);
 
 	const uint8_t opcode = this->read(this->PC);
 //	#define CPUTRACE
@@ -707,11 +707,11 @@ inline void Processor::onIRQ()
 
 // -- よく使いそうな関数 --
 
-inline uint8_t Processor::read(uint16_t addr)
+inline uint8_t Processor::read(uint16_t const addr)
 {
 	return vm_.read(addr);
 }
-inline void Processor::write(uint16_t addr, uint8_t value){
+inline void Processor::write(uint16_t const addr, uint8_t const value){
 	vm_.write(addr, value);
 }
 

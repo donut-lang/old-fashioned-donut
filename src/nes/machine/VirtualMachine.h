@@ -94,15 +94,7 @@ public: /* セーブ・ロード実装用 */
 
 class IOPort final{
 public:
-	explicit IOPort(VirtualMachine& vm, GamepadFairy* pad1, GamepadFairy* pad2) :
-			vm_(vm),
-			pad1Fairy(pad1 == 0 ? dummyPad : *pad1),
-			pad2Fairy(pad2 == 0 ? dummyPad : *pad2),
-			pad1Idx(GamepadFairy::A),
-			pad2Idx(GamepadFairy::A)
-	{
-
-	}
+	explicit IOPort(VirtualMachine& vm, GamepadFairy* pad1, GamepadFairy* pad2);
 	~IOPort() noexcept = default;
 
 	inline  void onVBlank(){
@@ -110,9 +102,9 @@ public:
 		pad2Fairy.onVBlank();
 	}
 
-	inline void writeOutReg(uint8_t value)
+	inline void writeOutReg(uint8_t const value)
 	{
-		if((value & 1) == 1){
+		if(((debugger_.ioWrite(value)) & 1) == 1){
 			pad1Fairy.onUpdate();
 			pad1Idx = 0;
 			pad2Fairy.onUpdate();
@@ -121,13 +113,11 @@ public:
 	}
 	inline uint8_t readInputReg1()
 	{
-		uint8_t result = pad1Fairy.isPressed((pad1Idx++) & 7) ? 1 : 0;
-		return result;
+		return debugger_.ioRead(0x4016, pad1Fairy.isPressed((pad1Idx++) & 7) ? 1 : 0);
 	}
 	inline uint8_t readInputReg2()
 	{
-		uint8_t result = pad2Fairy.isPressed((pad2Idx++) & 7) ? 1 : 0;
-		return result;
+		return debugger_.ioRead(0x4017, pad2Fairy.isPressed((pad2Idx++) & 7) ? 1 : 0);
 	}
 
 
@@ -135,6 +125,7 @@ protected:
 private:
 	DummyGamepadFairy dummyPad;
 	VirtualMachine& vm_;
+	Debugger& debugger_;
 	GamepadFairy& pad1Fairy;
 	GamepadFairy& pad2Fairy;
 	uint8_t pad1Idx;
@@ -168,6 +159,7 @@ public:
 protected:
 private:
 	VirtualMachine& vm_;
+	Debugger& debugger_;
 	AudioFairy& audioFairy;
 	//
 	unsigned int clockCnt;
@@ -208,13 +200,13 @@ class Video final{
 public:
 	explicit Video(VirtualMachine& vm, VideoFairy& videoFairy);
 	~Video() noexcept = default;
-	void run(uint16_t clockDelta);
+	void run(uint16_t const clockDelta);
 	void onHardReset();
 	void onReset();
-	uint8_t readReg(uint16_t addr);
-	void writeReg(uint16_t addr, uint8_t value);
-	void executeDMA(uint8_t value);
-	void connectCartridge(Cartridge* cartridge);
+	uint8_t readReg(uint16_t const addr);
+	void writeReg(uint16_t const addr, uint8_t const value);
+	void executeDMA(uint8_t const value);
+	void connectCartridge(Cartridge* const cartridge);
 	enum{
 		screenWidth = 256,
 		screenHeight = 240,
@@ -233,6 +225,7 @@ private:
 		defaultSpriteCnt = 8
 	};
 	VirtualMachine& vm_;
+	Debugger& debugger_;
 	Cartridge* cartridge;
 	VideoFairy& videoFairy;
 	bool isEven;
@@ -272,14 +265,14 @@ private:
 	inline void buildBgLine();
 
 	/* IO */
-	inline uint8_t readVram(uint16_t addr) const;
-	inline void writeVram(uint16_t addr, uint8_t value);
-	inline uint8_t readVramExternal(uint16_t addr) const;
-	inline void writeVramExternal(uint16_t addr, uint8_t value);
-	inline uint8_t readPalette(uint16_t addr) const;
-	inline void writePalette(uint16_t addr, uint8_t value);
-	inline uint8_t readSprite(uint16_t addr) const;
-	inline void writeSprite(uint16_t addr, uint8_t value);
+	inline uint8_t readVram(uint16_t const addr) const;
+	inline void writeVram(uint16_t const addr, uint8_t const value);
+	inline uint8_t readVramExternal(uint16_t const addr) const;
+	inline void writeVramExternal(uint16_t const addr, uint8_t const value);
+	inline uint8_t readPalette(uint16_t const addr) const;
+	inline void writePalette(uint16_t const addr, uint8_t const value);
+	inline uint8_t readSprite(uint16_t const addr) const;
+	inline void writeSprite(uint16_t const addr, uint8_t const value);
 
 	/* PPU Control Register 1 */
 	bool executeNMIonVBlank;
@@ -310,16 +303,16 @@ private:
 	bool scrollRegisterWritten;
 	bool vramAddrRegisterWritten;
 
-	inline void analyzePPUControlRegister1(uint8_t value);
-	inline void analyzePPUControlRegister2(uint8_t value);
-	inline void analyzePPUBackgroundScrollingOffset(uint8_t value);
+	inline void analyzePPUControlRegister1(uint8_t const value);
+	inline void analyzePPUControlRegister2(uint8_t const value);
+	inline void analyzePPUBackgroundScrollingOffset(uint8_t const value);
 	inline uint8_t buildPPUStatusRegister();
 	inline uint8_t readVramDataRegister();
 	inline uint8_t readSpriteDataRegister();
-	inline void analyzeVramAddrRegister(uint8_t value);
-	inline void analyzeSpriteAddrRegister(uint8_t value);
-	inline void writeVramDataRegister(uint8_t value);
-	inline void writeSpriteDataRegister(uint8_t value);
+	inline void analyzeVramAddrRegister(uint8_t const value);
+	inline void analyzeSpriteAddrRegister(uint8_t const value);
+	inline void writeVramDataRegister(uint8_t const value);
+	inline void writeSpriteDataRegister(uint8_t const value);
 
 	inline void startVBlank();
 public:
@@ -388,17 +381,18 @@ public:
 	inline void onReset()
 	{
 	}
-	inline uint8_t read(uint16_t addr)
+	inline uint8_t read(uint16_t const addr)
 	{
-		return wram[addr & 0x7ff];
+		return debugger_.ramRead(addr, wram[addr & 0x7ff]);
 	}
-	inline void write(uint16_t addr, uint8_t value)
+	inline void write(uint16_t const addr, uint8_t const value)
 	{
-		wram[addr & 0x7ff] = value;
+		wram[addr & 0x7ff] = debugger_.ramWrite(addr, value);
 	}
 protected:
 private:
 	VirtualMachine& vm_;
+	Debugger& debugger_;
 	uint8_t wram[WRAM_LENGTH]; //2KB WRAM
 public:
 	template <typename Archiver>
@@ -420,8 +414,8 @@ public:
 	void releaseIRQ();
 protected:
 private:
-	inline uint8_t read(uint16_t addr);
-	inline void write(uint16_t addr, uint8_t value);
+	inline uint8_t read(uint16_t const addr);
+	inline void write(uint16_t const addr, uint8_t const value);
 	//定数
 	enum{
 		FLAG_C = 1,
@@ -590,7 +584,7 @@ public:
 	{
 		consumeClock(clock * CPU_CLOCK_FACTOR);
 	}
-	inline uint8_t read(uint16_t addr) //from processor to subsystems.
+	inline uint8_t read(uint16_t const addr) //from processor to subsystems.
 	{
 		switch(addr & 0xE000){
 			case 0x0000:
@@ -622,7 +616,7 @@ public:
 				throw EmulatorException("[FIXME] Invalid addr: 0x") << std::hex << addr;
 		}
 	}
-	inline void write(uint16_t addr, uint8_t value) // from processor to subsystems.
+	inline void write(uint16_t const addr, uint8_t const value) // from processor to subsystems.
 	{
 		switch(addr & 0xE000){
 			case 0x0000:

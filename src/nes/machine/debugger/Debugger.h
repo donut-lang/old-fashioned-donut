@@ -30,17 +30,50 @@ private:
 public:
 	Debugger(VirtualMachine& vm);
 	~Debugger() noexcept = default;
-public:
+private:
 	uint8_t inline memoryRead(uint16_t const addr, uint8_t const value) noexcept {
-
 		return value;
 	}
-	void inline memoryWrite(uint16_t const addr, uint8_t now) noexcept
-	{
+	uint8_t inline memoryWrite(uint16_t const addr, uint8_t now) noexcept {
+		return now;
+	}
+	void inline memoryExecute(uint16_t const addr) noexcept {
 
 	}
-	void memoryExecute(uint16_t const addr) noexcept {
-
+public:
+	void inline processorExecute(uint16_t const addr) noexcept {
+		this->memoryExecute(addr);
+	}
+public: /* ram */
+	uint8_t inline ramRead(uint16_t const addr, uint8_t const value) noexcept {
+		return memoryRead(addr, value);
+	}
+	uint8_t inline ramWrite(uint16_t const addr, uint8_t now) noexcept {
+		return memoryWrite(addr, now);
+	}
+public: /* video */
+	uint8_t inline videoReadReg(uint16_t const addr, uint8_t const value) noexcept {
+		return memoryRead(addr, value);
+	}
+	uint8_t inline videoWriteReg(uint16_t const addr, uint8_t now) noexcept {
+		return memoryWrite(addr, now);
+	}
+	uint8_t inline videoWriteDMA(uint8_t now) noexcept {
+		return memoryWrite(0x4014, now);
+	}
+public: /* audio */
+	uint8_t inline audioRead(uint16_t const addr, uint8_t const value) noexcept {
+		return memoryRead(addr, value);
+	}
+	uint8_t inline audioWrite(uint16_t const addr, uint8_t now) noexcept {
+		return memoryWrite(addr, now);
+	}
+public: /* io */
+	uint8_t inline ioRead(uint16_t const addr, uint8_t const value) noexcept {
+		return memoryRead(addr, value);
+	}
+	uint8_t inline ioWrite(uint8_t now) noexcept {
+		return memoryWrite(0x4016, now);
 	}
 };
 

@@ -7,6 +7,7 @@ namespace nes {
 
 Video::Video(VirtualMachine& vm, VideoFairy& videoFairy)
 :vm_(vm)
+,debugger_(vm.debugger())
 ,cartridge(NULL)
 ,videoFairy(videoFairy)
 ,isEven(false)
@@ -39,7 +40,7 @@ Video::Video(VirtualMachine& vm, VideoFairy& videoFairy)
 	memset(this->screenBuffer, 0x0, screenWidth * screenHeight * sizeof(uint8_t));
 }
 
-void Video::run(uint16_t clockDelta)
+void Video::run(uint16_t const clockDelta)
 {
 	this->nowX += clockDelta;
 	while(this->nowX >= 341){
@@ -309,7 +310,7 @@ void Video::onReset()
 	//0x2007
 	vramBuffer = 0;
 }
-uint8_t Video::readReg(uint16_t addr)
+uint8_t Video::readReg(uint16_t const addr)
 {
 	switch(addr & 0x07)
 	{
@@ -317,23 +318,24 @@ uint8_t Video::readReg(uint16_t addr)
 		//case 0x00: //2000h - PPU Control Register 1 (W)
 		//case 0x01: //2001h - PPU Control Register 2 (W)
 		case 0x02: //2002h - PPU Status Register (R)
-			return buildPPUStatusRegister();
+			return debugger_.videoReadReg(addr, buildPPUStatusRegister());
 		/* PPU SPR-RAM Access Registers */
 		//case 0x03: //2003h - SPR-RAM Address Register (W)
 		case 0x04: //2004h - SPR-RAM Data Register (Read/Write)
-			return readSpriteDataRegister();
+			return debugger_.videoReadReg(addr, readSpriteDataRegister());
 		/* PPU VRAM Access Registers */
 		//case 0x05: //PPU Background Scrolling Offset (W2)
 		//case 0x06: //VRAM Address Register (W2)
 		case 0x07: //VRAM Read/Write Data Register (RW)
-			return readVramDataRegister();
+			return debugger_.videoReadReg(addr, readVramDataRegister());
 		default:
-			return 0;
+			return debugger_.videoReadReg(addr, 0);
 //			throw EmulatorException() << "Invalid addr: 0x" << std::hex << addr;
 	}
 }
-void Video::writeReg(uint16_t addr, uint8_t value)
+void Video::writeReg(uint16_t const addr, uint8_t const value_)
 {
+	uint8_t const value = debugger_.videoWriteReg(addr, value_);
 	switch(addr & 0x07)
 	{
 		/* PPU Control and Status Registers */
@@ -380,7 +382,7 @@ inline uint8_t Video::buildPPUStatusRegister()
 	return result;
 }
 
-inline void Video::analyzePPUControlRegister1(uint8_t value)
+inline void Video::analyzePPUControlRegister1(uint8_t const value)
 {
 	executeNMIonVBlank = ((value & 0x80) == 0x80) ? true : false;
 	spriteHeight = ((value & 0x20) == 0x20) ? 16 : 8;
@@ -389,7 +391,7 @@ inline void Video::analyzePPUControlRegister1(uint8_t value)
 	vramIncrementSize = ((value & 0x4) == 0x4) ? 32 : 1;
 	vramAddrReloadRegister = (vramAddrReloadRegister & 0x73ff) | ((value & 0x3) << 10);
 }
-inline void Video::analyzePPUControlRegister2(uint8_t value)
+inline void Video::analyzePPUControlRegister2(uint8_t const value)
 {
 	colorEmphasis = value >> 5; //FIXME: この扱い、どーする？
 	spriteVisibility = ((value & 0x10) == 0x10) ? true : false;
@@ -398,7 +400,7 @@ inline void Video::analyzePPUControlRegister2(uint8_t value)
 	backgroundClipping = ((value & 0x2) == 0x02) ? false : true;
 	paletteMask = ((value & 0x1) == 0x01) ? 0x30 : 0x3f;
 }
-inline void Video::analyzePPUBackgroundScrollingOffset(uint8_t value)
+inline void Video::analyzePPUBackgroundScrollingOffset(uint8_t const value)
 {
 	if(scrollRegisterWritten){ //Y
 		vramAddrReloadRegister = (vramAddrReloadRegister & 0x8C1F) | ((value & 0xf8) << 2) | ((value & 7) << 12);
@@ -408,7 +410,7 @@ inline void Video::analyzePPUBackgroundScrollingOffset(uint8_t value)
 	}
 	scrollRegisterWritten = !scrollRegisterWritten;
 }
-inline void Video::analyzeVramAddrRegister(uint8_t value)
+inline void Video::analyzeVramAddrRegister(uint8_t const value)
 {
 	if(vramAddrRegisterWritten){
 		vramAddrReloadRegister = (vramAddrReloadRegister & 0x7f00) | value;
@@ -436,7 +438,7 @@ inline uint8_t Video::readVramDataRegister()
 		return ret;
 	}
 }
-inline void Video::writeVramDataRegister(uint8_t value)
+inline void Video::writeVramDataRegister(uint8_t const value)
 {
 	writeVram(vramAddrRegister, value);
 	vramAddrRegister = (vramAddrRegister + vramIncrementSize) & 0x3fff;
@@ -445,15 +447,15 @@ inline uint8_t Video::readSpriteDataRegister()
 {
 	return readSprite(spriteAddr); //The address is NOT auto-incremented after <reading> from 2004h.
 }
-inline void Video::writeSpriteDataRegister(uint8_t value)
+inline void Video::writeSpriteDataRegister(uint8_t const value)
 {
 	writeSprite(spriteAddr, value);
 	spriteAddr++; //The address is NOT auto-incremented after <reading> from 2004h.
 }
 
-void Video::executeDMA(uint8_t value)
+void Video::executeDMA(uint8_t const value)
 {
-	const uint16_t addrMask = value << 8;
+	const uint16_t addrMask = (this->debugger_.videoWriteDMA(value)) << 8;
 	for(uint16_t i=0;i<256;i++){
 		writeSpriteDataRegister(vm_.read(addrMask | i));
 	}
@@ -462,7 +464,7 @@ void Video::executeDMA(uint8_t value)
 
 //-------------------- accessor ----------------------------
 
-inline uint8_t Video::readVram(uint16_t addr) const
+inline uint8_t Video::readVram(uint16_t const addr) const
 {
 	if((addr & 0x3f00) == 0x3f00){
 		return readPalette(addr);
@@ -470,7 +472,7 @@ inline uint8_t Video::readVram(uint16_t addr) const
 		return readVramExternal(addr);
 	}
 }
-inline void Video::writeVram(uint16_t addr, uint8_t value)
+inline void Video::writeVram(uint16_t const addr, uint8_t const value)
 {
 	if((addr & 0x3f00) == 0x3f00){
 		writePalette(addr, value);
@@ -478,7 +480,7 @@ inline void Video::writeVram(uint16_t addr, uint8_t value)
 		writeVramExternal(addr, value);
 	}
 }
-inline uint8_t Video::readVramExternal(uint16_t addr) const
+inline uint8_t Video::readVramExternal(uint16_t const addr) const
 {
 	switch(addr & 0x3000)
 	{
@@ -494,7 +496,7 @@ inline uint8_t Video::readVramExternal(uint16_t addr) const
 			throw EmulatorException("Invalid vram access");
 	}
 }
-inline void Video::writeVramExternal(uint16_t addr, uint8_t value)
+inline void Video::writeVramExternal(uint16_t const addr, uint8_t const value)
 {
 	switch(addr & 0x3000)
 	{
@@ -514,7 +516,7 @@ inline void Video::writeVramExternal(uint16_t addr, uint8_t value)
 			throw EmulatorException("Invalid vram access");
 	}
 }
-inline uint8_t Video::readPalette(uint16_t addr) const
+inline uint8_t Video::readPalette(uint16_t const addr) const
 {
 	if((addr & 0x3) == 0){
 		return this->palette[8][(addr >> 2) & 3];
@@ -522,7 +524,7 @@ inline uint8_t Video::readPalette(uint16_t addr) const
 		return this->palette[((addr>>2) & 7)][addr & 3];
 	}
 }
-inline void Video::writePalette(uint16_t addr, uint8_t value)
+inline void Video::writePalette(uint16_t const addr, uint8_t const value)
 {
 	if((addr & 0x3) == 0){
 		this->palette[8][(addr >> 2) & 3] = value & 0x3f;
@@ -531,7 +533,7 @@ inline void Video::writePalette(uint16_t addr, uint8_t value)
 	}
 }
 
-void Video::connectCartridge(Cartridge* cartridge)
+void Video::connectCartridge(Cartridge* const cartridge)
 {
 	this->cartridge = cartridge;
 	cartridge->connectInternalVram(this->internalVram);

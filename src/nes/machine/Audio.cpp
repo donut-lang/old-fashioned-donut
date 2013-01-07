@@ -4,6 +4,7 @@ namespace nes {
 
 Audio::Audio(VirtualMachine& vm, AudioFairy& audioFairy)
 :vm_(vm)
+,debugger_(vm.debugger())
 ,audioFairy(audioFairy)
 // ---
 ,clockCnt(0)
@@ -174,7 +175,7 @@ void Audio::onVSync()
 
 
 
-uint8_t Audio::readReg(uint16_t addr)
+uint8_t Audio::readReg(uint16_t const addr)
 {
 	if(addr != 0x4015){
 		throw EmulatorException("[FIXME] Invalid addr: 0x") << std::hex << addr << "for APU.";
@@ -189,12 +190,14 @@ uint8_t Audio::readReg(uint16_t addr)
 			|	(this->digital.isEnabled() ? 16 : 0)
 			|	(this->vm_.isIRQpending(VirtualMachine::DEVICE_FRAMECNT) ? 64 : 0)
 			|	(this->digital.isIRQActive() ? 128 : 0);
+	this->debugger_.audioRead(addr, ret);
 	this->vm_.releaseIRQ(VirtualMachine::DEVICE_FRAMECNT);
 
 	return ret;
 }
-void Audio::writeReg(uint16_t addr, uint8_t value)
+void Audio::writeReg(uint16_t const addr, uint8_t const value_)
 {
+	uint8_t const value = this->debugger_.audioWrite(addr, value);
 	switch(addr)
 	{
 	case 0x4000: //4000h - APU Volume/Decay Channel 1 (Rectangle)
