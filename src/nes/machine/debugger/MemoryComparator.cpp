@@ -17,6 +17,7 @@
  */
 
 #include "MemoryComparator.h"
+#include "../VirtualMachine.h"
 
 namespace nes {
 
@@ -25,6 +26,12 @@ MemoryComparator::MemoryComparator(	VirtualMachine& vm)
 {
 	// TODO Auto-generated constructor stub
 
+}
+
+std::vector<uint8_t> MemoryComparator::getNowMemory() const
+{
+	uint8_t (&ram)[Ram::WRAM_LENGTH] = vm_.ram().wram();
+	return std::vector<uint8_t>(ram, ram+Ram::WRAM_LENGTH);
 }
 
 }
