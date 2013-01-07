@@ -107,6 +107,7 @@ public:
 	uint8_t inline cartridgeWriteCPUBankHigh(uint16_t const addr, uint8_t const now) {
 		return cartridgeWriteCPU(addr, now);
 	}
+public:
 
 };
 
