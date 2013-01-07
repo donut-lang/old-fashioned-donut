@@ -602,16 +602,16 @@ public:
 				}else if(addr < 0x4018){
 					throw EmulatorException("[FIXME] Invalid addr: 0x") << std::hex << addr;
 				}else{
-					return cartridge->readRegisterArea(addr);
+					return debugger_.cartridgeReadCPUReg(addr, cartridge->readRegisterArea(addr));
 				}
 			case 0x6000:
-				return cartridge->readSaveArea(addr);
+				return debugger_.cartridgeReadCPUSaveArea(addr, cartridge->readSaveArea(addr));
 			case 0x8000:
 			case 0xA000:
-				return cartridge->readBankLow(addr);
+				return debugger_.cartridgeReadCPUBankLow(addr, cartridge->readBankLow(addr));
 			case 0xC000:
 			case 0xE000:
-				return cartridge->readBankHigh(addr);
+				return debugger_.cartridgeReadCPUBankHigh(addr, cartridge->readBankHigh(addr));
 			default:
 				throw EmulatorException("[FIXME] Invalid addr: 0x") << std::hex << addr;
 		}
@@ -633,19 +633,19 @@ public:
 				}else if(addr < 0x4018){
 					audio.writeReg(addr, value);
 				}else{
-					cartridge->writeRegisterArea(addr, value);
+					cartridge->writeRegisterArea(addr, debugger_.cartridgeWriteCPUReg(addr, value));
 				}
 				break;
 			case 0x6000:
-				cartridge->writeSaveArea(addr, value);
+				cartridge->writeSaveArea(addr, debugger_.cartridgeWriteCPUSaveArea(addr, value));
 				break;
 			case 0x8000:
 			case 0xA000:
-				cartridge->writeBankLow(addr, value);
+				cartridge->writeBankLow(addr, debugger_.cartridgeWriteCPUBankLow(addr, value));
 				break;
 			case 0xC000:
 			case 0xE000:
-				cartridge->writeBankHigh(addr, value);
+				cartridge->writeBankHigh(addr, debugger_.cartridgeWriteCPUBankHigh(addr, value));
 				break;
 			default:
 				throw EmulatorException("[FIXME] Invalid addr: 0x") << std::hex << addr;

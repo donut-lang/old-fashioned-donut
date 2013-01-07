@@ -197,7 +197,7 @@ uint8_t Audio::readReg(uint16_t const addr)
 }
 void Audio::writeReg(uint16_t const addr, uint8_t const value_)
 {
-	uint8_t const value = this->debugger_.audioWrite(addr, value);
+	uint8_t const value = this->debugger_.audioWrite(addr, value_);
 	switch(addr)
 	{
 	case 0x4000: //4000h - APU Volume/Decay Channel 1 (Rectangle)

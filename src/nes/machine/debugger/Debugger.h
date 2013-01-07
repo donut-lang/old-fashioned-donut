@@ -75,6 +75,39 @@ public: /* io */
 	uint8_t inline ioWrite(uint8_t now) noexcept {
 		return memoryWrite(0x4016, now);
 	}
+private: /* cartridge */
+	uint8_t inline cartridgeReadCPU(uint16_t const addr, uint8_t const value) {
+		return memoryRead(addr, value);
+	}
+	uint8_t inline cartridgeWriteCPU(uint16_t const addr, uint8_t const now) {
+		return memoryWrite(addr, now);
+	}
+public:
+	uint8_t inline cartridgeReadCPUReg(uint16_t const addr, uint8_t const value) {
+		return cartridgeReadCPU(addr, value);
+	}
+	uint8_t inline cartridgeWriteCPUReg(uint16_t const addr, uint8_t const now) {
+		return cartridgeWriteCPU(addr, now);
+	}
+	uint8_t inline cartridgeReadCPUSaveArea(uint16_t const addr, uint8_t const value) {
+		return cartridgeReadCPU(addr, value);
+	}
+	uint8_t inline cartridgeWriteCPUSaveArea(uint16_t const addr, uint8_t const now) {
+		return cartridgeWriteCPU(addr, now);
+	}
+	uint8_t inline cartridgeReadCPUBankLow(uint16_t const addr, uint8_t const value) {
+		return cartridgeReadCPU(addr, value);
+	}
+	uint8_t inline cartridgeWriteCPUBankLow(uint16_t const addr, uint8_t const now) {
+		return cartridgeWriteCPU(addr, now);
+	}
+	uint8_t inline cartridgeReadCPUBankHigh(uint16_t const addr, uint8_t const value) {
+		return cartridgeReadCPU(addr, value);
+	}
+	uint8_t inline cartridgeWriteCPUBankHigh(uint16_t const addr, uint8_t const now) {
+		return cartridgeWriteCPU(addr, now);
+	}
+
 };
 
 }
