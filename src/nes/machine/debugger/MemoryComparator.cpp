@@ -20,7 +20,8 @@
 
 namespace nes {
 
-MemoryComparator::MemoryComparator()
+MemoryComparator::MemoryComparator(	VirtualMachine& vm)
+:vm_(vm)
 {
 	// TODO Auto-generated constructor stub
 

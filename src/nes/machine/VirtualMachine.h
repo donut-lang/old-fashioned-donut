@@ -372,33 +372,36 @@ public:
 	inline void onHardReset()
 	{
 		//from http://wiki.nesdev.com/w/index.php/CPU_power_up_state
-		memset(wram, 0xff, WRAM_LENGTH);
-		wram[0x8] = 0xf7;
-		wram[0x9] = 0xef;
-		wram[0xa] = 0xdf;
-		wram[0xf] = 0xbf;
+		memset(wram_, 0xff, WRAM_LENGTH);
+		wram_[0x8] = 0xf7;
+		wram_[0x9] = 0xef;
+		wram_[0xa] = 0xdf;
+		wram_[0xf] = 0xbf;
 	}
 	inline void onReset()
 	{
 	}
 	inline uint8_t read(uint16_t const addr)
 	{
-		return debugger_.ramRead(addr, wram[addr & 0x7ff]);
+		return debugger_.ramRead(addr, wram_[addr & 0x7ff]);
 	}
 	inline void write(uint16_t const addr, uint8_t const value)
 	{
-		wram[addr & 0x7ff] = debugger_.ramWrite(addr, value);
+		wram_[addr & 0x7ff] = debugger_.ramWrite(addr, value);
 	}
 protected:
 private:
 	VirtualMachine& vm_;
 	Debugger& debugger_;
-	uint8_t wram[WRAM_LENGTH]; //2KB WRAM
+	uint8_t wram_[WRAM_LENGTH]; //2KB WRAM
 public:
 	template <typename Archiver>
 	void serialize(Archiver& arc){
-		arc & wram;
+		arc & wram_;
 	}
+public: /* debugger */
+	inline uint8_t const (&wram() const noexcept)[WRAM_LENGTH] { return this->wram_; }
+	inline uint8_t (&wram() noexcept)[WRAM_LENGTH] { return this->wram_; }
 };
 
 class Processor
@@ -588,30 +591,30 @@ public:
 	{
 		switch(addr & 0xE000){
 			case 0x0000:
-				return ram.read(addr);
+				return ram_.read(addr);
 			case 0x2000:
-				return video.readReg(addr);
+				return video_.readReg(addr);
 			case 0x4000:
 				//このへんは込み入ってるので、仕方ないからここで振り分け。
 				if(addr == 0x4015){
-					return audio.readReg(addr);
+					return audio_.readReg(addr);
 				}else if(addr == 0x4016){
-					return ioPort.readInputReg1();
+					return ioPort_.readInputReg1();
 				}else if(addr == 0x4017){
-					return ioPort.readInputReg2();
+					return ioPort_.readInputReg2();
 				}else if(addr < 0x4018){
 					throw EmulatorException("[FIXME] Invalid addr: 0x") << std::hex << addr;
 				}else{
-					return debugger_.cartridgeReadCPUReg(addr, cartridge->readRegisterArea(addr));
+					return debugger_.cartridgeReadCPUReg(addr, cartridge_->readRegisterArea(addr));
 				}
 			case 0x6000:
-				return debugger_.cartridgeReadCPUSaveArea(addr, cartridge->readSaveArea(addr));
+				return debugger_.cartridgeReadCPUSaveArea(addr, cartridge_->readSaveArea(addr));
 			case 0x8000:
 			case 0xA000:
-				return debugger_.cartridgeReadCPUBankLow(addr, cartridge->readBankLow(addr));
+				return debugger_.cartridgeReadCPUBankLow(addr, cartridge_->readBankLow(addr));
 			case 0xC000:
 			case 0xE000:
-				return debugger_.cartridgeReadCPUBankHigh(addr, cartridge->readBankHigh(addr));
+				return debugger_.cartridgeReadCPUBankHigh(addr, cartridge_->readBankHigh(addr));
 			default:
 				throw EmulatorException("[FIXME] Invalid addr: 0x") << std::hex << addr;
 		}
@@ -620,32 +623,32 @@ public:
 	{
 		switch(addr & 0xE000){
 			case 0x0000:
-				ram.write(addr, value);
+				ram_.write(addr, value);
 				break;
 			case 0x2000:
-				video.writeReg(addr, value);
+				video_.writeReg(addr, value);
 				break;
 			case 0x4000:
 				if(addr == 0x4014){
-					video.executeDMA(value);
+					video_.executeDMA(value);
 				}else if(addr == 0x4016){
-					ioPort.writeOutReg(value);
+					ioPort_.writeOutReg(value);
 				}else if(addr < 0x4018){
-					audio.writeReg(addr, value);
+					audio_.writeReg(addr, value);
 				}else{
-					cartridge->writeRegisterArea(addr, debugger_.cartridgeWriteCPUReg(addr, value));
+					cartridge_->writeRegisterArea(addr, debugger_.cartridgeWriteCPUReg(addr, value));
 				}
 				break;
 			case 0x6000:
-				cartridge->writeSaveArea(addr, debugger_.cartridgeWriteCPUSaveArea(addr, value));
+				cartridge_->writeSaveArea(addr, debugger_.cartridgeWriteCPUSaveArea(addr, value));
 				break;
 			case 0x8000:
 			case 0xA000:
-				cartridge->writeBankLow(addr, debugger_.cartridgeWriteCPUBankLow(addr, value));
+				cartridge_->writeBankLow(addr, debugger_.cartridgeWriteCPUBankLow(addr, value));
 				break;
 			case 0xC000:
 			case 0xE000:
-				cartridge->writeBankHigh(addr, debugger_.cartridgeWriteCPUBankHigh(addr, value));
+				cartridge_->writeBankHigh(addr, debugger_.cartridgeWriteCPUBankHigh(addr, value));
 				break;
 			default:
 				throw EmulatorException("[FIXME] Invalid addr: 0x") << std::hex << addr;
@@ -661,12 +664,12 @@ private:
 private:
 	Debugger debugger_;
 private:
-	Ram ram;
-	Processor processor;
-	Audio audio;
-	Video video;
-	Cartridge* cartridge;
-	IOPort ioPort;
+	Ram ram_;
+	Processor processor_;
+	Audio audio_;
+	Video video_;
+	Cartridge* cartridge_;
+	IOPort ioPort_;
 
 	uint32_t clockDelta;
 
@@ -674,12 +677,13 @@ private:
 	bool hardResetFlag;
 
 	uint8_t irqLine;
-public:
-	inline Processor const* getProcessor() const noexcept { return &processor; };
 public: /* Save/Load */
 	XValue save();
 	void load(XValue const& data);
 public: /* Debugger */
+	inline Processor const& processor() const noexcept { return processor_; };
+	inline Ram& ram() noexcept{ return this->ram_; }
+	inline Ram const& ram() const noexcept{ return this->ram_; }
 	inline Debugger& debugger() noexcept { return this->debugger_; };
 	inline Debugger const& debugger() const noexcept { return this->debugger_; };
 	void onBreak() noexcept;
