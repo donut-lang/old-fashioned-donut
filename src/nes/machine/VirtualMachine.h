@@ -90,8 +90,7 @@ public: /* セーブ・ロード実装用 */
 	virtual void loadImpl(XArchiverIn& arc) {};
 };
 
-class IOPort
-{
+class IOPort final{
 public:
 	explicit IOPort(VirtualMachine& vm, GamepadFairy* pad1, GamepadFairy* pad2) :
 			VM(vm),
@@ -151,7 +150,7 @@ public:
 
 };
 
-class Audio {
+class Audio final {
 	public:
 		explicit Audio(VirtualMachine& vm, AudioFairy& audioFairy);
 		~Audio();
@@ -205,8 +204,7 @@ class Audio {
 		}
 };
 
-class Video
-{
+class Video final{
 	public:
 		explicit Video(VirtualMachine& vm, VideoFairy& videoFairy);
 		~Video();
@@ -370,8 +368,7 @@ class Video
 		}
 };
 
-class Ram
-{
+class Ram final {
 public:
 	enum{
 		WRAM_LENGTH = 2048
