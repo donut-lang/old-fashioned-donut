@@ -19,8 +19,7 @@ public:
 	static const uint8_t LengthCounterConst[32];
 };
 
-class Rectangle
-{
+class Rectangle final {
 private:
 	bool isFirstChannel;
 
@@ -75,7 +74,7 @@ public:
 
 public:
 	explicit Rectangle(bool isFirstChannel);
-	~Rectangle();
+	~Rectangle() noexcept = default;
 	inline void analyzeVolumeRegister(uint8_t reg);
 	inline void analyzeSweepRegister(uint8_t reg);
 	inline void analyzeFrequencyRegister(uint8_t reg);
@@ -89,8 +88,7 @@ public:
 	inline void onReset();
 };
 
-class Triangle
-{
+class Triangle final{
 private:
 	const static uint8_t waveForm[32];
 
@@ -123,7 +121,7 @@ public:
 	}
 public:
 	Triangle();
-	~Triangle();
+	~Triangle() noexcept = default;
 	inline void analyzeLinearCounterRegister(uint8_t value);
 	inline void analyzeFrequencyRegister(uint8_t value);
 	inline void analyzeLengthCounter(uint8_t value);
@@ -136,8 +134,7 @@ public:
 	inline bool isEnabled();
 };
 
-class Noize
-{
+class Noize final {
 private:
 	static const uint16_t FrequencyTable[16];
 
@@ -183,7 +180,7 @@ public:
 	}
 public:
 	Noize();
-	~Noize();
+	~Noize() noexcept = default;
 	inline void analyzeVolumeRegister(uint8_t reg);
 	inline void analyzeFrequencyRegister(uint8_t reg);
 	inline void analyzeLengthRegister(uint8_t reg);
@@ -196,8 +193,7 @@ public:
 	inline void onReset();
 };
 
-class Digital
-{
+class Digital final{
 private:
 	VirtualMachine& vm_;
 
@@ -233,7 +229,7 @@ public:
 	}
 public:
 	Digital(VirtualMachine& vm);
-	~Digital();
+	~Digital() noexcept = default;
 	inline void analyzeFrequencyRegister(uint8_t value);
 	inline void analyzeDeltaCounterRegister(uint8_t value);
 	inline void analyzeSampleAddrRegister(uint8_t value);

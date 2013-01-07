@@ -39,10 +39,6 @@ Video::Video(VirtualMachine& vm, VideoFairy& videoFairy)
 	memset(this->screenBuffer, 0x0, screenWidth * screenHeight * sizeof(uint8_t));
 }
 
-Video::~Video()
-{
-	//dtor
-}
 void Video::run(uint16_t clockDelta)
 {
 	this->nowX += clockDelta;
