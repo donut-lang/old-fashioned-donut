@@ -111,6 +111,15 @@ public:
 			pad2Idx = 0;
 		}
 	}
+	inline void debuggerWriteOutReg(uint8_t const value)
+	{
+		if((value & 1) == 1){
+			pad1Fairy.onUpdate();
+			pad1Idx = 0;
+			pad2Fairy.onUpdate();
+			pad2Idx = 0;
+		}
+	}
 	inline uint8_t readInputReg1()
 	{
 		return debugger_.ioRead(0x4016, pad1Fairy.isPressed((pad1Idx++) & 7) ? 1 : 0);
@@ -118,6 +127,14 @@ public:
 	inline uint8_t readInputReg2()
 	{
 		return debugger_.ioRead(0x4017, pad2Fairy.isPressed((pad2Idx++) & 7) ? 1 : 0);
+	}
+	inline uint8_t debuggerReadInputReg1()
+	{
+		return pad1Fairy.isPressed((pad1Idx) & 7) ? 1 : 0;
+	}
+	inline uint8_t debuggerReadInputReg2()
+	{
+		return pad2Fairy.isPressed((pad2Idx) & 7) ? 1 : 0;
 	}
 
 
@@ -150,6 +167,8 @@ public:
 	void onReset();
 	uint8_t readReg(uint16_t addr);
 	void writeReg(uint16_t addr, uint8_t value);
+	uint8_t debuggerReadReg(uint16_t addr);
+	void debuggerWriteReg(uint16_t addr, uint8_t value);
 	void onVSync();
 	enum{
 		AUDIO_CLOCK = 21477272/12,//21.28MHz(NTSC)
@@ -309,6 +328,9 @@ private:
 	inline uint8_t buildPPUStatusRegister();
 	inline uint8_t readVramDataRegister();
 	inline uint8_t readSpriteDataRegister();
+	inline uint8_t debuggerBuildPPUStatusRegister();
+	inline uint8_t debuggerReadVramDataRegister();
+	inline uint8_t debuggerReadSpriteDataRegister();
 	inline void analyzeVramAddrRegister(uint8_t const value);
 	inline void analyzeSpriteAddrRegister(uint8_t const value);
 	inline void writeVramDataRegister(uint8_t const value);
@@ -359,6 +381,9 @@ public:
 		arc & scrollRegisterWritten;
 		arc & vramAddrRegisterWritten;
 	}
+public:
+	uint8_t debuggerReadReg(uint16_t const addr);
+	void debuggerWriteReg(uint16_t const addr, uint8_t const value);
 };
 
 class Ram final {
@@ -402,6 +427,12 @@ public:
 public: /* debugger */
 	inline uint8_t const (&wram() const noexcept)[WRAM_LENGTH] { return this->wram_; }
 	inline uint8_t (&wram() noexcept)[WRAM_LENGTH] { return this->wram_; }
+	inline uint8_t debuggerRead(uint16_t const addr) {
+		return wram_[addr & 0x7ff];
+	}
+	inline void debuggerWrite(uint16_t const addr, uint8_t const value) {
+		wram_[addr & 0x7ff] = value;
+	}
 };
 
 class Processor
@@ -619,6 +650,38 @@ public:
 				throw EmulatorException("[FIXME] Invalid addr: 0x") << std::hex << addr;
 		}
 	}
+	inline uint8_t debuggerRead(uint16_t const addr) //from processor to subsystems.
+	{
+		switch(addr & 0xE000){
+			case 0x0000:
+				return ram_.debuggerRead(addr);
+			case 0x2000:
+				return video_.debuggerReadReg(addr);
+			case 0x4000:
+				//このへんは込み入ってるので、仕方ないからここで振り分け。
+				if(addr == 0x4015){
+					return audio_.debuggerReadReg(addr);
+				}else if(addr == 0x4016){
+					return ioPort_.debuggerReadInputReg1();
+				}else if(addr == 0x4017){
+					return ioPort_.debuggerReadInputReg2();
+				}else if(addr < 0x4018){
+					return 0;
+				}else{
+					return cartridge_->readRegisterArea(addr); //XXX: 副作用避け
+				}
+			case 0x6000:
+				return cartridge_->readSaveArea(addr); //XXX: 副作用避け
+			case 0x8000:
+			case 0xA000:
+				return cartridge_->readBankLow(addr); //XXX: 副作用避け
+			case 0xC000:
+			case 0xE000:
+				return cartridge_->readBankHigh(addr); //XXX: 副作用避け
+			default:
+				return 0;
+		}
+	}
 	inline void write(uint16_t const addr, uint8_t const value) // from processor to subsystems.
 	{
 		switch(addr & 0xE000){
@@ -652,6 +715,41 @@ public:
 				break;
 			default:
 				throw EmulatorException("[FIXME] Invalid addr: 0x") << std::hex << addr;
+		}
+	}
+	inline void debuggerWrite(uint16_t const addr, uint8_t const value) // from debugger.
+	{
+		switch(addr & 0xE000){
+			case 0x0000:
+				ram_.debuggerWrite(addr, value);
+				break;
+			case 0x2000:
+				video_.debuggerWriteReg(addr, value);
+				break;
+			case 0x4000:
+				if(addr == 0x4014){
+					video_.executeDMA(value); //FIXME: どうする？？
+				}else if(addr == 0x4016){
+					ioPort_.debuggerWriteOutReg(value);
+				}else if(addr < 0x4018){
+					audio_.debuggerWriteReg(addr, value);
+				}else{
+					cartridge_->writeRegisterArea(addr, value); //XXX: 副作用避け
+				}
+				break;
+			case 0x6000:
+				cartridge_->writeSaveArea(addr, value); //XXX: 副作用避け
+				break;
+			case 0x8000:
+			case 0xA000:
+				cartridge_->writeBankLow(addr, value); //XXX: 副作用避け
+				break;
+			case 0xC000:
+			case 0xE000:
+				cartridge_->writeBankHigh(addr, value); //XXX: 副作用避け
+				break;
+			default:
+				break;
 		}
 	}
 private:

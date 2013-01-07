@@ -39,6 +39,12 @@ public:
 public:
 	Debugger(VirtualMachine& vm);
 	~Debugger() noexcept = default;
+public:
+
+
+	/******************************************************************************************************************
+	 * callback functions
+	 ******************************************************************************************************************/
 private:
 	uint8_t inline memoryRead(uint16_t const addr, uint8_t const value) noexcept {
 		return watcher_.onMemoryRead(addr, value);
