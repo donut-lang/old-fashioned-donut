@@ -16,7 +16,7 @@ namespace nes {
 
 NesMemoryWidget::NesMemoryWidget(chisa::Logger& log, chisa::HandlerW<chisa::tk::World> _world, tinyxml2::XMLElement* element)
 :Widget(log, _world, element)
-,numRenderer_(log, _world.lock()->drawableManager())
+,numRenderer_(log, _world.lock()->drawableManager(), 32)
 {
 	chisa::Handler<chisa::tk::World> world(_world.lock());
 	chisa::Handler<nes::NesGeist> geist(world->geist().cast<nes::NesGeist>());

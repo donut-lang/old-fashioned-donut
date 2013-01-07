@@ -34,19 +34,24 @@ private:
 	std::map<unsigned int, Handler<TextDrawable> > spriteTable_;
 	float maxWidth_;
 	float maxHeight_;
+	float maxCharWidth_;
+	float maxCharHeight_;
 private:
+	Handler<gl::Font> font_;
 	float size_;
 	gl::Color color_;
 	gl::Color backgroundColor_;
 public:
 	typedef unsigned int Symbol;
 	typedef std::vector<Symbol> SymList;
-	PredefinedSymRenderer(Logger& log, Handler<DrawableManager> drawableManager);
+	PredefinedSymRenderer(Logger& log, Handler<DrawableManager> drawableManager, float size);
 	virtual ~PredefinedSymRenderer() noexcept = default;
 public:
 	void registerSymbol( Symbol symbol, std::string const& str );
-	inline float maxWidth() const noexcept { return this->maxWidth_; };
-	inline float maxHeight() const noexcept { return this->maxHeight_; };
+	inline float const& maxWidth() const noexcept { return this->maxWidth_; };
+	inline float const& maxHeight() const noexcept { return this->maxHeight_; };
+	inline float const& maxCharWidth() const noexcept { return this->maxCharWidth_; };
+	inline float const& maxCharHeight() const noexcept { return this->maxCharHeight_; };
 	geom::Area renderSyms( Canvas& cv, geom::Point const& point, SymList const& str, float depth );
 	geom::Area renderSym( Canvas& cv, geom::Point const& point, Symbol const& str, float depth );
 };
