@@ -73,7 +73,7 @@ void NesMemoryCompare::render(chisa::gl::Canvas& cv, const chisa::geom::Area& ar
 	using namespace chisa::gl;
 	Handler<NesGeist> geist = this->geist_.lock();
 	Handler<chisa::tk::WidgetElement> parent = this->wrapper().lock();
-	if(!geist){
+	if(!geist || !parent){
 		return;
 	}
 	Debugger& dbg = geist->machine()->debugger();
@@ -120,7 +120,7 @@ void NesMemoryCompare::render(chisa::gl::Canvas& cv, const chisa::geom::Area& ar
 	}
 
 	{ //ラベル
-		cv.fillRect(White, Area(ZERO, Point(width_, rowHeight+area.y())));
+		cv.fillRect(parent->backgroundColor(), Area(ZERO, Point(width_, rowHeight+area.y())));
 		this->lAddr_->draw(cv, Point((this->addrWidth_-this->lAddr_->width())/2, area.y()));
 		this->lLast_->draw(cv, Point(this->addrWidth_ + 2 + (this->lastWidth_ - this->lLast_->width())/2,area.y()));
 		this->lNow_->draw(cv, Point(this->addrWidth_ + 2 + this->lastWidth_ + 2 + (this->nowWidth_ - this->lNow_->width())/2,area.y()));
