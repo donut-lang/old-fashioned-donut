@@ -33,6 +33,10 @@ Widget::Widget(Logger& log, HandlerW<World> world, tinyxml2::XMLElement* element
 
 geom::Vector Widget::calcAbsolutePosition()
 {
+	Handler<WidgetElement> const elm = this->wrapper_.lock();
+	if(!elm){
+		return geom::Vector();
+	}
 }
 
 void Widget::requestRelayout()
