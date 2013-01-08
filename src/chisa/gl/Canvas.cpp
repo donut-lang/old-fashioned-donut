@@ -42,7 +42,6 @@ Canvas::~Canvas()
 {
 
 }
-#define DEBUG
 
 void Canvas::ortho(const float left, const float right, const float bottom, const float top, const float near_val, const float far_val)
 {
