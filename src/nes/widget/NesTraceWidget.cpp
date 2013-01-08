@@ -136,7 +136,6 @@ void NesTraceWidget::render(chisa::gl::Canvas& cv, chisa::geom::Area const& area
 	VirtualMachine& vm = *geist->machine();
 	Debugger& dbg = geist->machine()->debugger();
 	Disassembler& disasm = dbg.disassembler();
-	uint16_t const nowPC = disasm.nowPC();
 
 
 	PredefinedSymRenderer::SymList addrSym(4);
@@ -148,12 +147,16 @@ void NesTraceWidget::render(chisa::gl::Canvas& cv, chisa::geom::Area const& area
 	unsigned int const endRow = std::ceil((area.y() - rowHeight + area.height())/rowHeight);
 
 	Instruction inst;
-	uint16_t pc = nowPC;
+	uint16_t const nowPC = disasm.nowPC();
+	uint16_t pc = disasm.lastPC(3);
 	for(unsigned int i=0;i<=endRow;++i){
 		disasm.decodeAt(pc, inst);
 		pc+=inst.binLength_;
 		if(i < startRow){
 			continue;
+		}
+		if(pc == nowPC) {
+			cv.fillRect(DarkGray, Area(area.x(), offset, area.width(), rowHeight));
 		}
 		float startX = 0;
 		{ //addr
