@@ -7,7 +7,7 @@
 					<xstring name="rom">__roms__/alter_ego/Alter_Ego.nes</xstring>
 				</xobject>
 			</widget>
-			<tab id="frame" place="left">
+			<tab id="frame" place="left" split-weight="1">
 				<scroll title="検索" mode="vertical">
 					<vertical>
 						<widget widget-klass="nes-compare" fit="expand" />
