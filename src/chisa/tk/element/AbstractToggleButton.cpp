@@ -30,10 +30,10 @@ const std::string AbstractToggleButton::AttrName::OffForegroundColor("foreground
 const std::string AbstractToggleButton::AttrName::OffBackgroundColor("background-color-off");
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(AbstractToggleButton, AbstractButton)
-,onForegroundColor_(gl::InvalidColor)
-,onBackgroundColor_(gl::InvalidColor)
-,offForegroundColor_(gl::InvalidColor)
-,offBackgroundColor_(gl::InvalidColor)
+,onForegroundColor_(foregroundColor())
+,onBackgroundColor_(backgroundColor())
+,offForegroundColor_(foregroundColor().darker())
+,offBackgroundColor_(backgroundColor().darker())
 {
 	this->addAttribute(AttrName::OnForegroundColor, this->onForegroundColor_);
 	this->addAttribute(AttrName::OnBackgroundColor, this->onBackgroundColor_);
@@ -59,21 +59,9 @@ void AbstractToggleButton::checked(bool const& state)
 void AbstractToggleButton::notifyCheckedStateChanged()
 {
 	if(this->checked()){
-		if(this->onBackgroundColor_.isInvalid()){
-			this->onBackgroundColor_ = this->backgroundColor();
-		}
-		if(this->onForegroundColor_.isInvalid()){
-			this->onForegroundColor_ = this->foregroundColor();
-		}
 		this->backgroundColor(this->onBackgroundColor());
 		this->foregroundColor(this->onForegroundColor());
 	}else{
-		if(this->offBackgroundColor_.isInvalid()){
-			this->offBackgroundColor_ = this->backgroundColor().darker();
-		}
-		if(this->offForegroundColor_.isInvalid()){
-			this->offForegroundColor_ = this->foregroundColor().lighter();
-		}
 		this->backgroundColor(this->offBackgroundColor());
 		this->foregroundColor(this->offForegroundColor());
 	}

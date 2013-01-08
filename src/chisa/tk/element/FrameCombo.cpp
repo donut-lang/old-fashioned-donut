@@ -40,14 +40,14 @@ std::string FrameCombo::toString() const
 
 void FrameCombo::renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
-	if( Handler<Element> elm = this->lastChild() ){
+	if( Handler<Element> elm = this->frontChild() ){
 		elm->render(canvas,ptInRoot,mask);
 	}
 }
 
 geom::Box FrameCombo::measureImpl(geom::Box const& constraint)
 {
-	if( Handler<Element> elm = this->lastChild() ){
+	if( Handler<Element> elm = this->frontChild() ){
 		return elm->measure( constraint );
 	}
 	return constraint;
@@ -55,7 +55,7 @@ geom::Box FrameCombo::measureImpl(geom::Box const& constraint)
 
 void FrameCombo::layoutImpl(geom::Distance const& offsetFromParent, geom::Box const& size)
 {
-	if( Handler<Element> elm = this->lastChild() ){
+	if( Handler<Element> elm = this->frontChild() ){
 		elm->layout(offsetFromParent, size);
 	}
 }
