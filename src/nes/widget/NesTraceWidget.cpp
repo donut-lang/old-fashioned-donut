@@ -148,16 +148,17 @@ void NesTraceWidget::render(chisa::gl::Canvas& cv, chisa::geom::Area const& area
 
 	Instruction inst;
 	uint16_t const nowPC = disasm.nowPC();
-	uint16_t pc = disasm.lastPC(3);
+	uint16_t pc = nowPC;
 	for(unsigned int i=0;i<=endRow;++i){
 		disasm.decodeAt(pc, inst);
-		pc+=inst.binLength_;
 		if(i < startRow){
+			pc+=inst.binLength_;
 			continue;
 		}
 		if(pc == nowPC) {
-			cv.fillRect(DarkGray, Area(area.x(), offset, area.width(), rowHeight));
+			cv.fillRect(Gray, Area(area.x(), offset, area.width(), rowHeight));
 		}
+		pc+=inst.binLength_;
 		float startX = 0;
 		{ //addr
 			startX += symRenderer_.renderSym(cv, Point(startX,offset), Dollar, 0.0f).width();
