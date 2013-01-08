@@ -40,8 +40,15 @@ public:
 	Debugger(VirtualMachine& vm);
 	~Debugger() noexcept = default;
 public:
+	inline Disassembler const& disassembler() const noexcept { return this->disasm_; };
+	inline Disassembler& disassembler() noexcept { return this->disasm_; };
 
+	inline Watcher const& watcher() const noexcept { return this->watcher_; };
+	inline Watcher& watcher() noexcept { return this->watcher_; };
 
+	inline MemoryComparator const& comparator() const noexcept { return this->comparator_; };
+	inline MemoryComparator& comparator() noexcept { return this->comparator_; };
+public:
 	/******************************************************************************************************************
 	 * callback functions
 	 ******************************************************************************************************************/
