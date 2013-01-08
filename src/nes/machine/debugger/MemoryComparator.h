@@ -77,6 +77,7 @@ private:
 public:
 	inline unsigned int candidates() const noexcept { return this->candidates_; };
 	inline bool isCandidate( uint16_t const& addr ) const noexcept { return (entry_[addr / (CHAR_BIT*sizeof(unsigned int))] & (1 << (addr % (CHAR_BIT*sizeof(unsigned int))))); };
+	inline bool isStarted() const noexcept { return !(this->last_.empty()); };
 	inline uint8_t last(uint16_t const& addr) const noexcept { return this->last_[addr & 0x2047]; };
 	uint8_t now(uint16_t const& addr) const noexcept;
 public:
