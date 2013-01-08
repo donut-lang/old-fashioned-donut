@@ -18,6 +18,7 @@
 
 #include "NesMemoryCompare.h"
 #include "../../chisa/tk/World.h"
+#include "../../chisa/tk/element/WidgetElement.h"
 #include "../../chisa/gl/DrawableManager.h"
 #include "../NesGeist.h"
 
@@ -53,16 +54,17 @@ NesMemoryCompare::NesMemoryCompare(chisa::Logger& log, chisa::HandlerW<chisa::tk
 	numRenderer_.registerSymbol(14, "e");
 	numRenderer_.registerSymbol(15, "f");
 	numRenderer_.registerSymbol(Dollar, "$");
+	numRenderer_.registerSymbol(Hatena, "?");
 
 
 	chisa::Handler<nes::NesGeist> geist(world->geist().cast<nes::NesGeist>());
 	this->geist_ = geist;
 
 	{
-		float const numLen = this->numRenderer_.maxCharWidth();
-		this->addrWidth_ = chisa::geom::max(this->lAddr_->width(), numLen * 5);
-		this->lastWidth_ = chisa::geom::max(this->lLast_->width(), numLen * 2);
-		this->nowWidth_ = chisa::geom::max(this->lNow_->width(), numLen * 2);
+		float const numLen = this->numRenderer_.maxWidth();
+		this->addrWidth_ = chisa::geom::max(this->lAddr_->width()+5, numLen * 5);
+		this->lastWidth_ = chisa::geom::max(this->lLast_->width()+5, numLen * 2);
+		this->nowWidth_ = chisa::geom::max(this->lNow_->width()+5, numLen * 2);
 		this->width_ = addrWidth_ + 2 + lastWidth_ + 2 + nowWidth_;
 	}
 }
@@ -72,14 +74,16 @@ void NesMemoryCompare::render(chisa::gl::Canvas& cv, const chisa::geom::Area& ar
 	using namespace chisa::geom;
 	using namespace chisa::gl;
 	Handler<NesGeist> geist = this->geist_.lock();
+	Handler<chisa::tk::WidgetElement> parent = this->wrapper().lock();
 	if(!geist){
 		return;
 	}
 	Debugger& dbg = geist->machine()->debugger();
 	MemoryComparator& cmp = dbg.comparator();
+	const float rowHeight = this->rowHeight();
 
-	unsigned int const startRow = max(std::floor((area.y() - rowHeight())/rowHeight()), 0);
-	unsigned int const endRow = min(std::ceil((area.y() - rowHeight() + area.height())/rowHeight()), cmp.candidates());
+	unsigned int const startRow = max(std::floor((area.y() - rowHeight)/rowHeight), 0);
+	unsigned int const endRow = min(std::ceil((area.y() - rowHeight + area.height())/rowHeight), cmp.candidates());
 
 	unsigned int idx = 0;
 	unsigned int drawn = 0;
@@ -89,7 +93,7 @@ void NesMemoryCompare::render(chisa::gl::Canvas& cv, const chisa::geom::Area& ar
 	for(unsigned int i=0; i<2048;++i) {
 		if(cmp.isCandidate(i)) {
 			if(  idx >= startRow && idx <= endRow ) {
-				float const offset = rowHeight() * (1+drawn);
+				float const offset = rowHeight * (1+idx);
 				{ //addr
 					asym_[1] = (i >> 12) & 0xf;
 					asym_[2] = (i >>  8) & 0xf;
@@ -110,21 +114,22 @@ void NesMemoryCompare::render(chisa::gl::Canvas& cv, const chisa::geom::Area& ar
 					this->numRenderer_.renderSyms(cv, Point(addrWidth_+2+lastWidth_+2, offset), sym_, 0);
 				}
 				++drawn;
-				++idx;
 			}else if( idx > endRow ){
 				break;
 			}
+			++idx;
 		}
 	}
 
 	{ //ラベル
+		cv.fillRect(White, Area(ZERO, Point(width_, rowHeight+area.y())));
 		this->lAddr_->draw(cv, Point((this->addrWidth_-this->lAddr_->width())/2, area.y()));
 		this->lLast_->draw(cv, Point(this->addrWidth_ + 2 + (this->lastWidth_ - this->lLast_->width())/2,area.y()));
 		this->lNow_->draw(cv, Point(this->addrWidth_ + 2 + this->lastWidth_ + 2 + (this->nowWidth_ - this->lNow_->width())/2,area.y()));
-		cv.drawLine(2, DarkGray, Point(addrWidth_, area.y()), Point(addrWidth_, rowHeight()+area.y()));
+		cv.drawLine(2, DarkGray, Point(0, rowHeight+area.y()), Point(width_, rowHeight+area.y()));
 	}
 	cv.drawLine(2, DarkGray, Point(addrWidth_ + lastWidth_, area.y()), Point(addrWidth_ + lastWidth_, area.y()+area.height()));
-	cv.drawLine(2, DarkGray, Point(0, area.y()), Point(width_, area.y()+area.height()));
+	cv.drawLine(2, DarkGray, Point(addrWidth_, area.y()), Point(addrWidth_, area.y()+area.height()));
 }
 
 void NesMemoryCompare::idle(const float delta_ms)

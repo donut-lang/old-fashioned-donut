@@ -43,7 +43,7 @@ class Widget {
 	DISABLE_COPY_AND_ASSIGN(Widget);
 	DEFINE_MEMBER_REF(protected, Logger, log);
 	DEFINE_MEMBER(protected, private, HandlerW<World>, world)
-	DEFINE_MEMBER(private, private, HandlerW<WidgetElement>, wrapper);
+	DEFINE_MEMBER(protected, private, HandlerW<WidgetElement>, wrapper);
 public:
 	Widget(Logger& log, HandlerW<World> world, tinyxml2::XMLElement* element);
 	virtual ~Widget() noexcept = default;
