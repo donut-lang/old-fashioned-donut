@@ -158,9 +158,12 @@ geom::Box SplitCombo::measureImpl(geom::Box const& constraint)
 			}else if(geom::isSpecified(childCtx.def.max)){
 				totalSize += childCtx.def.max;
 				childCtx.size = childCtx.def.max;
-			}else{
+			}else if(geom::isSpecified(childCtx.def.min)){
 				totalSize += childCtx.def.min;
 				childCtx.size = childCtx.def.min;
+			}else{
+				childCtx.weight = 1.0f;
+				childCtx.size = geom::Unspecified;
 			}
 			if(geom::isSpecified((childSize.*fixed_getter)())) {
 				fixedMaxSize = std::max(fixedMaxSize, (childSize.*fixed_getter)());
@@ -253,6 +256,40 @@ geom::Box SplitCombo::measureImpl(geom::Box const& constraint)
 
 void SplitCombo::layoutImpl(geom::Distance const& offsetFromParent, geom::Box const& size)
 {
+#ifdef DEBUG
+		if(geom::isUnspecified((size.*changed_getter)())) {
+			TARTE_EXCEPTION(Exception, "[BUG] Fixed size is unspecified for SplitCombo.");
+		}
+		if(geom::isUnspecified((size.*fixed_getter)())) {
+			TARTE_EXCEPTION(Exception, "[BUG] Fixed size is unspecified for SplitCombo.");
+		}
+#endif
+	float totalUnspecifiedWidth = 0.0f;
+	float left = (size.*changed_getter)();
+	for(ContainerType& it : this->children()){
+		SplitComboContext& ctx = it.second;
+		if( geom::isUnspecified(ctx.size) ) {
+			totalUnspecifiedWidth+=ctx.weight;
+#ifdef DEBUG
+			if(geom::isUnspecified(ctx.weight)) {
+				TARTE_EXCEPTION(Exception, "[BUG] Weight is unspecified.");
+			}
+#endif
+		}else{
+			left -= ctx.size;
+		}
+	}
+	if(totalUnspecifiedWidth > 0.0f) {
+		for(ContainerType& it : this->children()){
+			SplitComboContext& ctx = it.second;
+			if( geom::isUnspecified(ctx.size) ) {
+				float const s = left * ctx.weight / totalUnspecifiedWidth;
+				left -= s;
+				totalUnspecifiedWidth+=ctx.weight;
+				ctx.size = s;
+			}
+		}
+	}
 	geom::Box offset(geom::ZERO);
 	for(ContainerType& it : this->children()){
 		SplitComboContext& ctx = it.second;
@@ -260,6 +297,11 @@ void SplitCombo::layoutImpl(geom::Distance const& offsetFromParent, geom::Box co
 		(box.*changed_setter)(ctx.size);
 		(box.*fixed_setter)((size.*fixed_getter)());
 		(offset.*changed_setter)(ctx.size+(box.*changed_getter)());
+#ifdef DEBUG
+		if(geom::isUnspecified(ctx.size)) {
+			TARTE_EXCEPTION(Exception, "[BUG] Split size is unspecified.");
+		}
+#endif
 		it.first->layout(offset, box);
 	}
 }
