@@ -18,6 +18,7 @@
 
 #pragma once
 #include <string>
+#include <vector>
 #include <tarte/Handler.h>
 #include <tarte/ClassUtil.h>
 #include <tarte/Logger.h>
@@ -26,6 +27,17 @@
 namespace chisa {
 using namespace tarte;
 namespace gl {
+
+class BitmapGlyph : public HandlerBody<BitmapGlyph> {
+private:
+	FT_BitmapGlyph glyph_;
+public:
+	BitmapGlyph(FT_BitmapGlyph glyph);
+	~BitmapGlyph() noexcept;
+	inline bool onFree() noexcept { return false; };
+public:
+	FT_BitmapGlyph get() const noexcept { return this->glyph_; };
+};
 
 class Font : public HandlerBody<Font>
 {
@@ -38,6 +50,7 @@ private:
 	HandlerW<internal::FontManager> parent_;
 	Handler<internal::FreeType> freetype_;
 	FT_Face face_;
+	DEFINE_MEMBER(public, private, unsigned int, unicodeCharmapIndex);
 	DEFINE_MEMBER(private, private, bool, locked);
 public:
 	Font(internal::FontManager* parent, Handler<internal::FreeType> freetype, FT_Face face);
@@ -45,6 +58,8 @@ public:
 public:
 	std::string family() const noexcept;
 	std::string style() const noexcept;
+public:
+	std::vector<Handler<BitmapGlyph> > lookupGlyph(std::string const& str, float size) noexcept;
 public:
 	static void analyzeFontName(std::string const& name, std::string& family, std::string& style) noexcept;
 	static void calcLineInfo(FT_Face face, float const& fontSize, float& ascent, float& descent, float& height);
@@ -54,18 +69,27 @@ public:
 		DISABLE_COPY_AND_ASSIGN(RawFaceSession);
 		STACK_OBJECT(RawFaceSession);
 	private:
-		Handler<Font> parent_;
+		Font& parent_;
 	public:
-		RawFaceSession(Handler<Font> font):parent_(font){
-			if(this->parent_->locked()){
+		RawFaceSession(Handler<Font> font):parent_(*font.get()){
+			if(this->parent_.locked()){
 				TARTE_EXCEPTION(Exception, "[BUG] Failed to lock Font.");
 			}
-			this->parent_->locked(true);
+			this->parent_.locked(true);
+		};
+		RawFaceSession(Font& font):parent_(font){
+			if(this->parent_.locked()){
+				TARTE_EXCEPTION(Exception, "[BUG] Failed to lock Font.");
+			}
+			this->parent_.locked(true);
 		};
 		~RawFaceSession() noexcept{
-			this->parent_->locked(false);
+			if(!this->parent_.locked()){
+				TARTE_EXCEPTION(Exception, "[BUG] Oops. Font is already unlocked.");
+			}
+			this->parent_.locked(false);
 		}
-		FT_Face face() const noexcept { return parent_->face_; };
+		FT_Face face() const noexcept { return parent_.face_; };
 	};
 public:
 	bool onFree();

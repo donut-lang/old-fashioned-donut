@@ -20,6 +20,7 @@
 
 #include <string>
 #include <typeinfo>
+#include "Common.h"
 
 namespace tarte {
 

@@ -19,6 +19,7 @@
 #pragma once
 #include <vector>
 #include <algorithm>
+#include "Common.h"
 #include "PairFunctor.h"
 
 namespace tarte {

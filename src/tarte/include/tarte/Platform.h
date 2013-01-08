@@ -17,6 +17,7 @@
  */
 
 #pragma once
+#include "Common.h"
 
 #define CHISA_WINDOWS (defined(WIN32) || defined(WIN64) || defined(__WIN32__) || defined(__WIN64__))
 

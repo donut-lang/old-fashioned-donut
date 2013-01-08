@@ -21,26 +21,42 @@
 #include <deque>
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include <freetype/ftcache.h>
 
 #include <tarte/Logger.h>
 #include <tarte/Handler.h>
 #include <tarte/ClassUtil.h>
 
+#define FLOAT_TO_26_6(d) ((FT_F26Dot6)((d) * 64.0))
+#define FLOAT_FROM_26_6(t) ((float)(t) / 64.0)
+
 namespace chisa {
 using namespace tarte;
 namespace gl {
 class Font;
+class BitmapGlyph;
 
 namespace internal {
+
+class FontManager;
 class FreeType : public HandlerBody<FreeType> {
 private:
 	FT_Library library_;
+	FTC_Manager cache_;
+	FTC_CMapCache cmap_;
+	FTC_ImageCache image_;
 public:
 	FreeType();
 	~FreeType() noexcept;
 public:
-	FT_Library raw() const noexcept { return this->library_; };
 	inline bool onFree() noexcept { return false; };
+private:
+	friend class FontManager;
+	friend class gl::Font;
+	FT_Library raw() const noexcept { return this->library_; };
+	void removeFont(Font& font);
+	unsigned int lookupGlyphIndex(Font& font, unsigned int ucs4);
+	Handler<BitmapGlyph> lookupBitmap(Font& font, float size, unsigned int ucs4);
 };
 
 class FontManager : public HandlerBody<FontManager> {

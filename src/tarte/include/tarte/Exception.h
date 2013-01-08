@@ -20,6 +20,7 @@
 #include <exception>
 #include <string>
 #include <cstdarg>
+#include "Common.h"
 
 namespace tarte {
 

@@ -19,6 +19,7 @@
 #pragma once
 #include <utility>
 #include <functional>
+#include "Common.h"
 
 namespace tarte {
 

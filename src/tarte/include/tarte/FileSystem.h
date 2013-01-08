@@ -20,6 +20,7 @@
 
 #include <string>
 #include <vector>
+#include "Common.h"
 #include "Platform.h"
 #include "internal/FileSystem.h"
 

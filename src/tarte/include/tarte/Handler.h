@@ -19,6 +19,7 @@
 #pragma once
 #include <utility>
 #include <typeinfo>
+#include "Common.h"
 #include "Thread.h"
 #include "Exception.h"
 

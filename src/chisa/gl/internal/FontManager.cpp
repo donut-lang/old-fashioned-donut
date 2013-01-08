@@ -21,21 +21,8 @@
 
 namespace chisa {
 namespace gl {
+
 namespace internal {
-
-FreeType::FreeType()
-:library_(nullptr)
-{
-	if(FT_Init_FreeType(&this->library_) != 0){
-		TARTE_EXCEPTION(Exception, "[BUG] Failed to init Freetype.");
-	}
-}
-
-FreeType::~FreeType() noexcept
-{
-	FT_Done_FreeType(this->library_);
-	this->library_ = nullptr;
-}
 
 static std::string TAG("Font");
 
