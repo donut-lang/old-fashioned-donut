@@ -126,7 +126,7 @@ void NesMemoryCompare::render(chisa::gl::Canvas& cv, const chisa::geom::Area& ar
 		this->lNow_->draw(cv, Point(this->addrWidth_ + 2 + this->lastWidth_ + 2 + (this->nowWidth_ - this->lNow_->width())/2,area.y()));
 		cv.drawLine(2, DarkGray, Point(0, rowHeight+area.y()), Point(width_, rowHeight+area.y()));
 	}
-	cv.drawLine(2, DarkGray, Point(addrWidth_ + lastWidth_, area.y()), Point(addrWidth_ + lastWidth_, area.y()+area.height()));
+	cv.drawLine(2, DarkGray, Point(addrWidth_ + 2 + lastWidth_, area.y()), Point(addrWidth_ + 2 + lastWidth_, area.y()+area.height()));
 	cv.drawLine(2, DarkGray, Point(addrWidth_, area.y()), Point(addrWidth_, area.y()+area.height()));
 }
 
