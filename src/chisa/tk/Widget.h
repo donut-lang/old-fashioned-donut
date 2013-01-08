@@ -57,6 +57,12 @@ public:
 	virtual void reshape(geom::Box const& areaSize) = 0;
 	virtual geom::Box measure(geom::Box const& constraintSize) = 0;
 public:
+	void notifyRelayoutFinished();
+protected:
+	virtual void notifyRelayoutFinishedImpl() {};
+	void requestRelayout();
+	void notifyViewRefreshed();
+public:
 	virtual bool onDownRaw(float const& timeMs, geom::Point const& ptInWidget){return false;};
 	virtual bool onUpRaw(float const& timeMs, geom::Point const& ptInWidget){return false;};
 	virtual bool onMoveRaw(float const& timeMs, geom::Point const& ptInWidget){return false;};

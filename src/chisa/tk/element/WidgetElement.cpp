@@ -140,6 +140,11 @@ float WidgetElement::calcScale(geom::Box const& widget, geom::Box const& constra
 	);
 }
 
+void WidgetElement::notifyRelayoutFinished()
+{
+	this->widget_->notifyRelayoutFinished();
+}
+
 void WidgetElement::layoutImpl(geom::Distance const& offsetFromParent, geom::Box const& size)
 {
 	if(!widget()){

@@ -31,4 +31,27 @@ Widget::Widget(Logger& log, HandlerW<World> world, tinyxml2::XMLElement* element
 {
 }
 
+geom::Vector Widget::calcAbsolutePosition()
+{
+}
+
+void Widget::requestRelayout()
+{
+	if(Handler<WidgetElement> elm = this->wrapper_.lock()){
+		elm->requestRelayout();
+	}
+}
+
+void Widget::notifyRelayoutFinished()
+{
+	this->notifyRelayoutFinishedImpl();
+}
+
+void Widget::notifyViewRefreshed()
+{
+	if(Handler<WidgetElement> elm = this->wrapper_.lock()){
+		elm->notifyViewRefreshed();
+	}
+}
+
 }}
