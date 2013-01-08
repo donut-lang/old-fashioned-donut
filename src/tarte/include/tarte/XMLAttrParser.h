@@ -19,6 +19,7 @@
 #pragma once
 #include <string>
 #include <tinyxml2.h>
+#include "Common.h"
 
 #define DEF_OVERLOD(Klass)\
 template <> void parseAttr(std::string const& name, Klass& ptr, Klass const& def, tinyxml2::XMLElement* elm)

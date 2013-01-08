@@ -294,7 +294,7 @@ Handler<gl::Sprite> TextDrawable::sprite()
 	{
 		cairo_surface_t* surf = cairo_image_surface_create_for_data(ss.data(), CAIRO_FORMAT_ARGB32, ss.width(), ss.height(), ss.stride());
 		cairo_t* cr = cairo_create(surf);
-		cairo_font_face_t* face = cairo_ft_font_face_create_for_ft_face(rfs.face(),0);
+		cairo_font_face_t* face = cairo_ft_font_face_create_for_ft_face(rfs.face(), FT_LOAD_FORCE_AUTOHINT);
 		cairo_font_options_t* opt = cairo_font_options_create();
 
 		//データは使いまわしているので一旦サーフェイスの中身を削除する
@@ -302,6 +302,8 @@ Handler<gl::Sprite> TextDrawable::sprite()
 		cairo::setColor(cr, this->backColor_);
 		cairo_paint(cr);
 
+		float a,b,c;
+		Font::calcLineInfo(rfs.face(), this->fontSize_, a,b,c);
 		TextDrawable::setupCairo(cr, face, opt, this->fontSize_, this->style_);
 
 		cairo_set_operator(cr, CAIRO_OPERATOR_OVER);

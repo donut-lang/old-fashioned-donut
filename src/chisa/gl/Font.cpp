@@ -29,13 +29,25 @@ Font::Font(internal::FontManager* parent, Handler<internal::FreeType> freetype, 
 :parent_(parent)
 ,freetype_(freetype)
 ,face_(face)
+,unicodeCharmapIndex_(0)
 ,locked_(false)
 {
+	int cidx = -1;
+	for( int i=0;i<face->num_charmaps; ++i ) {
+		if(face->charmaps[i]->encoding == FT_ENCODING_UNICODE) {
+			cidx = i;
+			break;
+		}
+	}
+	if( unlikely( cidx < 0 ) ){
+		TARTE_EXCEPTION(Exception, "[BUG] This font does not support UNICODE.");
+	}
+	this->unicodeCharmapIndex(cidx);
 }
 
 Font::~Font() noexcept
 {
-	FT_Done_Face(this->face_);
+	this->freetype_->removeFont(*this);
 	this->face_ = nullptr;
 }
 
@@ -69,8 +81,37 @@ std::string Font::style() const noexcept
 	}
 }
 
-#define FLOAT_TO_26_6(d) ((FT_F26Dot6)((d) * 64.0))
-#define FLOAT_FROM_26_6(t) ((float)(t) / 64.0)
+static int getLength(unsigned char c) {
+	unsigned char mask = 128;
+	int size = 0;
+	while((c&mask) && mask != 0) {
+		mask >>= 1;
+		++size;
+	}
+	return size;
+}
+
+std::vector<Handler<BitmapGlyph> > Font::lookupGlyph(std::string const& str, float size) noexcept
+{
+	unsigned int code = 0;
+	std::vector<unsigned int> vec(str.length());
+	unsigned int idx = 0;
+
+	while(idx < str.size()){
+		int const len = getLength(str[idx]);
+		code |= (str[idx++] << (len*6));
+		for(int i=len-2;i>=0;--i) {
+			code |= ((str[idx++] & 63) << (i*6));
+		}
+		vec.push_back( code );
+	}
+	std::vector<Handler<BitmapGlyph> > glyphs;
+	for( unsigned int& code : vec ) {
+		glyphs.push_back( this->freetype_->lookupBitmap(*this, size, code) );
+	}
+	return glyphs;
+}
+
 
 void Font::calcLineInfo(FT_Face face, float const& fontSize, float& ascent, float& descent, float& height)
 {

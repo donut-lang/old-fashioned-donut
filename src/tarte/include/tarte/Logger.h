@@ -21,6 +21,7 @@
 #include <ostream>
 #include <cstdarg>
 #include <string>
+#include "Common.h"
 
 namespace tarte {
 /**

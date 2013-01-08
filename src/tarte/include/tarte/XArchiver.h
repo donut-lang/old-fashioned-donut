@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "Common.h"
 #include "XVal.h"
 
 namespace tarte {

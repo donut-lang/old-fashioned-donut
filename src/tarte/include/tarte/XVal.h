@@ -22,6 +22,7 @@
 #include <vector>
 #include <cstddef>
 #include <type_traits>
+#include "Common.h"
 #include "Handler.h"
 #include "ClassUtil.h"
 #include "PairFunctor.h"

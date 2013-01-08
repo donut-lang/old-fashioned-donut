@@ -1,5 +1,5 @@
 /**
- * Tarte
+ * Chisa
  * Copyright (C) 2012 psi
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,29 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-#include "Common.h"
-#include "Platform.h"
+#include "../Font.h"
 
-#if CHISA_WINDOWS
-#include <boost/thread.hpp>
-#include <boost/interprocess/detail/atomic.hpp>
-#include <boost/atomic.hpp>
-namespace std {
-using boost::mutex;
-using boost::recursive_mutex;
-using boost::lock_guard;
-using boost::condition_variable;
-using boost::unique_lock;
-using boost::thread;
-using boost::atomic;
-namespace chrono {
-using namespace boost::chrono;
+namespace chisa {
+namespace gl {
+
+BitmapGlyph::BitmapGlyph(FT_BitmapGlyph glyph)
+:glyph_(glyph)
+{
+
 }
+BitmapGlyph::~BitmapGlyph() noexcept
+{
+	FT_Done_Glyph(reinterpret_cast<FT_Glyph>(this->glyph_));
+	this->glyph_ = nullptr;
 }
-#else
-#include <thread>
-#include <condition_variable>
-#include <mutex>
-#include <atomic>
-#endif
+
+}}
+

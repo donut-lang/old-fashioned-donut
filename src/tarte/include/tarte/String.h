@@ -19,6 +19,7 @@
 #include <cstdarg>
 #include <string>
 #include <vector>
+#include "Common.h"
 
 #pragma once
 /* FIXME: さきゅばすから取ってきた */
