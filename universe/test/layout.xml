@@ -7,13 +7,12 @@
 					<xstring name="rom">__roms__/alter_ego/Alter_Ego.nes</xstring>
 				</xobject>
 			</widget>
-			<scroll title="メモリ" mode="vertical">
-				<vertical>
-					<widget widget-klass="nes-compare" fit="expand" />
-				</vertical>
-			</scroll>
-			<!--
 			<tab id="frame" place="left">
+				<scroll title="検索" mode="vertical">
+					<vertical>
+						<widget widget-klass="nes-compare" fit="expand" />
+					</vertical>
+				</scroll>
 				<scroll title="メモリ" mode="vertical">
 					<vertical>
 						<textarea desc="テキストエリアサンプル" />
@@ -24,7 +23,6 @@
 					</vertical>
 				</scroll>
 			</tab>
-			-->
 		</vertical>
 		<scroll mode="vertical">
 			<vertical>

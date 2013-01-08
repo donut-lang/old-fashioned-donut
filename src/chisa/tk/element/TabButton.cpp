@@ -50,12 +50,12 @@ std::string TabButton::toString() const
 void TabButton::checkedImpl(bool const& state)
 {
 	if(state && this->tab_){
-		this->tab_->bringChildToLast(this->element_);
+		this->tab_->bringChildToFront(this->element_);
 	}
 }
 bool TabButton::checkedImpl() const noexcept
 {
-	return this->tab_ && this->tab_->lastChild() == this->element_;
+	return this->tab_ && this->tab_->frontChild() == this->element_;
 }
 
 }}
