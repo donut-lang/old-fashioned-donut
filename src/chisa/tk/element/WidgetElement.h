@@ -53,6 +53,7 @@ private:
 	float calcScale(geom::Box const& widget, geom::Box const& constraint);
 private:
 	geom::Point calcPtInWidget(geom::Point const& ptInScreen);
+	virtual void notifyRelayoutFinished();
 public:
 	virtual bool onDownRaw(float const& timeMs, geom::Point const& ptInScreen) override;
 	virtual bool onUpRaw(float const& timeMs, geom::Point const& ptInScreen) override;
