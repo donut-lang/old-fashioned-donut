@@ -22,6 +22,7 @@
 						</widget>
 					</vertical>
 				</scroll>
+				<widget title="命令実行" widget-klass="nes-trace" fit="expand" />
 			</tab>
 		</vertical>
 		<scroll mode="vertical">

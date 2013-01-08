@@ -21,6 +21,7 @@
 #include "../../chisa/tk/World.h"
 #include "../../chisa/geom/Vector.h"
 #include "../../chisa/geom/Area.h"
+#include "../../chisa/tk/element/WidgetElement.h"
 
 namespace nes {
 
@@ -113,21 +114,339 @@ NesTraceWidget::NesTraceWidget(chisa::Logger& log, chisa::HandlerW<chisa::tk::Wo
 	this->numRenderer_.registerSymbol(14, "e");
 	this->numRenderer_.registerSymbol(15, "f");
 
-	this->symRenderer_.registerSymbol(Space         ," " );
 	this->symRenderer_.registerSymbol(Dollar        ,"$" );
-	this->symRenderer_.registerSymbol(Sharp         ,"#" );
 	this->symRenderer_.registerSymbol(RightParen    ,"(" );
 	this->symRenderer_.registerSymbol(LeftParen     ,")" );
-	this->symRenderer_.registerSymbol(RightBracket  ,"<" );
-	this->symRenderer_.registerSymbol(LeftBracket   ,">" );
-	this->symRenderer_.registerSymbol(RightSqBracket,"[" );
-	this->symRenderer_.registerSymbol(LeftSqBracket ,"]" );
-	this->symRenderer_.registerSymbol(HexStart      ,"0x");
 	this->symRenderer_.registerSymbol(Eq            ,"=" );
+	this->symRenderer_.registerSymbol(Comma         ,"," );
+	this->symRenderer_.registerSymbol(AtMark        ,"@" );
+	this->symRenderer_.registerSymbol(SymX          ,"X" );
+	this->symRenderer_.registerSymbol(SymY          ,"Y" );
 }
 
 void NesTraceWidget::render(chisa::gl::Canvas& cv, chisa::geom::Area const& area)
 {
+	using namespace chisa::geom;
+	using namespace chisa::gl;
+	Handler<NesGeist> geist = this->geist_.lock();
+	Handler<chisa::tk::WidgetElement> parent = this->wrapper().lock();
+	if(!geist || !parent){
+		return;
+	}
+	VirtualMachine& vm = *geist->machine();
+	Debugger& dbg = geist->machine()->debugger();
+	Disassembler& disasm = dbg.disassembler();
+	uint16_t const nowPC = disasm.nowPC();
+
+
+	PredefinedSymRenderer::SymList addrSym(4);
+	PredefinedSymRenderer::SymList numSym(2);
+	float offset = 0;
+	float rowHeight = this->symRenderer_.maxHeight();
+	float spaceSize = this->numRenderer_.maxWidth();
+	unsigned int const startRow = max(std::floor((area.y() - rowHeight)/rowHeight), 0);
+	unsigned int const endRow = std::ceil((area.y() - rowHeight + area.height())/rowHeight);
+
+	Instruction inst;
+	uint16_t pc = nowPC;
+	for(unsigned int i=0;i<=endRow;++i){
+		disasm.decodeAt(pc, inst);
+		pc+=inst.binLength_;
+		if(i < startRow){
+			continue;
+		}
+		float startX = 0;
+		{ //addr
+			startX += symRenderer_.renderSym(cv, Point(startX,offset), Dollar, 0.0f).width();
+			addrSym[0] = (pc >> 12) & 0xf;
+			addrSym[1] = (pc >>  8) & 0xf;
+			addrSym[2] = (pc >>  4) & 0xf;
+			addrSym[3] = (pc >>  0) & 0xf;
+			startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), addrSym, 0.0f).width();
+		}
+		startX += spaceSize;
+		{ //binary
+			float internalStartX = 0;
+			for(decltype(inst.binLength_) i=0;i<inst.binLength_;++i){
+				numSym[0] = (inst.bin[i] >> 4) & 0xf;
+				numSym[1] = (inst.bin[i] >> 0) & 0xf;
+				Area numRendererd = this->numRenderer_.renderSyms(cv, Point(startX+internalStartX,offset), numSym, 0.0f);
+				internalStartX += numRendererd.width();
+				internalStartX += spaceSize;
+			}
+		}
+		startX += spaceSize * 9;
+		startX += spaceSize;
+		{ //operand
+			Area opRendererd = this->asmRenderer_.renderSym(cv, Point(startX,offset), static_cast<PredefinedSymRenderer::Symbol>(inst.op_), 0.0f);
+			startX += opRendererd.width();
+		}
+		{ //addr
+			switch(inst.addrMode_) {
+			case AddrMode::Immediate: { //$xx
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Dollar, 0.0f).width();
+				uint8_t val = vm.debuggerRead( inst.addr_ );
+				numSym[0] = (val >> 4) & 0xf;
+				numSym[1] = (val >> 0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), numSym, 0.0f).width();
+			}
+				break;
+			case AddrMode::Zeropage: { //$xx(=xx)
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Dollar, 0.0f).width();
+				uint8_t operand = vm.debuggerRead( pc+1 );
+				numSym[0] = (operand >> 4) & 0xf;
+				numSym[1] = (operand >> 0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), numSym, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), RightParen, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Eq, 0.0f).width();
+				uint8_t val = vm.debuggerRead( inst.addr_ );
+				numSym[0] = (val >> 4) & 0xf;
+				numSym[1] = (val >> 0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), numSym, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), LeftParen, 0.0f).width();
+			}
+				break;
+			case AddrMode::ZeropageX: { //$xx,X @ $xxxx(=xx)
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Dollar, 0.0f).width();
+				uint8_t operand = vm.debuggerRead( pc+1 );
+				numSym[0] = (operand >> 4) & 0xf;
+				numSym[1] = (operand >> 0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), numSym, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Comma, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), SymX, 0.0f).width();
+				startX += spaceSize;
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), AtMark, 0.0f).width();
+				startX += spaceSize;
+
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Dollar, 0.0f).width();
+				addrSym[0] = (inst.addr_ >> 12) & 0xf;
+				addrSym[1] = (inst.addr_ >>  8) & 0xf;
+				addrSym[2] = (inst.addr_ >>  4) & 0xf;
+				addrSym[3] = (inst.addr_ >>  0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), addrSym, 0.0f).width();
+
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), RightParen, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Eq, 0.0f).width();
+				uint8_t val = vm.debuggerRead( inst.addr_ );
+				numSym[0] = (val >> 4) & 0xf;
+				numSym[1] = (val >> 0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), numSym, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), LeftParen, 0.0f).width();
+			}
+				break;
+			case AddrMode::ZeropageY: { //$xx,Y @ $xxxx(=xx)
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Dollar, 0.0f).width();
+				uint8_t operand = vm.debuggerRead( pc+1 );
+				numSym[0] = (operand >> 4) & 0xf;
+				numSym[1] = (operand >> 0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), numSym, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Comma, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), SymY, 0.0f).width();
+				startX += spaceSize;
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), AtMark, 0.0f).width();
+				startX += spaceSize;
+
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Dollar, 0.0f).width();
+				addrSym[0] = (inst.addr_ >> 12) & 0xf;
+				addrSym[1] = (inst.addr_ >>  8) & 0xf;
+				addrSym[2] = (inst.addr_ >>  4) & 0xf;
+				addrSym[3] = (inst.addr_ >>  0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), addrSym, 0.0f).width();
+
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), RightParen, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Eq, 0.0f).width();
+				uint8_t val = vm.debuggerRead( inst.addr_ );
+				numSym[0] = (val >> 4) & 0xf;
+				numSym[1] = (val >> 0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), numSym, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), LeftParen, 0.0f).width();
+			}
+				break;
+			case AddrMode::Absolute : { //$xxxx(=xx)
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Dollar, 0.0f).width();
+				addrSym[0] = (inst.addr_ >>12) & 0xf;
+				addrSym[1] = (inst.addr_ >> 8) & 0xf;
+				addrSym[2] = (inst.addr_ >> 4) & 0xf;
+				addrSym[3] = (inst.addr_ >> 0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), addrSym, 0.0f).width();
+
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), RightParen, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Eq, 0.0f).width();
+				uint8_t val = vm.debuggerRead( inst.addr_ );
+				numSym[0] = (val >> 4) & 0xf;
+				numSym[1] = (val >> 0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), numSym, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), LeftParen, 0.0f).width();
+			}
+				break;
+			case AddrMode::AbsoluteX: { //$xxxx,X @ $xxxx(=xx)
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Dollar, 0.0f).width();
+				uint16_t operand = vm.debuggerRead( pc+1 ) | (vm.debuggerRead( pc+2 ) << 8) ;
+				addrSym[0] = (operand >>12) & 0xf;
+				addrSym[1] = (operand >> 8) & 0xf;
+				addrSym[2] = (operand >> 4) & 0xf;
+				addrSym[3] = (operand >> 0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), addrSym, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Comma, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), SymX, 0.0f).width();
+				startX += spaceSize;
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), AtMark, 0.0f).width();
+				startX += spaceSize;
+
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Dollar, 0.0f).width();
+				addrSym[0] = (inst.addr_ >> 12) & 0xf;
+				addrSym[1] = (inst.addr_ >>  8) & 0xf;
+				addrSym[2] = (inst.addr_ >>  4) & 0xf;
+				addrSym[3] = (inst.addr_ >>  0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), addrSym, 0.0f).width();
+
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), RightParen, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Eq, 0.0f).width();
+				uint8_t val = vm.debuggerRead( inst.addr_ );
+				numSym[0] = (val >> 4) & 0xf;
+				numSym[1] = (val >> 0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), numSym, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), LeftParen, 0.0f).width();
+			}
+				break;
+			case AddrMode::AbsoluteY: { //$xxxx,Y @ $xxxx(=xx)
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Dollar, 0.0f).width();
+				uint16_t operand = vm.debuggerRead( pc+1 ) | (vm.debuggerRead( pc+2 ) << 8) ;
+				addrSym[0] = (operand >>12) & 0xf;
+				addrSym[1] = (operand >> 8) & 0xf;
+				addrSym[2] = (operand >> 4) & 0xf;
+				addrSym[3] = (operand >> 0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), addrSym, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Comma, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), SymY, 0.0f).width();
+				startX += spaceSize;
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), AtMark, 0.0f).width();
+				startX += spaceSize;
+
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Dollar, 0.0f).width();
+				addrSym[0] = (inst.addr_ >> 12) & 0xf;
+				addrSym[1] = (inst.addr_ >>  8) & 0xf;
+				addrSym[2] = (inst.addr_ >>  4) & 0xf;
+				addrSym[3] = (inst.addr_ >>  0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), addrSym, 0.0f).width();
+
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), RightParen, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Eq, 0.0f).width();
+				uint8_t val = vm.debuggerRead( inst.addr_ );
+				numSym[0] = (val >> 4) & 0xf;
+				numSym[1] = (val >> 0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), numSym, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), LeftParen, 0.0f).width();
+			}
+				break;
+			case AddrMode::Indirect: { //($xxxx) @ $xxxx(=xx)
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), RightParen, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Dollar, 0.0f).width();
+				uint16_t operand = vm.debuggerRead( pc+1 ) | (vm.debuggerRead( pc+2 ) << 8) ;
+				addrSym[0] = (operand >>12) & 0xf;
+				addrSym[1] = (operand >> 8) & 0xf;
+				addrSym[2] = (operand >> 4) & 0xf;
+				addrSym[3] = (operand >> 0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), addrSym, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), LeftParen, 0.0f).width();
+				startX += spaceSize;
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), AtMark, 0.0f).width();
+				startX += spaceSize;
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Dollar, 0.0f).width();
+				addrSym[0] = (inst.addr_ >> 12) & 0xf;
+				addrSym[1] = (inst.addr_ >>  8) & 0xf;
+				addrSym[2] = (inst.addr_ >>  4) & 0xf;
+				addrSym[3] = (inst.addr_ >>  0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), addrSym, 0.0f).width();
+
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), RightParen, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Eq, 0.0f).width();
+				uint8_t val = vm.debuggerRead( inst.addr_ );
+				numSym[0] = (val >> 4) & 0xf;
+				numSym[1] = (val >> 0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), numSym, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), LeftParen, 0.0f).width();
+			}
+				break;
+			case AddrMode::IndirectX: { //($xxxx,X) @ $xxxx(=xx)
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), RightParen, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Dollar, 0.0f).width();
+				uint16_t operand = vm.debuggerRead( pc+1 ) | (vm.debuggerRead( pc+2 ) << 8) ;
+				addrSym[0] = (operand >>12) & 0xf;
+				addrSym[1] = (operand >> 8) & 0xf;
+				addrSym[2] = (operand >> 4) & 0xf;
+				addrSym[3] = (operand >> 0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), addrSym, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Comma, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), SymX, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), LeftParen, 0.0f).width();
+				startX += spaceSize;
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), AtMark, 0.0f).width();
+				startX += spaceSize;
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Dollar, 0.0f).width();
+				addrSym[0] = (inst.addr_ >> 12) & 0xf;
+				addrSym[1] = (inst.addr_ >>  8) & 0xf;
+				addrSym[2] = (inst.addr_ >>  4) & 0xf;
+				addrSym[3] = (inst.addr_ >>  0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), addrSym, 0.0f).width();
+
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), RightParen, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Eq, 0.0f).width();
+				uint8_t val = vm.debuggerRead( inst.addr_ );
+				numSym[0] = (val >> 4) & 0xf;
+				numSym[1] = (val >> 0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), numSym, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), LeftParen, 0.0f).width();
+			}
+				break;
+			case AddrMode::IndirectY: { //($xxxx),Y @ $xxxx(=xx)
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), RightParen, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Dollar, 0.0f).width();
+				uint16_t operand = vm.debuggerRead( pc+1 ) | (vm.debuggerRead( pc+2 ) << 8) ;
+				addrSym[0] = (operand >>12) & 0xf;
+				addrSym[1] = (operand >> 8) & 0xf;
+				addrSym[2] = (operand >> 4) & 0xf;
+				addrSym[3] = (operand >> 0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), addrSym, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), LeftParen, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Comma, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), SymY, 0.0f).width();
+				startX += spaceSize;
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), AtMark, 0.0f).width();
+				startX += spaceSize;
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Dollar, 0.0f).width();
+				addrSym[0] = (inst.addr_ >> 12) & 0xf;
+				addrSym[1] = (inst.addr_ >>  8) & 0xf;
+				addrSym[2] = (inst.addr_ >>  4) & 0xf;
+				addrSym[3] = (inst.addr_ >>  0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), addrSym, 0.0f).width();
+
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), RightParen, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Eq, 0.0f).width();
+				uint8_t val = vm.debuggerRead( inst.addr_ );
+				numSym[0] = (val >> 4) & 0xf;
+				numSym[1] = (val >> 0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), numSym, 0.0f).width();
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), LeftParen, 0.0f).width();
+			}
+				break;
+			case AddrMode::Relative: { //$xxxx
+				startX += symRenderer_.renderSym(cv, Point(startX,offset), Dollar, 0.0f).width();
+				addrSym[0] = (inst.addr_ >>12) & 0xf;
+				addrSym[1] = (inst.addr_ >> 8) & 0xf;
+				addrSym[2] = (inst.addr_ >> 4) & 0xf;
+				addrSym[3] = (inst.addr_ >> 0) & 0xf;
+				startX += this->numRenderer_.renderSyms(cv, Point(startX,offset), addrSym, 0.0f).width();
+			}
+				break;
+			case AddrMode::None:
+				break;
+			default:
+				break;
+			}
+			offset += rowHeight;
+		}
+	}
 }
 
 void NesTraceWidget::idle(const float delta_ms)
@@ -143,7 +462,7 @@ chisa::geom::Box NesTraceWidget::measure(chisa::geom::Box const& constraintSize)
 {
 	//$xxxx aa bb cc LDA $xxxx(=0xdddd)
 	// 33文字
-	return chisa::geom::Box(this->asmRenderer_.maxCharWidth()*33.0f, chisa::geom::Unspecified);
+	return chisa::geom::Box(this->numRenderer_.maxCharWidth()*8.0f, constraintSize.height());
 }
 
 }
