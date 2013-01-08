@@ -54,8 +54,6 @@ NesMemoryCompare::NesMemoryCompare(chisa::Logger& log, chisa::HandlerW<chisa::tk
 	numRenderer_.registerSymbol(14, "e");
 	numRenderer_.registerSymbol(15, "f");
 	numRenderer_.registerSymbol(Dollar, "$");
-	numRenderer_.registerSymbol(Hatena, "?");
-
 
 	chisa::Handler<nes::NesGeist> geist(world->geist().cast<nes::NesGeist>());
 	this->geist_ = geist;
