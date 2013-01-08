@@ -23,10 +23,9 @@ namespace nes {
 
 MemoryComparator::MemoryComparator(	VirtualMachine& vm)
 :vm_(vm)
-,candidates_(2048)
+,candidates_(0)
 {
-	this->last_ = getNowMemory();
-	std::memset(this->entry_, static_cast<int>(-1), sizeof(this->entry_)/sizeof(unsigned int));
+	this->reset();
 }
 
 std::vector<uint8_t> MemoryComparator::getNowMemory() const
@@ -42,9 +41,7 @@ uint8_t MemoryComparator::now(uint16_t const& addr) const noexcept
 
 void MemoryComparator::start()
 {
-	this->candidates_=2048;
-	this->last_ = getNowMemory();
-	std::memset(this->entry_, static_cast<int>(-1), sizeof(this->entry_)/sizeof(unsigned int));
+	this->reset();
 }
 
 void MemoryComparator::reset()

@@ -102,9 +102,13 @@ void NesMemoryCompare::render(chisa::gl::Canvas& cv, const chisa::geom::Area& ar
 					this->numRenderer_.renderSyms(cv, Point(0, offset), asym_, 0);
 				}
 				{ //last
-					uint8_t const v = cmp.last(i);
-					sym_[0] = (v >>  4) & 0xf;
-					sym_[1] = (v >>  0) & 0xf;
+					if(cmp.isStarted()) {
+						uint8_t const v = cmp.last(i);
+						sym_[0] = (v >>  4) & 0xf;
+						sym_[1] = (v >>  0) & 0xf;
+					}else{
+						sym_[0] = sym_[1] = Hatena;
+					}
 					this->numRenderer_.renderSyms(cv, Point(addrWidth_+2, offset), sym_, 0);
 				}
 				{ //now
