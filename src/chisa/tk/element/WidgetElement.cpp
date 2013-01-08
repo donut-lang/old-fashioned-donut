@@ -212,45 +212,61 @@ void WidgetElement::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElem
 	}
 }
 
-geom::Point WidgetElement::calcPtInWidget(geom::Point const& ptInScreen)
+geom::Point WidgetElement::calcPtInWidgetRel(geom::Point const& ptInScreen)
 {
 	const geom::Point delta = ptInScreen - this->lastInnerPositionInRoot();
 	return geom::Point( delta / this->widgetScale() );
 }
 
+geom::Point WidgetElement::calcPtInWidgetAbs(geom::Point const& ptInScreen)
+{
+	return calcPtInWidgetRel(ptInScreen) + this->widgetOffset();
+}
+
+geom::Point WidgetElement::calcPtInElement(geom::Point const& ptInWidgetAbs)
+{
+	const geom::Point rel = ptInWidgetAbs - this->widgetOffset();
+	return rel * this->widgetScale();
+}
+
+geom::Point WidgetElement::calcPtInRoot(geom::Point const& ptInWidgetAbs)
+{
+	return this->calcPtInElement(ptInWidgetAbs) + this->lastInnerPositionInRoot();
+}
+
 bool WidgetElement::onDownRaw(float const& timeMs, geom::Point const& ptInScreen)
 {
-	return widget_->onDownRaw(timeMs, calcPtInWidget(ptInScreen));
+	return widget_->onDownRaw(timeMs, calcPtInWidgetRel(ptInScreen));
 }
 
 bool WidgetElement::onUpRaw(float const& timeMs, geom::Point const& ptInScreen)
 {
-	return widget_->onUpRaw(timeMs, calcPtInWidget(ptInScreen));
+	return widget_->onUpRaw(timeMs, calcPtInWidgetRel(ptInScreen));
 }
 
 bool WidgetElement::onMoveRaw(float const& timeMs, geom::Point const& ptInScreen)
 {
-	return widget_->onMoveRaw(timeMs, calcPtInWidget(ptInScreen));
+	return widget_->onMoveRaw(timeMs, calcPtInWidgetRel(ptInScreen));
 }
 
 bool WidgetElement::onSingleTapUp(float const& timeMs, geom::Point const& ptInScreen)
 {
-	return widget_->onSingleTapUp(timeMs, calcPtInWidget(ptInScreen));
+	return widget_->onSingleTapUp(timeMs, calcPtInWidgetRel(ptInScreen));
 }
 
 bool WidgetElement::onFling(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity)
 {
-	return widget_->onFling(timeMs, calcPtInWidget(start), calcPtInWidget(end), velocity / this->widgetScale());
+	return widget_->onFling(timeMs, calcPtInWidgetRel(start), calcPtInWidgetRel(end), velocity / this->widgetScale());
 }
 
 bool WidgetElement::onScroll(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance)
 {
-	return widget_->onScroll(timeMs, calcPtInWidget(start), calcPtInWidget(end), distance / this->widgetScale());
+	return widget_->onScroll(timeMs, calcPtInWidgetRel(start), calcPtInWidgetRel(end), distance / this->widgetScale());
 }
 
 bool WidgetElement::onZoom(float const& timeMs, geom::Point const& center, const float ratio)
 {
-	return widget_->onZoom(timeMs, calcPtInWidget(center), ratio);
+	return widget_->onZoom(timeMs, calcPtInWidgetRel(center), ratio);
 }
 
 }}
