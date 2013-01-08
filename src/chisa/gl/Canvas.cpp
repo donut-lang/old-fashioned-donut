@@ -42,22 +42,47 @@ Canvas::~Canvas()
 {
 
 }
+#define DEBUG
 
 void Canvas::ortho(const float left, const float right, const float bottom, const float top, const float near_val, const float far_val)
 {
 	glOrtho(left, right, bottom, top, near_val, far_val);
+	const GLenum err = glGetError();
+#ifdef DEBUG
+	if(err != GL_NO_ERROR){
+		TARTE_EXCEPTION(Exception, "[BUG] Failed to exec glOrtho: 0x%08x", err);
+	}
+#endif
 }
 void Canvas::translate(geom::Point const& pt)
 {
 	glTranslatef(pt.x(),pt.y(),0.0f);
+#ifdef DEBUG
+	const GLenum err = glGetError();
+	if(err != GL_NO_ERROR){
+		TARTE_EXCEPTION(Exception, "[BUG] Failed to exec glTranslatef: 0x%08x", err);
+	}
+#endif
 }
 void Canvas::rotate(const float angle, geom::Point const& pt)
 {
 	glRotatef(angle, pt.x(),pt.y(),0.0f);
+#ifdef DEBUG
+	const GLenum err = glGetError();
+	if(err != GL_NO_ERROR){
+		TARTE_EXCEPTION(Exception, "[BUG] Failed to exec glRotetef: 0x%08x", err);
+	}
+#endif
 }
 void Canvas::scale(geom::ScaleVector const& scale)
 {
 	glScalef(scale.x(),scale.y(),1.0f);
+#ifdef DEBUG
+	const GLenum err = glGetError();
+	if(err != GL_NO_ERROR){
+		TARTE_EXCEPTION(Exception, "[BUG] Failed to exec glScalef: 0x%08x", err);
+	}
+#endif
 }
 
 void Canvas::resize2d(geom::Box const& box)
@@ -71,11 +96,23 @@ void Canvas::resize2d(geom::Box const& box)
 	glLoadIdentity();
 	glViewport(0, 0, box.width(), box.height());
 	glScissor(0,0,box.width(),box.height());
+#ifdef DEBUG
+	const GLenum err = glGetError();
+	if(err != GL_NO_ERROR){
+		TARTE_EXCEPTION(Exception, "[BUG] Failed to exec resize2d: 0x%08x", err);
+	}
+#endif
 }
 
 void Canvas::scissor(geom::Area const& area)
 {
 	glScissor(area.x(), this->height_-area.height()-area.y(),area.width(), area.height());
+#ifdef DEBUG
+	const GLenum err = glGetError();
+	if(err != GL_NO_ERROR){
+		TARTE_EXCEPTION(Exception, "[BUG] Failed to exec glScissor: 0x%08x", err);
+	}
+#endif
 }
 
 void Canvas::drawSprite(Handler<Sprite> const& sprite, geom::Point const& ptInRoot, const float depth, Color const& color)
@@ -106,6 +143,12 @@ void Canvas::drawTexture(unsigned int texId, geom::Area const& areaInRoot, geom:
 		glTexCoord2f(right,bottom);glVertex3f(x+width, y+height, depth);
 		glTexCoord2f(right,top   );glVertex3f(x+width, y       , depth);
 	glEnd();
+#ifdef DEBUG
+	const GLenum err = glGetError();
+	if(err != GL_NO_ERROR){
+		TARTE_EXCEPTION(Exception, "[BUG] Failed to exec drawTexture: 0x%08x", err);
+	}
+#endif
 	glDisable(GL_TEXTURE_2D);
 }
 
@@ -120,6 +163,12 @@ void Canvas::drawLine(const float width, Color const& color, geom::Point const& 
 		glVertex3f(start.x(), start.y(), depth);
 		glVertex3f(end.x()  , end.y(), depth);
 	glEnd();
+#ifdef DEBUG
+	const GLenum err = glGetError();
+	if(err != GL_NO_ERROR){
+		TARTE_EXCEPTION(Exception, "[BUG] Failed to exec drawLine: 0x%08x", err);
+	}
+#endif
 }
 
 void Canvas::drawRect(const float width, Color const& color, geom::Area const& area, const float depth)
@@ -141,6 +190,12 @@ void Canvas::drawRect(const float width, Color const& color, geom::Area const& a
 		glVertex3f(sx, ey, depth);
 	}
 	glEnd();
+#ifdef DEBUG
+	const GLenum err = glGetError();
+	if(err != GL_NO_ERROR){
+		TARTE_EXCEPTION(Exception, "[BUG] Failed to exec drawRect: 0x%08x", err);
+	}
+#endif
 }
 void Canvas::fillRect(Color const& color, geom::Area const& area, const float depth)
 {
@@ -160,6 +215,12 @@ void Canvas::fillRect(Color const& color, geom::Area const& area, const float de
 		glVertex3f(sx, ey, depth);
 	}
 	glEnd();
+#ifdef DEBUG
+	const GLenum err = glGetError();
+	if(err != GL_NO_ERROR){
+		TARTE_EXCEPTION(Exception, "[BUG] Failed to exec fillRect: 0x%08x", err);
+	}
+#endif
 }
 
 

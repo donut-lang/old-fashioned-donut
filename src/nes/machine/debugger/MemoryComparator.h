@@ -33,12 +33,13 @@ public:
 private:
 	VirtualMachine& vm_;
 	unsigned int entry_[2048/(CHAR_BIT * sizeof(unsigned int))];
-	std::vector<uint8_t> before_;
+	std::vector<uint8_t> last_;
+	unsigned int candidates_;
 public:
 template <typename Archiver>
 	void serialize(Archiver& arc){
 		arc & entry_;
-		arc & before_;
+		arc & last_;
 	}
 private:
 	std::vector<uint8_t> getNowMemory() const;
@@ -51,11 +52,12 @@ private:
 			const uint16_t idx = addr / (CHAR_BIT*sizeof(unsigned int));
 			const uint16_t mask_bit = addr % (CHAR_BIT*sizeof(unsigned int));
 			const unsigned int mask = 1 << mask_bit;
-			if( (entry_[idx] & mask) && (!cmp(now[addr], before_[addr])) ) {
+			if( (entry_[idx] & mask) && (!cmp(now[addr], last_[addr])) ) {
 				entry_[idx] &= ~mask;
+				--this->candidates_;
 			}
 		}
-		before_.swap(now);
+		last_.swap(now);
 	}
 	template <typename Functor>
 	inline void selectConst( Functor const& cmp ) {
@@ -67,10 +69,16 @@ private:
 			const unsigned int mask = 1 << mask_bit;
 			if( (entry_[idx] & mask) && (!cmp(now[addr])) ) {
 				entry_[idx] &= ~mask;
+				--this->candidates_;
 			}
 		}
-		before_.swap(now);
+		last_.swap(now);
 	}
+public:
+	inline unsigned int candidates() const noexcept { return this->candidates_; };
+	inline bool isCandidate( uint16_t const& addr ) const noexcept { return (entry_[addr / (CHAR_BIT*sizeof(unsigned int))] & (1 << (addr % (CHAR_BIT*sizeof(unsigned int))))); };
+	inline uint8_t last(uint16_t const& addr) const noexcept { return this->last_[addr & 0x2047]; };
+	uint8_t now(uint16_t const& addr) const noexcept;
 public:
 	void start();
 	void reset();

@@ -23,15 +23,35 @@ namespace nes {
 
 MemoryComparator::MemoryComparator(	VirtualMachine& vm)
 :vm_(vm)
+,candidates_(2048)
 {
-	// TODO Auto-generated constructor stub
-
+	this->last_ = getNowMemory();
+	std::memset(this->entry_, static_cast<int>(-1), sizeof(this->entry_)/sizeof(unsigned int));
 }
 
 std::vector<uint8_t> MemoryComparator::getNowMemory() const
 {
 	uint8_t (&ram)[Ram::WRAM_LENGTH] = vm_.ram().wram();
 	return std::vector<uint8_t>(ram, ram+Ram::WRAM_LENGTH);
+}
+
+uint8_t MemoryComparator::now(uint16_t const& addr) const noexcept
+{
+	return this->vm_.ram().wram()[addr];
+}
+
+void MemoryComparator::start()
+{
+	this->candidates_=2048;
+	this->last_ = getNowMemory();
+	std::memset(this->entry_, static_cast<int>(-1), sizeof(this->entry_)/sizeof(unsigned int));
+}
+
+void MemoryComparator::reset()
+{
+	this->candidates_=2048;
+	this->last_ = getNowMemory();
+	std::memset(this->entry_, static_cast<int>(-1), sizeof(this->entry_)/sizeof(unsigned int));
 }
 
 }

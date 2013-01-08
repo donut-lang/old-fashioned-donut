@@ -2,22 +2,25 @@
 <world geist="nes">
 	<horizontal id="main">
 		<vertical>
+			<widget widget-klass="nes-screen" fit="fit">
+				<xobject>
+					<xstring name="rom">__roms__/alter_ego/Alter_Ego.nes</xstring>
+				</xobject>
+			</widget>
 			<tab id="frame" place="left">
-				<widget title="NES" widget-klass="nes-screen" fit="fit">
-					<xobject>
-						<xstring name="rom">__roms__/alter_ego/Alter_Ego.nes</xstring>
-					</xobject>
-				</widget>
+				<scroll title="メモリ" mode="vertical">
+					<vertical>
+						<textarea desc="テキストエリアサンプル" />
+						<button text="ボタン" />
+						<label text="ラベル" />
+						<widget title="NES" widget-klass="nes-memory" fit="expand">
+						</widget>
+					</vertical>
+				</scroll>
+				<scroll title="メモリ" mode="vertical">
+					<widget widget-klass="nes-compare" fit="expand" />
+				</scroll>
 			</tab>
-			<scroll mode="vertical">
-				<vertical>
-					<textarea desc="テキストエリアサンプル" />
-					<button text="ボタン" />
-					<label text="ラベル" />
-					<widget title="NES" widget-klass="nes-memory" fit="expand">
-					</widget>
-				</vertical>
-			</scroll>
 		</vertical>
 		<scroll mode="vertical">
 			<vertical>
