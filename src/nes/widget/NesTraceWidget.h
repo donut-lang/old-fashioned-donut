@@ -34,17 +34,16 @@ private:
 	chisa::HandlerW<nes::NesGeist> geist_;
 	chisa::gl::PredefinedSymRenderer asmRenderer_;
 	chisa::gl::PredefinedSymRenderer numRenderer_;
-	const static constexpr unsigned int Space          =  0; // " "
-	const static constexpr unsigned int Dollar         =  1; // "$"
-	const static constexpr unsigned int Sharp          =  2; // "#"
-	const static constexpr unsigned int RightParen     =  3; // "("
-	const static constexpr unsigned int LeftParen      =  4; // ")"
-	const static constexpr unsigned int RightBracket   =  5; // "<"
-	const static constexpr unsigned int LeftBracket    =  6; // ">"
-	const static constexpr unsigned int RightSqBracket =  7; // "["
-	const static constexpr unsigned int LeftSqBracket  =  8; // "]"
-	const static constexpr unsigned int HexStart       =  9; // "0x"
-	const static constexpr unsigned int Eq             = 10; // "="
+	enum {
+		Dollar    , // "$"
+		RightParen, // "("
+		LeftParen , // ")"
+		Eq        , // "="
+		Comma     , //","
+		AtMark    , //"@"
+		SymX      , //"X"
+		SymY      , //"Y"
+	};
 	chisa::gl::PredefinedSymRenderer symRenderer_;
 	float addrWidth_;
 public:

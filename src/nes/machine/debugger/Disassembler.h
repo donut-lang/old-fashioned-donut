@@ -107,9 +107,9 @@ const int constexpr ClockShift = 16;
 struct Instruction {
 	enum Operation op_;
 	enum AddrMode addrMode_;
-	unsigned int clock_;
+	unsigned char clock_;
 //命令
-	unsigned int binLength_;
+	unsigned char binLength_;
 	unsigned char bin[3];
 //解決したアドレスとその値
 	uint16_t addr_;
@@ -131,6 +131,8 @@ class Disassembler final {
 private:
 	static const uint32_t kInfoTable[0x100];
 	VirtualMachine& vm_;
+	uint16_t lastExecuted_[32];
+	uint8_t execIdx_;
 public:
 	template <typename Archiver>
 	void serialize(Archiver& arc){
@@ -139,7 +141,17 @@ public:
 	Disassembler(VirtualMachine& vm);
 	~Disassembler() = default;
 public:
-	void decodeAt(uint16_t addr, Instruction* inst);
+	void decodeAt(uint16_t addr, Instruction& inst);
+public:
+	void inline onMemoryExecute(uint16_t const addr){
+		lastExecuted_[execIdx_=(execIdx_+1)&31] = addr;
+	}
+	inline uint16_t nowPC() const noexcept{
+		return lastExecuted_[execIdx_];
+	}
+	inline uint16_t lastPC(uint8_t const from) const noexcept{
+		return lastExecuted_[(execIdx_+ 32 - from)&31];
+	}
 };
 
 }
