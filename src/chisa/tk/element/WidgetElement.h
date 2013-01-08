@@ -52,7 +52,10 @@ private:
 private:
 	float calcScale(geom::Box const& widget, geom::Box const& constraint);
 private:
-	geom::Point calcPtInWidget(geom::Point const& ptInScreen);
+	geom::Point calcPtInWidgetRel(geom::Point const& ptInScreen);
+	geom::Point calcPtInWidgetAbs(geom::Point const& ptInScreen);
+	geom::Point calcPtInElement(geom::Point const& ptInWidgetAbs);
+	geom::Point calcPtInRoot(geom::Point const& ptInWidgetAbs);
 	virtual void notifyRelayoutFinished();
 public:
 	virtual bool onDownRaw(float const& timeMs, geom::Point const& ptInScreen) override;
