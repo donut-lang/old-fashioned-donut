@@ -238,6 +238,7 @@ TextDrawable::TextDrawable(HandlerW<DrawableManager> manager, std::string const&
 ,font_descent_(0)
 ,font_height_(0)
 {
+	std::vector<Handler<BitmapGlyph> > glyphs = this->font_->lookupGlyph(this->str_, this->fontSize_);
 	this->revalidate();
 }
 
