@@ -16,25 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "PlatformFairy.h"
+#pragma once
+#include <vector>
+#include <tarte/Handler.h>
 
 namespace chisa {
 using namespace tarte;
 
-Handler<Quartet> PlatformFairy::quartet()
-{
-	if(!this->quartet_){
-		this->quartet_ = this->createQuartet();
-	}
-	return this->quartet_;
-}
-
-Handler<JoystickManager> PlatformFairy::joystickManager()
-{
-	if(!this->joystickManager_){
-		this->joystickManager_ = this->createJoystickManager();
-	}
-	return this->joystickManager_;
-}
+class Joystick;
+class JoystickManager : public HandlerBody<JoystickManager> {
+private:
+	std::vector<HandlerW<Joystick> > joysticks_;
+public:
+	JoystickManager();
+	virtual ~JoystickManager() noexcept = default;
+	inline bool onFree() const noexcept { return false; }
+public:
+	inline unsigned int numJoysticks() noexcept { return this->numJoysticksImpl(); }
+	Handler<Joystick> joystick( unsigned int id );
+protected:
+	virtual unsigned int numJoysticksImpl() noexcept = 0;
+	virtual Handler<Joystick> joystickImpl( unsigned int id ) = 0;
+};
 
 }
