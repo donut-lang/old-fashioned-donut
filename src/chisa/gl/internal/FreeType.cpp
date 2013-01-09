@@ -64,11 +64,9 @@ FreeType::~FreeType() noexcept
 	this->cache_ = nullptr;
 	this->library_ = nullptr;
 }
-void FreeType::removeFont(Font& font)
+void FreeType::removeFace(FT_Face face)
 {
-	Font::RawFaceSession rfs(font);
-	FTC_Manager_RemoveFaceID(this->cache_, rfs.face());
-	FT_Done_Face(rfs.face());
+	FTC_Manager_RemoveFaceID(this->cache_, face);
 }
 
 unsigned int FreeType::lookupGlyphIndex(Font& font, unsigned int ucs4)
