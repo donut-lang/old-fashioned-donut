@@ -51,17 +51,11 @@ public:
 	{
 	}
 public:
-	static inline int formatToAlign(ImageFormat const format) noexcept{
-		switch( format ) {
-		case ImageFormat::RGBA8:
-			return 4;
-		case ImageFormat::BGRA8:
-			return 4;
-		case ImageFormat::ALPHA:
-			return 1;
-		default:
-			return 0;
-		}
+	static constexpr inline int formatToAlign(ImageFormat const format) noexcept{
+		return
+				(format == ImageFormat::RGBA8) ? 4 :
+				(format == ImageFormat::BGRA8) ? 4 :
+				(format == ImageFormat::ALPHA) ? 1 : 0;
 	}
 public:
 	inline const unsigned int& textureID() const noexcept { return this->texId_; };
