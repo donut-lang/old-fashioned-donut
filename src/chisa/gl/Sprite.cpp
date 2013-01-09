@@ -41,12 +41,12 @@ Sprite::Sprite(HandlerW<internal::SpriteManager> mgr, geom::IntVector const& siz
 {
 	glGenTextures(1, &this->texId_);
 	const GLenum gerr = glGetError();
-	if(gerr != GL_NO_ERROR){
+	if( unlikely(gerr != GL_NO_ERROR) ){
 		TARTE_EXCEPTION(Exception, "[BUG] Failed to generate texture: 0x%08x", gerr);
 	}
 	glBindTexture(GL_TEXTURE_2D, this->texId_);
 	const GLenum berr = glGetError();
-	if(berr != GL_NO_ERROR){
+	if( unlikely(gerr != GL_NO_ERROR) ){
 		TARTE_EXCEPTION(Exception, "[BUG] Failed to bind texture: 0x%08x", berr);
 	}
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
@@ -57,14 +57,14 @@ Sprite::Sprite(HandlerW<internal::SpriteManager> mgr, geom::IntVector const& siz
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->origSize().width(), this->origSize().height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 	const GLenum terr = glGetError();
-	if(terr != GL_NO_ERROR){
+	if( unlikely(gerr != GL_NO_ERROR) ){
 		TARTE_EXCEPTION(Exception, "[BUG] Failed to transfer texture: 0x%08x", terr);
 	}
 }
 Sprite::~Sprite() noexcept (true)
 {
 	this->backBuffer();
-	if(this->texId_ != MAGIC){
+	if( likely(this->texId_ != MAGIC) ){
 		glDeleteTextures(1, &this->texId_);
 	}
 }
@@ -105,7 +105,7 @@ void Sprite::flushBuffer()
 		{
 			glBindTexture(GL_TEXTURE_2D, this->texId_);
 			const GLenum err = glGetError();
-			if(err != GL_NO_ERROR){
+			if( unlikely(err != GL_NO_ERROR) ) {
 				TARTE_EXCEPTION(Exception, "[BUG] Failed to bind texture: code 0x%x", err);
 			}
 		}
@@ -113,7 +113,7 @@ void Sprite::flushBuffer()
 			//ここのサイズはバッファのものにしないと変な所を読みに行くかもしれない。
 			glTexSubImage2D(GL_TEXTURE_2D, 0, 0,0, this->size().width(), this->size().height(), this->bufferType_, GL_UNSIGNED_BYTE, this->buffer_->ptr());
 			const GLenum err = glGetError();
-			if(err != GL_NO_ERROR){
+			if( unlikely(err != GL_NO_ERROR) ){
 				TARTE_EXCEPTION(Exception, "[BUG] Failed to transfer texture: code 0x%x", err);
 			}
 		}
@@ -123,7 +123,7 @@ void Sprite::flushBuffer()
 
 void Sprite::resize(int width, int height)
 {
-	if(width > this->origSize().width() || height > this->origSize().height()){
+	if(unlikely(width > this->origSize().width() || height > this->origSize().height())){
 		TARTE_EXCEPTION(Exception, "[BUG] You can't resize Sprite bigger than original.");
 	}
 	this->size(geom::IntBox(width, height));
@@ -161,7 +161,7 @@ bool Sprite::onFree() noexcept {
 internal::Buffer* Sprite::lock(Sprite::BufferType bufferType)
 {
 	bool expected = false;
-	if(!this->locked_.compare_exchange_strong(expected, true)){
+	if(unlikely(!this->locked_.compare_exchange_strong(expected, true))){
 		TARTE_EXCEPTION(Exception, "[BUG] Sprite already locked!");
 	}
 	if(this->buffer_ && this->bufferType_ == bufferType){
@@ -180,7 +180,7 @@ internal::Buffer* Sprite::lock(Sprite::BufferType bufferType)
 void Sprite::unlock()
 {
 	bool expected = true;
-	if(!this->locked_.compare_exchange_strong(expected, false)){
+	if(unlikely(!this->locked_.compare_exchange_strong(expected, false))){
 		TARTE_EXCEPTION(Exception, "[BUG] Sprite already unlocked!");
 	}
 }
