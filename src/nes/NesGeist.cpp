@@ -30,9 +30,10 @@ NesGeist::NesGeist(chisa::Logger& log, chisa::HandlerW<chisa::tk::World> world)
 ,runner_(nullptr)
 ,time_ms_(0.0f)
 {
+	using namespace chisa::gl;
 	this->machine_ = new VirtualMachine(*this, *this, this, nullptr);
 	if( chisa::Handler<chisa::tk::World> world = this->world_.lock() ){
-		this->spr_ = world->drawableManager()->queryRawSprite(256, 240);
+		this->spr_ = world->drawableManager()->queryRawSprite(ImageFormat::RGBA8, 256, 240);
 	}
 	;
 	this->world()->quartet()->addInstrument(
@@ -58,10 +59,10 @@ std::string NesGeist::toString() const
 
 void NesGeist::dispatchRendering(const uint8_t (&nesBuffer)[screenHeight][screenWidth], const uint8_t paletteMask)
 {
+	using namespace chisa::gl;
 	{
 		NesGeist::Lock lock(*this);
-		using namespace chisa::gl;
-		Sprite::Session s(lock.getSprite(), Sprite::BufferType::RGBA8);
+		Sprite::Session s(lock.getSprite(), ImageFormat::RGBA8);
 		unsigned char* mem8 = s.data();
 		unsigned int* mem32 = nullptr;
 		const int stride = s.stride();

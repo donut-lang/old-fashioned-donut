@@ -277,19 +277,29 @@ Handler<gl::Sprite> TextDrawable::sprite()
 		if(this->vertical_){
 			const int width = static_cast<int>(std::ceil(this->tsize_.height()));
 			const int height = static_cast<int>(std::ceil(this->tsize_.width()));
-			this->sprite_ = mgr->queryRawSprite(width, height);
+#if IS_BIG_ENDIAN
+			this->sprite_ = mgr->queryRawSprite(ImageFormat::ARGB8, width, height);
+	gl::Sprite::Session ss(spr, );
+#else
+			this->sprite_ = mgr->queryRawSprite(ImageFormat::BGRA8, width, height);
+#endif
 		}else{
 			const int width = static_cast<int>(std::ceil(this->tsize_.width()));
 			const int height = static_cast<int>(std::ceil(this->tsize_.height()));
-			this->sprite_ = mgr->queryRawSprite(width, height);
+#if IS_BIG_ENDIAN
+			this->sprite_ = mgr->queryRawSprite(ImageFormat::ARGB8, width, height);
+	gl::Sprite::Session ss(spr, );
+#else
+			this->sprite_ = mgr->queryRawSprite(ImageFormat::BGRA8, width, height);
+#endif
 		}
 	} else {
 		return this->sprite_;
 	}
 #if IS_BIG_ENDIAN
-	gl::Sprite::Session ss(spr, gl::Sprite::BufferType::ARGB8);
+	gl::Sprite::Session ss(spr, ImageFormat::ARGB8);
 #else
-	gl::Sprite::Session ss(this->sprite_, gl::Sprite::BufferType::BGRA8);
+	gl::Sprite::Session ss(this->sprite_, ImageFormat::BGRA8);
 #endif
 	gl::Font::RawFaceSession rfs(this->font_);
 	{

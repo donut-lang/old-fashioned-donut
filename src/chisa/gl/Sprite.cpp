@@ -16,35 +16,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "OpenGL.h"
-#include "Sprite.h"
-#include "../geom/Area.h"
-#include "Canvas.h"
-#include "Util.h"
-#include "internal/Order.h"
 #include <algorithm>
 #include <string>
+#include "OpenGL.h"
+#include "Canvas.h"
+#include "Util.h"
+#include "Sprite.h"
+#include "internal/SpriteManager.h"
+#include "internal/Order.h"
+#include "../geom/Area.h"
 
 namespace chisa {
 namespace gl {
 
 static constexpr unsigned int MAGIC=0xDEADBEEF;
 
-Sprite::Sprite(HandlerW<internal::SpriteManager> mgr, geom::IntVector const& size)
+Sprite::Sprite(HandlerW<internal::SpriteManager> mgr, ImageFormat format, geom::IntVector const& size)
 :mgr_(mgr)
-,origSize_(geom::IntBox(getPower2Of(size.width()), getPower2Of(size.height())))
-,size_(origSize_)
-,texId_(MAGIC)
+,texture_(MAGIC, format, getPower2Of(size.width()), getPower2Of(size.height()))
+,size_(texture_.width(), texture_.height())
 ,locked_(false)
-,buffer_(nullptr)
-,bufferType_(Sprite::BufferType::Invalid)
 {
-	glGenTextures(1, &this->texId_);
+	buffer_.mem_ = nullptr;
+	glGenTextures(1, &const_cast<unsigned int&>(texture_.textureID()));
 	const GLenum gerr = glGetError();
 	if( unlikely(gerr != GL_NO_ERROR) ){
 		TARTE_EXCEPTION(Exception, "[BUG] Failed to generate texture: 0x%08x", gerr);
 	}
-	glBindTexture(GL_TEXTURE_2D, this->texId_);
+	glBindTexture(GL_TEXTURE_2D, texture_.textureID());
 	const GLenum berr = glGetError();
 	if( unlikely(gerr != GL_NO_ERROR) ){
 		TARTE_EXCEPTION(Exception, "[BUG] Failed to bind texture: 0x%08x", berr);
@@ -54,8 +53,8 @@ Sprite::Sprite(HandlerW<internal::SpriteManager> mgr, geom::IntVector const& siz
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->origSize().width(), this->origSize().height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, this->texture_.align());
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->texture_.width(), this->texture_.height(), 0, static_cast<unsigned int>(this->texture_.format()), GL_UNSIGNED_BYTE, nullptr);
 	const GLenum terr = glGetError();
 	if( unlikely(gerr != GL_NO_ERROR) ){
 		TARTE_EXCEPTION(Exception, "[BUG] Failed to transfer texture: 0x%08x", terr);
@@ -64,8 +63,8 @@ Sprite::Sprite(HandlerW<internal::SpriteManager> mgr, geom::IntVector const& siz
 Sprite::~Sprite() noexcept (true)
 {
 	this->backBuffer();
-	if( likely(this->texId_ != MAGIC) ){
-		glDeleteTextures(1, &this->texId_);
+	if( likely(this->texture_.textureID() != MAGIC) ){
+		glDeleteTextures(1, &(texture_.textureID()));
 	}
 }
 
@@ -74,12 +73,12 @@ void Sprite::drawImpl(Canvas* const canvas, geom::Point const& ptInRoot, geom::A
 	this->flushBuffer();
 	geom::Area const drawn(geom::Area(geom::ZERO, size_).intersect(mask));
 	geom::Area coordinate(drawn);
-	coordinate.x(coordinate.x() / this->origSize_.width());
-	coordinate.y(coordinate.y() / this->origSize_.height());
-	coordinate.width(coordinate.width() / this->origSize_.width());
-	coordinate.height(coordinate.height() / this->origSize_.height());
+	coordinate.x(coordinate.x() / this->texture_.width());
+	coordinate.y(coordinate.y() / this->texture_.height());
+	coordinate.width(coordinate.width() / this->texture_.width());
+	coordinate.height(coordinate.height() / this->texture_.height());
 	canvas->drawTexture(
-			this->texId_,
+			this->texture_.textureID(),
 			geom::Area(ptInRoot+drawn.point(), drawn.box()),
 			coordinate,
 			depth,
@@ -89,10 +88,10 @@ void Sprite::drawImpl(Canvas* const canvas, geom::Point const& ptInRoot, const f
 {
 	this->flushBuffer();
 	geom::Area coordinate(geom::Area(geom::ZERO, size_));
-	coordinate.width(coordinate.width() / this->origSize_.width());
-	coordinate.height(coordinate.height() / this->origSize_.height());
+	coordinate.width(coordinate.width() / this->texture_.width());
+	coordinate.height(coordinate.height() / this->texture_.height());
 	canvas->drawTexture(
-			this->texId_,
+			this->texture_.textureID(),
 			geom::Area(ptInRoot, size_),
 			coordinate,
 			depth,
@@ -101,9 +100,9 @@ void Sprite::drawImpl(Canvas* const canvas, geom::Point const& ptInRoot, const f
 
 void Sprite::flushBuffer()
 {
-	if(this->buffer_){
+	if(this->buffer_.mem_){
 		{
-			glBindTexture(GL_TEXTURE_2D, this->texId_);
+			glBindTexture(GL_TEXTURE_2D, this->texture_.textureID());
 			const GLenum err = glGetError();
 			if( unlikely(err != GL_NO_ERROR) ) {
 				TARTE_EXCEPTION(Exception, "[BUG] Failed to bind texture: code 0x%x", err);
@@ -111,7 +110,11 @@ void Sprite::flushBuffer()
 		}
 		{
 			//ここのサイズはバッファのものにしないと変な所を読みに行くかもしれない。
-			glTexSubImage2D(GL_TEXTURE_2D, 0, 0,0, this->size().width(), this->size().height(), this->bufferType_, GL_UNSIGNED_BYTE, this->buffer_->ptr());
+			glTexSubImage2D(
+					GL_TEXTURE_2D, 0, 0,0,
+					this->buffer_.width_, this->buffer_.height_,
+					static_cast<unsigned int>(this->buffer_.format_),
+					GL_UNSIGNED_BYTE, this->buffer_.mem_->ptr());
 			const GLenum err = glGetError();
 			if( unlikely(err != GL_NO_ERROR) ){
 				TARTE_EXCEPTION(Exception, "[BUG] Failed to transfer texture: code 0x%x", err);
@@ -123,32 +126,38 @@ void Sprite::flushBuffer()
 
 void Sprite::resize(int width, int height)
 {
-	if(unlikely(width > this->origSize().width() || height > this->origSize().height())){
+	if(unlikely(width > this->texture_.width() || height > this->texture_.height())){
 		TARTE_EXCEPTION(Exception, "[BUG] You can't resize Sprite bigger than original.");
 	}
 	this->size(geom::IntBox(width, height));
+	this->buffer_.width_ = std::min(width+1, texture_.width());
+	this->buffer_.height_ = std::min(height+1, texture_.height());
 }
 
 std::string Sprite::toString() const noexcept
 {
-	return ::tarte::format("(Sprite %p tex: %d buffer: %p orig: %s now: %s)", this, this->texId_, this->buffer_, this->origSize().toString().c_str(), this->size().toString().c_str());
+	return ::tarte::format("(Sprite %p tex: %d buffer: %p orig: (%dx%d) now: (%dx%d))", this,
+			this->texture_.textureID(),
+			this->buffer_.mem_,
+			this->texture_.width(), texture_.height(),
+			this->size().width(),this->size().height());
 }
 
 //-----------------------------------------------------------------------------
 void Sprite::backBuffer()
 {
-	if(this->buffer_){
+	if(this->buffer_.mem_){
 		if( Handler<internal::SpriteManager> mgr = this->mgr_.lock() ){
-			mgr->backBuffer(this->buffer_);
+			mgr->backBuffer(this->buffer_.mem_);
 		}else{
-			delete this->buffer_;
+			delete this->buffer_.mem_;
 		}
-		this->buffer_ = nullptr;
+		this->buffer_.mem_ = nullptr;
 	}
 }
 
 bool Sprite::onFree() noexcept {
-	this->size(this->origSize());
+	this->size(geom::IntVector(texture_.width(), texture_.height()));
 	this->backBuffer();
 	if( Handler<internal::SpriteManager> mgr = this->mgr_.lock() ){
 		mgr->backSprite(this);
@@ -158,23 +167,27 @@ bool Sprite::onFree() noexcept {
 	}
 }
 
-internal::Buffer* Sprite::lock(Sprite::BufferType bufferType)
+internal::Buffer* Sprite::lock(ImageFormat imageFormat)
 {
 	bool expected = false;
 	if(unlikely(!this->locked_.compare_exchange_strong(expected, true))){
 		TARTE_EXCEPTION(Exception, "[BUG] Sprite already locked!");
 	}
-	if(this->buffer_ && this->bufferType_ == bufferType){
-		return this->buffer_;
-	}else{
+	if( this->buffer_.mem_ && this->buffer_.format_ == imageFormat ){
+		return this->buffer_.mem_;
+	} else if( unlikely( this->texture_.align() != Texture::formatToAlign(imageFormat) ) ) {
+		TARTE_EXCEPTION(Exception, "[BUG] Texture align does not match: requested: %d != texture: %d",
+				this->texture_.align(), Texture::formatToAlign(imageFormat) );
+	} else {
 		this->flushBuffer();
 		if( Handler<internal::SpriteManager> mgr = this->mgr_.lock() ){
-			this->buffer_ = mgr->queryBuffer(this->size().width() * this->size().height() * 4);
+			this->buffer_.stride_ = buffer_.width_ * texture_.align();
+			this->buffer_.mem_ = mgr->queryBuffer(buffer_.stride_ * buffer_.height_);
 		}else{
 			TARTE_EXCEPTION(Exception, "[BUG] SpriteManager already dead!!");
 		}
-		this->bufferType_ = bufferType;
-		return (this->buffer_);
+		this->buffer_.format_ = imageFormat;
+		return (this->buffer_.mem_);
 	}
 }
 void Sprite::unlock()
@@ -187,10 +200,10 @@ void Sprite::unlock()
 
 //-----------------------------------------------------------------------------
 
-Sprite::Session::Session(Handler<Sprite> parent, Sprite::BufferType bufferType)
+Sprite::Session::Session(Handler<Sprite> parent, ImageFormat imageFormat)
 :parent_(parent)
 {
-	this->parent_->lock(bufferType);
+	this->parent_->lock(imageFormat);
 }
 Sprite::Session::~Session()
 {

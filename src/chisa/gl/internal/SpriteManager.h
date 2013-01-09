@@ -19,24 +19,17 @@
 #pragma once
 #include <deque>
 #include <tarte/ClassUtil.h>
+#include "../ImageFormat.h"
 
 namespace chisa {
 using namespace tarte;
 
 namespace gl {
 class Sprite;
-class Canvas;
 
 namespace internal {
+class Buffer;
 
-class Buffer {
-	DISABLE_COPY_AND_ASSIGN (Buffer);
-	DEFINE_MEMBER_CONST(public, std::size_t, size);
-	DEFINE_MEMBER_CONST(public, unsigned char*, ptr);
-public:
-	Buffer(std::size_t size);
-	~Buffer() noexcept;
-};
 class SpriteManager: public HandlerBody<SpriteManager> {
 	DEFINE_MEMBER_REF(private, Logger, log)
 private:
@@ -48,7 +41,7 @@ public:
 	SpriteManager(Logger& log);
 	virtual ~SpriteManager() noexcept;
 	inline bool onFree() noexcept { return false; };
-	Handler<Sprite> queryRawSprite(const int width, const int height);
+	Handler<Sprite> queryRawSprite(ImageFormat const foramt, const int width, const int height);
 public:
 	void backSprite(Sprite* spr);
 	internal::Buffer* queryBuffer(std::size_t size);
