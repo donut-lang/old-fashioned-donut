@@ -34,9 +34,9 @@ DrawableManager::DrawableManager(Logger& log, DrawableSetting const& setting)
 	this->factories_.insert("none:", NullDrawable::create);
 }
 
-Handler<Sprite> DrawableManager::queryRawSprite(const int width, const int height)
+Handler<Sprite> DrawableManager::queryRawSprite(ImageFormat const format, const int width, const int height)
 {
-	return this->spriteManager_->queryRawSprite(width, height);
+	return this->spriteManager_->queryRawSprite(format, width, height);
 }
 
 Handler<Sprite> DrawableManager::queryImage(std::string const& filename)

@@ -16,9 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../Sprite.h"
-#include "Order.h"
 #include <algorithm>
+#include "../Sprite.h"
+#include "SpriteManager.h"
+#include "Buffer.h"
+#include "Order.h"
 
 namespace chisa {
 namespace gl{
@@ -70,14 +72,15 @@ void SpriteManager::backSprite(Sprite* spr)
 	}
 }
 
-Handler<Sprite> SpriteManager::queryRawSprite(const int width, const int height)
+Handler<Sprite> SpriteManager::queryRawSprite(ImageFormat const format, const int width, const int height)
 {
 	typedef chisa::gl::internal::WidthOrder<Sprite> SpriteOrder;
-	auto it = std::lower_bound(this->unusedSprite_.begin(), this->unusedSprite_.end(), std::pair<int,int>(width,height), SpriteOrder());
+	auto it = std::lower_bound(this->unusedSprite_.begin(), this->unusedSprite_.end(),
+			std::tuple<ImageFormat, int,int>(format, width, height), Sprite::CompareByTexture());
 	//横幅が同じ場合は、縦幅も大きいか同じであることが保証される。
 	//横幅が優先なので、横幅が違う場合は高さは短いかもしれない
-	if(it == this->unusedSprite_.end() || (*it)->height() < height){
-		Handler<Sprite> spr ( new Sprite(this, geom::IntBox(width, height)) );
+	if(it == this->unusedSprite_.end() || (*it)->texture().format() != format || (*it)->texture().height() < height || (*it)->texture().width() < width) {
+		Handler<Sprite> spr ( new Sprite(this, format, geom::IntBox(width, height)) );
 		spr->resize(width, height);
 		return spr;
 	}else{
@@ -126,18 +129,5 @@ void SpriteManager::backBuffer(internal::Buffer* buffer)
 		}
 	}
 }
-
-
-//-----------------------------------------------------------------------------
-Buffer::Buffer(std::size_t size)
-:size_(size), ptr_(new unsigned char [size])
-{
-
-}
-Buffer::~Buffer() noexcept
-{
-	delete [] ptr_;
-}
-
 
 }}}

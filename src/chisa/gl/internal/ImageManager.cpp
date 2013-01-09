@@ -104,9 +104,9 @@ Handler<Sprite> ImageManager::loadPNG(std::string const& filename)
 
 	Handler<Sprite> spr;
 	if(Handler<SpriteManager> mgr = this->spriteManager_.lock()){
-		spr = mgr->queryRawSprite(width, height);
+		spr = mgr->queryRawSprite(ImageFormat::RGBA8, width, height);
 		{
-			Sprite::Session session(spr, Sprite::BufferType::RGBA8);
+			Sprite::Session session(spr, ImageFormat::RGBA8);
 			unsigned char* data = session.data();
 			const int stride = session.stride();
 			unsigned char* ptr[height];
