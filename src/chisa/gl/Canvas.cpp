@@ -63,9 +63,9 @@ void Canvas::translate(geom::Point const& pt)
 	}
 #endif
 }
-void Canvas::rotate(const float angle, geom::Point const& pt)
+void Canvas::rotate(const float angle)
 {
-	glRotatef(angle, pt.x(),pt.y(),0.0f);
+	glRotatef(angle, 0, 0, 1.0f);
 #ifdef DEBUG
 	const GLenum err = glGetError();
 	if(err != GL_NO_ERROR){

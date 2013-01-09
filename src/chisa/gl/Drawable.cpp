@@ -238,115 +238,57 @@ TextDrawable::TextDrawable(HandlerW<DrawableManager> manager, std::string const&
 ,font_descent_(0)
 ,font_height_(0)
 {
-	std::vector<Handler<BitmapGlyph> > glyphs = this->font_->lookupGlyph(this->str_, this->fontSize_);
 	this->revalidate();
 }
 
 void TextDrawable::revalidate()
 {
-	Font::RawFaceSession session(font_);
-	cairo_surface_t* surf = cairo_image_surface_create(CAIRO_FORMAT_A8, 1,1);
-	cairo_t* cr = cairo_create(surf);
-	cairo_font_options_t* opt = cairo_font_options_create();
-	cairo_font_face_t* face = cairo_ft_font_face_create_for_ft_face(session.face(), 0);
+	std::vector<Handler<BitmapGlyph> > glyphs = this->font_->lookupGlyph(this->str_, this->fontSize_);
+	this->font_->calcLineInfo(fontSize_, this->font_ascent_, this->font_descent_, this->font_height_);
 	{
-		TextDrawable::setupCairo(cr, face, opt, fontSize_, style_);
-		cairo_text_extents_t ext;
-		cairo_text_extents(cr, str_.c_str(), &ext);
-		Font::calcLineInfo(session.face(), fontSize_, this->font_ascent_, this->font_descent_, this->font_height_);
-		this->tbearing_ = geom::Vector(ext.x_bearing, ext.y_bearing);
-		this->tadvance_ = geom::Vector(ext.x_advance, ext.y_advance);
-		this->tsize_ = geom::Box(ext.width, ext.height);
-		this->size_ = geom::Box(ext.x_advance, this->font_height_);
-		if(this->vertical_){
-			this->size_ = this->size_.flip();
+		int totalX = 0;
+		for(Handler<BitmapGlyph> const& glyph : glyphs){
+			FT_BitmapGlyph g = glyph->get();
+			totalX += g->root.advance.x;
+		}
+		if(Handler<DrawableManager> mgr = this->manager().lock()){
+			float const widthf = FLOAT_FROM_16_16(totalX);
+			int const width = std::ceil(widthf);
+			int const height = std::ceil(font_height_);
+			this->size_ = geom::Box(widthf, font_height_);
+			this->tsize_ = geom::IntBox(width, height);
+			this->sprite_ = mgr->queryRawSprite(ImageFormat::ALPHA, width, height);
+		}else{
+			return;
 		}
 	}
-	cairo_font_face_destroy(face);
-	cairo_font_options_destroy(opt);
-	cairo_destroy(cr);
-	cairo_surface_destroy(surf);
+	gl::Sprite::Session ss(this->sprite_);
+	int nowX = 0;
+	int const spriteStride = ss.stride();
+	unsigned char* const spriteBuf = ss.data();
+
+	for(Handler<BitmapGlyph> const& glyph : glyphs){
+		FT_BitmapGlyph g = glyph->get();
+		int const startX = INT_FROM_16_16_FLOOR(nowX);
+
+		int bmpY = 0;
+		int const bmpPitch = g->bitmap.pitch;
+		int const bmpWidth = g->bitmap.width;
+
+		int startY = this->font_ascent_-g->top;
+		int const endY = g->bitmap.rows+startY;
+		for(int y=startY;y<endY;++y) {
+			std::memcpy( &spriteBuf[y*spriteStride+startX], &g->bitmap.buffer[bmpPitch*bmpY], bmpWidth );
+			++bmpY;
+		}
+		nowX += g->root.advance.x;
+	}
 }
 
 Handler<gl::Sprite> TextDrawable::sprite()
 {
-	static int r = 0;
-	if(this->sprite_){
-		return this->sprite_;
-	}
-	r++;
-	if(Handler<DrawableManager> mgr = this->manager().lock()){
-		if(this->vertical_){
-			const int width = static_cast<int>(std::ceil(this->tsize_.height()));
-			const int height = static_cast<int>(std::ceil(this->tsize_.width()));
-			this->sprite_ = mgr->queryRawSprite(ImageFormat::ALPHA, width, height);
-		}else{
-			const int width = static_cast<int>(std::ceil(this->tsize_.width()));
-			const int height = static_cast<int>(std::ceil(this->tsize_.height()));
-			this->sprite_ = mgr->queryRawSprite(ImageFormat::ALPHA, width, height);
-		}
-	} else {
-		return this->sprite_;
-	}
-	gl::Sprite::Session ss(this->sprite_);
-	gl::Font::RawFaceSession rfs(this->font_);
-	{
-		cairo_surface_t* surf = cairo_image_surface_create_for_data(ss.data(), CAIRO_FORMAT_A8, ss.width(), ss.height(), ss.stride());
-		cairo_t* cr = cairo_create(surf);
-		cairo_font_face_t* face = cairo_ft_font_face_create_for_ft_face(rfs.face(), FT_LOAD_FORCE_AUTOHINT);
-		cairo_font_options_t* opt = cairo_font_options_create();
-
-		//データは使いまわしているので一旦サーフェイスの中身を削除する
-		cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
-		cairo::setColor(cr, this->backColor_);
-		cairo_paint(cr);
-
-		float a,b,c;
-		Font::calcLineInfo(rfs.face(), this->fontSize_, a,b,c);
-		TextDrawable::setupCairo(cr, face, opt, this->fontSize_, this->style_);
-
-		cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
-		if(this->vertical_){
-			cairo_rotate(cr, PI/2.0f);
-			cairo_translate(cr, 0, -this->tsize_.height());
-		}
-
-		cairo_move_to(cr, -this->tbearing_.x(), -this->tbearing_.y());
-		cairo::setColor(cr, this->color_);
-		//cairo_show_text(cr, this->str_.c_str());
-		cairo_text_path(cr, this->str_.c_str());
-		cairo_fill(cr);
-
-		cairo_set_antialias(cr, CAIRO_ANTIALIAS_NONE);
-		switch( this->deco_ ){
-		case Strike:{
-			const float hh = this->tsize_.height()/2;
-			cairo_move_to(cr, 0, hh);
-			cairo_line_to(cr, this->tsize_.width(), hh);
-			cairo_stroke(cr);
-			break;
-		}
-		case Underline: {
-			const float width = cairo_get_line_width(cr)/2;
-			const float h = this->tsize_.height()-width;
-			cairo_move_to(cr, 0, h);
-			cairo_line_to(cr, this->tsize_.width(), h);
-			cairo_stroke(cr);
-			break;
-		}
-		case None: {
-			break;
-		}
-		default: {
-			TARTE_EXCEPTION(Exception, "[BUG] Oops. Invalid decoration: %d", this->deco_);
-		}
-		}
-		cairo_status_t s = cairo_surface_write_to_png(surf, format("%d.png", r).c_str());
-
-		cairo_font_options_destroy(opt);
-		cairo_font_face_destroy(face);
-		cairo_surface_destroy(surf);
-		cairo_destroy(cr);
+	if(!this->sprite_){
+		this->revalidate();
 	}
 	return this->sprite_;
 }
@@ -358,49 +300,37 @@ Handler<TextDrawable> TextDrawable::create(HandlerW<DrawableManager> manager, st
 
 geom::Box TextDrawable::size()
 {
-	return this->size_;
+	return this->vertical_ ? this->size_.flip() : this->size_;
 }
 
 void TextDrawable::draw(Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask, const float depth)
 {
 	if(this->vertical_) {
-		geom::Distance off(this->font_height_ - (this->font_ascent_+(this->tsize_.height()+this->bearing().y())), this->bearing().x());
-		geom::Area const tmask(mask.point()-off, mask.box());
-		geom::Box const sprSize(this->sprite()->size());
-		canvas.drawSprite(this->sprite(), ptInRoot+off, geom::Area(geom::ZERO, sprSize).intersect(tmask), depth, this->color_);
+		Canvas::AffineScope af(canvas);
+		canvas.translate(ptInRoot);
+		canvas.rotate(90);
+		canvas.translate(geom::Point(0, -size_.height()));
+		canvas.drawSprite(this->sprite(), geom::ZERO, geom::Area(geom::ZERO, tsize_).intersect(mask.flip()), depth, this->color_);
 	}else{
-		geom::Distance off(this->bearing().x(), this->font_ascent_+this->bearing().y());
-		geom::Area const tmask(mask.point()-off, mask.box());
-		geom::Box const sprSize(this->sprite()->size());
-		canvas.drawSprite(this->sprite(), ptInRoot+off, geom::Area(geom::ZERO, sprSize).intersect(tmask), depth, this->color_);
+		canvas.drawSprite(this->sprite(), ptInRoot, geom::Area(geom::ZERO, tsize_).intersect(mask), depth, this->color_);
 	}
 }
 void TextDrawable::draw(Canvas& canvas, geom::Point const& ptInRoot, const float depth)
 {
 	if(this->vertical_) {
-		geom::Distance off(this->font_height_ - (this->font_ascent_+(this->tsize_.height()+this->bearing().y())), this->bearing().x());
-		canvas.drawSprite(this->sprite(), ptInRoot+off, depth, color_);
+		Canvas::AffineScope af(canvas);
+		canvas.translate(ptInRoot);
+		canvas.rotate(90);
+		canvas.translate(geom::Point(0, -this->size_.height()));
+		canvas.drawSprite(this->sprite(), geom::ZERO, depth, color_);
 	}else{
-		geom::Distance off(this->bearing().x(), this->font_ascent_+this->bearing().y());
-		canvas.drawSprite(this->sprite(), ptInRoot+off, depth, color_);
+		canvas.drawSprite(this->sprite(), ptInRoot, depth, color_);
 	}
 }
 
 std::string TextDrawable::toString() const
 {
 	return ::tarte::format("(TextDrawable %p str:\"%p\" size: %d)", this, this->str_.c_str(), fontSize_);
-}
-
-void TextDrawable::setupCairo(cairo_t* cairo, cairo_font_face_t* face, cairo_font_options_t* opt, float size, Style style)
-{
-	cairo_font_options_set_subpixel_order(opt, CAIRO_SUBPIXEL_ORDER_DEFAULT);
-	cairo_font_options_set_antialias(opt, CAIRO_ANTIALIAS_DEFAULT);
-	cairo_font_options_set_hint_metrics(opt, CAIRO_HINT_METRICS_DEFAULT);
-	cairo_font_options_set_hint_style(opt, CAIRO_HINT_STYLE_DEFAULT);
-	cairo_set_font_options(cairo, opt);
-	cairo_set_font_face(cairo, face);
-	cairo_set_font_size(cairo, size);
-	//FIXME Italic/Bold対応
 }
 
 //-----------------------------------------------------------------------------
