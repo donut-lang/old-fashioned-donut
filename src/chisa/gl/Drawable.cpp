@@ -278,7 +278,11 @@ void TextDrawable::revalidate()
 		int const endY = g->bitmap.rows+startY;
 		int bmpY = 0;
 		for(int y=startY;y<endY;++y,++bmpY) {
-			std::memcpy( &spriteBuf[y*spriteStride+startX], &g->bitmap.buffer[bmpPitch*bmpY], bmpWidth );
+			unsigned char* const sprBuf = &spriteBuf[y*spriteStride+startX];
+			unsigned char* const bmpBuf = &g->bitmap.buffer[bmpPitch*bmpY];
+			for(int x=0;x<bmpWidth; ++x) {
+				sprBuf[x] = bmpBuf[x];
+			}
 		}
 		nowX += g->root.advance.x;
 	}
