@@ -20,6 +20,7 @@
 
 #include "Universe.h"
 #include "World.h"
+#include "../input/JoystickManager.h"
 #include "../gl/DrawableManager.h"
 
 static const std::string TAG("Universe");
@@ -163,6 +164,10 @@ Handler<Quartet> Universe::quartet() const
 	return this->platformFairy()->quartet();
 }
 
+Handler<JoystickManager> Universe::joystickManager() const
+{
+	return this->platformFairy_->joystickManager();
+}
 Handler<chisa::WorldGeist> Universe::invokeWorldGeist(HandlerW<World> world, std::string const& nameOfGeist)
 {
 	if(log().t()){

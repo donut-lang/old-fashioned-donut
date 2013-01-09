@@ -21,6 +21,8 @@
 #include <tarte/Logger.h>
 #include <tarte/ClassUtil.h>
 #include "audio/Quartet.h"
+#include "input/JoystickManager.h"
+#include "input/Joystick.h"
 #include "geom/Area.h"
 
 namespace chisa {
@@ -31,6 +33,7 @@ class PlatformFairy : public HandlerBody<PlatformFairy> {
 	DEFINE_MEMBER_REF(protected, Logger, log);
 private:
 	Handler<Quartet> quartet_;
+	Handler<JoystickManager> joystickManager_;
 protected:
 	PlatformFairy(Logger& log):log_(log){};
 	virtual ~PlatformFairy() noexcept = default;
@@ -51,8 +54,11 @@ public: /* IME */
 	virtual void stopIME() = 0;
 public: /* Audio */
 	Handler<Quartet> quartet(); //カルテットサブシステムの呼び出し
+public:
+	Handler<JoystickManager> joystickManager();
 protected:
 	virtual Handler<Quartet> createQuartet() = 0;
+	virtual Handler<JoystickManager> createJoystickManager() = 0;
 };
 
 }

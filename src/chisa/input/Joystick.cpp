@@ -16,25 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "PlatformFairy.h"
+#include "Joystick.h"
+#include "JoystickManager.h"
 
 namespace chisa {
-using namespace tarte;
 
-Handler<Quartet> PlatformFairy::quartet()
+Joystick::Joystick(Handler<JoystickManager> const& manager)
+:manager_(manager)
 {
-	if(!this->quartet_){
-		this->quartet_ = this->createQuartet();
-	}
-	return this->quartet_;
 }
 
-Handler<JoystickManager> PlatformFairy::joystickManager()
+Handler<JoystickManager> Joystick::manager() const
 {
-	if(!this->joystickManager_){
-		this->joystickManager_ = this->createJoystickManager();
-	}
-	return this->joystickManager_;
+	return this->manager_.lock();
 }
 
 }

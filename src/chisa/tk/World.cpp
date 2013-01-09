@@ -25,6 +25,7 @@
 #include "Universe.h"
 #include "Action.h"
 #include "../gl/DrawableManager.h"
+#include "../input/JoystickManager.h"
 
 namespace chisa {
 namespace tk {
@@ -258,6 +259,14 @@ Handler<Quartet> World::quartet() const
 {
 	if(Handler<Universe> univ = this->universe_.lock()){
 		return univ->quartet();
+	}
+	TARTE_EXCEPTION(Exception, "[BUG] Universe is already dead.");
+}
+
+Handler<JoystickManager> World::joystickManager() const
+{
+	if(Handler<Universe> univ = this->universe_.lock()){
+		return univ->joystickManager();
 	}
 	TARTE_EXCEPTION(Exception, "[BUG] Universe is already dead.");
 }

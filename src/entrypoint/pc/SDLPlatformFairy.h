@@ -169,6 +169,58 @@ private:
 	}
 };
 
+class SDLJoystick : public Joystick {
+private:
+	SDL_Joystick* joy_;
+public:
+	SDLJoystick(Handler<JoystickManager> manager, SDL_Joystick* joy)
+	:Joystick(manager)
+	,joy_(joy)
+	{
+
+	}
+	virtual ~SDLJoystick() noexcept {
+		SDL_JoystickClose(joy_);
+	}
+protected:
+	virtual unsigned int numAxesImpl() noexcept {
+		return SDL_JoystickNumAxes(joy_);
+	}
+	virtual unsigned int numBallsImpl() noexcept {
+		return SDL_JoystickNumBalls(joy_);
+	}
+	virtual unsigned int numButtonsImpl() noexcept {
+		return SDL_JoystickNumButtons(joy_);
+	}
+protected:
+	virtual int axisImpl(unsigned int const& idx) noexcept {
+		return SDL_JoystickGetAxis(joy_, idx);
+	}
+	virtual void ballImpl(unsigned int const& idx, int& dx, int& dy) {
+		SDL_JoystickGetBall(joy_, idx, &dx, &dy);
+	}
+	virtual bool buttonImpl(unsigned int const& idx) noexcept {
+		return SDL_JoystickGetButton(joy_, idx);
+	}
+protected:
+	virtual void updateImpl() noexcept {
+		SDL_JoystickUpdate();
+	}
+};
+
+class SDLJoystickManager : public JoystickManager {
+public:
+	SDLJoystickManager(){}
+	virtual ~SDLJoystickManager() noexcept = default;
+private:
+	virtual unsigned int numJoysticksImpl() noexcept {
+		return SDL_NumJoysticks();
+	}
+	virtual Handler<Joystick> joystickImpl( unsigned int id ) {
+		Handler<Joystick> joy(new SDLJoystick(self(), SDL_JoystickOpen(id)));
+		return joy;
+	}
+};
 
 class SDLPlatformFairy : public PlatformFairy {
 private:
@@ -292,6 +344,9 @@ private:
 	virtual Handler< ::chisa::Quartet> createQuartet() override final
 	{
 		return Handler< ::chisa::Quartet>( new SDLQuartet(SoundSpec(SoundSpec::DataFormat::S16SYS, 1, 44100, 8192)) );
+	}
+	virtual Handler< ::chisa::JoystickManager> createJoystickManager() override final {
+		return Handler< ::chisa::JoystickManager> ( new SDLJoystickManager() );
 	}
 };
 

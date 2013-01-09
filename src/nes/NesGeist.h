@@ -22,6 +22,7 @@
 #include "../chisa/tk/Task.h"
 #include "../chisa/gl/Sprite.h"
 #include "../chisa/audio/Instrument.h"
+#include "../chisa/input/Joystick.h"
 #include <tarte/Thread.h>
 #include <tarte/Logger.h>
 
@@ -70,6 +71,10 @@ private:
 	float time_ms_;
 	std::condition_variable cond_;
 	Handler<Instrument> inst_;
+	unsigned char joyState_;
+	Handler<chisa::Joystick> joystick_;
+private:
+	void updateJoystick();
 public:
 	NesGeist(Logger& log, HandlerW<chisa::tk::World> world);
 	virtual ~NesGeist() noexcept;

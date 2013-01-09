@@ -19,6 +19,7 @@
 #include "NesGeist.h"
 #include "../chisa/tk/World.h"
 #include "../chisa/gl/DrawableManager.h"
+#include "../chisa/input/JoystickManager.h"
 
 namespace nes {
 
@@ -29,6 +30,7 @@ NesGeist::NesGeist(chisa::Logger& log, chisa::HandlerW<chisa::tk::World> world)
 ,runner_t_(nullptr)
 ,runner_(nullptr)
 ,time_ms_(0.0f)
+,joyState_(0)
 {
 	using namespace chisa::gl;
 	this->machine_ = new VirtualMachine(*this, *this, this, nullptr);
@@ -39,6 +41,10 @@ NesGeist::NesGeist(chisa::Logger& log, chisa::HandlerW<chisa::tk::World> world)
 	this->world()->quartet()->addInstrument(
 			this->inst_ = Handler<Instrument>(new Instrument(*this))
 			);
+	Handler<chisa::JoystickManager> mgr = this->world()->joystickManager();
+	if(mgr->numJoysticks() > 0) {
+		this->joystick_ = mgr->joystick(0);
+	}
 }
 
 NesGeist::~NesGeist() noexcept
@@ -84,11 +90,39 @@ void NesGeist::dispatchRendering(const uint8_t (&nesBuffer)[screenHeight][screen
 
 void NesGeist::onUpdate()
 {
+
+}
+
+void NesGeist::updateJoystick() {
+	if(!this->joystick_) {
+		return;
+	}
+	this->joystick_->update();
+	this->joyState_ = 0;
+	const int32_t x = this->joystick_->axis(0);
+	const int32_t y = this->joystick_->axis(1);
+
+	if(x > 100){
+		joyState_ |= GamepadFairy::MASK_RIGHT;
+	}else if(x < -100){
+		joyState_ |= GamepadFairy::MASK_LEFT;
+	}
+
+	if(y > 100){
+		joyState_ |= GamepadFairy::MASK_DOWN;
+	}else if(y < -100){
+		joyState_ |= GamepadFairy::MASK_UP;
+	}
+
+	joyState_ |= (this->joystick_->button(2)) << GamepadFairy::A;
+	joyState_ |= (this->joystick_->button(1)) << GamepadFairy::B;
+	joyState_ |= (this->joystick_->button(8)) << GamepadFairy::START;
+	joyState_ |= (this->joystick_->button(0)) << GamepadFairy::SELECT;
 }
 
 bool NesGeist::isPressed(uint8_t keyIdx)
 {
-	return false;
+	return (joyState_ >> keyIdx) & 1;
 }
 
 void NesGeist::loadNES(std::string const& abs_filename)
@@ -120,6 +154,7 @@ bool NesGeist::exec(const float delta_ms)
 		this->time_ms_ -= (1.0f/60);
 		this->cond_.notify_one();
 	}
+	this->updateJoystick();
 	return true;
 }
 
