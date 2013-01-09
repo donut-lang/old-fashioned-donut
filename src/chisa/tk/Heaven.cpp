@@ -28,4 +28,29 @@ Heaven::Heaven(const Handler<World>& world)
 {
 }
 
+void Heaven::render(gl::Canvas& canvas)
+{
+	for(VectorMap<std::string, Handler<Angel> >::Pair& p : this->angelMap_ ) {
+		Handler<Angel> const& angel = p.second;
+		angel->render(canvas);
+	}
+}
+
+void Heaven::idle(const float delta_ms)
+{
+	for(VectorMap<std::string, Handler<Angel> >::Pair& p : this->angelMap_ ) {
+		Handler<Angel> const& angel = p.second;
+		angel->idle(delta_ms);
+	}
+}
+
+void Heaven::reshape(const geom::Area& area)
+{
+	//何もしなくて良いんじゃないかな？
+	for(VectorMap<std::string, Handler<Angel> >::Pair& p : this->angelMap_ ) {
+		Handler<Angel> const& angel = p.second;
+		angel->reshape(area);
+	}
+}
+
 }}
