@@ -23,7 +23,6 @@
 #include "Drawable.h"
 #include "../geom/Area.h"
 #include "../geom/Vector.h"
-#include "internal/CairoUtil.h"
 #include "Canvas.h"
 #include "DrawableManager.h"
 
