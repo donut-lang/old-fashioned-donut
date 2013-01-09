@@ -24,6 +24,7 @@
 #include <tarte/Logger.h>
 #include <tarte/ClassUtil.h>
 #include <tarte/VectorMap.h>
+#include <donut/Donut.h>
 
 namespace chisa {
 using namespace tarte;
@@ -57,6 +58,7 @@ public: /* 登録 */
 	void registerWidget(std::string const& klass) {
 		this->registerWidget(klass, widgetConstructor<WidgetKlass>);
 	}
+	void registerDonutProvider(Handler< ::donut::Heap> const& heap);
 public: /* 作成 */
 	Widget* createWidget(std::string const& klass, tinyxml2::XMLElement* elem);
 };

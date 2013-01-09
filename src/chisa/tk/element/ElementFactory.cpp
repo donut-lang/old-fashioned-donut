@@ -134,6 +134,11 @@ void ElementFactory::registerProvider(std::string const& demangledElementName, H
 	}
 }
 
+void ElementFactory::registerDonutProvider(Handler< ::donut::Heap> const& heap)
+{
+
+}
+
 Handler<ElementProvider> ElementFactory::getProviderOf(Element* me)
 {
 	std::string const demangled(::tarte::demangle(me));

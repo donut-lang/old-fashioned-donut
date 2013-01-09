@@ -16,22 +16,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <donut/Exception.h>
 #include "Patron.h"
+#include "../World.h"
 
 namespace chisa {
-namespace tk {
 using namespace tarte;
+
+namespace tk {
 
 const static std::string TAG("Patron");
 
-Patron::Patron(int argc, char** argv)
-:argc_(argc)
-,argv_(argv)
+Patron::Patron(Handler<World> const& world)
+:world_(world)
 {
 }
 
 void Patron::onRegisterProvider(Handler< ::donut::Heap> const& heap)
 {
+	Handler<World> world = this->world_.lock();
+	if( unlikely(!world) ){
+		DONUT_EXCEPTION(Exception, "[BUG] Failed to lock world.");
+	}
+	//ウィジットのプロバイダを設定
+	//world->elementFactory()->registerDonutProvider(heap);
+	//world->widgetFactory()->registerDonutProvider(heap);
 }
 
 void Patron::onGlobalObjectInitialized(Handler< ::donut::Heap> const& heap)

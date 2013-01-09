@@ -17,18 +17,19 @@
  */
 
 #pragma once
+#include <tarte/Handler.h>
 #include <donut/Patron.h>
 
 namespace chisa {
-namespace tk {
 using namespace tarte;
 
+namespace tk {
+class World;
+
 class Patron : public donut::Patron {
-	int argc_;
-	char** argv_;
-	//Handler<SystemProvider> systemProvider_;
+	HandlerW<World> world_;
 public:
-	Patron(int argc, char** argv);
+	Patron(Handler<World> const& world);
 	virtual ~Patron() noexcept = default;
 public:
 	virtual void onRegisterProvider(Handler< ::donut::Heap> const& heap) override final;
