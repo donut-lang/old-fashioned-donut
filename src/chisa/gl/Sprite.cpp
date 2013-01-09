@@ -130,7 +130,7 @@ void Sprite::resize(int width, int height)
 		TARTE_EXCEPTION(Exception, "[BUG] You can't resize Sprite bigger than original.");
 	}
 	this->size(geom::IntBox(width, height));
-	this->buffer_.width_ = std::min(width+1, texture_.width());
+	this->buffer_.width_ = texture_.width();
 	this->buffer_.height_ = std::min(height+1, texture_.height());
 }
 
@@ -181,8 +181,9 @@ internal::Buffer* Sprite::lock(ImageFormat imageFormat)
 	} else {
 		this->flushBuffer();
 		if( Handler<internal::SpriteManager> mgr = this->mgr_.lock() ){
-			this->buffer_.stride_ = buffer_.width_ * texture_.align();
+			this->buffer_.stride_ = texture_.width() * texture_.align();
 			this->buffer_.mem_ = mgr->queryBuffer(buffer_.stride_ * buffer_.height_);
+			std::memset(buffer_.mem_->ptr(), 0, buffer_.mem_->size());
 		}else{
 			TARTE_EXCEPTION(Exception, "[BUG] SpriteManager already dead!!");
 		}

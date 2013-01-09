@@ -270,40 +270,28 @@ void TextDrawable::revalidate()
 
 Handler<gl::Sprite> TextDrawable::sprite()
 {
+	static int r = 0;
 	if(this->sprite_){
 		return this->sprite_;
 	}
+	r++;
 	if(Handler<DrawableManager> mgr = this->manager().lock()){
 		if(this->vertical_){
 			const int width = static_cast<int>(std::ceil(this->tsize_.height()));
 			const int height = static_cast<int>(std::ceil(this->tsize_.width()));
-#if IS_BIG_ENDIAN
-			this->sprite_ = mgr->queryRawSprite(ImageFormat::ARGB8, width, height);
-	gl::Sprite::Session ss(spr, );
-#else
-			this->sprite_ = mgr->queryRawSprite(ImageFormat::BGRA8, width, height);
-#endif
+			this->sprite_ = mgr->queryRawSprite(ImageFormat::ALPHA, width, height);
 		}else{
 			const int width = static_cast<int>(std::ceil(this->tsize_.width()));
 			const int height = static_cast<int>(std::ceil(this->tsize_.height()));
-#if IS_BIG_ENDIAN
-			this->sprite_ = mgr->queryRawSprite(ImageFormat::ARGB8, width, height);
-	gl::Sprite::Session ss(spr, );
-#else
-			this->sprite_ = mgr->queryRawSprite(ImageFormat::BGRA8, width, height);
-#endif
+			this->sprite_ = mgr->queryRawSprite(ImageFormat::ALPHA, width, height);
 		}
 	} else {
 		return this->sprite_;
 	}
-#if IS_BIG_ENDIAN
-	gl::Sprite::Session ss(spr, ImageFormat::ARGB8);
-#else
-	gl::Sprite::Session ss(this->sprite_, ImageFormat::BGRA8);
-#endif
+	gl::Sprite::Session ss(this->sprite_);
 	gl::Font::RawFaceSession rfs(this->font_);
 	{
-		cairo_surface_t* surf = cairo_image_surface_create_for_data(ss.data(), CAIRO_FORMAT_ARGB32, ss.width(), ss.height(), ss.stride());
+		cairo_surface_t* surf = cairo_image_surface_create_for_data(ss.data(), CAIRO_FORMAT_A8, ss.width(), ss.height(), ss.stride());
 		cairo_t* cr = cairo_create(surf);
 		cairo_font_face_t* face = cairo_ft_font_face_create_for_ft_face(rfs.face(), FT_LOAD_FORCE_AUTOHINT);
 		cairo_font_options_t* opt = cairo_font_options_create();
@@ -353,6 +341,7 @@ Handler<gl::Sprite> TextDrawable::sprite()
 			TARTE_EXCEPTION(Exception, "[BUG] Oops. Invalid decoration: %d", this->deco_);
 		}
 		}
+		cairo_status_t s = cairo_surface_write_to_png(surf, format("%d.png", r).c_str());
 
 		cairo_font_options_destroy(opt);
 		cairo_font_face_destroy(face);
@@ -378,22 +367,22 @@ void TextDrawable::draw(Canvas& canvas, geom::Point const& ptInRoot, geom::Area 
 		geom::Distance off(this->font_height_ - (this->font_ascent_+(this->tsize_.height()+this->bearing().y())), this->bearing().x());
 		geom::Area const tmask(mask.point()-off, mask.box());
 		geom::Box const sprSize(this->sprite()->size());
-		canvas.drawSprite(this->sprite(), ptInRoot+off, geom::Area(geom::ZERO, sprSize).intersect(tmask), depth);
+		canvas.drawSprite(this->sprite(), ptInRoot+off, geom::Area(geom::ZERO, sprSize).intersect(tmask), depth, this->color_);
 	}else{
 		geom::Distance off(this->bearing().x(), this->font_ascent_+this->bearing().y());
 		geom::Area const tmask(mask.point()-off, mask.box());
 		geom::Box const sprSize(this->sprite()->size());
-		canvas.drawSprite(this->sprite(), ptInRoot+off, geom::Area(geom::ZERO, sprSize).intersect(tmask), depth);
+		canvas.drawSprite(this->sprite(), ptInRoot+off, geom::Area(geom::ZERO, sprSize).intersect(tmask), depth, this->color_);
 	}
 }
 void TextDrawable::draw(Canvas& canvas, geom::Point const& ptInRoot, const float depth)
 {
 	if(this->vertical_) {
 		geom::Distance off(this->font_height_ - (this->font_ascent_+(this->tsize_.height()+this->bearing().y())), this->bearing().x());
-		canvas.drawSprite(this->sprite(), ptInRoot+off, depth);
+		canvas.drawSprite(this->sprite(), ptInRoot+off, depth, color_);
 	}else{
 		geom::Distance off(this->bearing().x(), this->font_ascent_+this->bearing().y());
-		canvas.drawSprite(this->sprite(), ptInRoot+off, depth);
+		canvas.drawSprite(this->sprite(), ptInRoot+off, depth, color_);
 	}
 }
 
