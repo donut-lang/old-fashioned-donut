@@ -260,10 +260,11 @@ void TextDrawable::revalidate()
 		int const height = std::ceil(font_height_);
 		this->size_ = geom::Box(widthf, font_height_);
 		this->tsize_ = geom::IntBox(width, height);
-		this->sprite_ = mgr->queryRawSprite(ImageFormat::ALPHA, width, height);
+		this->sprite_ = mgr->queryRawSprite(ImageFormat::RGBA8, width, height);
 	}
 	gl::Sprite::Session ss(this->sprite_);
 	int nowX = 0;
+	int const spriteAlign = ss.align();
 	int const spriteStride = ss.stride();
 	unsigned char* const spriteBuf = ss.data();
 
@@ -278,10 +279,14 @@ void TextDrawable::revalidate()
 		int const endY = g->bitmap.rows+startY;
 		int bmpY = 0;
 		for(int y=startY;y<endY;++y,++bmpY) {
-			unsigned char* const sprBuf = &spriteBuf[y*spriteStride+startX];
+			unsigned int* const sprBuf = reinterpret_cast<unsigned int*>(&spriteBuf[(y*spriteStride)+(startX*spriteAlign)]);
 			unsigned char* const bmpBuf = &g->bitmap.buffer[bmpPitch*bmpY];
 			for(int x=0;x<bmpWidth; ++x) {
-				sprBuf[x] = bmpBuf[x];
+#if IS_BIG_ENDIAN
+				sprBuf[x] = bmpBuf[x] | 0xffffff00;
+#else
+				sprBuf[x] = bmpBuf[x] << 24 | 0xffffff;
+#endif
 			}
 		}
 		nowX += g->root.advance.x;

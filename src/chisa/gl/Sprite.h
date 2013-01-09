@@ -100,6 +100,7 @@ private:
 		unsigned int height_;
 		unsigned int stride_;
 		ImageFormat format_;
+		unsigned int align_;
 	} buffer_;
 public:
 	Sprite(HandlerW<internal::SpriteManager> mgr, ImageFormat format, geom::IntVector const& size);
@@ -124,6 +125,7 @@ public:
 		inline int height() const noexcept { return parent_->size_.height(); };
 		inline geom::IntBox size() const noexcept { return parent_->size_; };
 		inline int stride() const noexcept { return parent_->buffer_.stride_; };
+		inline int align() const noexcept { return parent_->buffer_.align_; };
 		inline unsigned char* data() const noexcept { return parent_->buffer_.mem_->ptr(); };
 	};
 public:
