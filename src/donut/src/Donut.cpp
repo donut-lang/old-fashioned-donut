@@ -145,7 +145,6 @@ void Donut::load(XValue const& data)
 			machine->load( val.second );
 		}
 	}
-
 }
 
 
