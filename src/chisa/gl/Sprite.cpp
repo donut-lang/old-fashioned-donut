@@ -189,6 +189,7 @@ internal::Buffer* Sprite::lock(ImageFormat imageFormat)
 			TARTE_EXCEPTION(Exception, "[BUG] SpriteManager already dead!!");
 		}
 		this->buffer_.format_ = imageFormat;
+		this->buffer_.align_ = Texture::formatToAlign(imageFormat);
 		return (this->buffer_.mem_);
 	}
 }
