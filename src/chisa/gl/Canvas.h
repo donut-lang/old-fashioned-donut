@@ -46,7 +46,7 @@ public:
 	void ortho(const float left, const float right, const float bottom, const float top, const float near_val, const float far_val);
 	void resize2d(geom::Box const& box);
 	void translate(geom::Point const& pt);
-	void rotate(const float angle, geom::Point const& pt);
+	void rotate(const float angle);
 	void scale(geom::ScaleVector const& scale);
 	void drawSprite(Handler<Sprite> const& sprite, geom::Point const& pt, const float depth = 0.0f, Color const& color=White);
 	void drawSprite(Handler<Sprite> const& sprite, geom::Point const& pt, geom::Area const& mask, const float depth = 0.0f, Color const& color=White);

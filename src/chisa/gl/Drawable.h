@@ -149,9 +149,7 @@ private: /* テキストの内容 */
 	gl::Color backColor_;
 private: /* レンダリングのための一時的なオブジェクト */
 	Handler<gl::Sprite> sprite_;
-	geom::Vector tbearing_;
-	geom::Box tsize_;
-	geom::Box tadvance_;
+	geom::IntBox tsize_;
 	float font_ascent_;
 	float font_descent_;
 	float font_height_;
@@ -160,10 +158,6 @@ private:
 	TextDrawable( HandlerW<DrawableManager> manager, std::string const& str, bool vertical, const float size, Handler<Font> font, TextDrawable::Style style, TextDrawable::Decoration deco, gl::Color const& color, gl::Color const& backColor);
 	void revalidate();
 	Handler<gl::Sprite> sprite();
-public:
-	inline geom::Vector const& bearing() const noexcept { return this->tbearing_; };
-	inline geom::Box const& box() const noexcept { return this->tsize_; };
-	inline geom::Box const& advance() const noexcept { return this->tadvance_; };
 public:
 	static void setupCairo(cairo_t* cairo, cairo_font_face_t* face, cairo_font_options_t* opt, float size, Style style);
 	static Handler<TextDrawable> create(HandlerW<DrawableManager> manager, std::string const& str, bool vertical, const float size, Handler<Font> font, TextDrawable::Style style, TextDrawable::Decoration deco, gl::Color const& color, gl::Color const& backColor);

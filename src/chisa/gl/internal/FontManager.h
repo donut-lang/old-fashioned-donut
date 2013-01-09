@@ -30,6 +30,12 @@
 #define FLOAT_TO_26_6(d) ((FT_F26Dot6)((d) * 64.0))
 #define FLOAT_FROM_26_6(t) ((float)(t) / 64.0)
 
+#define FLOAT_TO_16_16(d) ((FT_F26Dot6)((d) * 65536.0))
+#define FLOAT_FROM_16_16(t) ((float)(t) / 65536.0)
+
+#define INT_TO_16_16(i) (i<<16)
+#define INT_FROM_16_16_FLOOR(t) (t>>16)
+
 namespace chisa {
 using namespace tarte;
 namespace gl {
