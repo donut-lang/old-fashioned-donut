@@ -51,4 +51,8 @@ Widget* WidgetFactory::createWidget(std::string const& klass, tinyxml2::XMLEleme
 	return it->second(log_, world_, elem);
 }
 
+void WidgetFactory::registerDonutProvider(Handler< ::donut::Heap> const& heap)
+{
+}
+
 }}
