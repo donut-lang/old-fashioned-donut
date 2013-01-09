@@ -466,7 +466,7 @@ chisa::geom::Box NesTraceWidget::measure(chisa::geom::Box const& constraintSize)
 {
 	//$xxxx aa bb cc LDA $xxxx(=0xdddd)
 	// 33文字
-	return chisa::geom::Box(this->numRenderer_.maxCharWidth()*8.0f, constraintSize.height());
+	return chisa::geom::Box(this->numRenderer_.maxWidth()*32.0f, constraintSize.height());
 }
 
 }

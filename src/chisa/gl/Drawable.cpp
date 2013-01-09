@@ -16,7 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <cairo/cairo-ft.h>
+
+#include <cstring>
 #include <tarte/String.h>
 
 #include "Drawable.h"
@@ -243,24 +244,24 @@ TextDrawable::TextDrawable(HandlerW<DrawableManager> manager, std::string const&
 
 void TextDrawable::revalidate()
 {
-	std::vector<Handler<BitmapGlyph> > glyphs = this->font_->lookupGlyph(this->str_, this->fontSize_);
-	this->font_->calcLineInfo(fontSize_, this->font_ascent_, this->font_descent_, this->font_height_);
+	Handler<DrawableManager> mgr = this->manager().lock();
+	if( unlikely(!mgr) ) {
+		return;
+	}
+	std::vector<Handler<BitmapGlyph> > glyphs =
+			this->font_->lookupGlyph(this->str_, this->fontSize_, this->font_ascent_, this->font_descent_, this->font_height_);
 	{
 		int totalX = 0;
 		for(Handler<BitmapGlyph> const& glyph : glyphs){
 			FT_BitmapGlyph g = glyph->get();
 			totalX += g->root.advance.x;
 		}
-		if(Handler<DrawableManager> mgr = this->manager().lock()){
-			float const widthf = FLOAT_FROM_16_16(totalX);
-			int const width = std::ceil(widthf);
-			int const height = std::ceil(font_height_);
-			this->size_ = geom::Box(widthf, font_height_);
-			this->tsize_ = geom::IntBox(width, height);
-			this->sprite_ = mgr->queryRawSprite(ImageFormat::ALPHA, width, height);
-		}else{
-			return;
-		}
+		float const widthf = FLOAT_FROM_16_16(totalX);
+		int const width = std::ceil(widthf);
+		int const height = std::ceil(font_height_);
+		this->size_ = geom::Box(widthf, font_height_);
+		this->tsize_ = geom::IntBox(width, height);
+		this->sprite_ = mgr->queryRawSprite(ImageFormat::ALPHA, width, height);
 	}
 	gl::Sprite::Session ss(this->sprite_);
 	int nowX = 0;
@@ -269,17 +270,16 @@ void TextDrawable::revalidate()
 
 	for(Handler<BitmapGlyph> const& glyph : glyphs){
 		FT_BitmapGlyph g = glyph->get();
-		int const startX = INT_FROM_16_16_FLOOR(nowX);
+		int const startX = INT_FROM_16_16_FLOOR(nowX)+g->left;
 
-		int bmpY = 0;
 		int const bmpPitch = g->bitmap.pitch;
 		int const bmpWidth = g->bitmap.width;
 
-		int startY = this->font_ascent_-g->top;
+		int const startY = this->font_ascent_-g->top;
 		int const endY = g->bitmap.rows+startY;
-		for(int y=startY;y<endY;++y) {
+		int bmpY = 0;
+		for(int y=startY;y<endY;++y,++bmpY) {
 			std::memcpy( &spriteBuf[y*spriteStride+startX], &g->bitmap.buffer[bmpPitch*bmpY], bmpWidth );
-			++bmpY;
 		}
 		nowX += g->root.advance.x;
 	}

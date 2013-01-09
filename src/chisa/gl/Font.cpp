@@ -81,9 +81,8 @@ static int getLength(unsigned char c) {
 	return size;
 }
 
-std::vector<Handler<BitmapGlyph> > Font::lookupGlyph(std::string const& str, float size) noexcept
+std::vector<Handler<BitmapGlyph> > Font::lookupGlyph(std::string const& str, float size, float& ascent, float& descent, float& height) noexcept
 {
-	unsigned int code = 0;
 	std::vector<unsigned int> vec;
 	vec.reserve(str.length());
 	unsigned int idx = 0;
@@ -91,53 +90,20 @@ std::vector<Handler<BitmapGlyph> > Font::lookupGlyph(std::string const& str, flo
 	while(idx < str.size()){
 		int const len = getLength(str[idx]);
 		unsigned char c = str[idx++];
-		code |= ((c & (127>>len)) << ((len-1)*6));
-		for(int i=len-2;i>=0;--i) {
-			unsigned char c = str[idx++];
-			code |= ((c & 63) << (i*6));
+		if(len > 0){
+			unsigned int code = ((c & (127>>len)) << ((len-1)*6));
+			for(int i=len-2;i>=0;--i) {
+				unsigned char c = str[idx++];
+				code |= ((c & 63) << (i*6));
+			}
+			vec.push_back( code );
+		}else{
+			vec.push_back( c );
 		}
-		vec.push_back( code );
-		code = 0;
 	}
-	std::vector<Handler<BitmapGlyph> > glyphs;
-	glyphs.reserve(vec.size());
-	for( unsigned int& code : vec ) {
-		glyphs.push_back( this->freetype_->lookupBitmap(*this, size, code) );
-	}
-	return glyphs;
+	return this->freetype_->lookupBitmap(*this, size, vec, ascent, descent, height);
 }
 
-
-void Font::calcLineInfo(FT_Face face, float const& fontSize, float& ascent, float& descent, float& height)
-{
-	FT_Size_RequestRec rec;
-	rec.type = FT_SIZE_REQUEST_TYPE_NOMINAL;
-	rec.height = FLOAT_TO_26_6(fontSize);
-	rec.width = FLOAT_TO_26_6(fontSize);
-	rec.horiResolution = 0;
-	rec.vertResolution = 0;
-	FT_Request_Size(face, &rec);
-
-	FT_Size_Metrics const& metrics = face->size->metrics;
-	ascent = FLOAT_FROM_26_6(metrics.ascender);
-	descent = FLOAT_FROM_26_6(metrics.descender);
-	height = FLOAT_FROM_26_6(metrics.height);
-}
-
-void Font::calcCharInfo(FT_Face face, float const& fontSize, float& max_width, float& max_height)
-{
-	FT_Size_RequestRec rec;
-	rec.type = FT_SIZE_REQUEST_TYPE_NOMINAL;
-	rec.height = FLOAT_TO_26_6(fontSize);
-	rec.width = FLOAT_TO_26_6(fontSize);
-	rec.horiResolution = 0;
-	rec.vertResolution = 0;
-	FT_Request_Size(face, &rec);
-
-	FT_Size_Metrics const& metrics = face->size->metrics;
-	max_width = FLOAT_FROM_26_6(metrics.max_advance);
-	max_height = FLOAT_FROM_26_6(metrics.height);
-}
 
 void Font::analyzeFontName(std::string const& name, std::string& family, std::string& style) noexcept
 {

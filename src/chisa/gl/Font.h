@@ -59,11 +59,9 @@ public:
 	std::string family() const noexcept;
 	std::string style() const noexcept;
 public:
-	std::vector<Handler<BitmapGlyph> > lookupGlyph(std::string const& str, float size) noexcept;
+	std::vector<Handler<BitmapGlyph> > lookupGlyph(std::string const& str, float size, float& ascent, float& descent, float& height) noexcept;
 public:
 	static void analyzeFontName(std::string const& name, std::string& family, std::string& style) noexcept;
-	static void calcLineInfo(FT_Face face, float const& fontSize, float& ascent, float& descent, float& height);
-	static void calcCharInfo(FT_Face face, float const& fontSize, float& max_width, float& max_height);
 public:
 	class RawFaceSession {
 		DISABLE_COPY_AND_ASSIGN(RawFaceSession);
@@ -93,16 +91,6 @@ public:
 	};
 public:
 	bool onFree();
-public:
-	void calcLineInfo(float const& fontSize, float& ascent, float& descent, float& height) {
-		RawFaceSession session(self());
-		Font::calcLineInfo(session.face(), fontSize, ascent, descent, height);
-	}
-	void calcCharInfo(float const& fontSize, float& max_width, float& max_height) {
-		RawFaceSession session(self());
-		Font::calcCharInfo(session.face(), fontSize, max_width, max_height);
-	}
-
 };
 
 }}

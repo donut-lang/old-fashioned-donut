@@ -120,9 +120,9 @@ public:
 	public:
 		Session(Handler<Sprite> parent, ImageFormat bufferType=ImageFormat::Invalid);
 		~Session();
-		inline int width() const noexcept { return parent_->size().width(); };
-		inline int height() const noexcept { return parent_->size().height(); };
-		inline geom::IntBox size() const noexcept { return parent_->size(); };
+		inline int width() const noexcept { return parent_->size_.width(); };
+		inline int height() const noexcept { return parent_->size_.height(); };
+		inline geom::IntBox size() const noexcept { return parent_->size_; };
 		inline int stride() const noexcept { return parent_->buffer_.stride_; };
 		inline unsigned char* data() const noexcept { return parent_->buffer_.mem_->ptr(); };
 	};
