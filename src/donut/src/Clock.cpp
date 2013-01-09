@@ -40,7 +40,7 @@ Clock::Clock( Donut* const donut)
 
 void Clock::tickFromMachine()
 {
-	if(machineRequest_ != MachineRequest::NONE){
+	if(unlikely(machineRequest_ != MachineRequest::NONE)){
 		DONUT_EXCEPTION(Exception, "[BUG] Oops. Clock operation already requested.");
 	}
 	if(this->log().d()) {
@@ -50,7 +50,7 @@ void Clock::tickFromMachine()
 }
 void Clock::seekFromMachine( unsigned int const& time )
 {
-	if(machineRequest_ != MachineRequest::NONE){
+	if(unlikely(machineRequest_ != MachineRequest::NONE)){
 		DONUT_EXCEPTION(Exception, "[BUG] Oops. Clock operation already requested.");
 	}
 	this->machineRequest_ = MachineRequest::SEEK;
@@ -61,7 +61,7 @@ void Clock::seekFromMachine( unsigned int const& time )
 }
 void Clock::backFromMachine()
 {
-	if(machineRequest_ != MachineRequest::NONE){
+	if(unlikely(machineRequest_ != MachineRequest::NONE)){
 		DONUT_EXCEPTION(Exception, "[BUG] Oops. Clock operation already requested.");
 	}
 	if(this->log().d()) {
@@ -71,7 +71,7 @@ void Clock::backFromMachine()
 }
 void Clock::forwardFromMachine()
 {
-	if(machineRequest_ != MachineRequest::NONE){
+	if(unlikely(machineRequest_ != MachineRequest::NONE)){
 		DONUT_EXCEPTION(Exception, "[BUG] Oops. Clock operation already requested.");
 	}
 	if(this->log().d()) {
@@ -81,7 +81,7 @@ void Clock::forwardFromMachine()
 }
 void Clock::discardFutureFromMachine()
 {
-	if(machineRequest_ != MachineRequest::NONE){
+	if(unlikely(machineRequest_ != MachineRequest::NONE)){
 		DONUT_EXCEPTION(Exception, "[BUG] Oops. Clock operation already requested.");
 	}
 	if(this->log().d()) {
@@ -91,7 +91,7 @@ void Clock::discardFutureFromMachine()
 }
 void Clock::discardHistoryFromMachine()
 {
-	if(machineRequest_ != MachineRequest::NONE){
+	if(unlikely(machineRequest_ != MachineRequest::NONE)){
 		DONUT_EXCEPTION(Exception, "[BUG] Oops. Clock operation already requested.");
 	}
 	if(this->log().d()) {
@@ -177,7 +177,7 @@ void Clock::load(XValue const& data)
 
 void Clock::seek( unsigned int const& time )
 {
-	if( time < this->firstTime() || time > this->lastTime()) {
+	if( unlikely( time < this->firstTime() || time > this->lastTime() ) ) {
 		DONUT_EXCEPTION(Exception, "[BUG] Failed to seek. time: %d , available time: %d -> %d", time, this->first_, this->last_);
 	}else if(time == this->now()){
 		this->log().w(TAG, "Requested seeking to %d, but it's already %d", time, this->now());
@@ -211,8 +211,7 @@ void Clock::processRequest()
 			this->tickStep();
 			this->tickRequested_ = false;
 		}
-		++cnt;
-		if(cnt > 1000){
+		if(unlikely(++cnt > 1000)){
 			DONUT_EXCEPTION(Exception, "[BUG] Endless discard/tick loop.");
 		}
 	}
@@ -220,7 +219,7 @@ void Clock::processRequest()
 
 void Clock::back()
 {
-	if(this->enter_){
+	if(unlikely(this->enter_)){
 		DONUT_EXCEPTION(Exception, "[BUG] You cannt seek back while discarding/seeking/ticking clock, homura!");
 	}
 	this->enter_=true;
@@ -230,7 +229,7 @@ void Clock::back()
 }
 void Clock::forward()
 {
-	if(this->enter_){
+	if(unlikely(this->enter_)){
 		DONUT_EXCEPTION(Exception, "[BUG] You cannt seek forward while discarding/seeking/ticking clock, homura!");
 	}
 	this->enter_=true;
@@ -241,7 +240,7 @@ void Clock::forward()
 
 void Clock::tick()
 {
-	if(this->enter_){
+	if(unlikely(this->enter_)){
 		this->log().i(TAG, "Ticking reserved.");
 		this->tickRequested_=true;
 		return;
@@ -253,7 +252,7 @@ void Clock::tick()
 }
 void Clock::discardFuture()
 {
-	if(this->enter_){
+	if(unlikely(this->enter_)){
 		this->log().i(TAG, "Discarding future reserved.");
 		this->discardFutureRequested_=true;
 		return;
@@ -265,7 +264,7 @@ void Clock::discardFuture()
 }
 void Clock::discardHistory()
 {
-	if(this->enter_){
+	if(unlikely(this->enter_)){
 		this->log().i(TAG, "Discarding history reserved.");
 		this->discardHistoryRequested_=true;
 		return;
