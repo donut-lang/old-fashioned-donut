@@ -203,7 +203,7 @@ void Sprite::unlock()
 Sprite::Session::Session(Handler<Sprite> parent, ImageFormat imageFormat)
 :parent_(parent)
 {
-	this->parent_->lock(imageFormat);
+	this->parent_->lock(imageFormat == ImageFormat::Invalid ? this->parent_->texture_.format() : imageFormat);
 }
 Sprite::Session::~Session()
 {

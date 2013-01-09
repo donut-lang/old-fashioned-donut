@@ -118,7 +118,7 @@ public:
 	private:
 		Handler<Sprite> parent_;
 	public:
-		Session(Handler<Sprite> parent, ImageFormat bufferType);
+		Session(Handler<Sprite> parent, ImageFormat bufferType=ImageFormat::Invalid);
 		~Session();
 		inline int width() const noexcept { return parent_->size().width(); };
 		inline int height() const noexcept { return parent_->size().height(); };
