@@ -32,17 +32,7 @@ Font::Font(internal::FontManager* parent, Handler<internal::FreeType> freetype, 
 ,unicodeCharmapIndex_(0)
 ,locked_(false)
 {
-	int cidx = -1;
-	for( int i=0;i<face->num_charmaps; ++i ) {
-		if(face->charmaps[i]->encoding == FT_ENCODING_UNICODE) {
-			cidx = i;
-			break;
-		}
-	}
-	if( unlikely( cidx < 0 ) ){
-		TARTE_EXCEPTION(Exception, "[BUG] This font does not support UNICODE.");
-	}
-	this->unicodeCharmapIndex(cidx);
+	this->unicodeCharmapIndex(FT_Get_Charmap_Index(face->charmap));
 }
 
 Font::~Font() noexcept
@@ -94,18 +84,23 @@ static int getLength(unsigned char c) {
 std::vector<Handler<BitmapGlyph> > Font::lookupGlyph(std::string const& str, float size) noexcept
 {
 	unsigned int code = 0;
-	std::vector<unsigned int> vec(str.length());
+	std::vector<unsigned int> vec;
+	vec.reserve(str.length());
 	unsigned int idx = 0;
 
 	while(idx < str.size()){
 		int const len = getLength(str[idx]);
-		code |= (str[idx++] << (len*6));
+		unsigned char c = str[idx++];
+		code |= ((c & (127>>len)) << ((len-1)*6));
 		for(int i=len-2;i>=0;--i) {
-			code |= ((str[idx++] & 63) << (i*6));
+			unsigned char c = str[idx++];
+			code |= ((c & 63) << (i*6));
 		}
 		vec.push_back( code );
+		code = 0;
 	}
 	std::vector<Handler<BitmapGlyph> > glyphs;
+	glyphs.reserve(vec.size());
 	for( unsigned int& code : vec ) {
 		glyphs.push_back( this->freetype_->lookupBitmap(*this, size, code) );
 	}

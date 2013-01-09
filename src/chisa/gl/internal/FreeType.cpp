@@ -25,7 +25,7 @@ namespace internal {
 
 static FT_Error face_requester(FTC_FaceID face_id, FT_Library library, FT_Pointer request_data, FT_Face* aface )
 {
-    *aface = (FT_Face)request_data;
+    *aface = (FT_Face)face_id;
     return 0;
 }
 
@@ -38,13 +38,18 @@ FreeType::FreeType()
 	if(FT_Init_FreeType(&this->library_) != 0){
 		TARTE_EXCEPTION(Exception, "[BUG] Failed to init Freetype.");
 	}
-	if(FTC_Manager_New(this->library_, 0, 0, 1024*1024*10, face_requester, nullptr, &this->cache_ )){
+	if(FTC_Manager_New(this->library_, 16, 0, 1024*1024*10, face_requester, nullptr, &this->cache_ )){
+		FT_Done_FreeType(this->library_);
 		TARTE_EXCEPTION(Exception, "[BUG] Failed to init cache manager.");
 	}
 	if(FTC_CMapCache_New(this->cache_, &this->cmap_)) {
+		FTC_Manager_Done(this->cache_);
+		FT_Done_FreeType(this->library_);
 		TARTE_EXCEPTION(Exception, "[BUG] Failed to init cmap cache.");
 	}
 	if(FTC_ImageCache_New(this->cache_, &this->image_)) {
+		FTC_Manager_Done(this->cache_);
+		FT_Done_FreeType(this->library_);
 		TARTE_EXCEPTION(Exception, "[BUG] Failed to init image cache.");
 	}
 }
@@ -76,6 +81,8 @@ Handler<BitmapGlyph> FreeType::lookupBitmap(Font& font, float size, unsigned int
 {
 	Font::RawFaceSession rfs(font);
 	FT_Face face = rfs.face();
+	FT_Face face__;
+	FTC_Manager_LookupFace(this->cache_, face, &face__);
 	unsigned int gindex = FTC_CMapCache_Lookup(this->cmap_, face, font.unicodeCharmapIndex(), ucs4);
 	FT_Glyph glyph;
 	{
@@ -84,8 +91,8 @@ Handler<BitmapGlyph> FreeType::lookupBitmap(Font& font, float size, unsigned int
 		scaler.width = 0;
 		scaler.height = FLOAT_TO_26_6( size );
 		scaler.pixel = 0;
-		scaler.x_res=300; //XXX
-		scaler.y_res=300; //XXX
+		scaler.x_res=72; //XXX
+		scaler.y_res=72; //XXX
 		FT_Glyph glyph_orig;
 		FTC_ImageCache_LookupScaler(this->image_, &scaler, 0, gindex, &glyph_orig, nullptr);
 		FT_Glyph_Copy(glyph_orig, &glyph);
