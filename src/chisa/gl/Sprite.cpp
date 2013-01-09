@@ -18,6 +18,7 @@
 
 #include <algorithm>
 #include <string>
+#include <cstring>
 #include "OpenGL.h"
 #include "Canvas.h"
 #include "Util.h"

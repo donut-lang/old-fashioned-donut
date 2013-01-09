@@ -42,7 +42,7 @@ public:
 	NesMemoryCompare(chisa::Logger& log, chisa::HandlerW<chisa::tk::World> _world, tinyxml2::XMLElement* element);
 	virtual ~NesMemoryCompare() noexcept = default;
 private:
-	inline float rowHeight() const noexcept { return this->numRenderer_.maxCharHeight(); };
+	inline float rowHeight() const noexcept { return this->numRenderer_.maxHeight(); };
 private:
 	virtual void render(chisa::gl::Canvas& cv, chisa::geom::Area const& area) override final;
 	virtual void idle(const float delta_ms) override final;
