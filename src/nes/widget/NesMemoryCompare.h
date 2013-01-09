@@ -32,6 +32,11 @@ private:
 	Handler<chisa::gl::TextDrawable> lNow_; // "今の値"
 	chisa::gl::PredefinedSymRenderer numRenderer_;
 	static const constexpr unsigned int Dollar=16;
+	static const constexpr unsigned int HexStart=17;
+	static const constexpr unsigned int Eq=18;
+	static const constexpr unsigned int RParen=19;
+	static const constexpr unsigned int LParen=20;
+	static const constexpr unsigned int Space=21;
 	float width_;
 	float addrWidth_;
 	float lastWidth_;
