@@ -78,7 +78,7 @@ Handler<Machine> Donut::queryMachine( std::string const& name )
 void Donut::sendMessage( std::string const& name, Handler<Object> const& obj )
 {
 	auto it = this->machines_.find(name);
-	if(it == this->machines_.end()){
+	if(unlikely(it == this->machines_.end())){
 		DONUT_EXCEPTION(Exception, "[BUG] Oops. Machine: \"%s\" not found.", name.c_str());
 	}
 	Handler<Machine> machine = it->second;
