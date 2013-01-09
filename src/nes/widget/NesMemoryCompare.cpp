@@ -53,16 +53,22 @@ NesMemoryCompare::NesMemoryCompare(chisa::Logger& log, chisa::HandlerW<chisa::tk
 	numRenderer_.registerSymbol(13, "d");
 	numRenderer_.registerSymbol(14, "e");
 	numRenderer_.registerSymbol(15, "f");
+	float const numWidth = this->numRenderer_.maxWidth();
+	numRenderer_.registerSymbol(HexStart, "0x");
+	float const hexWidth = this->numRenderer_.maxWidth();
 	numRenderer_.registerSymbol(Dollar, "$");
+	numRenderer_.registerSymbol(Eq, "=");
+	numRenderer_.registerSymbol(LParen, "(");
+	numRenderer_.registerSymbol(RParen, ")");
+	numRenderer_.registerSymbol(Space, " ");
 
 	chisa::Handler<nes::NesGeist> geist(world->geist().cast<nes::NesGeist>());
 	this->geist_ = geist;
 
 	{
-		float const numLen = this->numRenderer_.maxWidth();
-		this->addrWidth_ = chisa::geom::max(this->lAddr_->width()+5, numLen * 5);
-		this->lastWidth_ = chisa::geom::max(this->lLast_->width()+5, numLen * 2);
-		this->nowWidth_ = chisa::geom::max(this->lNow_->width()+5, numLen * 2);
+		this->addrWidth_ = chisa::geom::max(this->lAddr_->width()+2, numWidth * 5);
+		this->lastWidth_ = chisa::geom::max(this->lLast_->width()+5, hexWidth+numWidth * 8);
+		this->nowWidth_ = chisa::geom::max(this->lNow_->width()+5, hexWidth+numWidth * 8);
 		this->width_ = addrWidth_ + 2 + lastWidth_ + 2 + nowWidth_;
 	}
 }
@@ -87,7 +93,7 @@ void NesMemoryCompare::render(chisa::gl::Canvas& cv, const chisa::geom::Area& ar
 	unsigned int drawn = 0;
 	PredefinedSymRenderer::SymList asym_(5);
 	asym_[0] = Dollar;
-	PredefinedSymRenderer::SymList sym_(2);
+	PredefinedSymRenderer::SymList sym_(9);
 	for(unsigned int i=0; i<2048;++i) {
 		if(cmp.isCandidate(i)) {
 			if(  idx >= startRow && idx <= endRow ) {
@@ -101,14 +107,34 @@ void NesMemoryCompare::render(chisa::gl::Canvas& cv, const chisa::geom::Area& ar
 				}
 				{ //last
 					uint8_t const v = cmp.last(i);
-					sym_[0] = (v >>  4) & 0xf;
-					sym_[1] = (v >>  0) & 0xf;
+					sym_[0] = HexStart;
+					sym_[1] = (v >>  4) & 0xf;
+					sym_[2] = (v >>  0) & 0xf;
+					sym_[3] = LParen;
+					sym_[4] = Eq;
+					uint8_t vv = v;
+					sym_[7] = (vv % 10);
+					vv /= 10;
+					sym_[6] = (vv % 10) > 0 || vv >= 10 ? vv%10 : Space;
+					vv /= 10;
+					sym_[5] = (vv % 10) > 0 ? vv%10 : Space;
+					sym_[8] = RParen;
 					this->numRenderer_.renderSyms(cv, Point(addrWidth_+2, offset), sym_, 0);
 				}
 				{ //now
 					uint8_t const v = cmp.now(i);
-					sym_[0] = (v >>  4) & 0xf;
-					sym_[1] = (v >>  0) & 0xf;
+					sym_[0] = HexStart;
+					sym_[1] = (v >>  4) & 0xf;
+					sym_[2] = (v >>  0) & 0xf;
+					sym_[3] = LParen;
+					sym_[4] = Eq;
+					uint8_t vv = v;
+					sym_[7] = (vv % 10);
+					vv /= 10;
+					sym_[6] = (vv % 10) > 0 || vv >= 10 ? vv%10 : Space;
+					vv /= 10;
+					sym_[5] = (vv % 10) > 0 ? vv%10 : Space;
+					sym_[8] = RParen;
 					this->numRenderer_.renderSyms(cv, Point(addrWidth_+2+lastWidth_+2, offset), sym_, 0);
 				}
 				++drawn;

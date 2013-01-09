@@ -48,7 +48,7 @@ void MemoryComparator::reset()
 {
 	this->candidates_=2048;
 	this->last_ = getNowMemory();
-	std::memset(this->entry_, static_cast<int>(-1), sizeof(this->entry_)/sizeof(unsigned int));
+	std::memset(this->entry_, static_cast<int>(-1), sizeof(this->entry_));
 }
 
 }
