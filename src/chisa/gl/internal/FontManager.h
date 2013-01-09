@@ -60,7 +60,7 @@ private:
 	friend class FontManager;
 	friend class gl::Font;
 	FT_Library raw() const noexcept { return this->library_; };
-	void removeFont(Font& font);
+	void removeFace(FT_Face face);
 	unsigned int lookupGlyphIndex(Font& font, unsigned int ucs4);
 	std::vector<Handler<BitmapGlyph> > lookupBitmap(Font& font, float size, std::vector<unsigned int> const& ucs4, float& ascent, float& descent, float& height);
 };

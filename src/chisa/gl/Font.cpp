@@ -37,7 +37,7 @@ Font::Font(internal::FontManager* parent, Handler<internal::FreeType> freetype, 
 
 Font::~Font() noexcept
 {
-	this->freetype_->removeFont(*this);
+	this->freetype_->removeFace(this->face_);
 	this->face_ = nullptr;
 }
 
