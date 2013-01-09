@@ -48,7 +48,7 @@ public:
 	{
 		Handler<S> spr;
 		spr.sprite = sprite;
-		if(spr.sprite){
+		if( likely(spr.sprite) ){
 			spr.sprite->incref(false);
 		}
 		return spr;
@@ -57,14 +57,14 @@ public:
 	inline explicit Handler(S* const sprite)
 	:sprite(sprite)
 	{
-		if(this->sprite){
+		if( likely(this->sprite) ){
 			this->sprite->incref( true );
 		}
 	}
 	inline Handler(Handler<S> const& other) noexcept
 	:sprite(other.sprite)
 	{
-		if(this->sprite){
+		if( likely(this->sprite) ){
 			this->sprite->incref( false );
 		}
 	}
@@ -77,16 +77,16 @@ public:
 	inline Handler(Handler<T> const& other) noexcept
 	:sprite(other.get())
 	{
-		if(this->sprite){
+		if( likely(this->sprite) ){
 			this->sprite->incref( false );
 		}
 	}
 	inline Handler<S>& operator=(Handler<S> const& other) noexcept
 	{
-		if(other.sprite){
+		if( likely(other.sprite) ){
 			other.sprite->incref( false );
 		}
-		if(this->sprite){
+		if( this->sprite ){
 			this->sprite->decref();
 		}
 		this->sprite = other.sprite;
@@ -105,7 +105,7 @@ public:
 	template <class T>
 	Handler<S>& operator=(Handler<T> const& other) noexcept
 	{
-		if(other.get()){
+		if( likely(other.get()) ){
 			other.get()->incref( false );
 		}
 		if(this->sprite){
@@ -118,7 +118,7 @@ public:
 	Handler<T> cast() const
 	{
 		T* spr = dynamic_cast<T*>(this->sprite);
-		if(!spr){
+		if( unlikely(!spr) ){
 			TARTE_EXCEPTION(Exception, "[BUG] Sprite::Handler / failed to cast %s to %s", typeid(this->sprite).name(), typeid(spr).name());
 		}
 		return Handler<T>::__internal__fromRawPointerWithoutCheck(spr);
@@ -394,7 +394,7 @@ protected:
 protected:
 	inline void incref( bool check ) const{
 		HandlerBody<Derived, atomic>* const self = const_cast<HandlerBody<Derived, atomic>*>(this);
-		if((self->refcount_++) != 0 && check){
+		if( unlikely((self->refcount_++) != 0 && check) ){
 			int const val = --self->refcount_;
 			TARTE_EXCEPTION(Exception, "[BUG] Handler created, but refcount = %d, not zero.", val);
 		}
@@ -402,7 +402,7 @@ protected:
 	inline void decref() const{
 		HandlerBody<Derived, atomic>* const self = const_cast<HandlerBody<Derived, atomic>*>(this);
 		--self->refcount_;
-		if(self->refcount_ < 0){
+		if(unlikely(self->refcount_ < 0)){
 			int const val = self->refcount_;
 			TARTE_EXCEPTION(Exception, "[BUG] Handler refcount = %d < 0", val);
 		}else if(self->refcount_ == 0 && !self->deleted){
