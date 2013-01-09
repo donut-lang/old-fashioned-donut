@@ -22,6 +22,7 @@
 #include <tarte/VectorMap.h>
 #include <string>
 #include <cmath>
+#include "../geom/Area.h"
 
 namespace tinyxml2 {
 class XMLElement;
@@ -50,6 +51,10 @@ public:
 	inline bool onFree() const noexcept { return false; };
 public:
 	inline HandlerW<World> const& world() const noexcept { return this->world_; };
+public:
+	void render(gl::Canvas& canvas);
+	void idle(const float delta_ms);
+	void reshape(geom::Area const& area);
 };
 
 

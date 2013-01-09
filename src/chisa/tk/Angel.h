@@ -63,6 +63,7 @@ public:
 class AngelElementTarget : public AngelTarget {
 public:
 	AngelElementTarget(Handler<Angel> const& angel, std::string const& id);
+	virtual ~AngelElementTarget() noexcept = default;
 private:
 	std::string const id_;
 	HandlerW<Element> target_;
@@ -71,6 +72,7 @@ private:
 class AngelWidgetTarget : public AngelTarget {
 public:
 	AngelWidgetTarget(Handler<Angel> const& angel, std::string const& id, std::string const& guide);
+	virtual ~AngelWidgetTarget() noexcept = default;
 private:
 	std::string const id_;
 	HandlerW<Widget> widget_;
@@ -88,6 +90,10 @@ public:
 public:
 	inline HandlerW<World> const& world() const noexcept { return this->world_; };
 	inline HandlerW<Heaven> const& heaven() const noexcept { return this->heaven_; };
+public:
+	void render(gl::Canvas& canvas);
+	void idle(const float delta_ms);
+	void reshape(geom::Area const& area);
 };
 
 

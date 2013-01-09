@@ -54,5 +54,17 @@ Angel::Angel(Handler<Heaven> heaven)
 {
 }
 
+void Angel::render(gl::Canvas& canvas)
+{
+}
+
+void Angel::idle(const float delta_ms)
+{
+}
+
+void Angel::reshape(const geom::Area& area)
+{
+}
+
 }}
 
