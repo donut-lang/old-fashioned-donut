@@ -18,7 +18,6 @@
 
 #pragma once
 #include <map>
-#include <cairo/cairo.h>
 #include <cmath>
 #include "../geom/Area.h"
 #include "Color.h"
@@ -159,7 +158,6 @@ private:
 	void revalidate();
 	Handler<gl::Sprite> sprite();
 public:
-	static void setupCairo(cairo_t* cairo, cairo_font_face_t* face, cairo_font_options_t* opt, float size, Style style);
 	static Handler<TextDrawable> create(HandlerW<DrawableManager> manager, std::string const& str, bool vertical, const float size, Handler<Font> font, TextDrawable::Style style, TextDrawable::Decoration deco, gl::Color const& color, gl::Color const& backColor);
 	virtual ~TextDrawable() noexcept = default;
 	virtual geom::Box size() override;

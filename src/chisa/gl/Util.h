@@ -17,7 +17,6 @@
  */
 
 #pragma once
-#include <cairo/cairo.h>
 
 namespace chisa {
 namespace gl {

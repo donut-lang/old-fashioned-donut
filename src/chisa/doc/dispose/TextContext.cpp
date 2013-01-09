@@ -20,7 +20,6 @@
 #include "TextContext.h"
 #include <unicode/unistr.h>
 #include <unicode/bytestream.h>
-#include <cairo/cairo-ft.h>
 #include "../../gl/Drawable.h"
 #include "../render/RenderObject.h"
 

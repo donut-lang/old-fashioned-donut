@@ -17,7 +17,6 @@
  */
 
 #pragma once
-#include <cairo/cairo.h>
 #include <cstdint>
 #include <cstddef>
 #include <tarte/Logger.h>

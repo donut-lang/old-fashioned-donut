@@ -22,7 +22,6 @@
 #include "Util.h"
 #include <algorithm>
 #include <GL/gl.h>
-#include <cairo/cairo.h>
 
 namespace chisa {
 namespace gl {
