@@ -42,7 +42,8 @@ NesGeist::NesGeist(chisa::Logger& log, chisa::HandlerW<chisa::tk::World> world)
 			this->inst_ = Handler<Instrument>(new Instrument(*this))
 			);
 	Handler<chisa::JoystickManager> mgr = this->world()->joystickManager();
-	if(mgr->numJoysticks() > 0) {
+	const unsigned int numJoysticks = mgr->numJoysticks();
+	if(numJoysticks > 0) {
 		this->joystick_ = mgr->joystick(0);
 	}
 }
