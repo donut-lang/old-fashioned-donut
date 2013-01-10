@@ -17,15 +17,5 @@
  */
 
 #pragma once
-#include "Provider.h"
+#include "HomuraProviderDecl.h"
 
-namespace donut {
-
-class HomuraObject;
-class HomuraProvider final : public HeapProviderBaseT<HomuraProvider, HomuraObject> {
-public:
-	HomuraProvider(Handler<Heap> const& heap);
-	virtual ~HomuraProvider() noexcept = default;
-};
-
-}

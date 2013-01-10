@@ -36,15 +36,6 @@ PureNativeClosureObject::Signature const& Provider::findPureNativeClosureEntry( 
 	VectorMap<std::string, PureNativeClosureObject::Signature>::Pair const& p = *it;
 	return p.second;
 }
-ReactiveNativeClosureObject::Signature const& Provider::findReactiveNativeClosureEntry( std::string const& name )
-{
-	auto it = reactiveNativeClosures_.find(name);
-	if(it == this->reactiveNativeClosures_.end()){
-		DONUT_EXCEPTION(Exception, "Reactive Native Closure \"%s\" not found in \"%s\"!!", name.c_str(), this->name().c_str());
-	}
-	VectorMap<std::string, ReactiveNativeClosureObject::Signature>::Pair const& p = *it;
-	return p.second;
-}
 
 //関数ポインタ版
 template <>
@@ -52,20 +43,10 @@ bool Provider::registerPureNativeClosure<PureNativeClosureObject::Function> ( st
 	return (!pureNativeClosures_.have(name)) && pureNativeClosures_.update( name, f );
 }
 
-template <>
-bool Provider::registerReactiveNativeClosure<ReactiveNativeClosureObject::Function> ( std::string const& name, ReactiveNativeClosureObject::Function f) {
-	return (!reactiveNativeClosures_.have(name)) && reactiveNativeClosures_.update( name, f );
-}
-
 // std::function版
 template <>
 bool Provider::registerPureNativeClosure<PureNativeClosureObject::Signature>( std::string const& name, PureNativeClosureObject::Signature f) {
 	return (!pureNativeClosures_.have(name)) && pureNativeClosures_.update( name, f );
-}
-
-template <>
-bool Provider::registerReactiveNativeClosure<ReactiveNativeClosureObject::Signature>( std::string const& name, ReactiveNativeClosureObject::Signature f) {
-	return (!reactiveNativeClosures_.have(name)) && reactiveNativeClosures_.update( name, f );
 }
 
 /******************************************************************************
@@ -78,9 +59,6 @@ void Provider::bootstrap()
 		this->prototype_ = heap->createEmptyDonutObject();
 		for( std::pair<std::string, PureNativeClosureObject::Signature> const& p : this->pureNativeClosures_ ){
 			this->prototype_->set(heap, p.first, heap->createPureNativeClosureObject(this->name(), p.first, p.second));
-		}
-		for( std::pair<std::string, ReactiveNativeClosureObject::Signature> const& p : this->reactiveNativeClosures_ ){
-			this->prototype_->set(heap, p.first, heap->createReactiveNativeClosureObject(this->name(), p.first, p.second));
 		}
 	}
 }

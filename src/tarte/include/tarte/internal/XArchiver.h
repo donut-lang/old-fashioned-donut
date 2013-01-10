@@ -51,6 +51,34 @@ struct XSerializer<std::vector<T> > {
 	}
 };
 
+template <typename T, typename U>
+struct XSerializer<std::pair<T,U> > {
+	static XValue serialize(std::pair<T,U>& p) {
+		Handler<XArray> array(new XArray);
+		array->append( XSerializer<T>::serialize(p.first) );
+		array->append( XSerializer<U>::serialize(p.second) );
+		return array;
+	}
+	static void deserialize(std::pair<T,U>& p, XValue const& xval){
+		Handler<XArray> array(xval.as<XArray>());
+		if(array->size() != 2) {
+			TARTE_EXCEPTION(Exception, "Pair requested, but actual array size is %d", array->size());
+		}
+		XSerializer<T>::deserialize(p.first, array->get<XValue>(0));
+		XSerializer<U>::deserialize(p.second, array->get<XValue>(1));
+	}
+};
+
+template <>
+struct XSerializer<XValue> {
+	static XValue serialize(XValue& v) {
+		return v;
+	}
+	static void deserialize(XValue& p, XValue const& xval){
+		p = xval;
+	}
+};
+
 template <typename T, std::size_t N>
 struct XSerializer<T[N]> {
 	static XValue serialize(T (&val)[N]) {

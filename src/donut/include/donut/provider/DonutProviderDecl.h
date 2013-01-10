@@ -17,4 +17,21 @@
  */
 
 #pragma once
-#include "ObjectDecl.h"
+#include "ProviderDecl.h"
+
+namespace donut {
+
+class DonutObject;
+class DonutClosureObject;
+class DonutProvider final : public HeapProviderBaseT<DonutProvider, DonutObject> {
+public:
+	DonutProvider( Handler<Heap> const& heap );
+	virtual ~DonutProvider() noexcept = default;
+};
+class DonutClosureProvider final : public HeapProviderBaseT<DonutClosureProvider, DonutClosureObject> {
+public:
+	DonutClosureProvider( Handler<Heap> const& heap );
+	virtual ~DonutClosureProvider() noexcept = default;
+};
+
+}

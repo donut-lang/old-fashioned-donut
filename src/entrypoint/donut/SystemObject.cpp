@@ -32,7 +32,7 @@ using namespace tarte;
 const std::string TAG("SystemObject");
 
 SystemObject::SystemObject(HeapProvider* const provider)
-:ReactiveNativeObject(provider)
+:Super(provider)
 {
 }
 
@@ -82,13 +82,13 @@ std::string SystemObject::reprImpl(Handler<Heap> const& heap) const
 	return format("System: %p", this);
 }
 
-XValue SystemObject::onBack(Handler<Heap> const& heap, XValue const& val)
+std::tuple<bool, XValue> SystemObject::onBack(Handler<Heap> const& heap, XValue const& val)
 {
-	return XValue("Do nothing");
+	return std::tuple<bool, XValue>(true, XValue("Do nothing"));
 }
-XValue SystemObject::onForward(Handler<Heap> const& heap, XValue const& val)
+std::tuple<bool, XValue> SystemObject::onForward(Handler<Heap> const& heap, XValue const& val)
 {
-	return XValue("Do nothing");
+	return std::tuple<bool, XValue>(true, XValue("Do nothing"));
 }
 
 /**********************************************************************************

@@ -27,6 +27,7 @@
 #include "Clock.h"
 #include "source/Source.h"
 #include "object/Heap.h"
+#include "provider/Provider.h"
 #include "vm/Machine.h"
 #include "Patron.h"
 

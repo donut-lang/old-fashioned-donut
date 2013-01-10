@@ -17,4 +17,5 @@
  */
 
 #pragma once
-#include "ObjectDecl.h"
+#include "PureNativeClosureObjectDecl.h"
+

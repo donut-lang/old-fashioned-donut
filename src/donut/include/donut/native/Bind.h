@@ -73,31 +73,32 @@ std::function<Handler<Object>(Handler<Heap> const& heap, Handler<Object> const& 
  * reactive
  **********************************************************************************************************************/
 
-template <size_t idx, typename R>
-std::tuple<Handler<Object>, XValue> bindArgumentReactive(Handler<Heap> const& heap, std::vector<Handler<Object> > const& args, std::function<std::tuple<R, XValue>()> const& funct)
+template <size_t idx, typename __AntiSideEffect, typename R>
+std::tuple<Handler<Object>, bool, __AntiSideEffect> bindArgumentReactive(Handler<Heap> const& heap, std::vector<Handler<Object> > const& args, std::function<std::tuple<R, bool, __AntiSideEffect>()> const& funct)
 {
 	R res;
-	XValue val;
-	std::tie(res, val) = funct();
-	return std::tuple<Handler<Object>, XValue>(native::Encoder<R>::exec( heap, res ), val);
+	bool ok;
+	__AntiSideEffect val;
+	std::tie(res, ok, val) = funct();
+	return std::tuple<Handler<Object>, bool, __AntiSideEffect>(native::Encoder<R>::exec( heap, res ), ok, val);
 }
 
-template <size_t idx, typename R, typename U, typename... Args>
-std::tuple<Handler<Object>, XValue> bindArgumentReactive(Handler<Heap> const& heap, std::vector<Handler<Object> > const& args, std::function<std::tuple<R, XValue>(U val, Args... args)> const& funct)
+template <size_t idx, typename __AntiSideEffect, typename R, typename U, typename... Args>
+std::tuple<Handler<Object>, bool, __AntiSideEffect> bindArgumentReactive(Handler<Heap> const& heap, std::vector<Handler<Object> > const& args, std::function<std::tuple<R, bool, __AntiSideEffect>(U val, Args... args)> const& funct)
 {
-	return bindArgumentPure<idx + 1, R> (heap, args, std::function<std::tuple<R, XValue>(Args ... args)>( [funct, &heap, &args](Args... largs) {
+	return bindArgumentPure<idx + 1, R> (heap, args, std::function<std::tuple<R, bool, __AntiSideEffect>(Args ... args)>( [funct, &heap, &args](Args... largs) {
 		return funct(native::Decoder<U>::exec( heap, args[idx] ), largs...);
 	}));
 }
 
-template <typename R, typename S, typename... Args>
-std::function<std::tuple<Handler<Object>, XValue>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)> createBindReactive(std::function<std::tuple<R, XValue>(S self, Args... args)> f)
+template <typename __AntiSideEffect,typename R, typename S, typename... Args>
+std::function<std::tuple<Handler<Object>, bool, __AntiSideEffect>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)> createBindReactive(std::function<std::tuple<R, bool, __AntiSideEffect>(S self, Args... args)> f)
 {
 	return [f](Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args){
 		if (args.size() != sizeof...(Args)) {
 			DONUT_EXCEPTION(Exception, "this reactive native closure needs %d arguments, but %d arguments applied.", sizeof...(Args), args.size());
 		}
-		return bindArgumentReactive<0>(heap, args, std::function<std::tuple<R, XValue>(Args...)>(
+		return bindArgumentReactive<0>(heap, args, std::function<std::tuple<R, bool, __AntiSideEffect>(Args...)>(
 						[f, heap, self ](Args... args_){
 							return f(native::Decoder<S>::exec( heap, self ), args_...);
 						}
@@ -105,17 +106,17 @@ std::function<std::tuple<Handler<Object>, XValue>(Handler<Heap> const& heap, Han
 	};
 }
 
-template <typename R, typename S, typename... Args>
-std::function<std::tuple<Handler<Object>, XValue>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)> createBindReactive(std::tuple<R, XValue>(S::*f)(Args...))
+template <typename __AntiSideEffect,typename R, typename S, typename... Args>
+std::function<std::tuple<Handler<Object>, bool, __AntiSideEffect>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)> createBindReactive(std::tuple<R, bool, __AntiSideEffect>(S::*f)(Args...))
 {
-	return createBindReactive(std::function<std::tuple<R, XValue>(S*,Args...)>(f));
+	return createBindReactive(std::function<std::tuple<R, bool, __AntiSideEffect>(S*,Args...)>(f));
 }
 
 
-template <typename R, typename S, typename... Args>
-std::function<std::tuple<Handler<Object>, XValue>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)> createBindReactive(std::tuple<R, XValue>(*f)(S, Args...))
+template <typename __AntiSideEffect,typename R, typename S, typename... Args>
+std::function<std::tuple<Handler<Object>, bool, __AntiSideEffect>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)> createBindReactive(std::tuple<R, bool, __AntiSideEffect>(*f)(S, Args...))
 {
-	return createBindReactive(std::function<std::tuple<R, XValue>(S*,Args...)>(f));
+	return createBindReactive(std::function<std::tuple<R, bool, __AntiSideEffect>(S*,Args...)>(f));
 }
 
 }}

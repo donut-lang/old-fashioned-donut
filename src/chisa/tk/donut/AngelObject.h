@@ -29,8 +29,16 @@ using namespace tarte;
 namespace tk {
 using namespace donut;
 
+class AngelSnap {
+public:
+	template <typename Archiver>
+	void serialize(Archiver& arc){
+
+	}
+};
+
 class AngelObject;
-class AngelProvider : public ::donut::HeapProviderBaseT<AngelProvider, AngelObject> {
+class AngelProvider : public ::donut::ReactiveProviderBaseT<AngelProvider, AngelObject, AngelSnap> {
 private:
 	HandlerW<World> world_;
 public:
@@ -40,7 +48,7 @@ public:
 	Handler<World> world() const;
 };
 
-class AngelObject : public ReactiveNativeObject {
+class AngelObject : public ReactiveNativeObjectBaseT<AngelObject, AngelProvider, AngelSnap> {
 private:
 	HandlerW<World> world_;
 public:
@@ -52,8 +60,8 @@ public:
 	Handler<World> world() const;
 private:
 	virtual std::string reprImpl(Handler<Heap> const& heap) const override final;
-	virtual XValue onBack(Handler<Heap> const& heap, XValue const& val) override final;
-	virtual XValue onForward(Handler<Heap> const& heap, XValue const& val) override final;
+	virtual ResultType onBack(Handler<Heap> const& heap, AngelSnap const& val) override final;
+	virtual ResultType onForward(Handler<Heap> const& heap, AngelSnap const& val) override final;
 	virtual XValue saveImpl( Handler<Heap> const& heap ) override final;
 	virtual void loadImpl( Handler<Heap> const& heap, XValue const& data ) override final;
 };

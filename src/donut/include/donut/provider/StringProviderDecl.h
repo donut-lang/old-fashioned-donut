@@ -17,4 +17,15 @@
  */
 
 #pragma once
-#include "ObjectDecl.h"
+#include "ProviderDecl.h"
+
+namespace donut {
+
+class StringObject;
+class StringProvider final : public HeapProviderBaseT<StringProvider, StringObject> {
+public:
+	StringProvider(Handler<Heap> const& heap);
+	virtual ~StringProvider() noexcept = default;
+};
+
+}

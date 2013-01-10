@@ -121,11 +121,11 @@ void PureNativeClosureObject::loadImpl( Handler<Heap> const& heap, XValue const&
  * ReactiveNativeClosureObject
  **********************************************************************************************************************/
 
-void ReactiveNativeClosureObject::bootstrap( std::string const& objectProviderName, std::string const& closureName, ReactiveNativeClosureObject::Signature f )
-{
-	this->NativeClosureObject::bootstrap(objectProviderName, closureName);
-	this->func_ = f;
+
+ReactiveNativeClosureObject::ReactiveNativeClosureObject(HeapProvider* const provider)
+:NativeClosureObject(provider), spirit_(){
 }
+
 
 std::string ReactiveNativeClosureObject::reprImpl(Handler<Heap> const& heap) const
 {
@@ -134,19 +134,10 @@ std::string ReactiveNativeClosureObject::reprImpl(Handler<Heap> const& heap) con
 
 Handler<Object> ReactiveNativeClosureObject::apply(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& arg) const
 {
-	Handler<ReactiveNativeObject> obj;
-	if(!self->isObject() || !(obj = self.tryCast<ReactiveNativeObject>())){
-		DONUT_EXCEPTION(Exception, "[BUG] ReactiveNativeClosure must be applied only to ReactiveNativeObject.");
+	if( unlikely(this->spirit_) ){
+		DONUT_EXCEPTION(Exception, "[BUG] Spirit lost.");
 	}
-	Handler<Object> result;
-	XValue value;
-	std::tie(result, value) = this->func_(heap, obj, arg);
-	if(value.is<XNull>()) {
-		heap->clock()->discardHistory();
-	}else{
-		obj->registerReaction(heap->clock()->now(), value);
-	}
-	return result;
+	return this->spirit_->apply(heap, self,arg);
 }
 XValue ReactiveNativeClosureObject::saveImpl(Handler<Heap> const& heap)
 {
@@ -154,7 +145,14 @@ XValue ReactiveNativeClosureObject::saveImpl(Handler<Heap> const& heap)
 }
 void ReactiveNativeClosureObject::loadImpl(Handler<Heap> const& heap, XValue const& data)
 {
-	this->func_ = heap->findProvider(this->objectProviderName())->findReactiveNativeClosureEntry(this->closureName());
+	Handler<Provider> const provider = heap->findProvider(this->objectProviderName());
+	if( unlikely(!provider) ){
+		DONUT_EXCEPTION(Exception, "[BUG] Provider not found.", this->objectProviderName().c_str());
+	}
+	Handler<ReactiveProvider> rProvider(provider.cast<ReactiveProvider>());
+	if( unlikely(!( this->spirit_ = rProvider->createReactiveNativeClosure(this->closureName()) ) ) ) {
+		DONUT_EXCEPTION(Exception, "[BUG] closure name: \"%s\" not found.", this->closureName().c_str());
+	}
 }
 
 }
