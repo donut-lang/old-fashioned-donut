@@ -34,6 +34,7 @@ AngelTarget::AngelTarget(const Handler<Angel>& angel)
 
 geom::Area AngelTarget::findScreenArea()
 {
+	return this->findScreenAreaImpl();
 }
 
 Angel::Angel(Handler<Heaven> heaven)
@@ -63,6 +64,14 @@ void Angel::reshape(const geom::Area& area)
 /**********************************************************************************************************************
  * Servants
  **********************************************************************************************************************/
+
+Servant::Servant(Handler<Angel> const& angel)
+:world_(angel->world())
+,heaven_(angel->heaven())
+,angel_(angel)
+{
+
+}
 
 Handler<World> Servant::world() const
 {
