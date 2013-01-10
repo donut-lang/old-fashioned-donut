@@ -36,10 +36,16 @@ geom::Area AngelTarget::findScreenArea()
 {
 }
 
-
 Angel::Angel(Handler<Heaven> heaven)
 :heaven_(heaven)
 {
+}
+
+Handler<World> Angel::world() const {
+	return this->world_.lock();
+}
+Handler<Heaven> Angel::heaven() const {
+	return this->heaven_.lock();
 }
 
 void Angel::render(gl::Canvas& canvas)
@@ -52,6 +58,24 @@ void Angel::idle(const float delta_ms)
 
 void Angel::reshape(const geom::Area& area)
 {
+}
+
+/**********************************************************************************************************************
+ * Servants
+ **********************************************************************************************************************/
+
+Handler<World> Servant::world() const
+{
+	return this->world_.lock();
+}
+Handler<Heaven> Servant::heaven() const
+{
+	return this->heaven_.lock();
+}
+
+Handler<Angel> Servant::angel() const
+{
+	return this->angel_.lock();
 }
 
 }}

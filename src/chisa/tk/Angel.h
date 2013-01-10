@@ -62,6 +62,19 @@ protected:
 	virtual geom::Area findScreenAreaImpl() = 0;
 };
 
+class Servant : public HandlerBody<Servant> {
+private:
+	HandlerW<World> world_;
+	HandlerW<Heaven> heaven_;
+	HandlerW<Angel> angel_;
+	Handler<AngelTarget> target_;
+public:
+	Handler<World> world() const;
+	Handler<Heaven> heaven() const;
+	Handler<Angel> angel() const;
+	inline Handler<AngelTarget> const& target() const { return this->target_; };
+};
+
 class Angel : public HandlerBody<Angel> {
 private:
 	HandlerW<World> world_;
@@ -71,12 +84,16 @@ public:
 	virtual ~Angel() noexcept = default;
 	inline bool onFree() const noexcept { return false; };
 public:
-	inline HandlerW<World> const& world() const noexcept { return this->world_; };
-	inline HandlerW<Heaven> const& heaven() const noexcept { return this->heaven_; };
+	Handler<World> world() const;
+	Handler<Heaven> heaven() const;
 public:
 	void render(gl::Canvas& canvas);
 	void idle(const float delta_ms);
 	void reshape(geom::Area const& area);
+protected:
+	virtual void renderImpl(gl::Canvas& canvas) = 0;
+	virtual void idleImpl(const float delta_ms) = 0;
+	virtual void reshapeImpl(geom::Area const& area) = 0;
 };
 
 
