@@ -38,10 +38,10 @@ public:
 	ImageWidget(Logger& log, HandlerW<World> world, tinyxml2::XMLElement* element);
 	virtual ~ImageWidget() noexcept = default;
 public:
-	virtual void render(gl::Canvas& cv, geom::Area const& area) override;
-	virtual void idle(const float delta_ms) override;
-	virtual void reshape(geom::Box const& area) override;
-	virtual geom::Box measure(geom::Box const& constraint) override;
+	virtual void renderImpl(gl::Canvas& cv, geom::Area const& area) override;
+	virtual void idleImpl(const float delta_ms) override;
+	virtual void reshapeImpl(geom::Box const& area) override;
+	virtual geom::Box measureImpl(geom::Box const& constraint) override;
 };
 
 }}

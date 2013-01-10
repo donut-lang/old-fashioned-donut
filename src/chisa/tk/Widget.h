@@ -21,7 +21,7 @@
 #include <tarte/ClassUtil.h>
 #include <tarte/Logger.h>
 //#include "donut/WidgetObject.h"
-#include "../geom/Decl.h"
+#include "../geom/Area.h"
 
 namespace tinyxml2 {
 class XMLElement;
@@ -47,18 +47,30 @@ class Widget {
 	DEFINE_MEMBER(protected, private, HandlerW<WidgetElement>, wrapper);
 private: /* どーなつとの接続 */
 //	HandlerW<WidgetObject> donutObject_;
+private:
+	geom::Box size_;
+	geom::Area lastDrawnArea_;
 public:
 	Widget(Logger& log, HandlerW<World> world, tinyxml2::XMLElement* element);
 	virtual ~Widget() noexcept = default;
 public:
 	void updateWrapper(HandlerW<WidgetElement> wrapper) { this->wrapper_ = wrapper; };
 public:
-	geom::Vector calcAbsolutePosition();
+	void render(gl::Canvas& cv, geom::Area const& area);
+	void idle(const float delta_ms);
+	void reshape(geom::Box const& areaSize);
+	geom::Box measure(geom::Box const& constraintSize);
 public:
-	virtual void render(gl::Canvas& cv, geom::Area const& area) = 0;
-	virtual void idle(const float delta_ms) = 0;
-	virtual void reshape(geom::Box const& areaSize) = 0;
-	virtual geom::Box measure(geom::Box const& constraintSize) = 0;
+	geom::Area findTarget(std::string const& target);
+	geom::Area findTargetInRoot(std::string const& target);
+	geom::Area findTargetInElement(std::string const& target);
+protected:
+	virtual void renderImpl(gl::Canvas& cv, geom::Area const& area) = 0;
+	virtual void idleImpl(const float delta_ms) = 0;
+	virtual void reshapeImpl(geom::Box const& areaSize) = 0;
+	virtual geom::Box measureImpl(geom::Box const& constraintSize) = 0;
+protected:
+	virtual geom::Area findTargetImpl(std::string const& target) { return lastDrawnArea_; };
 public:
 	void notifyRelayoutFinished();
 protected:

@@ -124,7 +124,7 @@ NesTraceWidget::NesTraceWidget(chisa::Logger& log, chisa::HandlerW<chisa::tk::Wo
 	this->symRenderer_.registerSymbol(SymY          ,"Y" );
 }
 
-void NesTraceWidget::render(chisa::gl::Canvas& cv, chisa::geom::Area const& area)
+void NesTraceWidget::renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const& area)
 {
 	using namespace chisa::geom;
 	using namespace chisa::gl;
@@ -453,16 +453,16 @@ void NesTraceWidget::render(chisa::gl::Canvas& cv, chisa::geom::Area const& area
 	}
 }
 
-void NesTraceWidget::idle(const float delta_ms)
+void NesTraceWidget::idleImpl(const float delta_ms)
 {
 }
 
-void NesTraceWidget::reshape(chisa::geom::Box const& areaSize)
+void NesTraceWidget::reshapeImpl(chisa::geom::Box const& areaSize)
 {
 
 }
 
-chisa::geom::Box NesTraceWidget::measure(chisa::geom::Box const& constraintSize)
+chisa::geom::Box NesTraceWidget::measureImpl(chisa::geom::Box const& constraintSize)
 {
 	//$xxxx aa bb cc LDA $xxxx(=0xdddd)
 	// 33文字

@@ -43,7 +43,7 @@ NesMemoryWidget::NesMemoryWidget(chisa::Logger& log, chisa::HandlerW<chisa::tk::
 	this->addrWidth_ = numRenderer_.maxWidth()*(1+4+1);
 }
 
-void NesMemoryWidget::render(chisa::gl::Canvas& cv, chisa::geom::Area const& area)
+void NesMemoryWidget::renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const& area)
 {
 	using namespace chisa;
 	Handler<NesGeist> geist = this->geist_.lock();
@@ -89,15 +89,15 @@ void NesMemoryWidget::render(chisa::gl::Canvas& cv, chisa::geom::Area const& are
 	}
 }
 
-void NesMemoryWidget::idle(const float delta_ms)
+void NesMemoryWidget::idleImpl(const float delta_ms)
 {
 }
 
-void NesMemoryWidget::reshape(chisa::geom::Box const& areaSize)
+void NesMemoryWidget::reshapeImpl(chisa::geom::Box const& areaSize)
 {
 }
 
-chisa::geom::Box NesMemoryWidget::measure(chisa::geom::Box const& constraintSize)
+chisa::geom::Box NesMemoryWidget::measureImpl(chisa::geom::Box const& constraintSize)
 {
 	chisa::geom::Box memAreaSize((this->numRenderer_.maxWidth()+1)*32+this->addrWidth_, (this->numRenderer_.maxHeight()+2)*(65535/16)-2);
 	return memAreaSize;

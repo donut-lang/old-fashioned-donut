@@ -50,10 +50,10 @@ public:
 	NesTraceWidget(Logger& log, chisa::HandlerW<chisa::tk::World> world, tinyxml2::XMLElement* element);
 	virtual ~NesTraceWidget() noexcept = default;
 public:
-	virtual void render(chisa::gl::Canvas& cv, chisa::geom::Area const& area) override;
-	virtual void idle(const float delta_ms) override;
-	virtual void reshape(chisa::geom::Box const& areaSize) override;
-	virtual chisa::geom::Box measure(chisa::geom::Box const& constraintSize) override;
+	virtual void renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const& area) override;
+	virtual void idleImpl(const float delta_ms) override;
+	virtual void reshapeImpl(chisa::geom::Box const& areaSize) override;
+	virtual chisa::geom::Box measureImpl(chisa::geom::Box const& constraintSize) override;
 };
 
 }

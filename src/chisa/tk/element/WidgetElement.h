@@ -52,11 +52,15 @@ private:
 private:
 	float calcScale(geom::Box const& widget, geom::Box const& constraint);
 private:
-	geom::Point calcPtInWidgetRel(geom::Point const& ptInScreen);
-	geom::Point calcPtInWidgetAbs(geom::Point const& ptInScreen);
+	virtual void notifyRelayoutFinished();
+public:
+	geom::Point calcPtInWidgetRel(geom::Point const& ptInRoot);
+	geom::Point calcPtInWidgetAbs(geom::Point const& ptInRoot);
 	geom::Point calcPtInElement(geom::Point const& ptInWidgetAbs);
 	geom::Point calcPtInRoot(geom::Point const& ptInWidgetAbs);
-	virtual void notifyRelayoutFinished();
+
+	geom::Area calcAreaInElement(geom::Area const& areaInWidget);
+	geom::Area calcAreaInRoot(geom::Area const& areaInWidget);
 public:
 	virtual bool onDownRaw(float const& timeMs, geom::Point const& ptInScreen) override;
 	virtual bool onUpRaw(float const& timeMs, geom::Point const& ptInScreen) override;

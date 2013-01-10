@@ -235,6 +235,15 @@ geom::Point WidgetElement::calcPtInRoot(geom::Point const& ptInWidgetAbs)
 	return this->calcPtInElement(ptInWidgetAbs) + this->lastInnerPositionInRoot();
 }
 
+geom::Area WidgetElement::calcAreaInElement(geom::Area const& areaInWidget)
+{
+	return geom::Area( calcPtInElement(areaInWidget.point()), areaInWidget.box()*widgetScale() );
+}
+geom::Area WidgetElement::calcAreaInRoot(geom::Area const& areaInWidget)
+{
+	return geom::Area( calcPtInRoot(areaInWidget.point()), areaInWidget.box()*widgetScale() );
+}
+
 bool WidgetElement::onDownRaw(float const& timeMs, geom::Point const& ptInScreen)
 {
 	return widget_->onDownRaw(timeMs, calcPtInWidgetRel(ptInScreen));

@@ -47,22 +47,22 @@ ImageWidget::ImageWidget(Logger& log, HandlerW<World> world, tinyxml2::XMLElemen
 	}
 }
 
-void ImageWidget::render(gl::Canvas& cv, geom::Area const& area)
+void ImageWidget::renderImpl(gl::Canvas& cv, geom::Area const& area)
 {
 	if(this->imageSprite_){
 		cv.drawSprite(this->imageSprite_, geom::ZERO, area);
 	}
 }
 
-void ImageWidget::idle(const float delta_ms)
+void ImageWidget::idleImpl(const float delta_ms)
 {
 }
 
-void ImageWidget::reshape(geom::Box const& area)
+void ImageWidget::reshapeImpl(geom::Box const& area)
 {
 }
 
-geom::Box ImageWidget::measure(geom::Box const& constraint)
+geom::Box ImageWidget::measureImpl(geom::Box const& constraint)
 {
 	if(imageSprite_){
 		return geom::Box(imageSprite_->width(), imageSprite_->height());
