@@ -154,6 +154,8 @@ public:
 };
 
 #define INJECT_REACTIVE_PROVIDER_ASPECT(__AntiSideEffect__, __Super__) \
+public:\
+	typedef __AntiSideEffect__ AntiSideEffect;\
 private:\
 	ReactiveProviderAspectT<__AntiSideEffect__> __reactive_aspect__;\
 private:\
@@ -170,9 +172,10 @@ protected:\
 	}
 
 
-template <typename __Derived, typename __Object, typename __AntiSideEffect>
+template <typename __Derived, typename __Object, typename __AntiSideEffect=XValue>
 class ReactiveProviderBaseT : public ReactiveProvider {
 	INJECT_REACTIVE_PROVIDER_ASPECT(__AntiSideEffect, ReactiveProvider);
+	//static_assert(std::is_same<typename __Object::AntiSideEffect, __AntiSideEffect>::value,"Oops. AntiSideEffect type of Derived and Object must be the same.");
 protected:
 	typedef ReactiveProviderBaseT<__Derived, __Object, __AntiSideEffect> Super;
 	ReactiveProviderBaseT( Handler<Heap> const& heap, std::string const& name ):ReactiveProvider(heap, name){};
