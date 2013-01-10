@@ -26,8 +26,8 @@ namespace donut {
 
 template <typename __AntiSideEffect>
 Handler<Object> ReactiveNativeClosureBaseT<__AntiSideEffect>::apply(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& arg) const {
-	Handler<ReactiveNativeObjectT<__AntiSideEffect> > obj;
-	if(!self->isObject() || !(obj = self.tryCast<ReactiveNativeObjectT<__AntiSideEffect> >())){
+	Handler<ReactiveNativeObjectAbstractT<__AntiSideEffect> > obj;
+	if(!self->isObject() || !(obj = self.tryCast<ReactiveNativeObjectAbstractT<__AntiSideEffect> >())){
 		DONUT_EXCEPTION(Exception, "[BUG] ReactiveNativeClosure must be applied only to ReactiveNativeObject.");
 	}
 	Handler<Object> result;

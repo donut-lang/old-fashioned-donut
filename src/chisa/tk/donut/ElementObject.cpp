@@ -37,7 +37,7 @@ namespace tk {
 const static std::string TAG("ElementObject");
 
 ElementProvider::ElementProvider( Handler<Heap> const& heap, std::string const& name, Handler<World> const& world )
-:HeapProvider(heap, name)
+:Super(heap, name)
 ,world_(world)
 {
 	this->registerPureNativeClosure("findElementById", &ElementObject::findElementById);
@@ -56,7 +56,7 @@ Handler<World> ElementProvider::world() const
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 ElementObject::ElementObject(ElementProvider* provider)
-:ReactiveNativeObject(provider)
+:Super(provider)
 ,world_(provider->world())
 {
 }

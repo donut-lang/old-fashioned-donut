@@ -35,7 +35,7 @@ class Element;
 class ElementObject;
 
 // すべて共通のポインタとして使えるようにするためのクラス
-class ElementProvider : public ::donut::HeapProvider {
+class ElementProvider : public ::donut::ReactiveProviderAbstractT<XValue> {
 private:
 	HandlerW<World> world_;
 protected:
@@ -47,7 +47,7 @@ public:
 	virtual Handler<ElementObject> newInstance(Handler< ::donut::Heap> const& heap, Handler<Element> const& element) = 0;
 };
 
-class ElementObject : public ReactiveNativeObject {
+class ElementObject : public ReactiveNativeObjectAbstractT<XValue> {
 private:
 	HandlerW<World> world_;
 	Handler<Element> const element_;

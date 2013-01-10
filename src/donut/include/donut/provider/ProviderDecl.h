@@ -102,7 +102,7 @@ public:
 	virtual Handler<ReactiveNativeClosure> createReactiveNativeClosure( std::string const& name ) = 0;
 };
 
-template <typename __AntiSideEffect> class ReactiveProviderT;
+template <typename __AntiSideEffect> class ReactiveProviderAbstractT;
 
 template <typename __Derived, typename __Object, typename __AntiSideEffect> class ReactiveProviderBaseT;
 
@@ -110,19 +110,19 @@ namespace internal {
 
 template <typename __AntiSideEffect, typename __F>
 struct _Reactive_ClosureRegisterer{
-	static inline bool exec(ReactiveProviderT< __AntiSideEffect> * self, std::string const& name, __F f){
+	static inline bool exec(ReactiveProviderAbstractT< __AntiSideEffect> * self, std::string const& name, __F f){
 		return (!self->reactiveNativeClosures_.have(name)) && self->reactiveNativeClosures_.update( name, native::createBindReactive<__AntiSideEffect>(f) );
 	}
 };
 template <typename __AntiSideEffect>
 struct _Reactive_ClosureRegisterer<__AntiSideEffect, typename ReactiveNativeClosureBaseT<__AntiSideEffect>::Function> {
-	static inline bool exec(ReactiveProviderT<__AntiSideEffect> * self, std::string const& name, typename ReactiveNativeClosureBaseT<__AntiSideEffect>::Function f){
+	static inline bool exec(ReactiveProviderAbstractT<__AntiSideEffect> * self, std::string const& name, typename ReactiveNativeClosureBaseT<__AntiSideEffect>::Function f){
 		return (!self->reactiveNativeClosures_.have(name)) && self->reactiveNativeClosures_.update( name, f );
 	}
 };
 template <typename __AntiSideEffect>
 struct _Reactive_ClosureRegisterer<__AntiSideEffect, typename ReactiveNativeClosureBaseT<__AntiSideEffect>::Signature> {
-	static inline bool exec(ReactiveProviderT<__AntiSideEffect> * self, std::string const& name, typename ReactiveNativeClosureBaseT<__AntiSideEffect>::Function f){
+	static inline bool exec(ReactiveProviderAbstractT<__AntiSideEffect> * self, std::string const& name, typename ReactiveNativeClosureBaseT<__AntiSideEffect>::Function f){
 		return (!self->reactiveNativeClosures_.have(name)) && self->reactiveNativeClosures_.update( name, f );
 	}
 };
@@ -134,13 +134,13 @@ class ReactiveProviderBaseT;
 // オブジェクトのプロバイダ
 
 template <typename __AntiSideEffect>
-class ReactiveProviderT : public ReactiveProvider {
-private:
-	template <typename Derived_, typename Object_, typename AntiSideEffect_> friend class ReactiveProviderBaseT;
+class ReactiveProviderAbstractT : public ReactiveProvider {
+protected:
+	typedef ReactiveProviderAbstractT<__AntiSideEffect> Super;
 	// オブジェクトごとの反副作用情報を含んだ関数テーブル
 	VectorMap<std::string, typename ReactiveNativeClosureBaseT<__AntiSideEffect>::Signature> reactiveNativeClosures_;
-	ReactiveProviderT( Handler<Heap> const& heap, std::string const& name ): ReactiveProvider(heap, name){};
-	ReactiveProviderT( Handler<Heap> const& heap ):HeapProvider(heap, ::tarte::demangle<Object>() ){};
+	ReactiveProviderAbstractT( Handler<Heap> const& heap, std::string const& name ): ReactiveProvider(heap, name){};
+	ReactiveProviderAbstractT( Handler<Heap> const& heap ):HeapProvider(heap, ::tarte::demangle<Object>() ){};
 protected:
 	virtual void bootstrap() override;
 protected:
@@ -163,17 +163,16 @@ private:
 };
 
 template <typename __Derived, typename __Object, typename __AntiSideEffect>
-class ReactiveProviderBaseT : public ReactiveProviderT<__AntiSideEffect> {
-private:
+class ReactiveProviderBaseT : public ReactiveProviderAbstractT<__AntiSideEffect> {
 protected:
 	typedef ReactiveProviderBaseT<__Derived, __Object, __AntiSideEffect> Super;
-	ReactiveProviderBaseT( Handler<Heap> const& heap, std::string const& name ):ReactiveProviderT<__AntiSideEffect>(heap, name){};
-	ReactiveProviderBaseT( Handler<Heap> const& heap ):HeapProvider(heap, ::tarte::demangle<Object>() ){};
+	ReactiveProviderBaseT( Handler<Heap> const& heap, std::string const& name ):ReactiveProviderAbstractT<__AntiSideEffect>(heap, name){};
+	ReactiveProviderBaseT( Handler<Heap> const& heap ):ReactiveProviderAbstractT<__AntiSideEffect>(heap, ::tarte::demangle<Object>() ){};
 public:
 	virtual ~ReactiveProviderBaseT() noexcept = default;
 protected:
 	virtual void bootstrap() override final {
-		ReactiveProviderT<__AntiSideEffect>::bootstrap();
+		ReactiveProviderAbstractT<__AntiSideEffect>::bootstrap();
 	}
 private:
 	virtual HeapObject* __internal__createInstanceForLoading() override {
