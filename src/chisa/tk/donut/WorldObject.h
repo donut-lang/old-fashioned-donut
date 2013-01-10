@@ -29,8 +29,15 @@ using namespace tarte;
 namespace tk {
 using namespace donut;
 
+struct WorldSideEffect{
+	template <typename Arc>
+	void serialize(Arc& arc) {
+
+	}
+};
+
 class WorldObject;
-class WorldProvider : public ::donut::HeapProviderBaseT<WorldProvider, WorldObject> {
+class WorldProvider : public ::donut::ReactiveProviderBaseT<WorldProvider, WorldObject, WorldSideEffect> {
 private:
 	HandlerW<World> world_;
 public:
@@ -40,7 +47,7 @@ public:
 	Handler<World> world() const;
 };
 
-class WorldObject : public ReactiveNativeObjectBaseT<WorldObject, WorldProvider> {
+class WorldObject : public ReactiveNativeObjectBaseT<WorldObject, WorldProvider, WorldSideEffect> {
 private:
 	HandlerW<World> world_;
 public:
@@ -52,8 +59,8 @@ public:
 	Handler<World> world() const;
 private:
 	virtual std::string reprImpl(Handler<Heap> const& heap) const override final;
-	virtual ResultType onBack(Handler<Heap> const& heap, XValue const& val) override final;
-	virtual ResultType onForward(Handler<Heap> const& heap, XValue const& val) override final;
+	virtual ResultType onBack(Handler<Heap> const& heap, WorldSideEffect const& val) override final;
+	virtual ResultType onForward(Handler<Heap> const& heap, WorldSideEffect const& val) override final;
 	virtual XValue saveImpl( Handler<Heap> const& heap ) override final;
 	virtual void loadImpl( Handler<Heap> const& heap, XValue const& data ) override final;
 };

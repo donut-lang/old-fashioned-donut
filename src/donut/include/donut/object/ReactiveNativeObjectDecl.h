@@ -72,6 +72,8 @@ public:
 };
 
 #define INJECT_REACTIVE_OBJECT_ASPECT(__AntiSideEffect__, __Self__) \
+public:\
+	typedef __AntiSideEffect__ AntiSideEffect;\
 private:\
 	friend class ReactiveNativeObjectAspectT<__AntiSideEffect__, __Self__>;\
 	ReactiveNativeObjectAspectT<__AntiSideEffect__, __Self__> __reactive_aspect__;\
@@ -117,8 +119,8 @@ template <typename __Derived, typename __Provider, typename __AntiSideEffect=XVa
 class ReactiveNativeObjectBaseT : public ReactiveNativeObject {
 	typedef ReactiveNativeObjectBaseT<__Derived, __Provider, __AntiSideEffect> __Self__;
 	INJECT_REACTIVE_OBJECT_ASPECT(__AntiSideEffect, __Self__);
+	//static_assert(std::is_same<__AntiSideEffect, typename __Provider::AntiSideEffect>::value, "Oops. AntiSideEffect of provider and object must be the same.");
 protected:
-	typedef __AntiSideEffect AntiSideEffect;
 	typedef ReactiveNativeObjectBaseT<__Derived, __Provider, __AntiSideEffect> Super;
 	typedef std::tuple<bool, __AntiSideEffect> ResultType;
 	ReactiveNativeObjectBaseT(HeapProvider* const provider)

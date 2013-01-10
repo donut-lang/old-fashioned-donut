@@ -65,16 +65,16 @@ Handler<World> WorldObject::world() const
 	return this->world_.lock();
 }
 
-WorldObject::ResultType WorldObject::onBack(const Handler<Heap>& heap, const XValue& val)
+WorldObject::ResultType WorldObject::onBack(const Handler<Heap>& heap, const WorldSideEffect& val)
 {
 	//XXX
-	return ResultType(true, XValue());
+	return ResultType(true, WorldSideEffect());
 }
 
-WorldObject::ResultType WorldObject::onForward(const Handler<Heap>& heap, const XValue& val)
+WorldObject::ResultType WorldObject::onForward(const Handler<Heap>& heap, const WorldSideEffect& val)
 {
 	//XXX
-	return ResultType(true, XValue());
+	return ResultType(true, WorldSideEffect());
 }
 
 XValue WorldObject::saveImpl(const Handler<Heap>& heap)
