@@ -39,6 +39,11 @@ public:
 	,backable_and_forwardable(0)
 	,backable_only_once(0)
 	{}
+public:
+	void bootstrap(Handler<Heap> const& heap){
+		this->Super::bootstrap(heap);
+	}
+public:
 	virtual std::tuple<bool, XValue> onBack(Handler<Heap> const& heap, XValue const& val) override
 	{
 		std::string v(val.as<std::string>());

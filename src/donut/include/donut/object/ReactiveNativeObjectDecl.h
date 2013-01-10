@@ -22,64 +22,107 @@
 
 namespace donut {
 
+class ReactionRecord {
+	DISABLE_COPY_AND_ASSIGN(ReactionRecord);
+protected:
+	ReactionRecord() noexcept = default;
+	virtual ~ReactionRecord() noexcept = default;
+};
 class ReactiveNativeObject : public NativeObject {
 protected:
 	ReactiveNativeObject(HeapProvider* const provider):NativeObject(provider){}
 	virtual ~ReactiveNativeObject() noexcept = default;
 protected:
 	std::string reprImpl(Handler<Heap> const& heap) const override;
+public:
+	virtual ReactionRecord* reactionRecorde() = 0;
 };
 
-template <typename __AntiSideEffect=XValue>
-class ReactiveNativeObjectAbstractT : public ReactiveNativeObject {
+template <typename __AntiSideEffect>
+class ReactionRecordT : public ReactionRecord {
 protected:
-	typedef __AntiSideEffect AntiSideEffect;
-	typedef ReactiveNativeObjectAbstractT<__AntiSideEffect> Super;
-	typedef std::tuple<bool, __AntiSideEffect> ResultType;
+	ReactionRecordT() noexcept = default;
+	virtual ~ReactionRecordT() noexcept = default;
+public:
+	virtual void registerReaction( timestamp_t time, __AntiSideEffect const& v ) = 0;
+};
+
+template <typename __AntiSideEffect, typename _Self>
+class ReactiveNativeObjectAspectT final : public ReactionRecordT<__AntiSideEffect>{
 private:
 	std::vector<std::pair<timestamp_t, __AntiSideEffect> > reactions_;
 	int index_; //次に順方向で挿入されるべきインデックスを示す。0なら戻るものがないのを示す。
-protected:
-	ReactiveNativeObjectAbstractT(HeapProvider* const provider);
-	virtual ~ReactiveNativeObjectAbstractT() noexcept = default;
 public:
-	void bootstrap(Handler<Heap> const& heap);
-	virtual XValue save( Handler<Heap> const& heap ) override final;
-	virtual void load( Handler<Heap> const& heap, XValue const& data ) override final;
+	typedef std::tuple<bool, __AntiSideEffect> ResultType;
+	ReactiveNativeObjectAspectT():index_(0){};
+	virtual ~ReactiveNativeObjectAspectT() noexcept = default;
 private:
 	int inline findUpperIndex( timestamp_t const& t );
 	int findLowerIndex( timestamp_t const& t );
-private:
-	virtual void onBackNotifyImpl(Handler<Heap> const& heap) override final;
-	virtual void onForwardNotifyImpl(Handler<Heap> const& heap) override final;
-	virtual void onDiscardHistoryNotifyImpl(Handler<Heap> const& heap) override final;
-	virtual void onDiscardFutureNotifyImpl(Handler<Heap> const& heap) override final;
 public:
-	void registerReaction( timestamp_t time, AntiSideEffect const& v );
-protected:
-	virtual void onFutureDiscarded(Handler<Heap> const& heap) {};
-	virtual void onHistoryDiscarded(Handler<Heap> const& heap) {};
-protected:
-	virtual ResultType onBack(Handler<Heap> const& heap, AntiSideEffect const& val) = 0;
-	virtual ResultType onForward(Handler<Heap> const& heap, AntiSideEffect const& val) = 0;
-	virtual XValue saveImpl( Handler<Heap> const& heap ) override = 0;
-	virtual void loadImpl( Handler<Heap> const& heap, XValue const& data ) override = 0;
+	inline void onBackNotify(_Self& self, Handler<Heap> const& heap);
+	inline void onForwardNotify(_Self& self, Handler<Heap> const& heap);
+	inline void onDiscardHistoryNotify(_Self& self, Handler<Heap> const& heap);
+	inline void onDiscardFutureNotify(_Self& self, Handler<Heap> const& heap);
+public:
+	virtual void registerReaction( timestamp_t time, __AntiSideEffect const& v ) override final;
+public:
+	XValue save();
+	void load(XValue const& data );
 };
 
+#define INJECT_REACTIVE_OBJECT_ASPECT(__AntiSideEffect__, __Self__) \
+private:\
+	ReactiveNativeObjectAspectT<__AntiSideEffect__, __Self__> __reactive_aspect__;\
+	typedef typename ReactiveNativeObjectAspectT<__AntiSideEffect__, __Self__>::ResultType _ResultType;\
+private:\
+	virtual ReactionRecord* reactionRecorde() override final{\
+		return &this->__reactive_aspect__;\
+	}\
+	virtual XValue save( Handler<Heap> const& heap ) override final {\
+		Handler<XObject> top(new XObject);\
+		top->set("base", this->NativeObject::save(heap));\
+		top->set("reactions", __reactive_aspect__.save());\
+		top->set("impl", this->saveImpl(heap));\
+		return top;\
+	}\
+	virtual void load( Handler<Heap> const& heap, XValue const& data ) override final {\
+		Handler<XObject> top(data.as<XObject>());\
+		this->NativeObject::load(heap, top->get<XValue>("base"));\
+		this->__reactive_aspect__.load(top->get<XValue>("reactions"));\
+		this->loadImpl(heap, top->get<XValue>("impl"));\
+	}\
+	virtual void onBackNotifyImpl(Handler<Heap> const& heap) override final {\
+		this->__reactive_aspect__.onBackNotify((*this), heap);\
+	}\
+	virtual void onForwardNotifyImpl(Handler<Heap> const& heap) override final {\
+		this->__reactive_aspect__.onForwardNotify((*this), heap);\
+	}\
+	virtual void onDiscardHistoryNotifyImpl(Handler<Heap> const& heap) override final {\
+		this->__reactive_aspect__.onDiscardHistoryNotify((*this), heap);\
+	}\
+	virtual void onDiscardFutureNotifyImpl(Handler<Heap> const& heap) override final {\
+		this->__reactive_aspect__.onDiscardFutureNotify((*this), heap);\
+	}\
+public:\
+	virtual void onFutureDiscarded(Handler<Heap> const& heap) {} \
+	virtual void onHistoryDiscarded(Handler<Heap> const& heap) {} \
+public: \
+	virtual _ResultType onBack(Handler<Heap> const& heap, __AntiSideEffect__ const& val) = 0;\
+	virtual _ResultType onForward(Handler<Heap> const& heap, __AntiSideEffect__ const& val) = 0;\
+	virtual XValue saveImpl( Handler<Heap> const& heap ) override = 0;\
+	virtual void loadImpl( Handler<Heap> const& heap, XValue const& data ) override = 0;
 
 template <typename __Derived, typename __Provider, typename __AntiSideEffect=XValue>
-class ReactiveNativeObjectBaseT : public ReactiveNativeObjectAbstractT<__AntiSideEffect> {
+class ReactiveNativeObjectBaseT : public ReactiveNativeObject {
+	typedef ReactiveNativeObjectBaseT<__Derived, __Provider, __AntiSideEffect> __Self__;
+	INJECT_REACTIVE_OBJECT_ASPECT(__AntiSideEffect, __Self__);
 protected:
 	typedef __AntiSideEffect AntiSideEffect;
 	typedef ReactiveNativeObjectBaseT<__Derived, __Provider, __AntiSideEffect> Super;
 	typedef std::tuple<bool, __AntiSideEffect> ResultType;
 	ReactiveNativeObjectBaseT(HeapProvider* const provider)
-	:ReactiveNativeObjectAbstractT<AntiSideEffect>(provider){}
+	:ReactiveNativeObject(provider){}
 	virtual ~ReactiveNativeObjectBaseT() noexcept = default;
-protected:
-	virtual ResultType onBack(Handler<Heap> const& heap, AntiSideEffect const& val) override = 0;
-	virtual ResultType onForward(Handler<Heap> const& heap, AntiSideEffect const& val) override = 0;
-	virtual XValue saveImpl( Handler<Heap> const& heap ) override = 0;
-	virtual void loadImpl( Handler<Heap> const& heap, XValue const& data ) override = 0;
 };
 }
