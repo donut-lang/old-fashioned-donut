@@ -47,7 +47,7 @@ public:
 	virtual Handler<ElementObject> newInstance(Handler< ::donut::Heap> const& heap, Handler<Element> const& element) = 0;
 };
 
-class ElementObject : public ReactiveNativeObjectAbstractT<XValue> {
+class ElementObject : public ReactiveNativeObject {
 private:
 	HandlerW<World> world_;
 	Handler<Element> const element_;

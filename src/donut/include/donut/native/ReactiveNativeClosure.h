@@ -26,9 +26,15 @@ namespace donut {
 
 template <typename __AntiSideEffect>
 Handler<Object> ReactiveNativeClosureBaseT<__AntiSideEffect>::apply(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& arg) const {
-	Handler<ReactiveNativeObjectAbstractT<__AntiSideEffect> > obj;
-	if(!self->isObject() || !(obj = self.tryCast<ReactiveNativeObjectAbstractT<__AntiSideEffect> >())){
-		DONUT_EXCEPTION(Exception, "[BUG] ReactiveNativeClosure must be applied only to ReactiveNativeObject.");
+	Handler<ReactiveNativeObject> obj;
+	if(!self->isObject() || !(obj = self.tryCast<ReactiveNativeObject>())){
+		DONUT_EXCEPTION(Exception, "[BUG] ReactiveNativeClosure must be applied only to ReactiveNativeObject.\nActual type: %s",
+				demangle(self.get()).c_str());
+	}
+	ReactionRecordT<__AntiSideEffect>* record = dynamic_cast<ReactionRecordT<__AntiSideEffect>*>(obj->reactionRecorde());
+	if( !record ){
+		DONUT_EXCEPTION(Exception, "[BUG] AntiEffect type does not match. SelfType: %s\n\tAntiSideEffect type: \n\t\trequested: %s\n\t\t actual: %s",
+				demangle(self.get()).c_str(), demangle(obj->reactionRecorde()).c_str(), demangle<__AntiSideEffect>().c_str());
 	}
 	Handler<Object> result;
 	bool succeed;
@@ -37,7 +43,7 @@ Handler<Object> ReactiveNativeClosureBaseT<__AntiSideEffect>::apply(Handler<Heap
 	if( !succeed ) {
 		heap->clock()->discardHistory();
 	}else{
-		obj->registerReaction(heap->clock()->now(), value);
+		record->registerReaction(heap->clock()->now(), value);
 	}
 	return result;
 }

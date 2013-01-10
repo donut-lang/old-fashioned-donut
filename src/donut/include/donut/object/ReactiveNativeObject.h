@@ -21,49 +21,36 @@
 
 namespace donut {
 
-template <typename AntiSideEffect>
-inline ReactiveNativeObjectAbstractT<AntiSideEffect>::ReactiveNativeObjectAbstractT(HeapProvider* const provider)
-:ReactiveNativeObject(provider)
-,index_(0){
 
+template <typename AntiSideEffect, typename Self>
+XValue ReactiveNativeObjectAspectT<AntiSideEffect, Self>::save() {
+	XArchiverOut out;
+	out & reactions_;
+	out & index_;
+	return out.toXValue();
 }
 
-template <typename AntiSideEffect>
-void ReactiveNativeObjectAbstractT<AntiSideEffect>::bootstrap(Handler<Heap> const& heap) {
-	this->NativeObject::bootstrap(heap);
+template <typename AntiSideEffect, typename Self>
+void ReactiveNativeObjectAspectT<AntiSideEffect, Self>::load( XValue const& data ) {
+	XArchiverIn in(data);
+	in & reactions_;
+	in & index_;
 }
 
-template <typename AntiSideEffect>
-XValue ReactiveNativeObjectAbstractT<AntiSideEffect>::save( Handler<Heap> const& heap ) {
-	Handler<XObject> top(new XObject);
-	top->set("base", this->NativeObject::save(heap));
-	top->set("reactions", (XArchiverOut() << reactions_).toXValue());
-	top->set("impl", this->saveImpl(heap));
-	return top;
-}
-
-template <typename AntiSideEffect>
-void ReactiveNativeObjectAbstractT<AntiSideEffect>::load( Handler<Heap> const& heap, XValue const& data ) {
-	Handler<XObject> top(data.as<XObject>());
-	this->NativeObject::load(heap, top->get<XValue>("base"));
-	(XArchiverIn(top->get<XValue>("reactions"))) >> reactions_;
-	this->loadImpl(heap, top->get<XValue>("impl"));
-}
-
-template <typename AntiSideEffect>
-int inline ReactiveNativeObjectAbstractT<AntiSideEffect>::findUpperIndex( timestamp_t const& t ) {
+template <typename AntiSideEffect, typename Self>
+int inline ReactiveNativeObjectAspectT<AntiSideEffect, Self>::findUpperIndex( timestamp_t const& t ) {
 	return std::distance(this->reactions_.begin(),
 			std::upper_bound(this->reactions_.begin(), this->reactions_.end(), t, PairCompare<timestamp_t, AntiSideEffect>()));
 }
 
-template <typename AntiSideEffect>
-int inline ReactiveNativeObjectAbstractT<AntiSideEffect>::findLowerIndex( timestamp_t const& t ) {
+template <typename AntiSideEffect, typename Self>
+int inline ReactiveNativeObjectAspectT<AntiSideEffect, Self>::findLowerIndex( timestamp_t const& t ) {
 	return std::distance(this->reactions_.begin(),
 			std::lower_bound(this->reactions_.begin(), this->reactions_.end(), t, PairCompare<timestamp_t, AntiSideEffect>()));
 }
 
-template <typename AntiSideEffect>
-void ReactiveNativeObjectAbstractT<AntiSideEffect>::onBackNotifyImpl(Handler<Heap> const& heap) {
+template <typename AntiSideEffect, typename Self>
+void ReactiveNativeObjectAspectT<AntiSideEffect, Self>::onBackNotify(Self& self, Handler<Heap> const& heap) {
 	Handler<Clock> clock = heap->clock();
 	int const nowIndex = this->index_;
 	int const newIndex = this->findLowerIndex(clock->now());
@@ -72,7 +59,7 @@ void ReactiveNativeObjectAbstractT<AntiSideEffect>::onBackNotifyImpl(Handler<Hea
 	for(int i=nowIndex-1; i>=newIndex;--i){
 		std::pair<timestamp_t, AntiSideEffect>& p = reactions_[i];
 		bool f;
-		std::tie(f, p.second) = this->onBack(heap, p.second);
+		std::tie(f, p.second) = self.onBack(heap, p.second);
 		failed |= !f;
 	}
 	if( failed ){ //もうもどれない
@@ -80,8 +67,8 @@ void ReactiveNativeObjectAbstractT<AntiSideEffect>::onBackNotifyImpl(Handler<Hea
 	}
 }
 
-template <typename AntiSideEffect>
-void ReactiveNativeObjectAbstractT<AntiSideEffect>::onForwardNotifyImpl(Handler<Heap> const& heap) {
+template <typename AntiSideEffect, typename Self>
+void ReactiveNativeObjectAspectT<AntiSideEffect, Self>::onForwardNotify(Self& self, Handler<Heap> const& heap) {
 	Handler<Clock> clock = heap->clock();
 	int const nowIndex = this->index_;
 	int const newIndex = this->findUpperIndex(clock->now());
@@ -92,7 +79,7 @@ void ReactiveNativeObjectAbstractT<AntiSideEffect>::onForwardNotifyImpl(Handler<
 	for(auto it = start; it != end; ++it) {
 		std::pair<timestamp_t, AntiSideEffect>& p = *it;
 		bool f;
-		std::tie(f, p.second) = this->onForward(heap, p.second);
+		std::tie(f, p.second) = self.onForward(heap, p.second);
 		failed |= !f;
 	}
 	if( failed ){ //もうもどれない
@@ -100,26 +87,26 @@ void ReactiveNativeObjectAbstractT<AntiSideEffect>::onForwardNotifyImpl(Handler<
 	}
 }
 
-template <typename AntiSideEffect>
-void ReactiveNativeObjectAbstractT<AntiSideEffect>::onDiscardHistoryNotifyImpl(Handler<Heap> const& heap) {
+template <typename AntiSideEffect, typename Self>
+void ReactiveNativeObjectAspectT<AntiSideEffect, Self>::onDiscardHistoryNotify(Self& self, Handler<Heap> const& heap) {
 	if(this->reactions_.size() > 0) {
 		this->reactions_.erase(this->reactions_.begin(), this->reactions_.begin()+findLowerIndex(heap->clock()->now()));
 		this->index_ = 0;
 	}
-	this->onHistoryDiscarded(heap);
+	self.onHistoryDiscarded(heap);
 }
 
-template <typename AntiSideEffect>
-void ReactiveNativeObjectAbstractT<AntiSideEffect>::onDiscardFutureNotifyImpl(Handler<Heap> const& heap) {
+template <typename AntiSideEffect, typename Self>
+void ReactiveNativeObjectAspectT<AntiSideEffect, Self>::onDiscardFutureNotify(Self& self, Handler<Heap> const& heap) {
 	if(this->reactions_.size() > 0){
 		this->index_ = findUpperIndex(heap->clock()->now());
 		this->reactions_.erase(this->reactions_.begin()+this->index_, this->reactions_.end());
 	}
-	this->onFutureDiscarded(heap);
+	self.onFutureDiscarded(heap);
 }
 
-template <typename AntiSideEffect>
-void ReactiveNativeObjectAbstractT<AntiSideEffect>::registerReaction( timestamp_t time, AntiSideEffect const& v ) {
+template <typename AntiSideEffect, typename Self>
+void ReactiveNativeObjectAspectT<AntiSideEffect, Self>::registerReaction( timestamp_t time, AntiSideEffect const& v ) {
 	if( unlikely( this->reactions_.size() > 0 && this->reactions_.back().first > time ) ){
 		DONUT_EXCEPTION(Exception, "[BUG] Reaction table was broken!!");
 	}

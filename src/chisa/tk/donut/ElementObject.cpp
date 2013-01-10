@@ -56,7 +56,7 @@ Handler<World> ElementProvider::world() const
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 ElementObject::ElementObject(ElementProvider* provider)
-:Super(provider)
+:ReactiveNativeObject(provider)
 ,world_(provider->world())
 {
 }
