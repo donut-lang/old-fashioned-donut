@@ -134,7 +134,7 @@ std::string ReactiveNativeClosureObject::reprImpl(Handler<Heap> const& heap) con
 
 Handler<Object> ReactiveNativeClosureObject::apply(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& arg) const
 {
-	if( unlikely(this->spirit_) ){
+	if( unlikely(!this->spirit_) ){
 		DONUT_EXCEPTION(Exception, "[BUG] Spirit lost.");
 	}
 	return this->spirit_->apply(heap, self,arg);
