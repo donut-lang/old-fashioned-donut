@@ -238,7 +238,7 @@ void Element::onFocusLost(float const& timeMs)
 Handler<ElementObject> Element::getElementObject()
 {
 	if(!this->donutObject_.expired()){
-		this->donutObject_.lock();
+		return this->donutObject_.lock();
 	}
 	Handler<World> world = this->world().lock();
 	if(!world){

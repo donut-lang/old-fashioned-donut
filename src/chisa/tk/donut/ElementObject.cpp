@@ -20,6 +20,17 @@
 #include "ElementObject.h"
 #include "WorldObject.h"
 
+namespace donut {
+namespace native {
+
+template <>
+Handler<Object> encode< ::tarte::Handler<chisa::tk::Element> >(Handler<Heap> const& heap, ::tarte::Handler<chisa::tk::Element> val)
+{
+	return val->getElementObject();
+}
+
+}}
+
 namespace chisa {
 namespace tk {
 
@@ -29,6 +40,8 @@ ElementProvider::ElementProvider( Handler<Heap> const& heap, std::string const& 
 :HeapProvider(heap, name)
 ,world_(world)
 {
+	this->registerPureNativeClosure("findElementById", &ElementObject::findElementById);
+	this->registerPureNativeClosure("findRootElement", &ElementObject::findRootElement);
 }
 
 Handler<World> ElementProvider::world() const
@@ -56,5 +69,16 @@ Handler<World> ElementObject::world() const
 	}
 	return w;
 }
+
+Handler<Element> ElementObject::findRootElement()
+{
+	return this->element()->findRootElement();
+}
+
+Handler<Element> ElementObject::findElementById(std::string const& id)
+{
+	return this->element()->findElementById(id);
+}
+
 
 }}
