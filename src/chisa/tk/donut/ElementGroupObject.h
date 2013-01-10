@@ -38,9 +38,8 @@ private:
 	void registerClosures() {
 		this->registerPureNativeClosure("getChildCount", &ObjectT::getChildCount);
 		this->registerPureNativeClosure("getChildAt", &ObjectT::getChildAt);
-		this->registerPureNativeClosure("getFrontChild", &ObjectT::frontChild);
-		this->registerPureNativeClosure("getLastChild", &ObjectT::lastChild);
-		this->registerPureNativeClosure("getLastChild", &ObjectT::lastChild);
+		this->registerPureNativeClosure("frontChild", &ObjectT::frontChild);
+		this->registerPureNativeClosure("lastChild", &ObjectT::lastChild);
 	}
 };
 
@@ -62,13 +61,20 @@ public:
 	void bootstrap(Handler< ::donut::Heap> const& heap, Handler<ElementT> const& element) {
 		this->ElementObjectBaseT<ProviderT, DerivedObjectT, ElementT>::bootstrap(heap, element);
 	}
-public:
+public: /* 副作用なし */
 	std::size_t getChildCount() const noexcept {
 		return this->element()->getChildCount();
 	}
 	Handler<Element> getChildAt( std::size_t const& idx ) const noexcept {
 		return this->element()->getChildAt(idx);
 	}
+	Handler<Element> lastChild() const noexcept {
+		return this->element()->lastChild();
+	}
+	Handler<Element> frontChild() const noexcept {
+		return this->element()->frontChild();
+	}
+public: /* TODO: 副作用あり */
 	void addChild(Handler<Element> const& h) {
 		this->element()->addChild(h);
 	}
@@ -80,12 +86,6 @@ public:
 	}
 	Handler<Element> removeChild(Handler<Element> const& h) {
 		return this->element()->removeChild(h);
-	}
-	Handler<Element> lastChild() const noexcept {
-		return this->element()->lastChild();
-	}
-	Handler<Element> frontChild() const noexcept {
-		return this->element()->frontChild();
 	}
 	std::size_t bringChildToLast(Handler<Element> const& e) {
 		return this->element()->bringChildToLast(e);
