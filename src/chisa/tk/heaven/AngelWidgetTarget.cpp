@@ -16,42 +16,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Angel.h"
-#include "Heaven.h"
-#include "World.h"
-#include "../geom/Area.h"
-#include <tinyxml2.h>
+#include "AngelWidgetTarget.h"
+#include "../World.h"
+#include "../Element.h"
+#include "../element/WidgetElement.h"
+#include "../Widget.h"
 
 namespace chisa {
 namespace tk {
 
-AngelTarget::AngelTarget(const Handler<Angel>& angel)
-:world_(angel->world())
-,heaven_(angel->heaven())
-,angel_(angel)
+
+AngelWidgetTarget::AngelWidgetTarget(const Handler<Angel>& angel, const std::string& id, const std::string& guide)
+:AngelTarget(angel)
+,id_(id)
+,guide_(guide)
 {
 }
 
-geom::Area AngelTarget::findScreenArea()
+geom::Area AngelWidgetTarget::findScreenAreaImpl()
 {
-}
-
-
-Angel::Angel(Handler<Heaven> heaven)
-:heaven_(heaven)
-{
-}
-
-void Angel::render(gl::Canvas& canvas)
-{
-}
-
-void Angel::idle(const float delta_ms)
-{
-}
-
-void Angel::reshape(const geom::Area& area)
-{
+	Handler<World> world = this->world().lock();
+	if( unlikely(!world) ) {
+		return geom::Area();
+	}
+	WidgetElement* element = world->getWidgetById(id_);
+	if( unlikely(!element) ) {
+		return geom::Area();
+	}
+	return element->widget()->findTargetInRoot(guide_);
 }
 
 }}

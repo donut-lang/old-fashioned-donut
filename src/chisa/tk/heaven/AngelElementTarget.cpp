@@ -15,43 +15,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-#include "Angel.h"
-#include "Heaven.h"
-#include "World.h"
-#include "../geom/Area.h"
-#include <tinyxml2.h>
+#include "AngelElementTarget.h"
+#include "../World.h"
+#include "../Element.h"
 
 namespace chisa {
 namespace tk {
 
-AngelTarget::AngelTarget(const Handler<Angel>& angel)
-:world_(angel->world())
-,heaven_(angel->heaven())
-,angel_(angel)
+AngelElementTarget::AngelElementTarget(const Handler<Angel>& angel, const std::string& id)
+:AngelTarget(angel)
+,id_(id)
 {
 }
 
-geom::Area AngelTarget::findScreenArea()
+geom::Area AngelElementTarget::findScreenAreaImpl()
 {
-}
-
-
-Angel::Angel(Handler<Heaven> heaven)
-:heaven_(heaven)
-{
-}
-
-void Angel::render(gl::Canvas& canvas)
-{
-}
-
-void Angel::idle(const float delta_ms)
-{
-}
-
-void Angel::reshape(const geom::Area& area)
-{
+	Handler<World> world = this->world().lock();
+	if( unlikely(!world) ) {
+		return geom::Area();
+	}
+	Handler<Element> element = world->getElementById(id_);
+	if( unlikely(!element) ) {
+		return geom::Area();
+	}
+	return element->lastDrawnAreaInRoot();
 }
 
 }}
