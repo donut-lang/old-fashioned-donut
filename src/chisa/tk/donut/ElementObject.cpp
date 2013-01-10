@@ -37,7 +37,7 @@ namespace tk {
 const static std::string TAG("ElementObject");
 
 ElementProvider::ElementProvider( Handler<Heap> const& heap, std::string const& name, Handler<World> const& world )
-:Super(heap, name)
+:ReactiveProvider(heap, name)
 ,world_(world)
 {
 	this->registerPureNativeClosure("findElementById", &ElementObject::findElementById);

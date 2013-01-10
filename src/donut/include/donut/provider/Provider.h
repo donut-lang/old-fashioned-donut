@@ -33,17 +33,16 @@ template <> bool Provider::registerPureNativeClosure<PureNativeClosureObject::Si
 namespace donut {
 
 template <typename __AntiSideEffect>
-void ReactiveProviderAbstractT<__AntiSideEffect>::bootstrap() {
-	HeapProvider::bootstrap();
-	Handler<Heap> heap = this->heap().lock();
+void ReactiveProviderAspectT<__AntiSideEffect>::bootstrap(ReactiveProvider& self) {
+	Handler<Heap> heap = self.heap().lock();
 	if( unlikely(!heap) ){
 		DONUT_EXCEPTION(Exception, "[BUG] Heap is already dead.");
 	}
 	for( std::pair<std::string, typename ReactiveNativeClosureBaseT<__AntiSideEffect>::Signature> const& p : this->reactiveNativeClosures_ ){
-		this->prototype()->set(
+		self.prototype()->set(
 				heap,
 				p.first,
-				heap->createReactiveNativeClosureObject< __AntiSideEffect >(this->name(), p.first, p.second));
+				heap->createReactiveNativeClosureObject< __AntiSideEffect >(self.name(), p.first, p.second));
 	}
 }
 

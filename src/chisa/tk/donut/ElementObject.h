@@ -35,7 +35,7 @@ class Element;
 class ElementObject;
 
 // すべて共通のポインタとして使えるようにするためのクラス
-class ElementProvider : public ::donut::ReactiveProviderAbstractT<XValue> {
+class ElementProvider : public ::donut::ReactiveProvider {
 private:
 	HandlerW<World> world_;
 protected:
