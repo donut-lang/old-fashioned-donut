@@ -57,6 +57,18 @@ std::function<Handler<Object>(Handler<Heap> const& heap, Handler<Object> const& 
 	};
 }
 
+template <typename R, typename S, typename... Args>
+std::function<Handler<Object>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)> createBindPure(R(S::*f)(Args...))
+{
+	return createBindPure(std::function<R(S*,Args...)>(f));
+}
+
+template <typename R, typename S, typename... Args>
+std::function<Handler<Object>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)> createBindPure(R(*f)(S, Args...))
+{
+	return createBindPure(std::function<R(S, Args...)>(f));
+}
+
 /**********************************************************************************************************************
  * reactive
  **********************************************************************************************************************/
@@ -92,4 +104,18 @@ std::function<std::tuple<Handler<Object>, XValue>(Handler<Heap> const& heap, Han
 				));
 	};
 }
+
+template <typename R, typename S, typename... Args>
+std::function<std::tuple<Handler<Object>, XValue>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)> createBindReactive(std::tuple<R, XValue>(S::*f)(Args...))
+{
+	return createBindReactive(std::function<std::tuple<R, XValue>(S*,Args...)>(f));
+}
+
+
+template <typename R, typename S, typename... Args>
+std::function<std::tuple<Handler<Object>, XValue>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)> createBindReactive(std::tuple<R, XValue>(*f)(S, Args...))
+{
+	return createBindReactive(std::function<std::tuple<R, XValue>(S*,Args...)>(f));
+}
+
 }}
