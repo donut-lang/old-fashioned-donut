@@ -58,25 +58,8 @@ public:
 	inline HandlerW<Angel> const& angel() const noexcept { return this->angel_; };
 public:
 	geom::Area findScreenArea();
-};
-
-class AngelElementTarget : public AngelTarget {
-public:
-	AngelElementTarget(Handler<Angel> const& angel, std::string const& id);
-	virtual ~AngelElementTarget() noexcept = default;
-private:
-	std::string const id_;
-	HandlerW<Element> target_;
-};
-
-class AngelWidgetTarget : public AngelTarget {
-public:
-	AngelWidgetTarget(Handler<Angel> const& angel, std::string const& id, std::string const& guide);
-	virtual ~AngelWidgetTarget() noexcept = default;
-private:
-	std::string const id_;
-	HandlerW<Widget> widget_;
-	std::string const guide_;
+protected:
+	virtual geom::Area findScreenAreaImpl() = 0;
 };
 
 class Angel : public HandlerBody<Angel> {

@@ -16,43 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Angel.h"
-#include "Heaven.h"
-#include "World.h"
-#include "../geom/Area.h"
-#include <tinyxml2.h>
+#pragma once
+
+#include "../Angel.h"
 
 namespace chisa {
 namespace tk {
 
-AngelTarget::AngelTarget(const Handler<Angel>& angel)
-:world_(angel->world())
-,heaven_(angel->heaven())
-,angel_(angel)
-{
-}
-
-geom::Area AngelTarget::findScreenArea()
-{
-}
-
-
-Angel::Angel(Handler<Heaven> heaven)
-:heaven_(heaven)
-{
-}
-
-void Angel::render(gl::Canvas& canvas)
-{
-}
-
-void Angel::idle(const float delta_ms)
-{
-}
-
-void Angel::reshape(const geom::Area& area)
-{
-}
+class AngelElementTarget : public AngelTarget {
+public:
+	AngelElementTarget(Handler<Angel> const& angel, std::string const& id);
+	virtual ~AngelElementTarget() noexcept = default;
+private:
+	std::string const id_;
+	HandlerW<Element> target_;
+private:
+	virtual geom::Area findScreenAreaImpl();
+};
 
 }}
-
