@@ -30,7 +30,7 @@ AngelElementTarget::AngelElementTarget(const Handler<Angel>& angel, const std::s
 
 geom::Area AngelElementTarget::findScreenAreaImpl()
 {
-	Handler<World> world = this->world().lock();
+	Handler<World> world = this->world();
 	if( unlikely(!world) ) {
 		return geom::Area();
 	}

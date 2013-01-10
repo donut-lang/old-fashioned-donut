@@ -25,17 +25,6 @@
 namespace chisa {
 namespace tk {
 
-AngelTarget::AngelTarget(const Handler<Angel>& angel)
-:world_(angel->world())
-,heaven_(angel->heaven())
-,angel_(angel)
-{
-}
-
-geom::Area AngelTarget::findScreenArea()
-{
-	return this->findScreenAreaImpl();
-}
 
 Angel::Angel(Handler<Heaven> heaven)
 :heaven_(heaven)
@@ -65,10 +54,40 @@ void Angel::reshape(const geom::Area& area)
  * Servants
  **********************************************************************************************************************/
 
-Servant::Servant(Handler<Angel> const& angel)
+AngelTarget::AngelTarget(const Handler<Angel>& angel)
 :world_(angel->world())
 ,heaven_(angel->heaven())
 ,angel_(angel)
+{
+}
+
+geom::Area AngelTarget::findScreenArea()
+{
+	return this->findScreenAreaImpl();
+}
+
+Handler<World> AngelTarget::world() const
+{
+	return this->world_.lock();
+}
+Handler<Heaven> AngelTarget::heaven() const
+{
+	return this->heaven_.lock();
+}
+Handler<Angel> AngelTarget::angel() const
+{
+	return this->angel_.lock();
+}
+
+/**********************************************************************************************************************
+ * Servants
+ **********************************************************************************************************************/
+
+Servant::Servant(Handler<AngelTarget> const& angel_target)
+:world_(angel_target->world())
+,heaven_(angel_target->heaven())
+,angel_(angel_target->angel())
+,target_(angel_target)
 {
 
 }
@@ -85,6 +104,10 @@ Handler<Heaven> Servant::heaven() const
 Handler<Angel> Servant::angel() const
 {
 	return this->angel_.lock();
+}
+Handler<AngelTarget> Servant::target() const
+{
+	return this->target_.lock();
 }
 
 }}
