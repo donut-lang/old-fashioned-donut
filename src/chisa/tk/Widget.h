@@ -20,6 +20,7 @@
 #include <tarte/Handler.h>
 #include <tarte/ClassUtil.h>
 #include <tarte/Logger.h>
+//#include "donut/WidgetObject.h"
 #include "../geom/Decl.h"
 
 namespace tinyxml2 {
@@ -44,6 +45,8 @@ class Widget {
 	DEFINE_MEMBER_REF(protected, Logger, log);
 	DEFINE_MEMBER(protected, private, HandlerW<World>, world)
 	DEFINE_MEMBER(protected, private, HandlerW<WidgetElement>, wrapper);
+private: /* どーなつとの接続 */
+//	HandlerW<WidgetObject> donutObject_;
 public:
 	Widget(Logger& log, HandlerW<World> world, tinyxml2::XMLElement* element);
 	virtual ~Widget() noexcept = default;

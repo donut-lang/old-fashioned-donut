@@ -50,10 +50,20 @@ public:
 class ElementObject : public ReactiveNativeObject {
 private:
 	HandlerW<World> world_;
+	Handler<Element> const element_;
 protected:
 	ElementObject(ElementProvider* provider);
 	virtual ~ElementObject() noexcept = default;
 	inline Handler<World> world() const;
+	inline void bootstrap(Handler< ::donut::Heap> const& heap, Handler<Element> const& element){
+		this->ReactiveNativeObject::bootstrap(heap);
+		const_cast<Handler<Element>&>(element_) = this->element_;
+	}
+public:
+	Handler<Element> element() const { return element_; };
+public:
+	Handler<Element> findRootElement();
+	Handler<Element> findElementById(std::string const& id);
 };
 
 /**********************************************************************************************************************
@@ -83,10 +93,9 @@ private:
 template <typename ProviderT, typename DerivedObjectT, typename ElementT>
 class ElementObjectBaseT : public ElementObject
 {
-private:
-	Handler<ElementT> const element_;
 protected:
 	inline ProviderT provider() const noexcept { return static_cast<ProviderT*>(this->ElementObject::provider()); };
+	Handler<ElementT> element() const { return Handler<ElementT>::__internal__fromRawPointerWithoutCheck(static_cast<ElementT*>(ElementObject::element().get())); };
 protected:
 	ElementObjectBaseT(ProviderT* provider)
 	:ElementObject(provider)
@@ -99,8 +108,7 @@ public:
 	}
 public:
 	void bootstrap(Handler< ::donut::Heap> const& heap, Handler<ElementT> const& element) {
-		this->ElementObject::bootstrap(heap);
-		const_cast<Handler<ElementT>& >(this->element_) = element;
+		this->ElementObject::bootstrap(heap, element);
 	}
 };
 
