@@ -61,7 +61,8 @@ protected:
 private:
 	std::vector<ContainerType> children_;
 protected:
-	inline std::vector<ContainerType>& children(){ return this->children_; };
+	inline std::vector<ContainerType>& children() noexcept { return this->children_; };
+	inline std::vector<ContainerType> const& children() const noexcept { return this->children_; };
 public: /* ツリー操作 */
 	virtual std::size_t getChildCount() const noexcept override final{
 		return this->children_.size();
@@ -151,7 +152,7 @@ public: /* ツリー操作 */
 		}
 		return this->self();
 	}
-	virtual void notifyRelayoutFinished() final{
+	virtual void notifyRelayoutFinished() override final{
 		Element::notifyRelayoutFinished();
 		for(ContainerType& child : this->children_) {
 			child.first->notifyRelayoutFinished();
