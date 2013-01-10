@@ -1,0 +1,91 @@
+/**
+ * Chisa
+ * Copyright (C) 2012 psi
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include <functional>
+#include "AngelObject.h"
+#include "ElementObject.h"
+
+namespace chisa {
+namespace tk {
+
+const static std::string TAG("AngelObject");
+
+AngelProvider::AngelProvider(const Handler<Heap>& heap, const Handler<World>& world)
+:Super(heap, "chisa::tk::AngelObject")
+,world_(world)
+{
+	this->registerPureNativeClosure("getElementById",
+			std::function<Handler<ElementObject>(AngelObject* wobj, std::string const& name)>(
+					[&](AngelObject* wobj, std::string const& name)->Handler<ElementObject>{
+				Handler<World> const world = wobj->world();
+				return world->getElementById(name)->getElementObject();
+			}));
+}
+
+Handler<World> AngelProvider::world() const
+{
+	return world_.lock();
+}
+
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+AngelObject::AngelObject(AngelProvider* provider)
+:ReactiveNativeObject(provider)
+,world_(provider->world())
+{
+}
+
+void AngelObject::bootstrap(const Handler<Heap>& heap)
+{
+	this->ReactiveNativeObject::bootstrap(heap);
+}
+
+std::string AngelObject::reprImpl(const Handler<Heap>& heap) const
+{
+	return ::tarte::format("(AngelObject: %p)", this);
+}
+
+Handler<World> AngelObject::world() const
+{
+	return this->world_.lock();
+}
+
+XValue AngelObject::onBack(const Handler<Heap>& heap, const XValue& val)
+{
+	//XXX
+	return XValue();
+}
+
+XValue AngelObject::onForward(const Handler<Heap>& heap, const XValue& val)
+{
+	//XXX
+	return XValue();
+}
+
+XValue AngelObject::saveImpl(const Handler<Heap>& heap)
+{
+	//XXX
+	return XValue();
+}
+
+void AngelObject::loadImpl(const Handler<Heap>& heap, const XValue& data)
+{
+	//XXX
+}
+
+}}
