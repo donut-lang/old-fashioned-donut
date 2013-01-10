@@ -45,7 +45,7 @@ Handler<World> AngelProvider::world() const
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 AngelObject::AngelObject(AngelProvider* provider)
-:ReactiveNativeObject(provider)
+:Super(provider)
 ,world_(provider->world())
 {
 }
@@ -65,16 +65,16 @@ Handler<World> AngelObject::world() const
 	return this->world_.lock();
 }
 
-XValue AngelObject::onBack(const Handler<Heap>& heap, const XValue& val)
+AngelObject::ResultType AngelObject::onBack(const Handler<Heap>& heap, AngelSnap const& val)
 {
 	//XXX
-	return XValue();
+	return AngelObject::ResultType(true, AngelSnap());
 }
 
-XValue AngelObject::onForward(const Handler<Heap>& heap, const XValue& val)
+AngelObject::ResultType AngelObject::onForward(const Handler<Heap>& heap, AngelSnap const& val)
 {
 	//XXX
-	return XValue();
+	return AngelObject::ResultType(true, AngelSnap());
 }
 
 XValue AngelObject::saveImpl(const Handler<Heap>& heap)

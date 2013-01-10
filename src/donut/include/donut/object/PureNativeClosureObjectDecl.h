@@ -18,7 +18,7 @@
 
 #pragma once
 #include <functional>
-#include "Object.h"
+#include "ObjectDecl.h"
 #include "../native/Bind.h"
 
 namespace donut {
@@ -32,25 +32,6 @@ private:
 public:
 	PureNativeClosureObject(HeapProvider* const provider):NativeClosureObject(provider){}
 	virtual ~PureNativeClosureObject() noexcept {};
-	void bootstrap( std::string const& objectProviderName, std::string const& closureName, Signature f );
-protected:
-	virtual std::string reprImpl(Handler<Heap> const& heap) const override;
-private:
-	virtual XValue saveImpl( Handler<Heap> const& heap ) override final;
-	virtual void loadImpl( Handler<Heap> const& heap, XValue const& data ) override final;
-private:
-	virtual Handler<Object> apply(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& arg) const override final;
-};
-
-class ReactiveNativeClosureObject final : public NativeClosureObject {
-public:
-	typedef std::function<std::tuple<Handler<Object>, XValue>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& arg)> Signature;
-	typedef std::tuple<Handler<Object>, XValue>(*Function)(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& arg);
-private:
-	Signature func_;
-public:
-	ReactiveNativeClosureObject(HeapProvider* const provider):NativeClosureObject(provider){}
-	virtual ~ReactiveNativeClosureObject() noexcept {};
 	void bootstrap( std::string const& objectProviderName, std::string const& closureName, Signature f );
 protected:
 	virtual std::string reprImpl(Handler<Heap> const& heap) const override;

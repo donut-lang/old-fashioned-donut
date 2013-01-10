@@ -17,4 +17,16 @@
  */
 
 #pragma once
-#include "ObjectDecl.h"
+#include "ReactiveNativeClosureObjectDecl.h"
+#include "../native/ReactiveNativeClosure.h"
+
+namespace donut {
+
+template <typename __AntiSideEffect>
+void ReactiveNativeClosureObject::bootstrap( std::string const& objectProviderName, std::string const& closureName, typename ReactiveNativeClosureBaseT<__AntiSideEffect>::Signature f )
+{
+	this->NativeClosureObject::bootstrap(objectProviderName, closureName);
+	this->spirit_ = Handler<ReactiveNativeClosure>(new ReactiveNativeClosureBaseT<__AntiSideEffect>(f));
+}
+
+}

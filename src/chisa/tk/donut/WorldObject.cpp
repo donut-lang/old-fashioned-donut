@@ -45,7 +45,7 @@ Handler<World> WorldProvider::world() const
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 WorldObject::WorldObject(WorldProvider* provider)
-:ReactiveNativeObject(provider)
+:Super(provider)
 ,world_(provider->world())
 {
 }
@@ -65,16 +65,16 @@ Handler<World> WorldObject::world() const
 	return this->world_.lock();
 }
 
-XValue WorldObject::onBack(const Handler<Heap>& heap, const XValue& val)
+WorldObject::ResultType WorldObject::onBack(const Handler<Heap>& heap, const XValue& val)
 {
 	//XXX
-	return XValue();
+	return ResultType(true, XValue());
 }
 
-XValue WorldObject::onForward(const Handler<Heap>& heap, const XValue& val)
+WorldObject::ResultType WorldObject::onForward(const Handler<Heap>& heap, const XValue& val)
 {
 	//XXX
-	return XValue();
+	return ResultType(true, XValue());
 }
 
 XValue WorldObject::saveImpl(const Handler<Heap>& heap)

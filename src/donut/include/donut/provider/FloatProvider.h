@@ -17,15 +17,5 @@
  */
 
 #pragma once
-#include "Provider.h"
+#include "FloatProviderDecl.h"
 
-namespace donut {
-
-class FloatObject;
-class FloatProvider final : public HeapProviderBaseT<FloatProvider, FloatObject> {
-public:
-	FloatProvider(Handler<Heap> const& heap);
-	virtual ~FloatProvider() noexcept = default;
-};
-
-}

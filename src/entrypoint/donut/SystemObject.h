@@ -25,7 +25,7 @@ using namespace tarte;
 using namespace donut;
 
 class SystemProvider;
-class SystemObject final: public ReactiveNativeObject {
+class SystemObject final: public ReactiveNativeObjectBaseT<SystemObject, SystemProvider, XValue> {
 private:
 	std::vector<std::string> args_;
 public:
@@ -33,8 +33,8 @@ public:
 	virtual ~SystemObject() noexcept = default;
 protected:
 	virtual std::string reprImpl(Handler<Heap> const& heap) const override final;
-	virtual XValue onBack(Handler<Heap> const& heap, XValue const& val) override final;
-	virtual XValue onForward(Handler<Heap> const& heap, XValue const& val) override final;
+	virtual std::tuple<bool, XValue> onBack(Handler<Heap> const& heap, XValue const& val) override final;
+	virtual std::tuple<bool, XValue> onForward(Handler<Heap> const& heap, XValue const& val) override final;
 	virtual XValue saveImpl( Handler<Heap> const& heap ) override final;
 	virtual void loadImpl( Handler<Heap> const& heap, XValue const& data ) override final;
 public:

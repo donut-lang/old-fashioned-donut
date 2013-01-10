@@ -17,22 +17,4 @@
  */
 
 #pragma once
-#include "Provider.h"
-
-namespace donut {
-
-class PureNativeClosureObject;
-class PureNativeClosureProvider final : public HeapProviderBaseT<PureNativeClosureProvider, PureNativeClosureObject> {
-public:
-	PureNativeClosureProvider( Handler<Heap> const& heap );
-	virtual ~PureNativeClosureProvider() noexcept = default;
-};
-
-class ReactiveNativeClosureObject;
-class ReactiveNativeClosureProvider final : public HeapProviderBaseT<ReactiveNativeClosureProvider, ReactiveNativeClosureObject> {
-public:
-	ReactiveNativeClosureProvider( Handler<Heap> const& heap );
-	virtual ~ReactiveNativeClosureProvider() noexcept = default;
-};
-
-}
+#include "NativeClosureProviderDecl.h"

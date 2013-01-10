@@ -25,11 +25,12 @@
 #include "../Decl.h"
 #include "../Clock.h"
 
-#include "Object.h"
-#include "../provider/Provider.h"
+#include "ObjectDecl.h"
+#include "../provider/ProviderDecl.h"
+#include "../provider/NativeClosureProviderDecl.h"
 
-#include "DonutClosureObject.h"
-#include "NativeClosureObject.h"
+#include "DonutClosureObjectDecl.h"
+#include "NativeClosureObjectDecl.h"
 
 namespace donut {
 using namespace tarte;
@@ -93,7 +94,8 @@ public: /* オブジェクトを作ってそれをプールに登録し、メモ
 	Handler<Object> createBool(bool const& val);
 	Handler<Object> createNull();
 	Handler<PureNativeClosureObject> createPureNativeClosureObject(std::string const& objectProviderName, std::string const& closureName, PureNativeClosureObject::Signature sig);
-	Handler<ReactiveNativeClosureObject> createReactiveNativeClosureObject(std::string const& objectProviderName, std::string const& closureName, ReactiveNativeClosureObject::Signature f);
+	template <typename __AntiSideEffect>
+	Handler<ReactiveNativeClosureObject> createReactiveNativeClosureObject(std::string const& objectProviderName, std::string const& closureName, typename ReactiveNativeClosureBaseT<__AntiSideEffect>::Signature f);
 private:
 	Handler<HomuraObject> createHomuraObject();
 public: /* ヒープ管理 */

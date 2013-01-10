@@ -204,14 +204,6 @@ Handler<PureNativeClosureObject> Heap::createPureNativeClosureObject(std::string
 	return obj;
 }
 
-Handler<ReactiveNativeClosureObject> Heap::createReactiveNativeClosureObject(std::string const& objectProviderName, std::string const& closureName, ReactiveNativeClosureObject::Signature f)
-{
-	Handler<ReactiveNativeClosureObject> obj(this->reactiveNativeClosureProvider_->newInstance(objectProviderName, closureName, f));
-	this->registerObject(obj);
-
-	return obj;
-}
-
 Handler<HomuraObject> Heap::createHomuraObject()
 {
 	Handler<HomuraObject> obj(this->homuraProvider_->newInstance(self()));
