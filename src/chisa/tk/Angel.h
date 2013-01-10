@@ -43,6 +43,25 @@ class World;
 class Angel;
 class Element;
 class Widget;
+class AngelTarget;
+
+class Servant : public HandlerBody<Servant> {
+private:
+	HandlerW<World> world_;
+	HandlerW<Heaven> heaven_;
+	HandlerW<Angel> angel_;
+	HandlerW<AngelTarget> target_;
+public:
+	Handler<World> world() const;
+	Handler<Heaven> heaven() const;
+	Handler<Angel> angel() const;
+	Handler<AngelTarget> target() const;
+protected:
+	Servant(Handler<AngelTarget> const& angel_target);
+public:
+	virtual ~Servant() noexcept = default;
+	inline bool onFree() const noexcept { return false; };
+};
 
 class AngelTarget : public HandlerBody<AngelTarget> {
 protected:
@@ -54,38 +73,24 @@ private:
 	HandlerW<World> const world_;
 	HandlerW<Heaven> const heaven_;
 	HandlerW<Angel> const angel_;
+private:
+	std::vector<Handler<Servant> > servants_;
 public:
-	inline HandlerW<World> const& world() const noexcept { return this->world_; };
-	inline HandlerW<Heaven> const& heaven() const noexcept { return this->heaven_; };
-	inline HandlerW<Angel> const& angel() const noexcept { return this->angel_; };
+	Handler<World> world() const;
+	Handler<Heaven> heaven() const;
+	Handler<Angel> angel() const;
 public:
 	geom::Area findScreenArea();
 protected:
 	virtual geom::Area findScreenAreaImpl() = 0;
 };
 
-class Servant : public HandlerBody<Servant> {
-private:
-	HandlerW<World> world_;
-	HandlerW<Heaven> heaven_;
-	HandlerW<Angel> angel_;
-	Handler<AngelTarget> target_;
-public:
-	Handler<World> world() const;
-	Handler<Heaven> heaven() const;
-	Handler<Angel> angel() const;
-	inline Handler<AngelTarget> const& target() const { return this->target_; };
-protected:
-	Servant(Handler<Angel> const& angel);
-public:
-	virtual ~Servant() noexcept = default;
-	inline bool onFree() const noexcept { return false; };
-};
-
 class Angel : public HandlerBody<Angel> {
 private:
 	HandlerW<World> world_;
 	HandlerW<Heaven> heaven_;
+private:
+	std::vector<Handler<AngelTarget> > targets_;
 public:
 	Angel(Handler<Heaven> heaven);
 	virtual ~Angel() noexcept = default;
