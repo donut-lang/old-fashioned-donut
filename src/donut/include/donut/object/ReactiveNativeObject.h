@@ -21,6 +21,8 @@
 
 namespace donut {
 
+// TODO: シリアライズできる型なら何でも扱えるようにするべき。
+// TODO: Providerでの関数はimplパターンを利用して任意の型の関数を扱えるようにできないか？
 class ReactiveNativeObject : public NativeObject {
 private:
 	std::vector<std::pair<timestamp_t, XValue> > reactions_;
