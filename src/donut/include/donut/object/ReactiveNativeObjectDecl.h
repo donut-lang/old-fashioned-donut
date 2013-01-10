@@ -73,6 +73,7 @@ public:
 
 #define INJECT_REACTIVE_OBJECT_ASPECT(__AntiSideEffect__, __Self__) \
 private:\
+	friend class ReactiveNativeObjectAspectT<__AntiSideEffect__, __Self__>;\
 	ReactiveNativeObjectAspectT<__AntiSideEffect__, __Self__> __reactive_aspect__;\
 	typedef typename ReactiveNativeObjectAspectT<__AntiSideEffect__, __Self__>::ResultType _ResultType;\
 private:\
@@ -93,21 +94,20 @@ private:\
 		this->loadImpl(heap, top->get<XValue>("impl"));\
 	}\
 	virtual void onBackNotifyImpl(Handler<Heap> const& heap) override final {\
-		this->__reactive_aspect__.onBackNotify((*this), heap);\
+		this->__reactive_aspect__.onBackNotify(static_cast<__Self__&>(*this), heap);\
 	}\
 	virtual void onForwardNotifyImpl(Handler<Heap> const& heap) override final {\
-		this->__reactive_aspect__.onForwardNotify((*this), heap);\
+		this->__reactive_aspect__.onForwardNotify(static_cast<__Self__&>(*this), heap);\
 	}\
 	virtual void onDiscardHistoryNotifyImpl(Handler<Heap> const& heap) override final {\
-		this->__reactive_aspect__.onDiscardHistoryNotify((*this), heap);\
+		this->__reactive_aspect__.onDiscardHistoryNotify(static_cast<__Self__&>(*this), heap);\
 	}\
 	virtual void onDiscardFutureNotifyImpl(Handler<Heap> const& heap) override final {\
-		this->__reactive_aspect__.onDiscardFutureNotify((*this), heap);\
+		this->__reactive_aspect__.onDiscardFutureNotify(static_cast<__Self__&>(*this), heap);\
 	}\
-public:\
+protected: \
 	virtual void onFutureDiscarded(Handler<Heap> const& heap) {} \
 	virtual void onHistoryDiscarded(Handler<Heap> const& heap) {} \
-public: \
 	virtual _ResultType onBack(Handler<Heap> const& heap, __AntiSideEffect__ const& val) = 0;\
 	virtual _ResultType onForward(Handler<Heap> const& heap, __AntiSideEffect__ const& val) = 0;\
 	virtual XValue saveImpl( Handler<Heap> const& heap ) override = 0;\

@@ -31,10 +31,11 @@ private:
 public:
 	SystemObject(HeapProvider* const provider);
 	virtual ~SystemObject() noexcept = default;
-protected:
 	virtual std::string reprImpl(Handler<Heap> const& heap) const override final;
+public:
 	virtual std::tuple<bool, XValue> onBack(Handler<Heap> const& heap, XValue const& val) override final;
 	virtual std::tuple<bool, XValue> onForward(Handler<Heap> const& heap, XValue const& val) override final;
+private:
 	virtual XValue saveImpl( Handler<Heap> const& heap ) override final;
 	virtual void loadImpl( Handler<Heap> const& heap, XValue const& data ) override final;
 public:
