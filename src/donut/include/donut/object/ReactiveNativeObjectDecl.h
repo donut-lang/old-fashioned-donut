@@ -34,18 +34,17 @@ template <typename __Derived, typename __Provider, typename AntiSideEffect>
 class ReactiveNativeObjectBaseT;
 
 template <typename __AntiSideEffect=XValue>
-class ReactiveNativeObjectT : public ReactiveNativeObject {
+class ReactiveNativeObjectAbstractT : public ReactiveNativeObject {
 protected:
 	typedef __AntiSideEffect AntiSideEffect;
-	typedef ReactiveNativeObjectT<__AntiSideEffect> Super;
+	typedef ReactiveNativeObjectAbstractT<__AntiSideEffect> Super;
 	typedef std::tuple<bool, __AntiSideEffect> ResultType;
 private:
 	std::vector<std::pair<timestamp_t, __AntiSideEffect> > reactions_;
 	int index_; //次に順方向で挿入されるべきインデックスを示す。0なら戻るものがないのを示す。
-private:
-	template <typename __Derived, typename __Provider, typename _AntiSideEffect> friend class ReactiveNativeObjectBaseT;
-	ReactiveNativeObjectT(HeapProvider* const provider);
-	virtual ~ReactiveNativeObjectT() noexcept = default;
+protected:
+	ReactiveNativeObjectAbstractT(HeapProvider* const provider);
+	virtual ~ReactiveNativeObjectAbstractT() noexcept = default;
 public:
 	void bootstrap(Handler<Heap> const& heap);
 	virtual XValue save( Handler<Heap> const& heap ) override final;
@@ -72,13 +71,13 @@ protected:
 
 
 template <typename __Derived, typename __Provider, typename __AntiSideEffect=XValue>
-class ReactiveNativeObjectBaseT : public ReactiveNativeObjectT<__AntiSideEffect> {
+class ReactiveNativeObjectBaseT : public ReactiveNativeObjectAbstractT<__AntiSideEffect> {
 protected:
 	typedef __AntiSideEffect AntiSideEffect;
 	typedef ReactiveNativeObjectBaseT<__Derived, __Provider, __AntiSideEffect> Super;
 	typedef std::tuple<bool, __AntiSideEffect> ResultType;
 	ReactiveNativeObjectBaseT(HeapProvider* const provider)
-	:ReactiveNativeObjectT<AntiSideEffect>(provider){}
+	:ReactiveNativeObjectAbstractT<AntiSideEffect>(provider){}
 	virtual ~ReactiveNativeObjectBaseT() noexcept = default;
 protected:
 	virtual ResultType onBack(Handler<Heap> const& heap, AntiSideEffect const& val) override = 0;

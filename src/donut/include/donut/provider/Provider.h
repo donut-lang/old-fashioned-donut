@@ -33,7 +33,7 @@ template <> bool Provider::registerPureNativeClosure<PureNativeClosureObject::Si
 namespace donut {
 
 template <typename __AntiSideEffect>
-void ReactiveProviderT<__AntiSideEffect>::bootstrap() {
+void ReactiveProviderAbstractT<__AntiSideEffect>::bootstrap() {
 	HeapProvider::bootstrap();
 	Handler<Heap> heap = this->heap().lock();
 	if( unlikely(!heap) ){
