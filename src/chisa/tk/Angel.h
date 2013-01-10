@@ -47,7 +47,9 @@ class Widget;
 class AngelTarget : public HandlerBody<AngelTarget> {
 protected:
 	AngelTarget(Handler<Angel> const& angel);
+public:
 	virtual ~AngelTarget() noexcept = default;
+	inline bool onFree() const noexcept { return false; };
 private:
 	HandlerW<World> const world_;
 	HandlerW<Heaven> const heaven_;
@@ -73,6 +75,11 @@ public:
 	Handler<Heaven> heaven() const;
 	Handler<Angel> angel() const;
 	inline Handler<AngelTarget> const& target() const { return this->target_; };
+protected:
+	Servant(Handler<Angel> const& angel);
+public:
+	virtual ~Servant() noexcept = default;
+	inline bool onFree() const noexcept { return false; };
 };
 
 class Angel : public HandlerBody<Angel> {
