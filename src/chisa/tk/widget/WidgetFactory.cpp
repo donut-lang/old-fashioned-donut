@@ -48,7 +48,8 @@ Widget* WidgetFactory::createWidget(std::string const& klass, tinyxml2::XMLEleme
 	if(it == this->widgetMap_.end()){
 		return nullptr;
 	}
-	return it->second(log_, world_, elem);
+	VectorMap<std::string, ConstructorType>::Pair const& pair = *it;
+	return pair.second(log_, world_, elem);
 }
 
 void WidgetFactory::registerDonutProvider(Handler< ::donut::Heap> const& heap)
