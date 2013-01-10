@@ -53,13 +53,13 @@ void ReactiveNativeObjectT<AntiSideEffect>::load( Handler<Heap> const& heap, XVa
 template <typename AntiSideEffect>
 int inline ReactiveNativeObjectT<AntiSideEffect>::findUpperIndex( timestamp_t const& t ) {
 	return std::distance(this->reactions_.begin(),
-			std::lower_bound(this->reactions_.begin(), this->reactions_.end(), t, PairCompare<timestamp_t, AntiSideEffect>()));
+			std::upper_bound(this->reactions_.begin(), this->reactions_.end(), t, PairCompare<timestamp_t, AntiSideEffect>()));
 }
 
 template <typename AntiSideEffect>
 int inline ReactiveNativeObjectT<AntiSideEffect>::findLowerIndex( timestamp_t const& t ) {
 	return std::distance(this->reactions_.begin(),
-			std::upper_bound(this->reactions_.begin(), this->reactions_.end(), t, PairCompare<timestamp_t, AntiSideEffect>()));
+			std::lower_bound(this->reactions_.begin(), this->reactions_.end(), t, PairCompare<timestamp_t, AntiSideEffect>()));
 }
 
 template <typename AntiSideEffect>
