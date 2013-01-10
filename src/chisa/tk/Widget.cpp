@@ -31,12 +31,45 @@ Widget::Widget(Logger& log, HandlerW<World> world, tinyxml2::XMLElement* element
 {
 }
 
-geom::Vector Widget::calcAbsolutePosition()
+void Widget::render(gl::Canvas& cv, geom::Area const& area)
+{
+	this->render(cv, area);
+	this->lastDrawnArea_ = area;
+}
+void Widget::idle(const float delta_ms)
+{
+	this->idleImpl(delta_ms);
+}
+void Widget::reshape(geom::Box const& areaSize)
+{
+	this->reshapeImpl(areaSize);
+	this->size_ = areaSize;
+}
+geom::Box Widget::measure(geom::Box const& constraintSize)
+{
+	return this->measureImpl(constraintSize);
+}
+
+
+geom::Area Widget::findTarget(std::string const& target)
+{
+	return this->findTargetImpl(target);
+}
+geom::Area Widget::findTargetInRoot(std::string const& target)
 {
 	Handler<WidgetElement> const elm = this->wrapper_.lock();
 	if(!elm){
-		return geom::Vector();
+		return geom::Area();
 	}
+	return elm->calcAreaInRoot( findTarget(target) );
+}
+geom::Area Widget::findTargetInElement(std::string const& target)
+{
+	Handler<WidgetElement> const elm = this->wrapper_.lock();
+	if(!elm){
+		return geom::Area();
+	}
+	return elm->calcAreaInRoot( findTarget(target) );
 }
 
 void Widget::requestRelayout()

@@ -39,7 +39,7 @@ NesScreenWidget::NesScreenWidget(chisa::Logger& log, chisa::HandlerW<chisa::tk::
 	}
 }
 
-void NesScreenWidget::render(chisa::gl::Canvas& cv, chisa::geom::Area const& area)
+void NesScreenWidget::renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const& area)
 {
 	chisa::Handler<nes::NesGeist> geist = this->geist_.lock();
 	if(!geist){
@@ -53,16 +53,16 @@ void NesScreenWidget::render(chisa::gl::Canvas& cv, chisa::geom::Area const& are
 	}
 }
 
-void NesScreenWidget::idle(const float delta_ms)
+void NesScreenWidget::idleImpl(const float delta_ms)
 {
 }
 
-void NesScreenWidget::reshape(chisa::geom::Box const& areaSize)
+void NesScreenWidget::reshapeImpl(chisa::geom::Box const& areaSize)
 {
 
 }
 
-chisa::geom::Box NesScreenWidget::measure(chisa::geom::Box const& constraintSize)
+chisa::geom::Box NesScreenWidget::measureImpl(chisa::geom::Box const& constraintSize)
 {
 	return chisa::geom::Box(256,240);
 }

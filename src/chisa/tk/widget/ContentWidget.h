@@ -38,10 +38,10 @@ class ContentWidget: public chisa::tk::Widget {
 	DEFINE_MEMBER(private, private, float, lastWidth);
 	DEFINE_MEMBER(private, private, geom::Box, lastSize);
 public:
-	virtual void render(gl::Canvas& cv, geom::Area const& area) override;
-	virtual void idle(const float delta_ms) override;
-	virtual void reshape(geom::Box const& areaSize) override;
-	virtual geom::Box measure(geom::Box const& constraintSize) override;
+	virtual void renderImpl(gl::Canvas& cv, geom::Area const& area) override;
+	virtual void idleImpl(const float delta_ms) override;
+	virtual void reshapeImpl(geom::Box const& areaSize) override;
+	virtual geom::Box measureImpl(geom::Box const& constraintSize) override;
 public:
 	virtual bool onDownRaw(float const& timeMs, geom::Point const& ptInWidget) override;
 	virtual bool onUpRaw(float const& timeMs, geom::Point const& ptInWidget) override;

@@ -49,10 +49,10 @@ public:
 private:
 	inline float rowHeight() const noexcept { return this->numRenderer_.maxHeight(); };
 private:
-	virtual void render(chisa::gl::Canvas& cv, chisa::geom::Area const& area) override final;
-	virtual void idle(const float delta_ms) override final;
-	virtual void reshape(chisa::geom::Box const& areaSize) override final;
-	virtual chisa::geom::Box measure(chisa::geom::Box const& constraintSize) override final;
+	virtual void renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const& area) override final;
+	virtual void idleImpl(const float delta_ms) override final;
+	virtual void reshapeImpl(chisa::geom::Box const& areaSize) override final;
+	virtual chisa::geom::Box measureImpl(chisa::geom::Box const& constraintSize) override final;
 };
 
 }

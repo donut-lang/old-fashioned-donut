@@ -40,21 +40,21 @@ CHISA_WIDGET_SUBKLASS_CONSTRUCTOR_DEF(ContentWidget)
 	this->renderTree_ = Handler<doc::RenderTree>(new doc::RenderTree(this->log(), world.lock()->drawableManager()));
 }
 
-void ContentWidget::render(gl::Canvas& cv, geom::Area const& area)
+void ContentWidget::renderImpl(gl::Canvas& cv, geom::Area const& area)
 {
 	this->renderTree_->render(cv, area, 0.0f);
 }
 
-void ContentWidget::idle(const float delta_ms)
+void ContentWidget::idleImpl(const float delta_ms)
 {
 }
 
-void ContentWidget::reshape(geom::Box const& areaSize)
+void ContentWidget::reshapeImpl(geom::Box const& areaSize)
 {
 	this->measure(areaSize);
 }
 
-geom::Box ContentWidget::measure(geom::Box const& constraintSize)
+geom::Box ContentWidget::measureImpl(geom::Box const& constraintSize)
 {
 	if(geom::isUnspecified(this->lastWidth()) || std::fabs(constraintSize.width()-this->lastWidth()) >= geom::VerySmall){
 		this->lastWidth(constraintSize.width());

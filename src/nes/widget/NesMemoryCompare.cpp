@@ -73,7 +73,7 @@ NesMemoryCompare::NesMemoryCompare(chisa::Logger& log, chisa::HandlerW<chisa::tk
 	}
 }
 
-void NesMemoryCompare::render(chisa::gl::Canvas& cv, const chisa::geom::Area& area)
+void NesMemoryCompare::renderImpl(chisa::gl::Canvas& cv, const chisa::geom::Area& area)
 {
 	using namespace chisa::geom;
 	using namespace chisa::gl;
@@ -156,15 +156,15 @@ void NesMemoryCompare::render(chisa::gl::Canvas& cv, const chisa::geom::Area& ar
 	cv.drawLine(2, DarkGray, Point(addrWidth_, area.y()), Point(addrWidth_, area.y()+area.height()));
 }
 
-void NesMemoryCompare::idle(const float delta_ms)
+void NesMemoryCompare::idleImpl(const float delta_ms)
 {
 }
 
-void NesMemoryCompare::reshape(const chisa::geom::Box& areaSize)
+void NesMemoryCompare::reshapeImpl(const chisa::geom::Box& areaSize)
 {
 }
 
-chisa::geom::Box NesMemoryCompare::measure(const chisa::geom::Box& constraintSize)
+chisa::geom::Box NesMemoryCompare::measureImpl(const chisa::geom::Box& constraintSize)
 {
 	MemoryComparator& cmp = this->geist_.lock()->machine()->debugger().comparator();
 	float const height = rowHeight() *  (cmp.candidates()+1);
