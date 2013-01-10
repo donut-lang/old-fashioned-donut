@@ -33,7 +33,7 @@ Widget::Widget(Logger& log, HandlerW<World> world, tinyxml2::XMLElement* element
 
 void Widget::render(gl::Canvas& cv, geom::Area const& area)
 {
-	this->render(cv, area);
+	this->renderImpl(cv, area);
 	this->lastDrawnArea_ = area;
 }
 void Widget::idle(const float delta_ms)
