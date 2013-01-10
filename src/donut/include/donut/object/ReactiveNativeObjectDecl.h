@@ -30,9 +30,6 @@ protected:
 	std::string reprImpl(Handler<Heap> const& heap) const override;
 };
 
-template <typename __Derived, typename __Provider, typename AntiSideEffect>
-class ReactiveNativeObjectBaseT;
-
 template <typename __AntiSideEffect=XValue>
 class ReactiveNativeObjectAbstractT : public ReactiveNativeObject {
 protected:
