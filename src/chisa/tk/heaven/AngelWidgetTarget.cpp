@@ -46,9 +46,12 @@ geom::Area AngelWidgetTarget::findScreenAreaImpl()
 	return element->widget()->findTargetInRoot(guide_);
 }
 
-bool AngelWidgetTarget::matchToWidgetTarget(const std::string& widgetId, const std::string& widgetGuide) const noexcept
+Handler<AngelWidgetTarget> AngelWidgetTarget::matchToWidgetTarget(const std::string& widgetId, const std::string& widgetGuide) noexcept
 {
-	return this->id_ == widgetId && this->guide_ == widgetGuide;
+	return
+			(this->id_ == widgetId && this->guide_ == widgetGuide) ?
+					Handler<AngelWidgetTarget>::__internal__fromRawPointerWithoutCheck(this) :
+					Handler<AngelWidgetTarget>();
 }
 
 }}

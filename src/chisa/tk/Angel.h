@@ -63,6 +63,10 @@ public:
 	inline bool onFree() const noexcept { return false; };
 };
 
+
+class AngelElementTarget;
+class AngelWidgetTarget;
+
 class AngelTarget : public HandlerBody<AngelTarget> {
 protected:
 	AngelTarget(Handler<Angel> const& angel);
@@ -83,8 +87,8 @@ public:
 	geom::Area findScreenArea();
 	void attatchServant( Handler<Servant> const& servant );
 public:
-	virtual bool matchToElementTarget(std::string const& elementId) const noexcept { return false; };
-	virtual bool matchToWidgetTarget(std::string const& widgetId, std::string const& widgetGuide) const noexcept { return false; };
+	virtual Handler<AngelElementTarget> matchToElementTarget(std::string const& elementId) noexcept;
+	virtual Handler<AngelWidgetTarget> matchToWidgetTarget(std::string const& widgetId, std::string const& widgetGuide) noexcept;
 protected:
 	virtual geom::Area findScreenAreaImpl() = 0;
 };
@@ -111,8 +115,10 @@ protected:
 	virtual void idleImpl(const float delta_ms) = 0;
 	virtual void reshapeImpl(geom::Area const& area) = 0;
 public:
-	void registerServantToWidget( std::string const& widgetId, std::string const& widgetGuide, Handler<Servant> servant );
-	void registerServantToElement( std::string const& elementId , Handler<Servant> servant );
+	Handler<AngelWidgetTarget> newWidgetTarget(std::string const& widgetId, std::string const& widgetGuide);
+	Handler<AngelElementTarget> newElementTarget(std::string const& elementId);
+	Handler<AngelWidgetTarget> findWidgetTarget(const std::string& widgetId, const std::string& widgetGuide);
+	Handler<AngelElementTarget> findElementTarget(const std::string& elementId);
 };
 
 }}
