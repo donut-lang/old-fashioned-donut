@@ -156,6 +156,7 @@ public:
 #define INJECT_REACTIVE_PROVIDER_ASPECT(__AntiSideEffect__, __Super__) \
 public:\
 	typedef __AntiSideEffect__ AntiSideEffect;\
+	typedef typename ReactiveNativeClosureBaseT<__AntiSideEffect__>::ResultType ResultType;\
 private:\
 	ReactiveProviderAspectT<__AntiSideEffect__> __reactive_aspect__;\
 private:\

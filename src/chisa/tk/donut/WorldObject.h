@@ -30,6 +30,13 @@ namespace tk {
 using namespace donut;
 
 struct WorldSideEffect{
+	enum {
+		CreateAngel,
+		RemoveAngel
+	} op;
+	union {
+
+	};
 	template <typename Arc>
 	void serialize(Arc& arc) {
 

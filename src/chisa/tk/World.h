@@ -70,17 +70,28 @@ public:
 	void render(gl::Canvas& canvas);
 	void idle(const float delta_ms);
 	void reshape(geom::Area const& area);
-private:
-	void popElement();
-	void pushElement(std::string const& filename);
+	/******************************************************************************
+	 * ウィジット管理
+	 ******************************************************************************/
 public:
 	WidgetElement* getWidgetById(std::string const& name);
 	bool replaceWidget(std::string const& widgetId, WidgetElement* const newHandler);
 	bool deleteWidget(std::string const& widgetId, WidgetElement* const handler);
 	Widget* createWidget(std::string const& klass, tinyxml2::XMLElement* elem);
+	/******************************************************************************
+	 * エレメント管理
+	 ******************************************************************************/
 public:
-	Handler<Element> getElementByPoint(geom::Point const& screenVector);
-	Handler<Element> getElementById(std::string const& id);
+	Handler<Element> findElementByPoint(geom::Point const& screenVector);
+	Handler<Element> findElementById(std::string const& id);
+private:
+	void popElement();
+	void pushElement(std::string const& filename);
+	/******************************************************************************
+	 * Angel管理
+	 ******************************************************************************/
+public:
+
 	/******************************************************************************
 	 * タスク管理
 	 ******************************************************************************/

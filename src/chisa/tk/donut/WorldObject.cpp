@@ -29,12 +29,15 @@ WorldProvider::WorldProvider(const Handler<Heap>& heap, const Handler<World>& wo
 :Super(heap, "chisa::tk::WorldObject")
 ,world_(world)
 {
-	this->registerPureNativeClosure("getElementById",
-			std::function<Handler<ElementObject>(WorldObject* wobj, std::string const& name)>(
-					[&](WorldObject* wobj, std::string const& name)->Handler<ElementObject>{
+	this->registerPureNativeClosure("findElementById",
+			[&](WorldObject* wobj, std::string const& name) {
 				Handler<World> const world = wobj->world();
-				return world->getElementById(name)->getElementObject();
-			}));
+				return world->findElementById(name)->getElementObject();
+			});
+	this->registerReactiveNativeClosure("invokeAngel", [](WorldObject* obj)->ResultType{
+
+		return std::tuple<Handler<Object>,bool,WorldSideEffect>();
+	});
 }
 
 Handler<World> WorldProvider::world() const

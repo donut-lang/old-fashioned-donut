@@ -29,12 +29,6 @@ AngelProvider::AngelProvider(const Handler<Heap>& heap, const Handler<World>& wo
 :Super(heap, "chisa::tk::AngelObject")
 ,world_(world)
 {
-	this->registerPureNativeClosure("getElementById",
-			std::function<Handler<ElementObject>(AngelObject* wobj, std::string const& name)>(
-					[&](AngelObject* wobj, std::string const& name)->Handler<ElementObject>{
-				Handler<World> const world = wobj->world();
-				return world->getElementById(name)->getElementObject();
-			}));
 }
 
 Handler<World> AngelProvider::world() const
