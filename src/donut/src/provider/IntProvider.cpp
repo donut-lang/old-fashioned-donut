@@ -29,57 +29,57 @@ static const std::string TAG("IntProvider");
 IntProvider::IntProvider(Handler<Heap> const& heap)
 :Provider(heap, "Integer")
 {
-	this->registerPureNativeClosure("opAdd", std::function<int(int, int)>([&](int self, int v) {
+	this->registerPureNativeClosure("opAdd", [&](int self, int v) {
 		return self + v;
-	}));
-	this->registerPureNativeClosure("opBitAnd", std::function<int(int, int)>([&](int self, int v) {
+	});
+	this->registerPureNativeClosure("opBitAnd", [&](int self, int v) {
 		return self & v;
-	}));
-	this->registerPureNativeClosure("opBitOr", std::function<int(int, int)>([&](int self, int v) {
+	});
+	this->registerPureNativeClosure("opBitOr", [&](int self, int v) {
 		return self | v;
-	}));
-	this->registerPureNativeClosure("opSub", std::function<int(int, int)>([&](int self, int v) {
+	});
+	this->registerPureNativeClosure("opSub", [&](int self, int v) {
 		return self-v;
-	}));
-	this->registerPureNativeClosure("opMul", std::function<int(int, int)>([&](int self, int v) {
+	});
+	this->registerPureNativeClosure("opMul", [&](int self, int v) {
 		return self*v;
-	}));
-	this->registerPureNativeClosure("opDiv", std::function<int(int, int)>([&](int self, int v) {
+	});
+	this->registerPureNativeClosure("opDiv", [&](int self, int v) {
 		return self/v;
-	}));
-	this->registerPureNativeClosure("opPlus", std::function<int(int)>([&](int self) {
+	});
+	this->registerPureNativeClosure("opPlus", [&](int self) {
 		return +self;
-	}));
-	this->registerPureNativeClosure("opMinus", std::function<int(int)>([&](int self) {
+	});
+	this->registerPureNativeClosure("opMinus", [&](int self) {
 		return -self;
-	}));
-	this->registerPureNativeClosure("toFloat", std::function<float(int)>([&](int self) {
+	});
+	this->registerPureNativeClosure("toFloat", [&](int self) {
 		return static_cast<float>(self);
-	}));
-	this->registerPureNativeClosure("opMod", std::function<int(int, int)>([&](int self, int v) {
+	});
+	this->registerPureNativeClosure("opMod", [&](int self, int v) {
 		return self % v;
-	}));
-	this->registerPureNativeClosure("opLt", std::function<bool(int, int)>([&](int self, int v) {
+	});
+	this->registerPureNativeClosure("opLt", [&](int self, int v) {
 		return self < v;
-	}));
-	this->registerPureNativeClosure("opLe", std::function<bool(int, int)>([&](int self, int v) {
+	});
+	this->registerPureNativeClosure("opLe", [&](int self, int v) {
 		return self <= v;
-	}));
-	this->registerPureNativeClosure("opGt", std::function<bool(int, int)>([&](int self, int v) {
+	});
+	this->registerPureNativeClosure("opGt", [&](int self, int v) {
 		return self > v;
-	}));
-	this->registerPureNativeClosure("opGe", std::function<bool(int, int)>([&](int self, int v) {
+	});
+	this->registerPureNativeClosure("opGe", [&](int self, int v) {
 		return self >= v;
-	}));
-	this->registerPureNativeClosure("opEq", std::function<bool(int, int)>([&](int self, int v) {
+	});
+	this->registerPureNativeClosure("opEq", [&](int self, int v) {
 		return self == v;
-	}));
-	this->registerPureNativeClosure("opNe", std::function<bool(int, int)>([&](int self, int v) {
+	});
+	this->registerPureNativeClosure("opNe", [&](int self, int v) {
 		return self != v;
-	}));
-	this->registerPureNativeClosure("toString", std::function<std::string(int)>([&](int self) {
+	});
+	this->registerPureNativeClosure("toString", [&](int self) {
 		return toString(self);
-	}));
+	});
 }
 
 std::string IntProvider::repr(const Object* ptr) const

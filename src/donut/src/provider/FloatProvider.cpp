@@ -29,48 +29,48 @@ static const std::string TAG("FloatProvider");
 FloatProvider::FloatProvider(Handler<Heap> const& heap)
 :Super(heap, "Float")
 {
-	this->registerPureNativeClosure("opAdd", std::function<float(float, float)>([&](float self, float v) {
+	this->registerPureNativeClosure("opAdd", [&](float self, float v) {
 		return self+v;
-	}));
-	this->registerPureNativeClosure("opSub", std::function<float(float, float)>([&](float self, float v) {
+	});
+	this->registerPureNativeClosure("opSub", [&](float self, float v) {
 		return self-v;
-	}));
-	this->registerPureNativeClosure("opMul", std::function<float(float, float)>([&](float self, float v) {
+	});
+	this->registerPureNativeClosure("opMul", [&](float self, float v) {
 		return self*v;
-	}));
-	this->registerPureNativeClosure("opDiv", std::function<float(float, float)>([&](float self, float v) {
+	});
+	this->registerPureNativeClosure("opDiv", [&](float self, float v) {
 		return self/v;
-	}));
-	this->registerPureNativeClosure("opPlus", std::function<float(float)>([&](float self) {
+	});
+	this->registerPureNativeClosure("opPlus", [&](float self) {
 		return self;
-	}));
-	this->registerPureNativeClosure("opMinus", std::function<float(float)>([&](float self) {
+	});
+	this->registerPureNativeClosure("opMinus", [&](float self) {
 		return -self;
-	}));
-	this->registerPureNativeClosure("opLt", std::function<bool(float, float)>([&](float self, float v) {
+	});
+	this->registerPureNativeClosure("opLt", [&](float self, float v) {
 		return self < v;
-	}));
-	this->registerPureNativeClosure("opLe", std::function<bool(float, float)>([&](float self, float v) {
+	});
+	this->registerPureNativeClosure("opLe", [&](float self, float v) {
 		return self <= v;
-	}));
-	this->registerPureNativeClosure("opGt", std::function<bool(float, float)>([&](float self, float v) {
+	});
+	this->registerPureNativeClosure("opGt", [&](float self, float v) {
 		return self > v;
-	}));
-	this->registerPureNativeClosure("opGe", std::function<bool(float, float)>([&](float self, float v) {
+	});
+	this->registerPureNativeClosure("opGe", [&](float self, float v) {
 		return self >= v;
-	}));
-	this->registerPureNativeClosure("opEq", std::function<bool(float, float)>([&](float self, float v) {
+	});
+	this->registerPureNativeClosure("opEq", [&](float self, float v) {
 		return self == v;
-	}));
-	this->registerPureNativeClosure("opNe", std::function<bool(float, float)>([&](float self, float v) {
+	});
+	this->registerPureNativeClosure("opNe", [](float self, float v) {
 		return self != v;
-	}));
-	this->registerPureNativeClosure("toInteger", std::function<int(float)>([&](float self) {
+	});
+	this->registerPureNativeClosure("toInteger", [&](float self) {
 		return static_cast<int>(self);
-	}));
-	this->registerPureNativeClosure("toString", std::function<std::string(float)>([&](float self) {
+	});
+	this->registerPureNativeClosure("toString", [&](float self) {
 		return ::tarte::toString(self);
-	}));
+	});
 }
 
 }

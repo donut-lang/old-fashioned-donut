@@ -29,22 +29,18 @@ static const std::string TAG("BoolProvider");
 BoolProvider::BoolProvider(Handler<Heap> const& heap)
 :Provider(heap, "Boolean")
 {
-	this->registerPureNativeClosure("opAnd", std::function<bool(bool, bool)>(
-			[&](bool self, bool v)->bool{
+	this->registerPureNativeClosure("opAnd", [&](bool self, bool v){
 		return self && v;
-	}));
-	this->registerPureNativeClosure("opOr", std::function<bool(bool, bool)>(
-			[&](bool self, bool v)->bool{
+	});
+	this->registerPureNativeClosure("opOr", [&](bool self, bool v){
 		return self || v;
-	}));
-	this->registerPureNativeClosure("opNot", std::function<bool(bool)>(
-			[&](bool self)->bool{
+	});
+	this->registerPureNativeClosure("opNot", [&](bool self){
 		return !self;
-	}));
-	this->registerPureNativeClosure("toString", std::function<std::string(bool)>(
-			[&](bool self)->std::string{
+	});
+	this->registerPureNativeClosure("toString", [&](bool self){
 		return ::tarte::toString(self);
-	}));
+	});
 }
 
 std::string BoolProvider::repr(const Object* ptr) const

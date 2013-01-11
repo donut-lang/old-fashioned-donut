@@ -47,6 +47,8 @@ private:
 template <typename ProviderT, typename DerivedObjectT, typename ElementT, typename AntiSideEffectT>
 class ElementGroupObjectBaseT : public ElementObjectBaseT<ProviderT, DerivedObjectT, ElementT, AntiSideEffectT>
 {
+public:
+	typedef ElementGroupObjectBaseT<ProviderT, DerivedObjectT, ElementT, AntiSideEffectT> Super;
 protected:
 	ElementGroupObjectBaseT(ProviderT* provider)
 	:ElementObjectBaseT<ProviderT, DerivedObjectT, ElementT, AntiSideEffectT>(provider)
