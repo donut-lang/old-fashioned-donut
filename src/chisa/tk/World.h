@@ -45,6 +45,7 @@ class ActionMediator;
 class Heaven;
 class WidgetElement;
 class ElementFactory;
+class Angel;
 
 class WidgetFactory;
 
@@ -91,7 +92,7 @@ private:
 	 * Angel管理
 	 ******************************************************************************/
 public:
-
+	Handler<Angel> findAngelById( std::string const& id );
 	/******************************************************************************
 	 * タスク管理
 	 ******************************************************************************/

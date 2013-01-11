@@ -41,5 +41,10 @@ geom::Area AngelElementTarget::findScreenAreaImpl()
 	return element->lastDrawnAreaInRoot();
 }
 
+bool AngelElementTarget::matchToElementTarget(const std::string& elementId) const noexcept
+{
+	return this->id_ == elementId;
+}
+
 }}
 
