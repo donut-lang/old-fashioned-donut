@@ -52,6 +52,8 @@ class Servant;
 
 class WidgetFactory;
 
+class Patron;
+
 class World : public HandlerBody<World> {
 private:
 	DEFINE_MEMBER_REF(public, Logger, log);
@@ -69,8 +71,10 @@ private:
 	DEFINE_MEMBER(public, private, ElementFactory*, elementFactory);
 	DEFINE_MEMBER(public, private, WidgetFactory*, widgetFactory);
 	DEFINE_MEMBER(private, private, ActionMediator*, gestureMediator);
-	DEFINE_MEMBER(public, private, Handler< ::chisa::tk::Patron>, patron);
+	Handler< ::chisa::tk::Patron> patron_;
 	DEFINE_MEMBER(public, private, Handler< ::donut::Donut>, donut);
+public:
+	Handler< ::chisa::tk::Patron> const& patron() const noexcept { return this->patron_; };
 public:
 	void render(gl::Canvas& canvas);
 	void idle(const float delta_ms);

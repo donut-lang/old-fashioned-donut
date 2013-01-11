@@ -61,7 +61,7 @@ public:
 	HeavenObject(HeavenProvider* provider);
 	virtual ~HeavenObject() noexcept = default;
 public:
-	void bootstrap(Handler<Heap> const& heap);
+	void bootstrap(Handler<Heap> const& heap, Handler<Heaven> const& heaven);
 public:
 	Handler<Heaven> heaven() const;
 private:
