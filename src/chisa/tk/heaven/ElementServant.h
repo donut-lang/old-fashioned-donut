@@ -28,9 +28,8 @@ private:
 	Handler<Element> element_;
 public:
 	inline Handler<Element> const& element() const { return this->element_; };
-protected:
-	ElementServant(Handler<AngelTarget> const& angelTarget);
 public:
+	ElementServant(Handler<AngelTarget> const& angelTarget);
 	virtual ~ElementServant() noexcept = default;
 };
 

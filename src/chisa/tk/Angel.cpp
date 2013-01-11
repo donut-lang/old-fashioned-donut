@@ -20,8 +20,11 @@
 #include "Heaven.h"
 #include "World.h"
 #include "../geom/Area.h"
+#include "../gl/Color.h"
 #include "heaven/AngelElementTarget.h"
 #include "heaven/AngelWidgetTarget.h"
+#include "heaven/HaloServant.h"
+#include "heaven/ElementServant.h"
 #include <tinyxml2.h>
 
 namespace chisa {
@@ -84,6 +87,15 @@ Handler<Angel> AngelTarget::angel() const
 void AngelTarget::attatchServant(const Handler<Servant>& servant)
 {
 	this->servants_.push_back(servant);
+}
+
+Handler<HaloServant> AngelTarget::newHaloServant( gl::Color const& color )
+{
+	return Handler<HaloServant>(new HaloServant(self(), color));
+}
+Handler<ElementServant> AngelTarget::newElementServant( Handler<Element> const& element )
+{
+	return Handler<ElementServant>(new ElementServant(self()));
 }
 
 Handler<AngelElementTarget> AngelTarget::matchToElementTarget(std::string const& elementId) noexcept

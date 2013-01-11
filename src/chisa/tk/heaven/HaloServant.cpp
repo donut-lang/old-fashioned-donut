@@ -22,7 +22,7 @@
 namespace chisa {
 namespace tk {
 
-HaloServant::HaloServant(Handler<AngelTarget> const& angelTarget)
+HaloServant::HaloServant(Handler<AngelTarget> const& angelTarget, gl::Color const& color)
 :Servant(angelTarget)
 {
 

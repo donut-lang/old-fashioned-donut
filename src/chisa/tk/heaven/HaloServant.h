@@ -19,18 +19,18 @@
 #pragma once
 
 #include "../Angel.h"
+#include "../../gl/Color.h"
 
 namespace chisa {
 namespace tk {
 
 class HaloServant : public Servant {
 private:
-	Handler<Element> element_;
+	gl::Color color_;
 public:
-	inline Handler<Element> const& element() const { return this->element_; };
-protected:
-	HaloServant(Handler<AngelTarget> const& angelTarget);
+	inline gl::Color const& color() const { return this->color_; };
 public:
+	HaloServant(Handler<AngelTarget> const& angelTarget, gl::Color const& color);
 	virtual ~HaloServant() noexcept = default;
 };
 
