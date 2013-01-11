@@ -34,7 +34,7 @@ geom::Area AngelElementTarget::findScreenAreaImpl()
 	if( unlikely(!world) ) {
 		return geom::Area();
 	}
-	Handler<Element> element = world->getElementById(id_);
+	Handler<Element> element = world->findElementById(id_);
 	if( unlikely(!element) ) {
 		return geom::Area();
 	}

@@ -70,7 +70,7 @@ void ActionMediator::onTouchDown(float const& timeMs, const unsigned int pointer
 		this->releaseSession(timeMs, pointerIndex);
 	}
 	if(Handler<World> world = this->world().lock()){
-		ActionSession* const session = new ActionSession(this->log(), pointerIndex, world->getElementByPoint(screenPoint), screenPoint, timeMs);
+		ActionSession* const session = new ActionSession(this->log(), pointerIndex, world->findElementByPoint(screenPoint), screenPoint, timeMs);
 		this->session_[pointerIndex] = session;
 	}
 }
