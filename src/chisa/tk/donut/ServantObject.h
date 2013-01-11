@@ -51,7 +51,8 @@ public:
 class ServantObject : public ReactiveNativeObject {
 private:
 	Handler<Servant> servant_;
-public:
+protected:
+	typedef ServantObject Super;
 	ServantObject(ServantProvider* provider);
 	virtual ~ServantObject() noexcept = default;
 public:

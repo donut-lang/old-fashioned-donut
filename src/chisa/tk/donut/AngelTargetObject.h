@@ -42,6 +42,7 @@ class AngelTargetObject : public ReactiveNativeObject {
 private:
 	Handler<AngelTarget> target_;
 protected:
+	typedef AngelTargetObject Super;
 	AngelTargetObject(AngelTargetProvider* provider);
 	virtual ~AngelTargetObject() noexcept = default;
 public:
