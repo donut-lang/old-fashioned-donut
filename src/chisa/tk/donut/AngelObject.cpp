@@ -25,28 +25,38 @@ namespace tk {
 
 const static std::string TAG("AngelObject");
 
-AngelProvider::AngelProvider(const Handler<Heap>& heap, const Handler<World>& world)
-:Super(heap, "chisa::tk::AngelObject")
-,world_(world)
+AngelProvider::AngelProvider(Handler<Heap> const& heap, std::string const& provname, Handler<Heaven> const& heaven)
+:ReactiveProvider(heap, provname)
+,heaven_(heaven)
 {
 }
 
-Handler<World> AngelProvider::world() const
+Handler<Heaven> AngelProvider::heaven() const
 {
-	return world_.lock();
+	return heaven_.lock();
 }
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 AngelObject::AngelObject(AngelProvider* provider)
-:Super(provider)
-,world_(provider->world())
+:ReactiveNativeObject(provider)
 {
 }
 
-void AngelObject::bootstrap(const Handler<Heap>& heap)
+void AngelObject::bootstrap(const Handler<Heap>& heap, Handler<Angel> const& angel)
 {
 	this->ReactiveNativeObject::bootstrap(heap);
+	this->angel_ = angel;
+}
+
+Handler<World> AngelObject::world() const
+{
+	return angel_->world();
+}
+
+Handler<Angel> AngelObject::angel() const
+{
+	return this->angel_;
 }
 
 std::string AngelObject::reprImpl(const Handler<Heap>& heap) const
@@ -54,40 +64,105 @@ std::string AngelObject::reprImpl(const Handler<Heap>& heap) const
 	return ::tarte::format("(AngelObject: %p)", this);
 }
 
-Handler<World> AngelObject::world() const
-{
-	return this->world_.lock();
-}
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-AngelObject::ResultType AngelObject::onBack(const Handler<Heap>& heap, AngelSnap const& val)
-{
-	//XXX
-	return AngelObject::ResultType(true, AngelSnap());
-}
-
-AngelObject::ResultType AngelObject::onForward(const Handler<Heap>& heap, AngelSnap const& val)
-{
-	//XXX
-	return AngelObject::ResultType(true, AngelSnap());
-}
-
-XValue AngelObject::saveImpl(const Handler<Heap>& heap)
-{
-	//XXX
-	return XValue();
-}
-
-void AngelObject::onFutureDiscarded(const Handler<Heap>& heap)
+LoneAngelProvider::LoneAngelProvider(const Handler<Heap>& heap, const Handler<Heaven>& heaven)
+:AngelProvider(heap, "LoneAngelProvider", heaven)
 {
 }
 
-void AngelObject::onHistoryDiscarded(const Handler<Heap>& heap)
+LoneAngelObject::LoneAngelObject(AngelProvider* provider)
+:AngelObject(provider)
 {
 }
 
-void AngelObject::loadImpl(const Handler<Heap>& heap, const XValue& data)
+void LoneAngelObject::bootstrap(const Handler<Heap>& heap, const Handler<LoneAngel>& angel)
 {
-	//XXX
+}
+
+Handler<World> LoneAngelObject::world() const
+{
+}
+
+Handler<LoneAngel> LoneAngelObject::angel() const
+{
+}
+
+void LoneAngelObject::onFutureDiscarded(const Handler<Heap>& heap)
+{
+}
+
+void LoneAngelObject::onHistoryDiscarded(const Handler<Heap>& heap)
+{
+}
+
+LoneAngelObject::ResultType LoneAngelObject::onBack(const Handler<Heap>& heap, const AntiSideEffect& val)
+{
+}
+
+LoneAngelObject::ResultType LoneAngelObject::onForward(const Handler<Heap>& heap, const AntiSideEffect& val)
+{
+}
+
+XValue LoneAngelObject::saveImpl(const Handler<Heap>& heap)
+{
+}
+
+void LoneAngelObject::loadImpl(const Handler<Heap>& heap, const XValue& data)
+{
+}
+
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+TwinAngelProvider::TwinAngelProvider(const Handler<Heap>& heap, const Handler<Heaven>& heaven)
+:AngelProvider(heap, "TwinAngelProvider", heaven)
+{
+}
+
+
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+TwinAngelObject::TwinAngelObject(AngelProvider* provider)
+:AngelObject(provider)
+{
+}
+
+void TwinAngelObject::bootstrap(const Handler<Heap>& heap, const Handler<TwinAngel>& angel)
+{
+}
+
+Handler<World> TwinAngelObject::world() const
+{
+}
+
+Handler<TwinAngel> TwinAngelObject::angel() const
+{
+}
+
+void TwinAngelObject::onFutureDiscarded(const Handler<Heap>& heap)
+{
+}
+
+void TwinAngelObject::onHistoryDiscarded(const Handler<Heap>& heap)
+{
+}
+
+TwinAngelObject::ResultType TwinAngelObject::onBack(const Handler<Heap>& heap, const AntiSideEffect& val)
+{
+}
+
+TwinAngelObject::ResultType TwinAngelObject::onForward(const Handler<Heap>& heap, const AntiSideEffect& val)
+{
+}
+
+XValue TwinAngelObject::saveImpl(const Handler<Heap>& heap)
+{
+}
+
+void TwinAngelObject::loadImpl(const Handler<Heap>& heap, const XValue& data)
+{
 }
 
 }}
+
+
