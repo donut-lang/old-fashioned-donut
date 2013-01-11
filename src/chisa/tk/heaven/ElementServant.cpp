@@ -28,7 +28,7 @@ ElementServant::ElementServant(Handler<AngelTarget> const& angelTarget)
 
 }
 
-Handler< ::donut::Object> ElementServant::createDonutObject()
+Handler< ::donut::Object> ElementServant::createDonutObject(Handler< ::donut::Heap> const& heap)
 {
 }
 

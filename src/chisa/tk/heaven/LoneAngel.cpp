@@ -41,7 +41,7 @@ void LoneAngel::reshapeImpl(const geom::Area& area)
 {
 }
 
-Handler< ::donut::Object> LoneAngel::createDonutObject()
+Handler< ::donut::Object> LoneAngel::createDonutObject(Handler< ::donut::Heap> const& heap)
 {
 }
 

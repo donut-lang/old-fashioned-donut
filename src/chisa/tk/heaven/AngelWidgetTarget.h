@@ -34,7 +34,7 @@ private:
 private:
 	virtual geom::Area findScreenAreaImpl();
 	virtual Handler<AngelWidgetTarget> matchToWidgetTarget(std::string const& widgetId, std::string const& widgetGuide) noexcept override final;
-	virtual Handler< ::donut::Object> createDonutObject() override final;
+	virtual Handler< ::donut::Object> createDonutObject(Handler< ::donut::Heap> const& heap) override final;
 };
 
 }}
