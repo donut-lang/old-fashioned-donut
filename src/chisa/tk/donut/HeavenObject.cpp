@@ -20,6 +20,8 @@
 #include "HeavenObject.h"
 #include "ElementObject.h"
 #include "../Heaven.h"
+#include "../Angel.h"
+#include "AngelObject.h"
 
 namespace chisa {
 namespace tk {
@@ -29,9 +31,23 @@ const static std::string TAG("HeavenObject");
 HeavenProvider::HeavenProvider(const Handler<Heap>& heap, const Handler<Heaven>& heaven)
 :Super(heap, "chisa::tk::HeavenObject")
 {
-	this->registerReactiveNativeClosure("invokeAngel", [](HeavenObject* obj)->ResultType{
-
-		return std::tuple<Handler<Object>,bool,HeavenSideEffect>();
+	this->registerPureNativeClosure("findAngelById", [this](HeavenObject* obj, std::string id)->Handler< ::donut::Object>{
+		return obj->heaven()->findAngelById(id)->donutObject(this->heap().lock());
+	});
+	this->registerPureNativeClosure("findAngelById", [this](HeavenObject* obj, AngelObject* ang){
+		return obj->heaven()->findAngelId(ang->angel());
+	});
+	this->registerPureNativeClosure("newTwinAngel", [this](HeavenObject* obj){
+		return obj->heaven()->newTwinAngel()->donutObject(this->heap().lock());
+	});
+	this->registerPureNativeClosure("newLoneAngel", [this](HeavenObject* obj){
+		return obj->heaven()->newLoneAngel()->donutObject(this->heap().lock());
+	});
+	this->registerReactiveNativeClosure("attatchAngel", [this](HeavenObject* obj, AngelObject* angel)->std::tuple<std::string,bool,HeavenSideEffect>{
+		HeavenSideEffect side;
+		side.op = HeavenSideEffect::RemoveAngel;
+		std::string id = obj->heaven()->attatchAngel(angel->angel());
+		return std::tuple<std::string,bool,HeavenSideEffect>(id, true, side);
 	});
 }
 
@@ -46,6 +62,11 @@ void HeavenObject::bootstrap(const Handler<Heap>& heap, Handler<Heaven> const& h
 {
 	this->Super::bootstrap(heap);
 	this->heaven_ = heaven;
+}
+
+Handler<Heaven> HeavenObject::heaven() const
+{
+	return this->heaven_.lock();
 }
 
 std::string HeavenObject::reprImpl(const Handler<Heap>& heap) const
