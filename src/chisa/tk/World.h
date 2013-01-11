@@ -86,6 +86,7 @@ public:
 	 * エレメント管理
 	 ******************************************************************************/
 public:
+	Handler<Element> realizeElement( std::string const& templateId );
 	Handler<Element> findElementByPoint(geom::Point const& screenVector);
 	Handler<Element> findElementById(std::string const& id);
 private:
