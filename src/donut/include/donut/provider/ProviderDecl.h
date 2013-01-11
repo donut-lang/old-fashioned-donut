@@ -108,7 +108,7 @@ namespace internal {
 template <typename __AntiSideEffect, typename __F>
 struct _Reactive_ClosureRegisterer{
 	static inline bool exec(ReactiveProviderAspectT< __AntiSideEffect> * self, std::string const& name, __F f){
-		return (!self->reactiveNativeClosures_.have(name)) && self->reactiveNativeClosures_.update( name, native::createBindReactive<__AntiSideEffect>(f) );
+		return (!self->reactiveNativeClosures_.have(name)) && self->reactiveNativeClosures_.update( name, native::createBindReactive(f) );
 	}
 };
 template <typename __AntiSideEffect>
