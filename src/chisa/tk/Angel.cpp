@@ -58,7 +58,7 @@ void Angel::reshape(const geom::Area& area)
 Handler< ::donut::Object> Angel::donutObject(Handler< ::donut::Heap> const& heap)
 {
 	if(this->donutObject_.expired()){
-		Handler< ::donut::Object> obj(createDonutObject(Handler< ::donut::Heap> const& heap));
+		Handler< ::donut::Object> obj(createDonutObject(heap));
 		return obj;
 	}
 	return this->donutObject_.lock();
@@ -151,7 +151,7 @@ Handler<AngelWidgetTarget> AngelTarget::matchToWidgetTarget(std::string const& w
 Handler< ::donut::Object> AngelTarget::donutObject(Handler< ::donut::Heap> const& heap)
 {
 	if(this->donutObject_.expired()){
-		Handler< ::donut::Object> obj(createDonutObject(Handler< ::donut::Heap> const& heap));
+		Handler< ::donut::Object> obj(createDonutObject(heap));
 		return obj;
 	}
 	return this->donutObject_.lock();
@@ -191,7 +191,7 @@ Handler<AngelTarget> Servant::target() const
 Handler< ::donut::Object> Servant::donutObject(Handler< ::donut::Heap> const& heap)
 {
 	if(this->donutObject_.expired()){
-		Handler< ::donut::Object> obj(createDonutObject(Handler< ::donut::Heap> const& heap));
+		Handler< ::donut::Object> obj(createDonutObject(heap));
 		return obj;
 	}
 	return this->donutObject_.lock();
