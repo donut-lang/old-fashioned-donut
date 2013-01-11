@@ -30,61 +30,61 @@ static const std::string TAG("StringProvider");
 StringProvider::StringProvider(Handler<Heap> const& heap )
 :Super(heap, "String")
 {
-	this->registerPureNativeClosure("toInteger", std::function<int(StringObject*)>([&](StringObject* self) {
+	this->registerPureNativeClosure("toInteger", [&](StringObject* self) {
 		return parseAs<int>(self->toString(this->heap().lock()), 0);
-	}));
-	this->registerPureNativeClosure("toFloat", std::function<float(StringObject*)>([&](StringObject* self) {
+	});
+	this->registerPureNativeClosure("toFloat", [&](StringObject* self) {
 		return parseAs<float>(self->toString(this->heap().lock()));
-	}));
-	this->registerPureNativeClosure("toBoolean", std::function<bool(StringObject*)>([&](StringObject* self) {
+	});
+	this->registerPureNativeClosure("toBoolean", [&](StringObject* self) {
 		return parseAs<bool>(self->toString(this->heap().lock()));
-	}));
-	this->registerPureNativeClosure("opAdd", std::function<std::string(StringObject*,StringObject*)>([&](StringObject* self, StringObject* other) {
+	});
+	this->registerPureNativeClosure("opAdd", [&](StringObject* self, StringObject* other) {
 		std::string const str = self->toString(this->heap().lock());
 		std::string const ostr = other->toString(this->heap().lock());
 		return str + ostr;
-	}));
-	this->registerPureNativeClosure("opEq", std::function<bool(StringObject*,StringObject*)>([&](StringObject* self, StringObject* other) {
+	});
+	this->registerPureNativeClosure("opEq", [&](StringObject* self, StringObject* other) {
 		std::string const str = self->toString(this->heap().lock());
 		std::string const ostr = other->toString(this->heap().lock());
 		return str == ostr;
-	}));
-	this->registerPureNativeClosure("opNe", std::function<bool(StringObject*,StringObject*)>([&](StringObject* self, StringObject* other) {
+	});
+	this->registerPureNativeClosure("opNe", [&](StringObject* self, StringObject* other) {
 		std::string const str = self->toString(this->heap().lock());
 		std::string const ostr = other->toString(this->heap().lock());
 		return str != ostr;
-	}));
-	this->registerPureNativeClosure("opLt", std::function<bool(StringObject*,StringObject*)>([&](StringObject* self, StringObject* other) {
+	});
+	this->registerPureNativeClosure("opLt", [&](StringObject* self, StringObject* other) {
 		std::string const str = self->toString(this->heap().lock());
 		std::string const ostr = other->toString(this->heap().lock());
 		return str < ostr;
-	}));
-	this->registerPureNativeClosure("opLe", std::function<bool(StringObject*,StringObject*)>([&](StringObject* self, StringObject* other) {
+	});
+	this->registerPureNativeClosure("opLe", [&](StringObject* self, StringObject* other) {
 		std::string const str = self->toString(this->heap().lock());
 		std::string const ostr = other->toString(this->heap().lock());
 		return str <= ostr;
-	}));
-	this->registerPureNativeClosure("opGt", std::function<bool(StringObject*,StringObject*)>([&](StringObject* self, StringObject* other) {
+	});
+	this->registerPureNativeClosure("opGt", [&](StringObject* self, StringObject* other) {
 		std::string const str = self->toString(this->heap().lock());
 		std::string const ostr = other->toString(this->heap().lock());
 		return str > ostr;
-	}));
-	this->registerPureNativeClosure("opGe", std::function<bool(StringObject*,StringObject*)>([&](StringObject* self, StringObject* other) {
+	});
+	this->registerPureNativeClosure("opGe", [&](StringObject* self, StringObject* other) {
 		std::string const str = self->toString(this->heap().lock());
 		std::string const ostr = other->toString(this->heap().lock());
 		return str >= ostr;
-	}));
-	this->registerPureNativeClosure("opMul", std::function<std::string(StringObject*, int)>([&](StringObject* self, int times) {
+	});
+	this->registerPureNativeClosure("opMul", [&](StringObject* self, int times) {
 		std::string const str = self->toString(this->heap().lock());
 		std::stringstream ss;
 		for(int i=0;i<times;++i){
 			ss << str;
 		}
 		return ss.str();
-	}));
-	this->registerPureNativeClosure("toString", std::function<StringObject*(StringObject*)>([&](StringObject* self) {
+	});
+	this->registerPureNativeClosure("toString", [&](StringObject* self) {
 		return self;
-	}));
+	});
 }
 
 }

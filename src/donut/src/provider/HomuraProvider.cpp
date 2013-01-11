@@ -28,7 +28,7 @@ static const std::string TAG("HomuraProvider");
 HomuraProvider::HomuraProvider(Handler<Heap> const& heap)
 :Super(heap, "Homura")
 {
-	this->registerPureNativeClosure("tick", std::function<timestamp_t(HomuraObject*)>([&](HomuraObject* hom) {
+	this->registerPureNativeClosure("tick", [&](HomuraObject* hom) {
 		Handler<Heap> heap = this->heap().lock();
 		if(!heap){
 			DONUT_EXCEPTION(Exception, "[BUG] Heap is already dead.");
@@ -37,15 +37,15 @@ HomuraProvider::HomuraProvider(Handler<Heap> const& heap)
 		timestamp_t const t = clk->now();
 		clk->tickFromMachine();
 		return t;
-	}));
-	this->registerPureNativeClosure("now", std::function<timestamp_t(HomuraObject*)>([&](HomuraObject* hom) {
+	});
+	this->registerPureNativeClosure("now", [&](HomuraObject* hom) {
 		Handler<Heap> heap = this->heap().lock();
 		if(!heap){
 			DONUT_EXCEPTION(Exception, "[BUG] Heap is already dead.");
 		}
 		return heap->clock()->now();
-	}));
-	this->registerPureNativeClosure("seek", std::function<timestamp_t(HomuraObject*, timestamp_t t)>([&](HomuraObject* hom, timestamp_t t) {
+	});
+	this->registerPureNativeClosure("seek", [&](HomuraObject* hom, timestamp_t t) {
 		Handler<Heap> heap = this->heap().lock();
 		if(!heap){
 			DONUT_EXCEPTION(Exception, "[BUG] Heap is already dead.");
@@ -53,8 +53,8 @@ HomuraProvider::HomuraProvider(Handler<Heap> const& heap)
 		Handler<Clock> clk(heap->clock());
 		clk->seekFromMachine(t);
 		return t;
-	}));
-	this->registerPureNativeClosure("discardHistory", std::function<timestamp_t(HomuraObject*)>([&](HomuraObject* hom) {
+	});
+	this->registerPureNativeClosure("discardHistory", [&](HomuraObject* hom) {
 		Handler<Heap> heap = this->heap().lock();
 		if(!heap){
 			DONUT_EXCEPTION(Exception, "[BUG] Heap is already dead.");
@@ -62,7 +62,7 @@ HomuraProvider::HomuraProvider(Handler<Heap> const& heap)
 		Handler<Clock> clk(heap->clock());
 		clk->discardHistoryFromMachine();
 		return clk->now();
-	}));
+	});
 }
 
 }
