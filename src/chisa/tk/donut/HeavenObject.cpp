@@ -34,7 +34,7 @@ HeavenProvider::HeavenProvider(const Handler<Heap>& heap, const Handler<Heaven>&
 	this->registerPureNativeClosure("findAngelById", [this](HeavenObject* obj, std::string id)->Handler< ::donut::Object>{
 		return obj->heaven()->findAngelById(id)->donutObject(this->heap().lock());
 	});
-	this->registerPureNativeClosure("findAngelById", [this](HeavenObject* obj, AngelObject* ang){
+	this->registerPureNativeClosure("findAngelId", [this](HeavenObject* obj, AngelObject* ang){
 		return obj->heaven()->findAngelId(ang->angel());
 	});
 	this->registerPureNativeClosure("newTwinAngel", [this](HeavenObject* obj){
