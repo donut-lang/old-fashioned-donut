@@ -19,6 +19,8 @@
 #include "Heaven.h"
 #include "Angel.h"
 #include "World.h"
+#include "heaven/LoneAngel.h"
+#include "heaven/TwinAngel.h"
 
 namespace chisa {
 namespace tk {
@@ -51,6 +53,53 @@ void Heaven::reshape(const geom::Area& area)
 		Handler<Angel> const& angel = p.second;
 		angel->reshape(area);
 	}
+}
+
+Handler<Angel> Heaven::findAngelById(const std::string& id)
+{
+	VectorMap<std::string, Handler<Angel> >::Iterator it = this->angelMap_.find(id);
+	VectorMap<std::string, Handler<Angel> >::Pair& p = *it;
+	if( unlikely(it == angelMap_.end()) ) {
+		return Handler<Angel>();
+	}
+	return p.second;
+}
+
+std::string Heaven::findAngelId(const Handler<Angel>& angel)
+{
+	for(VectorMap<std::string, Handler<Angel> >::Pair& p : this->angelMap_ ) {
+		Handler<Angel> const& angel = p.second;
+		if(p.second == angel){
+			return p.first;
+		}
+	}
+	return "";
+}
+
+void Heaven::attatchAngel(const std::string& id, const Handler<Angel>& angel)
+{
+	this->angelMap_.update(id, angel);
+}
+
+std::string Heaven::attatchAngel(const Handler<Angel>& angel)
+{
+	do{
+		std::string const id( ::tarte::randomString(10));
+		if( this->angelMap_.insert(id, angel) ) {
+			return id;
+		}
+	} while(true);
+	return "";
+}
+
+Handler<Angel> Heaven::newTwinAngel()
+{
+	return Handler<Angel>( new TwinAngel(self()) );
+}
+
+Handler<Angel> Heaven::newLoneAngel()
+{
+	return Handler<Angel>( new LoneAngel(self()) );
 }
 
 }}
