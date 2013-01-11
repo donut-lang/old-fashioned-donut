@@ -23,6 +23,7 @@
 #include <tarte/ClassUtil.h>
 #include <tarte/Handler.h>
 #include <tarte/VectorMap.h>
+#include <donut/Donut.h>
 #include "../geom/Area.h"
 
 namespace tinyxml2 {
@@ -55,16 +56,21 @@ private:
 	HandlerW<Heaven> heaven_;
 	HandlerW<Angel> angel_;
 	HandlerW<AngelTarget> target_;
+private:
+	HandlerW< ::donut::Object> donutObject_;
 public:
 	Handler<World> world() const;
 	Handler<Heaven> heaven() const;
 	Handler<Angel> angel() const;
 	Handler<AngelTarget> target() const;
+	Handler< ::donut::Object> donutObject();
 protected:
 	Servant(Handler<AngelTarget> const& angel_target);
 public:
 	virtual ~Servant() noexcept = default;
 	inline bool onFree() const noexcept { return false; };
+protected:
+	virtual Handler< ::donut::Object> createDonutObject() = 0;
 };
 
 
@@ -82,11 +88,14 @@ private:
 	HandlerW<Heaven> const heaven_;
 	HandlerW<Angel> const angel_;
 private:
+	HandlerW< ::donut::Object> donutObject_;
+private:
 	std::vector<Handler<Servant> > servants_;
 public:
 	Handler<World> world() const;
 	Handler<Heaven> heaven() const;
 	Handler<Angel> angel() const;
+	Handler< ::donut::Object> donutObject();
 public:
 	geom::Area findScreenArea();
 	void attatchServant( Handler<Servant> const& servant );
@@ -97,6 +106,7 @@ public:
 	virtual Handler<AngelElementTarget> matchToElementTarget(std::string const& elementId) noexcept;
 	virtual Handler<AngelWidgetTarget> matchToWidgetTarget(std::string const& widgetId, std::string const& widgetGuide) noexcept;
 protected:
+	virtual Handler< ::donut::Object> createDonutObject() = 0;
 	virtual geom::Area findScreenAreaImpl() = 0;
 };
 
@@ -105,14 +115,18 @@ private:
 	HandlerW<World> world_;
 	HandlerW<Heaven> heaven_;
 private:
+	HandlerW< ::donut::Object> donutObject_;
+private:
 	std::vector<Handler<AngelTarget> > targets_;
-public:
+protected:
 	Angel(Handler<Heaven> heaven);
+public:
 	virtual ~Angel() noexcept = default;
 	inline bool onFree() const noexcept { return false; };
 public:
 	Handler<World> world() const;
 	Handler<Heaven> heaven() const;
+	Handler< ::donut::Object> donutObject();
 public:
 	void render(gl::Canvas& canvas);
 	void idle(const float delta_ms);
@@ -121,6 +135,8 @@ protected:
 	virtual void renderImpl(gl::Canvas& canvas) = 0;
 	virtual void idleImpl(const float delta_ms) = 0;
 	virtual void reshapeImpl(geom::Area const& area) = 0;
+protected:
+	virtual Handler< ::donut::Object> createDonutObject() = 0;
 public:
 	Handler<AngelWidgetTarget> newWidgetTarget(std::string const& widgetId, std::string const& widgetGuide);
 	Handler<AngelElementTarget> newElementTarget(std::string const& elementId);

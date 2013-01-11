@@ -55,6 +55,46 @@ void Angel::reshape(const geom::Area& area)
 {
 }
 
+Handler< ::donut::Object> Angel::donutObject()
+{
+	if(this->donutObject_.expired()){
+		Handler< ::donut::Object> obj(createDonutObject());
+		return obj;
+	}
+	return this->donutObject_.lock();
+}
+
+Handler<AngelWidgetTarget> Angel::newWidgetTarget(std::string const& widgetId, std::string const& widgetGuide)
+{
+	return Handler<AngelWidgetTarget>(new AngelWidgetTarget(self(), widgetId, widgetGuide));
+}
+Handler<AngelElementTarget> Angel::newElementTarget(std::string const& elementId)
+{
+	return Handler<AngelElementTarget>(new AngelElementTarget(self(), elementId));
+}
+
+Handler<AngelWidgetTarget> Angel::findWidgetTarget(const std::string& widgetId, const std::string& widgetGuide )
+{
+	Handler<AngelWidgetTarget> res;
+	for(Handler<AngelTarget> const& target : this->targets_) {
+		if((res = target->matchToWidgetTarget(widgetId, widgetGuide))) {
+			return res;
+		}
+	}
+	return res;
+}
+
+Handler<AngelElementTarget> Angel::findElementTarget(const std::string& elementId )
+{
+	Handler<AngelElementTarget> res;
+	for(Handler<AngelTarget> const& target : this->targets_) {
+		if((res = target->matchToElementTarget(elementId))) {
+			return res;
+		}
+	}
+	return res;
+}
+
 /**********************************************************************************************************************
  * Servants
  **********************************************************************************************************************/
@@ -102,10 +142,20 @@ Handler<AngelElementTarget> AngelTarget::matchToElementTarget(std::string const&
 {
 	return Handler<AngelElementTarget>();
 }
-Handler<AngelWidgetTarget> AngelTarget::matchToWidgetTarget(std::string const& widgetId, std::string const& widgetGuide) noexcept {
+
+Handler<AngelWidgetTarget> AngelTarget::matchToWidgetTarget(std::string const& widgetId, std::string const& widgetGuide) noexcept
+{
 	return Handler<AngelWidgetTarget>();
 }
 
+Handler< ::donut::Object> AngelTarget::donutObject()
+{
+	if(this->donutObject_.expired()){
+		Handler< ::donut::Object> obj(createDonutObject());
+		return obj;
+	}
+	return this->donutObject_.lock();
+}
 
 /**********************************************************************************************************************
  * Servants
@@ -138,35 +188,13 @@ Handler<AngelTarget> Servant::target() const
 	return this->target_.lock();
 }
 
-Handler<AngelWidgetTarget> Angel::newWidgetTarget(std::string const& widgetId, std::string const& widgetGuide)
+Handler< ::donut::Object> Servant::donutObject()
 {
-	return Handler<AngelWidgetTarget>(new AngelWidgetTarget(self(), widgetId, widgetGuide));
-}
-Handler<AngelElementTarget> Angel::newElementTarget(std::string const& elementId)
-{
-	return Handler<AngelElementTarget>(new AngelElementTarget(self(), elementId));
-}
-
-Handler<AngelWidgetTarget> Angel::findWidgetTarget(const std::string& widgetId, const std::string& widgetGuide )
-{
-	Handler<AngelWidgetTarget> res;
-	for(Handler<AngelTarget> const& target : this->targets_) {
-		if((res = target->matchToWidgetTarget(widgetId, widgetGuide))) {
-			return res;
-		}
+	if(this->donutObject_.expired()){
+		Handler< ::donut::Object> obj(createDonutObject());
+		return obj;
 	}
-	return res;
-}
-
-Handler<AngelElementTarget> Angel::findElementTarget(const std::string& elementId )
-{
-	Handler<AngelElementTarget> res;
-	for(Handler<AngelTarget> const& target : this->targets_) {
-		if((res = target->matchToElementTarget(elementId))) {
-			return res;
-		}
-	}
-	return res;
+	return this->donutObject_.lock();
 }
 
 }}

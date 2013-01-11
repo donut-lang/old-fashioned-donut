@@ -28,5 +28,9 @@ HaloServant::HaloServant(Handler<AngelTarget> const& angelTarget, gl::Color cons
 
 }
 
+Handler< ::donut::Object> HaloServant::createDonutObject()
+{
+}
+
 }}
 
