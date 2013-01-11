@@ -81,16 +81,7 @@ struct HaloServantSideEffect{
 	}
 };
 
-class HaloServantObject;
-class HaloServantProvider : public ServantProvider {
-	INJECT_REACTIVE_PROVIDER_ASPECT(HaloServantSideEffect, HaloServantProvider);
-private:
-	HandlerW<Heaven> heaven_;
-public:
-	HaloServantProvider(Handler<Heap> const& heap, Handler<Heaven> const& heaven);
-	virtual ~HaloServantProvider() noexcept = default;
-};
-
+class HaloServantProvider;
 class HaloServantObject : public ServantObject {
 	INJECT_REACTIVE_OBJECT_ASPECT(HaloServantSideEffect, HaloServantObject);
 public:
@@ -109,6 +100,17 @@ public:
 	XValue saveImpl( Handler<Heap> const& heap ) override final;
 	void loadImpl( Handler<Heap> const& heap, XValue const& data ) override final;
 };
+class HaloServantProvider : public ServantProvider {
+	INJECT_REACTIVE_PROVIDER_ASPECT(HaloServantSideEffect, HaloServantProvider);
+private:
+	HandlerW<Heaven> heaven_;
+public:
+	HaloServantProvider(Handler<Heap> const& heap, Handler<Heaven> const& heaven);
+	virtual ~HaloServantProvider() noexcept = default;
+	virtual ::donut::HeapObject* __internal__createInstanceForLoading() override final {
+		return new HaloServantObject(this);
+	}
+};
 
 /**********************************************************************************************************************
  * ElementServant
@@ -120,16 +122,7 @@ struct ElementServantSideEffect{
 	}
 };
 
-class ElementServantObject;
-class ElementServantProvider : public ServantProvider {
-	INJECT_REACTIVE_PROVIDER_ASPECT(ElementServantSideEffect, ElementServantProvider);
-private:
-	HandlerW<Heaven> heaven_;
-public:
-	ElementServantProvider(Handler<Heap> const& heap, Handler<Heaven> const& heaven);
-	virtual ~ElementServantProvider() noexcept = default;
-};
-
+class ElementServantProvider;
 class ElementServantObject : public ServantObject {
 	INJECT_REACTIVE_OBJECT_ASPECT(ElementServantSideEffect, ElementServantObject);
 public:
@@ -148,6 +141,16 @@ public:
 	XValue saveImpl( Handler<Heap> const& heap ) override final;
 	void loadImpl( Handler<Heap> const& heap, XValue const& data ) override final;
 };
-
+class ElementServantProvider : public ServantProvider {
+	INJECT_REACTIVE_PROVIDER_ASPECT(ElementServantSideEffect, ElementServantProvider);
+private:
+	HandlerW<Heaven> heaven_;
+public:
+	ElementServantProvider(Handler<Heap> const& heap, Handler<Heaven> const& heaven);
+	virtual ~ElementServantProvider() noexcept = default;
+	virtual ::donut::HeapObject* __internal__createInstanceForLoading() override final {
+		return new ElementServantObject(this);
+	}
+};
 
 }}
