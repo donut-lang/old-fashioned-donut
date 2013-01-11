@@ -38,6 +38,19 @@ using namespace donut;
  * Base
  **********************************************************************************************************************/
 
+struct AngelSideEffect{
+	enum {
+		AttatchTarget,
+		DetatchTarget
+	} op;
+	Handler<AngelTarget> attatchedTarget_;
+	Handler<AngelTarget> detatchedTarget_;
+	template <typename Arc>
+	void serialize(Arc& arc) {
+
+	}
+};
+
 class AngelProvider : public ReactiveProvider {
 private:
 	HandlerW<Heaven> heaven_;
@@ -62,6 +75,14 @@ public:
 	Handler<Angel> angel() const;
 private:
 	virtual std::string reprImpl(Handler<Heap> const& heap) const override final;
+private:
+	template <typename T>
+	T& execAntiSideEffect(Handler<Heap> const& heap, AngelSideEffect const& old, T& val);
+protected:
+	template <typename T>
+	T& onBack(Handler<Heap> const& heap, AngelSideEffect const& old, T& val);
+	template <typename T>
+	T& onForward(Handler<Heap> const& heap, AngelSideEffect const& old, T& val);
 //public:
 //	void onFutureDiscarded(Handler<Heap> const& heap);
 //	void onHistoryDiscarded(Handler<Heap> const& heap);
@@ -75,10 +96,10 @@ private:
 /**********************************************************************************************************************
  * LoneAngel
  **********************************************************************************************************************/
-struct LoneAngelSideEffect{
+struct LoneAngelSideEffect : public AngelSideEffect{
 	template <typename Arc>
 	void serialize(Arc& arc) {
-
+		AngelSideEffect::serialize(arc);
 	}
 };
 
@@ -118,10 +139,10 @@ private:
 /**********************************************************************************************************************
  * TwinAngel
  **********************************************************************************************************************/
-struct TwinAngelSideEffect{
+struct TwinAngelSideEffect : public AngelSideEffect{
 	template <typename Arc>
 	void serialize(Arc& arc) {
-
+		AngelSideEffect::serialize(arc);
 	}
 };
 
