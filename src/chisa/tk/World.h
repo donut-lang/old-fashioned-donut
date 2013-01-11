@@ -45,7 +45,10 @@ class ActionMediator;
 class Heaven;
 class WidgetElement;
 class ElementFactory;
+
 class Angel;
+class AngelTarget;
+class Servant;
 
 class WidgetFactory;
 
@@ -87,12 +90,17 @@ public:
 	Handler<Element> findElementById(std::string const& id);
 private:
 	void popElement();
-	void pushElement(std::string const& filename);
+	void pushElement(std::string const& elementId);
 	/******************************************************************************
 	 * Angel管理
 	 ******************************************************************************/
 public:
+	Handler<AngelTarget> newElementAngelTarget( std::string const& id );
+	Handler<AngelTarget> newWidgetAngelTarget( std::string const& id, std::string const& guide );
 	Handler<Angel> findAngelById( std::string const& id );
+	std::string findAngelId( Handler<Angel> const& angel );
+	void attatchAngel( std::string const& id, Handler<Angel> const& angel);
+	std::string attatchAngel( Handler<Angel> const& angel );
 	/******************************************************************************
 	 * タスク管理
 	 ******************************************************************************/

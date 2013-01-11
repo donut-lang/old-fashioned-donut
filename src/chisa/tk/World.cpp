@@ -26,6 +26,7 @@
 #include "Action.h"
 #include "../gl/DrawableManager.h"
 #include "../input/JoystickManager.h"
+#include "Angel.h"
 
 namespace chisa {
 namespace tk {
@@ -118,9 +119,9 @@ void World::reshape(geom::Area const& area)
 	this->area(area);
 }
 
-void World::pushElement(std::string const& filename)
+void World::pushElement(std::string const& elementId)
 {
-	Handler<Element> l = this->elementFactory_->parseTree(filename);
+	Handler<Element> l = this->elementFactory_->parseTree(elementId);
 	this->elementStack_.push(l);
 }
 
@@ -130,6 +131,23 @@ void World::popElement()
 	if(Handler<Element> elm = this->elementStack_.top()){
 		this->reshape(this->area());
 	}
+}
+
+Handler<Angel> World::findAngelById( std::string const& id )
+{
+	return this->heaven_->findAngelById( id );
+}
+std::string World::findAngelId( Handler<Angel> const& angel )
+{
+	return this->heaven_->findAngelId( angel );
+}
+void World::attatchAngel( std::string const& id, Handler<Angel> const& angel)
+{
+	this->heaven_->attatchAngel(id, angel);
+}
+std::string World::attatchAngel( Handler<Angel> const& angel )
+{
+	return this->heaven_->attatchAngel(angel);
 }
 
 void World::registerTask(Task* task)

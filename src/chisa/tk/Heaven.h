@@ -55,6 +55,14 @@ public:
 	void render(gl::Canvas& canvas);
 	void idle(const float delta_ms);
 	void reshape(geom::Area const& area);
+public:
+	Handler<Angel> findAngelById( std::string const& id );
+	std::string findAngelId( Handler<Angel> const& angel );
+	void attatchAngel( std::string const& id, Handler<Angel> const& angel);
+	std::string attatchAngel( Handler<Angel> const& angel );
+public:
+	Handler<Angel> newTwinAngel();
+	Handler<Angel> newLoneAngel();
 };
 
 
