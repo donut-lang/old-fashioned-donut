@@ -60,6 +60,7 @@ class AngelObject : public ReactiveNativeObject {
 private:
 	Handler<Angel> angel_;
 protected:
+	typedef AngelObject Super;
 	AngelObject(AngelProvider* provider);
 	virtual ~AngelObject() noexcept = default;
 public:
