@@ -80,12 +80,9 @@ void LoneAngelObject::bootstrap(const Handler<Heap>& heap, const Handler<LoneAng
 {
 }
 
-Handler<World> LoneAngelObject::world() const
-{
-}
-
 Handler<LoneAngel> LoneAngelObject::angel() const
 {
+	return Handler<LoneAngel>::__internal__fromRawPointerWithoutCheck( static_cast<LoneAngel*>(AngelObject::angel().get()) );
 }
 
 void LoneAngelObject::onFutureDiscarded(const Handler<Heap>& heap)
@@ -131,12 +128,9 @@ void TwinAngelObject::bootstrap(const Handler<Heap>& heap, const Handler<TwinAng
 {
 }
 
-Handler<World> TwinAngelObject::world() const
-{
-}
-
 Handler<TwinAngel> TwinAngelObject::angel() const
 {
+	return Handler<TwinAngel>::__internal__fromRawPointerWithoutCheck( static_cast<TwinAngel*>(AngelObject::angel().get()) );
 }
 
 void TwinAngelObject::onFutureDiscarded(const Handler<Heap>& heap)
