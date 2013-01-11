@@ -108,7 +108,6 @@ public:
 public:
 	void bootstrap(Handler<Heap> const& heap, Handler<LoneAngel> const& angel);
 public:
-	Handler<World> world() const;
 	Handler<LoneAngel> angel() const;
 public:
 	void onFutureDiscarded(Handler<Heap> const& heap);
@@ -147,7 +146,6 @@ public:
 public:
 	void bootstrap(Handler<Heap> const& heap, Handler<TwinAngel> const& angel);
 public:
-	Handler<World> world() const;
 	Handler<TwinAngel> angel() const;
 public:
 	void onFutureDiscarded(Handler<Heap> const& heap);
