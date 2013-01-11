@@ -27,12 +27,12 @@
 namespace chisa {
 namespace tk {
 
-template <typename DerivedProviderT, typename ObjectT, typename ElementT>
-class ElementGroupProviderBaseT : public ElementProviderBaseT<DerivedProviderT, ObjectT, ElementT> {
+template <typename DerivedProviderT, typename ObjectT, typename ElementT, typename AntiSideEffectT>
+class ElementGroupProviderBaseT : public ElementProviderBaseT<DerivedProviderT, ObjectT, ElementT,AntiSideEffectT> {
 protected:
-	typedef ElementGroupProviderBaseT<DerivedProviderT, ObjectT, ElementT> Super;
-	ElementGroupProviderBaseT( Handler<Heap> const& heap, std::string const& name ):ElementProviderBaseT<DerivedProviderT, ObjectT, ElementT>(heap, name){ this->registerClosures(); };
-	ElementGroupProviderBaseT( Handler<Heap> const& heap ): ElementProviderBaseT<DerivedProviderT, ObjectT, ElementT>(heap, ::tarte::demangle<ObjectT>() ){ this->registerClosures(); };
+	typedef ElementGroupProviderBaseT<DerivedProviderT, ObjectT, ElementT,AntiSideEffectT> Super;
+	ElementGroupProviderBaseT( Handler<Heap> const& heap, std::string const& name ):ElementProviderBaseT<DerivedProviderT, ObjectT, ElementT,AntiSideEffectT>(heap, name){ this->registerClosures(); };
+	ElementGroupProviderBaseT( Handler<Heap> const& heap ): ElementProviderBaseT<DerivedProviderT, ObjectT, ElementT,AntiSideEffectT>(heap, ::tarte::demangle<ObjectT>() ){ this->registerClosures(); };
 	virtual ~ElementGroupProviderBaseT() noexcept = default;
 private:
 	void registerClosures() {
@@ -44,12 +44,12 @@ private:
 };
 
 
-template <typename ProviderT, typename DerivedObjectT, typename ElementT>
-class ElementGroupObjectBaseT : public ElementObjectBaseT<ProviderT, DerivedObjectT, ElementT>
+template <typename ProviderT, typename DerivedObjectT, typename ElementT, typename AntiSideEffectT>
+class ElementGroupObjectBaseT : public ElementObjectBaseT<ProviderT, DerivedObjectT, ElementT, AntiSideEffectT>
 {
 protected:
 	ElementGroupObjectBaseT(ProviderT* provider)
-	:ElementObjectBaseT<ProviderT, DerivedObjectT, ElementT>(provider)
+	:ElementObjectBaseT<ProviderT, DerivedObjectT, ElementT, AntiSideEffectT>(provider)
 	{
 	}
 	virtual ~ElementGroupObjectBaseT() noexcept = default;
@@ -59,7 +59,7 @@ public:
 	}
 public:
 	void bootstrap(Handler< ::donut::Heap> const& heap, Handler<ElementT> const& element) {
-		this->ElementObjectBaseT<ProviderT, DerivedObjectT, ElementT>::bootstrap(heap, element);
+		this->ElementObjectBaseT<ProviderT, DerivedObjectT, ElementT, AntiSideEffectT>::bootstrap(heap, element);
 	}
 public: /* 副作用なし */
 	std::size_t getChildCount() const noexcept {

@@ -70,10 +70,11 @@ public:
  * 実装用テンプレートクラス
  **********************************************************************************************************************/
 
-template <typename DerivedProviderT, typename ObjectT, typename ElementT>
+template <typename DerivedProviderT, typename ObjectT, typename ElementT, typename __AntiSideEffectT>
 class ElementProviderBaseT : public ElementProvider {
+	INJECT_REACTIVE_PROVIDER_ASPECT(__AntiSideEffectT, DerivedProviderT);
 protected:
-	typedef ElementProviderBaseT<DerivedProviderT, ObjectT, ElementT> Super;
+	typedef ElementProviderBaseT<DerivedProviderT, ObjectT, ElementT, __AntiSideEffectT> Super;
 	ElementProviderBaseT( Handler<Heap> const& heap, std::string const& name ):HeapProvider(heap, name){};
 	ElementProviderBaseT( Handler<Heap> const& heap ):HeapProvider(heap, ::tarte::demangle<ObjectT>() ){};
 	virtual ~ElementProviderBaseT() noexcept = default;
@@ -90,9 +91,12 @@ private:
 };
 
 
-template <typename ProviderT, typename DerivedObjectT, typename ElementT>
+template <typename ProviderT, typename DerivedObjectT, typename ElementT, typename __AntiSideEffectT>
 class ElementObjectBaseT : public ElementObject
 {
+	INJECT_REACTIVE_OBJECT_ASPECT(__AntiSideEffectT, DerivedObjectT);
+public:
+	typedef ElementObjectBaseT<ProviderT, DerivedObjectT, ElementT, __AntiSideEffectT> Super;
 protected:
 	inline ProviderT provider() const noexcept { return static_cast<ProviderT*>(this->ElementObject::provider()); };
 	Handler<ElementT> element() const { return Handler<ElementT>::__internal__fromRawPointerWithoutCheck(static_cast<ElementT*>(ElementObject::element().get())); };

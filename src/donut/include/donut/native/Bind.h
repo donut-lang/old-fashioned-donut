@@ -18,6 +18,7 @@
 
 #pragma once
 #include <functional>
+#include <tarte/TypeTrans.h>
 #include "../Exception.h"
 #include "../object/Object.h"
 #include "Decoder.h"
@@ -43,7 +44,8 @@ Handler<Object> bindArgumentPure(Handler<Heap> const& heap, std::vector<Handler<
 }
 
 template <typename R, typename S, typename... Args>
-std::function<Handler<Object>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)> createBindPure(std::function<R(S self, Args... args)> f)
+std::function<Handler<Object>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)>
+createBindPure(std::function<R(S self, Args... args)> f)
 {
 	return [f](Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args){
 		if (args.size() != sizeof...(Args)) {
@@ -57,16 +59,11 @@ std::function<Handler<Object>(Handler<Heap> const& heap, Handler<Object> const& 
 	};
 }
 
-template <typename R, typename S, typename... Args>
-std::function<Handler<Object>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)> createBindPure(R(S::*f)(Args...))
+template <typename __F>
+auto createBindPure(__F f)
+-> decltype(createBindPure( ::tarte::makeFunctor(f) ))
 {
-	return createBindPure(std::function<R(S*,Args...)>(f));
-}
-
-template <typename R, typename S, typename... Args>
-std::function<Handler<Object>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)> createBindPure(R(*f)(S, Args...))
-{
-	return createBindPure(std::function<R(S, Args...)>(f));
+	return createBindPure( ::tarte::makeFunctor(f) );
 }
 
 /**********************************************************************************************************************
@@ -92,7 +89,8 @@ std::tuple<Handler<Object>, bool, __AntiSideEffect> bindArgumentReactive(Handler
 }
 
 template <typename __AntiSideEffect,typename R, typename S, typename... Args>
-std::function<std::tuple<Handler<Object>, bool, __AntiSideEffect>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)> createBindReactive(std::function<std::tuple<R, bool, __AntiSideEffect>(S self, Args... args)> f)
+std::function<std::tuple<Handler<Object>, bool, __AntiSideEffect>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)>
+createBindReactive(std::function<std::tuple<R, bool, __AntiSideEffect>(S self, Args... args)> f)
 {
 	return [f](Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args){
 		if (args.size() != sizeof...(Args)) {
@@ -106,17 +104,11 @@ std::function<std::tuple<Handler<Object>, bool, __AntiSideEffect>(Handler<Heap> 
 	};
 }
 
-template <typename __AntiSideEffect,typename R, typename S, typename... Args>
-std::function<std::tuple<Handler<Object>, bool, __AntiSideEffect>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)> createBindReactive(std::tuple<R, bool, __AntiSideEffect>(S::*f)(Args...))
+template <typename __F>
+auto createBindReactive(__F f)
+->decltype(createBindReactive(::tarte::makeFunctor(f)))
 {
-	return createBindReactive(std::function<std::tuple<R, bool, __AntiSideEffect>(S*,Args...)>(f));
-}
-
-
-template <typename __AntiSideEffect,typename R, typename S, typename... Args>
-std::function<std::tuple<Handler<Object>, bool, __AntiSideEffect>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)> createBindReactive(std::tuple<R, bool, __AntiSideEffect>(*f)(S, Args...))
-{
-	return createBindReactive(std::function<std::tuple<R, bool, __AntiSideEffect>(S*,Args...)>(f));
+	return createBindReactive(::tarte::makeFunctor(f));
 }
 
 }}
