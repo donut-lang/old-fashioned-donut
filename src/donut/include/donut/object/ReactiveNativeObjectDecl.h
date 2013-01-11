@@ -74,10 +74,10 @@ public:
 #define INJECT_REACTIVE_OBJECT_ASPECT(__AntiSideEffect__, __Self__) \
 public:\
 	typedef __AntiSideEffect__ AntiSideEffect;\
+	typedef typename ReactiveNativeObjectAspectT<__AntiSideEffect__, __Self__>::ResultType ResultType;\
 private:\
 	friend class ReactiveNativeObjectAspectT<__AntiSideEffect__, __Self__>;\
 	ReactiveNativeObjectAspectT<__AntiSideEffect__, __Self__> __reactive_aspect__;\
-	typedef typename ReactiveNativeObjectAspectT<__AntiSideEffect__, __Self__>::ResultType _ResultType;\
 private:\
 	virtual ReactionRecord* reactionRecorde() override final{\
 		return &this->__reactive_aspect__;\
@@ -106,23 +106,22 @@ private:\
 	}\
 	virtual void onDiscardFutureNotifyImpl(Handler<Heap> const& heap) override final {\
 		this->__reactive_aspect__.onDiscardFutureNotify(static_cast<__Self__&>(*this), heap);\
-	}\
-protected: \
-	virtual void onFutureDiscarded(Handler<Heap> const& heap) {} \
-	virtual void onHistoryDiscarded(Handler<Heap> const& heap) {} \
-	virtual _ResultType onBack(Handler<Heap> const& heap, __AntiSideEffect__ const& val) = 0;\
-	virtual _ResultType onForward(Handler<Heap> const& heap, __AntiSideEffect__ const& val) = 0;\
-	virtual XValue saveImpl( Handler<Heap> const& heap ) override = 0;\
-	virtual void loadImpl( Handler<Heap> const& heap, XValue const& data ) override = 0;
+	}
+//public;
+	//void onFutureDiscarded(Handler<Heap> const& heap);
+	//void onHistoryDiscarded(Handler<Heap> const& heap);
+	//ResultType onBack(Handler<Heap> const& heap, AntiSideEffect const& val);
+	//ResultType onForward(Handler<Heap> const& heap, AntiSideEffect const& val);
+	//XValue saveImpl( Handler<Heap> const& heap ) override final;
+	//void loadImpl( Handler<Heap> const& heap, XValue const& data ) override final;
 
 template <typename __Derived, typename __Provider, typename __AntiSideEffect=XValue>
 class ReactiveNativeObjectBaseT : public ReactiveNativeObject {
 	typedef ReactiveNativeObjectBaseT<__Derived, __Provider, __AntiSideEffect> __Self__;
-	INJECT_REACTIVE_OBJECT_ASPECT(__AntiSideEffect, __Self__);
+	INJECT_REACTIVE_OBJECT_ASPECT(__AntiSideEffect, __Derived);
 	//static_assert(std::is_same<__AntiSideEffect, typename __Provider::AntiSideEffect>::value, "Oops. AntiSideEffect of provider and object must be the same.");
 protected:
 	typedef ReactiveNativeObjectBaseT<__Derived, __Provider, __AntiSideEffect> Super;
-	typedef std::tuple<bool, __AntiSideEffect> ResultType;
 	ReactiveNativeObjectBaseT(HeapProvider* const provider)
 	:ReactiveNativeObject(provider){}
 	virtual ~ReactiveNativeObjectBaseT() noexcept = default;

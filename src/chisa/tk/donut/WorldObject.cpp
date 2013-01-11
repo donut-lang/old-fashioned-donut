@@ -83,6 +83,14 @@ XValue WorldObject::saveImpl(const Handler<Heap>& heap)
 	return XValue();
 }
 
+void WorldObject::onFutureDiscarded(const Handler<Heap>& heap)
+{
+}
+
+void WorldObject::onHistoryDiscarded(const Handler<Heap>& heap)
+{
+}
+
 void WorldObject::loadImpl(const Handler<Heap>& heap, const XValue& data)
 {
 	//XXX
