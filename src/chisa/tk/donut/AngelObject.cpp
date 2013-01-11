@@ -83,6 +83,14 @@ XValue AngelObject::saveImpl(const Handler<Heap>& heap)
 	return XValue();
 }
 
+void AngelObject::onFutureDiscarded(const Handler<Heap>& heap)
+{
+}
+
+void AngelObject::onHistoryDiscarded(const Handler<Heap>& heap)
+{
+}
+
 void AngelObject::loadImpl(const Handler<Heap>& heap, const XValue& data)
 {
 	//XXX

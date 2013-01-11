@@ -36,6 +36,14 @@ SystemObject::SystemObject(HeapProvider* const provider)
 {
 }
 
+void SystemObject::onFutureDiscarded(const Handler<Heap>& heap)
+{
+}
+
+void SystemObject::onHistoryDiscarded(const Handler<Heap>& heap)
+{
+}
+
 void SystemObject::bootstrap(Handler<Heap> const& heap)
 {
 	this->ReactiveNativeObject::bootstrap(heap);
