@@ -121,8 +121,7 @@ void World::reshape(geom::Area const& area)
 
 void World::pushElement(std::string const& elementId)
 {
-	Handler<Element> l = this->elementFactory_->parseTree(elementId);
-	this->elementStack_.push(l);
+	this->elementStack_.push(realizeElement(elementId));
 }
 
 void World::popElement()
@@ -148,6 +147,10 @@ void World::unregisterTask(Task* task)
 	this->taskHandler_.unregisterTask(task);
 }
 
+Handler<Element> World::realizeElement( std::string const& templateId )
+{
+	return this->elementFactory_->parseTree(templateId);
+}
 Handler<Element> World::findElementByPoint(geom::Point const& screenPoint)
 {
 	if(Handler<Element> elm = this->elementStack_.top()){
