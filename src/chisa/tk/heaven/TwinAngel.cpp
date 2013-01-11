@@ -41,7 +41,7 @@ void TwinAngel::reshapeImpl(const geom::Area& area)
 {
 }
 
-Handler< ::donut::Object> TwinAngel::createDonutObject()
+Handler< ::donut::Object> TwinAngel::createDonutObject(Handler< ::donut::Heap> const& heap)
 {
 }
 

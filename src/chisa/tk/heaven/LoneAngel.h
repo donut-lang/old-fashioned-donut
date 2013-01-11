@@ -30,7 +30,7 @@ protected:
 	virtual void renderImpl(gl::Canvas& canvas) override final;
 	virtual void idleImpl(const float delta_ms) override final;
 	virtual void reshapeImpl(geom::Area const& area) override final;
-	virtual Handler< ::donut::Object> createDonutObject() override final;
+	virtual Handler< ::donut::Object> createDonutObject(Handler< ::donut::Heap> const& heap) override final;
 };
 
 }}

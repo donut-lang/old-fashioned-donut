@@ -54,7 +54,7 @@ Handler<AngelWidgetTarget> AngelWidgetTarget::matchToWidgetTarget(const std::str
 					Handler<AngelWidgetTarget>();
 }
 
-Handler< ::donut::Object> AngelWidgetTarget::createDonutObject()
+Handler< ::donut::Object> AngelWidgetTarget::createDonutObject(Handler< ::donut::Heap> const& heap)
 {
 }
 

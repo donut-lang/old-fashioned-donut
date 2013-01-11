@@ -33,7 +33,7 @@ public:
 	HaloServant(Handler<AngelTarget> const& angelTarget, gl::Color const& color);
 	virtual ~HaloServant() noexcept = default;
 private:
-	virtual Handler< ::donut::Object> createDonutObject() override final;
+	virtual Handler< ::donut::Object> createDonutObject(Handler< ::donut::Heap> const& heap) override final;
 };
 
 }}
