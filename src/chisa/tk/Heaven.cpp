@@ -114,6 +114,31 @@ Handler<Angel> Heaven::newTwinAngel()
 	return Handler<Angel>( new TwinAngel(self()) );
 }
 
+Handler<Angel> Heaven::detatchAngel(const Handler<Angel>& angel)
+{
+	for( auto it = this->angelMap_.begin(); it != this->angelMap_.end(); ++it ) {
+		VectorMap<std::string, Handler<Angel> >::Pair& p = *it;
+		Handler<Angel> const& angel = p.second;
+		if(p.second == angel){
+			this->angelMap_.erase(it);
+			return angel;
+		}
+	}
+	return Handler<Angel>();
+}
+
+Handler<Angel> Heaven::detatchAngel(const std::string& id)
+{
+	VectorMap<std::string, Handler<Angel> >::Iterator it = this->angelMap_.find(id);
+	VectorMap<std::string, Handler<Angel> >::Pair& p = *it;
+	if( unlikely(it == angelMap_.end()) ) {
+		return Handler<Angel>();
+	}
+	Handler<Angel> angel(p.second);
+	this->angelMap_.erase(it);
+	return angel;
+}
+
 Handler<Angel> Heaven::newLoneAngel()
 {
 	return Handler<Angel>( new LoneAngel(self()) );

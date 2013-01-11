@@ -44,10 +44,20 @@ HeavenProvider::HeavenProvider(const Handler<Heap>& heap, const Handler<Heaven>&
 		return obj->heaven()->newLoneAngel()->donutObject(this->heap().lock());
 	});
 	this->registerReactiveNativeClosure("attatchAngel", [this](HeavenObject* obj, AngelObject* angel)->std::tuple<std::string,bool,HeavenSideEffect>{
-		HeavenSideEffect side;
-		side.op = HeavenSideEffect::RemoveAngel;
 		std::string id = obj->heaven()->attatchAngel(angel->angel());
+
+		HeavenSideEffect side;
+		side.op = HeavenSideEffect::DetatchAngel;
+		side.detatchedAngel_ = angel->angel();
 		return std::tuple<std::string,bool,HeavenSideEffect>(id, true, side);
+	});
+	this->registerReactiveNativeClosure("detatchAngel", [this](HeavenObject* obj, AngelObject* angel)->std::tuple<AngelObject* ,bool,HeavenSideEffect>{
+		obj->heaven()->detatchAngel(angel->angel());
+
+		HeavenSideEffect side;
+		side.op = HeavenSideEffect::AttatchAngel;
+		side.attatchedAngel_ = angel->angel();
+		return std::make_tuple(angel,true,side);
 	});
 }
 
@@ -74,16 +84,32 @@ std::string HeavenObject::reprImpl(const Handler<Heap>& heap) const
 	return ::tarte::format("(HeavenObject: %p)", this);
 }
 
+HeavenObject::ResultType HeavenObject::execAntiSideEffect(Handler<Heap> const& heap, AntiSideEffect const& val)
+{
+	HeavenSideEffect side;
+	switch (val.op){
+	case HeavenSideEffect::DetatchAngel:
+		this->heaven_.lock()->detatchAngel( val.detatchedAngel_ );
+		side.op = HeavenSideEffect::AttatchAngel;
+		side.attatchedAngel_ = val.detatchedAngel_;
+		break;
+	case HeavenSideEffect::AttatchAngel:
+		this->heaven_.lock()->attatchAngel(val.attatchedAngel_);
+		side.op = HeavenSideEffect::DetatchAngel;
+		side.detatchedAngel_ = val.attatchedAngel_;
+		break;
+	}
+	return ResultType(true, side);
+}
+
 HeavenObject::ResultType HeavenObject::onBack(const Handler<Heap>& heap, const HeavenSideEffect& val)
 {
-	//XXX
-	return ResultType(true, HeavenSideEffect());
+	return this->execAntiSideEffect(heap, val);
 }
 
 HeavenObject::ResultType HeavenObject::onForward(const Handler<Heap>& heap, const HeavenSideEffect& val)
 {
-	//XXX
-	return ResultType(true, HeavenSideEffect());
+	return this->execAntiSideEffect(heap, val);
 }
 
 XValue HeavenObject::saveImpl(const Handler<Heap>& heap)

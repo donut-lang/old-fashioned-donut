@@ -19,6 +19,8 @@
 #include <functional>
 #include "AngelObject.h"
 #include "ElementObject.h"
+#include "../heaven/AngelElementTarget.h"
+#include "../heaven/AngelWidgetTarget.h"
 
 namespace chisa {
 namespace tk {
@@ -29,6 +31,12 @@ AngelProvider::AngelProvider(Handler<Heap> const& heap, std::string const& provn
 :ReactiveProvider(heap, provname)
 ,heaven_(heaven)
 {
+	this->registerPureNativeClosure("newElementTarget", [this](AngelObject* obj, std::string elementId){
+		return obj->angel()->newElementTarget(elementId)->donutObject(this->heap().lock());
+	});
+	this->registerPureNativeClosure("newWidgetTarget", [this](AngelObject* obj, std::string elementId, std::string widgetGuide){
+		return obj->angel()->newWidgetTarget(elementId, widgetGuide)->donutObject(this->heap().lock());
+	});
 }
 
 Handler<Heaven> AngelProvider::heaven() const
