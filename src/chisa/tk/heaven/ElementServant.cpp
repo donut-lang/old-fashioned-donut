@@ -28,5 +28,9 @@ ElementServant::ElementServant(Handler<AngelTarget> const& angelTarget)
 
 }
 
+Handler< ::donut::Object> ElementServant::createDonutObject()
+{
+}
+
 }}
 
