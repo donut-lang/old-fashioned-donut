@@ -33,6 +33,7 @@ namespace chisa {
 using namespace tarte;
 
 namespace gl {
+class Color;
 class Canvas;
 }
 
@@ -44,6 +45,9 @@ class Angel;
 class Element;
 class Widget;
 class AngelTarget;
+
+class HaloServant;
+class ElementServant;
 
 class Servant : public HandlerBody<Servant> {
 private:
@@ -86,6 +90,9 @@ public:
 public:
 	geom::Area findScreenArea();
 	void attatchServant( Handler<Servant> const& servant );
+public:
+	Handler<HaloServant> newHaloServant( gl::Color const& color );
+	Handler<ElementServant> newElementServant( Handler<Element> const& element );
 public:
 	virtual Handler<AngelElementTarget> matchToElementTarget(std::string const& elementId) noexcept;
 	virtual Handler<AngelWidgetTarget> matchToWidgetTarget(std::string const& widgetId, std::string const& widgetGuide) noexcept;
