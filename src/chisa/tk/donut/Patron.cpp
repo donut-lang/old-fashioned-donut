@@ -38,6 +38,8 @@ void Patron::onRegisterProvider(Handler< ::donut::Heap> const& heap)
 	if( unlikely(!world) ){
 		DONUT_EXCEPTION(Exception, "[BUG] Failed to lock world.");
 	}
+	heap->registerProvider(this->angelElementTargetProvider_ = Handler<AngelElementTargetProvider>( new AngelElementTargetProvider(heap, world->heaven()) ));
+	heap->registerProvider(this->angelWidgetTargetProvider_ = Handler<AngelWidgetTargetProvider>( new AngelWidgetTargetProvider(heap, world->heaven()) ));
 	//ウィジットのプロバイダを設定
 	//world->elementFactory()->registerDonutProvider(heap);
 	//world->widgetFactory()->registerDonutProvider(heap);

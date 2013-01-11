@@ -20,6 +20,7 @@
 #include <tarte/ClassUtil.h>
 #include <tarte/Handler.h>
 #include <tarte/VectorMap.h>
+#include <donut/Donut.h>
 #include <string>
 #include <cmath>
 #include "../geom/Area.h"
@@ -41,14 +42,17 @@ class ElementFactory;
 class World;
 class Angel;
 
-class Heaven : public HandlerBody<Heaven> {
+class Heaven final : public HandlerBody<Heaven> {
 private:
 	HandlerW<World> world_;
 	VectorMap<std::string, Handler<Angel> > angelMap_;
+	HandlerW< ::donut::Object> donutObject_;
 public:
 	Heaven(Handler<World> const& world);
 	virtual ~Heaven() noexcept = default;
 	inline bool onFree() const noexcept { return false; };
+public:
+	Handler< ::donut::Object> donutObject(Handler< ::donut::Heap> const& heap);
 public:
 	inline HandlerW<World> const& world() const noexcept { return this->world_; };
 public:

@@ -48,7 +48,7 @@ Handler<AngelElementTarget> AngelElementTarget::matchToElementTarget(const std::
 			Handler<AngelElementTarget>();
 }
 
-Handler< ::donut::Object> AngelElementTarget::createDonutObject()
+Handler< ::donut::Object> AngelElementTarget::createDonutObject(Handler< ::donut::Heap> const& heap)
 {
 }
 

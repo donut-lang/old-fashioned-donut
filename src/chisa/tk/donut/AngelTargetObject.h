@@ -37,21 +37,11 @@ using namespace donut;
  * Servant
  **********************************************************************************************************************/
 
-class AngelTargetObject;
-class AngelTargetProvider : public ReactiveProvider {
-private:
-	HandlerW<Heaven> heaven_;
-public:
-	AngelTargetProvider(Handler<Heap> const& heap, std::string const& provname, Handler<Heaven> const& heaven);
-	virtual ~AngelTargetProvider() noexcept = default;
-public:
-	Handler<Heaven> heaven() const;
-};
-
+class AngelTargetProvider;
 class AngelTargetObject : public ReactiveNativeObject {
 private:
 	Handler<AngelTarget> target_;
-public:
+protected:
 	AngelTargetObject(AngelTargetProvider* provider);
 	virtual ~AngelTargetObject() noexcept = default;
 public:
@@ -70,6 +60,15 @@ private:
 //	void loadImpl( Handler<Heap> const& heap, XValue const& data ) override final;
 };
 
+class AngelTargetProvider : public ReactiveProvider {
+private:
+	HandlerW<Heaven> heaven_;
+protected:
+	AngelTargetProvider(Handler<Heap> const& heap, std::string const& provname, Handler<Heaven> const& heaven);
+	virtual ~AngelTargetProvider() noexcept = default;
+public:
+	Handler<Heaven> heaven() const;
+};
 
 /**********************************************************************************************************************
  * AngelElementTarget
@@ -81,16 +80,7 @@ struct AngelElementTargetSideEffect{
 	}
 };
 
-class AngelElementTargetObject;
-class AngelElementTargetProvider : public AngelTargetProvider {
-	INJECT_REACTIVE_PROVIDER_ASPECT(AngelElementTargetSideEffect, AngelElementTargetProvider);
-private:
-	HandlerW<Heaven> heaven_;
-public:
-	AngelElementTargetProvider(Handler<Heap> const& heap, Handler<Heaven> const& heaven);
-	virtual ~AngelElementTargetProvider() noexcept = default;
-};
-
+class AngelElementTargetProvider;
 class AngelElementTargetObject : public AngelTargetObject {
 	INJECT_REACTIVE_OBJECT_ASPECT(AngelElementTargetSideEffect, AngelElementTargetObject);
 public:
@@ -109,7 +99,18 @@ public:
 	XValue saveImpl( Handler<Heap> const& heap ) override final;
 	void loadImpl( Handler<Heap> const& heap, XValue const& data ) override final;
 };
-
+class AngelElementTargetProvider : public AngelTargetProvider {
+	INJECT_REACTIVE_PROVIDER_ASPECT(AngelElementTargetSideEffect, AngelElementTargetProvider);
+private:
+	HandlerW<Heaven> heaven_;
+public:
+	AngelElementTargetProvider(Handler<Heap> const& heap, Handler<Heaven> const& heaven);
+	virtual ~AngelElementTargetProvider() noexcept = default;
+private:
+	virtual ::donut::HeapObject* __internal__createInstanceForLoading() override final {
+		return new AngelElementTargetObject(this);
+	}
+};
 /**********************************************************************************************************************
  * AngelWidgetTarget
  **********************************************************************************************************************/
@@ -120,16 +121,7 @@ struct AngelWidgetTargetSideEffect{
 	}
 };
 
-class AngelWidgetTargetObject;
-class AngelWidgetTargetProvider : public AngelTargetProvider {
-	INJECT_REACTIVE_PROVIDER_ASPECT(AngelWidgetTargetSideEffect, AngelWidgetTargetProvider);
-private:
-	HandlerW<Heaven> heaven_;
-public:
-	AngelWidgetTargetProvider(Handler<Heap> const& heap, Handler<Heaven> const& heaven);
-	virtual ~AngelWidgetTargetProvider() noexcept = default;
-};
-
+class AngelWidgetTargetProvider;
 class AngelWidgetTargetObject : public AngelTargetObject {
 	INJECT_REACTIVE_OBJECT_ASPECT(AngelWidgetTargetSideEffect, AngelWidgetTargetObject);
 public:
@@ -147,6 +139,18 @@ public:
 	ResultType onForward(Handler<Heap> const& heap, AntiSideEffect const& val);
 	XValue saveImpl( Handler<Heap> const& heap ) override final;
 	void loadImpl( Handler<Heap> const& heap, XValue const& data ) override final;
+};
+class AngelWidgetTargetProvider : public AngelTargetProvider {
+	INJECT_REACTIVE_PROVIDER_ASPECT(AngelWidgetTargetSideEffect, AngelWidgetTargetProvider);
+private:
+	HandlerW<Heaven> heaven_;
+public:
+	AngelWidgetTargetProvider(Handler<Heap> const& heap, Handler<Heaven> const& heaven);
+	virtual ~AngelWidgetTargetProvider() noexcept = default;
+private:
+	virtual ::donut::HeapObject* __internal__createInstanceForLoading() override final {
+		return new AngelWidgetTargetObject(this);
+	}
 };
 
 

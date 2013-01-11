@@ -63,14 +63,14 @@ public:
 	Handler<Heaven> heaven() const;
 	Handler<Angel> angel() const;
 	Handler<AngelTarget> target() const;
-	Handler< ::donut::Object> donutObject();
+	Handler< ::donut::Object> donutObject(Handler< ::donut::Heap> const& heap);
 protected:
 	Servant(Handler<AngelTarget> const& angel_target);
 public:
 	virtual ~Servant() noexcept = default;
 	inline bool onFree() const noexcept { return false; };
 protected:
-	virtual Handler< ::donut::Object> createDonutObject() = 0;
+	virtual Handler< ::donut::Object> createDonutObject(Handler< ::donut::Heap> const& heap) = 0;
 };
 
 
@@ -95,7 +95,7 @@ public:
 	Handler<World> world() const;
 	Handler<Heaven> heaven() const;
 	Handler<Angel> angel() const;
-	Handler< ::donut::Object> donutObject();
+	Handler< ::donut::Object> donutObject(Handler< ::donut::Heap> const& heap);
 public:
 	geom::Area findScreenArea();
 	void attatchServant( Handler<Servant> const& servant );
@@ -106,7 +106,7 @@ public:
 	virtual Handler<AngelElementTarget> matchToElementTarget(std::string const& elementId) noexcept;
 	virtual Handler<AngelWidgetTarget> matchToWidgetTarget(std::string const& widgetId, std::string const& widgetGuide) noexcept;
 protected:
-	virtual Handler< ::donut::Object> createDonutObject() = 0;
+	virtual Handler< ::donut::Object> createDonutObject(Handler< ::donut::Heap> const& heap) = 0;
 	virtual geom::Area findScreenAreaImpl() = 0;
 };
 
@@ -126,7 +126,7 @@ public:
 public:
 	Handler<World> world() const;
 	Handler<Heaven> heaven() const;
-	Handler< ::donut::Object> donutObject();
+	Handler< ::donut::Object> donutObject(Handler< ::donut::Heap> const& heap);
 public:
 	void render(gl::Canvas& canvas);
 	void idle(const float delta_ms);
@@ -136,7 +136,7 @@ protected:
 	virtual void idleImpl(const float delta_ms) = 0;
 	virtual void reshapeImpl(geom::Area const& area) = 0;
 protected:
-	virtual Handler< ::donut::Object> createDonutObject() = 0;
+	virtual Handler< ::donut::Object> createDonutObject(Handler< ::donut::Heap> const& heap) = 0;
 public:
 	Handler<AngelWidgetTarget> newWidgetTarget(std::string const& widgetId, std::string const& widgetGuide);
 	Handler<AngelElementTarget> newElementTarget(std::string const& elementId);

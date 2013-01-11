@@ -35,10 +35,6 @@ WorldProvider::WorldProvider(const Handler<Heap>& heap, const Handler<World>& wo
 				Handler<World> const world = wobj->world();
 				return world->findElementById(name)->getElementObject();
 			});
-	this->registerPureNativeClosure("heaven",[](WorldObject* wobj){
-		Handler<World> const world = wobj->world();
-		return world->heaven()->donutObject(heap);
-	});
 	this->registerReactiveNativeClosure("invokeAngel", [](WorldObject* obj)->ResultType{
 
 		return std::tuple<Handler<Object>,bool,WorldSideEffect>();

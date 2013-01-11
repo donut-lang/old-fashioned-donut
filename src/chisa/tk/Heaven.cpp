@@ -21,6 +21,8 @@
 #include "World.h"
 #include "heaven/LoneAngel.h"
 #include "heaven/TwinAngel.h"
+#include "donut/Patron.h"
+#include "donut/WorldObject.h"
 
 namespace chisa {
 namespace tk {
@@ -28,6 +30,21 @@ namespace tk {
 Heaven::Heaven(const Handler<World>& world)
 :world_(world)
 {
+}
+
+
+Handler< ::donut::Object> Heaven::donutObject(Handler< ::donut::Heap> const& heap)
+{
+	if(!this->donutObject_.expired()){
+		return this->donutObject_.lock();
+	}
+	Handler<World> world(this->world().lock());
+	if(!world) {
+		return Handler< ::donut::Object>();
+	}
+	Handler<HeavenObject> obj( world->patron()->heavenProvider()->newInstance(heap) );
+	this->donutObject_ = obj;
+	return obj;
 }
 
 void Heaven::render(gl::Canvas& canvas)

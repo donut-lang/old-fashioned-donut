@@ -46,11 +46,10 @@ using namespace donut;
  *
  **********************************************************************************************************************/
 
-class AngelObject;
 class AngelProvider : public ReactiveProvider {
 private:
 	HandlerW<Heaven> heaven_;
-public:
+protected:
 	AngelProvider(Handler<Heap> const& heap, std::string const& provname, Handler<Heaven> const& heaven);
 	virtual ~AngelProvider() noexcept = default;
 public:
@@ -60,7 +59,7 @@ public:
 class AngelObject : public ReactiveNativeObject {
 private:
 	Handler<Angel> angel_;
-public:
+protected:
 	AngelObject(AngelProvider* provider);
 	virtual ~AngelObject() noexcept = default;
 public:
@@ -90,20 +89,11 @@ struct LoneAngelSideEffect{
 	}
 };
 
-class LoneAngelObject;
-class LoneAngelProvider : public AngelProvider {
-	INJECT_REACTIVE_PROVIDER_ASPECT(LoneAngelSideEffect, LoneAngelProvider);
-private:
-	HandlerW<Heaven> heaven_;
-public:
-	LoneAngelProvider(Handler<Heap> const& heap, Handler<Heaven> const& heaven);
-	virtual ~LoneAngelProvider() noexcept = default;
-};
-
+class LoneAngelProvider;
 class LoneAngelObject : public AngelObject {
 	INJECT_REACTIVE_OBJECT_ASPECT(LoneAngelSideEffect, LoneAngelObject);
 public:
-	LoneAngelObject(AngelProvider* provider);
+	LoneAngelObject(LoneAngelProvider* provider);
 	virtual ~LoneAngelObject() noexcept = default;
 public:
 	void bootstrap(Handler<Heap> const& heap, Handler<LoneAngel> const& angel);
@@ -118,6 +108,20 @@ public:
 	void loadImpl( Handler<Heap> const& heap, XValue const& data ) override final;
 };
 
+class LoneAngelProvider : public AngelProvider {
+	INJECT_REACTIVE_PROVIDER_ASPECT(LoneAngelSideEffect, LoneAngelProvider);
+private:
+	HandlerW<Heaven> heaven_;
+public:
+	LoneAngelProvider(Handler<Heap> const& heap, Handler<Heaven> const& heaven);
+	virtual ~LoneAngelProvider() noexcept = default;
+private:
+	virtual ::donut::HeapObject* __internal__createInstanceForLoading() override final {
+		return new LoneAngelObject(this);
+	}
+};
+
+
 /**********************************************************************************************************************
  * TwinAngel
  **********************************************************************************************************************/
@@ -128,20 +132,11 @@ struct TwinAngelSideEffect{
 	}
 };
 
-class TwinAngelObject;
-class TwinAngelProvider : public AngelProvider {
-	INJECT_REACTIVE_PROVIDER_ASPECT(TwinAngelSideEffect, TwinAngelProvider);
-private:
-	HandlerW<Heaven> heaven_;
-public:
-	TwinAngelProvider(Handler<Heap> const& heap, Handler<Heaven> const& heaven);
-	virtual ~TwinAngelProvider() noexcept = default;
-};
-
+class TwinAngelProvider;
 class TwinAngelObject : public AngelObject {
 	INJECT_REACTIVE_OBJECT_ASPECT(TwinAngelSideEffect, TwinAngelObject);
 public:
-	TwinAngelObject(AngelProvider* provider);
+	TwinAngelObject(TwinAngelProvider* provider);
 	virtual ~TwinAngelObject() noexcept = default;
 public:
 	void bootstrap(Handler<Heap> const& heap, Handler<TwinAngel> const& angel);
@@ -156,5 +151,17 @@ public:
 	void loadImpl( Handler<Heap> const& heap, XValue const& data ) override final;
 };
 
+class TwinAngelProvider : public AngelProvider {
+	INJECT_REACTIVE_PROVIDER_ASPECT(TwinAngelSideEffect, TwinAngelProvider);
+private:
+	HandlerW<Heaven> heaven_;
+public:
+	TwinAngelProvider(Handler<Heap> const& heap, Handler<Heaven> const& heaven);
+	virtual ~TwinAngelProvider() noexcept = default;
+private:
+	virtual ::donut::HeapObject* __internal__createInstanceForLoading() override final {
+		return new TwinAngelObject(this);
+	}
+};
 
 }}
