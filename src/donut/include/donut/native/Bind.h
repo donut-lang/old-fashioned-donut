@@ -83,7 +83,7 @@ std::tuple<Handler<Object>, bool, __AntiSideEffect> bindArgumentReactive(Handler
 template <size_t idx, typename __AntiSideEffect, typename R, typename U, typename... Args>
 std::tuple<Handler<Object>, bool, __AntiSideEffect> bindArgumentReactive(Handler<Heap> const& heap, std::vector<Handler<Object> > const& args, std::function<std::tuple<R, bool, __AntiSideEffect>(U val, Args... args)> const& funct)
 {
-	return bindArgumentPure<idx + 1, R> (heap, args, std::function<std::tuple<R, bool, __AntiSideEffect>(Args ... args)>( [funct, &heap, &args](Args... largs) {
+	return bindArgumentReactive<idx + 1> (heap, args, std::function<std::tuple<R, bool, __AntiSideEffect>(Args ... args)>( [funct, &heap, &args](Args... largs) {
 		return funct(native::Decoder<U>::exec( heap, args[idx] ), largs...);
 	}));
 }

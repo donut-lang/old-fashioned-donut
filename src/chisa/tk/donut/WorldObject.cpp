@@ -39,10 +39,6 @@ WorldProvider::WorldProvider(const Handler<Heap>& heap, const Handler<World>& wo
 		Handler<World> const world = wobj->world();
 		return world->heaven()->donutObject(this->heap().lock());
 	});
-	this->registerReactiveNativeClosure("invokeAngel", [](WorldObject* obj)->ResultType{
-
-		return std::tuple<Handler<Object>,bool,WorldSideEffect>();
-	});
 }
 
 Handler<World> WorldProvider::world() const
