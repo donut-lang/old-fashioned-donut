@@ -71,7 +71,7 @@ LoneAngelProvider::LoneAngelProvider(const Handler<Heap>& heap, const Handler<He
 {
 }
 
-LoneAngelObject::LoneAngelObject(AngelProvider* provider)
+LoneAngelObject::LoneAngelObject(LoneAngelProvider* provider)
 :AngelObject(provider)
 {
 }
@@ -119,7 +119,7 @@ TwinAngelProvider::TwinAngelProvider(const Handler<Heap>& heap, const Handler<He
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-TwinAngelObject::TwinAngelObject(AngelProvider* provider)
+TwinAngelObject::TwinAngelObject(TwinAngelProvider* provider)
 :AngelObject(provider)
 {
 }

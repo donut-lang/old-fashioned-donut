@@ -69,6 +69,7 @@ private:
 	DEFINE_MEMBER(public, private, ElementFactory*, elementFactory);
 	DEFINE_MEMBER(public, private, WidgetFactory*, widgetFactory);
 	DEFINE_MEMBER(private, private, ActionMediator*, gestureMediator);
+	DEFINE_MEMBER(public, private, Handler< ::chisa::tk::Patron>, patron);
 	DEFINE_MEMBER(public, private, Handler< ::donut::Donut>, donut);
 public:
 	void render(gl::Canvas& canvas);

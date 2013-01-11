@@ -33,7 +33,7 @@ private:
 private:
 	virtual geom::Area findScreenAreaImpl();
 	virtual Handler<AngelElementTarget> matchToElementTarget(std::string const& elementId) noexcept override final;
-	virtual Handler< ::donut::Object> createDonutObject() override final;
+	virtual Handler< ::donut::Object> createDonutObject(Handler< ::donut::Heap> const& heap) override final;
 };
 
 }}
