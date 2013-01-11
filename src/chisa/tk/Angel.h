@@ -138,6 +138,8 @@ protected:
 protected:
 	virtual Handler< ::donut::Object> createDonutObject(Handler< ::donut::Heap> const& heap) = 0;
 public:
+	virtual Handler<AngelTarget> attatchTarget(Handler<AngelTarget> const& target);
+	virtual Handler<AngelTarget> detatchTarget(Handler<AngelTarget> const& target);
 	Handler<AngelWidgetTarget> newWidgetTarget(std::string const& widgetId, std::string const& widgetGuide);
 	Handler<AngelElementTarget> newElementTarget(std::string const& elementId);
 	Handler<AngelWidgetTarget> findWidgetTarget(const std::string& widgetId, const std::string& widgetGuide);

@@ -84,6 +84,22 @@ Handler<AngelWidgetTarget> Angel::findWidgetTarget(const std::string& widgetId, 
 	return res;
 }
 
+Handler<AngelTarget> Angel::attatchTarget(const Handler<AngelTarget>& target)
+{
+	this->targets_.push_back(target);
+	return target;
+}
+
+Handler<AngelTarget> Angel::detatchTarget(const Handler<AngelTarget>& target)
+{
+	auto it = std::find(std::begin(targets_), std::end(targets_), target);
+	if(it != std::end(targets_)) {
+		targets_.erase(it);
+		return target;
+	}
+	TARTE_EXCEPTION(Exception, "[BUG] Angel target not found.")
+}
+
 Handler<AngelElementTarget> Angel::findElementTarget(const std::string& elementId )
 {
 	Handler<AngelElementTarget> res;

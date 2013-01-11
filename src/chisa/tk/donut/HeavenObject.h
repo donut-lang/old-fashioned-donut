@@ -31,12 +31,11 @@ using namespace donut;
 
 struct HeavenSideEffect{
 	enum {
-		CreateAngel,
-		RemoveAngel
+		AttatchAngel,
+		DetatchAngel
 	} op;
-	union {
-
-	};
+	Handler<Angel> attatchedAngel_;
+	Handler<Angel> detatchedAngel_;
 	template <typename Arc>
 	void serialize(Arc& arc) {
 
@@ -66,6 +65,8 @@ public:
 	Handler<Heaven> heaven() const;
 private:
 	virtual std::string reprImpl(Handler<Heap> const& heap) const override final;
+private:
+	ResultType execAntiSideEffect(Handler<Heap> const& heap, AntiSideEffect const& val);
 public:
 	void onFutureDiscarded(Handler<Heap> const& heap);
 	void onHistoryDiscarded(Handler<Heap> const& heap);

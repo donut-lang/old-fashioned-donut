@@ -64,6 +64,8 @@ public:
 	std::string findAngelId( Handler<Angel> const& angel );
 	void attatchAngel( std::string const& id, Handler<Angel> const& angel);
 	std::string attatchAngel( Handler<Angel> const& angel );
+	Handler<Angel> detatchAngel( Handler<Angel> const& angel );
+	Handler<Angel> detatchAngel( std::string const& id );
 public:
 	Handler<Angel> newTwinAngel();
 	Handler<Angel> newLoneAngel();
