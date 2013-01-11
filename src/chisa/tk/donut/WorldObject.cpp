@@ -35,9 +35,9 @@ WorldProvider::WorldProvider(const Handler<Heap>& heap, const Handler<World>& wo
 				Handler<World> const world = wobj->world();
 				return world->findElementById(name)->getElementObject();
 			});
-	this->registerPureNativeClosure("heaven",[](WorldObject* wobj){
+	this->registerPureNativeClosure("heaven",[this](WorldObject* wobj){
 		Handler<World> const world = wobj->world();
-		return world->heaven()->donutObject(heap);
+		return world->heaven()->donutObject(this->heap().lock());
 	});
 	this->registerReactiveNativeClosure("invokeAngel", [](WorldObject* obj)->ResultType{
 
