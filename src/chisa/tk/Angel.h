@@ -81,6 +81,10 @@ public:
 	Handler<Angel> angel() const;
 public:
 	geom::Area findScreenArea();
+	void attatchServant( Handler<Servant> const& servant );
+public:
+	virtual bool matchToElementTarget(std::string const& elementId) const noexcept { return false; };
+	virtual bool matchToWidgetTarget(std::string const& widgetId, std::string const& widgetGuide) const noexcept { return false; };
 protected:
 	virtual geom::Area findScreenAreaImpl() = 0;
 };
@@ -106,7 +110,9 @@ protected:
 	virtual void renderImpl(gl::Canvas& canvas) = 0;
 	virtual void idleImpl(const float delta_ms) = 0;
 	virtual void reshapeImpl(geom::Area const& area) = 0;
+public:
+	void registerServantToWidget( std::string const& widgetId, std::string const& widgetGuide, Handler<Servant> servant );
+	void registerServantToElement( std::string const& elementId , Handler<Servant> servant );
 };
-
 
 }}

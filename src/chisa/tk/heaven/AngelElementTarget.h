@@ -32,6 +32,7 @@ private:
 	HandlerW<Element> target_;
 private:
 	virtual geom::Area findScreenAreaImpl();
+	virtual bool matchToElementTarget(std::string const& elementId) const noexcept;
 };
 
 }}

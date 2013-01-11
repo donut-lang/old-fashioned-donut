@@ -20,6 +20,8 @@
 #include "Heaven.h"
 #include "World.h"
 #include "../geom/Area.h"
+#include "heaven/AngelElementTarget.h"
+#include "heaven/AngelWidgetTarget.h"
 #include <tinyxml2.h>
 
 namespace chisa {
@@ -79,6 +81,11 @@ Handler<Angel> AngelTarget::angel() const
 	return this->angel_.lock();
 }
 
+void AngelTarget::attatchServant(const Handler<Servant>& servant)
+{
+	this->servants_.push_back(servant);
+}
+
 /**********************************************************************************************************************
  * Servants
  **********************************************************************************************************************/
@@ -108,6 +115,32 @@ Handler<Angel> Servant::angel() const
 Handler<AngelTarget> Servant::target() const
 {
 	return this->target_.lock();
+}
+
+void Angel::registerServantToWidget(const std::string& widgetId, const std::string& widgetGuide, Handler<Servant> servant)
+{
+	for(Handler<AngelTarget> const& target : this->targets_) {
+		if(target->matchToWidgetTarget(widgetId, widgetGuide)) {
+			target->attatchServant(servant);
+			return;
+		}
+	}
+	Handler<AngelWidgetTarget> target (new AngelWidgetTarget(self(), widgetId, widgetGuide));
+	target->attatchServant(servant);
+	this->targets_.push_back(target);
+}
+
+void Angel::registerServantToElement(const std::string& elementId, Handler<Servant> servant)
+{
+	for(Handler<AngelTarget> const& target : this->targets_) {
+		if(target->matchToElementTarget(elementId)) {
+			target->attatchServant(servant);
+			return;
+		}
+	}
+	Handler<AngelElementTarget> target (new AngelElementTarget(self(), elementId));
+	target->attatchServant(servant);
+	this->targets_.push_back(target);
 }
 
 }}

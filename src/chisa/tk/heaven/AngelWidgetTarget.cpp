@@ -46,5 +46,10 @@ geom::Area AngelWidgetTarget::findScreenAreaImpl()
 	return element->widget()->findTargetInRoot(guide_);
 }
 
+bool AngelWidgetTarget::matchToWidgetTarget(const std::string& widgetId, const std::string& widgetGuide) const noexcept
+{
+	return this->id_ == widgetId && this->guide_ == widgetGuide;
+}
+
 }}
 
