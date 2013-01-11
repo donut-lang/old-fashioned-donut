@@ -41,9 +41,11 @@ geom::Area AngelElementTarget::findScreenAreaImpl()
 	return element->lastDrawnAreaInRoot();
 }
 
-bool AngelElementTarget::matchToElementTarget(const std::string& elementId) const noexcept
+Handler<AngelElementTarget> AngelElementTarget::matchToElementTarget(const std::string& elementId) noexcept
 {
-	return this->id_ == elementId;
+	return (this->id_ == elementId) ?
+			Handler<AngelElementTarget>::__internal__fromRawPointerWithoutCheck(this) :
+			Handler<AngelElementTarget>();
 }
 
 }}

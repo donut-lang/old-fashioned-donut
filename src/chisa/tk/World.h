@@ -95,12 +95,7 @@ private:
 	 * Angel管理
 	 ******************************************************************************/
 public:
-	Handler<AngelTarget> newElementAngelTarget( std::string const& id );
-	Handler<AngelTarget> newWidgetAngelTarget( std::string const& id, std::string const& guide );
-	Handler<Angel> findAngelById( std::string const& id );
-	std::string findAngelId( Handler<Angel> const& angel );
-	void attatchAngel( std::string const& id, Handler<Angel> const& angel);
-	std::string attatchAngel( Handler<Angel> const& angel );
+	Handler<Heaven> heaven();
 	/******************************************************************************
 	 * タスク管理
 	 ******************************************************************************/

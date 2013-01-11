@@ -33,7 +33,7 @@ private:
 	std::string const guide_;
 private:
 	virtual geom::Area findScreenAreaImpl();
-	virtual bool matchToWidgetTarget(std::string const& widgetId, std::string const& widgetGuide) const noexcept;
+	virtual Handler<AngelWidgetTarget> matchToWidgetTarget(std::string const& widgetId, std::string const& widgetGuide) noexcept override final;
 };
 
 }}

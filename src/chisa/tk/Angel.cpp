@@ -86,6 +86,15 @@ void AngelTarget::attatchServant(const Handler<Servant>& servant)
 	this->servants_.push_back(servant);
 }
 
+Handler<AngelElementTarget> AngelTarget::matchToElementTarget(std::string const& elementId) noexcept
+{
+	return Handler<AngelElementTarget>();
+}
+Handler<AngelWidgetTarget> AngelTarget::matchToWidgetTarget(std::string const& widgetId, std::string const& widgetGuide) noexcept {
+	return Handler<AngelWidgetTarget>();
+}
+
+
 /**********************************************************************************************************************
  * Servants
  **********************************************************************************************************************/
@@ -117,30 +126,35 @@ Handler<AngelTarget> Servant::target() const
 	return this->target_.lock();
 }
 
-void Angel::registerServantToWidget(const std::string& widgetId, const std::string& widgetGuide, Handler<Servant> servant)
+Handler<AngelWidgetTarget> Angel::newWidgetTarget(std::string const& widgetId, std::string const& widgetGuide)
 {
-	for(Handler<AngelTarget> const& target : this->targets_) {
-		if(target->matchToWidgetTarget(widgetId, widgetGuide)) {
-			target->attatchServant(servant);
-			return;
-		}
-	}
-	Handler<AngelWidgetTarget> target (new AngelWidgetTarget(self(), widgetId, widgetGuide));
-	target->attatchServant(servant);
-	this->targets_.push_back(target);
+	return Handler<AngelWidgetTarget>(new AngelWidgetTarget(self(), widgetId, widgetGuide));
+}
+Handler<AngelElementTarget> Angel::newElementTarget(std::string const& elementId)
+{
+	return Handler<AngelElementTarget>(new AngelElementTarget(self(), elementId));
 }
 
-void Angel::registerServantToElement(const std::string& elementId, Handler<Servant> servant)
+Handler<AngelWidgetTarget> Angel::findWidgetTarget(const std::string& widgetId, const std::string& widgetGuide )
 {
+	Handler<AngelWidgetTarget> res;
 	for(Handler<AngelTarget> const& target : this->targets_) {
-		if(target->matchToElementTarget(elementId)) {
-			target->attatchServant(servant);
-			return;
+		if((res = target->matchToWidgetTarget(widgetId, widgetGuide))) {
+			return res;
 		}
 	}
-	Handler<AngelElementTarget> target (new AngelElementTarget(self(), elementId));
-	target->attatchServant(servant);
-	this->targets_.push_back(target);
+	return res;
+}
+
+Handler<AngelElementTarget> Angel::findElementTarget(const std::string& elementId )
+{
+	Handler<AngelElementTarget> res;
+	for(Handler<AngelTarget> const& target : this->targets_) {
+		if((res = target->matchToElementTarget(elementId))) {
+			return res;
+		}
+	}
+	return res;
 }
 
 }}

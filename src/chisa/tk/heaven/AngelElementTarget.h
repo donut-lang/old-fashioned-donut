@@ -32,7 +32,7 @@ private:
 	HandlerW<Element> target_;
 private:
 	virtual geom::Area findScreenAreaImpl();
-	virtual bool matchToElementTarget(std::string const& elementId) const noexcept;
+	virtual Handler<AngelElementTarget> matchToElementTarget(std::string const& elementId) noexcept override final;
 };
 
 }}
