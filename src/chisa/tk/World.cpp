@@ -27,6 +27,7 @@
 #include "../gl/DrawableManager.h"
 #include "../input/JoystickManager.h"
 #include "Angel.h"
+#include "donut/Patron.h"
 
 namespace chisa {
 namespace tk {

@@ -17,85 +17,69 @@
  */
 
 #include <functional>
-#include "WorldObject.h"
+#include "HeavenObject.h"
 #include "ElementObject.h"
 #include "../Heaven.h"
 
 namespace chisa {
 namespace tk {
 
-const static std::string TAG("WorldObject");
+const static std::string TAG("HeavenObject");
 
-WorldProvider::WorldProvider(const Handler<Heap>& heap, const Handler<World>& world)
-:Super(heap, "chisa::tk::WorldObject")
-,world_(world)
+HeavenProvider::HeavenProvider(const Handler<Heap>& heap, const Handler<Heaven>& heaven)
+:Super(heap, "chisa::tk::HeavenObject")
 {
-	this->registerPureNativeClosure("findElementById",
-			[&](WorldObject* wobj, std::string const& name) {
-				Handler<World> const world = wobj->world();
-				return world->findElementById(name)->getElementObject();
-			});
-	this->registerReactiveNativeClosure("invokeAngel", [](WorldObject* obj)->ResultType{
+	this->registerReactiveNativeClosure("invokeAngel", [](HeavenObject* obj)->ResultType{
 
-		return std::tuple<Handler<Object>,bool,WorldSideEffect>();
+		return std::tuple<Handler<Object>,bool,HeavenSideEffect>();
 	});
-}
-
-Handler<World> WorldProvider::world() const
-{
-	return world_.lock();
 }
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-WorldObject::WorldObject(WorldProvider* provider)
+HeavenObject::HeavenObject(HeavenProvider* provider)
 :Super(provider)
-,world_(provider->world())
 {
 }
 
-void WorldObject::bootstrap(const Handler<Heap>& heap)
+void HeavenObject::bootstrap(const Handler<Heap>& heap, Handler<Heaven> const& heaven)
 {
-	this->ReactiveNativeObject::bootstrap(heap);
+	this->Super::bootstrap(heap);
+	this->heaven_ = heaven;
 }
 
-std::string WorldObject::reprImpl(const Handler<Heap>& heap) const
+std::string HeavenObject::reprImpl(const Handler<Heap>& heap) const
 {
-	return ::tarte::format("(WorldObject: %p)", this);
+	return ::tarte::format("(HeavenObject: %p)", this);
 }
 
-Handler<World> WorldObject::world() const
-{
-	return this->world_.lock();
-}
-
-WorldObject::ResultType WorldObject::onBack(const Handler<Heap>& heap, const WorldSideEffect& val)
+HeavenObject::ResultType HeavenObject::onBack(const Handler<Heap>& heap, const HeavenSideEffect& val)
 {
 	//XXX
-	return ResultType(true, WorldSideEffect());
+	return ResultType(true, HeavenSideEffect());
 }
 
-WorldObject::ResultType WorldObject::onForward(const Handler<Heap>& heap, const WorldSideEffect& val)
+HeavenObject::ResultType HeavenObject::onForward(const Handler<Heap>& heap, const HeavenSideEffect& val)
 {
 	//XXX
-	return ResultType(true, WorldSideEffect());
+	return ResultType(true, HeavenSideEffect());
 }
 
-XValue WorldObject::saveImpl(const Handler<Heap>& heap)
+XValue HeavenObject::saveImpl(const Handler<Heap>& heap)
 {
 	//XXX
 	return XValue();
 }
 
-void WorldObject::onFutureDiscarded(const Handler<Heap>& heap)
+void HeavenObject::onFutureDiscarded(const Handler<Heap>& heap)
 {
 }
 
-void WorldObject::onHistoryDiscarded(const Handler<Heap>& heap)
+void HeavenObject::onHistoryDiscarded(const Handler<Heap>& heap)
 {
 }
 
-void WorldObject::loadImpl(const Handler<Heap>& heap, const XValue& data)
+void HeavenObject::loadImpl(const Handler<Heap>& heap, const XValue& data)
 {
 	//XXX
 }

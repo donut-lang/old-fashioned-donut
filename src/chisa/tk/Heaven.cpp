@@ -42,7 +42,7 @@ Handler< ::donut::Object> Heaven::donutObject(Handler< ::donut::Heap> const& hea
 	if(!world) {
 		return Handler< ::donut::Object>();
 	}
-	Handler<HeavenObject> obj( world->patron()->heavenProvider()->newInstance(heap) );
+	Handler<HeavenObject> obj( world->patron()->heavenProvider()->newInstance(heap, self()) );
 	this->donutObject_ = obj;
 	return obj;
 }
