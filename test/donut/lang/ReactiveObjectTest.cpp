@@ -44,7 +44,7 @@ public:
 		this->Super::bootstrap(heap);
 	}
 public:
-	virtual std::tuple<bool, XValue> onBack(Handler<Heap> const& heap, XValue const& val) override
+	std::tuple<bool, XValue> onBack(Handler<Heap> const& heap, XValue const& val)
 	{
 		std::string v(val.as<std::string>());
 		if(v == "backable_but_non_fowardable"){
@@ -58,7 +58,7 @@ public:
 		}
 		return std::tuple<bool, XValue>(true, XValue(2));
 	}
-	virtual std::tuple<bool, XValue> onForward(Handler<Heap> const& heap, XValue const& val) override
+	std::tuple<bool, XValue> onForward(Handler<Heap> const& heap, XValue const& val)
 	{
 		std::string v(val.as<std::string>());
 		if(v == "backable_and_forwardable"){
@@ -69,10 +69,10 @@ public:
 		}
 		return std::tuple<bool, XValue>(true, XValue(1));
 	}
-	virtual void onFutureDiscarded(Handler<Heap> const& heap) {
+	void onFutureDiscarded(Handler<Heap> const& heap) {
 		this->futureDiscarded = true;
 	}
-	virtual void onHistoryDiscarded(Handler<Heap> const& heap) {
+	void onHistoryDiscarded(Handler<Heap> const& heap) {
 		this->historyDiscarded = true;
 	}
 	virtual XValue saveImpl( Handler<Heap> const& heap ) override {
