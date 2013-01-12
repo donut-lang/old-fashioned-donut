@@ -37,12 +37,6 @@ using namespace donut;
  * Base
  **********************************************************************************************************************/
 struct ServantSideEffect{
-	enum {
-		AttatchServant,
-		DetatchServant,
-	}op;
-	Handler<Servant> attatchedServant;
-	Handler<Servant> detatchedServant;
 	template <typename Arc>
 	void serialize(Arc& arc) {
 
@@ -52,7 +46,7 @@ struct ServantSideEffect{
 class ServantProvider;
 class ServantObject : public ReactiveNativeObject {
 private:
-	Handler<Servant> target_;
+	Handler<Servant> servant_;
 protected:
 	ServantObject(ServantProvider* provider);
 	virtual ~ServantObject() noexcept = default;
@@ -60,7 +54,7 @@ public:
 	void bootstrap(Handler<Heap> const& heap, Handler<Servant> const& target);
 public:
 	Handler<World> world() const;
-	Handler<Servant> angelTarget() const;
+	Handler<Servant> servant() const;
 //public:
 //	void onFutureDiscarded(Handler<Heap> const& heap);
 //	void onHistoryDiscarded(Handler<Heap> const& heap);
@@ -91,9 +85,9 @@ protected:
 	ServantObjectBaseT(ProviderT* provider);
 	virtual ~ServantObjectBaseT() noexcept = default;
 protected:
-	void bootstrap(const Handler<Heap>& heap, const Handler<TargetT>& angelTarget);
+	void bootstrap(const Handler<Heap>& heap, const Handler<TargetT>& servant);
 public:
-	Handler<TargetT> angelTarget() const;
+	Handler<TargetT> servant() const;
 private:
 	ResultType execAntiSideEffect(Handler<Heap> const& heap, AntiSideEffect const& val);
 public:
@@ -128,7 +122,7 @@ public:
 	ElementServantObject(ElementServantProvider* provider);
 	virtual ~ElementServantObject() noexcept = default;
 public:
-	void bootstrap(Handler<Heap> const& heap, Handler<ElementServant> const& Servant);
+	void bootstrap(Handler<Heap> const& heap, Handler<ElementServant> const& servant);
 public:
 	void onFutureDiscarded(Handler<Heap> const& heap);
 	void onHistoryDiscarded(Handler<Heap> const& heap);
@@ -165,7 +159,7 @@ public:
 	HaloServantObject(HaloServantProvider* provider);
 	virtual ~HaloServantObject() noexcept = default;
 public:
-	void bootstrap(Handler<Heap> const& heap, Handler<HaloServant> const& Servant);
+	void bootstrap(Handler<Heap> const& heap, Handler<HaloServant> const& servant);
 public:
 	Handler<World> world() const;
 public:

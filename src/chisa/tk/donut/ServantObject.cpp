@@ -50,17 +50,17 @@ ServantObject::ServantObject(ServantProvider* provider)
 void ServantObject::bootstrap(const Handler<Heap>& heap, Handler<Servant> const& angelTarget)
 {
 	this->ReactiveNativeObject::bootstrap(heap);
-	this->target_ = angelTarget;
+	this->servant_ = angelTarget;
 }
 
 Handler<World> ServantObject::world() const
 {
-	return target_->world();
+	return servant_->world();
 }
 
-Handler<Servant> ServantObject::angelTarget() const
+Handler<Servant> ServantObject::servant() const
 {
-	return this->target_;
+	return this->servant_;
 }
 
 
@@ -83,16 +83,16 @@ inline ServantObjectBaseT<ProviderT, ObjectT, TargetT, AntiT>::ServantObjectBase
 }
 
 template <typename ProviderT, typename ObjectT, typename TargetT, typename AntiT>
-Handler<TargetT> ServantObjectBaseT<ProviderT, ObjectT, TargetT, AntiT>::angelTarget() const
+Handler<TargetT> ServantObjectBaseT<ProviderT, ObjectT, TargetT, AntiT>::servant() const
 {
-	return Handler<TargetT>::__internal__fromRawPointerWithoutCheck( static_cast<TargetT*>(ServantObject::angelTarget().get()) );
+	return Handler<TargetT>::__internal__fromRawPointerWithoutCheck( static_cast<TargetT*>(ServantObject::servant().get()) );
 }
 
 
 template <typename ProviderT, typename ObjectT, typename TargetT, typename AntiT>
-void ServantObjectBaseT<ProviderT, ObjectT, TargetT, AntiT>::bootstrap(const Handler<Heap>& heap, const Handler<TargetT>& angelTarget)
+void ServantObjectBaseT<ProviderT, ObjectT, TargetT, AntiT>::bootstrap(const Handler<Heap>& heap, const Handler<TargetT>& servant)
 {
-	this->ServantObject::bootstrap(heap, angelTarget);
+	this->ServantObject::bootstrap(heap, servant);
 }
 
 template <typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
@@ -141,9 +141,9 @@ ElementServantObject::ElementServantObject(ElementServantProvider* provider)
 {
 }
 
-void ElementServantObject::bootstrap(const Handler<Heap>& heap, const Handler<ElementServant>& angeltarget)
+void ElementServantObject::bootstrap(const Handler<Heap>& heap, const Handler<ElementServant>& servant)
 {
-	Super::bootstrap(heap, angeltarget);
+	Super::bootstrap(heap, servant);
 }
 
 void ElementServantObject::onFutureDiscarded(const Handler<Heap>& heap)
@@ -196,9 +196,9 @@ HaloServantObject::HaloServantObject(HaloServantProvider* provider)
 {
 }
 
-void HaloServantObject::bootstrap(const Handler<Heap>& heap, const Handler<HaloServant>& angelTarget)
+void HaloServantObject::bootstrap(const Handler<Heap>& heap, const Handler<HaloServant>& servant)
 {
-	Super::bootstrap(heap, angelTarget);
+	Super::bootstrap(heap, servant);
 }
 
 void HaloServantObject::onFutureDiscarded(const Handler<Heap>& heap)
