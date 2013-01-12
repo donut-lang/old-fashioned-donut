@@ -40,7 +40,7 @@ Handler<Heaven> AngelTargetProvider::heaven() const
 	return heaven_.lock();
 }
 
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+//---------------------------------------------------------
 
 AngelTargetObject::AngelTargetObject(AngelTargetProvider* provider)
 :ReactiveNativeObject(provider)
@@ -67,6 +67,14 @@ Handler<AngelTarget> AngelTargetObject::angelTarget() const
 /**********************************************************************************************************************
  * BaseT
  **********************************************************************************************************************/
+template <typename ProviderT, typename ObjectT, typename TargetT, typename AntiT>
+AngelTargetProviderBaseT<ProviderT, ObjectT, TargetT, AntiT>::AngelTargetProviderBaseT(Handler<Heap> const& heap, std::string const& provname, Handler<Heaven> const& heaven)
+:AngelTargetProvider(heap, provname, heaven)
+{
+
+}
+
+//---------------------------------------------------------
 
 template<typename ProviderT, typename ObjectT, typename TargetT, typename AntiT>
 inline AngelTargetObjectBaseT<ProviderT, ObjectT, TargetT, AntiT>::AngelTargetObjectBaseT(ProviderT* provider)
@@ -86,14 +94,6 @@ void AngelTargetObjectBaseT<ProviderT, ObjectT, TargetT, AntiT>::bootstrap(const
 {
 	this->AngelTargetObject::bootstrap(heap, angelTarget);
 }
-
-template <typename ProviderT, typename ObjectT, typename TargetT, typename AntiT>
-AngelTargetProviderBaseT<ProviderT, ObjectT, TargetT, AntiT>::AngelTargetProviderBaseT(Handler<Heap> const& heap, std::string const& provname, Handler<Heaven> const& heaven)
-:AngelTargetProvider(heap, provname, heaven)
-{
-
-}
-
 
 template <typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
 void AngelTargetObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::onFutureDiscarded(Handler<Heap> const& heap)
@@ -144,7 +144,7 @@ AngelElementTargetProvider::AngelElementTargetProvider(const Handler<Heap>& heap
 {
 }
 
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+//---------------------------------------------------------
 
 AngelElementTargetObject::AngelElementTargetObject(AngelElementTargetProvider* provider)
 :Super(provider)
@@ -154,14 +154,6 @@ AngelElementTargetObject::AngelElementTargetObject(AngelElementTargetProvider* p
 void AngelElementTargetObject::bootstrap(const Handler<Heap>& heap, const Handler<AngelElementTarget>& angeltarget)
 {
 	Super::bootstrap(heap, angeltarget);
-}
-
-Handler<World> AngelElementTargetObject::world() const
-{
-}
-
-Handler<AngelElementTarget> AngelElementTargetObject::servant() const
-{
 }
 
 void AngelElementTargetObject::onFutureDiscarded(const Handler<Heap>& heap)
@@ -207,7 +199,7 @@ AngelWidgetTargetProvider::AngelWidgetTargetProvider(const Handler<Heap>& heap, 
 {
 }
 
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+//---------------------------------------------------------
 
 AngelWidgetTargetObject::AngelWidgetTargetObject(AngelWidgetTargetProvider* provider)
 :Super(provider)
@@ -217,14 +209,6 @@ AngelWidgetTargetObject::AngelWidgetTargetObject(AngelWidgetTargetProvider* prov
 void AngelWidgetTargetObject::bootstrap(const Handler<Heap>& heap, const Handler<AngelWidgetTarget>& angelTarget)
 {
 	Super::bootstrap(heap, angelTarget);
-}
-
-Handler<World> AngelWidgetTargetObject::world() const
-{
-}
-
-Handler<AngelWidgetTarget> AngelWidgetTargetObject::angelTarget() const
-{
 }
 
 void AngelWidgetTargetObject::onFutureDiscarded(const Handler<Heap>& heap)
