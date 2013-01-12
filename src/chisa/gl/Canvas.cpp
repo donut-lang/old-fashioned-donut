@@ -169,6 +169,25 @@ void Canvas::drawLine(const float width, Color const& color, geom::Point const& 
 #endif
 }
 
+void Canvas::drawLines(const float width, Color const& color, std::vector<geom::Point> const& pts, const float depth)
+{
+	if(color.isInvalid() || !(width > 0)){
+		return;
+	}
+	glLineWidth(width);
+	this->setColor(color);
+	glBegin(GL_LINE_STRIP);
+	for(geom::Point const& pt : pts){
+		glVertex3f(pt.x(), pt.y(), depth);
+	}
+	glEnd();
+#ifdef DEBUG
+	const GLenum err = glGetError();
+	if(err != GL_NO_ERROR){
+		TARTE_EXCEPTION(Exception, "[BUG] Failed to exec drawLine: 0x%08x", err);
+	}
+#endif
+}
 void Canvas::drawRect(const float width, Color const& color, geom::Area const& area, const float depth)
 {
 	if(color.isInvalid() || !(width > 0)){

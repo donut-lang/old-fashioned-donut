@@ -41,13 +41,14 @@ void renderCubicLine(gl::Canvas& cv, float width, gl::Color const& color, geom::
 	geom::Distance delta( pt1-pt2 );
 	geom::Point const vec_( delta.y()/delta.x() , -1 );
 	geom::Point const vec( vec_ / (vec_.length()/(delta.length()/7)) );
-
-	geom::Point last (pt1);
-	for(int x=9; x >= 0; --x) {
-		geom::Point next( ((pt1 * x + pt2*(10-x)) / 10)+vec*_sin[x] );
-		cv.drawLine(width, color, last, next );
-		last=next;
+	std::vector<geom::Point> pts;
+	pts.reserve(10);
+	pts.push_back(pt1);
+	for(int x=9; x >= 1; --x) {
+		pts.push_back( ((pt1 * x + pt2*(10-x)) / 10)+vec*_sin[x] );
 	}
+	pts.push_back(pt2);
+	cv.drawLines(width, color, pts, 0.0f);
 }
 
 }}
