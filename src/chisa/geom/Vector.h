@@ -173,6 +173,21 @@ public:
 		return geom::isSpecified(this->x_) && geom::isSpecified(this->y_);
 	}
 public:
+	inline float length() const {
+		return std::sqrt(lengthSq());
+	}
+	inline float lengthSq() const {
+		return x_*x_ + y_*y_;
+	}
+	inline float distance( Self const& other ) const {
+		return std::sqrt(distanceSq(other));
+	}
+	inline float distanceSq( Self const& other ) const noexcept {
+		float dx = x_ - other.x_;
+		float dy = y_ - other.y_;
+		return dx*dx + dy*dy;
+	}
+public:
 	inline constexpr Val x() const noexcept{return x_;};
 	inline constexpr Val y() const noexcept{return y_;};
 	inline void x(const Val x) noexcept { x_=x; };
@@ -344,6 +359,11 @@ constexpr T min(const BaseVector<T, U>& a, const BaseVector<T, U>& b) noexcept{
 template <typename T, typename U>
 constexpr T max(const BaseVector<T, U>& a, const BaseVector<T, U>& b) noexcept{
 	return T(std::max(a.x(), b.x()), std::max(a.y(), b.y()));
+}
+
+template <typename T, typename U>
+constexpr T abs(const BaseVector<T, U>& a) noexcept{
+	return T(std::abs(a.x()), std::abs(a.y()));
 }
 
 }}
