@@ -50,7 +50,11 @@ int main(int argc, char** argv) {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		gChisa->start("test");
-	} catch (tarte::Exception& e) {
+	} catch ( ::donut::Exception& e) {
+		std::cerr << "Donut Exception caught at " << e.file() << ":" << e.line() << std::endl;
+		std::cerr << "<msg>" << e.msg() << std::endl;
+		return -2;
+	} catch ( ::tarte::Exception& e) {
 		std::cerr << "Exception caught at " << e.file() << ":" << e.line() << std::endl;
 		std::cerr << "<msg>" << e.msg() << std::endl;
 		return -2;
