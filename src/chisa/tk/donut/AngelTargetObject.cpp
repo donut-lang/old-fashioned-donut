@@ -25,6 +25,10 @@ namespace tk {
 
 const static std::string TAG("AngelTargetObject");
 
+/**********************************************************************************************************************
+ * Base
+ **********************************************************************************************************************/
+
 AngelTargetProvider::AngelTargetProvider(Handler<Heap> const& heap, std::string const& provname, Handler<Heaven> const& heaven)
 :ReactiveProvider(heap, provname)
 ,heaven_(heaven)
@@ -59,27 +63,57 @@ Handler<AngelTarget> AngelTargetObject::angelTarget() const
 	return this->target_;
 }
 
-std::string AngelTargetObject::reprImpl(const Handler<Heap>& heap) const
-{
-	return ::tarte::format("(AngelTargetObject: %p)", this);
-}
 
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+/**********************************************************************************************************************
+ * BaseT
+ **********************************************************************************************************************/
 
-AngelElementTargetProvider::AngelElementTargetProvider(const Handler<Heap>& heap, const Handler<Heaven>& heaven)
-:AngelTargetProvider(heap, "AngelElementTarget", heaven)
-{
-}
-
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-AngelElementTargetObject::AngelElementTargetObject(AngelTargetProvider* provider)
+template<typename ProviderT, typename ObjectT, typename TargetT, typename AntiT>
+inline AngelTargetObjectBaseT<ProviderT, ObjectT, TargetT, AntiT>::AngelTargetObjectBaseT(ProviderT* provider)
 :AngelTargetObject(provider)
 {
 }
 
-void AngelElementTargetObject::bootstrap(const Handler<Heap>& heap, const Handler<AngelElementTarget>& AngelTarget)
+template <typename ProviderT, typename ObjectT, typename TargetT, typename AntiT>
+Handler<TargetT> AngelTargetObjectBaseT<ProviderT, ObjectT, TargetT, AntiT>::angelTarget() const
 {
+	return Handler<TargetT>::__internal__fromRawPointerWithoutCheck( static_cast<TargetT*>(AngelTargetObject::angelTarget().get()) );
+}
+
+
+template <typename ProviderT, typename ObjectT, typename TargetT, typename AntiT>
+void AngelTargetObjectBaseT<ProviderT, ObjectT, TargetT, AntiT>::bootstrap(const Handler<Heap>& heap, const Handler<TargetT>& angelTarget)
+{
+	this->AngelTargetObject::bootstrap(heap, angelTarget);
+}
+
+template <typename ProviderT, typename ObjectT, typename TargetT, typename AntiT>
+AngelTargetProviderBaseT<ProviderT, ObjectT, TargetT, AntiT>::AngelTargetProviderBaseT(Handler<Heap> const& heap, std::string const& provname, Handler<Heaven> const& heaven)
+:AngelTargetProvider(heap, provname, heaven)
+{
+
+}
+
+
+/**********************************************************************************************************************
+ * Element
+ **********************************************************************************************************************/
+
+AngelElementTargetProvider::AngelElementTargetProvider(const Handler<Heap>& heap, const Handler<Heaven>& heaven)
+:Super(heap, "AngelElementTarget", heaven)
+{
+}
+
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+AngelElementTargetObject::AngelElementTargetObject(AngelElementTargetProvider* provider)
+:Super(provider)
+{
+}
+
+void AngelElementTargetObject::bootstrap(const Handler<Heap>& heap, const Handler<AngelElementTarget>& angeltarget)
+{
+	Super::bootstrap(heap, angeltarget);
 }
 
 Handler<World> AngelElementTargetObject::world() const
@@ -114,22 +148,31 @@ void AngelElementTargetObject::loadImpl(const Handler<Heap>& heap, const XValue&
 {
 }
 
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+std::string AngelElementTargetObject::reprImpl(const Handler<Heap>& heap) const
+{
+	return ::tarte::format("(AngelElementTargetObject: %p)", this);
+}
+
+
+/**********************************************************************************************************************
+ * Widget
+ **********************************************************************************************************************/
 
 AngelWidgetTargetProvider::AngelWidgetTargetProvider(const Handler<Heap>& heap, const Handler<Heaven>& heaven)
-:AngelTargetProvider(heap, "AngelWidgetTarget", heaven)
+:Super(heap, "AngelWidgetTarget", heaven)
 {
 }
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-AngelWidgetTargetObject::AngelWidgetTargetObject(AngelTargetProvider* provider)
-:AngelTargetObject(provider)
+AngelWidgetTargetObject::AngelWidgetTargetObject(AngelWidgetTargetProvider* provider)
+:Super(provider)
 {
 }
 
-void AngelWidgetTargetObject::bootstrap(const Handler<Heap>& heap, const Handler<AngelWidgetTarget>& AngelTarget)
+void AngelWidgetTargetObject::bootstrap(const Handler<Heap>& heap, const Handler<AngelWidgetTarget>& angelTarget)
 {
+	Super::bootstrap(heap, angelTarget);
 }
 
 Handler<World> AngelWidgetTargetObject::world() const
@@ -162,6 +205,11 @@ XValue AngelWidgetTargetObject::saveImpl(const Handler<Heap>& heap)
 
 void AngelWidgetTargetObject::loadImpl(const Handler<Heap>& heap, const XValue& data)
 {
+}
+
+std::string AngelWidgetTargetObject::reprImpl(const Handler<Heap>& heap) const
+{
+	return ::tarte::format("(AngelWidgetTargetObject: %p)", this);
 }
 
 }}
