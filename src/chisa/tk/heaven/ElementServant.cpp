@@ -20,6 +20,7 @@
 #include "../Element.h"
 #include "../World.h"
 #include "../donut/Patron.h"
+#include "../../gl/DecoUtil.h"
 
 namespace chisa {
 namespace tk {
@@ -47,15 +48,20 @@ void ElementServant::renderImpl(gl::Canvas& canvas)
 	geom::Area area = this->target()->findScreenArea();
 
 	float offsetX = 0;
+	float midX;
 	if( area.right() + box.width() < renderArea().right() ) { //右側に描けるよ！
 		offsetX = area.right();
+		midX = box.width();
 	}else if( area.left() - box.width() > 0 ){ //左なら開いてるよ！
 		offsetX = area.left() - box.width();
+		midX=0;
 	}else{
 		offsetX = 0;
+		midX=0;
 	}
 
 	float offsetY = 0;
+	float const midY = (area.top() + area.bottom())/2;
 	if( area.bottom() + box.height() < renderArea().bottom() ) {
 		offsetY = area.bottom();
 	}else if( area.top() - box.height() > 0 ) {
@@ -69,7 +75,9 @@ void ElementServant::renderImpl(gl::Canvas& canvas)
 
 	geom::Point pt(offsetX+cycleX, offsetY+cycleY);
 	geom::Box leftSize( renderArea().width()-offsetX, renderArea().height()-offsetY );
+	geom::Point lpt(offsetX+cycleX+midX, offsetY+cycleY);
 
+	gl::renderCubicLine(canvas, 2, gl::Color(1.0f,.8f,.8f,.7f), geom::Point(offsetX, midY), lpt);
 	this->element()->render(canvas, pt, geom::Area(geom::ZERO, geom::min(box, leftSize)));
 }
 
