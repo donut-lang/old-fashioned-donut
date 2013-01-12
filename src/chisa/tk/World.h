@@ -64,7 +64,7 @@ private:
 	Stack<Handler<Element> > elementStack_;
 	Handler<Heaven> heaven_;
 	std::unordered_map<std::string, WidgetElement*> widgetMap_;
-	DEFINE_MEMBER(private, private, geom::Area, area);
+	DEFINE_MEMBER(public, private, geom::Area, area);
 private:
 	tinyxml2::XMLDocument* doc_;
 	DEFINE_MEMBER(public, private, Handler<WorldGeist>, geist);

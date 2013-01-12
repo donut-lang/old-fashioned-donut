@@ -26,6 +26,7 @@ namespace tk {
 class ElementServant : public Servant {
 private:
 	Handler<Element> element_;
+	float anim_;
 public:
 	inline Handler<Element> const& element() const { return this->element_; };
 public:

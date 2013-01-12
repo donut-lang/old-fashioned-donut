@@ -52,6 +52,8 @@ class ElementServant;
 
 class Servant : public HandlerBody<Servant> {
 private:
+	geom::Area renderArea_;
+private:
 	HandlerW<World> world_;
 	HandlerW<Heaven> heaven_;
 	HandlerW<Angel> angel_;
@@ -66,6 +68,7 @@ public:
 	Handler< ::donut::Object> donutObject(Handler< ::donut::Heap> const& heap);
 protected:
 	Servant(Handler<AngelTarget> const& angel_target);
+	inline geom::Area const& renderArea() const noexcept { return this->renderArea_; };
 public:
 	virtual ~Servant() noexcept = default;
 	inline bool onFree() const noexcept { return false; };
@@ -98,6 +101,7 @@ private:
 private:
 	HandlerW< ::donut::Object> donutObject_;
 private:
+	geom::Area renderArea_;
 	std::vector<Handler<Servant> > servants_;
 public:
 	Handler<World> world() const;
@@ -107,6 +111,7 @@ public:
 	std::size_t inline numServants() const noexcept { return this->servants_.size(); };
 protected:
 	inline std::vector<Handler<Servant> >& servants() noexcept { return this->servants_; };
+	inline geom::Area const& renderArea() const noexcept { return this->renderArea_; };
 public:
 	geom::Area findScreenArea();
 	void attatchServant( Handler<Servant> const& servant );
@@ -137,6 +142,7 @@ private:
 private:
 	HandlerW< ::donut::Object> donutObject_;
 private:
+	geom::Area renderArea_;
 	std::vector<Handler<AngelTarget> > targets_;
 protected:
 	Angel(Handler<Heaven> heaven);
@@ -160,6 +166,7 @@ public:
 	inline std::size_t numTargets() const noexcept { return this->targets_.size(); };
 protected:
 	inline std::vector<Handler<AngelTarget> >& targets() noexcept { return this->targets_; };
+	inline geom::Area const& renderArea() const noexcept { return this->renderArea_; };
 public:
 	virtual Handler<AngelTarget> attatchTarget(Handler<AngelTarget> const& target);
 	virtual Handler<AngelTarget> detatchTarget(Handler<AngelTarget> const& target);
