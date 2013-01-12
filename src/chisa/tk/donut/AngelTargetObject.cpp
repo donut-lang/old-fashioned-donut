@@ -21,6 +21,7 @@
 #include "ElementObject.h"
 #include "../heaven/HaloServant.h"
 #include "../heaven/ElementServant.h"
+#include "ServantObject.h"
 
 namespace chisa {
 namespace tk {
@@ -79,7 +80,22 @@ template <typename ProviderT, typename ObjectT, typename TargetT, typename AntiT
 AngelTargetProviderBaseT<ProviderT, ObjectT, TargetT, AntiT>::AngelTargetProviderBaseT(Handler<Heap> const& heap, std::string const& provname, Handler<Heaven> const& heaven)
 :AngelTargetProvider(heap, provname, heaven)
 {
+	this->registerReactiveNativeClosure("attatchServant", [this](AngelTargetObject* target, ServantObject* servant) {
+		AntiT anti;
+		AngelTargetSideEffect& side = anti;
+		side.op = AngelTargetSideEffect::DetatchServant;
+		side.detatchedServant = servant->servant();
+		target->angelTarget()->attatchServant(servant->servant());
+		return std::make_tuple(servant, true, anti);
+	});
 
+	this->registerReactiveNativeClosure("detatchServant", [this](AngelTargetObject* target, ServantObject* servant) {
+		AntiT anti;
+		AngelTargetSideEffect& side = anti;
+		side.op = AngelTargetSideEffect::AttatchServant;
+		side.attatchedServant = servant->servant();
+		return std::make_tuple(servant, true, anti);
+	});
 }
 
 //---------------------------------------------------------
