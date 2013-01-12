@@ -26,8 +26,6 @@ namespace tk {
 TwinAngel::TwinAngel(Handler<Heaven> const& heaven)
 :Angel(heaven)
 {
-	// TODO Auto-generated constructor stub
-
 }
 
 void TwinAngel::renderImpl(gl::Canvas& canvas)
@@ -51,5 +49,19 @@ Handler< ::donut::Object> TwinAngel::createDonutObject(Handler< ::donut::Heap> c
 {
 	return Handler< ::donut::Object>( world()->patron()->twinAngelProvider()->newInstance(heap, self()) );
 }
+
+Handler<AngelTarget> TwinAngel::attatchTarget(const Handler<AngelTarget>& target)
+{
+	if(numTargets() >= 2) {
+		TARTE_EXCEPTION(Exception, "[BUG] Oops. Twin angel can hold only two targets.")
+	}
+	return this->Angel::attatchTarget(target);
+}
+
+Handler<AngelTarget> TwinAngel::detatchTarget(const Handler<AngelTarget>& target)
+{
+	return this->Angel::detatchTarget(target);
+}
+
 
 }}

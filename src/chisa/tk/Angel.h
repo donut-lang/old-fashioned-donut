@@ -71,6 +71,14 @@ public:
 	inline bool onFree() const noexcept { return false; };
 protected:
 	virtual Handler< ::donut::Object> createDonutObject(Handler< ::donut::Heap> const& heap) = 0;
+public:
+	void render(gl::Canvas& canvas);
+	void idle(const float delta_ms);
+	geom::Box reshape(geom::Area const& area);
+protected:
+	virtual void renderImpl(gl::Canvas& canvas) = 0;
+	virtual void idleImpl(const float delta_ms) = 0;
+	virtual geom::Box reshapeImpl(geom::Area const& area) = 0;
 };
 
 
@@ -96,6 +104,9 @@ public:
 	Handler<Heaven> heaven() const;
 	Handler<Angel> angel() const;
 	Handler< ::donut::Object> donutObject(Handler< ::donut::Heap> const& heap);
+	std::size_t inline numServants() const noexcept { return this->servants_.size(); };
+protected:
+	inline std::vector<Handler<Servant> >& servants() noexcept { return this->servants_; };
 public:
 	geom::Area findScreenArea();
 	void attatchServant( Handler<Servant> const& servant );
@@ -106,6 +117,14 @@ public:
 public:
 	virtual Handler<AngelElementTarget> matchToElementTarget(std::string const& elementId) noexcept;
 	virtual Handler<AngelWidgetTarget> matchToWidgetTarget(std::string const& widgetId, std::string const& widgetGuide) noexcept;
+public:
+	void render(gl::Canvas& canvas);
+	void idle(const float delta_ms);
+	geom::Box reshape(geom::Area const& area);
+protected:
+	virtual void renderImpl(gl::Canvas& canvas) = 0;
+	virtual void idleImpl(const float delta_ms) = 0;
+	virtual geom::Box reshapeImpl(geom::Area const& area) = 0;
 protected:
 	virtual Handler< ::donut::Object> createDonutObject(Handler< ::donut::Heap> const& heap) = 0;
 	virtual geom::Area findScreenAreaImpl() = 0;
@@ -136,8 +155,11 @@ protected:
 	virtual void renderImpl(gl::Canvas& canvas) = 0;
 	virtual void idleImpl(const float delta_ms) = 0;
 	virtual void reshapeImpl(geom::Area const& area) = 0;
-protected:
 	virtual Handler< ::donut::Object> createDonutObject(Handler< ::donut::Heap> const& heap) = 0;
+public:
+	inline std::size_t numTargets() const noexcept { return this->targets_.size(); };
+protected:
+	inline std::vector<Handler<AngelTarget> >& targets() noexcept { return this->targets_; };
 public:
 	virtual Handler<AngelTarget> attatchTarget(Handler<AngelTarget> const& target);
 	virtual Handler<AngelTarget> detatchTarget(Handler<AngelTarget> const& target);

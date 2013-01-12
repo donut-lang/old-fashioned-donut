@@ -41,5 +41,24 @@ Handler< ::donut::Object> ElementServant::createDonutObject(Handler< ::donut::He
 	return Handler< ::donut::Object>( world()->patron()->elementServantProvider()->newInstance(heap, self()) );
 }
 
+void ElementServant::renderImpl(gl::Canvas& canvas)
+{
+}
+
+void ElementServant::idleImpl(const float delta_ms)
+{
+}
+
+geom::Box ElementServant::reshapeImpl(const geom::Area& area)
+{
+	geom::Box requested(element()->measure(area.box()/4));
+	geom::Box _size(
+			geom::isUnspecified(requested.width()) ? area.box().width()/4 : requested.width(),
+			geom::isUnspecified(requested.height()) ? area.box().height()/4 : requested.height()
+			);
+	element()->layout(geom::ZERO, _size);
+	return _size;
+}
+
 }}
 
