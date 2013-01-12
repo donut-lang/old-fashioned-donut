@@ -38,12 +38,17 @@ void Patron::onRegisterProvider(Handler< ::donut::Heap> const& heap)
 	if( unlikely(!world) ){
 		DONUT_EXCEPTION(Exception, "[BUG] Failed to lock world.");
 	}
+	//world
 	heap->registerProvider(this->worldProvider_ = Handler<WorldProvider>( new WorldProvider(heap, world) ));
+	// heaven
 	heap->registerProvider(this->heavenProvider_ = Handler<HeavenProvider>( new HeavenProvider(heap, world->heaven()) ));
+	// angel
 	heap->registerProvider(this->loneAngelProvider_ = Handler<LoneAngelProvider>( new LoneAngelProvider(heap, world->heaven()) ));
 	heap->registerProvider(this->twinAngelProvider_ = Handler<TwinAngelProvider>( new TwinAngelProvider(heap, world->heaven()) ));
+	// angel target
 	heap->registerProvider(this->angelElementTargetProvider_ = Handler<AngelElementTargetProvider>( new AngelElementTargetProvider(heap, world->heaven()) ));
 	heap->registerProvider(this->angelWidgetTargetProvider_ = Handler<AngelWidgetTargetProvider>( new AngelWidgetTargetProvider(heap, world->heaven()) ));
+	// servant
 	heap->registerProvider(this->haloServantProvider_ = Handler<HaloServantProvider>( new HaloServantProvider(heap, world->heaven()) ));
 	heap->registerProvider(this->elementServantProvider_ = Handler<ElementServantProvider>( new ElementServantProvider(heap, world->heaven()) ));
 	//ウィジットのプロバイダを設定
@@ -53,6 +58,7 @@ void Patron::onRegisterProvider(Handler< ::donut::Heap> const& heap)
 
 void Patron::onGlobalObjectInitialized(Handler< ::donut::Heap> const& heap)
 {
+	heap->setGlobalObject("World", this->world().lock()->donutObject(heap));
 }
 
 }}

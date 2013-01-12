@@ -75,8 +75,8 @@ class ElementProviderBaseT : public ElementProvider {
 	INJECT_REACTIVE_PROVIDER_ASPECT(__AntiSideEffectT, DerivedProviderT);
 protected:
 	typedef ElementProviderBaseT<DerivedProviderT, ObjectT, ElementT, __AntiSideEffectT> Super;
-	ElementProviderBaseT( Handler<Heap> const& heap, std::string const& name ):HeapProvider(heap, name){};
-	ElementProviderBaseT( Handler<Heap> const& heap ):HeapProvider(heap, ::tarte::demangle<ObjectT>() ){};
+	ElementProviderBaseT( Handler<Heap> const& heap, std::string const& name );
+	ElementProviderBaseT( Handler<Heap> const& heap );
 	virtual ~ElementProviderBaseT() noexcept = default;
 private:
 	virtual HeapObject* __internal__createInstanceForLoading() override final {
@@ -117,3 +117,15 @@ public:
 };
 
 }}
+
+template<typename DerivedProviderT, typename ObjectT, typename ElementT, typename __AntiSideEffectT>
+inline chisa::tk::ElementProviderBaseT<DerivedProviderT, ObjectT, ElementT, __AntiSideEffectT >::ElementProviderBaseT(const Handler<Heap>& heap, const std::string& name)
+:HeapProvider(heap, name)
+{
+}
+
+template<typename DerivedProviderT, typename ObjectT, typename ElementT, typename __AntiSideEffectT>
+inline chisa::tk::ElementProviderBaseT<DerivedProviderT, ObjectT, ElementT, __AntiSideEffectT >::ElementProviderBaseT(const Handler<Heap>& heap)
+:HeapProvider(heap, ::tarte::demangle<ObjectT>())
+{
+}

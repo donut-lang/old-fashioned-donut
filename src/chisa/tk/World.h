@@ -53,6 +53,7 @@ class Servant;
 class WidgetFactory;
 
 class Patron;
+class WorldObject;
 
 class World : public HandlerBody<World> {
 private:
@@ -72,13 +73,18 @@ private:
 	DEFINE_MEMBER(public, private, WidgetFactory*, widgetFactory);
 	DEFINE_MEMBER(private, private, ActionMediator*, gestureMediator);
 	Handler< ::chisa::tk::Patron> patron_;
-	DEFINE_MEMBER(public, private, Handler< ::donut::Donut>, donut);
-public:
-	Handler< ::chisa::tk::Patron> const& patron() const noexcept { return this->patron_; };
+	Handler< ::donut::Donut> donut_;
+	HandlerW< ::chisa::tk::WorldObject> donutObject_;
 public:
 	void render(gl::Canvas& canvas);
 	void idle(const float delta_ms);
 	void reshape(geom::Area const& area);
+	/******************************************************************************
+	 * ど～なっつ
+	 ******************************************************************************/
+	Handler< ::chisa::tk::Patron> const& patron() const noexcept { return this->patron_; };
+	Handler< ::donut::Donut> const& donut() const noexcept { return this->donut_; };
+	Handler< ::donut::Object> donutObject(Handler< ::donut::Heap> const& heap);
 	/******************************************************************************
 	 * ウィジット管理
 	 ******************************************************************************/

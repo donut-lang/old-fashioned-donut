@@ -36,6 +36,10 @@ namespace tk {
 
 const static std::string TAG("ElementObject");
 
+/**********************************************************************************************************************
+ * Base
+ **********************************************************************************************************************/
+
 ElementProvider::ElementProvider( Handler<Heap> const& heap, std::string const& name, Handler<World> const& world )
 :ReactiveProvider(heap, name)
 ,world_(world)
@@ -53,7 +57,7 @@ Handler<World> ElementProvider::world() const
 	return w;
 }
 
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+//---------------------------------------------------------
 
 ElementObject::ElementObject(ElementProvider* provider)
 :ReactiveNativeObject(provider)
