@@ -85,8 +85,6 @@ protected:
 	typedef AngelProviderBaseT<ProviderT, ObjectT, AngelT, AntiT> Super;
 	AngelProviderBaseT(Handler<Heap> const& heap, std::string const& provname, Handler<Heaven> const& heaven);
 	virtual ~AngelProviderBaseT() noexcept = default;
-protected:
-	void registerReactiveFunctions();
 };
 
 template <typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
@@ -139,8 +137,6 @@ private:
 };
 
 class LoneAngelProvider : public AngelProviderBaseT <LoneAngelProvider, LoneAngelObject, LoneAngel, LoneAngelSideEffect>{
-private:
-	HandlerW<Heaven> heaven_;
 public:
 	LoneAngelProvider(Handler<Heap> const& heap, Handler<Heaven> const& heaven);
 	virtual ~LoneAngelProvider() noexcept = default;
@@ -180,8 +176,6 @@ private:
 };
 
 class TwinAngelProvider : public AngelProviderBaseT<TwinAngelProvider, TwinAngelObject, TwinAngel, TwinAngelSideEffect> {
-private:
-	HandlerW<Heaven> heaven_;
 public:
 	TwinAngelProvider(Handler<Heap> const& heap, Handler<Heaven> const& heaven);
 	virtual ~TwinAngelProvider() noexcept = default;

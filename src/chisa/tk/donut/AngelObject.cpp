@@ -28,6 +28,10 @@ namespace tk {
 
 const static std::string TAG("AngelObject");
 
+/**********************************************************************************************************************
+ * Base
+ **********************************************************************************************************************/
+
 AngelProvider::AngelProvider(const Handler<Heap>& heap, const std::string& provname, const Handler<Heaven>& heaven)
 :ReactiveProvider(heap, provname)
 ,heaven_(heaven)
@@ -38,7 +42,7 @@ Handler<Heaven> AngelProvider::heaven() const
 {
 	return heaven_.lock();
 }
-
+//---------------------------------------------------------
 AngelObject::AngelObject(AngelProvider* provider)
 :ReactiveNativeObject(provider)
 {
@@ -59,7 +63,10 @@ Handler<Angel> AngelObject::angel() const
 {
 	return this->angel_;
 }
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+/**********************************************************************************************************************
+ * BaseT
+ **********************************************************************************************************************/
 
 template <typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
 AngelProviderBaseT<ProviderT, ObjectT, AngelT, AntiT>::AngelProviderBaseT(Handler<Heap> const& heap, std::string const& provname, Handler<Heaven> const& heaven)
@@ -77,14 +84,8 @@ AngelProviderBaseT<ProviderT, ObjectT, AngelT, AntiT>::AngelProviderBaseT(Handle
 	this->registerPureNativeClosure("findWidgetTarget", [this](ObjectT* obj, std::string elementId, std::string widgetGuide){
 		return obj->angel()->findWidgetTarget(elementId, widgetGuide)->donutObject(this->heap().lock());
 	});
-}
 
-template <typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
-void AngelProviderBaseT<ProviderT, ObjectT, AngelT, AntiT>::registerReactiveFunctions()
-{
-	ProviderT& self = static_cast<ProviderT&>(*this);
-
-	self.registerReactiveNativeClosure("attatchTarget", [this](ObjectT* dangel, AngelTargetObject* dtarget) {
+	this->registerReactiveNativeClosure("attatchTarget", [this](ObjectT* dangel, AngelTargetObject* dtarget) {
 		Handler<AngelT> angel(dangel->angel());
 		Handler<AngelTarget> target(dtarget->angelTarget());
 		AntiT side_;
@@ -93,7 +94,7 @@ void AngelProviderBaseT<ProviderT, ObjectT, AngelT, AntiT>::registerReactiveFunc
 		side.detatchedTarget_ = target;
 		return std::make_tuple(dtarget, true, side_);
 	});
-	self.registerReactiveNativeClosure("detatchTarget", [this](ObjectT* dangel, AngelTargetObject* dtarget) {
+	this->registerReactiveNativeClosure("detatchTarget", [this](ObjectT* dangel, AngelTargetObject* dtarget) {
 		Handler<AngelT> angel(dangel->angel());
 		Handler<AngelTarget> target(dtarget->angelTarget());
 		AntiT side_;
@@ -104,7 +105,7 @@ void AngelProviderBaseT<ProviderT, ObjectT, AngelT, AntiT>::registerReactiveFunc
 	});
 }
 
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+//---------------------------------------------------------
 
 template <typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
 AngelObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::AngelObjectBaseT(ProviderT* provider)
@@ -168,13 +169,16 @@ inline typename AngelObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ResultType 
 	return this->execAntiSideEffect(heap, val);
 }
 
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+/**********************************************************************************************************************
+ * LoneAngel
+ **********************************************************************************************************************/
 
 LoneAngelProvider::LoneAngelProvider(const Handler<Heap>& heap, const Handler<Heaven>& heaven)
 :Super(heap, "LoneAngelProvider", heaven)
 {
-	this->registerReactiveFunctions();
 }
+
+//-------------------------------------------------------
 
 LoneAngelObject::LoneAngelObject(LoneAngelProvider* provider)
 :Super(provider)
@@ -219,15 +223,16 @@ void LoneAngelObject::loadImpl(const Handler<Heap>& heap, const XValue& data)
 {
 }
 
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+/**********************************************************************************************************************
+ * TwinAngel
+ **********************************************************************************************************************/
 
 TwinAngelProvider::TwinAngelProvider(const Handler<Heap>& heap, const Handler<Heaven>& heaven)
 :Super(heap, "TwinAngelProvider", heaven)
 {
-	this->registerReactiveFunctions();
 }
 
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+//-------------------------------------------------------
 
 TwinAngelObject::TwinAngelObject(TwinAngelProvider* provider)
 :Super(provider)

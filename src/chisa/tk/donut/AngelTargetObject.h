@@ -130,9 +130,6 @@ public:
 public:
 	void bootstrap(Handler<Heap> const& heap, Handler<AngelElementTarget> const& AngelTarget);
 public:
-	Handler<World> world() const;
-	Handler<AngelElementTarget> servant() const;
-public:
 	void onFutureDiscarded(Handler<Heap> const& heap);
 	void onHistoryDiscarded(Handler<Heap> const& heap);
 	ResultType onBack(Handler<Heap> const& heap, AntiSideEffect const& val);
@@ -171,7 +168,6 @@ public:
 	void bootstrap(Handler<Heap> const& heap, Handler<AngelWidgetTarget> const& AngelTarget);
 public:
 	Handler<World> world() const;
-	Handler<AngelWidgetTarget> angelTarget() const;
 public:
 	void onFutureDiscarded(Handler<Heap> const& heap);
 	void onHistoryDiscarded(Handler<Heap> const& heap);
