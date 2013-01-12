@@ -88,6 +88,7 @@ AngelProviderBaseT<ProviderT, ObjectT, AngelT, AntiT>::AngelProviderBaseT(Handle
 	this->registerReactiveNativeClosure("attatchTarget", [this](ObjectT* dangel, AngelTargetObject* dtarget) {
 		Handler<AngelT> angel(dangel->angel());
 		Handler<AngelTarget> target(dtarget->angelTarget());
+		angel->attatchTarget(target);
 		AntiT side_;
 		AngelSideEffect& side = side_;
 		side.op = AngelSideEffect::DetatchTarget;
@@ -97,6 +98,7 @@ AngelProviderBaseT<ProviderT, ObjectT, AngelT, AntiT>::AngelProviderBaseT(Handle
 	this->registerReactiveNativeClosure("detatchTarget", [this](ObjectT* dangel, AngelTargetObject* dtarget) {
 		Handler<AngelT> angel(dangel->angel());
 		Handler<AngelTarget> target(dtarget->angelTarget());
+		angel->detatchTarget(target);
 		AntiT side_;
 		AngelSideEffect& side = side_;
 		side.op = AngelSideEffect::AttatchTarget;
