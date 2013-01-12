@@ -153,7 +153,17 @@ Handler<HaloServant> AngelTarget::newHaloServant( gl::Color const& color )
 }
 Handler<ElementServant> AngelTarget::newElementServant( Handler<Element> const& element )
 {
-	return Handler<ElementServant>(new ElementServant(self()));
+	return Handler<ElementServant>(new ElementServant(self(), element));
+}
+
+Handler<ElementServant> AngelTarget::newElementServant( std::string const& elementId )
+{
+	Handler<World> world(this->world());
+	if( unlikely(!world) ){
+		TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.")
+	}
+	Handler<Element> element = world->realizeElement(elementId);
+	return Handler<ElementServant>(new ElementServant(self(), element));
 }
 
 Handler<AngelElementTarget> AngelTarget::matchToElementTarget(std::string const& elementId) noexcept
