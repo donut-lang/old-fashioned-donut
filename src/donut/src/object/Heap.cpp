@@ -106,6 +106,9 @@ void Heap::unregisterSource( Source* source )
 
 void Heap::registerObject( Handler<HeapObject> const& obj )
 {
+	if( unlikely(obj->id() != 0) ) {
+		DONUT_EXCEPTION(Exception, "[BUG] Object \"%s\" is already registered to %d.", obj->repr(self()).c_str(), obj->id());
+	}
 	obj->id(++this->objectId_);
 	this->objectPool_.push_back(obj.get());
 	if( this->objectPool_.size() >= this->gcLimit_ ) {
@@ -158,58 +161,38 @@ Handler<DonutObject> Heap::createDonutObject()
 {
 	Handler<DonutObject> obj(donutObjectProvider_->newInstance());
 	obj->set(self(), "__proto__", this->objectProto());
-	this->registerObject(obj);
-
 	return obj;
 }
 
 Handler<DonutObject> Heap::createEmptyDonutObject()
 {
-	Handler<DonutObject> obj(donutObjectProvider_->newInstance());
-	this->registerObject(obj);
-
-	return obj;
+	return donutObjectProvider_->newInstance();
 }
 class DonutObject;
 
 Handler<StringObject> Heap::createStringObject(std::string const& val)
 {
-	Handler<StringObject> obj(this->stringProvider_->newInstance(self(), val));
-	this->registerObject(obj);
-
-	return obj;
+	return this->stringProvider_->newInstance(self(), val);
 }
 
 Handler<FloatObject> Heap::createFloatObject(float const& val)
 {
-	Handler<FloatObject> obj(this->floatProvider_->newInstance(self(), val));
-	this->registerObject(obj);
-
-	return obj;
+	return this->floatProvider_->newInstance(self(), val);
 }
 
 Handler<DonutClosureObject> Heap::createDonutClosureObject( Handler<Source> const& src, unsigned int const& closureIndex, Handler<Object> const& scope )
 {
-	Handler<DonutClosureObject> obj(this->donutClosureObjectProvider_->newInstance(self(), src, closureIndex, scope));
-	this->registerObject(obj);
-
-	return obj;
+	return this->donutClosureObjectProvider_->newInstance(self(), src, closureIndex, scope);
 }
 
 Handler<PureNativeClosureObject> Heap::createPureNativeClosureObject(std::string const& objectProviderName, std::string const& closureName, PureNativeClosureObject::Signature f)
 {
-	Handler<PureNativeClosureObject> obj(this->pureNativeClosureProvider_->newInstance(objectProviderName, closureName, f));
-	this->registerObject(obj);
-
-	return obj;
+	return this->pureNativeClosureProvider_->newInstance(objectProviderName, closureName, f);
 }
 
 Handler<HomuraObject> Heap::createHomuraObject()
 {
-	Handler<HomuraObject> obj(this->homuraProvider_->newInstance(self()));
-	this->registerObject(obj);
-
-	return obj;
+	return this->homuraProvider_->newInstance(self());
 }
 Handler<Object> Heap::createInt(int const& val)
 {
