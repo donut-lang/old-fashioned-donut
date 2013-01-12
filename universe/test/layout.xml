@@ -17,7 +17,7 @@
 					<vertical>
 						<textarea desc="テキストエリアサンプル" />
 						<button text="ボタン">
-							1+1;
+							World.heaven().newTwinAngel();
 						</button>
 						<label text="ラベル" />
 						<widget title="NES" widget-klass="nes-memory" fit="expand">

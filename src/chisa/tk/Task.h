@@ -18,7 +18,10 @@
 
 #pragma once
 #include <unordered_set>
+#include <vector>
+#include <functional>
 #include <tarte/Logger.h>
+#include <tarte/TypeTrans.h>
 
 namespace chisa {
 using namespace tarte;
@@ -43,12 +46,21 @@ private:
 	Logger& log;
 private:
 	std::unordered_set<Task*> taskPool;
+	std::vector<std::function<bool(float)> > lambas_;
 public:
 	TaskHandler(Logger& log);
 	virtual ~TaskHandler();
 public:
 	void registerTask(Task* task);
 	void unregisterTask(Task* task);
+public:
+	void registerTask( std::function<bool()> const& lambda );
+	void registerTask( std::function<bool(float)> const& lambda );
+	void registerTask( std::function<void()> const& lambda );
+	template <typename __Lambda>
+	void registerTask( __Lambda lambda ){
+		registerTask( ::tarte::makeFunctor(lambda) );
+	}
 	std::size_t getPostCount() const{ return taskPool.size(); };
 public:
 	void run(const float delta_ms);
