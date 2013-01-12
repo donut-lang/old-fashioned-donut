@@ -102,6 +102,7 @@ public:
 public:
 	Handler<HaloServant> newHaloServant( gl::Color const& color );
 	Handler<ElementServant> newElementServant( Handler<Element> const& element );
+	Handler<ElementServant> newElementServant( std::string const& elemId );
 public:
 	virtual Handler<AngelElementTarget> matchToElementTarget(std::string const& elementId) noexcept;
 	virtual Handler<AngelWidgetTarget> matchToWidgetTarget(std::string const& widgetId, std::string const& widgetGuide) noexcept;

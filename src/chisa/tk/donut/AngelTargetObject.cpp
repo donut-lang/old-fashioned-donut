@@ -19,6 +19,8 @@
 #include <functional>
 #include "AngelTargetObject.h"
 #include "ElementObject.h"
+#include "../heaven/HaloServant.h"
+#include "../heaven/ElementServant.h"
 
 namespace chisa {
 namespace tk {
@@ -33,6 +35,12 @@ AngelTargetProvider::AngelTargetProvider(Handler<Heap> const& heap, std::string 
 :ReactiveProvider(heap, provname)
 ,heaven_(heaven)
 {
+	this->registerPureNativeClosure("newHaloServant", [this]( AngelTargetObject* target, std::string color ){
+		return target->angelTarget()->newHaloServant(gl::Color::fromString(color))->donutObject(this->heap().lock());
+	});
+	this->registerPureNativeClosure("newElementServant", [this]( AngelTargetObject* target, std::string elemId )->Handler<Object>{
+		return target->angelTarget()->newElementServant(elemId)->donutObject(this->heap().lock());
+	});
 }
 
 Handler<Heaven> AngelTargetProvider::heaven() const
@@ -114,10 +122,14 @@ inline typename AngelTargetObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::Resul
 	AngelTargetSideEffect const& old = val;
 	switch(old.op){
 	case AngelTargetSideEffect::AttatchServant:
+		this->angelTarget()->attatchServant( old.attatchedServant );
 		side.op = AngelTargetSideEffect::DetatchServant;
+		side.detatchedServant = old.attatchedServant;
 		break;
 	case AngelTargetSideEffect::DetatchServant:
+		this->angelTarget()->attatchServant( old.detatchedServant );
 		side.op = AngelTargetSideEffect::DetatchServant;
+		side.attatchedServant = old.detatchedServant;
 		break;
 	}
 	return std::make_tuple(true, newAnti);

@@ -31,7 +31,7 @@ public:
 public:
 	Handler<ElementServant> self() noexcept;
 public:
-	ElementServant(Handler<AngelTarget> const& angelTarget);
+	ElementServant(Handler<AngelTarget> const& angelTarget, Handler<Element> const& elem);
 	virtual ~ElementServant() noexcept = default;
 private:
 	virtual Handler< ::donut::Object> createDonutObject(Handler< ::donut::Heap> const& heap) override final;
