@@ -95,6 +95,46 @@ AngelTargetProviderBaseT<ProviderT, ObjectT, TargetT, AntiT>::AngelTargetProvide
 }
 
 
+template <typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
+void AngelTargetObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::onFutureDiscarded(Handler<Heap> const& heap)
+{
+
+}
+template <typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
+void AngelTargetObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::onHistoryDiscarded(Handler<Heap> const& heap)
+{
+
+}
+
+template<typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
+inline typename AngelTargetObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ResultType AngelTargetObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::execAntiSideEffect(const Handler<Heap>& heap, const AntiSideEffect& val)
+{
+	AntiT newAnti;
+	AngelTargetSideEffect& side = newAnti;
+	AngelTargetSideEffect const& old = val;
+	switch(old.op){
+	case AngelTargetSideEffect::AttatchServant:
+		side.op = AngelTargetSideEffect::DetatchServant;
+		break;
+	case AngelTargetSideEffect::DetatchServant:
+		side.op = AngelTargetSideEffect::DetatchServant;
+		break;
+	}
+	return std::make_tuple(true, newAnti);
+}
+
+template<typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
+inline typename AngelTargetObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ResultType AngelTargetObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::onBack(const Handler<Heap>& heap, const AntiSideEffect& val)
+{
+	return this->execAntiSideEffect(heap, val);
+}
+
+template<typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
+inline typename AngelTargetObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ResultType AngelTargetObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::onForward(const Handler<Heap>& heap, const AntiSideEffect& val)
+{
+	return this->execAntiSideEffect(heap, val);
+}
+
 /**********************************************************************************************************************
  * Element
  **********************************************************************************************************************/
@@ -126,18 +166,22 @@ Handler<AngelElementTarget> AngelElementTargetObject::servant() const
 
 void AngelElementTargetObject::onFutureDiscarded(const Handler<Heap>& heap)
 {
+	Super::onFutureDiscarded(heap);
 }
 
 void AngelElementTargetObject::onHistoryDiscarded(const Handler<Heap>& heap)
 {
+	Super::onHistoryDiscarded(heap);
 }
 
 AngelElementTargetObject::ResultType AngelElementTargetObject::onBack(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
+	return Super::onBack(heap, val);
 }
 
 AngelElementTargetObject::ResultType AngelElementTargetObject::onForward(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
+	return Super::onForward(heap, val);
 }
 
 XValue AngelElementTargetObject::saveImpl(const Handler<Heap>& heap)
@@ -185,18 +229,22 @@ Handler<AngelWidgetTarget> AngelWidgetTargetObject::angelTarget() const
 
 void AngelWidgetTargetObject::onFutureDiscarded(const Handler<Heap>& heap)
 {
+	Super::onFutureDiscarded(heap);
 }
 
 void AngelWidgetTargetObject::onHistoryDiscarded(const Handler<Heap>& heap)
 {
+	Super::onHistoryDiscarded(heap);
 }
 
 AngelWidgetTargetObject::ResultType AngelWidgetTargetObject::onBack(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
+	return Super::onBack(heap, val);
 }
 
 AngelWidgetTargetObject::ResultType AngelWidgetTargetObject::onForward(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
+	return Super::onForward(heap, val);
 }
 
 XValue AngelWidgetTargetObject::saveImpl(const Handler<Heap>& heap)
