@@ -74,6 +74,7 @@ struct ElementSideEffect {
 	enum {
 
 	} op;
+	typedef ElementSideEffect Super;
 	template <typename Arc>
 	void serialize(Arc& arc) {
 	}

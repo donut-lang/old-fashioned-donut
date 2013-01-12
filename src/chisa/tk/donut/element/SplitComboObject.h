@@ -33,7 +33,7 @@ struct SplitComboSideEffect : public ElementGroupSideEffect {
 	}
 	template <typename Arc>
 	void serialize(Arc& arc) {
-		ElementGroupSideEffect::serialize(arc);
+		Super::serialize(arc);
 	}
 };
 

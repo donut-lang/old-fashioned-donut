@@ -35,6 +35,7 @@ struct ElementGroupSideEffect : public ElementSideEffect {
 	enum {
 		None=0,
 	} op;
+	typedef ElementGroupSideEffect Super;
 	ElementGroupSideEffect()
 	:op(None)
 	{
