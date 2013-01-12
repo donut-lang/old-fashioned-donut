@@ -69,7 +69,8 @@ struct Decoder<T, typename std::enable_if<
 template <typename T>
 struct Decoder<T, typename std::enable_if<
 		std::is_pointer<typename DecodeTraits<T>::return_type>::value &&
-		std::is_base_of<Object, typename std::remove_pointer<typename DecodeTraits<T>::return_type>::type >::value
+		std::is_base_of<Object, typename std::remove_pointer<typename DecodeTraits<T>::return_type>::type >::value &&
+		!std::is_base_of<typename std::remove_pointer<typename DecodeTraits<T>::return_type>::type, Object>::value
 			>::type> final {
 	static typename DecodeTraits<T>::return_type exec(Handler<Heap> const& heap, Handler<Object> obj)
 	{
@@ -82,7 +83,8 @@ template <typename T>
 struct Decoder<T, typename std::enable_if<
 	std::is_pointer<typename DecodeTraits<T>::return_type>::value &&
 	std::is_base_of<Object, typename std::remove_pointer<typename DecodeTraits<T>::return_type>::type>::value &&
-	std::is_base_of<typename std::remove_pointer<typename DecodeTraits<T>::return_type>::type, Object>::value >::type > final {
+	std::is_base_of<typename std::remove_pointer<typename DecodeTraits<T>::return_type>::type, Object>::value
+		>::type> final {
 	static typename DecodeTraits<T>::return_type exec(Handler<Heap> const& heap, Handler<Object> obj)
 	{
 		return obj.get();
