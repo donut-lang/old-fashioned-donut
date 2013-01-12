@@ -54,8 +54,9 @@ protected:
 	ElementGroupBase(CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_LIST)
 	:ElementGroup(CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_PARAM_APPLY){}
 	virtual ~ElementGroupBase() noexcept {}
-protected:
+public:
 	typedef __Context Context;
+protected:
 	typedef std::pair<Handler<Element>,Context> ContainerType;
 	typedef ElementGroupBase<Context> Super;
 private:

@@ -81,11 +81,11 @@ struct ElementSideEffect {
 
 template <typename ProviderT, typename ObjectT, typename ElementT, typename AntiT>
 class ElementProviderBaseT : public ElementProvider {
-	INJECT_REACTIVE_PROVIDER_ASPECT(AntiT, ProviderT);
+	INJECT_REACTIVE_PROVIDER_ASPECT(AntiT, ElementProvider);
 protected:
 	typedef ElementProviderBaseT<ProviderT, ObjectT, ElementT, AntiT> Super;
-	ElementProviderBaseT( Handler<Heap> const& heap, std::string const& name );
-	ElementProviderBaseT( Handler<Heap> const& heap );
+	ElementProviderBaseT( Handler<Heap> const& heap, std::string const& name, Handler<World> const& world );
+	ElementProviderBaseT( Handler<Heap> const& heap, Handler<World> const& world );
 	virtual ~ElementProviderBaseT() noexcept = default;
 private:
 	virtual HeapObject* __internal__createInstanceForLoading() override final {
@@ -111,10 +111,7 @@ protected:
 	inline ProviderT provider() const noexcept { return static_cast<ProviderT*>(this->ElementObject::provider()); };
 	Handler<ElementT> element() const { return Handler<ElementT>::__internal__fromRawPointerWithoutCheck(static_cast<ElementT*>(ElementObject::element().get())); };
 protected:
-	ElementObjectBaseT(ProviderT* provider)
-	:ElementObject(provider)
-	{
-	}
+	ElementObjectBaseT(ProviderT* provider);
 	virtual ~ElementObjectBaseT() noexcept = default;
 public:
 	virtual std::string reprImpl(Handler<Heap> const& heap) const override {
@@ -138,18 +135,24 @@ public:
  **********************************************************************************************************************/
 
 template<typename ProviderT, typename ObjectT, typename ElementT, typename AntiT>
-ElementProviderBaseT<ProviderT, ObjectT, ElementT, AntiT >::ElementProviderBaseT(const Handler<Heap>& heap, const std::string& name)
-:HeapProvider(heap, name)
+ElementProviderBaseT<ProviderT, ObjectT, ElementT, AntiT >::ElementProviderBaseT(const Handler<Heap>& heap, const std::string& name, Handler<World> const& world)
+:ElementProvider(heap, name, world)
 {
 }
 
 template<typename ProviderT, typename ObjectT, typename ElementT, typename AntiT>
-ElementProviderBaseT<ProviderT, ObjectT, ElementT, AntiT >::ElementProviderBaseT(const Handler<Heap>& heap)
-:HeapProvider(heap, ::tarte::demangle<ObjectT>())
+ElementProviderBaseT<ProviderT, ObjectT, ElementT, AntiT >::ElementProviderBaseT(const Handler<Heap>& heap, Handler<World> const& world)
+:ElementProvider(heap, ::tarte::demangle<ObjectT>(), world)
 {
 }
 
 //-------------------------------------------------------------------
+
+template <typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
+ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ElementObjectBaseT(ProviderT* provider)
+:ElementObject(provider)
+{
+}
 
 template <typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
 void ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::onFutureDiscarded(Handler<Heap> const& heap)
@@ -166,23 +169,23 @@ template<typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
 inline typename ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ResultType ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::execAntiSideEffect(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
 	AntiT newAnti;
-	ElementSideEffect& side = newAnti;
-	ElementSideEffect const& old = val;
-	switch(old.op) {
-	}
+	//ElementSideEffect& side = newAnti;
+	//ElementSideEffect const& old = val;
+	//switch(old.op) {
+	//}
 	return std::make_tuple(true, newAnti);
 }
 
 template<typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
 inline typename ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ResultType ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::onBack(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
-	return this->execAntiSideEffect(heap, val);
+	return this->ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::execAntiSideEffect(heap, val);
 }
 
 template<typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
 inline typename ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ResultType ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::onForward(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
-	return this->execAntiSideEffect(heap, val);
+	return this->ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::execAntiSideEffect(heap, val);
 }
 
 }}
