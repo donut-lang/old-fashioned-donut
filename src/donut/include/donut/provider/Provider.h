@@ -46,4 +46,14 @@ void ReactiveProviderAspectT<__AntiSideEffect>::bootstrap(ReactiveProvider& self
 	}
 }
 
+template <typename ObjectT, typename ProviderT, typename... Args>
+inline Handler<ObjectT> HeapProvider::newInstance(ProviderT* self, Args... args)
+{
+	Handler<Heap> heap(self->heap().lock());
+	if(!heap) {
+		DONUT_EXCEPTION(Exception, "[BUG] Heap is already dead.");
+	}
+	return heap->createObject<ObjectT>(self, args...);
+}
+
 }

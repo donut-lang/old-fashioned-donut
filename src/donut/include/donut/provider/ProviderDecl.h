@@ -66,6 +66,9 @@ protected:
 	virtual HeapObject* __internal__createInstanceForLoading() = 0;
 public:
 	virtual ~HeapProvider() noexcept = default;
+protected: /* これを使ってオブジェクトを生成してね */
+	template <typename ObjectT, typename ProviderT, typename... Args>
+	static inline Handler<ObjectT> newInstance(ProviderT* self, Args... args);
 };
 
 template <typename Derived, typename T>
@@ -81,11 +84,8 @@ private:
 		return new T( static_cast<Derived*>(this) );
 	}
 public: /* これを使ってオブジェクトを生成してね */
-	template <typename... Args> inline
-	Handler<T> newInstance(Args... args) {
-		Handler<T> t ( new T( static_cast<Derived*>(this) ) );
-		t->bootstrap(args...);
-		return t;
+	template <typename... Args> inline Handler<T> newInstance(Args... args) {
+		return HeapProvider::newInstance<T>(static_cast<Derived*>(this), args...);
 	}
 };
 
@@ -188,11 +188,8 @@ private:
 		return new __Object( static_cast<__Derived*>(this) );
 	}
 public: /* これを使ってオブジェクトを生成してね */
-	template <typename... Args> inline
-	Handler<__Object> newInstance(Args... args) {
-		Handler<__Object> obj ( new __Object( static_cast<__Derived*>(this) ) );
-		obj->bootstrap(args...);
-		return obj;
+	template <typename... Args> inline Handler<__Object> newInstance(Args... args) {
+		return HeapProvider::newInstance<__Object>(static_cast<__Derived*>(this), args...);
 	}
 };
 
