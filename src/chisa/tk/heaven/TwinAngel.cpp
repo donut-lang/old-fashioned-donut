@@ -18,6 +18,7 @@
 
 #include "../Heaven.h"
 #include "TwinAngel.h"
+#include "../donut/Patron.h"
 
 namespace chisa {
 namespace tk {
@@ -41,8 +42,14 @@ void TwinAngel::reshapeImpl(const geom::Area& area)
 {
 }
 
+Handler<TwinAngel> TwinAngel::self() noexcept
+{
+	return Handler<TwinAngel>::__internal__fromRawPointerWithoutCheck(this);
+}
+
 Handler< ::donut::Object> TwinAngel::createDonutObject(Handler< ::donut::Heap> const& heap)
 {
+	return Handler< ::donut::Object>( world()->patron()->twinAngelProvider()->newInstance(heap, self()) );
 }
 
 }}

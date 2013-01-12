@@ -29,6 +29,8 @@ private:
 public:
 	inline Handler<Element> const& element() const { return this->element_; };
 public:
+	Handler<ElementServant> self() noexcept;
+public:
 	ElementServant(Handler<AngelTarget> const& angelTarget);
 	virtual ~ElementServant() noexcept = default;
 private:

@@ -26,6 +26,8 @@ class TwinAngel final : public Angel {
 public:
 	TwinAngel(Handler<Heaven> const& heaven);
 	virtual ~TwinAngel() noexcept = default;
+public:
+	Handler<TwinAngel> self() noexcept;
 protected:
 	virtual void renderImpl(gl::Canvas& canvas) override final;
 	virtual void idleImpl(const float delta_ms) override final;

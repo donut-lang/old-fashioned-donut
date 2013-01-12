@@ -42,19 +42,19 @@ void TaskHandler::unregisterTask(Task* task)
 	this->taskPool.erase(task);
 }
 
-void TaskHandler::registerTask( std::function<bool()> const& lambda ){
+void TaskHandler::send( std::function<bool()> const& lambda ){
 	if(this->log.t()){
 		this->log.t(TAG, "Lambda std::function<bool()> registered.");
 	}
 	this->lambas_.push_back(std::function<bool(float)>( [lambda](float n)->bool{ return lambda(); } ));
 }
-void TaskHandler::registerTask( std::function<void()> const& lambda ){
+void TaskHandler::send( std::function<void()> const& lambda ){
 	if(this->log.t()){
 		this->log.t(TAG, "Lambda std::function<void()> registered.");
 	}
 	this->lambas_.push_back(std::function<bool(float)>( [lambda](float n)->bool{ lambda();return false; } ));
 }
-void TaskHandler::registerTask( std::function<bool(float)> const& lambda ){
+void TaskHandler::send( std::function<bool(float)> const& lambda ){
 	if(this->log.t()){
 		this->log.t(TAG, "Lambda std::function<bool(float)> registered.");
 	}

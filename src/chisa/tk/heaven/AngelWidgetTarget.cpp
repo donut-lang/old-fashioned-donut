@@ -53,9 +53,14 @@ Handler<AngelWidgetTarget> AngelWidgetTarget::matchToWidgetTarget(const std::str
 					Handler<AngelWidgetTarget>::__internal__fromRawPointerWithoutCheck(this) :
 					Handler<AngelWidgetTarget>();
 }
+Handler<AngelWidgetTarget> AngelWidgetTarget::self() noexcept
+{
+	return Handler<AngelWidgetTarget>::__internal__fromRawPointerWithoutCheck(this);
+}
 
 Handler< ::donut::Object> AngelWidgetTarget::createDonutObject(Handler< ::donut::Heap> const& heap)
 {
+	return Handler< ::donut::Object>( world()->patron()->angelWidgetTargetProvider()->newInstance(heap, self()) );
 }
 
 }}

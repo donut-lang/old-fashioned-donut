@@ -30,6 +30,8 @@ public:
 private:
 	std::string const id_;
 	HandlerW<Element> target_;
+public:
+	Handler<AngelElementTarget> self() noexcept;
 private:
 	virtual geom::Area findScreenAreaImpl();
 	virtual Handler<AngelElementTarget> matchToElementTarget(std::string const& elementId) noexcept override final;

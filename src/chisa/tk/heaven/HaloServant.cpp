@@ -28,8 +28,14 @@ HaloServant::HaloServant(Handler<AngelTarget> const& angelTarget, gl::Color cons
 
 }
 
+Handler<HaloServant> HaloServant::self() noexcept
+{
+
+}
+
 Handler< ::donut::Object> HaloServant::createDonutObject(Handler< ::donut::Heap> const& heap)
 {
+	return Handler< ::donut::Object>( world()->patron()->haloServantProvider()->newInstance(heap, self()) );
 }
 
 }}

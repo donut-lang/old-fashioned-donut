@@ -26,6 +26,8 @@ class LoneAngel final : public Angel {
 public:
 	LoneAngel(Handler<Heaven> const& heaven);
 	virtual ~LoneAngel() noexcept = default;
+public:
+	Handler<LoneAngel> self() noexcept;
 protected:
 	virtual void renderImpl(gl::Canvas& canvas) override final;
 	virtual void idleImpl(const float delta_ms) override final;

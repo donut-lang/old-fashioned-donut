@@ -54,13 +54,14 @@ public:
 	void registerTask(Task* task);
 	void unregisterTask(Task* task);
 public:
-	void registerTask( std::function<bool()> const& lambda );
-	void registerTask( std::function<bool(float)> const& lambda );
-	void registerTask( std::function<void()> const& lambda );
+	void send( std::function<bool()> const& lambda );
+	void send( std::function<bool(float)> const& lambda );
+	void send( std::function<void()> const& lambda );
 	template <typename __Lambda>
-	void registerTask( __Lambda lambda ){
-		registerTask( ::tarte::makeFunctor(lambda) );
+	void send( __Lambda lambda ){
+		this->send( ::tarte::makeFunctor(lambda) );
 	}
+	std::size_t numTasks() const noexcept { return this->lambas_.size(); };
 	std::size_t getPostCount() const{ return taskPool.size(); };
 public:
 	void run(const float delta_ms);
