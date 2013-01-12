@@ -16,7 +16,9 @@
 				<scroll title="メモリ" mode="vertical">
 					<vertical>
 						<textarea desc="テキストエリアサンプル" />
-						<button text="ボタン" />
+						<button text="ボタン">
+							1+1;
+						</button>
 						<label text="ラベル" />
 						<widget title="NES" widget-klass="nes-memory" fit="expand">
 						</widget>

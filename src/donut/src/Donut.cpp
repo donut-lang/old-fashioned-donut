@@ -26,6 +26,7 @@
 namespace donut {
 
 static Logger defaultLogger(std::cout, Logger::Level::WARN_);
+static std::string const TAG("Donut");
 
 Donut::Donut()
 :log_(defaultLogger)
@@ -88,6 +89,9 @@ void Donut::sendMessage( std::string const& name, Handler<Object> const& obj )
 
 Handler<Source> Donut::parse(std::string const& src, std::string const& filename, int const& lineno)
 {
+	if( this->log_.t() ){
+		this->log_.t(TAG, "Parsing[%s:%d]:\n%s", filename.c_str(), lineno, src.c_str());
+	}
 	return heap_->registerSource ( Parser::fromString(src, filename, lineno)->parseProgram() );
 }
 
