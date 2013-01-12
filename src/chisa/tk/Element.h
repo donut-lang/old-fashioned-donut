@@ -136,7 +136,7 @@ protected:  /* 子供が必ず実装するメソッド */
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) = 0;
 	virtual bool notifyViewRefreshedImpl();
 public: /* どーなつとの接続 */
-	Handler<ElementObject> getElementObject();
+	Handler<ElementObject> donutObject();
 protected:
 	Element(Logger& log, HandlerW<World> world, HandlerW<Element> parent);
 	template <typename T> void addAttribute(std::string const& name, T& ptr)
