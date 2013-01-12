@@ -100,8 +100,8 @@ public:
 	template <typename ObjectT, typename ProviderT, typename... Args>
 	Handler<ObjectT> createObject( ProviderT* provider, Args... args ){
 		Handler<ObjectT> obj ( new ObjectT(provider) );
-		this->registerObject(obj);
 		obj->bootstrap(args...);
+		this->registerObject(obj);
 		return obj;
 	}
 private:
