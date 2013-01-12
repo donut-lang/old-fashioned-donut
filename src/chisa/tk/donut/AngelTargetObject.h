@@ -36,13 +36,18 @@ using namespace donut;
 /**********************************************************************************************************************
  * Base
  **********************************************************************************************************************/
+struct AngelTargetSideEffect{
+	template <typename Arc>
+	void serialize(Arc& arc) {
+
+	}
+};
 
 class AngelTargetProvider;
 class AngelTargetObject : public ReactiveNativeObject {
 private:
 	Handler<AngelTarget> target_;
 protected:
-	typedef AngelTargetObject Super;
 	AngelTargetObject(AngelTargetProvider* provider);
 	virtual ~AngelTargetObject() noexcept = default;
 public:
@@ -50,8 +55,6 @@ public:
 public:
 	Handler<World> world() const;
 	Handler<AngelTarget> angelTarget() const;
-private:
-	virtual std::string reprImpl(Handler<Heap> const& heap) const override final;
 //public:
 //	void onFutureDiscarded(Handler<Heap> const& heap);
 //	void onHistoryDiscarded(Handler<Heap> const& heap);
@@ -72,9 +75,34 @@ public:
 };
 
 /**********************************************************************************************************************
+ * BaseT
+ **********************************************************************************************************************/
+template <typename ProviderT, typename ObjectT, typename TargetT, typename AntiT>
+class AngelTargetObjectBaseT : public AngelTargetObject {
+	INJECT_REACTIVE_OBJECT_ASPECT(AntiT, ObjectT)
+protected:
+	typedef AngelTargetObjectBaseT<ProviderT, ObjectT, TargetT, AntiT> Super;
+	AngelTargetObjectBaseT(ProviderT* provider);
+	virtual ~AngelTargetObjectBaseT() noexcept = default;
+protected:
+	void bootstrap(const Handler<Heap>& heap, const Handler<TargetT>& angelTarget);
+public:
+	Handler<TargetT> angelTarget() const;
+};
+
+template <typename ProviderT, typename ObjectT, typename TargetT, typename AntiT>
+class AngelTargetProviderBaseT : public AngelTargetProvider {
+	INJECT_REACTIVE_PROVIDER_ASPECT(AntiT, AngelTargetProvider)
+protected:
+	typedef AngelTargetProviderBaseT<ProviderT, ObjectT, TargetT, AntiT> Super;
+	AngelTargetProviderBaseT(Handler<Heap> const& heap, std::string const& provname, Handler<Heaven> const& heaven);
+	virtual ~AngelTargetProviderBaseT() noexcept = default;
+};
+
+/**********************************************************************************************************************
  * AngelElementTarget
  **********************************************************************************************************************/
-struct AngelElementTargetSideEffect{
+struct AngelElementTargetSideEffect : public AngelTargetSideEffect{
 	template <typename Arc>
 	void serialize(Arc& arc) {
 
@@ -82,10 +110,9 @@ struct AngelElementTargetSideEffect{
 };
 
 class AngelElementTargetProvider;
-class AngelElementTargetObject : public AngelTargetObject {
-	INJECT_REACTIVE_OBJECT_ASPECT(AngelElementTargetSideEffect, AngelElementTargetObject);
+class AngelElementTargetObject : public AngelTargetObjectBaseT<AngelElementTargetProvider, AngelElementTargetObject, AngelElementTarget, AngelElementTargetSideEffect> {
 public:
-	AngelElementTargetObject(AngelTargetProvider* provider);
+	AngelElementTargetObject(AngelElementTargetProvider* provider);
 	virtual ~AngelElementTargetObject() noexcept = default;
 public:
 	void bootstrap(Handler<Heap> const& heap, Handler<AngelElementTarget> const& AngelTarget);
@@ -99,11 +126,11 @@ public:
 	ResultType onForward(Handler<Heap> const& heap, AntiSideEffect const& val);
 	XValue saveImpl( Handler<Heap> const& heap ) override final;
 	void loadImpl( Handler<Heap> const& heap, XValue const& data ) override final;
-};
-class AngelElementTargetProvider : public AngelTargetProvider {
-	INJECT_REACTIVE_PROVIDER_ASPECT(AngelElementTargetSideEffect, AngelElementTargetProvider);
 private:
-	HandlerW<Heaven> heaven_;
+	virtual std::string reprImpl(Handler<Heap> const& heap) const override final;
+};
+
+class AngelElementTargetProvider : public AngelTargetProviderBaseT<AngelElementTargetProvider, AngelElementTargetObject, AngelElementTarget, AngelElementTargetSideEffect> {
 public:
 	AngelElementTargetProvider(Handler<Heap> const& heap, Handler<Heaven> const& heaven);
 	virtual ~AngelElementTargetProvider() noexcept = default;
@@ -115,7 +142,7 @@ private:
 /**********************************************************************************************************************
  * AngelWidgetTarget
  **********************************************************************************************************************/
-struct AngelWidgetTargetSideEffect{
+struct AngelWidgetTargetSideEffect : public AngelTargetSideEffect{
 	template <typename Arc>
 	void serialize(Arc& arc) {
 
@@ -123,10 +150,9 @@ struct AngelWidgetTargetSideEffect{
 };
 
 class AngelWidgetTargetProvider;
-class AngelWidgetTargetObject : public AngelTargetObject {
-	INJECT_REACTIVE_OBJECT_ASPECT(AngelWidgetTargetSideEffect, AngelWidgetTargetObject);
+class AngelWidgetTargetObject : public AngelTargetObjectBaseT<AngelWidgetTargetProvider, AngelWidgetTargetObject, AngelWidgetTarget, AngelWidgetTargetSideEffect> {
 public:
-	AngelWidgetTargetObject(AngelTargetProvider* provider);
+	AngelWidgetTargetObject(AngelWidgetTargetProvider* provider);
 	virtual ~AngelWidgetTargetObject() noexcept = default;
 public:
 	void bootstrap(Handler<Heap> const& heap, Handler<AngelWidgetTarget> const& AngelTarget);
@@ -140,11 +166,10 @@ public:
 	ResultType onForward(Handler<Heap> const& heap, AntiSideEffect const& val);
 	XValue saveImpl( Handler<Heap> const& heap ) override final;
 	void loadImpl( Handler<Heap> const& heap, XValue const& data ) override final;
-};
-class AngelWidgetTargetProvider : public AngelTargetProvider {
-	INJECT_REACTIVE_PROVIDER_ASPECT(AngelWidgetTargetSideEffect, AngelWidgetTargetProvider);
 private:
-	HandlerW<Heaven> heaven_;
+	virtual std::string reprImpl(Handler<Heap> const& heap) const override final;
+};
+class AngelWidgetTargetProvider : public AngelTargetProviderBaseT<AngelWidgetTargetProvider, AngelWidgetTargetObject, AngelWidgetTarget, AngelWidgetTargetSideEffect> {
 public:
 	AngelWidgetTargetProvider(Handler<Heap> const& heap, Handler<Heaven> const& heaven);
 	virtual ~AngelWidgetTargetProvider() noexcept = default;
