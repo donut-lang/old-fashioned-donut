@@ -61,7 +61,7 @@ public:
 	WorldObject(WorldProvider* provider);
 	virtual ~WorldObject() noexcept = default;
 public:
-	void bootstrap(Handler<Heap> const& heap);
+	void bootstrap(Handler<Heap> const& heap, Handler<World> const& world);
 public:
 	Handler<World> world() const;
 private:

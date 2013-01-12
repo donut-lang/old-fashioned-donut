@@ -50,13 +50,13 @@ Handler<World> WorldProvider::world() const
 
 WorldObject::WorldObject(WorldProvider* provider)
 :Super(provider)
-,world_(provider->world())
 {
 }
 
-void WorldObject::bootstrap(const Handler<Heap>& heap)
+void WorldObject::bootstrap(const Handler<Heap>& heap, Handler<World> const& world)
 {
 	this->ReactiveNativeObject::bootstrap(heap);
+	this->world_ = world;
 }
 
 std::string WorldObject::reprImpl(const Handler<Heap>& heap) const

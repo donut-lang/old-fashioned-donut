@@ -28,6 +28,7 @@
 #include "../input/JoystickManager.h"
 #include "Angel.h"
 #include "donut/Patron.h"
+#include "donut/WorldObject.h"
 
 namespace chisa {
 namespace tk {
@@ -45,6 +46,7 @@ World::World(Logger& log, HandlerW<Universe> _universe, std::string const& world
 ,elementFactory_(nullptr)
 ,widgetFactory_(nullptr)
 ,gestureMediator_(nullptr)
+,patron_(nullptr)
 {
 
 }
@@ -92,6 +94,8 @@ void World::init()
 	}
 	this->gestureMediator_ = new ActionMediator(this->log_, self);
 	this->heaven_ = Handler<Heaven>(new Heaven(self));
+	this->patron_ = Handler<Patron>(new Patron(self));
+	this->donut_ = Handler< ::donut::Donut>(new ::donut::Donut(this->patron_));
 	this->pushElement("main");
 }
 
@@ -118,6 +122,16 @@ void World::reshape(geom::Area const& area)
 		this->heaven_->reshape(area);
 	}
 	this->area(area);
+}
+
+Handler< ::donut::Object> World::donutObject(Handler< ::donut::Heap> const& heap)
+{
+	if(!this->donutObject_.expired()){
+		return this->donutObject_.lock();
+	}
+	Handler<WorldObject> obj( patron()->worldProvider()->newInstance(heap, self()) );
+	this->donutObject_ = obj;
+	return obj;
 }
 
 void World::pushElement(std::string const& elementId)
