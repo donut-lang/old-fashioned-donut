@@ -59,5 +59,18 @@ Handler< ::donut::Object> AngelElementTarget::createDonutObject(Handler< ::donut
 	return Handler< ::donut::Object>( world()->patron()->angelElementTargetProvider()->newInstance(heap, self()) );
 }
 
+void AngelElementTarget::renderImpl(gl::Canvas& canvas)
+{
+}
+
+void AngelElementTarget::idleImpl(const float delta_ms)
+{
+}
+
+geom::Box AngelElementTarget::reshapeImpl(const geom::Area& area)
+{
+	return geom::ZERO;
+}
+
 }}
 

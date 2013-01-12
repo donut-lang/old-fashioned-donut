@@ -26,6 +26,7 @@ namespace tk {
 
 HaloServant::HaloServant(Handler<AngelTarget> const& angelTarget, gl::Color const& color)
 :Servant(angelTarget)
+,color_(color)
 {
 
 }
@@ -38,6 +39,20 @@ Handler<HaloServant> HaloServant::self() noexcept
 Handler< ::donut::Object> HaloServant::createDonutObject(Handler< ::donut::Heap> const& heap)
 {
 	return Handler< ::donut::Object>( world()->patron()->haloServantProvider()->newInstance(heap, self()) );
+}
+
+void HaloServant::renderImpl(gl::Canvas& canvas)
+{
+	canvas.drawRect(2, this->color_, this->target()->findScreenArea());
+}
+
+void HaloServant::idleImpl(const float delta_ms)
+{
+}
+
+geom::Box HaloServant::reshapeImpl(const geom::Area& area)
+{
+	return this->target()->findScreenArea().box();
 }
 
 }}

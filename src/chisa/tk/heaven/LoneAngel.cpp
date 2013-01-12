@@ -26,8 +26,6 @@ namespace tk {
 LoneAngel::LoneAngel(Handler<Heaven> const& heaven)
 :Angel(heaven)
 {
-	// TODO Auto-generated constructor stub
-
 }
 
 void LoneAngel::renderImpl(gl::Canvas& canvas)
@@ -51,6 +49,19 @@ Handler<LoneAngel> LoneAngel::self() noexcept
 Handler< ::donut::Object> LoneAngel::createDonutObject(Handler< ::donut::Heap> const& heap)
 {
 	return Handler< ::donut::Object>( world()->patron()->loneAngelProvider()->newInstance(heap, self()) );
+}
+
+Handler<AngelTarget> LoneAngel::attatchTarget(const Handler<AngelTarget>& target)
+{
+	if(numTargets() > 0) {
+		TARTE_EXCEPTION(Exception, "[BUG] Oops. Lone angel can hold only one target.")
+	}
+	return this->Angel::attatchTarget(target);
+}
+
+Handler<AngelTarget> LoneAngel::detatchTarget(const Handler<AngelTarget>& target)
+{
+	return this->Angel::detatchTarget(target);
 }
 
 }}

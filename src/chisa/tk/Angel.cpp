@@ -46,14 +46,26 @@ Handler<Heaven> Angel::heaven() const {
 
 void Angel::render(gl::Canvas& canvas)
 {
+	this->renderImpl(canvas);
+	for(Handler<AngelTarget> const& t : this->targets_) {
+		t->render(canvas);
+	}
 }
 
 void Angel::idle(const float delta_ms)
 {
+	for(Handler<AngelTarget> const& t : this->targets_) {
+		t->idle(delta_ms);
+	}
+	this->idleImpl(delta_ms);
 }
 
 void Angel::reshape(const geom::Area& area)
 {
+	for(Handler<AngelTarget> const& t : this->targets_) {
+		t->reshape(area);
+	}
+	this->reshapeImpl(area);
 }
 
 Handler< ::donut::Object> Angel::donutObject(Handler< ::donut::Heap> const& heap)
@@ -223,6 +235,42 @@ Handler< ::donut::Object> Servant::donutObject(Handler< ::donut::Heap> const& he
 		return obj;
 	}
 	return this->donutObject_.lock();
+}
+
+void AngelTarget::render(gl::Canvas& canvas)
+{
+	this->renderImpl(canvas);
+	for(Handler<Servant> const& serv : this->servants_) {
+		serv->render(canvas);
+	}
+}
+
+void AngelTarget::idle(const float delta_ms)
+{
+	for(Handler<Servant> const& serv : this->servants_) {
+		serv->idle(delta_ms);
+	}
+	this->idleImpl(delta_ms);
+}
+
+geom::Box AngelTarget::reshape(const geom::Area& area)
+{
+	return this->reshapeImpl(area);
+}
+
+void Servant::render(gl::Canvas& canvas)
+{
+	this->renderImpl(canvas);
+}
+
+void Servant::idle(const float delta_ms)
+{
+	this->idleImpl(delta_ms);
+}
+
+geom::Box Servant::reshape(const geom::Area& area)
+{
+	return this->reshapeImpl(area);
 }
 
 }}
