@@ -18,6 +18,8 @@
 
 #include "HaloServant.h"
 #include "../Element.h"
+#include "../World.h"
+#include "../donut/Patron.h"
 
 namespace chisa {
 namespace tk {
@@ -30,7 +32,7 @@ HaloServant::HaloServant(Handler<AngelTarget> const& angelTarget, gl::Color cons
 
 Handler<HaloServant> HaloServant::self() noexcept
 {
-
+	return Handler<HaloServant>::__internal__fromRawPointerWithoutCheck(this);
 }
 
 Handler< ::donut::Object> HaloServant::createDonutObject(Handler< ::donut::Heap> const& heap)

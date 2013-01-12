@@ -17,10 +17,11 @@
  */
 
 #include "AngelWidgetTarget.h"
-#include "../World.h"
 #include "../Element.h"
 #include "../element/WidgetElement.h"
 #include "../Widget.h"
+#include "../World.h"
+#include "../donut/Patron.h"
 
 namespace chisa {
 namespace tk {
