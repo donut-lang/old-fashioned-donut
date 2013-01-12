@@ -155,7 +155,7 @@ private:
 /**********************************************************************************************************************
  * TwinAngel
  **********************************************************************************************************************/
-struct TwinAngelSideEffect : public AngelSideEffect{
+struct TwinAngelSideEffect : public AngelSideEffect {
 	template <typename Arc>
 	void serialize(Arc& arc) {
 		AngelSideEffect::serialize(arc);
