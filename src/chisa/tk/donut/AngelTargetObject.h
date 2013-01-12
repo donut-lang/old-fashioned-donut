@@ -167,8 +167,6 @@ public:
 public:
 	void bootstrap(Handler<Heap> const& heap, Handler<AngelWidgetTarget> const& AngelTarget);
 public:
-	Handler<World> world() const;
-public:
 	void onFutureDiscarded(Handler<Heap> const& heap);
 	void onHistoryDiscarded(Handler<Heap> const& heap);
 	ResultType onBack(Handler<Heap> const& heap, AntiSideEffect const& val);
