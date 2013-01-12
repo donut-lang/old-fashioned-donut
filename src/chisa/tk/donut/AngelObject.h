@@ -65,7 +65,6 @@ class AngelObject : public ReactiveNativeObject {
 private:
 	Handler<Angel> angel_;
 protected:
-	typedef AngelObject Super;
 	AngelObject(AngelProvider* provider);
 	virtual ~AngelObject() noexcept = default;
 public:
@@ -73,30 +72,48 @@ public:
 public:
 	Handler<World> world() const;
 	Handler<Angel> angel() const;
-private:
-	virtual std::string reprImpl(Handler<Heap> const& heap) const override final;
-private:
-	template <typename T>
-	T& execAntiSideEffect(Handler<Heap> const& heap, AngelSideEffect const& old, T& val);
+};
+
+/**********************************************************************************************************************
+ * BaseT
+ **********************************************************************************************************************/
+
+template <typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
+class AngelProviderBaseT : public AngelProvider {
+	INJECT_REACTIVE_PROVIDER_ASPECT(AntiT, AngelProvider);
 protected:
-	template <typename T>
-	T& onBack(Handler<Heap> const& heap, AngelSideEffect const& old, T& val);
-	template <typename T>
-	T& onForward(Handler<Heap> const& heap, AngelSideEffect const& old, T& val);
-//public:
-//	void onFutureDiscarded(Handler<Heap> const& heap);
-//	void onHistoryDiscarded(Handler<Heap> const& heap);
-//	ResultType onBack(Handler<Heap> const& heap, AntiSideEffect const& val);
-//	ResultType onForward(Handler<Heap> const& heap, AntiSideEffect const& val);
-//	XValue saveImpl( Handler<Heap> const& heap ) override final;
-//	void loadImpl( Handler<Heap> const& heap, XValue const& data ) override final;
+	typedef AngelProviderBaseT<ProviderT, ObjectT, AngelT, AntiT> Super;
+	AngelProviderBaseT(Handler<Heap> const& heap, std::string const& provname, Handler<Heaven> const& heaven);
+	virtual ~AngelProviderBaseT() noexcept = default;
+protected:
+	void registerReactiveFunctions();
+};
+
+template <typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
+class AngelObjectBaseT : public AngelObject {
+	INJECT_REACTIVE_OBJECT_ASPECT(AntiT, ObjectT);
+protected:
+	typedef AngelObjectBaseT<ProviderT, ObjectT, AngelT, AntiT> Super;
+	AngelObjectBaseT(ProviderT* provider);
+	virtual ~AngelObjectBaseT() noexcept = default;
+public:
+	void bootstrap(Handler<Heap> const& heap, Handler<Angel> const& angel);
+public:
+	Handler<AngelT> angel() const;
+private:
+	ResultType execAntiSideEffect(Handler<Heap> const& heap, AntiSideEffect const& val);
+public:
+	void onFutureDiscarded(Handler<Heap> const& heap);
+	void onHistoryDiscarded(Handler<Heap> const& heap);
+	ResultType onBack(Handler<Heap> const& heap, AntiSideEffect const& val);
+	ResultType onForward(Handler<Heap> const& heap, AntiSideEffect const& val);
 };
 
 
 /**********************************************************************************************************************
  * LoneAngel
  **********************************************************************************************************************/
-struct LoneAngelSideEffect : public AngelSideEffect{
+struct LoneAngelSideEffect : public AngelSideEffect {
 	template <typename Arc>
 	void serialize(Arc& arc) {
 		AngelSideEffect::serialize(arc);
@@ -104,15 +121,12 @@ struct LoneAngelSideEffect : public AngelSideEffect{
 };
 
 class LoneAngelProvider;
-class LoneAngelObject : public AngelObject {
-	INJECT_REACTIVE_OBJECT_ASPECT(LoneAngelSideEffect, LoneAngelObject);
+class LoneAngelObject : public AngelObjectBaseT <LoneAngelProvider, LoneAngelObject, LoneAngel, LoneAngelSideEffect>{
 public:
 	LoneAngelObject(LoneAngelProvider* provider);
 	virtual ~LoneAngelObject() noexcept = default;
 public:
 	void bootstrap(Handler<Heap> const& heap, Handler<LoneAngel> const& angel);
-public:
-	Handler<LoneAngel> angel() const;
 public:
 	void onFutureDiscarded(Handler<Heap> const& heap);
 	void onHistoryDiscarded(Handler<Heap> const& heap);
@@ -120,10 +134,11 @@ public:
 	ResultType onForward(Handler<Heap> const& heap, AntiSideEffect const& val);
 	XValue saveImpl( Handler<Heap> const& heap ) override final;
 	void loadImpl( Handler<Heap> const& heap, XValue const& data ) override final;
+private:
+	virtual std::string reprImpl(const Handler<Heap>& heap) const override final;
 };
 
-class LoneAngelProvider : public AngelProvider {
-	INJECT_REACTIVE_PROVIDER_ASPECT(LoneAngelSideEffect, LoneAngelProvider);
+class LoneAngelProvider : public AngelProviderBaseT <LoneAngelProvider, LoneAngelObject, LoneAngel, LoneAngelSideEffect>{
 private:
 	HandlerW<Heaven> heaven_;
 public:
@@ -147,15 +162,12 @@ struct TwinAngelSideEffect : public AngelSideEffect{
 };
 
 class TwinAngelProvider;
-class TwinAngelObject : public AngelObject {
-	INJECT_REACTIVE_OBJECT_ASPECT(TwinAngelSideEffect, TwinAngelObject);
+class TwinAngelObject : public AngelObjectBaseT<TwinAngelProvider, TwinAngelObject, TwinAngel, TwinAngelSideEffect> {
 public:
 	TwinAngelObject(TwinAngelProvider* provider);
 	virtual ~TwinAngelObject() noexcept = default;
 public:
 	void bootstrap(Handler<Heap> const& heap, Handler<TwinAngel> const& angel);
-public:
-	Handler<TwinAngel> angel() const;
 public:
 	void onFutureDiscarded(Handler<Heap> const& heap);
 	void onHistoryDiscarded(Handler<Heap> const& heap);
@@ -163,10 +175,11 @@ public:
 	ResultType onForward(Handler<Heap> const& heap, AntiSideEffect const& val);
 	XValue saveImpl( Handler<Heap> const& heap ) override final;
 	void loadImpl( Handler<Heap> const& heap, XValue const& data ) override final;
+private:
+	virtual std::string reprImpl(const Handler<Heap>& heap) const override final;
 };
 
-class TwinAngelProvider : public AngelProvider {
-	INJECT_REACTIVE_PROVIDER_ASPECT(TwinAngelSideEffect, TwinAngelProvider);
+class TwinAngelProvider : public AngelProviderBaseT<TwinAngelProvider, TwinAngelObject, TwinAngel, TwinAngelSideEffect> {
 private:
 	HandlerW<Heaven> heaven_;
 public:
