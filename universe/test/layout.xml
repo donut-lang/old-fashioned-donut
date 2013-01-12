@@ -20,8 +20,10 @@
 							angel = World.heaven().newTwinAngel();
 							target = angel.newElementTarget("frame");
 							servant = target.newHaloServant("red");
+							servant = target.newElementServant("main").element();
 							angel.attatchTarget(target);
 							target.attatchServant(servant);
+							
 						</button>
 						<label text="ラベル" />
 						<widget title="NES" widget-klass="nes-memory" fit="expand">

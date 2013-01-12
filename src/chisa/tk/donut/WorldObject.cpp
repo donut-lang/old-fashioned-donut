@@ -33,7 +33,7 @@ WorldProvider::WorldProvider(const Handler<Heap>& heap, const Handler<World>& wo
 	this->registerPureNativeClosure("findElementById",
 			[&](WorldObject* wobj, std::string const& name) {
 				Handler<World> const world = wobj->world();
-				return world->findElementById(name)->getElementObject();
+				return world->findElementById(name)->donutObject();
 			});
 	this->registerPureNativeClosure("heaven",[this](WorldObject* wobj){
 		Handler<World> const world = wobj->world();

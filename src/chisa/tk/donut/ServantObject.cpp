@@ -132,6 +132,9 @@ inline typename ServantObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ResultTyp
 ElementServantProvider::ElementServantProvider(const Handler<Heap>& heap, const Handler<Heaven>& heaven)
 :Super(heap, "ElementServant", heaven)
 {
+	this->registerPureNativeClosure("element", [this](ElementServantObject* servant){
+		return servant->servant()->element()->donutObject();
+	});
 }
 
 //---------------------------------------------------------

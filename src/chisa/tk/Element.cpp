@@ -235,18 +235,21 @@ void Element::onFocusLost(float const& timeMs)
 	this->onFocused_ = false;
 }
 
-Handler<ElementObject> Element::getElementObject()
+Handler<ElementObject> Element::donutObject()
 {
 	if(!this->donutObject_.expired()){
 		return this->donutObject_.lock();
 	}
 	Handler<World> world = this->world().lock();
-	if(!world){
+	if( unlikely(!world) ){
 		TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
 	}
 	Handler<Donut> donut( world->donut() );
 	ElementFactory* factory = world->elementFactory();
 	Handler<ElementProvider> provider(factory->getProviderOf(this));
+	if( unlikely(!provider) ){
+		TARTE_EXCEPTION(Exception, "[BUG] Oops. Provider is not found for \"%s\"", this->toString().c_str());
+	}
 	Handler<ElementObject> eobj ( provider->newInstance(donut->heap(), this->self()) );
 	this->donutObject_ = eobj;
 	return eobj;
