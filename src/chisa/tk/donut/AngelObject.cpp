@@ -21,28 +21,17 @@
 #include "ElementObject.h"
 #include "../heaven/AngelElementTarget.h"
 #include "../heaven/AngelWidgetTarget.h"
+#include "AngelTargetObject.h"
 
 namespace chisa {
 namespace tk {
 
 const static std::string TAG("AngelObject");
 
-AngelProvider::AngelProvider(Handler<Heap> const& heap, std::string const& provname, Handler<Heaven> const& heaven)
+AngelProvider::AngelProvider(const Handler<Heap>& heap, const std::string& provname, const Handler<Heaven>& heaven)
 :ReactiveProvider(heap, provname)
 ,heaven_(heaven)
 {
-	this->registerPureNativeClosure("newElementTarget", [this](AngelObject* obj, std::string elementId){
-		return obj->angel()->newElementTarget(elementId)->donutObject(this->heap().lock());
-	});
-	this->registerPureNativeClosure("newWidgetTarget", [this](AngelObject* obj, std::string elementId, std::string widgetGuide){
-		return obj->angel()->newWidgetTarget(elementId, widgetGuide)->donutObject(this->heap().lock());
-	});
-	this->registerPureNativeClosure("findElementTarget", [this](AngelObject* obj, std::string elementId){
-		return obj->angel()->findElementTarget(elementId)->donutObject(this->heap().lock());
-	});
-	this->registerPureNativeClosure("findWidgetTarget", [this](AngelObject* obj, std::string elementId, std::string widgetGuide){
-		return obj->angel()->findWidgetTarget(elementId, widgetGuide)->donutObject(this->heap().lock());
-	});
 }
 
 Handler<Heaven> AngelProvider::heaven() const
@@ -50,17 +39,14 @@ Handler<Heaven> AngelProvider::heaven() const
 	return heaven_.lock();
 }
 
-
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
 AngelObject::AngelObject(AngelProvider* provider)
 :ReactiveNativeObject(provider)
 {
 }
 
-void AngelObject::bootstrap(const Handler<Heap>& heap, Handler<Angel> const& angel)
+void AngelObject::bootstrap(const Handler<Heap>& heap, const Handler<Angel>& angel)
 {
-	this->ReactiveNativeObject::bootstrap(heap);
+	ReactiveNativeObject::bootstrap(heap);
 	this->angel_ = angel;
 }
 
@@ -73,16 +59,88 @@ Handler<Angel> AngelObject::angel() const
 {
 	return this->angel_;
 }
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-std::string AngelObject::reprImpl(const Handler<Heap>& heap) const
+template <typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
+AngelProviderBaseT<ProviderT, ObjectT, AngelT, AntiT>::AngelProviderBaseT(Handler<Heap> const& heap, std::string const& provname, Handler<Heaven> const& heaven)
+:AngelProvider(heap, provname, heaven)
 {
-	return ::tarte::format("(AngelObject: %p)", this);
+	this->registerPureNativeClosure("newElementTarget", [this](ObjectT* obj, std::string elementId){
+		return obj->angel()->newElementTarget(elementId)->donutObject(this->heap().lock());
+	});
+	this->registerPureNativeClosure("newWidgetTarget", [this](ObjectT* obj, std::string elementId, std::string widgetGuide){
+		return obj->angel()->newWidgetTarget(elementId, widgetGuide)->donutObject(this->heap().lock());
+	});
+	this->registerPureNativeClosure("findElementTarget", [this](ObjectT* obj, std::string elementId){
+		return obj->angel()->findElementTarget(elementId)->donutObject(this->heap().lock());
+	});
+	this->registerPureNativeClosure("findWidgetTarget", [this](ObjectT* obj, std::string elementId, std::string widgetGuide){
+		return obj->angel()->findWidgetTarget(elementId, widgetGuide)->donutObject(this->heap().lock());
+	});
 }
 
-template <typename T>
-T& AngelObject::execAntiSideEffect(Handler<Heap> const& heap, AngelSideEffect const& old, T& val)
+template <typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
+void AngelProviderBaseT<ProviderT, ObjectT, AngelT, AntiT>::registerReactiveFunctions()
 {
-	AngelSideEffect& side = val;
+	ProviderT& self = static_cast<ProviderT&>(*this);
+
+	self.registerReactiveNativeClosure("attatchTarget", [this](ObjectT* dangel, AngelTargetObject* dtarget) {
+		Handler<AngelT> angel(dangel->angel());
+		Handler<AngelTarget> target(dtarget->angelTarget());
+		AntiT side_;
+		AngelSideEffect& side = side_;
+		side.op = AngelSideEffect::DetatchTarget;
+		side.detatchedTarget_ = target;
+		return std::make_tuple(dtarget, true, side_);
+	});
+	self.registerReactiveNativeClosure("detatchTarget", [this](ObjectT* dangel, AngelTargetObject* dtarget) {
+		Handler<AngelT> angel(dangel->angel());
+		Handler<AngelTarget> target(dtarget->angelTarget());
+		AntiT side_;
+		AngelSideEffect& side = side_;
+		side.op = AngelSideEffect::AttatchTarget;
+		side.attatchedTarget_ = target;
+		return std::make_tuple(dtarget, true, side_);
+	});
+}
+
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+template <typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
+AngelObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::AngelObjectBaseT(ProviderT* provider)
+:AngelObject(provider)
+{
+}
+
+template <typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
+void AngelObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::bootstrap(const Handler<Heap>& heap, Handler<Angel> const& angel)
+{
+	this->AngelObject::bootstrap(heap, angel);
+}
+
+template <typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
+Handler<AngelT> AngelObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::angel() const
+{
+	return Handler<AngelT>::__internal__fromRawPointerWithoutCheck( static_cast<AngelT*>(AngelObject::angel().get()) );
+}
+
+template <typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
+void AngelObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::onFutureDiscarded(Handler<Heap> const& heap)
+{
+
+}
+template <typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
+void AngelObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::onHistoryDiscarded(Handler<Heap> const& heap)
+{
+
+}
+
+template<typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
+inline typename AngelObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ResultType AngelObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::execAntiSideEffect(const Handler<Heap>& heap, const AntiSideEffect& val)
+{
+	AntiT newAnti;
+	AngelSideEffect& side = newAnti;
+	AngelSideEffect const& old = val;
 	switch(old.op){
 	case AngelSideEffect::AttatchTarget:
 		this->angel()->attatchTarget(old.attatchedTarget_);
@@ -95,40 +153,36 @@ T& AngelObject::execAntiSideEffect(Handler<Heap> const& heap, AngelSideEffect co
 		side.attatchedTarget_ = old.detatchedTarget_;
 		break;
 	}
-	return val;
+	return std::make_tuple(true, newAnti);
 }
 
-template <typename T>
-T& AngelObject::onBack(Handler<Heap> const& heap, AngelSideEffect const& old, T& val)
+template<typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
+inline typename AngelObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ResultType AngelObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::onBack(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
-	return execAntiSideEffect(heap, old, val);
+	return this->execAntiSideEffect(heap, val);
 }
 
-template <typename T>
-T& AngelObject::onForward(Handler<Heap> const& heap, AngelSideEffect const& old, T& val)
+template<typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
+inline typename AngelObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ResultType AngelObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::onForward(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
-	return execAntiSideEffect(heap, old, val);
+	return this->execAntiSideEffect(heap, val);
 }
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 LoneAngelProvider::LoneAngelProvider(const Handler<Heap>& heap, const Handler<Heaven>& heaven)
-:AngelProvider(heap, "LoneAngelProvider", heaven)
+:Super(heap, "LoneAngelProvider", heaven)
 {
+	this->registerReactiveFunctions();
 }
 
 LoneAngelObject::LoneAngelObject(LoneAngelProvider* provider)
-:AngelObject(provider)
+:Super(provider)
 {
 }
 
 void LoneAngelObject::bootstrap(const Handler<Heap>& heap, const Handler<LoneAngel>& angel)
 {
-}
-
-Handler<LoneAngel> LoneAngelObject::angel() const
-{
-	return Handler<LoneAngel>::__internal__fromRawPointerWithoutCheck( static_cast<LoneAngel*>(AngelObject::angel().get()) );
 }
 
 void LoneAngelObject::onFutureDiscarded(const Handler<Heap>& heap)
@@ -139,17 +193,21 @@ void LoneAngelObject::onHistoryDiscarded(const Handler<Heap>& heap)
 {
 }
 
-LoneAngelObject::ResultType LoneAngelObject::onBack(const Handler<Heap>& heap, const AntiSideEffect& val)
+typename LoneAngelObject::ResultType LoneAngelObject::onBack(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
-	AntiSideEffect side;
-	return LoneAngelObject::ResultType(true, this->AngelObject::onBack(heap, val, side));
+	return Super::onBack(heap, val);
 }
 
-LoneAngelObject::ResultType LoneAngelObject::onForward(const Handler<Heap>& heap, const AntiSideEffect& val)
+typename LoneAngelObject::ResultType LoneAngelObject::onForward(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
-	AntiSideEffect side;
-	return LoneAngelObject::ResultType(true, this->AngelObject::onForward(heap, val, side));
+	return Super::onForward(heap, val);
 }
+
+std::string LoneAngelObject::reprImpl(const Handler<Heap>& heap) const
+{
+	return ::tarte::format("(LoneAngelObject: %p)", this);
+}
+
 
 XValue LoneAngelObject::saveImpl(const Handler<Heap>& heap)
 {
@@ -162,25 +220,20 @@ void LoneAngelObject::loadImpl(const Handler<Heap>& heap, const XValue& data)
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 TwinAngelProvider::TwinAngelProvider(const Handler<Heap>& heap, const Handler<Heaven>& heaven)
-:AngelProvider(heap, "TwinAngelProvider", heaven)
+:Super(heap, "TwinAngelProvider", heaven)
 {
+	this->registerReactiveFunctions();
 }
-
 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 TwinAngelObject::TwinAngelObject(TwinAngelProvider* provider)
-:AngelObject(provider)
+:Super(provider)
 {
 }
 
 void TwinAngelObject::bootstrap(const Handler<Heap>& heap, const Handler<TwinAngel>& angel)
 {
-}
-
-Handler<TwinAngel> TwinAngelObject::angel() const
-{
-	return Handler<TwinAngel>::__internal__fromRawPointerWithoutCheck( static_cast<TwinAngel*>(AngelObject::angel().get()) );
 }
 
 void TwinAngelObject::onFutureDiscarded(const Handler<Heap>& heap)
@@ -191,17 +244,21 @@ void TwinAngelObject::onHistoryDiscarded(const Handler<Heap>& heap)
 {
 }
 
-TwinAngelObject::ResultType TwinAngelObject::onBack(const Handler<Heap>& heap, const AntiSideEffect& val)
+typename TwinAngelObject::ResultType TwinAngelObject::onBack(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
-	AntiSideEffect side;
-	return TwinAngelObject::ResultType(true, this->AngelObject::onBack(heap, val, side));
+	return Super::onBack(heap, val);
 }
 
-TwinAngelObject::ResultType TwinAngelObject::onForward(const Handler<Heap>& heap, const AntiSideEffect& val)
+typename TwinAngelObject::ResultType TwinAngelObject::onForward(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
-	AntiSideEffect side;
-	return TwinAngelObject::ResultType(true, this->AngelObject::onForward(heap, val, side));
+	return Super::onForward(heap, val);
 }
+
+std::string TwinAngelObject::reprImpl(const Handler<Heap>& heap) const
+{
+	return ::tarte::format("(TwinAngelObject: %p)", this);
+}
+
 
 XValue TwinAngelObject::saveImpl(const Handler<Heap>& heap)
 {
@@ -212,5 +269,3 @@ void TwinAngelObject::loadImpl(const Handler<Heap>& heap, const XValue& data)
 }
 
 }}
-
-
