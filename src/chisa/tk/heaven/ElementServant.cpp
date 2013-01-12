@@ -43,10 +43,39 @@ Handler< ::donut::Object> ElementServant::createDonutObject(Handler< ::donut::He
 
 void ElementServant::renderImpl(gl::Canvas& canvas)
 {
+	geom::Box box = this->element_->size();
+	geom::Area area = this->target()->findScreenArea();
+
+	float offsetX = 0;
+	if( area.right() + box.width() < renderArea().right() ) { //右側に描けるよ！
+		offsetX = area.right();
+	}else if( area.left() - box.width() > 0 ){ //左なら開いてるよ！
+		offsetX = area.left() - box.width();
+	}else{
+		offsetX = 0;
+	}
+
+	float offsetY = 0;
+	if( area.bottom() + box.height() < renderArea().bottom() ) {
+		offsetY = area.bottom();
+	}else if( area.top() - box.height() > 0 ) {
+		offsetY = area.top() - box.height();
+	}else{
+		offsetY = 0;
+	}
+
+	float const cycleY = std::sin( anim_/1000.0f ) * box.height() * 0.1f;
+	float const cycleX = std::sin( anim_/1740.0f ) * box.width() * 0.1f;
+
+	geom::Point pt(offsetX+cycleX, offsetY+cycleY);
+	geom::Box leftSize( renderArea().width()-offsetX, renderArea().height()-offsetY );
+
+	this->element()->render(canvas, pt, geom::Area(geom::ZERO, geom::min(box, leftSize)));
 }
 
 void ElementServant::idleImpl(const float delta_ms)
 {
+	this->anim_ += delta_ms;
 }
 
 geom::Box ElementServant::reshapeImpl(const geom::Area& area)

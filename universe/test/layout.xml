@@ -2,7 +2,7 @@
 <world geist="nes">
 	<horizontal id="main">
 		<vertical>
-			<widget widget-klass="nes-screen" fit="fit">
+			<widget widget-klass="nes-screen" fit="fit" id="nes">
 				<xobject>
 					<xstring name="rom">__roms__/alter_ego/Alter_Ego.nes</xstring>
 				</xobject>
@@ -19,8 +19,8 @@
 						<button text="ボタン">
 							heaven = World.heaven();
 							angel = heaven.newTwinAngel();
-							target = angel.newElementTarget("frame");
-							servant = target.newHaloServant("red");
+							target = angel.newElementTarget("nes");
+							servant = target.newElementServant("label");
 							angel.attatchTarget(target);
 							target.attatchServant(servant);
 							heaven.attatchAngel(angel);
@@ -56,5 +56,6 @@
 			</vertical>
 		</scroll>
 	</horizontal>
+	<label id="label" text="NES"></label>
 </world>
 

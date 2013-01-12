@@ -62,6 +62,7 @@ void Angel::idle(const float delta_ms)
 
 void Angel::reshape(const geom::Area& area)
 {
+	this->renderArea_ = area;
 	for(Handler<AngelTarget> const& t : this->targets_) {
 		t->reshape(area);
 	}
@@ -255,6 +256,10 @@ void AngelTarget::idle(const float delta_ms)
 
 geom::Box AngelTarget::reshape(const geom::Area& area)
 {
+	this->renderArea_ = area;
+	for(Handler<Servant> const& serv : this->servants_) {
+		serv->reshape(area);
+	}
 	return this->reshapeImpl(area);
 }
 
@@ -270,6 +275,7 @@ void Servant::idle(const float delta_ms)
 
 geom::Box Servant::reshape(const geom::Area& area)
 {
+	this->renderArea_ = area;
 	return this->reshapeImpl(area);
 }
 

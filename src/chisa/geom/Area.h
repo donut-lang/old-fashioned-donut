@@ -104,6 +104,18 @@ public:
 	inline constexpr Area flip() const noexcept {
 		return Area(point_.flip(), box_.flip());
 	}
+	inline constexpr float bottom() const noexcept {
+		return this->y() + this->height();
+	}
+	inline constexpr float top() const noexcept {
+		return this->y();
+	}
+	inline constexpr float right() const noexcept {
+		return this->x() + this->width();
+	}
+	inline constexpr float left() const noexcept {
+		return this->x();
+	}
 };
 
 class Space {

@@ -65,7 +65,6 @@ void Heaven::idle(const float delta_ms)
 
 void Heaven::reshape(const geom::Area& area)
 {
-	//何もしなくて良いんじゃないかな？
 	for(VectorMap<std::string, Handler<Angel> >::Pair& p : this->angelMap_ ) {
 		Handler<Angel> const& angel = p.second;
 		angel->reshape(area);
@@ -96,6 +95,7 @@ std::string Heaven::findAngelId(const Handler<Angel>& angel)
 void Heaven::attatchAngel(const std::string& id, const Handler<Angel>& angel)
 {
 	this->angelMap_.update(id, angel);
+	angel->reshape( this->world().lock()->area() );
 }
 
 std::string Heaven::attatchAngel(const Handler<Angel>& angel)
@@ -103,6 +103,7 @@ std::string Heaven::attatchAngel(const Handler<Angel>& angel)
 	do{
 		std::string const id( ::tarte::randomString(10));
 		if( this->angelMap_.insert(id, angel) ) {
+			angel->reshape( this->world().lock()->area() );
 			return id;
 		}
 	} while(true);
