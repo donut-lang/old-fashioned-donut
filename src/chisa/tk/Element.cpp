@@ -193,10 +193,9 @@ void Element::requestRelayout()
 {
 	if(!this->relayoutRequested_){
 		this->relayoutRequested_ = true;
-		if(Handler<Element> p = this->parent().lock()) {
-			if(!p->isValidationRoot()){
-				p->requestRelayout();
-			}
+		Handler<Element> p = this->parent().lock();
+		if(p && !p->isValidationRoot()) {
+			p->requestRelayout();
 		}
 	}
 }
