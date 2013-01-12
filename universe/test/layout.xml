@@ -19,7 +19,7 @@
 						<button text="ボタン">
 							angel = World.heaven().newTwinAngel();
 							target = angel.newElementTarget("frame");
-							target.newHaloServant();
+							target.newHaloServant("red");
 						</button>
 						<label text="ラベル" />
 						<widget title="NES" widget-klass="nes-memory" fit="expand">
