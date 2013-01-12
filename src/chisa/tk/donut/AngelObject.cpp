@@ -187,6 +187,7 @@ LoneAngelObject::LoneAngelObject(LoneAngelProvider* provider)
 
 void LoneAngelObject::bootstrap(const Handler<Heap>& heap, const Handler<LoneAngel>& angel)
 {
+	Super::bootstrap(heap, angel);
 }
 
 void LoneAngelObject::onFutureDiscarded(const Handler<Heap>& heap)
@@ -241,6 +242,7 @@ TwinAngelObject::TwinAngelObject(TwinAngelProvider* provider)
 
 void TwinAngelObject::bootstrap(const Handler<Heap>& heap, const Handler<TwinAngel>& angel)
 {
+	Super::bootstrap(heap, angel);
 }
 
 void TwinAngelObject::onFutureDiscarded(const Handler<Heap>& heap)

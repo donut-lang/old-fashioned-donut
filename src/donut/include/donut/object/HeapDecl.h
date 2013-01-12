@@ -96,6 +96,14 @@ public: /* オブジェクトを作ってそれをプールに登録し、メモ
 	Handler<PureNativeClosureObject> createPureNativeClosureObject(std::string const& objectProviderName, std::string const& closureName, PureNativeClosureObject::Signature sig);
 	template <typename __AntiSideEffect>
 	Handler<ReactiveNativeClosureObject> createReactiveNativeClosureObject(std::string const& objectProviderName, std::string const& closureName, typename ReactiveNativeClosureBaseT<__AntiSideEffect>::Signature f);
+public:
+	template <typename ObjectT, typename ProviderT, typename... Args>
+	Handler<ObjectT> createObject( ProviderT* provider, Args... args ){
+		Handler<ObjectT> obj ( new ObjectT(provider) );
+		this->registerObject(obj);
+		obj->bootstrap(args...);
+		return obj;
+	}
 private:
 	Handler<HomuraObject> createHomuraObject();
 public: /* ヒープ管理 */

@@ -107,9 +107,7 @@ protected:
 public:
 	template <typename... Args> inline
 	Handler<ObjectT> newInstance(Args... args) {
-		Handler<ObjectT> obj ( new ObjectT( static_cast<ProviderT*>(this) ) );
-		obj->bootstrap(args...);
-		return obj;
+		return HeapProvider::newInstance<ObjectT>( static_cast<ProviderT*>(this), args... );
 	}
 };
 
