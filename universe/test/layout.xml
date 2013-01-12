@@ -17,13 +17,13 @@
 					<vertical>
 						<textarea desc="テキストエリアサンプル" />
 						<button text="ボタン">
-							angel = World.heaven().newTwinAngel();
+							heaven = World.heaven();
+							angel = heaven.newTwinAngel();
 							target = angel.newElementTarget("frame");
 							servant = target.newHaloServant("red");
-							servant = target.newElementServant("main").element();
 							angel.attatchTarget(target);
 							target.attatchServant(servant);
-							
+							heaven.attatchAngel(angel);
 						</button>
 						<label text="ラベル" />
 						<widget title="NES" widget-klass="nes-memory" fit="expand">
