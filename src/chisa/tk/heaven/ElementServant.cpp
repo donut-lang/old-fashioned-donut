@@ -28,6 +28,7 @@ namespace tk {
 ElementServant::ElementServant(Handler<AngelTarget> const& angelTarget, Handler<Element> const& elem)
 :Servant(angelTarget)
 ,element_(elem)
+,anim_(0)
 {
 
 }
