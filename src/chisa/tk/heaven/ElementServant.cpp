@@ -18,6 +18,8 @@
 
 #include "ElementServant.h"
 #include "../Element.h"
+#include "../World.h"
+#include "../donut/Patron.h"
 
 namespace chisa {
 namespace tk {

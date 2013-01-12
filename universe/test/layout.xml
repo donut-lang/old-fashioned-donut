@@ -17,7 +17,8 @@
 					<vertical>
 						<textarea desc="テキストエリアサンプル" />
 						<button text="ボタン">
-							World.heaven().newTwinAngel();
+							angel = World.heaven().newTwinAngel();
+							angel.newElementTarget("frame");
 						</button>
 						<label text="ラベル" />
 						<widget title="NES" widget-klass="nes-memory" fit="expand">

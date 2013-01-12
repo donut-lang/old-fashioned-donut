@@ -32,7 +32,8 @@ namespace tk {
 
 
 Angel::Angel(Handler<Heaven> heaven)
-:heaven_(heaven)
+:world_(heaven->world())
+,heaven_(heaven)
 {
 }
 
@@ -59,6 +60,7 @@ Handler< ::donut::Object> Angel::donutObject(Handler< ::donut::Heap> const& heap
 {
 	if(this->donutObject_.expired()){
 		Handler< ::donut::Object> obj(createDonutObject(heap));
+		this->donutObject_ = obj;
 		return obj;
 	}
 	return this->donutObject_.lock();
