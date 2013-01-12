@@ -28,8 +28,14 @@ ElementServant::ElementServant(Handler<AngelTarget> const& angelTarget)
 
 }
 
+Handler<ElementServant> ElementServant::self() noexcept
+{
+	return Handler<ElementServant>::__internal__fromRawPointerWithoutCheck(this);
+}
+
 Handler< ::donut::Object> ElementServant::createDonutObject(Handler< ::donut::Heap> const& heap)
 {
+	return Handler< ::donut::Object>( world()->patron()->elementServantProvider()->newInstance(heap, self()) );
 }
 
 }}

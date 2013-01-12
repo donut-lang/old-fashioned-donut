@@ -85,6 +85,13 @@ protected:
 	typedef AngelProviderBaseT<ProviderT, ObjectT, AngelT, AntiT> Super;
 	AngelProviderBaseT(Handler<Heap> const& heap, std::string const& provname, Handler<Heaven> const& heaven);
 	virtual ~AngelProviderBaseT() noexcept = default;
+public:
+	template <typename... Args> inline
+	Handler<ObjectT> newInstance(Args... args) {
+		Handler<ObjectT> obj ( new ObjectT( static_cast<ProviderT*>(this) ) );
+		obj->bootstrap(args...);
+		return obj;
+	}
 };
 
 template <typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>

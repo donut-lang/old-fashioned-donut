@@ -33,7 +33,7 @@ TEST(TaskHandlerTest, RegisterTest)
 		x+=1;
 		return false;
 	});
-	ASSERT_NO_THROW(handler.registerTask(l));
+	ASSERT_NO_THROW(handler.send(l));
 	ASSERT_EQ( 0, x );
 	ASSERT_NO_THROW(handler.run(10));
 
@@ -53,7 +53,7 @@ TEST(TaskHandlerTest, RegisterRecycledTest)
 		x+=1;
 		return true;
 	});
-	ASSERT_NO_THROW(handler.registerTask(l));
+	ASSERT_NO_THROW(handler.send(l));
 	ASSERT_EQ( 0, x );
 	ASSERT_NO_THROW(handler.run(10));
 
@@ -71,7 +71,7 @@ TEST(TaskHandlerTest, RegisterVoidLambdaTest)
 	std::function<void()> l([&x]()->void{
 		x+=1;
 	});
-	ASSERT_NO_THROW(handler.registerTask(l));
+	ASSERT_NO_THROW(handler.send(l));
 	ASSERT_EQ( 0, x );
 	ASSERT_NO_THROW(handler.run(10));
 
@@ -86,7 +86,7 @@ TEST(TaskHandlerTest, RegisterRawLambdaTest)
 	TaskHandler handler(log_trace);
 	int x = 0;
 	ASSERT_EQ( 0, x );
-	ASSERT_NO_THROW(handler.registerTask([&x]()->bool{
+	ASSERT_NO_THROW(handler.send([&x]()->bool{
 		x+=1;
 		return false;
 	}));
@@ -104,7 +104,7 @@ TEST(TaskHandlerTest, RegisterRawLambdaVoidTest)
 	TaskHandler handler(log_trace);
 	int x = 0;
 	ASSERT_EQ( 0, x );
-	ASSERT_NO_THROW(handler.registerTask([&x]()->void{
+	ASSERT_NO_THROW(handler.send([&x]()->void{
 		x+=1;
 	}));
 	ASSERT_EQ( 0, x );
@@ -121,7 +121,7 @@ TEST(TaskHandlerTest, RegisterFullLambda)
 	TaskHandler handler(log_trace);
 	float f = 0;
 	ASSERT_FLOAT_EQ( 0, f );
-	ASSERT_NO_THROW(handler.registerTask([&f](float n)->bool{
+	ASSERT_NO_THROW(handler.send([&f](float n)->bool{
 		f+=n;
 		return true;
 	}));
@@ -138,7 +138,7 @@ TEST(TaskHandlerTest, RegisterFullFalseLambda)
 	TaskHandler handler(log_trace);
 	float f = 0;
 	ASSERT_FLOAT_EQ( 0, f );
-	ASSERT_NO_THROW(handler.registerTask([&f](float n)->bool{
+	ASSERT_NO_THROW(handler.send([&f](float n)->bool{
 		f+=n;
 		return false;
 	}));

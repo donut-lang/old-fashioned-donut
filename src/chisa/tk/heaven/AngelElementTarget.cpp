@@ -18,6 +18,7 @@
 #include "AngelElementTarget.h"
 #include "../World.h"
 #include "../Element.h"
+#include "../donut/Patron.h"
 
 namespace chisa {
 namespace tk {
@@ -48,8 +49,14 @@ Handler<AngelElementTarget> AngelElementTarget::matchToElementTarget(const std::
 			Handler<AngelElementTarget>();
 }
 
+Handler<AngelElementTarget> AngelElementTarget::self() noexcept
+{
+	return Handler<AngelElementTarget>::__internal__fromRawPointerWithoutCheck(this);
+}
+
 Handler< ::donut::Object> AngelElementTarget::createDonutObject(Handler< ::donut::Heap> const& heap)
 {
+	return Handler< ::donut::Object>( world()->patron()->angelElementTargetProvider()->newInstance(heap, self()) );
 }
 
 }}

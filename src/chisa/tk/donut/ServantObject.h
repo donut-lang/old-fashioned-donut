@@ -104,6 +104,13 @@ protected:
 	typedef ServantProviderBaseT<ProviderT, ObjectT, TargetT, AntiT> Super;
 	ServantProviderBaseT(Handler<Heap> const& heap, std::string const& provname, Handler<Heaven> const& heaven);
 	virtual ~ServantProviderBaseT() noexcept = default;
+public:
+	template <typename... Args> inline
+	Handler<ObjectT> newInstance(Args... args) {
+		Handler<ObjectT> obj ( new ObjectT( static_cast<ProviderT*>(this) ) );
+		obj->bootstrap(args...);
+		return obj;
+	}
 };
 
 /**********************************************************************************************************************

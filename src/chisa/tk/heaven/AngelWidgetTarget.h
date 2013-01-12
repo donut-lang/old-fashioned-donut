@@ -31,6 +31,8 @@ private:
 	std::string const id_;
 	HandlerW<Widget> widget_;
 	std::string const guide_;
+public:
+	Handler<AngelWidgetTarget> self() noexcept;
 private:
 	virtual geom::Area findScreenAreaImpl();
 	virtual Handler<AngelWidgetTarget> matchToWidgetTarget(std::string const& widgetId, std::string const& widgetGuide) noexcept override final;
