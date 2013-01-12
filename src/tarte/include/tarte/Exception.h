@@ -21,10 +21,12 @@
 #include <string>
 #include <cstdarg>
 #include "Common.h"
+#include "ClassUtil.h"
 
 namespace tarte {
 
 class Exception : public std::exception {
+	DEFAULT_COPY_AND_ASSIGN(Exception);
 private:
 	std::string _loc;
 	std::string _msg;
