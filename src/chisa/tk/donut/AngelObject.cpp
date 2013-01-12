@@ -187,10 +187,12 @@ void LoneAngelObject::bootstrap(const Handler<Heap>& heap, const Handler<LoneAng
 
 void LoneAngelObject::onFutureDiscarded(const Handler<Heap>& heap)
 {
+	Super::onFutureDiscarded(heap);
 }
 
 void LoneAngelObject::onHistoryDiscarded(const Handler<Heap>& heap)
 {
+	Super::onHistoryDiscarded(heap);
 }
 
 typename LoneAngelObject::ResultType LoneAngelObject::onBack(const Handler<Heap>& heap, const AntiSideEffect& val)
@@ -238,10 +240,12 @@ void TwinAngelObject::bootstrap(const Handler<Heap>& heap, const Handler<TwinAng
 
 void TwinAngelObject::onFutureDiscarded(const Handler<Heap>& heap)
 {
+	Super::onFutureDiscarded(heap);
 }
 
 void TwinAngelObject::onHistoryDiscarded(const Handler<Heap>& heap)
 {
+	Super::onHistoryDiscarded(heap);
 }
 
 typename TwinAngelObject::ResultType TwinAngelObject::onBack(const Handler<Heap>& heap, const AntiSideEffect& val)

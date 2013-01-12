@@ -37,6 +37,12 @@ using namespace donut;
  * Base
  **********************************************************************************************************************/
 struct AngelTargetSideEffect{
+	enum {
+		AttatchServant,
+		DetatchServant,
+	}op;
+	Handler<Servant> attatchedServant;
+	Handler<Servant> detatchedServant;
 	template <typename Arc>
 	void serialize(Arc& arc) {
 
@@ -88,6 +94,13 @@ protected:
 	void bootstrap(const Handler<Heap>& heap, const Handler<TargetT>& angelTarget);
 public:
 	Handler<TargetT> angelTarget() const;
+private:
+	ResultType execAntiSideEffect(Handler<Heap> const& heap, AntiSideEffect const& val);
+public:
+	void onFutureDiscarded(Handler<Heap> const& heap);
+	void onHistoryDiscarded(Handler<Heap> const& heap);
+	ResultType onBack(Handler<Heap> const& heap, AntiSideEffect const& val);
+	ResultType onForward(Handler<Heap> const& heap, AntiSideEffect const& val);
 };
 
 template <typename ProviderT, typename ObjectT, typename TargetT, typename AntiT>
