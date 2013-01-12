@@ -27,15 +27,21 @@
 namespace chisa {
 namespace tk {
 
+static std::string const TAG("Button");
+
 const std::string Button::AttrName::ShadowColor("shadow-color");
 const std::string Button::AttrName::ShadowDepth("shadow-depth");
+const std::string Button::AttrName::DonutMachineName("donut");
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(Button, AbstractButton)
 ,shadowColor_(gl::DarkGray)
 ,shadowDepth_(3.0f)
+,donutMachineName_()
+,script_(nullptr)
 {
 	this->addAttribute(AttrName::ShadowColor, this->shadowColor_);
 	this->addAttribute(AttrName::ShadowDepth, this->shadowDepth_);
+	this->addAttribute(AttrName::DonutMachineName, this->donutMachineName_);
 }
 
 Button::~Button() noexcept
@@ -93,5 +99,39 @@ void Button::layoutButtonContent(geom::Box const& size)
 	this->renderOffset_ = ((size-this->textImage()->size()-geom::Distance(shadowDepth_,shadowDepth_))/2);
 }
 
+void Button::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)
+{
+	std::string const src = element->GetText();
+	if( !src.empty() ) {
+		Handler<World> world( this->world().lock() );
+		if( unlikely(!world) ) {
+			TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
+		}
+		this->script_ = world->donut()->parse(src, "Button-Innnter", 0);
+	}
+}
+
+void Button::onClick()
+{
+	if(this->script_){
+		if(this->log().d()){
+			this->log().d(TAG, "Executing script.");
+		}
+		Handler<World> world( this->world().lock() );
+		if( unlikely(!world) ) {
+			TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
+		}
+		Handler<Donut> donut(world->donut());
+		Handler<Machine> vm(donut->queryMachine(this->donutMachineName_));
+		if(this->log().d()){
+			this->log().d(TAG, "Execute script on: %s", this->donutMachineName_.c_str());
+		}
+		vm->start(this->script_);
+	}else{
+		if(this->log().d()){
+			this->log().d(TAG, "Button script is empty.");
+		}
+	}
+}
 
 }}

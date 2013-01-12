@@ -95,7 +95,8 @@ void World::init()
 	this->gestureMediator_ = new ActionMediator(this->log_, self);
 	this->heaven_ = Handler<Heaven>(new Heaven(self));
 	this->patron_ = Handler<Patron>(new Patron(self));
-	this->donut_ = Handler< ::donut::Donut>(new ::donut::Donut(this->patron_));
+	this->donut_ = Handler< ::donut::Donut>(new ::donut::Donut(this->log_, this->patron_));
+	this->donut_->bootstrap();
 	this->pushElement("main");
 }
 
