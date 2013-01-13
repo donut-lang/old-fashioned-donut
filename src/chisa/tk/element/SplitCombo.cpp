@@ -264,29 +264,27 @@ void SplitCombo::layoutImpl(geom::Distance const& offsetFromParent, geom::Box co
 			TARTE_EXCEPTION(Exception, "[BUG] Fixed size is unspecified for SplitCombo.");
 		}
 #endif
-	float totalUnspecifiedWidth = 0.0f;
+	float totalWeight = 0.0f;
 	float left = (size.*changed_getter)();
 	for(ContainerType& it : this->children()){
 		SplitComboContext& ctx = it.second;
+		if(geom::isSpecified(ctx.weight)) {
+			totalWeight+=ctx.weight;
+		}
 		if( geom::isUnspecified(ctx.size) ) {
-			totalUnspecifiedWidth+=ctx.weight;
-#ifdef DEBUG
-			if(geom::isUnspecified(ctx.weight)) {
-				TARTE_EXCEPTION(Exception, "[BUG] Weight is unspecified.");
-			}
-#endif
+			ctx.size = 0;
 		}else{
 			left -= ctx.size;
 		}
 	}
-	if(totalUnspecifiedWidth > 0.0f) {
+	if(totalWeight > 0.0f) {
 		for(ContainerType& it : this->children()){
 			SplitComboContext& ctx = it.second;
-			if( geom::isUnspecified(ctx.size) ) {
-				float const s = left * ctx.weight / totalUnspecifiedWidth;
+			if(geom::isSpecified(ctx.weight)) {
+				float const s = left * ctx.weight / totalWeight;
 				left -= s;
-				totalUnspecifiedWidth+=ctx.weight;
-				ctx.size = s;
+				totalWeight+=ctx.weight;
+				ctx.size += s;
 			}
 		}
 	}
