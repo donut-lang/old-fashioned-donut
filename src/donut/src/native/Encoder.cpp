@@ -25,17 +25,21 @@
 namespace donut {
 namespace native {
 
-template <>
-Handler<Object> encode<int>(Handler<Heap> const& heap, int val)
-{
-	return heap->createInt(val);
+#define INT_ENCODER(TYPE)\
+template <>\
+Handler<Object> encode<TYPE>(Handler<Heap> const& heap, TYPE val)\
+{\
+	return heap->createInt(val);\
 }
-
-template <>
-Handler<Object> encode<unsigned int>(Handler<Heap> const& heap, unsigned int val)
-{
-	return heap->createInt(val);
-}
+INT_ENCODER(long);
+INT_ENCODER(unsigned long);
+INT_ENCODER(int);
+INT_ENCODER(unsigned int);
+INT_ENCODER(short);
+INT_ENCODER(unsigned short);
+INT_ENCODER(char);
+INT_ENCODER(unsigned char);
+INT_ENCODER(signed char);
 
 template <>
 Handler<Object> encode<float>(Handler<Heap> const& heap, float val)
