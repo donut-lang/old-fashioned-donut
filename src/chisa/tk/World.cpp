@@ -76,29 +76,32 @@ World::~World() noexcept
 void World::init()
 {
 	Handler<World> self(this->self());
-	if(Handler<Universe> universe = this->universe_.lock()){
-		const std::string filename(universe->resolveWorldFilepath(this->name_, "layout.xml"));
-		this->doc_ = new tinyxml2::XMLDocument();
-		this->doc_->LoadFile(filename.c_str());
-		this->elementFactory_ = new ElementFactory(this->log_, self, filename, this->doc_, false);
-
-		if( const char* geistName = this->doc_->RootElement()->Attribute("geist", nullptr)){
-			universe->hexe()->registerElements(*this->elementFactory_);
-			this->geist(universe->invokeWorldGeist(this->self(), geistName));
-		}else{
-			if(log().t()){
-				log().t(TAG, "Geist not specified for: %s", this->name().c_str());
-			}
-		}
-		this->widgetFactory_ = new WidgetFactory(this->log_, self);
-		universe->hexe()->registerWidgets(*this->widgetFactory_);
+	Handler<Universe> universe = this->universe_.lock();
+	if( unlikely(!universe) ){
+		TARTE_EXCEPTION(Exception, "[BUG] Universe is already dead.")
 	}
+	const std::string filename(universe->resolveWorldFilepath(this->name_, "layout.xml"));
+	this->doc_ = new tinyxml2::XMLDocument();
+	this->doc_->LoadFile(filename.c_str());
+	this->elementFactory_ = new ElementFactory(this->log_, self, filename, this->doc_, false);
+
+	if( const char* geistName = this->doc_->RootElement()->Attribute("geist", nullptr)){
+		universe->hexe()->registerElements(*this->elementFactory_);
+		this->geist(universe->invokeWorldGeist(this->self(), geistName));
+	}else{
+		if(log().t()){
+			log().t(TAG, "Geist not specified for: %s", this->name().c_str());
+		}
+	}
+	this->widgetFactory_ = new WidgetFactory(this->log_, self);
+	universe->hexe()->registerWidgets(*this->widgetFactory_);
 	this->gestureMediator_ = new ActionMediator(this->log_, self);
 	this->heaven_ = Handler<Heaven>(new Heaven(self));
 	this->patron_ = Handler<Patron>(new Patron(self));
 	this->donut_ = Handler< ::donut::Donut>(new ::donut::Donut(this->log_, this->patron_));
 	this->donut_->bootstrap();
 	// XXX: 何にせよ、見苦しい
+	universe->hexe()->registerGeistProvider(donut_->heap());
 	donut_->heap()->setGlobalObject("Geist", this->geist()->donutObject(donut_->heap()));
 	this->pushElement("main");
 }
