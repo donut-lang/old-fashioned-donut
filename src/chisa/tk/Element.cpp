@@ -252,7 +252,8 @@ Handler<ElementObject> Element::donutObject()
 	if( unlikely(!provider) ){
 		TARTE_EXCEPTION(Exception, "[BUG] Oops. Provider is not found for \"%s\"", this->toString().c_str());
 	}
-	Handler<ElementObject> eobj ( provider->newInstance(donut->heap(), this->self()) );
+	Handler<Heap> const& heap = donut->heap();
+	Handler<ElementObject> eobj ( provider->newInstance(heap, this->self()) );
 	this->donutObject_ = eobj;
 	return eobj;
 }

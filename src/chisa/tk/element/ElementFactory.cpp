@@ -137,10 +137,15 @@ void ElementFactory::registerProvider(std::string const& demangledElementName, H
 	if(!this->demangledElementNameToDonutProviderMap_.insert(demangledElementName, provider)){
 		TARTE_EXCEPTION(Exception, "[BUG] Oops. Provider for \"%s\" is already registered");
 	}
+	if( unlikely(!heap_) ) {
+		TARTE_EXCEPTION(Exception, "[BUG] Oops. Heap is not specified.");
+	}
+	heap_->registerProvider(provider);
 }
 
 void ElementFactory::registerDonutProvider(Handler< ::donut::Heap> const& heap)
 {
+	HeapLock lock(*this, heap);
 	Handler<World> world(this->world().lock());
 	if( unlikely(!world) ){
 		TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");

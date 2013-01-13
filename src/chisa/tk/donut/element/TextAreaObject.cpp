@@ -37,9 +37,10 @@ void TextAreaObject::onHistoryDiscarded(const Handler<Heap>& heap)
 typename TextAreaObject::ResultType TextAreaObject::execAntiSideEffect(Handler<Heap> const& heap, AntiSideEffect const& val)
 {
 	AntiSideEffect anti;
-	//switch(val.op){
-
-	//}
+	switch(val.op){
+	case AntiSideEffect::ChangeText:
+		break;
+	}
 	return std::tuple<bool, AntiSideEffect>(true, anti);
 }
 
@@ -72,6 +73,10 @@ void TextAreaObject::loadImpl(const Handler<Heap>& heap, const XValue& data)
 TextAreaProvider::TextAreaProvider(Handler<Heap> const& heap, Handler<World> const& world)
 :Super(heap, world)
 {
+	this->registerPureNativeClosure("text", [](TextAreaObject* obj, std::string str){
+		obj->element()->text(str);
+		return str;
+	});
 }
 
 }}

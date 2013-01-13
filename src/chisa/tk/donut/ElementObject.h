@@ -57,13 +57,13 @@ protected:
 	inline Handler<World> world() const;
 	inline void bootstrap(Handler< ::donut::Heap> const& heap, Handler<Element> const& element){
 		this->ReactiveNativeObject::bootstrap(heap);
-		const_cast<Handler<Element>&>(element_) = this->element_;
+		const_cast<Handler<Element>&>(element_) = element;
 	}
 public:
 	Handler<Element> element() const { return element_; };
 public:
 	Handler<Element> findRootElement();
-	Handler<Element> findElementById(std::string const& id);
+	Handler<Object> findElementById(std::string const& id);
 };
 
 /**********************************************************************************************************************
@@ -110,6 +110,7 @@ public:
 	typedef ElementObjectBaseT<ProviderT, ObjectT, ElementT, AntiT> Super;
 protected:
 	inline ProviderT provider() const noexcept { return static_cast<ProviderT*>(this->ElementObject::provider()); };
+public:
 	Handler<ElementT> element() const { return Handler<ElementT>::__internal__fromRawPointerWithoutCheck(static_cast<ElementT*>(ElementObject::element().get())); };
 protected:
 	ElementObjectBaseT(ProviderT* provider);

@@ -102,6 +102,21 @@ public: /* 登録 */
 		static_assert(std::is_base_of<Element, ElementKlass>::value, "Please register provider for element class.");
 		this->registerProvider(::tarte::demangle<ElementKlass>(), provider);
 	}
+private:
+	Handler<Heap> heap_;
+	class HeapLock final{
+		STACK_OBJECT(HeapLock);
+		DISABLE_COPY_AND_ASSIGN(HeapLock);
+	public:
+		ElementFactory& self;
+	public:
+		HeapLock(ElementFactory& self, Handler< ::donut::Heap> const& heap):self(self) {
+			self.heap_ = heap;
+		}
+		~HeapLock(){
+			self.heap_.reset();
+		}
+	};
 };
 
 }}

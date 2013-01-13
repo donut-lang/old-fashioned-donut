@@ -134,8 +134,10 @@ bool NesMemoryWidget::onSingleTapUp(const float& timeMs, const chisa::geom::Poin
 	}
 	uint16_t const addr_ = this->ptToAddr(ptInWidget);
 	std::string addr( ::tarte::toString(addr_, 16));
+	Handler<NesGeist> geist = this->geist_.lock();
+	std::string val ( ::tarte::toString(geist->machine()->debuggerRead(addr_)));
 
-	world->sendTask([this, world,addr]()->void{
+	world->sendTask([this, world,addr,val]()->void{
 		Handler< ::donut::Donut> donut(world->donut());
 		auto src = donut->parse(std::string("")+R"delimiter(
 h = World.heaven();
@@ -144,7 +146,9 @@ t1 = angel.newWidgetTarget("nes-compare", ")delimiter"+addr+R"delimiter(");
 t2 = angel.newWidgetTarget("nes-watcher", ")delimiter"+addr+R"delimiter(");
 t1.attatchServant(t1.newHaloServant("red"));
 t2.attatchServant(t2.newHaloServant("red"));
-t2.attatchServant(t2.newElementServant("mem-edit"));
+elm = t2.newElementServant("mem-edit");
+elm.element().findElementById("val").text(")delimiter"+val+R"delimiter(");
+t2.attatchServant(elm);
 angel.attatchTarget(t1);
 angel.attatchTarget(t2);
 h.attatchAngel(angel);

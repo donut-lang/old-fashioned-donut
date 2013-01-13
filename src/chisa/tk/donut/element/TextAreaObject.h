@@ -26,7 +26,9 @@ namespace tk {
 struct TextAreaSideEffect : public ElementSideEffect {
 	enum {
 		None=0,
+		ChangeText
 	} op;
+	std::string text;
 	TextAreaSideEffect()
 	:op(None)
 	{

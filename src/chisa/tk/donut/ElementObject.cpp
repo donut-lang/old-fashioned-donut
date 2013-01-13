@@ -79,9 +79,14 @@ Handler<Element> ElementObject::findRootElement()
 	return this->element()->findRootElement();
 }
 
-Handler<Element> ElementObject::findElementById(std::string const& id)
+Handler<Object> ElementObject::findElementById(std::string const& id)
 {
-	return this->element()->findElementById(id);
+	Handler<Element> found (this->element()->findElementById(id));
+	if( found ) {
+		return found->donutObject();
+	}else{
+		this->provider()->heap().lock()->createNull();
+	}
 }
 
 
