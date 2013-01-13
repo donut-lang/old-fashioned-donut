@@ -27,6 +27,8 @@ TYPE decode<TYPE>(Handler<Heap> const& heap, Handler<Object> obj)\
 {\
 	return obj->toInt(heap);\
 }
+INT_DECODER(long long);
+INT_DECODER(unsigned long long);
 INT_DECODER(long);
 INT_DECODER(unsigned long);
 INT_DECODER(int);
@@ -36,6 +38,7 @@ INT_DECODER(unsigned short);
 INT_DECODER(char);
 INT_DECODER(unsigned char);
 INT_DECODER(signed char);
+
 #define FLOAT_DECODER(TYPE)\
 template <>\
 TYPE decode<TYPE>(Handler<Heap> const& heap, Handler<Object> obj)\
