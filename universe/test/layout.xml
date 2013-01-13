@@ -14,10 +14,10 @@
 			</vertical>
 			<vertical>
 				<horizontal split-weight="2" id="content">
-					<scroll title="比較" mode="vertical" id="memory-compare">
+					<scroll title="比較" mode="vertical" id="memory-compare" split-weight="1">
 						<widget widget-klass="nes-compare" fit="expand" />
 					</scroll>
-					<scroll title="メモリ" mode="vertical" id="memory-viewer">
+					<scroll title="メモリ" mode="vertical" id="memory-viewer" split-weight="1">
 						<widget title="NES" widget-klass="nes-memory" fit="expand" />
 					</scroll>
 				</horizontal>
