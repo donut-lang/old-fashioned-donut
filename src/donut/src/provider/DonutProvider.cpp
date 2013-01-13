@@ -17,8 +17,10 @@
  */
 
 #include <donut/object/Object.h>
+#include <donut/object/Heap.h>
 #include <donut/object/DonutClosureObject.h>
 #include <donut/provider/DonutProvider.h>
+
 
 namespace donut {
 
@@ -26,7 +28,12 @@ namespace donut {
 DonutProvider::DonutProvider( Handler<Heap> const& heap )
 :Super(heap, "DonutObject")
 {
-
+	this->registerPureNativeClosure("has",[this](DonutObject* obj, std::string name){
+		return obj->has(this->heap().lock(), name);
+	});
+	this->registerPureNativeClosure("hasOwn",[this](DonutObject* obj, std::string name){
+		return obj->has(this->heap().lock(), name);
+	});
 }
 DonutClosureProvider::DonutClosureProvider( Handler<Heap> const& heap )
 :Super(heap,"DonutClosureObject")

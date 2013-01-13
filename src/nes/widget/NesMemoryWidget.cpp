@@ -141,7 +141,13 @@ bool NesMemoryWidget::onSingleTapUp(const float& timeMs, const chisa::geom::Poin
 		Handler< ::donut::Donut> donut(world->donut());
 		auto src = donut->parse(std::string("")+R"delimiter(
 h = World.heaven();
+if( Global.has("__mem__widget_angel") ){
+h.detatchAngel(Global.__mem__widget_angel);
+}else{
+};
 angel = h.newTwinAngel();
+Global.__mem__widget_angel = angel;
+Global.__mem__widget_addr = )delimiter"+addr+R"delimiter(;
 t1 = angel.newWidgetTarget("nes-compare", ")delimiter"+addr+R"delimiter(");
 t2 = angel.newWidgetTarget("nes-watcher", ")delimiter"+addr+R"delimiter(");
 t1.attatchServant(t1.newHaloServant("red"));
@@ -151,7 +157,7 @@ elm.element().findElementById("val").text(")delimiter"+val+R"delimiter(");
 t2.attatchServant(elm);
 angel.attatchTarget(t1);
 angel.attatchTarget(t2);
-h.attatchAngel(angel);
+Global.attatched = h.attatchAngel(angel);
 )delimiter");
 		donut->queryMachine()->start(src);
 	});

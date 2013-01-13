@@ -65,7 +65,7 @@
 	</vertical>
 	<label id="label" text="NES"></label>
 	<horizontal id="mem-edit">
-		<textarea id="val" desc="値を入れて下さい" />
+		<textarea id="val" desc="値を入力" />
 		<button text=" 変更 " />
 	</horizontal>
 	<label id="label" text="NES"></label>

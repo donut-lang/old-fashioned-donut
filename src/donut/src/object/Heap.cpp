@@ -257,7 +257,7 @@ void Heap::bootstrap()
 
 	this->initPrototypes();
 
-	this->globalObject_ = this->createEmptyDonutObject();
+	this->globalObject_ = this->createDonutObject(); //XXX: Emptyの方がいいとお思う
 	this->globalObject_->set(self, "Object", this->objectProto());
 	this->globalObject_->set(self, "Int", this->intProto());
 	this->globalObject_->set(self, "Boolean", this->boolProto());
