@@ -8,16 +8,16 @@
 						<xstring name="rom">__roms__/alter_ego/Alter_Ego.nes</xstring>
 					</xobject>
 				</widget>
-				<scroll title="検索" mode="vertical">
-					<widget title="命令実行" widget-klass="nes-trace" fit="expand" />
+				<scroll mode="vertical" id="trace-scroll">
+					<widget widget-klass="nes-trace" fit="expand" />
 				</scroll>
 			</vertical>
 			<vertical>
-				<horizontal split-weight="2">
-					<scroll title="比較" mode="vertical">
+				<horizontal split-weight="2" id="content">
+					<scroll title="比較" mode="vertical" id="memory-compare">
 						<widget widget-klass="nes-compare" fit="expand" />
 					</scroll>
-					<scroll title="メモリ" mode="vertical">
+					<scroll title="メモリ" mode="vertical" id="memory-viewer">
 						<widget title="NES" widget-klass="nes-memory" fit="expand" />
 					</scroll>
 				</horizontal>

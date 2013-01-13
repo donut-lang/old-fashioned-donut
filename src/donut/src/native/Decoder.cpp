@@ -21,17 +21,22 @@
 namespace donut {
 namespace native {
 
-template <>
-int decode<int>(Handler<Heap> const& heap, Handler<Object> obj)
-{
-	return obj->toInt(heap);
+#define INT_DECODER(TYPE)\
+template <>\
+TYPE decode<TYPE>(Handler<Heap> const& heap, Handler<Object> obj)\
+{\
+	return obj->toInt(heap);\
 }
+INT_DECODER(long);
+INT_DECODER(unsigned long);
+INT_DECODER(int);
+INT_DECODER(unsigned int);
+INT_DECODER(short);
+INT_DECODER(unsigned short);
+INT_DECODER(char);
+INT_DECODER(unsigned char);
+INT_DECODER(signed char);
 
-template <>
-unsigned int decode<unsigned int>(Handler<Heap> const& heap, Handler<Object> obj)
-{
-	return obj->toInt(heap);
-}
 template <>
 float decode<float>(Handler<Heap> const& heap, Handler<Object> obj)
 {
