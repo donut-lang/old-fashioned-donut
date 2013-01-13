@@ -426,7 +426,7 @@ Handler<Object> Machine::run()
 
 			if( Handler<NativeClosureObject> nclos = closureObj->tryCastToNativeClosureObject() ){
 				this->pushStack( nclos->apply(heap_, destObj, arg) );
-				if( clock_->invokeMahcineRequest() ){ //ネイティブ処理の実行後は時計操作が行われる可能性がある
+				if( unlikely(clock_->invokeMahcineRequest()) ){ //ネイティブ処理の実行後は時計操作が行われる可能性がある
 					running &= !this->isInterruptedNow();
 				}
 			}else if( Handler<DonutClosureObject> dclos = closureObj->tryCastToDonutClosureObject() ){
