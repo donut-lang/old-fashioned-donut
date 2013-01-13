@@ -56,11 +56,14 @@ int main(int argc, char** argv) {
 		std::cerr << "<msg>" << e.msg() << std::endl;
 		return -2;
 	} catch (nes::EmulatorException& e) {
-		std::cerr << "Emulator Exception:" << e.getMessage() << std::endl;
+		std::cerr << "Emulator Exception: \"" << e.getMessage() << "\"" << std::endl;
 		return -3;
+	} catch (std::exception& e) {
+		std::cerr << "STL Exception: \"" << e.what() << "\"" << std::endl;
+		return -4;
 	} catch (...) {
 		std::cerr << "caught unknwon error." << std::endl;
-		return -4;
+		return -5;
 	}
 	return 0;
 }

@@ -32,6 +32,11 @@
 #include "TabCombo.h"
 #include "TextArea.h"
 
+#include "../donut/element/SplitComboObject.h"
+#include "../donut/element/TextAreaObject.h"
+
+#include "../World.h"
+
 namespace chisa {
 namespace tk {
 
@@ -56,7 +61,7 @@ ElementFactory::ElementFactory(Logger& log, HandlerW<World> world, std::string c
 :log_(log)
 ,world_(world)
 ,filename_(filename)
-,doc_(new XMLDocument())
+,doc_(new tinyxml2::XMLDocument())
 ,doc_free_by_me_(true)
 {
 	init();
@@ -70,7 +75,7 @@ ElementFactory::ElementFactory(Logger& log, HandlerW<World> world, std::string c
 	}
 }
 
-ElementFactory::ElementFactory(Logger& log, HandlerW<World> world, std::string const& filename, XMLDocument* document, bool doc_free_by_me)
+ElementFactory::ElementFactory(Logger& log, HandlerW<World> world, std::string const& filename, tinyxml2::XMLDocument* document, bool doc_free_by_me)
 :log_(log)
 ,world_(world)
 ,filename_(filename)
@@ -136,7 +141,12 @@ void ElementFactory::registerProvider(std::string const& demangledElementName, H
 
 void ElementFactory::registerDonutProvider(Handler< ::donut::Heap> const& heap)
 {
-
+	Handler<World> world(this->world().lock());
+	if( unlikely(!world) ){
+		TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
+	}
+	this->registerProvider<SplitCombo>(Handler<ElementProvider>(new SplitComboProvider(heap, world)));
+	this->registerProvider<TextArea>(Handler<ElementProvider>(new TextAreaProvider(heap, world)));
 }
 
 Handler<ElementProvider> ElementFactory::getProviderOf(Element* me)

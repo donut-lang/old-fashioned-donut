@@ -82,22 +82,24 @@ private:
 	void init();
 	void registerLayout(std::string const& xmlElementName, ConstructorType constructor);
 	void registerProvider(std::string const& demangledElementName, Handler<ElementProvider> const& provider);
-	void registerDonutProvider(Handler< ::donut::Heap> const& heap);
 public: /* Element作成メソッド */
 	Handler<Element> parseTree(std::string const& layoutId);
 	Handler<Element> parseTree(HandlerW<Element> parent, tinyxml2::XMLElement* top);
-public:
+public: /* donut関連 */
 	Handler<ElementProvider> getProviderOf(Element* me);
+	void registerDonutProvider(Handler< ::donut::Heap> const& heap);
 public: /* 登録 */
 	template <typename ElementKlass>
 	void registerLayout(std::string const& xmlElementName)
 	{
+		static_assert(std::is_base_of<Element, ElementKlass>::value, "Please register layout for element class.");
 		this->registerLayout(xmlElementName, elementConstructor<ElementKlass>);
 	}
 	//XXX: ここだめ！！！ヒープごとにプロバイダは作られるので、コンストラクタを登録しないと。
 	template <typename ElementKlass>
 	void registerProvider(Handler<ElementProvider> const& provider)
 	{
+		static_assert(std::is_base_of<Element, ElementKlass>::value, "Please register provider for element class.");
 		this->registerProvider(::tarte::demangle<ElementKlass>(), provider);
 	}
 };
