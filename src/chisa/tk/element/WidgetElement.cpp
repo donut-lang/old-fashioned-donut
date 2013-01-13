@@ -16,7 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "GL/gl.h"
 #include "WidgetElement.h"
 #include "../World.h"
 #include "../../gl/Canvas.h"
@@ -166,8 +165,8 @@ void WidgetElement::layoutImpl(geom::Distance const& offsetFromParent, geom::Box
 		const float scale = this->calcScale(this->widgetSize(), size);
 
 		this->widgetScale(geom::ScaleVector(scale, scale));
-		this->widgetSizeReal(geom::Box(this->widgetSize().width() * scale, this->widgetSize().height() * scale));
-		this->widgetOffset(geom::Point((size.width() - this->widgetSizeReal().width())/2, (size.height()-this->widgetSizeReal().height())/2));
+		this->widgetSizeReal(this->widgetSize() * scale);
+		this->widgetOffset((size-this->widgetSizeReal())/2);
 		break;
 	}
 	case Center: {
