@@ -98,7 +98,8 @@ void World::init()
 	this->patron_ = Handler<Patron>(new Patron(self));
 	this->donut_ = Handler< ::donut::Donut>(new ::donut::Donut(this->log_, this->patron_));
 	this->donut_->bootstrap();
-	donut_->heap()->setGlobalObject("geist", this->geist()->donutObject(donut_->heap()));
+	// XXX: 何にせよ、見苦しい
+	donut_->heap()->setGlobalObject("Geist", this->geist()->donutObject(donut_->heap()));
 	this->pushElement("main");
 }
 
