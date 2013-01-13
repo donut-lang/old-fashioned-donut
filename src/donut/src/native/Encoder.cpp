@@ -31,6 +31,8 @@ Handler<Object> encode<TYPE>(Handler<Heap> const& heap, TYPE val)\
 {\
 	return heap->createInt(val);\
 }
+INT_ENCODER(long long);
+INT_ENCODER(unsigned long long);
 INT_ENCODER(long);
 INT_ENCODER(unsigned long);
 INT_ENCODER(int);
