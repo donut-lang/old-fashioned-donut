@@ -282,8 +282,6 @@ void SplitCombo::layoutImpl(geom::Distance const& offsetFromParent, geom::Box co
 			SplitComboContext& ctx = it.second;
 			if(geom::isSpecified(ctx.weight)) {
 				float const s = left * ctx.weight / totalWeight;
-				left -= s;
-				totalWeight+=ctx.weight;
 				ctx.size += s;
 			}
 		}

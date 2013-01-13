@@ -104,7 +104,7 @@ geom::Box WidgetElement::measureImpl(geom::Box const& constraint)
 		}else if(heightSpecified){
 			scale = constraint.height() / box.height();
 		}
-		return geom::Box(box.width() * scale, box.height() * scale);
+		return geom::Box(box * scale);
 	}
 	case Fit: {
 		const bool widthSpecified = geom::isSpecified(constraint.width());
@@ -118,7 +118,7 @@ geom::Box WidgetElement::measureImpl(geom::Box const& constraint)
 			scale = constraint.height() / box.height();
 		}
 		scale = std::min(scale, 1.0f);
-		return geom::Box(box.width() * scale, box.height() * scale);
+		return geom::Box(box * scale);
 	}
 	case Center: {
 		return box;
