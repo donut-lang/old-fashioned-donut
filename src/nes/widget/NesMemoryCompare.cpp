@@ -167,6 +167,11 @@ void NesMemoryCompare::reshapeImpl(const chisa::geom::Box& areaSize)
 chisa::geom::Area NesMemoryCompare::findTargetImpl(const std::string& target)
 {
 	uint16_t addr = ::tarte::parseAs<uint16_t>(target,16);
+	return addrToArea(addr);
+}
+
+chisa::geom::Area NesMemoryCompare::addrToArea(const uint16_t& addr)
+{
 	const float rowHeight = this->rowHeight();
 	MemoryComparator& cmp = this->geist_.lock()->machine()->debugger().comparator();
 	if(!cmp.isCandidate(addr)){
@@ -181,6 +186,24 @@ chisa::geom::Area NesMemoryCompare::findTargetImpl(const std::string& target)
 		}
 	}
 	return chisa::geom::Area(0, row*rowHeight, width_, rowHeight);
+}
+
+uint16_t NesMemoryCompare::ptToAddr(const chisa::geom::Point& pt)
+{
+	MemoryComparator& cmp = this->geist_.lock()->machine()->debugger().comparator();
+	const float rowHeight = this->rowHeight();
+	int row = std::max(0, static_cast<int>(pt.y()/rowHeight)-1);
+	uint16_t last=0;
+	for(int i=0;i<2048;++i) {
+		if(cmp.isCandidate(i)){
+			if(row == 0) {
+				return i;
+			}
+			last = i;
+			--row;
+		}
+	}
+	return last;
 }
 
 chisa::geom::Box NesMemoryCompare::measureImpl(const chisa::geom::Box& constraintSize)

@@ -50,6 +50,9 @@ private:
 	inline float rowHeight() const noexcept { return this->numRenderer_.maxHeight(); };
 	virtual chisa::geom::Area findTargetImpl(std::string const& target);
 private:
+	chisa::geom::Area addrToArea(uint16_t const& addr);
+	uint16_t ptToAddr(chisa::geom::Point const& pt);
+private:
 	virtual void renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const& area) override final;
 	virtual void idleImpl(const float delta_ms) override final;
 	virtual void reshapeImpl(chisa::geom::Box const& areaSize) override final;
