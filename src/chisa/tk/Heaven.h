@@ -41,6 +41,7 @@ class ElementFactory;
 
 class World;
 class Angel;
+class Element;
 
 class Heaven final : public HandlerBody<Heaven> {
 private:
@@ -59,6 +60,9 @@ public:
 	void render(gl::Canvas& canvas);
 	void idle(const float delta_ms);
 	void reshape(geom::Area const& area);
+public:
+	Handler<Element> findElementByPoint(geom::Point const& screenVector);
+	Handler<Element> findElementById(std::string const& id);
 public:
 	Handler<Angel> findAngelById( std::string const& id );
 	std::string findAngelId( Handler<Angel> const& angel );

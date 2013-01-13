@@ -140,6 +140,32 @@ Handler<Angel> Heaven::detatchAngel(const std::string& id)
 	return angel;
 }
 
+Handler<Element> Heaven::findElementByPoint(geom::Point const& screenVector)
+{
+	Handler<Element> elm;
+	for(VectorMap<std::string, Handler<Angel> >::Pair& p : this->angelMap_ ) {
+		Handler<Angel> const& angel = p.second;
+		elm = angel->findElementByPoint(screenVector);
+		if( elm ){
+			break;
+		}
+	}
+	return elm;
+}
+
+Handler<Element> Heaven::findElementById(const std::string& id)
+{
+	Handler<Element> elm;
+	for(VectorMap<std::string, Handler<Angel> >::Pair& p : this->angelMap_ ) {
+		Handler<Angel> const& angel = p.second;
+		elm = angel->findElementById(id);
+		if( elm ){
+			break;
+		}
+	}
+	return elm;
+}
+
 Handler<Angel> Heaven::newLoneAngel()
 {
 	return Handler<Angel>( new LoneAngel(self()) );

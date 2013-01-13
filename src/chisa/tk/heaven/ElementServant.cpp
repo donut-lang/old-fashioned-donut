@@ -98,5 +98,15 @@ geom::Box ElementServant::reshapeImpl(const geom::Area& area)
 	return _size;
 }
 
+Handler<Element> ElementServant::findElementById(const std::string& id)
+{
+	return this->element()->findElementById(id);
+}
+
+Handler<Element> ElementServant::findElementByPoint(const geom::Point& screenVector)
+{
+	return this->element()->findElementByPoint(screenVector);
+}
+
 }}
 

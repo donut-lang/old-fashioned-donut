@@ -115,6 +115,30 @@ Handler<AngelTarget> Angel::detatchTarget(const Handler<AngelTarget>& target)
 	TARTE_EXCEPTION(Exception, "[BUG] Angel target not found.")
 }
 
+Handler<Element> Angel::findElementByPoint(const geom::Point& screenVector)
+{
+	Handler<Element> res;
+	for(Handler<AngelTarget> const& target : this->targets_) {
+		res = target->findElementByPoint(screenVector);
+		if( res ) {
+			break;
+		}
+	}
+	return res;
+}
+
+Handler<Element> Angel::findElementById(const std::string& id)
+{
+	Handler<Element> res;
+	for(Handler<AngelTarget> const& target : this->targets_) {
+		res = target->findElementById(id);
+		if( res ) {
+			break;
+		}
+	}
+	return res;
+}
+
 Handler<AngelElementTarget> Angel::findElementTarget(const std::string& elementId )
 {
 	Handler<AngelElementTarget> res;
@@ -198,6 +222,30 @@ Handler< ::donut::Object> AngelTarget::donutObject(Handler< ::donut::Heap> const
 	return this->donutObject_.lock();
 }
 
+
+Handler<Element> AngelTarget::findElementByPoint(const geom::Point& screenVector)
+{
+	Handler<Element> elm;
+	for(Handler<Servant> const& s : this->servants_){
+		elm = s->findElementByPoint(screenVector);
+		if(elm) {
+			break;
+		}
+	}
+	return elm;
+}
+
+Handler<Element> AngelTarget::findElementById(const std::string& id)
+{
+	Handler<Element> elm;
+	for(Handler<Servant> const& s : this->servants_){
+		elm = s->findElementById(id);
+		if(elm) {
+			break;
+		}
+	}
+	return elm;
+}
 /**********************************************************************************************************************
  * Servants
  **********************************************************************************************************************/
@@ -278,6 +326,18 @@ geom::Box Servant::reshape(const geom::Area& area)
 	this->renderArea_ = area;
 	return this->reshapeImpl(area);
 }
+
+Handler<Element> Servant::findElementById(const std::string& id)
+{
+	return Handler<Element>();
+}
+
+Handler<Element> Servant::findElementByPoint(const geom::Point& screenVector)
+{
+	return Handler<Element>();
+}
+
+
 
 }}
 

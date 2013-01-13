@@ -40,6 +40,9 @@ private:
 	virtual void renderImpl(gl::Canvas& canvas) override final;
 	virtual void idleImpl(const float delta_ms) override final;
 	virtual geom::Box reshapeImpl(geom::Area const& area) override final;
+private:
+	virtual Handler<Element> findElementById(std::string const& id) override final;
+	virtual Handler<Element> findElementByPoint(geom::Point const& screenVector) override final;
 };
 
 
