@@ -157,8 +157,8 @@ void WidgetElement::layoutImpl(geom::Distance const& offsetFromParent, geom::Box
 		const float scale = this->calcScale(this->widgetSize(), size);
 
 		this->widgetScale(geom::ScaleVector(scale, scale));
-		this->widgetSizeReal(geom::Box(this->widgetSize().width() * scale, this->widgetSize().height() * scale));
-		this->widgetOffset(geom::Point((size.width() - this->widgetSizeReal().width())/2, (size.height()-this->widgetSizeReal().height())/2));
+		this->widgetSizeReal(this->widgetSize() * scale);
+		this->widgetOffset((size - this->widgetSizeReal())/2);
 		break;
 	}
 	case Fit: {
@@ -172,7 +172,7 @@ void WidgetElement::layoutImpl(geom::Distance const& offsetFromParent, geom::Box
 	case Center: {
 		this->widgetScale(geom::ScaleVector(1.0f, 1.0f));
 		this->widgetSizeReal(this->widgetSize());
-		this->widgetOffset(geom::Point((size.width() - this->widgetSize().width())/2, (size.height()-this->widgetSize().height())/2));
+		this->widgetOffset((size - this->widgetSize())/2);
 		break;
 	}
 	}
