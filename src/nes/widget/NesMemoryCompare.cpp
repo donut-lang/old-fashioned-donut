@@ -172,7 +172,7 @@ chisa::geom::Area NesMemoryCompare::findTargetImpl(const std::string& target)
 	if(!cmp.isCandidate(addr)){
 		return chisa::geom::Area(0,0,0,0);
 	}
-	int row=0;
+	int row=1;
 	for(int i=0;i<2048;++i) {
 		if( i == addr ){
 			break;

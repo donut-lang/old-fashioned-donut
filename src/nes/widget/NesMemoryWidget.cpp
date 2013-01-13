@@ -110,16 +110,20 @@ chisa::geom::Area NesMemoryWidget::findTargetImpl(const std::string& target)
 
 chisa::geom::Area NesMemoryWidget::addrToArea(uint16_t const& addr)
 {
-	float const width = this->numRenderer_.maxWidth();
-	float const height = this->numRenderer_.maxHeight();
-	return chisa::geom::Area( this->addrWidth_+((addr&0xf) * width), height * (addr/16), width, height );
+	float const symwidth(numRenderer_.maxWidth());
+	float const dwidth(symwidth*2+2);
+	float const dheight(numRenderer_.maxHeight()+2);
+	return chisa::geom::Area( this->addrWidth_+((addr&0xf) * dwidth), dheight * (addr/16), dwidth, dheight );
 }
 uint16_t NesMemoryWidget::ptToAddr(chisa::geom::Point const& pt)
 {
-	float const width = this->numRenderer_.maxWidth();
-	float const height = this->numRenderer_.maxHeight();
+	float const symwidth(numRenderer_.maxWidth());
+	float const dwidth(symwidth*2+2);
+	float const dheight(numRenderer_.maxHeight()+2);
+	int const x = std::max(0, static_cast<int>((pt.x()-addrWidth_)/dwidth));
+	int const y = std::min(std::max(0,static_cast<int>((pt.y()/dheight))), 2048);
 	return
-		((pt.x()-addrWidth_)/width) + (pt.y()/height)*16;
+		x | y << 4;
 }
 
 bool NesMemoryWidget::onSingleTapUp(const float& timeMs, const chisa::geom::Point& ptInWidget)
@@ -131,8 +135,21 @@ bool NesMemoryWidget::onSingleTapUp(const float& timeMs, const chisa::geom::Poin
 	uint16_t const addr_ = this->ptToAddr(ptInWidget);
 	std::string addr( ::tarte::toString(addr_, 16));
 
-	world->sendTask([this]()->void{
-
+	world->sendTask([this, world,addr]()->void{
+		Handler< ::donut::Donut> donut(world->donut());
+		auto src = donut->parse(std::string("")+R"delimiter(
+h = World.heaven();
+angel = h.newTwinAngel();
+t1 = angel.newWidgetTarget("nes-compare", ")delimiter"+addr+R"delimiter(");
+t2 = angel.newWidgetTarget("nes-watcher", ")delimiter"+addr+R"delimiter(");
+t1.attatchServant(t1.newHaloServant("red"));
+t2.attatchServant(t2.newHaloServant("red"));
+t2.attatchServant(t2.newElementServant("mem-edit"));
+angel.attatchTarget(t1);
+angel.attatchTarget(t2);
+h.attatchAngel(angel);
+)delimiter");
+		donut->queryMachine()->start(src);
 	});
 
 	return true;

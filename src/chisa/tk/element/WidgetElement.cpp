@@ -204,6 +204,9 @@ void WidgetElement::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElem
 			this->widget()->updateWrapper(this->self().cast<WidgetElement>());
 		}else{
 			this->widget(world->createWidget(widgetKlass, element));
+			if(widgetId){
+				world->replaceWidget(widgetId, this);
+			}
 			this->widget()->updateWrapper(this->self().cast<WidgetElement>());
 			if(!this->widget()){
 				this->log().e(TAG, "Oops. widget \"%s\" not registered.", widgetKlass);

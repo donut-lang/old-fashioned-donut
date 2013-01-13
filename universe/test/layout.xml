@@ -15,10 +15,10 @@
 			<vertical split-weight="1">
 				<horizontal split-weight="2" id="content">
 					<scroll title="比較" mode="vertical" id="memory-compare" split-weight="1">
-						<widget widget-klass="nes-compare" fit="expand" />
+						<widget widget-klass="nes-compare" widget-id="nes-compare" fit="expand" />
 					</scroll>
 					<scroll title="メモリ" mode="vertical" id="memory-viewer" split-weight="1">
-						<widget title="NES" widget-klass="nes-memory" fit="expand" />
+						<widget title="NES" widget-klass="nes-memory" widget-id="nes-watcher" fit="expand" />
 					</scroll>
 				</horizontal>
 				<horizontal>
@@ -63,6 +63,11 @@
 			<button text="進む" />
 		</horizontal>
 	</vertical>
+	<label id="label" text="NES"></label>
+	<horizontal id="mem-edit">
+		<textarea desc="" />
+		<button text="変更" />
+	</horizontal>
 	<label id="label" text="NES"></label>
 </world>
 
