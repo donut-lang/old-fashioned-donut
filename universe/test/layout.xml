@@ -12,7 +12,7 @@
 					<widget widget-klass="nes-trace" fit="expand" />
 				</scroll>
 			</vertical>
-			<vertical>
+			<vertical split-weight="1">
 				<horizontal split-weight="2" id="content">
 					<scroll title="比較" mode="vertical" id="memory-compare" split-weight="1">
 						<widget widget-klass="nes-compare" fit="expand" />
@@ -21,7 +21,7 @@
 						<widget title="NES" widget-klass="nes-memory" fit="expand" />
 					</scroll>
 				</horizontal>
-				<horizontal split-weight="1">
+				<horizontal>
 					<vertical split-weight="1">
 						<label text="値を検索" />
 						<textarea desc="この値と比較して" />
@@ -56,6 +56,11 @@
 					</vertical>
 				</horizontal>
 			</vertical>
+		</horizontal>
+		<horizontal>
+			<label split-weight="1" />
+			<button text="戻る" />
+			<button text="進む" />
 		</horizontal>
 	</vertical>
 	<label id="label" text="NES"></label>
