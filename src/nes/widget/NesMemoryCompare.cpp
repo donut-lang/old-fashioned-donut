@@ -164,6 +164,25 @@ void NesMemoryCompare::reshapeImpl(const chisa::geom::Box& areaSize)
 {
 }
 
+chisa::geom::Area NesMemoryCompare::findTargetImpl(const std::string& target)
+{
+	uint16_t addr = ::tarte::parseAs<uint16_t>(target,16);
+	const float rowHeight = this->rowHeight();
+	MemoryComparator& cmp = this->geist_.lock()->machine()->debugger().comparator();
+	if(!cmp.isCandidate(addr)){
+		return chisa::geom::Area(0,0,0,0);
+	}
+	int row=0;
+	for(int i=0;i<2048;++i) {
+		if( i == addr ){
+			break;
+		}else if(cmp.isCandidate(i)) {
+			++row;
+		}
+	}
+	return chisa::geom::Area(0, row*rowHeight, width_, rowHeight);
+}
+
 chisa::geom::Box NesMemoryCompare::measureImpl(const chisa::geom::Box& constraintSize)
 {
 	MemoryComparator& cmp = this->geist_.lock()->machine()->debugger().comparator();

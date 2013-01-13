@@ -51,6 +51,7 @@ World::World(Logger& log, HandlerW<Universe> _universe, std::string const& world
 
 }
 
+
 World::~World() noexcept
 {
 	if(this->doc_){
@@ -161,6 +162,22 @@ void World::registerTask(Task* task)
 void World::unregisterTask(Task* task)
 {
 	this->taskHandler_.unregisterTask(task);
+}
+
+
+void World::sendTask(const std::function<bool(float)>& f)
+{
+	this->taskHandler_.send(f);
+}
+
+void World::sendTask(const std::function<bool()>& f)
+{
+	this->taskHandler_.send(f);
+}
+
+void World::sendTask(const std::function<void()>& f)
+{
+	this->taskHandler_.send(f);
 }
 
 Handler<Element> World::realizeElement( std::string const& templateId )

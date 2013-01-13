@@ -103,4 +103,39 @@ chisa::geom::Box NesMemoryWidget::measureImpl(chisa::geom::Box const& constraint
 	return memAreaSize;
 }
 
+chisa::geom::Area NesMemoryWidget::findTargetImpl(const std::string& target)
+{
+	return addrToArea( ::tarte::parseAs<uint16_t>(target,16) );
+}
+
+chisa::geom::Area NesMemoryWidget::addrToArea(uint16_t const& addr)
+{
+	float const width = this->numRenderer_.maxWidth();
+	float const height = this->numRenderer_.maxHeight();
+	return chisa::geom::Area( this->addrWidth_+((addr&0xf) * width), height * (addr/16), width, height );
+}
+uint16_t NesMemoryWidget::ptToAddr(chisa::geom::Point const& pt)
+{
+	float const width = this->numRenderer_.maxWidth();
+	float const height = this->numRenderer_.maxHeight();
+	return
+		((pt.x()-addrWidth_)/width) + (pt.y()/height)*16;
+}
+
+bool NesMemoryWidget::onSingleTapUp(const float& timeMs, const chisa::geom::Point& ptInWidget)
+{
+	Handler<chisa::tk::World> world = this->world().lock();
+	if( unlikely(!world) ) {
+		return true;
+	}
+	uint16_t const addr_ = this->ptToAddr(ptInWidget);
+	std::string addr( ::tarte::toString(addr_, 16));
+
+	world->sendTask([this]()->void{
+
+	});
+
+	return true;
+}
+
 }

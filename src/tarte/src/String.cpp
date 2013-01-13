@@ -195,6 +195,13 @@ TYPE parseAs<TYPE>(std::string const& str, bool* succeed) {\
 	return parseAs<TYPE>(str, 0, succeed);\
 }
 
+PARSE_STRTO(char, strtol);
+PARSE_STRTO(signed char, strtol);
+PARSE_STRTO(unsigned char, strtoul);
+
+PARSE_STRTO(short, strtol);
+PARSE_STRTO(unsigned short, strtoul);
+
 PARSE_STRTO(int, strtol);
 PARSE_STRTO(unsigned int, strtoul);
 

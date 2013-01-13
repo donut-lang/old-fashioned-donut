@@ -54,6 +54,7 @@ public:
 	virtual void idleImpl(const float delta_ms) override;
 	virtual void reshapeImpl(chisa::geom::Box const& areaSize) override;
 	virtual chisa::geom::Box measureImpl(chisa::geom::Box const& constraintSize) override;
+	virtual chisa::geom::Area findTargetImpl(std::string const& target);
 };
 
 }

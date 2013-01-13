@@ -48,6 +48,7 @@ public:
 	virtual ~NesMemoryCompare() noexcept = default;
 private:
 	inline float rowHeight() const noexcept { return this->numRenderer_.maxHeight(); };
+	virtual chisa::geom::Area findTargetImpl(std::string const& target);
 private:
 	virtual void renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const& area) override final;
 	virtual void idleImpl(const float delta_ms) override final;

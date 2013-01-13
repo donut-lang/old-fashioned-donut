@@ -469,4 +469,8 @@ chisa::geom::Box NesTraceWidget::measureImpl(chisa::geom::Box const& constraintS
 	return chisa::geom::Box(this->numRenderer_.maxWidth()*32.0f, constraintSize.height());
 }
 
+chisa::geom::Area NesTraceWidget::findTargetImpl(const std::string& target)
+{
+}
+
 }

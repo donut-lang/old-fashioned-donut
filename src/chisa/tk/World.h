@@ -20,6 +20,7 @@
 #include <string>
 #include <unordered_map>
 #include <tarte/ClassUtil.h>
+#include <tarte/TypeTrans.h>
 #include <donut/Donut.h>
 #include "../gl/Canvas.h"
 #include "../geom/Area.h"
@@ -114,6 +115,11 @@ public:
 public:
 	void registerTask(Task* task);
 	void unregisterTask(Task* task);
+	void sendTask(std::function<bool(float)> const& f);
+	void sendTask(std::function<bool()> const& f);
+	void sendTask(std::function<void()> const& f);
+	template <typename __F>
+	void sendTask(__F f) { this->sendTask( ::tarte::makeFunctor(f) ); };
 	/******************************************************************************
 	 * Universeへの移譲
 	 ******************************************************************************/
