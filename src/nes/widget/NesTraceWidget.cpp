@@ -144,7 +144,7 @@ void NesTraceWidget::renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const& 
 	float rowHeight = this->symRenderer_.maxHeight();
 	float spaceSize = this->numRenderer_.maxWidth();
 	unsigned int const startRow = max(std::floor((area.y() - rowHeight)/rowHeight), 0);
-	unsigned int const endRow = std::ceil((area.y() - rowHeight + area.height())/rowHeight);
+	unsigned int const endRow = std::ceil(max((area.y() - rowHeight + area.height())/rowHeight, 0));
 
 	Instruction inst;
 	uint16_t const nowPC = disasm.nowPC();
