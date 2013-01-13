@@ -184,6 +184,17 @@ void AngelTarget::attatchServant(const Handler<Servant>& servant)
 	this->servants_.push_back(servant);
 }
 
+bool AngelTarget::detatchServant(const Handler<Servant>& servant)
+{
+	auto it = std::find(this->servants_.begin(), this->servants_.end(), servant);
+	if(it != this->servants_.end()) {
+		this->servants_.erase(it);
+		return true;
+	}else{
+		return false;
+	}
+}
+
 Handler<HaloServant> AngelTarget::newHaloServant( gl::Color const& color )
 {
 	return Handler<HaloServant>(new HaloServant(self(), color));

@@ -143,7 +143,7 @@ inline typename AngelTargetObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::Resul
 		side.detatchedServant = old.attatchedServant;
 		break;
 	case AngelTargetSideEffect::DetatchServant:
-		this->angelTarget()->attatchServant( old.detatchedServant );
+		this->angelTarget()->detatchServant( old.detatchedServant );
 		side.op = AngelTargetSideEffect::AttatchServant;
 		side.attatchedServant = old.detatchedServant;
 		break;

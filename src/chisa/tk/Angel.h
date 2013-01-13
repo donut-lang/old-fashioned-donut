@@ -118,6 +118,7 @@ protected:
 public:
 	geom::Area findScreenArea();
 	void attatchServant( Handler<Servant> const& servant );
+	bool detatchServant( Handler<Servant> const& servant );
 public:
 	Handler<HaloServant> newHaloServant( gl::Color const& color );
 	Handler<ElementServant> newElementServant( Handler<Element> const& element );
