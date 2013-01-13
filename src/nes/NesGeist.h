@@ -29,6 +29,8 @@
 namespace nes {
 using namespace tarte;
 
+class Hexe;
+
 class NesGeist : public chisa::WorldGeist, public VideoFairy, public AudioFairy, public GamepadFairy, public chisa::tk::Task {
 private:
 	class Runner {
@@ -54,6 +56,8 @@ private:
 		virtual void playImpl(unsigned char *stream, int len) override final;
 	};
 public:
+	Handler<Hexe> hexe();
+public:
 	class Lock {
 		NesGeist& parent_;
 	public:
@@ -76,7 +80,7 @@ private:
 private:
 	void updateJoystick();
 public:
-	NesGeist(Logger& log, HandlerW<chisa::tk::World> world);
+	NesGeist(Logger& log, ::tarte::Handler<Hexe> const& hexe, ::tarte::HandlerW<chisa::tk::World> world);
 	virtual ~NesGeist() noexcept;
 	virtual std::string toString() const override;
 	inline VirtualMachine* machine() const noexcept { return this->machine_; };

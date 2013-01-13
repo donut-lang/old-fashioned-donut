@@ -35,6 +35,11 @@ Hexe::~Hexe() noexcept
 {
 }
 
+void Hexe::registerGeistProvider( ::tarte::Handler< ::donut::Heap> const& heap )
+{
+	heap->registerProvider(this->nesGeistProvider_ = Handler<NesGeistProvider>(new NesGeistProvider(heap)));
+}
+
 void Hexe::registerWidgets(chisa::tk::WidgetFactory& factory)
 {
 	factory.registerWidget<nes::NesScreenWidget>("nes-screen");
@@ -50,7 +55,7 @@ void Hexe::registerElements(chisa::tk::ElementFactory& factory)
 chisa::Handler<chisa::WorldGeist> Hexe::invokeWorldGeist(chisa::HandlerW<chisa::tk::World> world, std::string const& nameOfGeist)
 {
 	if(nameOfGeist == "nes"){
-		return chisa::Handler<chisa::WorldGeist>(new NesGeist(log(), world));
+		return chisa::Handler<chisa::WorldGeist>(new NesGeist(log(), self(), world));
 	}
 	return chisa::Handler<chisa::WorldGeist>();
 }

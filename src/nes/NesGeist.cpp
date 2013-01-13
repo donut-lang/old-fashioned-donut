@@ -20,11 +20,12 @@
 #include "../chisa/tk/World.h"
 #include "../chisa/gl/DrawableManager.h"
 #include "../chisa/input/JoystickManager.h"
+#include "Hexe.h"
 
 namespace nes {
 
-NesGeist::NesGeist(chisa::Logger& log, chisa::HandlerW<chisa::tk::World> world)
-:chisa::WorldGeist(log, world)
+NesGeist::NesGeist(chisa::Logger& log, ::tarte::Handler<Hexe> const& hexe, ::tarte::HandlerW<chisa::tk::World> world)
+:chisa::WorldGeist(log, hexe, world)
 ,chisa::tk::Task(log)
 ,machine_(nullptr)
 ,runner_t_(nullptr)
@@ -59,9 +60,13 @@ NesGeist::~NesGeist() noexcept
 	delete this->machine_;
 }
 
+Handler<Hexe> NesGeist::hexe() {
+	return ::tarte::Handler<Hexe>::__internal__fromRawPointerWithoutCheck(static_cast<Hexe*>(WorldGeist::hexe().get()));
+}
+
 Handler< ::donut::Object> NesGeist::createDonutObject(Handler< ::donut::Heap> const& heap)
 {
-
+	return hexe()->nesGeistProvider()->newInstance(heap, self());
 }
 
 std::string NesGeist::toString() const

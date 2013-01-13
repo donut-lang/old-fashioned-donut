@@ -36,8 +36,9 @@ std::string Hexe::toString() const
 	return ::tarte::format("(Hexe %p)", this);
 }
 
-WorldGeist::WorldGeist(Logger& log, HandlerW<chisa::tk::World> world)
+WorldGeist::WorldGeist(Logger& log, Handler<Hexe> const& hexe, HandlerW<chisa::tk::World> world)
 :log_(log)
+,hexe_(hexe)
 ,world_(world)
 {
 
@@ -51,6 +52,8 @@ Handler< ::donut::Object> WorldGeist::donutObject(Handler< ::donut::Heap> const&
 {
 	if( this->donutObject_.expired() ) {
 		Handler< ::donut::Object> obj(createDonutObject(heap));
+		this->donutObject_ = obj;
+		return obj;
 	}else{
 		return this->donutObject_.lock();
 	}
@@ -61,6 +64,10 @@ Handler<chisa::tk::World> WorldGeist::world()
 	return world_.lock();
 }
 
+Handler<Hexe> WorldGeist::hexe()
+{
+	return hexe_.lock();
+}
 std::string WorldGeist::toString() const{
 	return format("(WorldGeist %p)", this);
 }

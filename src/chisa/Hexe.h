@@ -44,6 +44,7 @@ public:
 	}
 
 public:
+	virtual void registerGeistProvider( ::tarte::Handler< ::donut::Heap> const& heap ){};
 	virtual void registerWidgets(tk::WidgetFactory& factory){};
 	virtual void registerElements(tk::ElementFactory& factory){};
 public:
@@ -53,6 +54,7 @@ public:
 class WorldGeist : public HandlerBody<WorldGeist> {
 	DISABLE_COPY_AND_ASSIGN(WorldGeist);
 	DEFINE_MEMBER_REF(protected, Logger, log);
+	HandlerW<Hexe> hexe_;
 	HandlerW<chisa::tk::World> world_;
 	HandlerW< ::donut::Object> donutObject_;
 public:
@@ -60,11 +62,12 @@ public:
 public:
 	virtual std::string toString() const;
 public:
-	WorldGeist(Logger& log, HandlerW<chisa::tk::World> world);
+	WorldGeist(Logger& log, Handler<Hexe> const& hexe, HandlerW<chisa::tk::World> world);
 	virtual ~WorldGeist() noexcept;
 	inline bool onFree() noexcept { return false; };
 public:
 	Handler<chisa::tk::World> world();
+	Handler<Hexe> hexe();
 protected:
 	virtual Handler< ::donut::Object> createDonutObject(Handler< ::donut::Heap> const& heap) = 0;
 };
