@@ -35,16 +35,14 @@ Heaven::Heaven(const Handler<World>& world)
 
 Handler< ::donut::Object> Heaven::donutObject(Handler< ::donut::Heap> const& heap)
 {
-	if(!this->donutObject_.expired()){
-		return this->donutObject_.lock();
+	if(this->donutObject_){
+		return this->donutObject_;
 	}
 	Handler<World> world(this->world().lock());
 	if(!world) {
 		return Handler< ::donut::Object>();
 	}
-	Handler<HeavenObject> obj( world->patron()->heavenProvider()->newInstance(heap, self()) );
-	this->donutObject_ = obj;
-	return obj;
+	return this->donutObject_ = world->patron()->heavenProvider()->newInstance(heap, self());
 }
 
 void Heaven::render(gl::Canvas& canvas)

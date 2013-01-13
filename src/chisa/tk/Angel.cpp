@@ -226,11 +226,12 @@ Handler<AngelWidgetTarget> AngelTarget::matchToWidgetTarget(std::string const& w
 
 Handler< ::donut::Object> AngelTarget::donutObject(Handler< ::donut::Heap> const& heap)
 {
-	if(this->donutObject_.expired()){
+	if(!this->donutObject_){
 		Handler< ::donut::Object> obj(createDonutObject(heap));
+		this->donutObject_ = obj;
 		return obj;
 	}
-	return this->donutObject_.lock();
+	return this->donutObject_;
 }
 
 
@@ -290,11 +291,10 @@ Handler<AngelTarget> Servant::target() const
 
 Handler< ::donut::Object> Servant::donutObject(Handler< ::donut::Heap> const& heap)
 {
-	if(this->donutObject_.expired()){
-		Handler< ::donut::Object> obj(createDonutObject(heap));
-		return obj;
+	if(this->donutObject_){
+		return this->donutObject_;
 	}
-	return this->donutObject_.lock();
+	return this->donutObject_ = createDonutObject(heap);
 }
 
 void AngelTarget::render(gl::Canvas& canvas)

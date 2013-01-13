@@ -59,7 +59,7 @@ private:
 	HandlerW<Angel> angel_;
 	HandlerW<AngelTarget> target_;
 private:
-	HandlerW< ::donut::Object> donutObject_;
+	Handler< ::donut::Object> donutObject_;
 public:
 	Handler<World> world() const;
 	Handler<Heaven> heaven() const;
@@ -102,7 +102,7 @@ private:
 	HandlerW<Heaven> const heaven_;
 	HandlerW<Angel> const angel_;
 private:
-	HandlerW< ::donut::Object> donutObject_;
+	Handler< ::donut::Object> donutObject_;
 private:
 	geom::Area renderArea_;
 	std::vector<Handler<Servant> > servants_;
