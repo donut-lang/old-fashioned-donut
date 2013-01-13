@@ -33,6 +33,9 @@ const std::string Element::AttrName::EdgeWidth("edge-width");
 const std::string Element::AttrName::Padding("padding");
 const std::string Element::AttrName::Margin("margin");
 
+const std::string Element::AttrName::Width("width");
+const std::string Element::AttrName::Height("height");
+
 const std::string Element::AttrName::Id("id");
 
 

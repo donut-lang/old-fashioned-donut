@@ -55,6 +55,8 @@ public:
 		const static std::string EdgeColor;
 		const static std::string ForegroundColor;
 		const static std::string BackgroundColor;
+		const static std::string Width;
+		const static std::string Height;
 	};
 private:
 	DISABLE_COPY_AND_ASSIGN(Element);

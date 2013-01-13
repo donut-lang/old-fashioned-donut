@@ -101,8 +101,8 @@ void Button::layoutButtonContent(geom::Box const& size)
 
 void Button::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
-	std::string const src = element->GetText();
-	if( !src.empty() ) {
+	const char* src = element->GetText();;
+	if( src ) {
 		Handler<World> world( this->world().lock() );
 		if( unlikely(!world) ) {
 			TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");

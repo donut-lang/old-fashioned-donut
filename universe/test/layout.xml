@@ -1,61 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <world geist="nes">
-	<horizontal id="main">
-		<vertical>
-			<widget widget-klass="nes-screen" fit="fit" id="nes">
-				<xobject>
-					<xstring name="rom">__roms__/alter_ego/Alter_Ego.nes</xstring>
-				</xobject>
-			</widget>
-			<tab id="frame" place="left" split-weight="1">
-				<scroll title="検索" mode="vertical">
-					<vertical>
-						<widget widget-klass="nes-compare" fit="expand" />
-					</vertical>
-				</scroll>
-				<scroll title="メモリ" mode="vertical">
-					<vertical>
-						<textarea desc="テキストエリアサンプル" />
-						<button text="ボタン">
-							heaven = World.heaven();
-							angel = heaven.newTwinAngel();
-							target = angel.newElementTarget("nes");
-							servant = target.newElementServant("label");
-							angel.attatchTarget(target);
-							target.attatchServant(servant);
-							heaven.attatchAngel(angel);
-						</button>
-						<label text="ラベル" />
-						<widget title="NES" widget-klass="nes-memory" fit="expand">
-						</widget>
-					</vertical>
-				</scroll>
-				<widget title="命令実行" widget-klass="nes-trace" fit="expand" />
-			</tab>
-		</vertical>
-		<scroll mode="vertical">
+	<!-- <vertical id="main" -->
+		<horizontal id="main">
 			<vertical>
-				<widget widget-klass="content" fit="expand">
-					<doc>
-						<h1>ドキュメント</h1>
-						<p>
-						HTML風にテキストを記述するウィジットのサンプルです。
-						</p>
-						<h1 float="left"><font color="red">タイトルテスト</font></h1>
-						<p>
-						HTML風にテキストを記述するウィジットのサンプルです。
-						</p>
-						<p float="right">↓画像を表示するウィジットのサンプル</p>
-					</doc>
-				</widget>
-				<widget widget-klass="image" fit="center">
+				<widget widget-klass="nes-screen" fit="fit" id="nes">
 					<xobject>
-						<xstring name="src">test/test.png</xstring>
+						<xstring name="rom">__roms__/alter_ego/Alter_Ego.nes</xstring>
 					</xobject>
 				</widget>
+				<scroll title="検索" mode="vertical">
+					<widget title="命令実行" widget-klass="nes-trace" fit="expand" />
+				</scroll>
 			</vertical>
-		</scroll>
-	</horizontal>
+			<vertical>
+				<horizontal split-weight="2">
+					<scroll title="比較" mode="vertical">
+						<widget widget-klass="nes-compare" fit="expand" />
+					</scroll>
+					<scroll title="メモリ" mode="vertical">
+						<widget title="NES" widget-klass="nes-memory" fit="expand" />
+					</scroll>
+				</horizontal>
+				<horizontal split-weight="1">
+					<vertical split-weight="1">
+						<label text="値を検索" />
+						<textarea desc="この値と比較して" />
+						<horizontal>
+							<button text="同じ" split-weight="1" />
+							<button text="違う" split-weight="1" />
+						</horizontal>
+						<horizontal>
+							<button text="より大きい" split-weight="1" />
+							<button text="より小さい" split-weight="1" />
+						</horizontal>
+						<horizontal>
+							<button text="以上" split-weight="1" />
+							<button text="以下" split-weight="1" />
+						</horizontal>
+					</vertical>
+					<vertical split-weight="1">
+						<label text="比較" />
+						<label text="前の値と比較して" />
+						<horizontal>
+							<button text="同じ" split-weight="1" />
+							<button text="違う" split-weight="1" />
+						</horizontal>
+						<horizontal>
+							<button text="より大きい" split-weight="1" />
+							<button text="より小さい" split-weight="1" />
+						</horizontal>
+						<horizontal>
+							<button text="以上" split-weight="1" />
+							<button text="以下" split-weight="1" />
+						</horizontal>
+					</vertical>
+				</horizontal>
+			</vertical>
+		</horizontal>
+	<!-- </vertical> -->
 	<label id="label" text="NES"></label>
 </world>
 
