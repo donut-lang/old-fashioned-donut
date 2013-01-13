@@ -311,6 +311,15 @@ geom::Box TextDrawable::size()
 	return this->vertical_ ? this->size_.flip() : this->size_;
 }
 
+float TextDrawable::width()
+{
+	return this->vertical_ ? this->size_.height() : this->size_.width();
+}
+float TextDrawable::height()
+{
+	return this->vertical_ ? this->size_.width() : this->size_.height();
+}
+
 void TextDrawable::draw(Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask, const float depth)
 {
 	if(this->vertical_) {

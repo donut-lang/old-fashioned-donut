@@ -41,8 +41,8 @@ protected:
 public:
 	virtual ~Drawable() noexcept = default;
 	inline bool onFree() noexcept { return false; };
-	float width();
-	float height();
+	virtual float width();
+	virtual float height();
 	virtual geom::Box size() = 0;
 	virtual void draw(Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask, const float depth=0.0f) = 0;
 	virtual void draw(Canvas& canvas, geom::Point const& ptInRoot, const float depth=0.0f)
@@ -160,7 +160,9 @@ private:
 public:
 	static Handler<TextDrawable> create(HandlerW<DrawableManager> manager, std::string const& str, bool vertical, const float size, Handler<Font> font, TextDrawable::Style style, TextDrawable::Decoration deco, gl::Color const& color, gl::Color const& backColor);
 	virtual ~TextDrawable() noexcept = default;
-	virtual geom::Box size() override;
+	virtual geom::Box size() override final;
+	virtual float width() override final;
+	virtual float height() override final;
 	virtual void draw(Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask, const float depth=0.0f) override;
 	virtual void draw(Canvas& canvas, geom::Point const& ptInRoot, const float depth=0.0f) override;
 	virtual std::string toString() const override;

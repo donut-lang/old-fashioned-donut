@@ -18,6 +18,7 @@
 
 #pragma once
 #include <tarte/ClassUtil.h>
+#include <unordered_map>
 #include "../geom/Decl.h"
 #include "DrawableManager.h"
 
@@ -31,7 +32,7 @@ class PredefinedSymRenderer {
 	DEFINE_MEMBER_REF(private, Logger, log);
 private:
 	Handler<DrawableManager> drawableManager_;
-	std::map<unsigned int, Handler<TextDrawable> > spriteTable_;
+	std::unordered_map<unsigned int, Handler<TextDrawable> > spriteTable_;
 	float maxWidth_;
 	float maxHeight_;
 private:
