@@ -59,6 +59,11 @@ NesGeist::~NesGeist() noexcept
 	delete this->machine_;
 }
 
+Handler< ::donut::Object> NesGeist::createDonutObject(Handler< ::donut::Heap> const& heap)
+{
+
+}
+
 std::string NesGeist::toString() const
 {
 	return format("(NesGeist %p)", this);

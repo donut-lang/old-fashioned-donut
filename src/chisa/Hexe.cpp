@@ -47,6 +47,15 @@ WorldGeist::~WorldGeist() noexcept
 
 }
 
+Handler< ::donut::Object> WorldGeist::donutObject(Handler< ::donut::Heap> const& heap)
+{
+	if( this->donutObject_.expired() ) {
+		Handler< ::donut::Object> obj(createDonutObject(heap));
+	}else{
+		return this->donutObject_.lock();
+	}
+}
+
 Handler<chisa::tk::World> WorldGeist::world()
 {
 	return world_.lock();

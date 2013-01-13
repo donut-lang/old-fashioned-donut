@@ -54,6 +54,9 @@ class WorldGeist : public HandlerBody<WorldGeist> {
 	DISABLE_COPY_AND_ASSIGN(WorldGeist);
 	DEFINE_MEMBER_REF(protected, Logger, log);
 	HandlerW<chisa::tk::World> world_;
+	HandlerW< ::donut::Object> donutObject_;
+public:
+	Handler< ::donut::Object> donutObject(Handler< ::donut::Heap> const& heap);
 public:
 	virtual std::string toString() const;
 public:
@@ -62,6 +65,8 @@ public:
 	inline bool onFree() noexcept { return false; };
 public:
 	Handler<chisa::tk::World> world();
+protected:
+	virtual Handler< ::donut::Object> createDonutObject(Handler< ::donut::Heap> const& heap) = 0;
 };
 
 }

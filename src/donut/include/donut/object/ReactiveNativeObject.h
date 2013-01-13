@@ -18,6 +18,7 @@
 
 #pragma once
 #include "ReactiveNativeObjectDecl.h"
+#include "HeapDecl.h"
 
 namespace donut {
 

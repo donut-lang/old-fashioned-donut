@@ -77,8 +77,8 @@ void NesMemoryWidget::renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const&
 			geom::Point pt (this->addrWidth_ + x*dwidth, rowOffset);
 			uint16_t const addr = (y*16)+x;
 			uint8_t const val = geist->machine()->debuggerRead(addr);
-			num[0] = val >> 4;
-			num[1] = val & 7;
+			num[0] = (val >> 4);
+			num[1] = (val >> 0) & 0xf;
 			this->numRenderer_.renderSyms(cv, pt, num, 0.0f);
 		}
 	}

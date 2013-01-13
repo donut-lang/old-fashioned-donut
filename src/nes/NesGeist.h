@@ -85,6 +85,8 @@ public:
 	virtual void onUpdate() override;
 	virtual bool isPressed(uint8_t keyIdx) override;
 	virtual bool exec(const float delta_ms) override;
+private:
+	virtual Handler< ::donut::Object> createDonutObject(Handler< ::donut::Heap> const& heap) override final;
 public:
 	void stopNES();
 	void loadNES(std::string const& abs_filename);
