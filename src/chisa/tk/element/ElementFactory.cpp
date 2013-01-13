@@ -28,6 +28,7 @@
 #include "ScrollCombo.h"
 #include "WidgetElement.h"
 #include "Button.h"
+#include "ClockButton.h"
 #include "Label.h"
 #include "TabCombo.h"
 #include "TextArea.h"
@@ -52,6 +53,7 @@ const std::string ElementFactory::ElemName::WidgetWrapper("widget");
 const std::string ElementFactory::ElemName::Scroll("scroll");
 const std::string ElementFactory::ElemName::Tab("tab");
 const std::string ElementFactory::ElemName::Button("button");
+const std::string ElementFactory::ElemName::ClockButton("clockbutton");
 const std::string ElementFactory::ElemName::Label("label");
 const std::string ElementFactory::ElemName::TextArea("textarea");
 
@@ -112,6 +114,7 @@ void ElementFactory::init()
 	this->registerLayout<ScrollCombo>(ElemName::Scroll);
 	this->registerLayout<WidgetElement>(ElemName::WidgetWrapper);
 	this->registerLayout<Button>(ElemName::Button);
+	this->registerLayout<ClockButton>(ElemName::ClockButton);
 	this->registerLayout<Label>(ElemName::Label);
 	this->registerLayout<TabCombo>(ElemName::Tab);
 	this->registerLayout<TextArea>(ElemName::TextArea);

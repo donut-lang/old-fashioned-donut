@@ -59,8 +59,8 @@
 		</horizontal>
 		<horizontal>
 			<label split-weight="1" />
-			<button text="戻る" />
-			<button text="進む" />
+			<clockbutton text="戻る" op="back" />
+			<clockbutton text="進む" op="forward" />
 		</horizontal>
 	</vertical>
 	<label id="label" text="NES"></label>

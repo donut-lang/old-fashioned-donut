@@ -144,7 +144,7 @@ inline typename AngelTargetObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::Resul
 		break;
 	case AngelTargetSideEffect::DetatchServant:
 		this->angelTarget()->attatchServant( old.detatchedServant );
-		side.op = AngelTargetSideEffect::DetatchServant;
+		side.op = AngelTargetSideEffect::AttatchServant;
 		side.attatchedServant = old.detatchedServant;
 		break;
 	}

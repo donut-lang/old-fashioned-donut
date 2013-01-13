@@ -151,7 +151,7 @@ inline typename AngelObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ResultType 
 		side.detatchedTarget_ = old.attatchedTarget_;
 		break;
 	case AngelSideEffect::DetatchTarget:
-		this->angel()->detatchTarget(old.attatchedTarget_);
+		this->angel()->detatchTarget(old.detatchedTarget_);
 		side.op = AngelSideEffect::AttatchTarget;
 		side.attatchedTarget_ = old.detatchedTarget_;
 		break;

@@ -52,6 +52,7 @@ public:
 		static const std::string Empty;
 		static const std::string Scroll;
 		static const std::string Button;
+		static const std::string ClockButton;
 		static const std::string Label;
 		static const std::string TextArea;
 		static const std::string WidgetWrapper;

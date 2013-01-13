@@ -154,6 +154,31 @@ void World::popElement()
 	}
 }
 
+void World::back()
+{
+	Handler< ::donut::Machine> vm = this->donut_->queryMachine();
+	Handler< ::donut::Clock> clk = this->donut_->clock();
+	if(!clk->canBack()){
+		return;
+	}
+	clk->back();
+	while(!vm->isCallstackEmpty() && clk->canBack()) {
+		clk->back();
+	}
+}
+void World::forward()
+{
+	Handler< ::donut::Machine> vm = this->donut_->queryMachine();
+	Handler< ::donut::Clock> clk = this->donut_->clock();
+	if(!clk->canAdvance()){
+		return;
+	}
+	clk->forward();
+	while(!vm->isCallstackEmpty() && clk->canAdvance()) {
+		clk->forward();
+	}
+}
+
 Handler<Heaven> World::heaven()
 {
 	return heaven_;

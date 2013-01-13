@@ -40,7 +40,7 @@ private:
 	std::string donutMachineName_;
 	Handler< ::donut::Source> script_;
 public:
-	virtual std::string toString() const override final;
+	virtual std::string toString() const override;
 	inline gl::Color const& shadowColor() const noexcept { return this->shadowColor_; };
 	inline float shadowDepth() const noexcept { return this->shadowDepth_; };
 	void shadowColor(gl::Color const& color);
@@ -52,7 +52,7 @@ private:
 	virtual void renderOff(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask) override final;
 	virtual bool isOn() const noexcept override final;
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
-	virtual void onClick() override final;
+	virtual void onClick() override;
 };
 
 }}
