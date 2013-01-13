@@ -54,7 +54,7 @@ template <typename AntiSideEffect, typename Self>
 void ReactiveNativeObjectAspectT<AntiSideEffect, Self>::onBackNotify(Self& self, Handler<Heap> const& heap) {
 	Handler<Clock> clock = heap->clock();
 	int const nowIndex = this->index_;
-	int const newIndex = this->findLowerIndex(clock->now());
+	int const newIndex = this->findUpperIndex(clock->now());
 	this->index_ = newIndex;
 	bool failed = false;
 	for(int i=nowIndex-1; i>=newIndex;--i){
