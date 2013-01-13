@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <world geist="nes">
-	<!-- <vertical id="main" -->
-		<horizontal id="main">
+	<vertical id="main">
+		<horizontal split-weight="1">
 			<vertical>
 				<widget widget-klass="nes-screen" fit="fit" id="nes">
 					<xobject>
 						<xstring name="rom">__roms__/alter_ego/Alter_Ego.nes</xstring>
 					</xobject>
 				</widget>
-				<scroll mode="vertical" id="trace-scroll">
+				<scroll mode="vertical" id="trace-scroll" split-weight="1">
 					<widget widget-klass="nes-trace" fit="expand" />
 				</scroll>
 			</vertical>
@@ -57,7 +57,7 @@
 				</horizontal>
 			</vertical>
 		</horizontal>
-	<!-- </vertical> -->
+	</vertical>
 	<label id="label" text="NES"></label>
 </world>
 
