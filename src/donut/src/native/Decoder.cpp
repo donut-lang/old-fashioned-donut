@@ -36,12 +36,16 @@ INT_DECODER(unsigned short);
 INT_DECODER(char);
 INT_DECODER(unsigned char);
 INT_DECODER(signed char);
-
-template <>
-float decode<float>(Handler<Heap> const& heap, Handler<Object> obj)
-{
-	return obj->toFloat(heap);
+#define FLOAT_DECODER(TYPE)\
+template <>\
+TYPE decode<TYPE>(Handler<Heap> const& heap, Handler<Object> obj)\
+{\
+	return obj->toFloat(heap);\
 }
+
+FLOAT_DECODER(float);
+FLOAT_DECODER(double);
+FLOAT_DECODER(long double);
 
 template <>
 bool decode<bool>(Handler<Heap> const& heap, Handler<Object> obj)

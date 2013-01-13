@@ -41,11 +41,16 @@ INT_ENCODER(char);
 INT_ENCODER(unsigned char);
 INT_ENCODER(signed char);
 
-template <>
-Handler<Object> encode<float>(Handler<Heap> const& heap, float val)
-{
-	return heap->createFloatObject(val);
+#define FLOAT_ENCODER(TYPE)\
+template <>\
+Handler<Object> encode<TYPE>(Handler<Heap> const& heap, TYPE val)\
+{\
+	return heap->createFloatObject(val);\
 }
+
+FLOAT_ENCODER(float);
+FLOAT_ENCODER(double);
+FLOAT_ENCODER(long double);
 
 template <>
 Handler<Object> encode<bool>(Handler<Heap> const& heap, bool val)
