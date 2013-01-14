@@ -100,15 +100,18 @@ private: /* 実行時の一時的な変数 */
 	};
 	inline bool running() const noexcept { return this->running_; };
 private: /* 最新のコンテキストへのアクセサ */
-	Handler<Object> const& self();
-	Handler<DonutObject> const& local();
-	Handler<DonutClosureObject> const& closureObject();
-	Handler<Source> const& src();
-	Handler<Closure> const& closure();
-	std::vector<Handler<Object> >& stack();
-	unsigned int stackBase();
-	std::vector<Callchain>& callStack();
-	pc_t& pc();
+	inline Handler<Object> const& self();
+	inline Handler<DonutObject> const& local();
+	inline Handler<DonutClosureObject> const& closureObject();
+	inline Handler<Source> const& src();
+	inline Handler<Closure> const& closure();
+	inline std::vector<Handler<Object> >& stack();
+	inline unsigned int stackBase();
+	inline std::vector<Callchain>& callStack();
+	inline pc_t& pc();
+	inline void pushStack( Handler<Object> const& obj );
+	inline Handler<Object> popStack();
+	inline Handler<Object> topStack();
 private:
 	Handler<Object> const& interrupt() const noexcept;
 	void interrupt(Handler<Object> const& obj);
@@ -126,10 +129,6 @@ public: /* 外部からの実行指示 */
 	Handler<Object> resume( Handler<Object> const& obj );
 	bool isInterrupted() const noexcept;
 	bool isCallstackEmpty() const noexcept;
-private: /* スタック操作 */
-	void pushStack( Handler<Object> const& obj );
-	Handler<Object> popStack();
-	Handler<Object> topStack();
 private: /* 実行 */
 	void enterClosure(Handler<Object> const& self, Handler<DonutClosureObject> const& clos, std::vector<Handler<Object> > const& args);
 	bool leaveClosure();
@@ -148,3 +147,5 @@ public: /* 時間操作 */
 };
 
 }
+
+#include "MachineImpl.h"

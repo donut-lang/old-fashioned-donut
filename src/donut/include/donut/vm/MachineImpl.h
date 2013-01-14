@@ -16,34 +16,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <donut/vm/Machine.h>
+#pragma once
+#include <vector>
+#include "../object/Object.h"
+#include "../object/Heap.h"
+#include "../source/Source.h"
 
 namespace donut {
 
-const static std::string TAG("Machine");
-
-Handler<Object> const& Machine::self()
+inline Handler<Object> const& Machine::self()
 {
 	Context& ctx =  this->contextRevs_.back();
 	Callchain& chain = ctx.callStack_.back();
 	return chain.self_;
 }
 
-Handler<DonutObject> const& Machine::local()
+inline Handler<DonutObject> const& Machine::local()
 {
 	Context& ctx =  this->contextRevs_.back();
 	Callchain& chain = ctx.callStack_.back();
 	return chain.local_;
 }
 
-Handler<DonutClosureObject> const& Machine::closureObject()
+inline Handler<DonutClosureObject> const& Machine::closureObject()
 {
 	Context& ctx =  this->contextRevs_.back();
 	Callchain& chain = ctx.callStack_.back();
 	return chain.closure_;
 }
 
-Handler<Source> const& Machine::src()
+inline Handler<Source> const& Machine::src()
 {
 	Context& ctx =  this->contextRevs_.back();
 	Callchain& chain = ctx.callStack_.back();
@@ -51,7 +53,7 @@ Handler<Source> const& Machine::src()
 	return clos->source();
 }
 
-Handler<Closure> const& Machine::closure()
+inline Handler<Closure> const& Machine::closure()
 {
 	Context& ctx =  this->contextRevs_.back();
 	Callchain& chain = ctx.callStack_.back();
@@ -59,31 +61,46 @@ Handler<Closure> const& Machine::closure()
 	return clos->closureCode();
 }
 
-pc_t& Machine::pc()
+inline pc_t& Machine::pc()
 {
 	Context& ctx =  this->contextRevs_.back();
 	Callchain& chain = ctx.callStack_.back();
 	return chain.pc_;
 }
 
-std::vector<Callchain>& Machine::callStack()
+inline std::vector<Callchain>& Machine::callStack()
 {
 	Context& ctx =  this->contextRevs_.back();
 	return ctx.callStack_;
 }
 
-std::vector<Handler<Object> >& Machine::stack()
+inline std::vector<Handler<Object> >& Machine::stack()
 {
 	Context& ctx =  this->contextRevs_.back();
 	return ctx.stack_;
 }
 
-unsigned int Machine::stackBase()
+inline unsigned int Machine::stackBase()
 {
 	Context& ctx =  this->contextRevs_.back();
 	Callchain& chain = ctx.callStack_.back();
 	return chain.stackBase_;
 }
 
+inline void Machine::pushStack( Handler<Object> const& obj )
+{
+	this->stack().push_back( obj );
+}
+inline Handler<Object> Machine::popStack()
+{
+	std::vector<Handler<Object> >& stack = this->stack();
+	Handler<Object> obj( stack.back() );
+	stack.pop_back();
+	return obj;
+}
+inline Handler<Object> Machine::topStack()
+{
+	return this->stack().back();
 }
 
+}

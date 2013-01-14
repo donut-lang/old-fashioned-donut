@@ -231,24 +231,6 @@ bool Machine::leaveClosure()
 	return !this->callStack().empty(); //まだ実行するコールスタックが存在する
 }
 
-
-void Machine::pushStack( Handler<Object> const& obj )
-{
-	this->stack().push_back( obj );
-}
-Handler<Object> Machine::popStack()
-{
-	std::vector<Handler<Object> >& stack = this->stack();
-	Handler<Object> obj( stack.back() );
-	stack.pop_back();
-	return obj;
-}
-
-Handler<Object> Machine::topStack()
-{
-	return this->stack().back();
-}
-
 Handler<Object> Machine::run()
 {
 	RunLock lock(this);
