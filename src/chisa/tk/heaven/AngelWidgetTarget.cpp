@@ -72,6 +72,23 @@ void AngelWidgetTarget::idleImpl(const float delta_ms)
 {
 }
 
+void AngelWidgetTarget::onAttatchedImpl()
+{
+	Handler<World> world = this->world();
+	if( unlikely(!world) ) {
+		return;
+	}
+	WidgetElement* element = world->getWidgetById(id_);
+	if( unlikely(!element) ) {
+		return;
+	}
+	geom::Area area(element->widget()->findTargetInElement(guide_));
+	geom::Point center(area.point() + area.box()/2);
+	if( !element->lastInnerDrawnAreaInRoot().contain(center+element->lastPositionInRoot()) ) {
+		element->showPoint(center);
+	}
+}
+
 geom::Box AngelWidgetTarget::reshapeImpl(const geom::Area& area)
 {
 	return geom::ZERO;

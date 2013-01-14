@@ -64,6 +64,7 @@ public:
 	geom::Area findTarget(std::string const& target);
 	geom::Area findTargetInRoot(std::string const& target);
 	geom::Area findTargetInElement(std::string const& target);
+	void showPoint(geom::Point const& pt);
 protected:
 	virtual void renderImpl(gl::Canvas& cv, geom::Area const& area) = 0;
 	virtual void idleImpl(const float delta_ms) = 0;

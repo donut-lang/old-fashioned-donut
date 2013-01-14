@@ -102,6 +102,7 @@ Handler<AngelWidgetTarget> Angel::findWidgetTarget(const std::string& widgetId, 
 Handler<AngelTarget> Angel::attatchTarget(const Handler<AngelTarget>& target)
 {
 	this->targets_.push_back(target);
+	target->onAttatched();
 	return target;
 }
 
@@ -295,6 +296,12 @@ Handler< ::donut::Object> Servant::donutObject(Handler< ::donut::Heap> const& he
 		return this->donutObject_;
 	}
 	return this->donutObject_ = createDonutObject(heap);
+}
+
+
+void AngelTarget::onAttatched()
+{
+	this->onAttatchedImpl();
 }
 
 void AngelTarget::render(gl::Canvas& canvas)

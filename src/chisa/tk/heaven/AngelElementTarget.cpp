@@ -67,6 +67,19 @@ void AngelElementTarget::idleImpl(const float delta_ms)
 {
 }
 
+void AngelElementTarget::onAttatchedImpl()
+{
+	Handler<World> world = this->world();
+	if( unlikely(!world) ) {
+		return;
+	}
+	Handler<Element> element = world->findElementById(id_);
+	if( unlikely(!element) ) {
+		return;
+	}
+	element->showPoint( geom::ZERO );
+}
+
 geom::Box AngelElementTarget::reshapeImpl(const geom::Area& area)
 {
 	return geom::ZERO;

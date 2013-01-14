@@ -69,7 +69,15 @@ geom::Area Widget::findTargetInElement(std::string const& target)
 	if(!elm){
 		return geom::Area();
 	}
-	return elm->calcAreaInRoot( findTarget(target) );
+	return elm->calcAreaInElement( findTarget(target) );
+}
+
+void Widget::showPoint(geom::Point const& pt)
+{
+	Handler<WidgetElement> const elm = this->wrapper_.lock();
+	if(elm){
+		elm->showPoint( elm->calcPtInElement( pt ) );
+	}
 }
 
 void Widget::requestRelayout()

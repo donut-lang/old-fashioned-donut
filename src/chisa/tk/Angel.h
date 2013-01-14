@@ -127,6 +127,7 @@ public:
 	virtual Handler<AngelElementTarget> matchToElementTarget(std::string const& elementId) noexcept;
 	virtual Handler<AngelWidgetTarget> matchToWidgetTarget(std::string const& widgetId, std::string const& widgetGuide) noexcept;
 public:
+	void onAttatched();
 	void render(gl::Canvas& canvas);
 	void idle(const float delta_ms);
 	geom::Box reshape(geom::Area const& area);
@@ -134,6 +135,7 @@ public:
 	Handler<Element> findElementByPoint(geom::Point const& screenVector);
 	Handler<Element> findElementById(std::string const& id);
 protected:
+	virtual void onAttatchedImpl() = 0;
 	virtual void renderImpl(gl::Canvas& canvas) = 0;
 	virtual void idleImpl(const float delta_ms) = 0;
 	virtual geom::Box reshapeImpl(geom::Area const& area) = 0;
