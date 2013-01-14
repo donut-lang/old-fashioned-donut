@@ -76,7 +76,7 @@ void ActionSession::onTouchUp(float const& timeMs, geom::Point const& pt)
 	this->lastPoint_ = pt;
 	this->invokeUpRaw(timeMs, pt);
 
-	this->totalMoved_ += (pt-this->lastPoint_);
+	this->totalMoved_ += geom::abs(pt-this->lastPoint_);
 
 	const float timeDiff = this->lastTimeMs_-this->startTimeMs_;
 	const geom::Velocity vel(this->totalMoved_, timeDiff);
@@ -84,7 +84,8 @@ void ActionSession::onTouchUp(float const& timeMs, geom::Point const& pt)
 		this->invokeFling(timeMs, this->startPoint_, pt, vel);
 		return;
 	}
-	if( Handler<Element> target = this->target_.lock() ){
+	Handler<Element> target;
+	if( totalMoved_.x() < MaxSingleTapupDistance && totalMoved_.y() < MaxSingleTapupDistance && (target = this->target_.lock()) ){
 		if(target->lastDrawnAreaInRoot().contain(pt)){
 			target->onSingleTapUp(timeMs, pt);
 			return;
@@ -96,7 +97,7 @@ void ActionSession::onTouchMove(float const& timeMs, geom::Point const& pt)
 {
 	this->invokeMoveRaw(timeMs, pt);
 	this->invokeScroll(timeMs, this->lastPoint_, pt, pt-this->lastPoint_);
-	this->totalMoved_ += (pt-this->lastPoint_);
+	this->totalMoved_ += geom::abs(pt-this->lastPoint_);
 	this->lastTimeMs_ = timeMs;
 	this->lastPoint_ = pt;
 }

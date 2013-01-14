@@ -75,6 +75,7 @@ public:
 private:
 	//static constexpr float MaxFlingVelocity=4000;
 	static constexpr float MinFlingVelocity=500.0f/1000;
+	static constexpr float MaxSingleTapupDistance=30;
 private:
 	HandlerW<Element> target_;
 	std::vector<HandlerW<Element> > elementChain_;
