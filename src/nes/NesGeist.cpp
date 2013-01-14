@@ -138,8 +138,8 @@ void NesGeist::Runner::queryStop()
 
 void NesGeist::Runner::operator ()()
 {
-	while(!this->stop_){
-		for(size_t i=0;i<1000*1000;++i){
+	while( likely(!this->stop_) ){
+		for(int x=100; x>0;--x){
 			this->parent_.machine_->run();
 		}
 	}
