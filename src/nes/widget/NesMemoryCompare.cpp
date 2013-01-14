@@ -220,4 +220,43 @@ chisa::geom::Box NesMemoryCompare::measureImpl(const chisa::geom::Box& constrain
 	return chisa::geom::Box( width_, height);
 }
 
+
+bool NesMemoryCompare::onSingleTapUp(const float& timeMs, const chisa::geom::Point& ptInWidget)
+{
+	Handler<chisa::tk::World> world = this->world().lock();
+	if( unlikely(!world) ) {
+		return true;
+	}
+	uint16_t const addr_ = this->ptToAddr(ptInWidget);
+	std::string addr( ::tarte::toString(addr_, 16));
+	Handler<NesGeist> geist = this->geist_.lock();
+	std::string val ( ::tarte::toString(geist->machine()->debuggerRead(addr_)));
+
+	world->sendTask([this, world,addr,val]()->void{
+		Handler< ::donut::Donut> donut(world->donut());
+		auto src = donut->parse(std::string("")+R"delimiter(
+h = World.heaven();
+if( Global.has("__mem__widget_angel") ){
+h.detatchAngel(Global.__mem__widget_angel);
+}else{
+};
+angel = h.newTwinAngel();
+Global.__mem__widget_angel = angel;
+Global.__mem__widget_addr = )delimiter"+addr+R"delimiter(;
+t1 = angel.newWidgetTarget("nes-compare", ")delimiter"+addr+R"delimiter(");
+t2 = angel.newWidgetTarget("nes-watcher", ")delimiter"+addr+R"delimiter(");
+t1.attatchServant(t1.newHaloServant("red"));
+t2.attatchServant(t2.newHaloServant("red"));
+elm = t2.newElementServant("mem-edit");
+elm.element().findElementById("val").setText(")delimiter"+val+R"delimiter(");
+t2.attatchServant(elm);
+angel.attatchTarget(t1);
+angel.attatchTarget(t2);
+Global.attatched = h.attatchAngel(angel);
+)delimiter");
+		donut->queryMachine()->start(src);
+	});
+
+	return true;
+}
 }

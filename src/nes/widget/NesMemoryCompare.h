@@ -58,6 +58,8 @@ private:
 	virtual void idleImpl(const float delta_ms) override final;
 	virtual void reshapeImpl(chisa::geom::Box const& areaSize) override final;
 	virtual chisa::geom::Box measureImpl(chisa::geom::Box const& constraintSize) override final;
+private:
+	virtual bool onSingleTapUp(float const& timeMs, chisa::geom::Point const& ptInWidget) override;
 };
 
 }
