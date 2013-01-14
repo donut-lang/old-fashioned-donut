@@ -28,19 +28,6 @@ TaskHandler::TaskHandler(Logger& log)
 {
 
 }
-TaskHandler::~TaskHandler()
-{
-
-}
-void TaskHandler::registerTask(Task* task)
-{
-	this->taskPool.insert(task);
-}
-
-void TaskHandler::unregisterTask(Task* task)
-{
-	this->taskPool.erase(task);
-}
 
 void TaskHandler::send( std::function<bool()> const& lambda ){
 	if(this->log.t()){
@@ -63,11 +50,6 @@ void TaskHandler::send( std::function<bool(float)> const& lambda ){
 
 void TaskHandler::run(const float delta_ms)
 {
-	for(auto it = taskPool.begin(); it != taskPool.end(); ++it){
-		if( !(*it)->exec(delta_ms) ){
-			it = taskPool.erase(it);
-		}
-	}
 	for( auto it = lambas_.begin(); it != lambas_.end(); ) {
 		std::function<bool(float)> const& f = *it;
 		bool const result = f(delta_ms);

@@ -184,32 +184,6 @@ Handler<Heaven> World::heaven()
 	return heaven_;
 }
 
-void World::registerTask(Task* task)
-{
-	this->taskHandler_.registerTask(task);
-}
-
-void World::unregisterTask(Task* task)
-{
-	this->taskHandler_.unregisterTask(task);
-}
-
-
-void World::sendTask(const std::function<bool(float)>& f)
-{
-	this->taskHandler_.send(f);
-}
-
-void World::sendTask(const std::function<bool()>& f)
-{
-	this->taskHandler_.send(f);
-}
-
-void World::sendTask(const std::function<void()>& f)
-{
-	this->taskHandler_.send(f);
-}
-
 Handler<Element> World::realizeElement( std::string const& templateId )
 {
 	return this->elementFactory_->parseTree(templateId);

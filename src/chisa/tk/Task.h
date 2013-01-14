@@ -45,14 +45,10 @@ class TaskHandler {
 private:
 	Logger& log;
 private:
-	std::unordered_set<Task*> taskPool;
 	std::vector<std::function<bool(float)> > lambas_;
 public:
 	TaskHandler(Logger& log);
-	virtual ~TaskHandler();
-public:
-	void registerTask(Task* task);
-	void unregisterTask(Task* task);
+	virtual ~TaskHandler() = default;
 public:
 	void send( std::function<bool()> const& lambda );
 	void send( std::function<bool(float)> const& lambda );
@@ -62,7 +58,6 @@ public:
 		this->send( ::tarte::makeFunctor(lambda) );
 	}
 	std::size_t numTasks() const noexcept { return this->lambas_.size(); };
-	std::size_t getPostCount() const{ return taskPool.size(); };
 public:
 	void run(const float delta_ms);
 };

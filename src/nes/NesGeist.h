@@ -31,7 +31,7 @@ using namespace tarte;
 
 class Hexe;
 
-class NesGeist : public chisa::WorldGeist, public VideoFairy, public AudioFairy, public GamepadFairy, public chisa::tk::Task {
+class NesGeist : public chisa::WorldGeist {
 private:
 	class Runner {
 	private:
@@ -45,15 +45,43 @@ private:
 	public:
 		void operator()();
 	};
-	class Instrument : public chisa::Instrument {
+private:
+	class Video final : public VideoFairy {
 	private:
 		NesGeist& self_;
 	public:
-		Instrument(NesGeist& self);
-		virtual ~Instrument() noexcept = default;
+		Video(NesGeist& self);
+		virtual void dispatchRendering(const uint8_t (&nesBuffer)[screenHeight][screenWidth], const uint8_t paletteMask) override final;
+	};
+	class Audio final : public AudioFairy {
 	private:
-		virtual ::chisa::SoundSpec querySpec(::chisa::SoundSpec const& spec) noexcept override final;
-		virtual void playImpl(unsigned char *stream, int len) override final;
+		NesGeist& self_;
+		::tarte::Handler<chisa::Instrument> inst_;
+	public:
+		Audio(NesGeist& self);
+		::tarte::Handler<chisa::Instrument> instrument();
+	public:
+		class Instrument : public chisa::Instrument {
+		private:
+			Audio& self_;
+		public:
+			Instrument(Audio& self);
+			virtual ~Instrument() noexcept = default;
+		private:
+			virtual ::chisa::SoundSpec querySpec(::chisa::SoundSpec const& spec) noexcept override final;
+			virtual void playImpl(unsigned char *stream, int len) override final;
+		};
+	};
+	class Gamepad final : public GamepadFairy {
+	private:
+		unsigned char joyState_;
+		Handler<chisa::Joystick> joystick_;
+	private:
+		virtual void onUpdate() override;
+		virtual bool isPressed(uint8_t keyIdx) override;
+	public:
+		Gamepad(Handler<chisa::JoystickManager> const& mgr);
+		void updateJoystick();
 	};
 public:
 	Handler<Hexe> hexe();
@@ -74,21 +102,14 @@ private:
 	std::mutex frame_mutex_;
 	float time_ms_;
 	std::condition_variable cond_;
-	Handler<Instrument> inst_;
-	unsigned char joyState_;
-	Handler<chisa::Joystick> joystick_;
-private:
-	void updateJoystick();
+	Video video_;
+	Audio audio_;
+	Gamepad gamepad_;
 public:
 	NesGeist(Logger& log, ::tarte::Handler<Hexe> const& hexe, ::tarte::HandlerW<chisa::tk::World> world);
 	virtual ~NesGeist() noexcept;
-	virtual std::string toString() const override;
+	virtual std::string toString() const override final;
 	inline VirtualMachine* machine() const noexcept { return this->machine_; };
-public:
-	virtual void dispatchRendering(const uint8_t (&nesBuffer)[screenHeight][screenWidth], const uint8_t paletteMask) override;
-	virtual void onUpdate() override;
-	virtual bool isPressed(uint8_t keyIdx) override;
-	virtual bool exec(const float delta_ms) override;
 private:
 	virtual Handler< ::donut::Object> createDonutObject(Handler< ::donut::Heap> const& heap) override final;
 public:

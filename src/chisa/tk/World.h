@@ -115,13 +115,8 @@ public:
 	 * タスク管理
 	 ******************************************************************************/
 public:
-	void registerTask(Task* task);
-	void unregisterTask(Task* task);
-	void sendTask(std::function<bool(float)> const& f);
-	void sendTask(std::function<bool()> const& f);
-	void sendTask(std::function<void()> const& f);
 	template <typename __F>
-	void sendTask(__F f) { this->sendTask( ::tarte::makeFunctor(f) ); };
+	void sendTask(__F f) { this->taskHandler_.send(f); };
 	/******************************************************************************
 	 * Universeへの移譲
 	 ******************************************************************************/
