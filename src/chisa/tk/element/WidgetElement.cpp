@@ -141,6 +141,7 @@ float WidgetElement::calcScale(geom::Box const& widget, geom::Box const& constra
 
 void WidgetElement::notifyRelayoutFinished()
 {
+	Element::notifyRelayoutFinished();
 	this->widget_->notifyRelayoutFinished();
 }
 

@@ -30,10 +30,56 @@ NesGeistProvider::NesGeistProvider(Handler< ::donut::Heap> const& heap)
 		NesGeistSideEffect side;
 		side.op = NesGeistSideEffect::LoadSave;
 		side.save = geist->machine()->save();
-		geist->machine()->write(addr, val);
+		geist->machine()->debuggerWrite(addr, val);
 
 		return std::make_tuple(val,true,side);
 	});
+	this->registerReactiveNativeClosure("cmpReset",[](NesGeistObject* obj){
+		Handler<NesGeist> geist(obj->geist());
+		NesGeist::MachineLock lock(geist);
+		MemoryComparator& cmp = geist->machine()->debugger().comparator();
+		NesGeistSideEffect side;
+		side.op = NesGeistSideEffect::LoadSave;
+		side.save = geist->machine()->save();
+		cmp.reset();
+		return std::make_tuple(cmp.candidates(),true,side);
+	});
+#define SELECT_FU(_op) \
+	this->registerReactiveNativeClosure("select" #_op,[](NesGeistObject* obj){\
+		Handler<NesGeist> geist(obj->geist());\
+		NesGeist::MachineLock lock(geist);\
+		MemoryComparator& cmp = geist->machine()->debugger().comparator();\
+		NesGeistSideEffect side;\
+		side.op = NesGeistSideEffect::LoadSave;\
+		side.save = geist->machine()->save();\
+		cmp.select##_op();\
+		return std::make_tuple(cmp.candidates(),true,side);\
+	});
+	SELECT_FU(Gt);
+	SELECT_FU(Ge);
+	SELECT_FU(Lt);
+	SELECT_FU(Le);
+	SELECT_FU(Eq);
+	SELECT_FU(Ne);
+#undef SELECT_FU
+
+#define SELECT_FU(_op) \
+	this->registerReactiveNativeClosure("selectConst" #_op,[](NesGeistObject* obj, uint8_t val){\
+		Handler<NesGeist> geist(obj->geist());\
+		NesGeist::MachineLock lock(geist);\
+		MemoryComparator& cmp = geist->machine()->debugger().comparator();\
+		NesGeistSideEffect side;\
+		side.op = NesGeistSideEffect::LoadSave;\
+		side.save = geist->machine()->save();\
+		cmp.select##_op(val);\
+		return std::make_tuple(cmp.candidates(),true,side);\
+	});
+	SELECT_FU(Gt);
+	SELECT_FU(Ge);
+	SELECT_FU(Lt);
+	SELECT_FU(Le);
+	SELECT_FU(Eq);
+	SELECT_FU(Ne);
 }
 
 //---------------------------------------------------------------------------------------

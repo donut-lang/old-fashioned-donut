@@ -30,6 +30,7 @@ struct NesGeistSideEffect {
 		LoadSave
 	} op;
 	::tarte::XValue save;
+	::tarte::XValue cmpSave;
 	NesGeistSideEffect()
 	:op(None)
 	{

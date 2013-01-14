@@ -42,6 +42,7 @@ private:
 	float lastWidth_;
 	float nowWidth_;
 private:
+	unsigned int lastCandidates_;
 	chisa::HandlerW<nes::NesGeist> geist_;
 public:
 	NesMemoryCompare(chisa::Logger& log, chisa::HandlerW<chisa::tk::World> _world, tinyxml2::XMLElement* element);

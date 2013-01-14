@@ -27,6 +27,7 @@ namespace nes {
 NesMemoryCompare::NesMemoryCompare(chisa::Logger& log, chisa::HandlerW<chisa::tk::World> _world, tinyxml2::XMLElement* element)
 :Widget(log, _world, element)
 ,numRenderer_(log, _world.lock()->drawableManager(), 16)
+,lastCandidates_(0)
 {
 	using namespace chisa::tk;
 	using namespace chisa::gl;
@@ -158,6 +159,11 @@ void NesMemoryCompare::renderImpl(chisa::gl::Canvas& cv, const chisa::geom::Area
 
 void NesMemoryCompare::idleImpl(const float delta_ms)
 {
+	MemoryComparator& cmp = this->geist_.lock()->machine()->debugger().comparator();
+	if(	lastCandidates_ != cmp.candidates() ){
+		lastCandidates_ = cmp.candidates();
+		this->requestRelayout();
+	}
 }
 
 void NesMemoryCompare::reshapeImpl(const chisa::geom::Box& areaSize)
@@ -210,6 +216,7 @@ chisa::geom::Box NesMemoryCompare::measureImpl(const chisa::geom::Box& constrain
 {
 	MemoryComparator& cmp = this->geist_.lock()->machine()->debugger().comparator();
 	float const height = rowHeight() *  (cmp.candidates()+1);
+	lastCandidates_ = cmp.candidates();
 	return chisa::geom::Box( width_, height);
 }
 

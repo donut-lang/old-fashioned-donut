@@ -30,7 +30,7 @@ Disassembler::Disassembler(VirtualMachine& vm)
 }
 void Disassembler::decodeAt(uint16_t addr, Instruction& inst)
 {
-	inst.bin[0] = this->vm_.read(addr);
+	inst.bin[0] = this->vm_.debuggerRead(addr);
 	const uint32_t flags = kInfoTable[inst.bin[0]];
 	inst.op_ = static_cast<Operation>(flags & static_cast<uint32_t>(Operation::OperationMask));
 	inst.addrMode_ = static_cast<AddrMode>(flags & static_cast<uint32_t>(AddrMode::AddrModeMask));
@@ -107,7 +107,8 @@ void Disassembler::decodeAt(uint16_t addr, Instruction& inst)
 			inst.addr_ = 0;
 			break;
 		default:
-			TARTE_EXCEPTION(Exception, "[BUG] Oops. Invalid instruction.");
+			break;
+			//TARTE_EXCEPTION(Exception, "[BUG] Oops. Invalid instruction.");
 	}
 }
 
