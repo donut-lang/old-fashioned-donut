@@ -85,6 +85,7 @@ public:
 		NesGeist& parent_;
 	public:
 		inline  MachineLock(NesGeist& parent):parent_(parent){ parent_.machine_mutex_.lock(); };
+		inline  MachineLock(Handler<NesGeist> const& parent):parent_(*parent.get()){ parent_.machine_mutex_.lock(); };
 		inline ~MachineLock() { parent_.machine_mutex_.unlock(); }
 	};
 	class MachineUnlock final {

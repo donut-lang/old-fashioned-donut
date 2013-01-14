@@ -79,7 +79,10 @@ void ElementServant::renderImpl(gl::Canvas& canvas)
 	geom::Point lpt(offsetX+cycleX+midX, offsetY+cycleY);
 
 	gl::renderCubicLine(canvas, 2, gl::Color(1.0f,.8f,.8f,.7f), geom::Point(offsetX, midY), lpt);
-	this->element()->render(canvas, pt, geom::Area(geom::ZERO, geom::min(box, leftSize)));
+	geom::Box maskSize(geom::min(box, leftSize));
+	if(maskSize.width() > 0 && maskSize.height() > 0) {
+		this->element()->render(canvas, pt, geom::Area(geom::ZERO, maskSize));
+	}
 }
 
 void ElementServant::idleImpl(const float delta_ms)

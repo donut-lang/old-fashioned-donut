@@ -67,7 +67,8 @@
 	<horizontal id="mem-edit">
 		<textarea id="val" desc="値を入力" />
 		<button text=" 変更 ">
-			Geist;
+			angel = Global.__mem__widget_angel;
+			Geist.writeNES(Global.__mem__widget_addr, angel.findElementById("val").getText().toInteger());
 		</button>
 	</horizontal>
 	<label id="label" text="NES"></label>

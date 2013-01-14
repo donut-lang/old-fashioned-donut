@@ -103,7 +103,7 @@ public:
 protected:
 	inline ProviderT provider() const noexcept { return static_cast<ProviderT*>(this->GeistObject::provider()); };
 public:
-	Handler<GeistT> geist() const { return Handler<GeistT>::__internal__fromRawPointerWithoutCheck(static_cast<GeistT*>(GeistObject::geist().get())); };
+	Handler<GeistT> geist() { return Handler<GeistT>::__internal__fromRawPointerWithoutCheck(static_cast<GeistT*>(GeistObject::geist().get())); };
 protected:
 	GeistObjectBaseT(ProviderT* provider);
 	virtual ~GeistObjectBaseT() noexcept = default;

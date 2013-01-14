@@ -27,7 +27,9 @@ namespace nes {
 struct NesGeistSideEffect {
 	enum {
 		None=0,
+		LoadSave
 	} op;
+	::tarte::XValue save;
 	NesGeistSideEffect()
 	:op(None)
 	{

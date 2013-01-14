@@ -21,6 +21,23 @@
 namespace nes {
 using namespace tarte;
 
+NesGeistProvider::NesGeistProvider(Handler< ::donut::Heap> const& heap)
+:Super(heap)
+{
+	this->registerReactiveNativeClosure("writeNES",[](NesGeistObject* obj, uint16_t addr, uint16_t val){
+		Handler<NesGeist> geist(obj->geist());
+		NesGeist::MachineLock lock(geist);
+		NesGeistSideEffect side;
+		side.op = NesGeistSideEffect::LoadSave;
+		side.save = geist->machine()->save();
+		geist->machine()->write(addr, val);
+
+		return std::make_tuple(val,true,side);
+	});
+}
+
+//---------------------------------------------------------------------------------------
+
 NesGeistObject::NesGeistObject(NesGeistProvider* provider)
 :Super(provider)
 {
@@ -36,10 +53,18 @@ void NesGeistObject::onHistoryDiscarded(const Handler< ::donut::Heap>& heap)
 
 typename NesGeistObject::ResultType NesGeistObject::execAntiSideEffect(Handler< ::donut::Heap> const& heap, AntiSideEffect const& val)
 {
+	Handler<NesGeist> geist(this->geist());
+	NesGeist::MachineLock lock(geist);
 	AntiSideEffect anti;
-	//switch(val.op){
-
-	//}
+	switch(val.op){
+	case AntiSideEffect::None:
+		break;
+	case AntiSideEffect::LoadSave:
+		anti.op = AntiSideEffect::LoadSave;
+		anti.save = geist->machine()->save();
+		geist->machine()->load(val.save);
+		break;
+	}
 	return std::tuple<bool, AntiSideEffect>(true, anti);
 }
 
@@ -67,11 +92,5 @@ void NesGeistObject::loadImpl(const Handler< ::donut::Heap>& heap, const XValue&
 {
 }
 
-//---------------------------------------------------------------------------------------
-
-NesGeistProvider::NesGeistProvider(Handler< ::donut::Heap> const& heap)
-:Super(heap)
-{
-}
 
 }

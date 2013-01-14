@@ -153,7 +153,7 @@ t2 = angel.newWidgetTarget("nes-watcher", ")delimiter"+addr+R"delimiter(");
 t1.attatchServant(t1.newHaloServant("red"));
 t2.attatchServant(t2.newHaloServant("red"));
 elm = t2.newElementServant("mem-edit");
-elm.element().findElementById("val").text(")delimiter"+val+R"delimiter(");
+elm.element().findElementById("val").setText(")delimiter"+val+R"delimiter(");
 t2.attatchServant(elm);
 angel.attatchTarget(t1);
 angel.attatchTarget(t2);

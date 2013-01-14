@@ -73,9 +73,12 @@ void TextAreaObject::loadImpl(const Handler<Heap>& heap, const XValue& data)
 TextAreaProvider::TextAreaProvider(Handler<Heap> const& heap, Handler<World> const& world)
 :Super(heap, world)
 {
-	this->registerPureNativeClosure("text", [](TextAreaObject* obj, std::string str){
+	this->registerPureNativeClosure("setText", [](TextAreaObject* obj, std::string str){
 		obj->element()->text(str);
 		return str;
+	});
+	this->registerPureNativeClosure("getText", [](TextAreaObject* obj){
+		return obj->element()->text();
 	});
 }
 

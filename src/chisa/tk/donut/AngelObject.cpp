@@ -81,6 +81,9 @@ AngelProviderBaseT<ProviderT, ObjectT, AngelT, AntiT>::AngelProviderBaseT(Handle
 	this->registerPureNativeClosure("findElementTarget", [this](ObjectT* obj, std::string elementId){
 		return obj->angel()->findElementTarget(elementId)->donutObject(this->heap().lock());
 	});
+	this->registerPureNativeClosure("findElementById", [this](ObjectT* obj, std::string elementId){
+		return obj->angel()->findElementById(elementId);
+	});
 	this->registerPureNativeClosure("findWidgetTarget", [this](ObjectT* obj, std::string elementId, std::string widgetGuide){
 		return obj->angel()->findWidgetTarget(elementId, widgetGuide)->donutObject(this->heap().lock());
 	});
