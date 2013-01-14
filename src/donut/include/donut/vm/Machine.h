@@ -23,7 +23,6 @@
 #include "../source/Source.h"
 
 namespace donut {
-class Heap;
 typedef unsigned int pc_t;
 
 /**
@@ -32,13 +31,13 @@ typedef unsigned int pc_t;
 struct Callchain final {
 public: /* 値 */
 	pc_t pc_; // Program counter
-	unsigned int stackBase_;
-	Handler<Object> self_; //このクロージャの対象self
-	Handler<DonutClosureObject> closure_; //クロージャ本体
-	Handler<DonutObject> scope_; //ローカル変数の格納されるオブジェクト
+	unsigned int stackBase_; //戻るときはスタックをこの位置まで元に戻してね。
+	Handler<Object> self_; //このクロージャのselfは何か？
+	Handler<DonutClosureObject> closure_; //クロージャの実行コード本体
+	Handler<DonutObject> local_; //ローカル変数の格納されるオブジェクト
 public: /* 作成・破棄・セーブ */
 	Callchain(pc_t pc, unsigned int const& stackBase, Handler<Object> const& self, Handler<DonutClosureObject> const& closure, Handler<DonutObject> const& scope)
-	:pc_(pc), stackBase_(stackBase), self_(self), closure_(closure), scope_(scope){
+	:pc_(pc), stackBase_(stackBase), self_(self), closure_(closure), local_(scope){
 	}
 	Callchain(Handler<Heap> const& heap, XValue const& data);
 	XValue save();
@@ -54,6 +53,10 @@ public: /* 値 */
 	Handler<Object> interrupt_;
 	std::vector<Handler<Object> > stack_;
 	std::vector<Callchain> callStack_;
+public:
+	enum State : unsigned int{
+
+	};
 public: /* 作成・破棄・セーブ */
 	Context(Handler<Clock> const& clk);
 	Context(Handler<Clock> const& clk, Context const& other);
@@ -98,7 +101,7 @@ private: /* 実行時の一時的な変数 */
 	inline bool running() const noexcept { return this->running_; };
 private: /* 最新のコンテキストへのアクセサ */
 	Handler<Object> const& self();
-	Handler<DonutObject> const& scope();
+	Handler<DonutObject> const& local();
 	Handler<DonutClosureObject> const& closureObject();
 	Handler<Source> const& src();
 	Handler<Closure> const& closure();
@@ -106,6 +109,7 @@ private: /* 最新のコンテキストへのアクセサ */
 	unsigned int stackBase();
 	std::vector<Callchain>& callStack();
 	pc_t& pc();
+private:
 	Handler<Object> const& interrupt() const noexcept;
 	void interrupt(Handler<Object> const& obj);
 	void releaseInterrupt();
