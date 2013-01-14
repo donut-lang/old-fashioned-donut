@@ -33,19 +33,6 @@ class Hexe;
 
 class NesGeist : public chisa::WorldGeist {
 private:
-	class Runner {
-	private:
-		NesGeist& parent_;
-		bool stop_;
-	public:
-		Runner(NesGeist& parent);
-		virtual ~Runner() = default;
-	public:
-		void queryStop();
-	public:
-		void operator()();
-	};
-private:
 	class Video final : public VideoFairy {
 	private:
 		NesGeist& self_;
@@ -86,21 +73,35 @@ private:
 public:
 	Handler<Hexe> hexe();
 public:
-	class Lock final {
+	class VideoLock final {
 		NesGeist& parent_;
 	public:
-		inline Lock(NesGeist& parent):parent_(parent){ parent_.spr_mutex_.lock(); };
-		inline ~Lock() { parent_.spr_mutex_.unlock(); }
+		inline VideoLock(NesGeist& parent):parent_(parent){ parent_.spr_mutex_.lock(); };
+		inline ~VideoLock() { parent_.spr_mutex_.unlock(); }
 		inline Handler<chisa::gl::Sprite> getSprite() { return parent_.spr_; };
+	};
+public:
+	class MachineLock final {
+		NesGeist& parent_;
+	public:
+		inline  MachineLock(NesGeist& parent):parent_(parent){ parent_.machine_mutex_.lock(); };
+		inline ~MachineLock() { parent_.machine_mutex_.unlock(); }
+	};
+	class MachineUnlock final {
+		NesGeist& parent_;
+	public:
+		inline  MachineUnlock(NesGeist& parent):parent_(parent){ parent_.machine_mutex_.unlock(); };
+		inline ~MachineUnlock() { parent_.machine_mutex_.lock(); }
 	};
 private:
 	VirtualMachine* machine_;
+	bool running_;
 	std::thread* runner_t_;
-	Runner* runner_;
 	Handler<chisa::gl::Sprite> spr_;
 	std::mutex spr_mutex_;
-	std::mutex frame_mutex_;
+	std::mutex machine_mutex_;
 	float time_ms_;
+	std::mutex cond_mutex_;
 	std::condition_variable cond_;
 	Video video_;
 	Audio audio_;
@@ -110,6 +111,9 @@ public:
 	virtual ~NesGeist() noexcept;
 	virtual std::string toString() const override final;
 	inline VirtualMachine* machine() const noexcept { return this->machine_; };
+public:
+	void queryStop();
+	void operator()();
 private:
 	virtual Handler< ::donut::Object> createDonutObject(Handler< ::donut::Heap> const& heap) override final;
 public:

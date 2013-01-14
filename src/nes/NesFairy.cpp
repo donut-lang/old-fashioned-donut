@@ -38,7 +38,7 @@ void NesGeist::Video::dispatchRendering(const uint8_t (&nesBuffer)[screenHeight]
 {
 	using namespace chisa::gl;
 	{
-		NesGeist::Lock lock(self_);
+		NesGeist::VideoLock lock(self_);
 		Sprite::Session s(lock.getSprite());
 		unsigned char* mem8 = s.data();
 		unsigned int* mem32 = nullptr;
@@ -52,8 +52,9 @@ void NesGeist::Video::dispatchRendering(const uint8_t (&nesBuffer)[screenHeight]
 		}
 	}
 	{
-		std::unique_lock<std::mutex> lock(self_.frame_mutex_);
-		if(self_.runner_){
+		MachineUnlock unl(self_);
+		std::unique_lock<std::mutex> lock(self_.cond_mutex_);
+		if(self_.runner_t_){
 			self_.cond_.wait_for(lock, std::chrono::milliseconds(20));
 		}
 	}

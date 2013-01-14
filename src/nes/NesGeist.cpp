@@ -27,8 +27,8 @@ namespace nes {
 NesGeist::NesGeist(chisa::Logger& log, ::tarte::Handler<Hexe> const& hexe, ::tarte::HandlerW<chisa::tk::World> world)
 :chisa::WorldGeist(log, hexe, world)
 ,machine_(nullptr)
+,running_(false)
 ,runner_t_(nullptr)
-,runner_(nullptr)
 ,time_ms_(0.0f)
 ,video_(*this)
 ,audio_(*this)
@@ -75,72 +75,65 @@ void NesGeist::loadNES(std::string const& abs_filename)
 }
 void NesGeist::stopNES()
 {
-	if(this->runner_){
-		this->runner_->queryStop();
+	if(this->runner_t_){
+		this->queryStop();
 		this->runner_t_->join();
 		delete this->runner_t_;
-		delete this->runner_;
 		this->runner_t_ = nullptr;
-		this->runner_ = nullptr;
 	}
 }
 
 void NesGeist::startNES()
 {
 	this->stopNES();
-	this->runner_ = new Runner(*this);
-	this->runner_t_ = new std::thread(std::ref(*this->runner_));
+	this->running_ = true;
+	this->runner_t_ = new std::thread(std::ref(*this));
 	this->time_ms_ = 0.0f;
 	if( chisa::Handler<chisa::tk::World> world = this->world() ) {
 		world->sendTask([this](float delta_ms)->bool{
-			std::unique_lock<std::mutex> lock(this->frame_mutex_);
+			std::unique_lock<std::mutex> lock(this->cond_mutex_);
 			this->time_ms_ += delta_ms;
 			this->gamepad_.updateJoystick();
 			while(this->time_ms_ > (1.0f/60)){
 				this->time_ms_ -= (1.0f/60);
 				this->cond_.notify_one();
 			}
-			return (this->runner_);
+			return (this->runner_t_);
 		});
 	}
 }
 
 XValue NesGeist::saveNES()
 {
-	this->stopNES();
-	XValue const savedata = this->machine_->save();
-	this->startNES();
+	XValue savedata;
+	{
+		MachineLock lock(*this);
+		savedata = this->machine_->save();
+	}
 	return savedata;
 }
 
 void NesGeist::loadNES(XValue const& data)
 {
-	this->stopNES();
+	MachineLock lock(*this);
 	this->machine_->load(data);
-	this->startNES();
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 // 実行スレッドの実装
 //---------------------------------------------------------------------------------------------------------------------
 
-NesGeist::Runner::Runner(NesGeist& parent)
-:parent_(parent)
-,stop_(false)
+void NesGeist::queryStop()
 {
-
+	this->running_ = false;
 }
 
-void NesGeist::Runner::queryStop()
+void NesGeist::operator ()()
 {
-	this->stop_=true;
-}
-
-void NesGeist::Runner::operator ()()
-{
-	while( likely(!this->stop_) ){
+	MachineLock l(*this);
+	while( likely(this->running_) ){
 		for(int x=100; x>0;--x){
-			this->parent_.machine_->run();
+			this->machine_->run();
 		}
 	}
 }

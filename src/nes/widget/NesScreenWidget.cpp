@@ -45,7 +45,7 @@ void NesScreenWidget::renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const&
 	if(!geist){
 		return;
 	}
-	nes::NesGeist::Lock lock(*geist.get());
+	nes::NesGeist::VideoLock lock(*geist.get());
 	cv.drawSprite(lock.getSprite(), chisa::geom::Vector(0.0f, 0.0f));
 }
 
