@@ -159,6 +159,16 @@ bool ScrollCombo::onUpRaw(float const& timeMs, geom::Point const& ptInScreen)
 	return false;
 }
 
+void ScrollCombo::showPoint(const geom::Point& relPtFromParent)
+{
+	if(this->scrollMode_ & Vertical) {
+		this->scrollOffset_.y(relPtFromParent.y() - lastInnerDrawnAreaInRoot().height()/2);
+	}
+	if(this->scrollMode_ & Horizontal){
+		this->scrollOffset_.x(relPtFromParent.x() - lastInnerDrawnAreaInRoot().width()/2);
+	}
+}
+
 bool ScrollCombo::onScroll(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance)
 {
 	geom::Point const& ptStart(this->scrollOffset_);

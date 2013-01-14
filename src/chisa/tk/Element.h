@@ -117,6 +117,7 @@ public: /* レンダリング(非virtual) */
 	void requestRelayout();
 	virtual void notifyRelayoutFinished();
 	void notifyViewRefreshed();
+	virtual void showPoint(geom::Point const& relPtFromParent);
 private:
 	void forceRelayout();
 public: /* ツリー操作 */

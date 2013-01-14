@@ -224,6 +224,15 @@ void Element::notifyViewRefreshed()
 	}
 }
 
+void Element::showPoint(geom::Point const& relPtFromParent)
+{
+	Handler<Element> p = this->parent().lock();
+	if(p) {
+		p->showPoint(innerOffsetFromParent_+relPtFromParent);
+	}
+}
+
+
 bool Element::notifyViewRefreshedImpl()
 {
 	return false;
