@@ -53,6 +53,8 @@ public:
 	void send( std::function<bool()> const& lambda );
 	void send( std::function<bool(float)> const& lambda );
 	void send( std::function<void()> const& lambda );
+	template <typename R, typename... Args>
+	void send( std::function<R(Args...)> const& lambda ) = delete;
 	template <typename __Lambda>
 	void send( __Lambda lambda ){
 		this->send( ::tarte::makeFunctor(lambda) );
