@@ -86,11 +86,11 @@ private:
 public:
 	Handler<Hexe> hexe();
 public:
-	class Lock {
+	class Lock final {
 		NesGeist& parent_;
 	public:
-		Lock(NesGeist& parent);
-		virtual ~Lock();
+		inline Lock(NesGeist& parent):parent_(parent){ parent_.spr_mutex_.lock(); };
+		inline ~Lock() { parent_.spr_mutex_.unlock(); }
 		inline Handler<chisa::gl::Sprite> getSprite() { return parent_.spr_; };
 	};
 private:

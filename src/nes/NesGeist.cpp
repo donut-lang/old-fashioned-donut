@@ -144,16 +144,5 @@ void NesGeist::Runner::operator ()()
 		}
 	}
 }
-
-NesGeist::Lock::Lock(NesGeist& parent)
-:parent_(parent)
-{
-	parent_.spr_mutex_.lock();
-}
-NesGeist::Lock::~Lock()
-{
-	parent_.spr_mutex_.unlock();
-}
-
 }
 
