@@ -22,7 +22,7 @@
 
 namespace nes {
 
-enum class AddrMode : uint32_t {
+enum class AddrMode : uint16_t {
 	AddrModeMask = 0xf,
 	Immediate = 0,
 	Zeropage = 1,
@@ -35,10 +35,11 @@ enum class AddrMode : uint32_t {
 	IndirectX = 8,
 	IndirectY = 9,
 	Relative = 10,
-	None = 11
+	None = 11,
+	Invalid=AddrModeMask
 };
 
-enum class Operation : uint32_t {
+enum class Operation : uint16_t {
 	OperationMask=0xfff0,
 	LDA = 0,
 	LDX = 16,
@@ -100,6 +101,7 @@ enum class Operation : uint32_t {
 	BPL = 912,
 	BVC = 928,
 	BVS = 944,
+	Invalid=OperationMask
 };
 
 const int constexpr ClockShift = 16;
@@ -113,6 +115,10 @@ struct Instruction {
 	unsigned char bin[3];
 //解決したアドレスとその値
 	uint16_t addr_;
+public:
+	inline bool isInvalidInstruction() const noexcept{
+		return (op_ == Operation::Invalid) || (addrMode_ == AddrMode::Invalid);
+	}
 public:
 	template <typename Archiver>
 	void serialize(Archiver& arc){
@@ -131,6 +137,8 @@ class Disassembler final {
 private:
 	static const uint32_t kInfoTable[0x100];
 	VirtualMachine& vm_;
+	static const constexpr uint8_t kExecBufferSize=32;
+	static const constexpr uint8_t kExecIndexMask=31;
 	uint16_t lastExecuted_[32];
 	uint8_t execIdx_;
 public:
@@ -141,16 +149,19 @@ public:
 	Disassembler(VirtualMachine& vm);
 	~Disassembler() = default;
 public:
-	void decodeAt(uint16_t addr, Instruction& inst);
+	/**
+	 * 命令として成立するならtrueを、無効な命令ならfalseを返す
+	 */
+	bool decodeAt(uint16_t addr, Instruction& inst);
 public:
 	void inline onMemoryExecute(uint16_t const addr){
-		lastExecuted_[execIdx_=(execIdx_+1)&31] = addr;
+		lastExecuted_[execIdx_=(execIdx_+1)&kExecIndexMask] = addr;
 	}
 	inline uint16_t nowPC() const noexcept{
 		return lastExecuted_[execIdx_];
 	}
 	inline uint16_t lastPC(uint8_t const from) const noexcept{
-		return lastExecuted_[(execIdx_+ 32 - from)&31];
+		return lastExecuted_[(execIdx_+ kExecBufferSize - from)&kExecIndexMask];
 	}
 };
 

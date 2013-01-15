@@ -25,10 +25,11 @@ using namespace tarte;
 
 Disassembler::Disassembler(VirtualMachine& vm)
 :vm_(vm)
+,execIdx_(0)
 {
 
 }
-void Disassembler::decodeAt(uint16_t addr, Instruction& inst)
+bool Disassembler::decodeAt(uint16_t addr, Instruction& inst)
 {
 	inst.bin[0] = this->vm_.debuggerRead(addr);
 	const uint32_t flags = kInfoTable[inst.bin[0]];
@@ -106,10 +107,13 @@ void Disassembler::decodeAt(uint16_t addr, Instruction& inst)
 			inst.binLength_=1;
 			inst.addr_ = 0;
 			break;
-		default:
+		case AddrMode::Invalid:
 			break;
-			//TARTE_EXCEPTION(Exception, "[BUG] Oops. Invalid instruction.");
+		default:
+			TARTE_EXCEPTION(Exception, "[BUG] Oops. Invalid instruction.");
+			break;
 	}
+	return !inst.isInvalidInstruction();
 }
 
 }

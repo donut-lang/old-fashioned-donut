@@ -957,7 +957,6 @@ module Opcode
 end
 
 module OpcodeTable
-    TransTable = [0xff]*0x100;
 	AddrMode = {
 		:Immediate => 0,
 		:Zeropage => 1,
@@ -1037,6 +1036,7 @@ module OpcodeTable
 	};
 	InstModeMask = 0xfff0;
 	ClockShift = 16;
+    TransTable = [0xffff]*0x100;
 	Opcode::eachInst do |b, opsym, addr|
 		next if addr.nil? or opsym.nil?
 		OpcodeTable::TransTable[b] = OpcodeTable::AddrMode[addr] | OpcodeTable::InstMode[opsym] | ((Opcode::Cycle[b])<< OpcodeTable::ClockShift);
