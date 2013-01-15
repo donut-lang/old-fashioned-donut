@@ -46,15 +46,21 @@ private:
 	};
 	chisa::gl::PredefinedSymRenderer symRenderer_;
 	float addrWidth_;
+	int16_t pcDelta_;
+	uint16_t lastPC_;
+	uint16_t lastDrawnPCStart_;
+	uint16_t lastDrawnPCEnd_;
+	float scrollIntegral_;
 public:
 	NesTraceWidget(Logger& log, chisa::HandlerW<chisa::tk::World> world, tinyxml2::XMLElement* element);
 	virtual ~NesTraceWidget() noexcept = default;
-public:
+private:
 	virtual void renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const& area) override;
 	virtual void idleImpl(const float delta_ms) override;
 	virtual void reshapeImpl(chisa::geom::Box const& areaSize) override;
 	virtual chisa::geom::Box measureImpl(chisa::geom::Box const& constraintSize) override;
 	virtual chisa::geom::Area findTargetImpl(std::string const& target);
+	virtual bool onScroll(float const& timeMs, chisa::geom::Point const& start, chisa::geom::Point const& end, chisa::geom::Distance const& distance) override final;
 };
 
 }

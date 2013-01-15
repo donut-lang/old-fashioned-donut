@@ -31,6 +31,11 @@ NesTraceWidget::NesTraceWidget(chisa::Logger& log, chisa::HandlerW<chisa::tk::Wo
 ,numRenderer_(log, _world.lock()->drawableManager(), 24.0f)
 ,symRenderer_(log, _world.lock()->drawableManager(), 24.0f)
 ,addrWidth_(0)
+,pcDelta_(0)
+,lastPC_(0)
+,lastDrawnPCStart_(0)
+,lastDrawnPCEnd_(0)
+,scrollIntegral_(0)
 {
 	chisa::Handler<chisa::tk::World> world(_world.lock());
 	chisa::Handler<nes::NesGeist> geist(world->geist().cast<nes::NesGeist>());
@@ -96,6 +101,7 @@ NesTraceWidget::NesTraceWidget(chisa::Logger& log, chisa::HandlerW<chisa::tk::Wo
 	this->asmRenderer_.registerSymbol(static_cast<unsigned int>(Operation::BPL ),"BPL");
 	this->asmRenderer_.registerSymbol(static_cast<unsigned int>(Operation::BVC ),"BVC");
 	this->asmRenderer_.registerSymbol(static_cast<unsigned int>(Operation::BVS ),"BVS");
+	this->asmRenderer_.registerSymbol(static_cast<unsigned int>(Operation::Invalid ),"???");
 
 	this->numRenderer_.registerSymbol(0, "0");
 	this->numRenderer_.registerSymbol(1, "1");
@@ -130,7 +136,7 @@ void NesTraceWidget::renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const& 
 	using namespace chisa::gl;
 	Handler<NesGeist> geist = this->geist_.lock();
 	Handler<chisa::tk::WidgetElement> parent = this->wrapper().lock();
-	if(!geist || !parent){
+	if( unlikely(!geist || !parent) ){
 		return;
 	}
 	VirtualMachine& vm = *geist->machine();
@@ -148,7 +154,34 @@ void NesTraceWidget::renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const& 
 
 	Instruction inst;
 	uint16_t const nowPC = disasm.nowPC();
+	if(this->lastPC_ != nowPC) {
+		this->lastPC_ = nowPC;
+		this->pcDelta_ = 0;
+	}
 	uint16_t pc = nowPC;
+	if(pcDelta_ > 0) {
+		int delta = 0;
+		disasm.decodeAt(pc, inst);
+		do {
+			uint8_t binLen = inst.binLength_;
+			if( disasm.decodeAt(pc+binLen, inst) ) {
+				pc+=binLen;
+				++delta;
+			}else{
+				++pc;
+			}
+		}while(delta < pcDelta_ && pc <= 0xffff);
+	} else if(pcDelta_ < 0) {
+		int delta = 0;
+		while(delta > pcDelta_ && pc > 0) {
+			--pc;
+			if( disasm.decodeAt(pc, inst) ) {
+				--delta;
+			}
+		}
+	}
+	lastDrawnPCStart_ = pc;
+
 	for(unsigned int i=0;i<=endRow;++i){
 		disasm.decodeAt(pc, inst);
 		if(i < startRow){
@@ -445,12 +478,16 @@ void NesTraceWidget::renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const& 
 				break;
 			case AddrMode::None:
 				break;
+			case AddrMode::Invalid:
+				break;
 			default:
+				TARTE_EXCEPTION(Exception, "[BUG] Oops. Failed to decode inst.");
 				break;
 			}
 			offset += rowHeight;
 		}
 	}
+	this->lastDrawnPCEnd_ = pc;
 }
 
 void NesTraceWidget::idleImpl(const float delta_ms)
@@ -471,6 +508,47 @@ chisa::geom::Box NesTraceWidget::measureImpl(chisa::geom::Box const& constraintS
 
 chisa::geom::Area NesTraceWidget::findTargetImpl(const std::string& target)
 {
+	Handler<NesGeist> geist = this->geist_.lock();
+	if( unlikely(!geist) ){
+		return chisa::geom::Area();
+	}
+	Debugger& dbg = geist->machine()->debugger();
+	Disassembler& disasm = dbg.disassembler();
+
+	const uint16_t addr = ::tarte::parseAs<uint16_t>(target);
+	if( addr < lastDrawnPCStart_ || lastDrawnPCEnd_ < addr ) {
+		return chisa::geom::Area();
+	}
+	uint16_t pc = lastDrawnPCStart_;
+	Instruction inst;
+	disasm.decodeAt(pc, inst);
+	int row = 0;
+	do {
+		uint8_t binLen = inst.binLength_;
+		if( disasm.decodeAt(pc+binLen, inst) ){
+			pc+=binLen;
+			++row;
+		}else{
+			++pc;
+		}
+	} while(pc < addr);
+	const float rowHeight = numRenderer_.maxHeight();
+	return chisa::geom::Area(0,row*rowHeight, size().width(), rowHeight);
+}
+
+bool NesTraceWidget::onScroll(const float& timeMs, const chisa::geom::Point& start, const chisa::geom::Point& end, const chisa::geom::Distance& distance)
+{
+	this->scrollIntegral_ += distance.y();
+	const float rowHeight = numRenderer_.maxHeight();
+	while( scrollIntegral_ > rowHeight ) {
+		scrollIntegral_ -= rowHeight;
+		--this->pcDelta_;
+	}
+	while( scrollIntegral_  < -rowHeight ) {
+		scrollIntegral_ += rowHeight;
+		++this->pcDelta_;
+	}
+	return false;
 }
 
 }

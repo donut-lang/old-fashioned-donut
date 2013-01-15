@@ -54,6 +54,9 @@ public:
 	Widget(Logger& log, HandlerW<World> world, tinyxml2::XMLElement* element);
 	virtual ~Widget() noexcept = default;
 public:
+	inline geom::Area const& lastDrawnArea() const noexcept { return this->lastDrawnArea_; };
+	inline geom::Box const& size() const noexcept { return size_; };
+public:
 	void updateWrapper(HandlerW<WidgetElement> wrapper) { this->wrapper_ = wrapper; };
 public:
 	void render(gl::Canvas& cv, geom::Area const& area);
