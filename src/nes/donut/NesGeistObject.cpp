@@ -34,7 +34,7 @@ NesGeistProvider::NesGeistProvider(Handler< ::donut::Heap> const& heap)
 
 		return std::make_tuple(val,true,side);
 	});
-	this->registerReactiveNativeClosure("cmpReset",[](NesGeistObject* obj){
+	this->registerReactiveNativeClosure("selectReset",[](NesGeistObject* obj){
 		Handler<NesGeist> geist(obj->geist());
 		NesGeist::MachineLock lock(geist);
 		MemoryComparator& cmp = geist->machine()->debugger().comparator();

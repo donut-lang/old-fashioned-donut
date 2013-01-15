@@ -81,7 +81,7 @@
 					</vertical>
 				</horizontal>
 				<button text="候補をリセット">
-					Geist.cmpReset();
+					Geist.selectReset();
 				</button>
 			</vertical>
 		</horizontal>
