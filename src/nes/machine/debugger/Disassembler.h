@@ -137,10 +137,7 @@ class Disassembler final {
 private:
 	static const uint32_t kInfoTable[0x100];
 	VirtualMachine& vm_;
-	static const constexpr uint8_t kExecBufferSize=32;
-	static const constexpr uint8_t kExecIndexMask=31;
-	uint16_t lastExecuted_[32];
-	uint8_t execIdx_;
+	uint8_t lastExecuted_;
 public:
 	template <typename Archiver>
 	void serialize(Archiver& arc){
@@ -155,13 +152,10 @@ public:
 	bool decodeAt(uint16_t addr, Instruction& inst);
 public:
 	void inline onMemoryExecute(uint16_t const addr){
-		lastExecuted_[execIdx_=(execIdx_+1)&kExecIndexMask] = addr;
+		lastExecuted_ = addr;
 	}
 	inline uint16_t nowPC() const noexcept{
-		return lastExecuted_[execIdx_];
-	}
-	inline uint16_t lastPC(uint8_t const from) const noexcept{
-		return lastExecuted_[(execIdx_+ kExecBufferSize - from)&kExecIndexMask];
+		return lastExecuted_;
 	}
 };
 

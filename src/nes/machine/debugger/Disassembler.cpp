@@ -25,7 +25,7 @@ using namespace tarte;
 
 Disassembler::Disassembler(VirtualMachine& vm)
 :vm_(vm)
-,execIdx_(0)
+,lastExecuted_(0)
 {
 
 }
