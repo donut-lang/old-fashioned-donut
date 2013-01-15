@@ -8,6 +8,9 @@
 						<xstring name="rom">__roms__/alter_ego/Alter_Ego.nes</xstring>
 					</xobject>
 				</widget>
+				<button text="再開"></button>
+				<button text="中断"></button>
+				<button text="ステップ"></button>
 				<widget widget-klass="nes-trace" fit="expand" split-weight="1" />
 			</vertical>
 			<vertical split-weight="1">
