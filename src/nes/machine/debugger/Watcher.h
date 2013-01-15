@@ -39,28 +39,28 @@ public:
 		arc & id & addr_begin & addr_end;
 	}
 public:
-	MemoryRange(break_id_t id, uint16_t addr_begin, uint16_t addr_end) noexcept
+	constexpr MemoryRange(break_id_t id, uint16_t addr_begin, uint16_t addr_end) noexcept
 	:id(id), addr_begin(addr_begin), addr_end(addr_end) {
 
 	}
-	MemoryRange() noexcept
+	constexpr MemoryRange() noexcept
 	:id(0), addr_begin(0), addr_end(0) {
 
 	}
 	~MemoryRange() noexcept = default;
 public:
-	bool contain(uint16_t const addr) const noexcept{
+	constexpr bool inline contain(uint16_t const addr) const noexcept{
 		return addr_begin <= addr && addr < addr_end;
 	}
 public:
 	struct CompareByID final {
-		inline bool operator()(MemoryRange const& a, MemoryRange const& b){
+		constexpr inline bool operator()(MemoryRange const& a, MemoryRange const& b){
 			return a.id < b.id;
 		}
-		inline bool operator()(break_id_t const& a, MemoryRange const& b){
+		constexpr inline bool operator()(break_id_t const& a, MemoryRange const& b){
 			return a < b.id;
 		}
-		inline bool operator()(MemoryRange const& a, break_id_t const& b){
+		constexpr inline bool operator()(MemoryRange const& a, break_id_t const& b){
 			return a.id < b;
 		}
 	};
@@ -110,9 +110,21 @@ public:
 	bool removeMemoryExecBreak(break_id_t id);
 public:
 	uint8_t onMemoryRead(uint16_t const addr, uint8_t const value){
+		for(MemoryRange const& range : this->readBreaks_) {
+			if(range.contain(addr)){
+
+				break;
+			}
+		}
 		return value;
 	}
 	uint8_t onMemoryWrite(uint16_t const addr, uint8_t const value){
+		for(MemoryRange const& range : this->writeBreaks_) {
+			if(range.contain(addr)){
+
+				break;
+			}
+		}
 		return value;
 	}
 	void onMemoryExecute(uint16_t const addr){
