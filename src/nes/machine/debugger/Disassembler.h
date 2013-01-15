@@ -137,7 +137,7 @@ class Disassembler final {
 private:
 	static const uint32_t kInfoTable[0x100];
 	VirtualMachine& vm_;
-	uint8_t lastExecuted_;
+	uint16_t lastExecuted_;
 public:
 	template <typename Archiver>
 	void serialize(Archiver& arc){
