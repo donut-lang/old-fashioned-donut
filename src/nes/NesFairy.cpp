@@ -152,38 +152,41 @@ bool NesGeist::Gamepad::onKeyDown(bool isRepeat, const SDL_Keysym& sym)
 	default:
 		break;
 	}
+	return true;
 }
 
 bool NesGeist::Gamepad::onKeyUp(const SDL_Keysym& sym)
-{	switch(sym.scancode){
-case SDL_SCANCODE_UP:
-	keyState_ &= ~GamepadFairy::MASK_UP;
-	break;
-case SDL_SCANCODE_DOWN:
-	keyState_ &= ~GamepadFairy::MASK_DOWN;
-	break;
-case SDL_SCANCODE_LEFT:
-	keyState_ &= ~GamepadFairy::MASK_LEFT;
-	break;
-case SDL_SCANCODE_RIGHT:
-	keyState_ &= ~GamepadFairy::MASK_RIGHT;
-	break;
-case SDL_SCANCODE_Z:
-	keyState_ &= ~GamepadFairy::MASK_B;
-	break;
-case SDL_SCANCODE_X:
-	keyState_ &= ~GamepadFairy::MASK_A;
-	break;
-case SDL_SCANCODE_RETURN:
-case SDL_SCANCODE_RETURN2:
-	keyState_ &= ~GamepadFairy::MASK_START;
-	break;
-case SDL_SCANCODE_BACKSPACE:
-	keyState_ &= ~GamepadFairy::MASK_SELECT;
-	break;
-default:
-	break;
-}
+{
+	switch(sym.scancode){
+	case SDL_SCANCODE_UP:
+		keyState_ &= ~GamepadFairy::MASK_UP;
+		break;
+	case SDL_SCANCODE_DOWN:
+		keyState_ &= ~GamepadFairy::MASK_DOWN;
+		break;
+	case SDL_SCANCODE_LEFT:
+		keyState_ &= ~GamepadFairy::MASK_LEFT;
+		break;
+	case SDL_SCANCODE_RIGHT:
+		keyState_ &= ~GamepadFairy::MASK_RIGHT;
+		break;
+	case SDL_SCANCODE_Z:
+		keyState_ &= ~GamepadFairy::MASK_B;
+		break;
+	case SDL_SCANCODE_X:
+		keyState_ &= ~GamepadFairy::MASK_A;
+		break;
+	case SDL_SCANCODE_RETURN:
+	case SDL_SCANCODE_RETURN2:
+		keyState_ &= ~GamepadFairy::MASK_START;
+		break;
+	case SDL_SCANCODE_BACKSPACE:
+		keyState_ &= ~GamepadFairy::MASK_SELECT;
+		break;
+	default:
+		break;
+	}
+	return true;
 }
 /**********************************************************************************************************************
  * Sound/Audio
