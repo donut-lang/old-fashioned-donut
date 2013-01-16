@@ -5,16 +5,16 @@
 			<vertical>
 				<widget widget-klass="nes-screen" fit="fit" id="nes">
 					<xobject>
-						<xstring name="rom">__roms__/workshop/rom1.nes</xstring>
+						<xstring name="rom">__roms__/alter_ego/Alter_Ego.nes</xstring>
 					</xobject>
 				</widget>
 				<horizontal>
-					<button text="Lesson1" split-weight="1"></button>
-					<button text="AlterEgo" split-weight="1"></button>
+					<button text="Lesson1" split-weight="1"> Geist.loadNES("__roms__/workshop/rom1.nes"); </button>
+					<button text="AlterEgo" split-weight="1"> Geist.loadNES("__roms__/alter_ego/Alter_Ego.nes"); </button>
 				</horizontal>
 				<horizontal>
 					<button text="Lesson2" split-weight="1"></button>
-					<button text="TETRIS" split-weight="1"></button>
+					<button text="TETRIS" split-weight="1">Geist.loadNES("__roms__/lj65/lj65.nes");</button>
 				</horizontal>
 				<horizontal>
 					<button text="" split-weight="1"></button>

@@ -17,6 +17,7 @@
  */
 
 #include "NesGeistObject.h"
+#include "../../chisa/tk/World.h"
 
 namespace nes {
 using namespace tarte;
@@ -24,6 +25,15 @@ using namespace tarte;
 NesGeistProvider::NesGeistProvider(Handler< ::donut::Heap> const& heap)
 :Super(heap)
 {
+	this->registerReactiveNativeClosure("loadNES",[this](NesGeistObject* obj, std::string fname){
+		Handler<NesGeist> geist(obj->geist());
+		NesGeist::MachineLock lock(geist);
+		NesGeistSideEffect side;
+		geist->machine()->loadCartridge((geist->world()->resolveUniverseFilepath(fname)).c_str());
+		geist->machine()->sendHardReset();
+
+		return std::make_tuple(fname,false,side);
+	});
 	this->registerReactiveNativeClosure("writeNES",[](NesGeistObject* obj, uint16_t addr, uint16_t val){
 		Handler<NesGeist> geist(obj->geist());
 		NesGeist::MachineLock lock(geist);
