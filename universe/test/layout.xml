@@ -74,7 +74,7 @@
 							</button>
 						</horizontal>
 						<horizontal>
-							<button text="大きいなった" split-weight="1">
+							<button text="大きくなった" split-weight="1">
 								Geist.selectGt();
 							</button>
 							<button text="小さくなった" split-weight="1">

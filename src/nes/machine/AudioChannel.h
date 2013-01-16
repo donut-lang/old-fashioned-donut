@@ -70,7 +70,16 @@ public:
 		arc & sweepUpdateRatio;
 
 		arc & sweepCounter;
-	}
+
+		//
+		arc & frequency;
+		arc & loopEnabled;
+		arc & lengthCounter;
+
+		//
+		arc & freqCounter;
+		arc & dutyCounter;
+}
 
 public:
 	explicit Rectangle(bool isFirstChannel);
