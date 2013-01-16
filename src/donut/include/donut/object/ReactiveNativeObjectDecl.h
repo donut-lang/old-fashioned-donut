@@ -44,7 +44,7 @@ protected:
 	ReactionRecordT() noexcept = default;
 	virtual ~ReactionRecordT() noexcept = default;
 public:
-	virtual void registerReaction( timestamp_t time, __AntiSideEffect const& v ) = 0;
+	virtual void registerReaction( Handler<HeapObject> const& obj, timestamp_t time, __AntiSideEffect const& v ) = 0;
 };
 
 template <typename __AntiSideEffect, typename _Self>
@@ -65,7 +65,7 @@ public:
 	inline void onDiscardHistoryNotify(_Self& self, Handler<Heap> const& heap);
 	inline void onDiscardFutureNotify(_Self& self, Handler<Heap> const& heap);
 public:
-	virtual void registerReaction( timestamp_t time, __AntiSideEffect const& v ) override final;
+	virtual void registerReaction( Handler<HeapObject> const& obj, timestamp_t time, __AntiSideEffect const& v ) override final;
 public:
 	XValue save();
 	void load(XValue const& data );

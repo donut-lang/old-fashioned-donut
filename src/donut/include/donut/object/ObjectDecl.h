@@ -133,6 +133,7 @@ private:
 	objectid_t id_;
 	bool erased_;
 	int color_;
+	bool useLocked_;
 public:
 	HeapObject(HeapProvider* const provider);
 	virtual ~HeapObject() noexcept = default;
@@ -142,9 +143,13 @@ public:
 	inline void id(objectid_t const& nid) noexcept { this->id_ = nid; }
 public:
 	virtual bool onFree() noexcept override { if(this->erased_||this->id_ <= 0){ return false; }else{ return true; } };
-	inline void erase() noexcept { this->erased_ = true; if(refcount() == 0){ delete this; } };
+	inline void erase() noexcept { this->erased_ = true; if(!used()){ delete this; } };
 	int color() noexcept { return this->color_; };
-	inline bool used() { return this->refcount() > 0; };
+	inline bool used() { return this->refcount() > 0 || useLocked_; };
+public:
+	inline void useLock() { useLocked_=true; };
+	inline void useUnlock() { useLocked_=false; };
+	inline void setUseLock( bool inUse ) {useLocked_=inUse;};
 public:
 	virtual XValue save( Handler<Heap> const& heap ) = 0;
 	virtual void load( Handler<Heap> const& heap, XValue const& data ) = 0;

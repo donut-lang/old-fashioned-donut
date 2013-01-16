@@ -47,7 +47,7 @@ class Heaven final : public HandlerBody<Heaven> {
 private:
 	HandlerW<World> world_;
 	VectorMap<std::string, Handler<Angel> > angelMap_;
-	Handler< ::donut::Object> donutObject_;
+	HandlerW< ::donut::Object> donutObject_;
 public:
 	Heaven(Handler<World> const& world);
 	virtual ~Heaven() noexcept = default;

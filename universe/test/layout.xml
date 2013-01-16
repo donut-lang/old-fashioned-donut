@@ -8,9 +8,18 @@
 						<xstring name="rom">__roms__/workshop/rom1.nes</xstring>
 					</xobject>
 				</widget>
-				<button text="再開"></button>
-				<button text="中断"></button>
-				<button text="ステップ"></button>
+				<horizontal>
+					<button text="Lesson1" split-weight="1"></button>
+					<button text="AlterEgo" split-weight="1"></button>
+				</horizontal>
+				<horizontal>
+					<button text="Lesson2" split-weight="1"></button>
+					<button text="TETRIS" split-weight="1"></button>
+				</horizontal>
+				<horizontal>
+					<button text="" split-weight="1"></button>
+					<button text="" split-weight="1"></button>
+				</horizontal>
 				<widget widget-klass="nes-trace" fit="expand" split-weight="1" />
 			</vertical>
 			<vertical split-weight="1">

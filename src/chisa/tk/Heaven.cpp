@@ -35,14 +35,16 @@ Heaven::Heaven(const Handler<World>& world)
 
 Handler< ::donut::Object> Heaven::donutObject(Handler< ::donut::Heap> const& heap)
 {
-	if(this->donutObject_){
-		return this->donutObject_;
+	if(this->donutObject_.expired()){
+		Handler<World> world(this->world().lock());
+		if( unlikely(!world) ){
+			TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
+		}
+		Handler< ::donut::Object> obj(world->patron()->heavenProvider()->newInstance(heap, self()));
+		this->donutObject_ = obj;
+		return obj;
 	}
-	Handler<World> world(this->world().lock());
-	if(!world) {
-		return Handler< ::donut::Object>();
-	}
-	return this->donutObject_ = world->patron()->heavenProvider()->newInstance(heap, self());
+	return this->donutObject_.lock();
 }
 
 void Heaven::render(gl::Canvas& canvas)

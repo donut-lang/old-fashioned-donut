@@ -43,7 +43,7 @@ Handler<Object> ReactiveNativeClosureBaseT<__AntiSideEffect>::apply(Handler<Heap
 	if( !succeed ) {
 		heap->clock()->discardHistory();
 	}else{
-		record->registerReaction(heap->clock()->now(), value);
+		record->registerReaction(obj, heap->clock()->now(), value);
 	}
 	return result;
 }

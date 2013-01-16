@@ -93,6 +93,7 @@ void ReactiveNativeObjectAspectT<AntiSideEffect, Self>::onDiscardHistoryNotify(S
 	if(this->reactions_.size() > 0) {
 		this->reactions_.erase(this->reactions_.begin(), this->reactions_.begin()+findLowerIndex(heap->clock()->now()));
 		this->index_ = 0;
+		self.setUseLock( !this->reactions_.empty() );
 	}
 	self.onHistoryDiscarded(heap);
 }
@@ -102,16 +103,18 @@ void ReactiveNativeObjectAspectT<AntiSideEffect, Self>::onDiscardFutureNotify(Se
 	if(this->reactions_.size() > 0){
 		this->index_ = findUpperIndex(heap->clock()->now());
 		this->reactions_.erase(this->reactions_.begin()+this->index_, this->reactions_.end());
+		self.setUseLock( !this->reactions_.empty() );
 	}
 	self.onFutureDiscarded(heap);
 }
 
 template <typename AntiSideEffect, typename Self>
-void ReactiveNativeObjectAspectT<AntiSideEffect, Self>::registerReaction( timestamp_t time, AntiSideEffect const& v ) {
+void ReactiveNativeObjectAspectT<AntiSideEffect, Self>::registerReaction( Handler<HeapObject> const& obj, timestamp_t time, AntiSideEffect const& v ) {
 	if( unlikely( this->reactions_.size() > 0 && this->reactions_.back().first > time ) ){
 		DONUT_EXCEPTION(Exception, "[BUG] Reaction table was broken!!");
 	}
 	this->reactions_.push_back(std::pair<timestamp_t, AntiSideEffect>(time, v));
+	obj->setUseLock( true );
 	this->index_ = this->reactions_.size();
 }
 }
