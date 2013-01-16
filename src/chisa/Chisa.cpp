@@ -75,6 +75,9 @@ void Chisa::loop()
 		nextFrame+=(1000.0/60);
 		running &= this->fairy_->pollEvent(*this);
 	}
+	if(this->log().i()){
+		this->log().i(TAG, "Shutting down...");
+	}
 }
 
 void Chisa::onShown()

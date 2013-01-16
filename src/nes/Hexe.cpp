@@ -25,6 +25,8 @@
 
 namespace nes {
 
+static std::string TAG("nes::Hexe");
+
 Hexe::Hexe(chisa::Logger& log, std::string const& basepath)
 :chisa::Hexe(log, basepath)
 {
@@ -33,6 +35,7 @@ Hexe::Hexe(chisa::Logger& log, std::string const& basepath)
 
 Hexe::~Hexe() noexcept
 {
+	log().d(TAG, "Shutting down...");
 }
 
 void Hexe::registerGeistProvider( ::tarte::Handler< ::donut::Heap> const& heap )

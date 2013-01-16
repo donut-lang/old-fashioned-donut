@@ -24,6 +24,8 @@
 
 namespace nes {
 
+static std::string TAG("NesGeist");
+
 NesGeist::NesGeist(chisa::Logger& log, ::tarte::Handler<Hexe> const& hexe, ::tarte::HandlerW<chisa::tk::World> world)
 :chisa::WorldGeist(log, hexe, world)
 ,machine_(nullptr)
@@ -44,10 +46,11 @@ NesGeist::NesGeist(chisa::Logger& log, ::tarte::Handler<Hexe> const& hexe, ::tar
 
 NesGeist::~NesGeist() noexcept
 {
-	if(Handler< ::chisa::tk::World> world = this->world()){
-		if(Handler< ::chisa::Quartet> quartet = world->quartet()){
-			quartet->removeInstrument(this->audio_.instrument());
-		}
+	log().d(TAG, "Shutting down...");
+
+	if(Handler< ::chisa::Quartet> quartet = audio_.instrument()->quartet()){
+		quartet->removeInstrument(this->audio_.instrument());
+		log().d(TAG, "Audio fairy detatched.");
 	}
 	this->stopNES();
 	delete this->machine_;

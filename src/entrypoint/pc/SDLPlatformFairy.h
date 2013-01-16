@@ -237,9 +237,16 @@ public:
 		}
 	}
 	virtual ~SDLPlatformFairy() noexcept {
+		SDL_LockAudio();
+		SDL_PauseAudio(1);
+		SDL_UnlockAudio();
+		SDL_CloseAudio();
 		SDL_GL_DeleteContext(gl_);
+		this->log().d("SDL", "Context deleted.");
 		SDL_DestroyWindow(this->window_);
+		this->log().d("SDL", "Window destroyed.");
 		SDL_Quit();
+		this->log().d("SDL", "Quit.");
 	}
 private:
 	virtual void init(std::string const& title, int width, int height, int redbits, int greenbits, int bluebits, int alphabits, int depthbits, int stencilbits ) {

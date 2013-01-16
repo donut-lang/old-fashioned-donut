@@ -38,33 +38,43 @@ Handler<Chisa> gChisa;
 int main(int argc, char** argv) {
 	Handler<SDLPlatformFairy> platform(new SDLPlatformFairy(log));
 	Handler<Hexe> hexe(new nes::Hexe(log, "./universe"));
-
 	gChisa = Handler<Chisa>(new Chisa(log, platform, hexe));
+	{
+		try {
+			gChisa->init("Chisa", 1024,768, 8, 8, 8, 8, 16, 0);
+			glDisable(GL_ALPHA_TEST);
+			glDisable(GL_STENCIL_TEST);
 
-	try {
-		gChisa->init("Chisa", 1024,768, 8, 8, 8, 8, 16, 0);
-		glDisable(GL_ALPHA_TEST);
-		glDisable(GL_STENCIL_TEST);
-
-		//glEnable(GL_DEPTH_TEST);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		gChisa->start("test");
-		//XXX ::donut::Exceptionが隠れてしまってる
-	} catch ( ::tarte::Exception& e) {
-		std::cerr << "Exception caught at " << e.file() << ":" << e.line() << std::endl;
-		std::cerr << "<msg>" << e.msg() << std::endl;
-		return -2;
-	} catch (nes::EmulatorException& e) {
-		std::cerr << "Emulator Exception: \"" << e.getMessage() << "\"" << std::endl;
-		return -3;
-	} catch (std::exception& e) {
-		std::cerr << "STL Exception: \"" << e.what() << "\"" << std::endl;
-		return -4;
-	} catch (...) {
-		std::cerr << "caught unknwon error." << std::endl;
-		return -5;
+			//glEnable(GL_DEPTH_TEST);
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			gChisa->start("test");
+			//XXX ::donut::Exceptionが隠れてしまってる
+		} catch ( ::tarte::Exception& e) {
+			std::cerr << "Exception caught at " << e.file() << ":" << e.line() << std::endl;
+			std::cerr << "<msg>" << e.msg() << std::endl;
+			return -2;
+		} catch (nes::EmulatorException& e) {
+			std::cerr << "Emulator Exception: \"" << e.getMessage() << "\"" << std::endl;
+			return -3;
+		} catch (std::exception& e) {
+			std::cerr << "STL Exception: \"" << e.what() << "\"" << std::endl;
+			return -4;
+		} catch (...) {
+			std::cerr << "caught unknwon error." << std::endl;
+			return -5;
+		}
+		std::cout << "exit successfully." << std::endl << std::flush;
 	}
+	std::cout << "Erasing chisa..." <<  std::endl <<std::flush;
+	gChisa.reset();
+	std::cout << "erased." << std::endl << std::flush;
+	std::cout << "Erasing hexe..." <<  std::endl <<std::flush;
+	hexe.reset();
+	std::cout << "erased." << std::endl << std::flush;
+	std::cout << "Erasing SDL..." <<  std::endl <<std::flush;
+	platform.reset();
+	std::cout << "erased." << std::endl << std::flush;
 	return 0;
 }
 
