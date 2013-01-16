@@ -58,7 +58,6 @@ private:
 				--this->candidates_;
 			}
 		}
-		last_.swap(now);
 	}
 	template <typename Functor>
 	inline void selectConst( Functor const& cmp ) {
@@ -73,7 +72,6 @@ private:
 				--this->candidates_;
 			}
 		}
-		last_.swap(now);
 	}
 public:
 	inline unsigned int candidates() const noexcept { return this->candidates_; };
@@ -84,6 +82,7 @@ public:
 public:
 	void start();
 	void reset();
+	void takeSnapshot() { this->last_ = getNowMemory(); };
 public:
 	void selectEq(uint8_t val) { selectConst( std::bind2nd(std::equal_to<uint8_t>(), val) ); };
 	void selectEq() { selectCompare(std::equal_to<uint8_t>()); };

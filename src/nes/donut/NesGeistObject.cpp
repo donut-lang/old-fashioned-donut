@@ -54,6 +54,16 @@ NesGeistProvider::NesGeistProvider(Handler< ::donut::Heap> const& heap)
 		cmp.reset();
 		return std::make_tuple(cmp.candidates(),true,side);
 	});
+	this->registerReactiveNativeClosure("selectTakeSnapshot",[](NesGeistObject* obj){
+		Handler<NesGeist> geist(obj->geist());
+		NesGeist::MachineLock lock(geist);
+		MemoryComparator& cmp = geist->machine()->debugger().comparator();
+		NesGeistSideEffect side;
+		side.op = NesGeistSideEffect::LoadSave;
+		side.save = geist->machine()->save();
+		cmp.takeSnapshot();
+		return std::make_tuple(cmp.candidates(),true,side);
+	});
 #define SELECT_FU(_op) \
 	this->registerReactiveNativeClosure("select" #_op,[](NesGeistObject* obj){\
 		Handler<NesGeist> geist(obj->geist());\
