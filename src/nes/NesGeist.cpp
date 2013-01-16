@@ -24,7 +24,7 @@
 
 namespace nes {
 
-static std::string TAG("NesGeist");
+static const std::string TAG("NesGeist");
 
 NesGeist::NesGeist(chisa::Logger& log, ::tarte::Handler<Hexe> const& hexe, ::tarte::HandlerW<chisa::tk::World> world)
 :chisa::WorldGeist(log, hexe, world)
