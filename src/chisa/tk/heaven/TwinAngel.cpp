@@ -44,9 +44,9 @@ void TwinAngel::renderImpl(gl::Canvas& canvas)
 	}
 
 	if( (a1.right() + a1.left() / 2) < (a2.right() + a2.left() / 2) ) {
-		gl::renderCubicLine(canvas, 2, gl::Color(1.0f,.8f,.8f,.7f), geom::Point(a1.right(), a1.top()+a1.height()/2), geom::Point(a2.left(), a2.top()+a2.height()/2));
+		gl::renderCubicLine(canvas, 2, gl::Color(1.0f,.0f,.0f,.3f), geom::Point(a1.right(), a1.top()+a1.height()/2), geom::Point(a2.left(), a2.top()+a2.height()/2));
 	}else{
-		gl::renderCubicLine(canvas, 2, gl::Color(1.0f,.8f,.8f,.7f), geom::Point(a1.left(), a1.top()+a1.height()/2), geom::Point(a2.right(), a2.top()+a2.height()/2));
+		gl::renderCubicLine(canvas, 2, gl::Color(1.0f,.0f,.0f,.3f), geom::Point(a1.left(), a1.top()+a1.height()/2), geom::Point(a2.right(), a2.top()+a2.height()/2));
 	}
 }
 
