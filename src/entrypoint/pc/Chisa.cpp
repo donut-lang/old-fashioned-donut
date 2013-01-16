@@ -66,15 +66,9 @@ int main(int argc, char** argv) {
 		}
 		std::cout << "exit successfully." << std::endl << std::flush;
 	}
-	std::cout << "Erasing chisa..." <<  std::endl <<std::flush;
 	gChisa.reset();
-	std::cout << "erased." << std::endl << std::flush;
-	std::cout << "Erasing hexe..." <<  std::endl <<std::flush;
 	hexe.reset();
-	std::cout << "erased." << std::endl << std::flush;
-	std::cout << "Erasing SDL..." <<  std::endl <<std::flush;
 	platform.reset();
-	std::cout << "erased." << std::endl << std::flush;
 	return 0;
 }
 
