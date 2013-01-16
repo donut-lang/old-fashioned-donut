@@ -110,30 +110,30 @@ public:
 	bool removeMemoryExecBreak(break_id_t id);
 public:
 	uint8_t onMemoryRead(uint16_t const addr, uint8_t const value){
-		for(MemoryRange const& range : this->readBreaks_) {
+		/*for(MemoryRange const& range : this->readBreaks_) {
 			if(range.contain(addr)){
 
 				break;
 			}
-		}
+		}*/
 		return value;
 	}
 	uint8_t onMemoryWrite(uint16_t const addr, uint8_t const value){
-		for(MemoryRange const& range : this->writeBreaks_) {
+		/*for(MemoryRange const& range : this->writeBreaks_) {
 			if(range.contain(addr)){
 
 				break;
 			}
-		}
+		}*/
 		return value;
 	}
 	void onMemoryExecute(uint16_t const addr){
-		for(MemoryRange const& range : this->execBreaks_) {
+		/*for(MemoryRange const& range : this->execBreaks_) {
 			if(range.contain(addr)){
 
 				break;
 			}
-		}
+		}*/
 	}
 };
 

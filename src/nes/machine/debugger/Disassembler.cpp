@@ -31,6 +31,7 @@ Disassembler::Disassembler(VirtualMachine& vm)
 }
 bool Disassembler::decodeAt(uint16_t addr, Instruction& inst)
 {
+	inst.pc = addr;
 	inst.bin[0] = this->vm_.debuggerRead(addr);
 	const uint32_t flags = kInfoTable[inst.bin[0]];
 	inst.op_ = static_cast<Operation>(flags & static_cast<uint32_t>(Operation::OperationMask));

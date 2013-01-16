@@ -107,6 +107,7 @@ enum class Operation : uint16_t {
 const int constexpr ClockShift = 16;
 
 struct Instruction {
+	unsigned short pc;
 	enum Operation op_;
 	enum AddrMode addrMode_;
 	unsigned char clock_;

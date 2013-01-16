@@ -27,7 +27,9 @@
 namespace nes {
 using namespace tarte;
 
+class VirtualMachine;
 class NesGeist;
+struct Instruction;
 
 class NesTraceWidget: public ::chisa::tk::Widget {
 private:
@@ -46,7 +48,7 @@ private:
 	};
 	chisa::gl::PredefinedSymRenderer symRenderer_;
 	float addrWidth_;
-	int16_t pcDelta_;
+	int pcDelta_;
 	uint16_t lastPC_;
 	uint16_t lastDrawnPCStart_;
 	uint16_t lastDrawnPCEnd_;
@@ -54,6 +56,8 @@ private:
 public:
 	NesTraceWidget(Logger& log, chisa::HandlerW<chisa::tk::World> world, tinyxml2::XMLElement* element);
 	virtual ~NesTraceWidget() noexcept = default;
+private:
+	void renderInst(chisa::gl::Canvas& cv, VirtualMachine& vm, uint16_t const& nowPC, Instruction const& inst, float const& rowWidth, float const& rowHeight, float const& offsetY);
 private:
 	virtual void renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const& area) override;
 	virtual void idleImpl(const float delta_ms) override;
