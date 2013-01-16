@@ -82,7 +82,7 @@ void NesMemoryWidget::renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const&
 			this->numRenderer_.renderSyms(cv, pt, num, 0.0f);
 		}
 	}
-	cv.fillRect(gl::White, geom::Area(this->addrWidth_-symwidth,0, symwidth, area.height()));
+	cv.fillRect(gl::White, geom::Area(this->addrWidth_-symwidth,area.y(), symwidth, area.height()));
 	for(int x=colStart; x <= colEnd;++x) {
 		float const colOffset = this->addrWidth_ + (x+1)*dwidth-1;
 		cv.drawLine(2, gl::White, geom::Point(colOffset,0), geom::Point(colOffset,area.height()));
