@@ -200,7 +200,7 @@ protected:
 		SDL_JoystickGetBall(joy_, idx, &dx, &dy);
 	}
 	virtual bool buttonImpl(unsigned int const& idx) noexcept {
-		return SDL_JoystickGetButton(joy_, idx);
+		return SDL_JoystickGetButton(joy_, idx) != 0;
 	}
 protected:
 	virtual void updateImpl() noexcept {

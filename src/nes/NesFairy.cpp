@@ -98,10 +98,10 @@ void NesGeist::Gamepad::updateJoystick() {
 		joyState_ |= GamepadFairy::MASK_UP;
 	}
 
-	joyState_ |= (this->joystick_->button(0)) << GamepadFairy::A;
-	joyState_ |= (this->joystick_->button(1)) << GamepadFairy::B;
-	joyState_ |= (this->joystick_->button(7)) << GamepadFairy::START;
-	joyState_ |= (this->joystick_->button(6)) << GamepadFairy::SELECT;
+	joyState_ |= this->joystick_->button(0) ? GamepadFairy::MASK_A : 0;
+	joyState_ |= this->joystick_->button(1) ? GamepadFairy::MASK_B : 0;
+	joyState_ |= this->joystick_->button(7) ? GamepadFairy::MASK_START : 0;
+	joyState_ |= this->joystick_->button(6) ? GamepadFairy::MASK_SELECT : 0;
 }
 
 bool NesGeist::Gamepad::isPressed(uint8_t keyIdx)
