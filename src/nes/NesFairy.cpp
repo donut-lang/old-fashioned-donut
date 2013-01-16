@@ -21,6 +21,7 @@
 #include "../chisa/gl/DrawableManager.h"
 #include "../chisa/input/JoystickManager.h"
 #include "Hexe.h"
+#include <SDL2/SDL.h>
 
 namespace nes {
 
@@ -66,6 +67,7 @@ void NesGeist::Video::dispatchRendering(const uint8_t (&nesBuffer)[screenHeight]
 
 NesGeist::Gamepad::Gamepad(Handler<chisa::JoystickManager> const& mgr)
 :joyState_(0)
+,keyState_(0)
 {
 	if(mgr->numJoysticks() > 0) {
 		this->joystick_ = mgr->joystick(0);
@@ -106,9 +108,83 @@ void NesGeist::Gamepad::updateJoystick() {
 
 bool NesGeist::Gamepad::isPressed(uint8_t keyIdx)
 {
-	return (joyState_ >> keyIdx) & 1;
+	return ((joyState_ | keyState_) >> keyIdx) & 1;
 }
 
+void NesGeist::Gamepad::onFocusGained()
+{
+	this->keyState_ = 0;
+}
+
+void NesGeist::Gamepad::onFocusLost()
+{
+	this->keyState_ = 0;
+}
+
+bool NesGeist::Gamepad::onKeyDown(bool isRepeat, const SDL_Keysym& sym)
+{
+	switch(sym.scancode){
+	case SDL_SCANCODE_UP:
+		keyState_ |= GamepadFairy::MASK_UP;
+		break;
+	case SDL_SCANCODE_DOWN:
+		keyState_ |= GamepadFairy::MASK_DOWN;
+		break;
+	case SDL_SCANCODE_LEFT:
+		keyState_ |= GamepadFairy::MASK_LEFT;
+		break;
+	case SDL_SCANCODE_RIGHT:
+		keyState_ |= GamepadFairy::MASK_RIGHT;
+		break;
+	case SDL_SCANCODE_Z:
+		keyState_ |= GamepadFairy::MASK_B;
+		break;
+	case SDL_SCANCODE_X:
+		keyState_ |= GamepadFairy::MASK_A;
+		break;
+	case SDL_SCANCODE_RETURN:
+	case SDL_SCANCODE_RETURN2:
+		keyState_ |= GamepadFairy::MASK_START;
+		break;
+	case SDL_SCANCODE_BACKSPACE:
+		keyState_ |= GamepadFairy::MASK_SELECT;
+		break;
+	default:
+		break;
+	}
+}
+
+bool NesGeist::Gamepad::onKeyUp(const SDL_Keysym& sym)
+{	switch(sym.scancode){
+case SDL_SCANCODE_UP:
+	keyState_ &= ~GamepadFairy::MASK_UP;
+	break;
+case SDL_SCANCODE_DOWN:
+	keyState_ &= ~GamepadFairy::MASK_DOWN;
+	break;
+case SDL_SCANCODE_LEFT:
+	keyState_ &= ~GamepadFairy::MASK_LEFT;
+	break;
+case SDL_SCANCODE_RIGHT:
+	keyState_ &= ~GamepadFairy::MASK_RIGHT;
+	break;
+case SDL_SCANCODE_Z:
+	keyState_ &= ~GamepadFairy::MASK_B;
+	break;
+case SDL_SCANCODE_X:
+	keyState_ &= ~GamepadFairy::MASK_A;
+	break;
+case SDL_SCANCODE_RETURN:
+case SDL_SCANCODE_RETURN2:
+	keyState_ &= ~GamepadFairy::MASK_START;
+	break;
+case SDL_SCANCODE_BACKSPACE:
+	keyState_ &= ~GamepadFairy::MASK_SELECT;
+	break;
+default:
+	break;
+}
+}
 /**********************************************************************************************************************
  * Sound/Audio
  **********************************************************************************************************************/
@@ -141,6 +217,7 @@ void NesGeist::Audio::Instrument::playImpl(unsigned char *stream, int len)
 {
 	self_.popAudio(reinterpret_cast<int16_t*>(stream), len/sizeof(int16_t));
 }
+
 
 }
 

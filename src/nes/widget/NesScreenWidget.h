@@ -40,6 +40,10 @@ public:
 	virtual void idleImpl(const float delta_ms) override;
 	virtual void reshapeImpl(chisa::geom::Box const& areaSize) override;
 	virtual chisa::geom::Box measureImpl(chisa::geom::Box const& constraintSize) override;
+	virtual void onFocusGained(float const& timeMs, chisa::geom::Point const& lastPtInScreen) override;
+	virtual void onFocusLost(float const& timeMs) override;
+	virtual bool onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym) override final;
+	virtual bool onKeyUp(float const& timeMs, SDL_Keysym const& sym) override final;
 };
 
 }

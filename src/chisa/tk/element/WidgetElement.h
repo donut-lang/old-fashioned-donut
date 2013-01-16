@@ -23,7 +23,7 @@ namespace chisa {
 namespace tk {
 class Widget;
 
-class WidgetElement: public Element {
+class WidgetElement final : public Element {
 	CHISA_ELEMENT_SUBKLASS_FINAL(WidgetElement);
 public:
 	enum FitMode {
@@ -62,14 +62,17 @@ public:
 	geom::Area calcAreaInElement(geom::Area const& areaInWidget);
 	geom::Area calcAreaInRoot(geom::Area const& areaInWidget);
 public:
-	virtual bool onDownRaw(float const& timeMs, geom::Point const& ptInScreen) override;
-	virtual bool onUpRaw(float const& timeMs, geom::Point const& ptInScreen) override;
-	virtual bool onMoveRaw(float const& timeMs, geom::Point const& ptInScreen) override;
-	virtual bool onSingleTapUp(float const& timeMs, geom::Point const& ptInScreen) override;
-	virtual bool onFling(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity) override;
-	virtual bool onScroll(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance) override;
-	virtual bool onZoom(float const& timeMs, geom::Point const& center, const float ratio) override;
-
+	virtual bool onDownRaw(float const& timeMs, geom::Point const& ptInScreen) override final;
+	virtual bool onUpRaw(float const& timeMs, geom::Point const& ptInScreen) override final;
+	virtual bool onMoveRaw(float const& timeMs, geom::Point const& ptInScreen) override final;
+	virtual bool onSingleTapUp(float const& timeMs, geom::Point const& ptInScreen) override final;
+	virtual bool onFling(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity) override final;
+	virtual bool onScroll(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance) override final;
+	virtual bool onZoom(float const& timeMs, geom::Point const& center, const float ratio) override final;
+	virtual void onFocusGained(float const& timeMs, geom::Point const& lastPtInScreen) override;
+	virtual void onFocusLost(float const& timeMs) override;
+	virtual bool onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym) override final;
+	virtual bool onKeyUp(float const& timeMs, SDL_Keysym const& sym) override final;
 };
 
 }}

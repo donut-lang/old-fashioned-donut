@@ -282,4 +282,24 @@ bool WidgetElement::onZoom(float const& timeMs, geom::Point const& center, const
 	return widget_->onZoom(timeMs, calcPtInWidgetRel(center), ratio);
 }
 
+bool WidgetElement::onKeyDown(const float& timeMs, bool isRepeat, const SDL_Keysym& sym)
+{
+	return widget_->onKeyDown(timeMs, isRepeat, sym);
+}
+
+void chisa::tk::WidgetElement::onFocusGained(const float& timeMs, const geom::Point& lastPtInScreen)
+{
+	widget_->onFocusGained(timeMs, lastPtInScreen);
+}
+
+void chisa::tk::WidgetElement::onFocusLost(const float& timeMs)
+{
+	widget_->onFocusLost(timeMs);
+}
+
+bool WidgetElement::onKeyUp(const float& timeMs, const SDL_Keysym& sym)
+{
+	return widget_->onKeyUp(timeMs, sym);
+}
+
 }}

@@ -23,6 +23,8 @@
 //#include "donut/WidgetObject.h"
 #include "../geom/Area.h"
 
+struct SDL_Keysym;
+
 namespace tinyxml2 {
 class XMLElement;
 }
@@ -89,6 +91,10 @@ public:
 	virtual bool onFling(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity){return false;};
 	virtual bool onScroll(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance){return false;};
 	virtual bool onZoom(float const& timeMs, geom::Point const& center, const float ratio){return false;};
+	virtual void onFocusGained(float const& timeMs, geom::Point const& lastPtInScreen){};
+	virtual void onFocusLost(float const& timeMs){};
+	virtual bool onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym){return false;};
+	virtual bool onKeyUp(float const& timeMs, SDL_Keysym const& sym){return false;};
 
 //	実装用
 //public:
@@ -103,7 +109,11 @@ public:
 //	virtual bool onSingleTapUp(float const& timeMs, geom::Point const& ptInWidget) override;
 //	virtual bool onFling(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Velocity const& velocity) override;
 //	virtual bool onScroll(float const& timeMs, geom::Point const& start, geom::Point const& end, geom::Distance const& distance) override;
+//	virtual bool onFocusGained(float const& timeMs, geom::Point const& lastPtInScreen) override;
+//	virtual bool onFocusLost(float const& timeMs) override;
 //	virtual bool onZoom(float const& timeMs, geom::Point const& center, const float ratio) override;
+//	virtual bool onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym) override final;
+//	virtual bool onKeyUp(float const& timeMs, SDL_Keysym const& sym) override final;
 
 };
 

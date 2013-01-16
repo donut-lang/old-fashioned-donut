@@ -63,4 +63,40 @@ chisa::geom::Box NesScreenWidget::measureImpl(chisa::geom::Box const& constraint
 	return chisa::geom::Box(256,240);
 }
 
+void NesScreenWidget::onFocusGained(const float& timeMs, const chisa::geom::Point& lastPtInScreen)
+{
+	chisa::Handler<nes::NesGeist> geist = this->geist_.lock();
+	if(!geist){
+		return;
+	}
+	geist->gamepad().onFocusGained();
+}
+
+void NesScreenWidget::onFocusLost(const float& timeMs)
+{
+	chisa::Handler<nes::NesGeist> geist = this->geist_.lock();
+	if(!geist){
+		return;
+	}
+	geist->gamepad().onFocusLost();
+}
+
+bool NesScreenWidget::onKeyDown(const float& timeMs, bool isRepeat, const SDL_Keysym& sym)
+{
+	chisa::Handler<nes::NesGeist> geist = this->geist_.lock();
+	if(geist){
+		geist->gamepad().onKeyDown(isRepeat, sym);
+	}
+	return true;
+}
+
+bool NesScreenWidget::onKeyUp(const float& timeMs, const SDL_Keysym& sym)
+{
+	chisa::Handler<nes::NesGeist> geist = this->geist_.lock();
+	if(geist){
+		geist->gamepad().onKeyUp(sym);
+	}
+	return true;
+}
+
 }

@@ -32,7 +32,7 @@ using namespace tarte;
 class Hexe;
 
 class NesGeist : public chisa::WorldGeist {
-private:
+public:
 	class Video final : public VideoFairy {
 	private:
 		NesGeist& self_;
@@ -62,6 +62,7 @@ private:
 	class Gamepad final : public GamepadFairy {
 	private:
 		unsigned char joyState_;
+		unsigned char keyState_;
 		Handler<chisa::Joystick> joystick_;
 	private:
 		virtual void onUpdate() override;
@@ -69,6 +70,10 @@ private:
 	public:
 		Gamepad(Handler<chisa::JoystickManager> const& mgr);
 		void updateJoystick();
+		void onFocusGained();
+		void onFocusLost();
+		bool onKeyDown(bool isRepeat, SDL_Keysym const& sym);
+		bool onKeyUp(SDL_Keysym const& sym);
 	};
 public:
 	Handler<Hexe> hexe();
@@ -112,9 +117,11 @@ public:
 	virtual ~NesGeist() noexcept;
 	virtual std::string toString() const override final;
 	inline VirtualMachine* machine() const noexcept { return this->machine_; };
+	inline Gamepad& gamepad() noexcept { return gamepad_; };
 public:
 	void queryStop();
 	void operator()();
+
 private:
 	virtual Handler< ::donut::Object> createDonutObject(Handler< ::donut::Heap> const& heap) override final;
 public:
