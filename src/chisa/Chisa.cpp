@@ -26,6 +26,7 @@ Chisa::Chisa(Logger& log, Handler<PlatformFairy> fairy, Handler<Hexe> hexe)
 ,fairy_(fairy)
 ,hexe_(hexe)
 ,universe_(tk::Universe::create(this->log(), fairy, hexe))
+,isHidden_(false)
 {
 }
 
@@ -33,6 +34,7 @@ void Chisa::init(std::string const& windowTitle, int width, int height, int redb
 {
 	fairy_->init(windowTitle, width, height, redbits, greenbits, bluebits, alphabits, depthbits, stencilbits);
 	this->reshape(width, height);
+	this->universe_->reshape(geom::Area(0,0,width,height));
 }
 
 void Chisa::setTitle(std::string const& name)
@@ -60,9 +62,11 @@ void Chisa::loop()
 		delta = now-last;
 		last = now;
 		if(now < nextFrame){
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			this->universe_->render();
-			this->fairy_->swapBuffer();
+			if( likely(!isHidden_) ){
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+				this->universe_->render();
+				this->fairy_->swapBuffer();
+			}
 			float now = fairy_->getTimeMs();
 			if(now < nextFrame){
 				fairy_->sleepMs(nextFrame-now);
@@ -73,9 +77,25 @@ void Chisa::loop()
 	}
 }
 
+void Chisa::onShown()
+{
+	if(this->log().d()){
+		this->log().d(TAG, "onShown");
+	}
+	this->isHidden_ = false;
+}
+void Chisa::onHidden()
+{
+	if(this->log().d()){
+		this->log().d(TAG, "onHidden");
+	}
+	this->isHidden_ = true;
+}
 void Chisa::reshape(float const& width, float const& height)
 {
-	this->universe_->reshape(geom::Area(0,0,width,height));
+	if(!isHidden_){
+		this->universe_->reshape(geom::Area(0,0,width,height));
+	}
 }
 void Chisa::pointerDown(float const& timeMs, unsigned int const& pointerIndex, geom::Point const& screenPoint)
 {

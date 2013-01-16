@@ -35,6 +35,8 @@ private:
 	Handler<PlatformFairy> fairy_;
 	Handler<Hexe> hexe_;
 	Handler<tk::Universe> universe_;
+private:
+	bool isHidden_;
 public:
 	void init(std::string const& windowTitle, int width, int height, int redbits, int greenbits, int bluebits, int alphabits, int depthbits, int stencilbits );
 	void setTitle(std::string const& name);
@@ -42,6 +44,8 @@ public:
 private:
 	void loop();
 public:
+	void onShown();
+	void onHidden();
 	void reshape(float const& width, float const& height);
 	void pointerDown(float const& timeMs, unsigned int const& pointerIndex, geom::Point const& screenPoint);
 	void pointerUp(float const& timeMs, unsigned int const& pointerIndex, geom::Point const& screenPoint);

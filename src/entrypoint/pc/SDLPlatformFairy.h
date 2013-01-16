@@ -249,7 +249,8 @@ private:
 			SDL_WINDOWPOS_CENTERED,
 			width,
 			height,
-			SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
+			//XXX: ワークアラウンド。SDL2がリサイズ出来るようにした時にうまく対処できない
+			SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN// | SDL_WINDOW_RESIZABLE
 		);
 		if (!this->window_) {
 			TARTE_EXCEPTION(Exception, SDL_GetError());
@@ -284,8 +285,18 @@ private:
 		while(SDL_PollEvent(&ev) == SDL_TRUE){
 			switch(ev.type){
 			case SDL_WINDOWEVENT: {
-				if(ev.window.event == SDL_WINDOWEVENT_RESIZED) {
+				switch ( ev.window.event ) {
+				case SDL_WINDOWEVENT_RESIZED:
 					chisa.reshape(ev.window.data1, ev.window.data2);
+					break;
+				case SDL_WINDOWEVENT_SHOWN:
+				case SDL_WINDOWEVENT_EXPOSED:
+					chisa.onShown();
+					break;
+				case SDL_WINDOWEVENT_MINIMIZED:
+				case SDL_WINDOWEVENT_HIDDEN:
+					chisa.onHidden();
+					break;
 				}
 				break;
 			}
