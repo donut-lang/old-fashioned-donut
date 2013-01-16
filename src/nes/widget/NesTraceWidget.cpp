@@ -154,6 +154,22 @@ void NesTraceWidget::renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const& 
 	uint16_t const nowPC = disasm.nowPC();
 
 	this->lastPC_ = nowPC;
+
+	while( this->pcDelta_ < 0 ) {
+		if( disasm.decodeAt(lastDrawnPCStart_, inst) ) {
+			++pcDelta_;
+		}
+		--lastDrawnPCStart_;
+	}
+	while( this->pcDelta_ > 0 ) {
+		if( disasm.decodeAt(lastDrawnPCStart_, inst) ) {
+			--this->pcDelta_;
+			lastDrawnPCStart_ += inst.binLength_;
+		}else{
+			++lastDrawnPCStart_;
+		}
+	}
+
 	if( lastPC_ < lastDrawnPCStart_ ) {
 		this->lastDrawnPCStart_ = lastPC_;
 		int pc = lastPC_;
@@ -166,17 +182,18 @@ void NesTraceWidget::renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const& 
 					offset += rowHeight;
 				}
 				++row;
+				pc+=inst.binLength_;
+			}else{
+				++pc;
 			}
-			pc+=inst.binLength_;
 		} while( row <= endRow && pc < 0x10000 );
 		lastDrawnPCEnd_ = pc;
 	}else if( lastPC_ > lastDrawnPCEnd_ ) {
-
 		lastDrawnPCEnd_ = lastPC_;
 		int pc = lastPC_;
 		int row = endRow;
 		disasm.decodeAt(pc, inst);
-		offset = rowHeight * (endRow-startRow-1);
+		offset = rowHeight * (endRow-startRow);
 		do {
 			if( disasm.decodeAt(pc, inst) ) {
 				renderInst(cv, vm, nowPC, inst, rowWidth, rowHeight, offset);
@@ -197,8 +214,10 @@ void NesTraceWidget::renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const& 
 					offset += rowHeight;
 					++row;
 				}
+				pc+=inst.binLength_;
+			}else{
+				++pc;
 			}
-			pc+=inst.binLength_;
 		} while( row <= endRow && pc < 0x10000);
 		lastDrawnPCEnd_ = pc;
 	}
