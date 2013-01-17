@@ -38,7 +38,6 @@ const std::string Element::AttrName::Height("height");
 
 const std::string Element::AttrName::Id("id");
 
-
 Element::Element(Logger& log, HandlerW<World> world, HandlerW<Element> parent)
 :log_(log)
 ,world_(world)
@@ -267,6 +266,11 @@ Handler<ElementObject> Element::donutObject()
 	Handler<ElementObject> eobj ( provider->newInstance(heap, this->self()) );
 	this->donutObject_ = eobj;
 	return eobj;
+}
+
+bool Element::isEnabledImpl()
+{
+	return true;
 }
 
 }}

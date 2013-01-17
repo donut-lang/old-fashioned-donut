@@ -109,6 +109,7 @@ public:
 	inline gl::Color const& foregroundColor() const noexcept { return this->foregroundColor_; };
 	inline gl::Color const& backgroundColor() const noexcept { return this->backgroundColor_; };
 	inline bool onFocused() const noexcept { return this->onFocused_; };
+	inline bool isEnabled() noexcept { return this->isEnabledImpl(); };
 public: /* レンダリング(非virtual) */
 	void render(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask);
 	geom::Box measure(geom::Box const& constraint);
@@ -138,6 +139,7 @@ protected:  /* 子供が必ず実装するメソッド */
 	virtual void layoutImpl(geom::Distance const& offsetFromParent, geom::Box const& size) = 0;
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) = 0;
 	virtual bool notifyViewRefreshedImpl();
+	virtual bool isEnabledImpl();
 public: /* どーなつとの接続 */
 	Handler<ElementObject> donutObject();
 protected:
