@@ -26,6 +26,7 @@ HeapObject::HeapObject(HeapProvider* const provider)
 ,id_(0)
 ,erased_(0)
 ,color_(0)
+,useLocked_(false)
 {
 }
 
