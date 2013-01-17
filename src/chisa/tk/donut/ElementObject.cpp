@@ -47,7 +47,6 @@ ElementProvider::ElementProvider( Handler<Heap> const& heap, std::string const& 
 	this->registerPureNativeClosure("findElementById", &ElementObject::findElementById);
 	this->registerPureNativeClosure("findRootElement", &ElementObject::findRootElement);
 	this->registerPureNativeClosure("isEnabled", &ElementObject::isEnabled);
-	this->registerPureNativeClosure("setEnabled", &ElementObject::setEnabled);
 }
 
 Handler<World> ElementProvider::world() const
@@ -89,12 +88,6 @@ Handler<Object> ElementObject::findElementById(std::string const& id)
 	}else{
 		return this->provider()->heap().lock()->createNull();
 	}
-}
-
-std::nullptr_t ElementObject::setEnabled(bool newstate)
-{
-	this->element()->enabled(newstate);
-	return std::nullptr_t();
 }
 
 bool ElementObject::isEnabled()

@@ -64,7 +64,6 @@ public:
 public:
 	Handler<Element> findRootElement();
 	Handler<Object> findElementById(std::string const& id);
-	std::nullptr_t setEnabled( bool newstate );
 	bool isEnabled();
 };
 
@@ -74,8 +73,9 @@ public:
 
 struct ElementSideEffect {
 	enum {
-
+		SetEnabledOrDisabled,
 	} op;
+	bool enabled;
 	typedef ElementSideEffect Super;
 	template <typename Arc>
 	void serialize(Arc& arc) {
@@ -125,6 +125,8 @@ public:
 	void bootstrap(Handler< ::donut::Heap> const& heap, Handler<ElementT> const& element) {
 		this->ElementObject::bootstrap(heap, element);
 	}
+public:
+	std::tuple<std::nullptr_t,bool,AntiT> setEnabled( bool newstate );
 private:
 	ResultType execAntiSideEffect(Handler<Heap> const& heap, AntiSideEffect const& val);
 public:
@@ -142,6 +144,7 @@ template<typename ProviderT, typename ObjectT, typename ElementT, typename AntiT
 ElementProviderBaseT<ProviderT, ObjectT, ElementT, AntiT >::ElementProviderBaseT(const Handler<Heap>& heap, const std::string& name, Handler<World> const& world)
 :ElementProvider(heap, name, world)
 {
+	this->registerReactiveNativeClosure("setEnabled", &ObjectT::setEnabled);
 }
 
 template<typename ProviderT, typename ObjectT, typename ElementT, typename AntiT>
@@ -173,10 +176,15 @@ template<typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
 inline typename ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ResultType ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::execAntiSideEffect(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
 	AntiT newAnti;
-	//ElementSideEffect& side = newAnti;
-	//ElementSideEffect const& old = val;
-	//switch(old.op) {
-	//}
+	ElementSideEffect& side = newAnti;
+	ElementSideEffect const& old = val;
+	switch(old.op) {
+	case ElementSideEffect::SetEnabledOrDisabled:
+		side.op = ElementSideEffect::SetEnabledOrDisabled;
+		side.enabled = element()->enabled();
+		element()->enabled( old.enabled );
+		break;
+	}
 	return std::make_tuple(true, newAnti);
 }
 
@@ -190,6 +198,18 @@ template<typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
 inline typename ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ResultType ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::onForward(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
 	return this->ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::execAntiSideEffect(heap, val);
+}
+
+template<typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
+std::tuple<std::nullptr_t,bool,AntiT> ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::setEnabled(bool newstate)
+{
+		bool const oldstate = this->element()->enabled();
+		AntiT anti;
+		ElementSideEffect& side = anti;
+		side.op=ElementSideEffect::SetEnabledOrDisabled;
+		side.enabled = oldstate;
+		element()->enabled(newstate);
+		return std::tuple<std::nullptr_t, bool, AntiT>(nullptr, true, anti);
 }
 
 }}

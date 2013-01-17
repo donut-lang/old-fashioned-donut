@@ -88,15 +88,15 @@ void NesGeist::Gamepad::updateJoystick() {
 	const int32_t x = this->joystick_->axis(0);
 	const int32_t y = this->joystick_->axis(1);
 
-	if(x > 100){
+	if(x > 16384){
 		joyState_ |= GamepadFairy::MASK_RIGHT;
-	}else if(x < -100){
+	}else if(x < -16384){
 		joyState_ |= GamepadFairy::MASK_LEFT;
 	}
 
-	if(y > 100){
+	if(y > 16384){
 		joyState_ |= GamepadFairy::MASK_DOWN;
-	}else if(y < -100){
+	}else if(y < -16384){
 		joyState_ |= GamepadFairy::MASK_UP;
 	}
 
