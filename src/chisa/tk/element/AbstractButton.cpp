@@ -79,7 +79,7 @@ Handler<gl::TextDrawable> AbstractButton::textImage()
 						Handler<gl::Font>(),
 						gl::TextDrawable::Style::Bold,
 						gl::TextDrawable::Decoration::None,
-						this->foregroundColor(),
+						enabled() ? this->foregroundColor() : disabledForegroundColor(),
 						gl::Transparent
 						);
 			}else{
@@ -89,7 +89,7 @@ Handler<gl::TextDrawable> AbstractButton::textImage()
 						Handler<gl::Font>(),
 						gl::TextDrawable::Style::Bold,
 						gl::TextDrawable::Decoration::None,
-						this->foregroundColor(),
+						enabled() ? this->foregroundColor() : disabledForegroundColor(),
 						gl::Transparent
 						);
 			}
@@ -159,6 +159,12 @@ bool AbstractButton::onUpRaw(float const& timeMs, geom::Point const& ptInScreen)
 bool AbstractButton::onMoveRaw(float const& timeMs, geom::Point const& ptInScreen)
 {
 	return true;
+}
+
+void AbstractButton::enabledImpl(const bool& newstate)
+{
+	Element::enabledImpl(newstate);
+	notifyViewRefreshed();
 }
 
 bool AbstractButton::onSingleTapUp(float const& timeMs, geom::Point const& ptInScreen)

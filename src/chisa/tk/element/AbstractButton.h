@@ -64,6 +64,7 @@ protected: /* 子クラスの実装すべきメソッド */
 	virtual void renderDisabled(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask) = 0;
 	virtual bool isOn() const noexcept = 0;
 	virtual void onClick();
+	virtual void enabledImpl(bool const& newstate);
 public:
 	virtual bool onDownRaw(float const& timeMs, geom::Point const& ptInScreen) override;
 	virtual bool onUpRaw(float const& timeMs, geom::Point const& ptInScreen) override;
