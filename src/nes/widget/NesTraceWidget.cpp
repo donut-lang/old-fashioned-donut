@@ -580,13 +580,13 @@ chisa::geom::Area NesTraceWidget::addrToArea(const uint16_t& addr)
 	Instruction inst;
 	uint16_t pc = lastDrawnPCStart_;
 	disasm.decodeAt(pc, inst);
-	uint16_t end = pc+inst.binLength_;
+	uint16_t next = pc+inst.binLength_;
 
 	int row = 0;
-	while( end <= addr ){
-		if( disasm.decodeAt(end, inst) ){
-			pc = end;
-			end += inst.binLength_;
+	while( next <= addr ){
+		if( disasm.decodeAt(next, inst) ){
+			pc = next;
+			next += inst.binLength_;
 			++row;
 		}else{
 			++pc;
