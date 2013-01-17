@@ -29,6 +29,7 @@ VirtualMachine::~VirtualMachine()
 }
 void VirtualMachine::run()
 {
+	this->debugger_.processorExecute(this->processor_.getPC());
 	if(this->hardResetFlag){
 		this->clockDelta = 0;
 		this->hardResetFlag = false;

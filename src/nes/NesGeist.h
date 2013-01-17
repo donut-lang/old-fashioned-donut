@@ -96,8 +96,8 @@ public:
 	class MachineUnlock final {
 		NesGeist& parent_;
 	public:
-		inline  MachineUnlock(NesGeist& parent):parent_(parent){ parent_.machine_mutex_.unlock(); };
-		inline ~MachineUnlock() { parent_.machine_mutex_.lock(); }
+		inline  MachineUnlock(NesGeist& parent):parent_(parent){ parent_.machine_wait_mutex_.lock();parent_.machine_mutex_.unlock(); };
+		inline ~MachineUnlock() { parent_.machine_mutex_.lock();parent_.machine_wait_mutex_.unlock(); }
 	};
 private:
 	VirtualMachine* machine_;
@@ -106,9 +106,11 @@ private:
 	Handler<chisa::gl::Sprite> spr_;
 	std::mutex spr_mutex_;
 	std::mutex machine_mutex_;
+	std::mutex machine_wait_mutex_;
 	float time_ms_;
 	std::mutex cond_mutex_;
 	std::condition_variable cond_;
+	bool isBreak_;
 	std::mutex breakMutex_;
 	std::condition_variable breakCond_;
 	Video video_;
@@ -127,11 +129,13 @@ public:
 private:
 	virtual Handler< ::donut::Object> createDonutObject(Handler< ::donut::Heap> const& heap) override final;
 public:
+	inline bool isBreak() const noexcept { return this->isBreak_; };
+public:
 	void stopNES();
 	void loadNES(std::string const& abs_filename);
 	void startNES();
 public:
-	virtual void onContinueBreak() override final;
+	virtual void onStep() override final;
 	virtual void onBreak() override final;
 public:
 	XValue saveNES();

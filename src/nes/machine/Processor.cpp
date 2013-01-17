@@ -86,8 +86,6 @@ void Processor::run(uint16_t clockDelta)
 		needStatusRewrite = false;
 	}
 
-	this->debugger_.processorExecute(this->PC);
-
 	const uint8_t opcode = this->read(this->PC);
 //	#define CPUTRACE
 	#ifdef CPUTRACE
@@ -104,7 +102,7 @@ void Processor::run(uint16_t clockDelta)
 	printf("%04x op:%02x a:%02x x:%02x y:%02x sp:%02x p:%s IRQ?:%s NMI?:%s\n", this->PC, opcode, this->A, this->X, this->Y, this->SP, flag, IRQ ? "on" : "off", NMI ? "on" : "off");
 	fflush(stdout);
 	#endif
-	this->PC++;
+	++this->PC;
 	switch(opcode){
 		case 0x00: // BRK
 			this->BRK();

@@ -60,8 +60,8 @@ private:
 		return watcher_.onMemoryWrite(addr, now);
 	}
 	void inline memoryExecute(uint16_t const addr) noexcept {
-		watcher_.onMemoryExecute(addr);
 		disassembler().onMemoryExecute(addr);
+		watcher_.onMemoryExecute(addr);
 	}
 private:
 	uint8_t vramRead(uint16_t const addr, uint8_t const value){

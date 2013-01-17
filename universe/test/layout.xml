@@ -145,11 +145,20 @@
 			</vertical>
 		</horizontal>
 		<horizontal>
-			<button text="ステップ">
-				Geist.stepRunning();
+			<button text="ステップ" id="step">
+				if(!Global.has("step_break")) {
+					Global.step_break = Geist.addExecBreak(0,0xffff);
+				}else if( Global.step_break == 0 ){
+					Global.step_break = Geist.addExecBreak(0,0xffff);
+				}else{
+					Geist.stepRunning();
+				};
+				World.findElementById("continue").setEnabled(true);
 			</button>
-			<button text="再開">
+			<button text="再開" id="continue" enabled="false">
 				Geist.continueRunning();
+				Global.step_break = 0;
+				World.findElementById("continue").setEnabled(false);
 			</button>
 			<label split-weight="1" id="status" />
 			<clockbutton text="戻る" op="back" />

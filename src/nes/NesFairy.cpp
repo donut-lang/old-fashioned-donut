@@ -218,7 +218,8 @@ NesGeist::Audio::Instrument::Instrument(Audio& self)
 
 void NesGeist::Audio::Instrument::playImpl(unsigned char *stream, int len)
 {
-	self_.popAudio(reinterpret_cast<int16_t*>(stream), len/sizeof(int16_t));
+	int written = (self_.popAudio(reinterpret_cast<int16_t*>(stream), len/sizeof(int16_t)))*sizeof(int16_t);
+	std::memset(&stream[written], 0, len-written);
 }
 
 

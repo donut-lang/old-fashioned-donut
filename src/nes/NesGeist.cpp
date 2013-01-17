@@ -32,6 +32,7 @@ NesGeist::NesGeist(chisa::Logger& log, ::tarte::Handler<Hexe> const& hexe, ::tar
 ,running_(false)
 ,runner_t_(nullptr)
 ,time_ms_(0.0f)
+,isBreak_(false)
 ,video_(*this)
 ,audio_(*this)
 ,gamepad_(this->world()->joystickManager())
@@ -121,19 +122,27 @@ void NesGeist::onBreak()
 	MachineUnlock unlock(*this);
 	{
 		std::unique_lock<std::mutex> lock(breakMutex_);
+		isBreak_=true;
 		breakCond_.wait(lock);
+		isBreak_=false;
 	}
 }
-void NesGeist::onContinueBreak()
+void NesGeist::onStep()
 {
-	std::unique_lock<std::mutex> lock(breakMutex_);
-	breakCond_.notify_all();
+	{
+		std::unique_lock<std::mutex> lock(breakMutex_);
+		breakCond_.notify_all();
+	}
 }
 
 void NesGeist::loadNES(XValue const& data)
 {
-	MachineLock lock(*this);
-	this->machine_->load(data);
+	this->machine()->debugger().watcher().removeMemoryExecBreakAll();
+	onStep();
+	{
+		MachineLock lock(*this);
+		this->machine_->load(data);
+	}
 }
 
 //---------------------------------------------------------------------------------------------------------------------

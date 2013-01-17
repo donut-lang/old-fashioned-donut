@@ -118,27 +118,10 @@ NesGeistProvider::NesGeistProvider(Handler< ::donut::Heap> const& heap)
 	SELECT_FU(Eq);
 	SELECT_FU(Ne);
 
-	this->registerReactiveNativeClosure("stepRunning",[](NesGeistObject* obj){
-		Handler<NesGeist> geist(obj->geist());
-		NesGeist::MachineLock lock(geist);
-		Watcher& watcher = geist->machine()->debugger().watcher();
-		NesGeistSideEffect side;
-		side.op = NesGeistSideEffect::LoadSave;
-		side.save = geist->machine()->save();
-		watcher.startStepRunning();
-		return std::make_tuple(nullptr,true,side);
-	});
-
-	this->registerReactiveNativeClosure("continueRunning",[](NesGeistObject* obj){
-		Handler<NesGeist> geist(obj->geist());
-		NesGeist::MachineLock lock(geist);
-		Watcher& watcher = geist->machine()->debugger().watcher();
-		NesGeistSideEffect side;
-		side.op = NesGeistSideEffect::LoadSave;
-		side.save = geist->machine()->save();
-		watcher.continueRunning();
-		return std::make_tuple(nullptr,true,side);
-	});
+	this->registerReactiveNativeClosure("addExecBreak",&NesGeistObject::addExecBreak);
+	this->registerReactiveNativeClosure("removeExecBreak", &NesGeistObject::removeExecBreak);
+	this->registerReactiveNativeClosure("stepRunning",&NesGeistObject::stepRunning);
+	this->registerReactiveNativeClosure("continueRunning",&NesGeistObject::continueRunning);
 }
 
 //---------------------------------------------------------------------------------------
@@ -165,9 +148,15 @@ typename NesGeistObject::ResultType NesGeistObject::execAntiSideEffect(Handler< 
 	case AntiSideEffect::None:
 		break;
 	case AntiSideEffect::LoadSave:
-		anti.op = AntiSideEffect::LoadSave;
+		anti.op = geist->isBreak() ? NesGeistSideEffect::LoadSave : NesGeistSideEffect::LoadSaveAndRun;
 		anti.save = geist->machine()->save();
 		geist->machine()->load(val.save);
+		break;
+	case AntiSideEffect::LoadSaveAndRun:
+		anti.op = geist->isBreak() ? NesGeistSideEffect::LoadSave : NesGeistSideEffect::LoadSaveAndRun;
+		anti.save = geist->machine()->save();
+		geist->machine()->load(val.save);
+		geist->machine()->debugger().watcher().stepRunning();
 		break;
 	}
 	return std::tuple<bool, AntiSideEffect>(true, anti);
@@ -197,5 +186,53 @@ void NesGeistObject::loadImpl(const Handler< ::donut::Heap>& heap, const XValue&
 {
 }
 
+std::tuple<std::nullptr_t, bool, NesGeistObject::AntiSideEffect> NesGeistObject::stepRunning()
+{
+	Handler<NesGeist> geist(this->geist());
+	NesGeist::MachineLock lock(geist);
+	Watcher& watcher = geist->machine()->debugger().watcher();
+	NesGeistSideEffect side;
+	side.op = geist->isBreak() ? NesGeistSideEffect::LoadSave : NesGeistSideEffect::LoadSaveAndRun;
+	side.save = geist->machine()->save();
+	watcher.stepRunning();
+	return std::tuple<std::nullptr_t, bool, NesGeistObject::AntiSideEffect>(nullptr,true,side);
+}
+
+std::tuple<break_id_t, bool, NesGeistObject::AntiSideEffect> NesGeistObject::addExecBreak(uint16_t addr_first, uint16_t addr_end)
+{
+		Handler<NesGeist> geist(this->geist());
+		NesGeist::MachineLock lock(geist);
+		Watcher& watcher = geist->machine()->debugger().watcher();
+		NesGeistSideEffect side;
+		side.op = geist->isBreak() ? NesGeistSideEffect::LoadSave : NesGeistSideEffect::LoadSaveAndRun;
+		side.save = geist->machine()->save();
+		break_id_t id = watcher.addMemoryExecBreak(addr_first, addr_end);
+		return std::tuple<break_id_t, bool, NesGeistObject::AntiSideEffect>(id,true,side);
+}
+
+std::tuple<bool, bool, NesGeistObject::AntiSideEffect> NesGeistObject::removeExecBreak(break_id_t id)
+{
+
+	Handler<NesGeist> geist(this->geist());
+	NesGeist::MachineLock lock(geist);
+	Watcher& watcher = geist->machine()->debugger().watcher();
+	NesGeistSideEffect side;
+	side.op = geist->isBreak() ? NesGeistSideEffect::LoadSave : NesGeistSideEffect::LoadSaveAndRun;
+	side.save = geist->machine()->save();
+	bool result = watcher.removeMemoryExecBreak(id);
+	return std::tuple<bool, bool, NesGeistObject::AntiSideEffect>(result, true, side);
+}
+
+std::tuple<std::nullptr_t, bool, NesGeistObject::AntiSideEffect> NesGeistObject::continueRunning()
+{
+	Handler<NesGeist> geist(this->geist());
+	NesGeist::MachineLock lock(geist);
+	Watcher& watcher = geist->machine()->debugger().watcher();
+	NesGeistSideEffect side;
+	side.op = geist->isBreak() ? NesGeistSideEffect::LoadSave : NesGeistSideEffect::LoadSaveAndRun;
+	side.save = geist->machine()->save();
+	watcher.continueRunning();
+	return std::tuple<std::nullptr_t, bool, NesGeistObject::AntiSideEffect>(nullptr,true,side);
+}
 
 }

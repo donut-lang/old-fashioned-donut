@@ -28,16 +28,17 @@ Watcher::Watcher(VirtualMachine& vm, DebuggerFairy& debuggerFairy)
 ,breakUniq_(0)
 {
 }
-void Watcher::startStepRunning()
+
+void Watcher::stepRunning()
 {
-	addMemoryExecBreak(0,0xffff);
+	debuggerFairy_.onStep();
 }
 
 void Watcher::continueRunning()
 {
-	debuggerFairy_.onContinueBreak();
+	removeMemoryExecBreakAll();
+	debuggerFairy_.onStep();
 }
-
 void Watcher::onBreak()
 {
 	debuggerFairy_.onBreak();
@@ -95,6 +96,13 @@ bool Watcher::removeMemoryExecBreak(break_id_t id)
 	}
 	this->execBreaks_.erase(it);
 	return true;
+}
+
+std::vector<MemoryRange> Watcher::removeMemoryExecBreakAll()
+{
+	std::vector<MemoryRange> r;
+	r.swap(execBreaks_);
+	return r;
 }
 
 }

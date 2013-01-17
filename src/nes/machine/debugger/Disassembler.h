@@ -142,6 +142,7 @@ private:
 public:
 	template <typename Archiver>
 	void serialize(Archiver& arc){
+		arc & lastExecuted_;
 	}
 public:
 	Disassembler(VirtualMachine& vm);

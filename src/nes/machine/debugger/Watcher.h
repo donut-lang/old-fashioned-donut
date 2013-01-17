@@ -101,7 +101,7 @@ public:
 	Watcher(VirtualMachine& vm, DebuggerFairy& debuggerFairy);
 	~Watcher() {}
 public:
-	void startStepRunning();
+	void stepRunning();
 	void continueRunning();
 private:
 	void onBreak();
@@ -113,6 +113,7 @@ public:
 	bool removeMemoryReadBreak(break_id_t id);
 	bool removeMemoryWriteBreak(break_id_t id);
 	bool removeMemoryExecBreak(break_id_t id);
+	std::vector<MemoryRange> removeMemoryExecBreakAll();
 public:
 	uint8_t onMemoryRead(uint16_t const addr, uint8_t const value){
 		/*for(MemoryRange const& range : this->readBreaks_) {
