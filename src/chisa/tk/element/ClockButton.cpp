@@ -98,7 +98,7 @@ bool ClockButton::enabledImpl()
 	if( unlikely(!w) ){
 		return false;
 	}
-	// FIXME: 見苦しい
+	// FIXME: 見苦しい　elementが変化を見守るべきだと思う
 	bool const clk = ( operation_ == Forward ?
 			w->donut()->clock()->canAdvance() :
 			w->donut()->clock()->canBack());
