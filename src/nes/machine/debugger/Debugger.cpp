@@ -20,10 +20,10 @@
 
 namespace nes {
 
-Debugger::Debugger(VirtualMachine& vm)
+Debugger::Debugger(VirtualMachine& vm, DebuggerFairy& debuggerFairy)
 :vm_(vm)
 ,disasm_(vm)
-,watcher_(vm)
+,watcher_(vm, debuggerFairy)
 ,comparator_(vm)
 {
 

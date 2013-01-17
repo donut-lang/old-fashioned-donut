@@ -37,8 +37,8 @@ public:
 		arc & comparator_;
 	}
 public:
-	Debugger(VirtualMachine& vm);
-	~Debugger() noexcept = default;
+	Debugger(VirtualMachine& vm, DebuggerFairy& debuggerFairy);
+	~Debugger() {}
 public:
 	inline Disassembler const& disassembler() const noexcept { return this->disasm_; };
 	inline Disassembler& disassembler() noexcept { return this->disasm_; };

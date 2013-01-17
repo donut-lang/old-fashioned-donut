@@ -6,8 +6,8 @@
 
 namespace nes {
 
-VirtualMachine::VirtualMachine(VideoFairy& videoFairy, AudioFairy& audioFairy, GamepadFairy* player1, GamepadFairy* player2)
-:debugger_(*this)
+VirtualMachine::VirtualMachine(DebuggerFairy& debuggerFairy, VideoFairy& videoFairy, AudioFairy& audioFairy, GamepadFairy* player1, GamepadFairy* player2)
+:debugger_(*this, debuggerFairy)
 ,ram_(*this)
 ,processor_(*this)
 ,audio_(*this, audioFairy)

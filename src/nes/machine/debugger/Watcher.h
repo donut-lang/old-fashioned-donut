@@ -31,26 +31,26 @@ struct MemoryRange final{
 	DEFAULT_COPY_AND_ASSIGN(MemoryRange);
 public:
 	break_id_t id;
-	uint16_t addr_begin;
-	uint16_t addr_end;
+	uint16_t addr_first;
+	uint16_t addr_last;
 public:
 	template <typename Archiver>
 	void serialize(Archiver& arc){
-		arc & id & addr_begin & addr_end;
+		arc & id & addr_first & addr_last;
 	}
 public:
 	constexpr MemoryRange(break_id_t id, uint16_t addr_begin, uint16_t addr_end) noexcept
-	:id(id), addr_begin(addr_begin), addr_end(addr_end) {
+	:id(id), addr_first(addr_begin), addr_last(addr_end) {
 
 	}
 	constexpr MemoryRange() noexcept
-	:id(0), addr_begin(0), addr_end(0) {
+	:id(0), addr_first(0), addr_last(0) {
 
 	}
 	~MemoryRange() noexcept = default;
 public:
 	constexpr bool inline contain(uint16_t const addr) const noexcept{
-		return addr_begin <= addr && addr < addr_end;
+		return addr_first <= addr && addr <= addr_last;
 	}
 public:
 	struct CompareByID final {
@@ -66,24 +66,25 @@ public:
 	};
 	struct CompareByRange final {
 		inline bool operator()(MemoryRange const& a, MemoryRange const& b){
-			return std::tie(a.addr_begin, a.addr_end) < std::tie(b.addr_begin, b.addr_end);
+			return std::tie(a.addr_first, a.addr_last) < std::tie(b.addr_first, b.addr_last);
 		}
 		inline bool operator()(std::pair<uint16_t, uint16_t> const& a, MemoryRange const& b){
-			return std::tie(a.first, a.second) < std::tie(b.addr_begin, b.addr_end);
+			return std::tie(a.first, a.second) < std::tie(b.addr_first, b.addr_last);
 		}
 		inline bool operator()(MemoryRange const& a, std::pair<uint16_t, uint16_t> const& b){
-			return std::tie(a.addr_begin, a.addr_end) < std::tie(b.first, b.second);
+			return std::tie(a.addr_first, a.addr_last) < std::tie(b.first, b.second);
 		}
 	};
 };
 
 class VirtualMachine;
-
+class DebuggerFairy;
 class Watcher final {
 	STACK_OBJECT(Watcher);
 	DISABLE_COPY_AND_ASSIGN(Watcher);
 private:
 	VirtualMachine& vm_;
+	DebuggerFairy& debuggerFairy_;
 	break_id_t breakUniq_;
 	std::vector<MemoryRange> readBreaks_;
 	std::vector<MemoryRange> writeBreaks_;
@@ -97,9 +98,13 @@ public:
 		arc & execBreaks_;
 	}
 public:
-	Watcher(VirtualMachine& vm);
-	~Watcher() noexcept = default;
+	Watcher(VirtualMachine& vm, DebuggerFairy& debuggerFairy);
+	~Watcher() {}
+public:
+	void startStepRunning();
+	void continueRunning();
 private:
+	void onBreak();
 	inline break_id_t createBreakUniq() noexcept { return ++this->breakUniq_; };
 public:
 	break_id_t addMemoryReadBreak(uint16_t addr_begin,uint16_t addr_end);
@@ -128,12 +133,12 @@ public:
 		return value;
 	}
 	void onMemoryExecute(uint16_t const addr){
-		/*for(MemoryRange const& range : this->execBreaks_) {
+		for(MemoryRange const& range : this->execBreaks_) {
 			if(range.contain(addr)){
-
+				onBreak();
 				break;
 			}
-		}*/
+		}
 	}
 };
 

@@ -37,7 +37,7 @@ NesGeist::NesGeist(chisa::Logger& log, ::tarte::Handler<Hexe> const& hexe, ::tar
 ,gamepad_(this->world()->joystickManager())
 {
 	using namespace chisa::gl;
-	this->machine_ = new VirtualMachine(video_, audio_, &gamepad_, nullptr);
+	this->machine_ = new VirtualMachine(*this, video_, audio_, &gamepad_, nullptr);
 	if( chisa::Handler<chisa::tk::World> world = this->world_.lock() ){
 		this->spr_ = world->drawableManager()->queryRawSprite(ImageFormat::RGBA8, 256, 240);
 	}
@@ -114,6 +114,20 @@ XValue NesGeist::saveNES()
 		savedata = this->machine_->save();
 	}
 	return savedata;
+}
+
+void NesGeist::onBreak()
+{
+	MachineUnlock unlock(*this);
+	{
+		std::unique_lock<std::mutex> lock(breakMutex_);
+		breakCond_.wait(lock);
+	}
+}
+void NesGeist::onContinueBreak()
+{
+	std::unique_lock<std::mutex> lock(breakMutex_);
+	breakCond_.notify_all();
 }
 
 void NesGeist::loadNES(XValue const& data)

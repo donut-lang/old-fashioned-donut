@@ -117,6 +117,28 @@ NesGeistProvider::NesGeistProvider(Handler< ::donut::Heap> const& heap)
 	SELECT_FU(Le);
 	SELECT_FU(Eq);
 	SELECT_FU(Ne);
+
+	this->registerReactiveNativeClosure("stepRunning",[](NesGeistObject* obj){
+		Handler<NesGeist> geist(obj->geist());
+		NesGeist::MachineLock lock(geist);
+		Watcher& watcher = geist->machine()->debugger().watcher();
+		NesGeistSideEffect side;
+		side.op = NesGeistSideEffect::LoadSave;
+		side.save = geist->machine()->save();
+		watcher.startStepRunning();
+		return std::make_tuple(nullptr,true,side);
+	});
+
+	this->registerReactiveNativeClosure("continueRunning",[](NesGeistObject* obj){
+		Handler<NesGeist> geist(obj->geist());
+		NesGeist::MachineLock lock(geist);
+		Watcher& watcher = geist->machine()->debugger().watcher();
+		NesGeistSideEffect side;
+		side.op = NesGeistSideEffect::LoadSave;
+		side.save = geist->machine()->save();
+		watcher.continueRunning();
+		return std::make_tuple(nullptr,true,side);
+	});
 }
 
 //---------------------------------------------------------------------------------------

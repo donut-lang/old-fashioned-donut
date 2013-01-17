@@ -6,13 +6,15 @@
 #include <string.h>
 #include <tarte/XArchiver.h>
 
-#include "debugger/Debugger.h"
 
 #include "file/NesFile.h"
 #include "fairy/VideoFairy.h"
 #include "fairy/AudioFairy.h"
 #include "fairy/GamepadFairy.h"
+#include "fairy/DebuggerFairy.h"
 #include "AudioChannel.h"
+
+#include "debugger/Debugger.h"
 
 namespace chisa{
 namespace util {
@@ -605,7 +607,7 @@ public:
 class VirtualMachine final
 {
 public:
-	explicit VirtualMachine(VideoFairy& videoFairy, AudioFairy& audioFairy, GamepadFairy* player1, GamepadFairy* player2);
+	explicit VirtualMachine(DebuggerFairy& debuggerFairy, VideoFairy& videoFairy, AudioFairy& audioFairy, GamepadFairy* player1, GamepadFairy* player2);
 	~VirtualMachine();
 	void run();
 	void sendNMI(); //from video to processor

@@ -145,8 +145,12 @@
 			</vertical>
 		</horizontal>
 		<horizontal>
-			<button text="ステップ"></button>
-			<button text="再開"></button>
+			<button text="ステップ">
+				Geist.stepRunning();
+			</button>
+			<button text="再開">
+				Geist.continueRunning();
+			</button>
 			<label split-weight="1" id="status" />
 			<clockbutton text="戻る" op="back" />
 			<clockbutton text="進む" op="forward" />

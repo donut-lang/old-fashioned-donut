@@ -31,7 +31,7 @@ using namespace tarte;
 
 class Hexe;
 
-class NesGeist : public chisa::WorldGeist {
+class NesGeist : public chisa::WorldGeist, public DebuggerFairy {
 public:
 	class Video final : public VideoFairy {
 	private:
@@ -109,6 +109,8 @@ private:
 	float time_ms_;
 	std::mutex cond_mutex_;
 	std::condition_variable cond_;
+	std::mutex breakMutex_;
+	std::condition_variable breakCond_;
 	Video video_;
 	Audio audio_;
 	Gamepad gamepad_;
@@ -128,6 +130,9 @@ public:
 	void stopNES();
 	void loadNES(std::string const& abs_filename);
 	void startNES();
+public:
+	virtual void onContinueBreak() override final;
+	virtual void onBreak() override final;
 public:
 	XValue saveNES();
 	void loadNES(XValue const& data);

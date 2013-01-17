@@ -16,15 +16,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Watcher.h"
 #include <algorithm>
+#include "Watcher.h"
+#include "../fairy/DebuggerFairy.h"
 
 namespace nes {
 
-Watcher::Watcher(VirtualMachine& vm)
+Watcher::Watcher(VirtualMachine& vm, DebuggerFairy& debuggerFairy)
 :vm_(vm)
+,debuggerFairy_(debuggerFairy)
 ,breakUniq_(0)
 {
+}
+void Watcher::startStepRunning()
+{
+	addMemoryExecBreak(0,0xffff);
+}
+
+void Watcher::continueRunning()
+{
+	debuggerFairy_.onContinueBreak();
+}
+
+void Watcher::onBreak()
+{
+	debuggerFairy_.onBreak();
 }
 
 break_id_t Watcher::addMemoryReadBreak(uint16_t addr_begin, uint16_t addr_end)
