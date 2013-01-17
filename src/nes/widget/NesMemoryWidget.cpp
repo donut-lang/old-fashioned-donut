@@ -99,7 +99,7 @@ void NesMemoryWidget::reshapeImpl(chisa::geom::Box const& areaSize)
 
 chisa::geom::Box NesMemoryWidget::measureImpl(chisa::geom::Box const& constraintSize)
 {
-	chisa::geom::Box memAreaSize((this->numRenderer_.maxWidth()+1)*32+this->addrWidth_, (this->numRenderer_.maxHeight()+2)*(65535/16)-2);
+	chisa::geom::Box memAreaSize((this->numRenderer_.maxWidth()+1)*32+this->addrWidth_, (this->numRenderer_.maxHeight()+2)*(65536/16)-2);
 	return memAreaSize;
 }
 
