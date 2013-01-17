@@ -27,6 +27,8 @@ namespace tk {
 
 const std::string Element::AttrName::ForegroundColor("foreground-color");
 const std::string Element::AttrName::BackgroundColor("background-color");
+const std::string Element::AttrName::DisabledForegroundColor("disabled-foreground-color");
+const std::string Element::AttrName::DisabledBackgroundColor("disabled-background-color");
 
 const std::string Element::AttrName::EdgeColor("edge-color");
 const std::string Element::AttrName::EdgeWidth("edge-width");
@@ -48,6 +50,8 @@ Element::Element(Logger& log, HandlerW<World> world, HandlerW<Element> parent)
 ,edgeWidth_(0)
 ,foregroundColor_(gl::Black)
 ,backgroundColor_(gl::Color(0.9,0.9,0.9,1))
+,disabledForegroundColor_(gl::Color(0.5,0.5,0.5,1))
+,disabledBackgroundColor_(gl::Color(0.7,0.7,0.7,1))
 ,relayoutRequested_(false)
 ,onFocused_(false)
 {
@@ -80,6 +84,16 @@ void Element::foregroundColor(gl::Color const& c)
 	this->notifyViewRefreshed();
 }
 void Element::backgroundColor(gl::Color const& c)
+{
+	this->backgroundColor_ = c;
+	this->requestRelayout();
+}
+void Element::disabledForegroundColor(gl::Color const& c)
+{
+	this->foregroundColor_ = c;
+	this->notifyViewRefreshed();
+}
+void Element::disabledBackgroundColor(gl::Color const& c)
 {
 	this->backgroundColor_ = c;
 	this->requestRelayout();
@@ -268,9 +282,13 @@ Handler<ElementObject> Element::donutObject()
 	return eobj;
 }
 
-bool Element::isEnabledImpl()
+bool Element::enabledImpl()
 {
 	return true;
+}
+
+void Element::enabledImpl(bool const& newstate)
+{
 }
 
 }}

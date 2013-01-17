@@ -61,6 +61,7 @@ protected: /* 子クラスの実装すべきメソッド */
 	virtual void layoutButtonContent(geom::Box const& size) = 0;
 	virtual void renderOn(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask) = 0;
 	virtual void renderOff(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask) = 0;
+	virtual void renderDisabled(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask) = 0;
 	virtual bool isOn() const noexcept = 0;
 	virtual void onClick();
 public:

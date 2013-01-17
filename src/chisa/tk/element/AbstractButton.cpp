@@ -57,10 +57,14 @@ std::string AbstractButton::toString() const
 
 void AbstractButton::renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
-	if(this->isOn()) {
-		this->renderOn(canvas, ptInRoot, mask);
-	}else{
-		this->renderOff(canvas, ptInRoot, mask);
+	if( this->enabled() ){
+		if(this->isOn()) {
+			this->renderOn(canvas, ptInRoot, mask);
+		}else{
+			this->renderOff(canvas, ptInRoot, mask);
+		}
+	} else {
+		this->renderDisabled(canvas, ptInRoot, mask);
 	}
 }
 

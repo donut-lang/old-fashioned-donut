@@ -154,6 +154,11 @@ void AbstractToggleButton::renderOff(gl::Canvas& canvas, geom::Point const& ptIn
 {
 	this->textImage()->draw(canvas, ptInRoot, mask);
 }
+void AbstractToggleButton::renderDisabled(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
+{
+	///XXX: 実装
+	this->textImage()->draw(canvas, ptInRoot, mask);
+}
 
 
 }}

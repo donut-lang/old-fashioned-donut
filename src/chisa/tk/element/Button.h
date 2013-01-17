@@ -50,6 +50,7 @@ private:
 	virtual void layoutButtonContent(geom::Box const& size) override final;
 	virtual void renderOn(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask) override final;
 	virtual void renderOff(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask) override final;
+	virtual void renderDisabled(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask) override final;
 	virtual bool isOn() const noexcept override final;
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
 	virtual void onClick() override;

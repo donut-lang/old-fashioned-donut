@@ -55,6 +55,8 @@ public:
 		const static std::string EdgeColor;
 		const static std::string ForegroundColor;
 		const static std::string BackgroundColor;
+		const static std::string DisabledForegroundColor;
+		const static std::string DisabledBackgroundColor;
 		const static std::string Width;
 		const static std::string Height;
 	};
@@ -74,6 +76,8 @@ private: /* ツリー */
 	float edgeWidth_;
 	gl::Color foregroundColor_;
 	gl::Color backgroundColor_;
+	gl::Color disabledForegroundColor_;
+	gl::Color disabledBackgroundColor_;
 	bool relayoutRequested_;
 private: /* 画面描画情報 */
 	geom::Box size_;
@@ -101,6 +105,8 @@ public:
 	void padding(geom::Space const& p);
 	void foregroundColor(gl::Color const& c);
 	void backgroundColor(gl::Color const& c);
+	void disabledForegroundColor(gl::Color const& c);
+	void disabledBackgroundColor(gl::Color const& c);
 	void edgeColor(gl::Color const& c);
 	void edgeWidth(float const& f);
 	inline HandlerW<World> world() noexcept { return this->world_; }
@@ -108,8 +114,11 @@ public:
 	inline geom::Space const& padding() const noexcept { return this->padding_; };
 	inline gl::Color const& foregroundColor() const noexcept { return this->foregroundColor_; };
 	inline gl::Color const& backgroundColor() const noexcept { return this->backgroundColor_; };
+	inline gl::Color const& disabledForegroundColor() const noexcept { return this->foregroundColor_; };
+	inline gl::Color const& disabledBackgroundColor() const noexcept { return this->backgroundColor_; };
 	inline bool onFocused() const noexcept { return this->onFocused_; };
-	inline bool isEnabled() noexcept { return this->isEnabledImpl(); };
+	inline bool enabled() noexcept { return this->enabledImpl(); };
+	inline void enabled( bool const& newState ) noexcept { this->enabledImpl(newState); };
 public: /* レンダリング(非virtual) */
 	void render(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask);
 	geom::Box measure(geom::Box const& constraint);
@@ -139,7 +148,8 @@ protected:  /* 子供が必ず実装するメソッド */
 	virtual void layoutImpl(geom::Distance const& offsetFromParent, geom::Box const& size) = 0;
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) = 0;
 	virtual bool notifyViewRefreshedImpl();
-	virtual bool isEnabledImpl();
+	virtual bool enabledImpl();
+	virtual void enabledImpl(bool const& newstate);
 public: /* どーなつとの接続 */
 	Handler<ElementObject> donutObject();
 protected:

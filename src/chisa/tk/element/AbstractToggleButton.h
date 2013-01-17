@@ -62,6 +62,7 @@ protected: /* AbstractButtonの実装 */
 	virtual void layoutButtonContent(geom::Box const& size) override;
 	virtual void renderOn(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask) override;
 	virtual void renderOff(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask) override;
+	virtual void renderDisabled(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask) override;
 	virtual bool isOn() const noexcept override;
 	virtual void onClick() override;
 protected:
