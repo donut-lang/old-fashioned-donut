@@ -94,9 +94,6 @@ private:
 	virtual HeapObject* __internal__createInstanceForLoading() override final {
 		return new ObjectT( static_cast<ProviderT*>(this) );
 	}
-	template <typename... Args> inline
-	Handler<ObjectT> newInstance(Args... args) {
-	}
 	virtual Handler<ElementObject> newInstance(Handler< ::donut::Heap> const& heap, Handler<Element> const& element) override final
 	{
 		return HeapProvider::newInstance<ObjectT>( static_cast<ProviderT*>(this), heap, element.cast<ElementT>() );
