@@ -121,7 +121,7 @@ uint16_t NesMemoryWidget::ptToAddr(chisa::geom::Point const& pt)
 	float const dwidth(symwidth*2+2);
 	float const dheight(numRenderer_.maxHeight()+2);
 	int const x = std::max(0, static_cast<int>((pt.x()-addrWidth_)/dwidth));
-	int const y = std::min(std::max(0,static_cast<int>((pt.y()/dheight))), 2048);
+	int const y = std::min(std::max(0,static_cast<int>((pt.y()/dheight))), 0xffff);
 	return
 		x | y << 4;
 }

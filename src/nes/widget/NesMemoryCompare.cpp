@@ -180,7 +180,7 @@ chisa::geom::Area NesMemoryCompare::addrToArea(const uint16_t& addr)
 {
 	const float rowHeight = this->rowHeight();
 	MemoryComparator& cmp = this->geist_.lock()->machine()->debugger().comparator();
-	if(!cmp.isCandidate(addr)){
+	if(!cmp.isCandidate(addr) || addr > 2048){
 		return chisa::geom::Area(0,0,0,0);
 	}
 	int row=1;
