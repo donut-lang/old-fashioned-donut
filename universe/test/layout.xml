@@ -66,7 +66,7 @@
 						</button>
 						<label text="記録メモと比較して" />
 						<horizontal>
-							<button text="変わってない" split-weight="1">
+							<button text="変わってない" split-weight="1" enabled="false">
 								Geist.selectEq();
 							</button>
 							<button text="変わった" split-weight="1">

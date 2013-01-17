@@ -87,7 +87,7 @@ void Button::renderOff(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Ar
 void Button::renderDisabled(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
 	canvas.fillRect(this->shadowColor_, geom::Area(ptInRoot, innerSize()) );
-	canvas.fillRect(this->disabledBackgroundColor(), geom::Area(ptInRoot+geom::Distance(shadowDepth_/2, shadowDepth_/2), geom::Box(shadowDepth_, shadowDepth_)) );
+	canvas.fillRect(this->disabledBackgroundColor(), geom::Area(ptInRoot+geom::Distance(shadowDepth_/2, shadowDepth_/2), innerSize()-geom::Box(shadowDepth_, shadowDepth_)) );
 
 	geom::Distance const offset( (innerSize()-textImage()->size())/2 );
 	geom::Area const buttonMask(mask.point()-offset, mask.box());
