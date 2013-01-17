@@ -20,14 +20,14 @@
 					<button text="" split-weight="1"></button>
 					<button text="" split-weight="1"></button>
 				</horizontal>
-				<widget widget-klass="nes-trace" fit="expand" split-weight="1" />
+				<widget widget-klass="nes-trace" widget-id="nes-trace" fit="expand" split-weight="1" />
 			</vertical>
 			<vertical split-weight="1">
 				<horizontal split-weight="2" id="content">
-					<scroll title="比較" mode="vertical" id="memory-compare" split-weight="1">
+					<scroll mode="vertical" id="memory-compare" split-weight="1">
 						<widget widget-klass="nes-compare" widget-id="nes-compare" fit="expand" />
 					</scroll>
-					<scroll title="メモリ" mode="vertical" id="memory-viewer" split-weight="1">
+					<scroll mode="vertical" id="memory-viewer" split-weight="1">
 						<widget title="NES" widget-klass="nes-memory" widget-id="nes-watcher" fit="expand" />
 					</scroll>
 				</horizontal>

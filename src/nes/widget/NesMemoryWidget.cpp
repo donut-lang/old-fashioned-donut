@@ -148,7 +148,11 @@ h.detatchAngel(Global.__mem__widget_angel);
 angel = h.newTwinAngel();
 Global.__mem__widget_angel = angel;
 Global.__mem__widget_addr = )delimiter"+addr+R"delimiter(;
-t1 = angel.newWidgetTarget("nes-compare", ")delimiter"+addr+R"delimiter(");
+if(Global.__mem__widget_addr >= 0x8000) {
+  t1 = angel.newWidgetTarget("nes-trace", ")delimiter"+addr+R"delimiter(");
+} else {
+  t1 = angel.newWidgetTarget("nes-compare", ")delimiter"+addr+R"delimiter(");
+};
 t2 = angel.newWidgetTarget("nes-watcher", ")delimiter"+addr+R"delimiter(");
 t1.attatchServant(t1.newHaloServant("red"));
 t2.attatchServant(t2.newHaloServant("red"));

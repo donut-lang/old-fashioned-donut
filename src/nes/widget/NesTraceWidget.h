@@ -58,6 +58,8 @@ public:
 	virtual ~NesTraceWidget() noexcept = default;
 private:
 	void renderInst(chisa::gl::Canvas& cv, VirtualMachine& vm, uint16_t const& nowPC, Instruction const& inst, float const& rowWidth, float const& rowHeight, float const& offsetY);
+	uint16_t ptToAddr(chisa::geom::Point const& pt);
+	chisa::geom::Area addrToArea(uint16_t const& addr);
 private:
 	virtual void renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const& area) override;
 	virtual void idleImpl(const float delta_ms) override;
@@ -65,6 +67,8 @@ private:
 	virtual chisa::geom::Box measureImpl(chisa::geom::Box const& constraintSize) override;
 	virtual chisa::geom::Area findTargetImpl(std::string const& target);
 	virtual bool onScroll(float const& timeMs, chisa::geom::Point const& start, chisa::geom::Point const& end, chisa::geom::Distance const& distance) override final;
+private:
+	virtual bool onSingleTapUp(float const& timeMs, chisa::geom::Point const& ptInWidget) override;
 };
 
 }
