@@ -19,10 +19,9 @@
 #include <tinyxml2.h>
 #include <tarte/Exception.h>
 
-#include "Button.h"
+#include "ClickButton.h"
 #include "../../gl/Canvas.h"
 #include "../../gl/DrawableManager.h"
-#include "../World.h"
 
 namespace chisa {
 namespace tk {
@@ -31,17 +30,13 @@ static std::string const TAG("Button");
 
 const std::string ClickButton::AttrName::ShadowColor("shadow-color");
 const std::string ClickButton::AttrName::ShadowDepth("shadow-depth");
-const std::string ClickButton::AttrName::DonutMachineName("donut");
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(ClickButton, AbstractButton)
 ,shadowColor_(gl::DarkGray)
 ,shadowDepth_(3.0f)
-,donutMachineName_()
-,script_(nullptr)
 {
 	this->addAttribute(AttrName::ShadowColor, this->shadowColor_);
 	this->addAttribute(AttrName::ShadowDepth, this->shadowDepth_);
-	this->addAttribute(AttrName::DonutMachineName, this->donutMachineName_);
 }
 
 ClickButton::~ClickButton() noexcept
@@ -110,37 +105,6 @@ void ClickButton::layoutButtonContent(geom::Box const& size)
 
 void ClickButton::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
-	const char* src = element->GetText();;
-	if( src ) {
-		Handler<World> world( this->world().lock() );
-		if( unlikely(!world) ) {
-			TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
-		}
-		this->script_ = world->donut()->parse(src, "Button-Innnter", 0);
-	}
-}
-
-void ClickButton::onClick()
-{
-	if(this->script_){
-		if(this->log().d()){
-			this->log().d(TAG, "Executing script.");
-		}
-		Handler<World> world( this->world().lock() );
-		if( unlikely(!world) ) {
-			TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
-		}
-		Handler<Donut> donut(world->donut());
-		Handler<Machine> vm(donut->queryMachine(this->donutMachineName_));
-		if(this->log().d()){
-			this->log().d(TAG, "Execute script on: %s", this->donutMachineName_.c_str());
-		}
-		vm->start(this->script_);
-	}else{
-		if(this->log().d()){
-			this->log().d(TAG, "Button script is empty.");
-		}
-	}
 }
 
 }}

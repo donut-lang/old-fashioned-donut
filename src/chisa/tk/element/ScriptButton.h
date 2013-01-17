@@ -24,19 +24,15 @@
 namespace chisa {
 namespace tk {
 
-class ClockButton: public ClickButton {
-	CHISA_ELEMENT_SUBKLASS_FINAL(ClockButton);
+class ScriptButton: public ClickButton {
+	CHISA_ELEMENT_SUBKLASS_FINAL(ScriptButton);
 private:
 	struct AttrName{
-		const static std::string Operation;
-	};
-public:
-	enum ClockOperation{
-		Back,
-		Forward
+		const static std::string DonutMachineName;
 	};
 private:
-	enum ClockOperation operation_;
+	std::string donutMachineName_;
+	Handler< ::donut::Source> script_;
 public:
 	virtual std::string toString() const override;
 private:

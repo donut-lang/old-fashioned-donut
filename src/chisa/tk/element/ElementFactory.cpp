@@ -27,8 +27,8 @@
 #include "Empty.h"
 #include "ScrollCombo.h"
 #include "WidgetElement.h"
-#include "Button.h"
 #include "ClockButton.h"
+#include "ScriptButton.h"
 #include "Label.h"
 #include "TabCombo.h"
 #include "TextArea.h"
@@ -113,7 +113,7 @@ void ElementFactory::init()
 	this->registerLayout<Empty>(ElemName::Empty);
 	this->registerLayout<ScrollCombo>(ElemName::Scroll);
 	this->registerLayout<WidgetElement>(ElemName::WidgetWrapper);
-	this->registerLayout<ClickButton>(ElemName::Button);
+	this->registerLayout<ScriptButton>(ElemName::Button);
 	this->registerLayout<ClockButton>(ElemName::ClockButton);
 	this->registerLayout<Label>(ElemName::Label);
 	this->registerLayout<TabCombo>(ElemName::Tab);

@@ -30,15 +30,11 @@ public:
 	struct AttrName{
 		const static std::string ShadowColor;
 		const static std::string ShadowDepth;
-		const static std::string DonutMachineName;
 	};
 private:
 	gl::Color shadowColor_;
 	float shadowDepth_;
 	geom::Box renderOffset_;
-private:
-	std::string donutMachineName_;
-	Handler< ::donut::Source> script_;
 public:
 	virtual std::string toString() const override;
 	inline gl::Color const& shadowColor() const noexcept { return this->shadowColor_; };
@@ -53,7 +49,7 @@ private:
 	virtual void renderDisabled(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask) override final;
 	virtual bool isOn() const noexcept override final;
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
-	virtual void onClick() override;
+	virtual void onClick() override = 0;
 };
 
 }}
