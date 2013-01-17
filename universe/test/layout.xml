@@ -135,6 +135,12 @@
 				</horizontal>
 				<button text="候補をリセット">
 					Geist.selectReset();
+					World.findElementById("select-ne").setEnabled(false);
+					World.findElementById("select-eq").setEnabled(false);
+					World.findElementById("select-ge").setEnabled(false);
+					World.findElementById("select-le").setEnabled(false);
+					World.findElementById("select-gt").setEnabled(false);
+					World.findElementById("select-lt").setEnabled(false);
 				</button>
 			</vertical>
 		</horizontal>
