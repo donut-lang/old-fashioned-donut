@@ -323,7 +323,7 @@ private:
 				}
 				break;
 			case SDL_MOUSEWHEEL:
-				chisa.pointerScroll(ev.wheel.timestamp, ev.wheel.y*50);
+				chisa.pointerScroll(ev.wheel.timestamp, ev.wheel.y);
 				break;
 			case SDL_QUIT:
 				return false;

@@ -87,11 +87,11 @@ void NesMemoryCompare::renderImpl(chisa::gl::Canvas& cv, const chisa::geom::Area
 	MemoryComparator& cmp = dbg.comparator();
 	const float rowHeight = this->rowHeight();
 
-	unsigned int const startRow = max(std::floor((area.y() - rowHeight)/rowHeight), 0);
-	unsigned int const endRow = min(std::ceil((area.y() - rowHeight + area.height())/rowHeight), cmp.candidates());
+	int const startRow = max(std::floor((area.y() - rowHeight)/rowHeight), 0);
+	int const endRow = min(max(std::ceil((area.y() - rowHeight + area.height())/rowHeight),0), cmp.candidates());
 
-	unsigned int idx = 0;
-	unsigned int drawn = 0;
+	int idx = 0;
+	int drawn = 0;
 	PredefinedSymRenderer::SymList asym_(5);
 	asym_[0] = Dollar;
 	PredefinedSymRenderer::SymList sym_(9);
