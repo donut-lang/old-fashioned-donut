@@ -34,7 +34,7 @@ void Watcher::stepRunning()
 	debuggerFairy_.onStep();
 }
 
-void Watcher::continueRunning()
+void Watcher::resumeRunning()
 {
 	removeMemoryExecBreakAll();
 	debuggerFairy_.onStep();

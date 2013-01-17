@@ -231,7 +231,7 @@ std::tuple<std::nullptr_t, bool, NesGeistObject::AntiSideEffect> NesGeistObject:
 	NesGeistSideEffect side;
 	side.op = geist->isBreak() ? NesGeistSideEffect::LoadSave : NesGeistSideEffect::LoadSaveAndRun;
 	side.save = geist->machine()->save();
-	watcher.continueRunning();
+	watcher.resumeRunning();
 	return std::tuple<std::nullptr_t, bool, NesGeistObject::AntiSideEffect>(nullptr,true,side);
 }
 

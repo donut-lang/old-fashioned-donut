@@ -102,7 +102,7 @@ public:
 	~Watcher() {}
 public:
 	void stepRunning();
-	void continueRunning();
+	void resumeRunning();
 private:
 	void onBreak();
 	inline break_id_t createBreakUniq() noexcept { return ++this->breakUniq_; };
