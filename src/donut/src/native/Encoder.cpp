@@ -66,4 +66,10 @@ Handler<Object> encode<std::string>(Handler<Heap> const& heap, std::string val)
 	return heap->createStringObject(val);
 }
 
+template <>
+Handler<Object> encode<std::nullptr_t>(Handler<Heap> const& heap, std::nullptr_t)
+{
+	return heap->createNull();
+}
+
 }}

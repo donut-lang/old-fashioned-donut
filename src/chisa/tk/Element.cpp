@@ -39,6 +39,7 @@ const std::string Element::AttrName::Width("width");
 const std::string Element::AttrName::Height("height");
 
 const std::string Element::AttrName::Id("id");
+const std::string Element::AttrName::Enabled("enabled");
 
 Element::Element(Logger& log, HandlerW<World> world, HandlerW<Element> parent)
 :log_(log)
@@ -54,6 +55,7 @@ Element::Element(Logger& log, HandlerW<World> world, HandlerW<Element> parent)
 ,disabledBackgroundColor_(gl::Color(0.7,0.7,0.7,1))
 ,relayoutRequested_(false)
 ,onFocused_(false)
+,enabled_(true)
 {
 	this->addAttribute(AttrName::Margin, this->margin_);
 	this->addAttribute(AttrName::Padding, this->padding_);
@@ -62,6 +64,7 @@ Element::Element(Logger& log, HandlerW<World> world, HandlerW<Element> parent)
 	this->addAttribute(AttrName::ForegroundColor, this->foregroundColor_);
 	this->addAttribute(AttrName::BackgroundColor, this->backgroundColor_);
 	this->addAttribute(AttrName::Id, this->id_);
+	this->addAttribute(AttrName::Enabled, this->enabled_);
 }
 
 void Element::idle(const float delta_ms)
@@ -284,11 +287,12 @@ Handler<ElementObject> Element::donutObject()
 
 bool Element::enabledImpl()
 {
-	return true;
+	return enabled_;
 }
 
 void Element::enabledImpl(bool const& newstate)
 {
+	this->enabled_ = newstate;
 }
 
 }}

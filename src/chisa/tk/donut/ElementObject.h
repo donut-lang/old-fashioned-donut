@@ -64,6 +64,8 @@ public:
 public:
 	Handler<Element> findRootElement();
 	Handler<Object> findElementById(std::string const& id);
+	std::nullptr_t setEnabled( bool newstate );
+	bool isEnabled();
 };
 
 /**********************************************************************************************************************

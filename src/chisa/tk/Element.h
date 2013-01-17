@@ -49,6 +49,7 @@ class Element : public HandlerBody<Element>, public ActionListener {
 public:
 	struct AttrName {
 		const static std::string Id;
+		const static std::string Enabled;
 		const static std::string Padding;
 		const static std::string Margin;
 		const static std::string EdgeWidth;
@@ -89,6 +90,7 @@ private: /* 画面描画情報 */
 	geom::Point lastInnerPositionInRoot_;
 	geom::Area lastInnerDrawnAreaInRoot_;
 	bool onFocused_;
+	bool enabled_;
 private: /* どーなつとの接続 */
 	HandlerW<ElementObject> donutObject_;
 public:
