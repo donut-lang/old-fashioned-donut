@@ -63,30 +63,72 @@
 					<vertical split-weight="1">
 						<button text="記録メモを取る">
 								Geist.selectTakeSnapshot();
+								World.findElementById("select-ne").setEnabled(true);
+								World.findElementById("select-eq").setEnabled(true);
+								World.findElementById("select-ge").setEnabled(true);
+								World.findElementById("select-le").setEnabled(true);
+								World.findElementById("select-gt").setEnabled(true);
+								World.findElementById("select-lt").setEnabled(true);
 						</button>
 						<label text="記録メモと比較して" />
 						<horizontal>
-							<button text="変わってない" split-weight="1" enabled="false">
+							<button id="select-ne" text="変わってない" split-weight="1">
 								Geist.selectEq();
+								World.findElementById("select-ne").setEnabled(false);
+								World.findElementById("select-eq").setEnabled(false);
+								World.findElementById("select-ge").setEnabled(false);
+								World.findElementById("select-le").setEnabled(false);
+								World.findElementById("select-gt").setEnabled(false);
+								World.findElementById("select-lt").setEnabled(false);
 							</button>
-							<button text="変わった" split-weight="1">
+							<button id="select-eq" text="変わった" split-weight="1">
 								Geist.selectNe();
+								World.findElementById("select-ne").setEnabled(false);
+								World.findElementById("select-eq").setEnabled(false);
+								World.findElementById("select-ge").setEnabled(false);
+								World.findElementById("select-le").setEnabled(false);
+								World.findElementById("select-gt").setEnabled(false);
+								World.findElementById("select-lt").setEnabled(false);
 							</button>
 						</horizontal>
 						<horizontal>
-							<button text="大きくなった" split-weight="1">
+							<button id="select-gt" text="大きくなった" split-weight="1">
 								Geist.selectGt();
+								World.findElementById("select-ne").setEnabled(false);
+								World.findElementById("select-eq").setEnabled(false);
+								World.findElementById("select-ge").setEnabled(false);
+								World.findElementById("select-le").setEnabled(false);
+								World.findElementById("select-gt").setEnabled(false);
+								World.findElementById("select-lt").setEnabled(false);
 							</button>
-							<button text="小さくなった" split-weight="1">
+							<button id="select-lt" text="小さくなった" split-weight="1">
 								Geist.selectLt();
+								World.findElementById("select-ne").setEnabled(false);
+								World.findElementById("select-eq").setEnabled(false);
+								World.findElementById("select-ge").setEnabled(false);
+								World.findElementById("select-le").setEnabled(false);
+								World.findElementById("select-gt").setEnabled(false);
+								World.findElementById("select-lt").setEnabled(false);
 							</button>
 						</horizontal>
 						<horizontal>
-							<button text="同じか大きく" split-weight="1">
+							<button id="select-ge" text="同じか大きく" split-weight="1">
 								Geist.selectGe();
+								World.findElementById("select-ne").setEnabled(false);
+								World.findElementById("select-eq").setEnabled(false);
+								World.findElementById("select-ge").setEnabled(false);
+								World.findElementById("select-le").setEnabled(false);
+								World.findElementById("select-gt").setEnabled(false);
+								World.findElementById("select-lt").setEnabled(false);
 							</button>
-							<button text="同じか小さく" split-weight="1">
+							<button id="select-le" text="同じか小さく" split-weight="1">
 								Geist.selectLe();
+								World.findElementById("select-ne").setEnabled(false);
+								World.findElementById("select-eq").setEnabled(false);
+								World.findElementById("select-ge").setEnabled(false);
+								World.findElementById("select-le").setEnabled(false);
+								World.findElementById("select-gt").setEnabled(false);
+								World.findElementById("select-lt").setEnabled(false);
 							</button>
 						</horizontal>
 					</vertical>

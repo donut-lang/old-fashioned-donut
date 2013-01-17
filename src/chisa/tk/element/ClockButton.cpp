@@ -53,7 +53,7 @@ static std::string const TAG("ClockButton");
 
 const std::string ClockButton::AttrName::Operation("op");
 
-CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(ClockButton, Button)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(ClockButton, ClickButton)
 ,operation_(Back)
 {
 	this->addAttribute(AttrName::Operation, this->operation_);

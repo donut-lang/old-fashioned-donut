@@ -29,11 +29,11 @@ namespace tk {
 
 static std::string const TAG("Button");
 
-const std::string Button::AttrName::ShadowColor("shadow-color");
-const std::string Button::AttrName::ShadowDepth("shadow-depth");
-const std::string Button::AttrName::DonutMachineName("donut");
+const std::string ClickButton::AttrName::ShadowColor("shadow-color");
+const std::string ClickButton::AttrName::ShadowDepth("shadow-depth");
+const std::string ClickButton::AttrName::DonutMachineName("donut");
 
-CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(Button, AbstractButton)
+CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(ClickButton, AbstractButton)
 ,shadowColor_(gl::DarkGray)
 ,shadowDepth_(3.0f)
 ,donutMachineName_()
@@ -44,29 +44,29 @@ CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(Button, AbstractButton)
 	this->addAttribute(AttrName::DonutMachineName, this->donutMachineName_);
 }
 
-Button::~Button() noexcept
+ClickButton::~ClickButton() noexcept
 {
 }
 
-std::string Button::toString() const
+std::string ClickButton::toString() const
 {
 	return ::tarte::format("(Button text:\"%s\" %p)", this->text().c_str(), this);
 }
 
-void Button::shadowColor(gl::Color const& color)
+void ClickButton::shadowColor(gl::Color const& color)
 {
 	if(this->shadowColor_ != color){
 		this->shadowColor_ = color;
 	}
 }
-void Button::shadowDepth(float const& depth)
+void ClickButton::shadowDepth(float const& depth)
 {
 	if( this->shadowDepth_ != depth ) {
 		this->shadowDepth_ = depth;
 	}
 }
 
-void Button::renderOn(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
+void ClickButton::renderOn(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
 	canvas.fillRect(this->shadowColor_, geom::Area(ptInRoot, geom::Box(innerSize().width(), shadowDepth_)) );
 	canvas.fillRect(this->shadowColor_, geom::Area(ptInRoot, geom::Box(shadowDepth_, innerSize().height())) );
@@ -75,7 +75,7 @@ void Button::renderOn(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Are
 	geom::Area const buttonMask(mask.point()-offset, mask.box());
 	this->textImage()->draw(canvas, ptInRoot+offset, buttonMask);
 }
-void Button::renderOff(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
+void ClickButton::renderOff(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
 	canvas.fillRect(this->shadowColor_, geom::Area(ptInRoot+geom::Distance(0, innerSize().height()-shadowDepth_), geom::Box(innerSize().width(), shadowDepth_)) );
 	canvas.fillRect(this->shadowColor_, geom::Area(ptInRoot+geom::Distance(innerSize().width()-shadowDepth_, 0), geom::Box(shadowDepth_, innerSize().height())) );
@@ -84,7 +84,7 @@ void Button::renderOff(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Ar
 	geom::Area const buttonMask(mask.point()-offset, mask.box());
 	this->textImage()->draw(canvas, ptInRoot+offset, buttonMask);
 }
-void Button::renderDisabled(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
+void ClickButton::renderDisabled(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
 	canvas.fillRect(this->shadowColor_, geom::Area(ptInRoot, innerSize()) );
 	canvas.fillRect(this->disabledBackgroundColor(), geom::Area(ptInRoot+geom::Distance(shadowDepth_/2, shadowDepth_/2), innerSize()-geom::Box(shadowDepth_, shadowDepth_)) );
@@ -93,22 +93,22 @@ void Button::renderDisabled(gl::Canvas& canvas, geom::Point const& ptInRoot, geo
 	geom::Area const buttonMask(mask.point()-offset, mask.box());
 	this->textImage()->draw(canvas, ptInRoot+offset, buttonMask);
 }
-bool Button::isOn() const noexcept
+bool ClickButton::isOn() const noexcept
 {
 	return this->pushedCount() > 0;
 }
 
-geom::Box Button::measureButtonContent(geom::Box const& constraint)
+geom::Box ClickButton::measureButtonContent(geom::Box const& constraint)
 {
 	return this->textImage()->size()+geom::Distance(shadowDepth_,shadowDepth_);
 }
 
-void Button::layoutButtonContent(geom::Box const& size)
+void ClickButton::layoutButtonContent(geom::Box const& size)
 {
 	this->renderOffset_ = ((size-this->textImage()->size()-geom::Distance(shadowDepth_,shadowDepth_))/2);
 }
 
-void Button::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)
+void ClickButton::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
 	const char* src = element->GetText();;
 	if( src ) {
@@ -120,7 +120,7 @@ void Button::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* co
 	}
 }
 
-void Button::onClick()
+void ClickButton::onClick()
 {
 	if(this->script_){
 		if(this->log().d()){

@@ -24,8 +24,8 @@
 namespace chisa {
 namespace tk {
 
-class Button: public AbstractButton {
-	CHISA_ELEMENT_SUBKLASS_FINAL(Button);
+class ClickButton: public AbstractButton {
+	CHISA_ELEMENT_SUBKLASS_FINAL(ClickButton);
 public:
 	struct AttrName{
 		const static std::string ShadowColor;

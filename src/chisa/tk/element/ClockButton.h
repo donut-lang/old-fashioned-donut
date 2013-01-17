@@ -24,7 +24,7 @@
 namespace chisa {
 namespace tk {
 
-class ClockButton: public Button {
+class ClockButton: public ClickButton {
 	CHISA_ELEMENT_SUBKLASS_FINAL(ClockButton);
 private:
 	struct AttrName{
