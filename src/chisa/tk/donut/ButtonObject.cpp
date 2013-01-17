@@ -23,6 +23,6 @@
 namespace chisa {
 namespace tk {
 
-const static std::string TAG("ElementObject");
+const static std::string TAG("ButtonObject");
 
 }}

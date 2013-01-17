@@ -92,4 +92,22 @@ void ClockButton::onClick()
 	}
 }
 
+bool ClockButton::enabledImpl()
+{
+	Handler<World> w (this->world().lock());
+	if( unlikely(!w) ){
+		return false;
+	}
+	// FIXME: 見苦しい
+	bool const clk = ( operation_ == Forward ?
+			w->donut()->clock()->canAdvance() :
+			w->donut()->clock()->canBack());
+	bool const orig = this->Element::enabledImpl();
+	if( clk ^ orig ){
+		enabled(clk);
+	}
+	return clk;
+
+}
+
 }}

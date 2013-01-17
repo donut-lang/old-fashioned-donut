@@ -35,6 +35,7 @@
 
 #include "../donut/element/SplitComboObject.h"
 #include "../donut/element/TextAreaObject.h"
+#include "../donut/element/ScriptButtonObject.h"
 
 #include "../World.h"
 
@@ -155,6 +156,7 @@ void ElementFactory::registerDonutProvider(Handler< ::donut::Heap> const& heap)
 	}
 	this->registerProvider<SplitCombo>(Handler<ElementProvider>(new SplitComboProvider(heap, world)));
 	this->registerProvider<TextArea>(Handler<ElementProvider>(new TextAreaProvider(heap, world)));
+	this->registerProvider<ScriptButton>(Handler<ElementProvider>(new ScriptButtonProvider(heap, world)));
 }
 
 Handler<ElementProvider> ElementFactory::getProviderOf(Element* me)

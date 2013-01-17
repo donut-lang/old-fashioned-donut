@@ -91,6 +91,8 @@ protected:
 	ElementProviderBaseT( Handler<Heap> const& heap, Handler<World> const& world );
 	virtual ~ElementProviderBaseT() noexcept = default;
 private:
+	void registerClosures();
+private:
 	virtual HeapObject* __internal__createInstanceForLoading() override final {
 		return new ObjectT( static_cast<ProviderT*>(this) );
 	}
@@ -141,14 +143,22 @@ template<typename ProviderT, typename ObjectT, typename ElementT, typename AntiT
 ElementProviderBaseT<ProviderT, ObjectT, ElementT, AntiT >::ElementProviderBaseT(const Handler<Heap>& heap, const std::string& name, Handler<World> const& world)
 :ElementProvider(heap, name, world)
 {
-	this->registerReactiveNativeClosure("setEnabled", &ObjectT::setEnabled);
+	registerClosures();
 }
 
 template<typename ProviderT, typename ObjectT, typename ElementT, typename AntiT>
 ElementProviderBaseT<ProviderT, ObjectT, ElementT, AntiT >::ElementProviderBaseT(const Handler<Heap>& heap, Handler<World> const& world)
 :ElementProvider(heap, ::tarte::demangle<ObjectT>(), world)
 {
+	registerClosures();
 }
+
+template<typename ProviderT, typename ObjectT, typename ElementT, typename AntiT>
+void ElementProviderBaseT<ProviderT, ObjectT, ElementT, AntiT >::registerClosures()
+{
+	this->registerReactiveNativeClosure("setEnabled", &ObjectT::setEnabled);
+}
+
 
 //-------------------------------------------------------------------
 

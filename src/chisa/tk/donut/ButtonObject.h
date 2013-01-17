@@ -46,6 +46,9 @@ struct ButtonSideEffect {
 	template <typename Arc>
 	void serialize(Arc& arc) {
 	}
+	ButtonSideEffect():op(None){
+
+	}
 };
 
 template <typename ProviderT, typename ObjectT, typename ElementT, typename AntiT>
@@ -91,7 +94,6 @@ template<typename ProviderT, typename ObjectT, typename ButtonT, typename AntiT>
 ButtonProviderBaseT<ProviderT, ObjectT, ButtonT, AntiT >::ButtonProviderBaseT(const Handler<Heap>& heap, const std::string& name, Handler<World> const& world)
 :ElementProviderBaseT<ProviderT, ObjectT, ButtonT, AntiT >(heap, name, world)
 {
-	this->registerReactiveNativeClosure("setEnabled", &ObjectT::setEnabled);
 }
 
 template<typename ProviderT, typename ObjectT, typename ButtonT, typename AntiT>

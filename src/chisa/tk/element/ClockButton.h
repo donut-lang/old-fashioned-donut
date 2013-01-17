@@ -24,7 +24,7 @@
 namespace chisa {
 namespace tk {
 
-class ClockButton: public ClickButton {
+class ClockButton final: public ClickButton {
 	CHISA_ELEMENT_SUBKLASS_FINAL(ClockButton);
 private:
 	struct AttrName{
@@ -42,6 +42,7 @@ public:
 private:
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
 	virtual void onClick() override;
+	virtual bool enabledImpl();
 };
 
 }}

@@ -72,7 +72,7 @@
 						</button>
 						<label text="記録メモと比較して" />
 						<horizontal>
-							<button id="select-ne" text="変わってない" split-weight="1">
+							<button id="select-ne" text="変わってない" split-weight="1" enabled="false">
 								Geist.selectEq();
 								World.findElementById("select-ne").setEnabled(false);
 								World.findElementById("select-eq").setEnabled(false);
@@ -81,7 +81,7 @@
 								World.findElementById("select-gt").setEnabled(false);
 								World.findElementById("select-lt").setEnabled(false);
 							</button>
-							<button id="select-eq" text="変わった" split-weight="1">
+							<button id="select-eq" text="変わった" split-weight="1" enabled="false">
 								Geist.selectNe();
 								World.findElementById("select-ne").setEnabled(false);
 								World.findElementById("select-eq").setEnabled(false);
@@ -92,7 +92,7 @@
 							</button>
 						</horizontal>
 						<horizontal>
-							<button id="select-gt" text="大きくなった" split-weight="1">
+							<button id="select-gt" text="大きくなった" split-weight="1" enabled="false">
 								Geist.selectGt();
 								World.findElementById("select-ne").setEnabled(false);
 								World.findElementById("select-eq").setEnabled(false);
@@ -101,7 +101,7 @@
 								World.findElementById("select-gt").setEnabled(false);
 								World.findElementById("select-lt").setEnabled(false);
 							</button>
-							<button id="select-lt" text="小さくなった" split-weight="1">
+							<button id="select-lt" text="小さくなった" split-weight="1" enabled="false">
 								Geist.selectLt();
 								World.findElementById("select-ne").setEnabled(false);
 								World.findElementById("select-eq").setEnabled(false);
@@ -112,7 +112,7 @@
 							</button>
 						</horizontal>
 						<horizontal>
-							<button id="select-ge" text="同じか大きく" split-weight="1">
+							<button id="select-ge" text="同じか大きく" split-weight="1" enabled="false">
 								Geist.selectGe();
 								World.findElementById("select-ne").setEnabled(false);
 								World.findElementById("select-eq").setEnabled(false);
@@ -121,7 +121,7 @@
 								World.findElementById("select-gt").setEnabled(false);
 								World.findElementById("select-lt").setEnabled(false);
 							</button>
-							<button id="select-le" text="同じか小さく" split-weight="1">
+							<button id="select-le" text="同じか小さく" split-weight="1" enabled="false">
 								Geist.selectLe();
 								World.findElementById("select-ne").setEnabled(false);
 								World.findElementById("select-eq").setEnabled(false);
