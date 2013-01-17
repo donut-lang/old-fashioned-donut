@@ -118,6 +118,7 @@ public:
 	inline gl::Color const& backgroundColor() const noexcept { return this->backgroundColor_; };
 	inline gl::Color const& disabledForegroundColor() const noexcept { return this->disabledForegroundColor_; };
 	inline gl::Color const& disabledBackgroundColor() const noexcept { return this->disabledBackgroundColor_; };
+	inline gl::Color const& edgeColor() const noexcept { return this->edgeColor_; };
 	inline bool onFocused() const noexcept { return this->onFocused_; };
 	inline bool enabled() noexcept { return this->enabledImpl(); };
 	inline void enabled( bool const& newState ) noexcept { this->enabledImpl(newState); };

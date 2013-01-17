@@ -73,9 +73,12 @@ public:
 
 struct ElementSideEffect {
 	enum {
+		None,
 		SetEnabledOrDisabled,
+		SetEdgeColor
 	} op;
 	bool enabled;
+	gl::Color color;
 	typedef ElementSideEffect Super;
 	template <typename Arc>
 	void serialize(Arc& arc) {
@@ -126,6 +129,7 @@ public:
 	}
 public:
 	std::tuple<std::nullptr_t,bool,AntiT> setEnabled( bool newstate );
+	std::tuple<std::nullptr_t,bool,AntiT> setEdgeColor( std::string const& color );
 private:
 	ResultType execAntiSideEffect(Handler<Heap> const& heap, AntiSideEffect const& val);
 public:
@@ -157,6 +161,7 @@ template<typename ProviderT, typename ObjectT, typename ElementT, typename AntiT
 void ElementProviderBaseT<ProviderT, ObjectT, ElementT, AntiT >::registerClosures()
 {
 	this->registerReactiveNativeClosure("setEnabled", &ObjectT::setEnabled);
+	this->registerReactiveNativeClosure("setEdgeColor", &ObjectT::setEdgeColor);
 }
 
 
@@ -171,7 +176,6 @@ ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ElementObjectBaseT(Provid
 template <typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
 void ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::onFutureDiscarded(Handler<Heap> const& heap)
 {
-
 }
 template <typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
 void ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::onHistoryDiscarded(Handler<Heap> const& heap)
@@ -191,6 +195,15 @@ inline typename ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ResultTyp
 		side.enabled = element()->enabled();
 		element()->enabled( old.enabled );
 		break;
+	case ElementSideEffect::SetEdgeColor:
+		side.op = ElementSideEffect::None;
+		side.op = ElementSideEffect::SetEdgeColor;
+		side.color = element()->edgeColor();
+		element()->edgeColor( old.color );
+		break;
+	case ElementSideEffect::None:
+		side.op = ElementSideEffect::None;
+		break;
 	}
 	return std::make_tuple(true, newAnti);
 }
@@ -198,12 +211,26 @@ inline typename ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ResultTyp
 template<typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
 inline typename ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ResultType ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::onBack(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
+	ElementSideEffect const& old = val;
+	switch(old.op){
+	case ElementSideEffect::SetEdgeColor:
+	case ElementSideEffect::SetEnabledOrDisabled:
+	case ElementSideEffect::None:
+		break;
+	}
 	return this->ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::execAntiSideEffect(heap, val);
 }
 
 template<typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
 inline typename ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ResultType ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::onForward(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
+	ElementSideEffect const& old = val;
+	switch(old.op){
+	case ElementSideEffect::SetEdgeColor:
+	case ElementSideEffect::SetEnabledOrDisabled:
+	case ElementSideEffect::None:
+		break;
+	}
 	return this->ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::execAntiSideEffect(heap, val);
 }
 
@@ -216,6 +243,17 @@ std::tuple<std::nullptr_t,bool,AntiT> ElementObjectBaseT<ProviderT, ObjectT, Ang
 		side.op=ElementSideEffect::SetEnabledOrDisabled;
 		side.enabled = oldstate;
 		element()->enabled(newstate);
+		return std::tuple<std::nullptr_t, bool, AntiT>(nullptr, true, anti);
+}
+
+template<typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
+std::tuple<std::nullptr_t,bool,AntiT> ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::setEdgeColor( std::string const& color )
+{
+		AntiT anti;
+		ElementSideEffect& side = anti;
+		side.op=ElementSideEffect::SetEdgeColor;
+		side.color = element()->edgeColor();
+		element()->edgeColor( chisa::gl::Color::fromString(color) );
 		return std::tuple<std::nullptr_t, bool, AntiT>(nullptr, true, anti);
 }
 

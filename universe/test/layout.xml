@@ -145,7 +145,9 @@
 			</vertical>
 		</horizontal>
 		<horizontal>
-			<label split-weight="1" />
+			<button text="ステップ"></button>
+			<button text="再開"></button>
+			<label split-weight="1" id="status" />
 			<clockbutton text="戻る" op="back" />
 			<clockbutton text="進む" op="forward" />
 		</horizontal>
@@ -155,7 +157,14 @@
 		<textarea id="val" desc="値を入力" />
 		<button text=" 変更 ">
 			angel = Global.__mem__widget_angel;
-			Geist.writeNES(Global.__mem__widget_addr, angel.findElementById("val").getText().toInteger());
+			elm = angel.findElementById("val");
+			res = Geist.writeNES(Global.__mem__widget_addr, elm.getText());
+			if( !res.isEmpty() ) {
+				elm.setFrameColor("red");
+				World.findElementById("status").setText(res);
+			}else{
+				World.findElementById("status").setText("");
+			};
 		</button>
 	</horizontal>
 	<label id="label" text="NES"></label>

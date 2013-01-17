@@ -65,6 +65,11 @@ Handler<Object> encode<std::string>(Handler<Heap> const& heap, std::string val)
 {
 	return heap->createStringObject(val);
 }
+template <>
+Handler<Object> encode<const char*>(Handler<Heap> const& heap, const char* val)
+{
+	return heap->createStringObject(val);
+}
 
 template <>
 Handler<Object> encode<std::nullptr_t>(Handler<Heap> const& heap, std::nullptr_t)

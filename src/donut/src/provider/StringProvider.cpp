@@ -96,6 +96,11 @@ StringProvider::StringProvider(Handler<Heap> const& heap )
 	this->registerPureNativeClosure("toString", [this](StringObject* self) {
 		return self;
 	});
+	this->registerPureNativeClosure("isEmpty", [this](StringObject* self) {
+		Handler<Heap> heap(this->heap().lock());
+		std::string const str = self->toString(heap);
+		return str.empty();
+	});
 }
 
 }

@@ -18,20 +18,18 @@
 
 #pragma once
 #include "../ElementGroupObject.h"
-#include "../../element/TextArea.h"
+#include "../../element/Label.h"
 
 namespace chisa {
 namespace tk {
 
-struct TextAreaSideEffect : public ElementSideEffect {
+struct LabelSideEffect : public ElementSideEffect {
 	enum {
 		None=0,
 		ChangeText,
-		ChangeFrameColor
 	} op;
 	std::string text;
-	gl::Color color;
-	TextAreaSideEffect()
+	LabelSideEffect()
 	:op(None)
 	{
 	}
@@ -41,11 +39,11 @@ struct TextAreaSideEffect : public ElementSideEffect {
 	}
 };
 
-class TextAreaProvider;
-class TextAreaObject : public ElementObjectBaseT<TextAreaProvider, TextAreaObject, TextArea, TextAreaSideEffect> {
+class LabelProvider;
+class LabelObject : public ElementObjectBaseT<LabelProvider, LabelObject, Label, LabelSideEffect> {
 public:
-	TextAreaObject(TextAreaProvider* provider);
-	virtual ~TextAreaObject() noexcept = default;
+	LabelObject(LabelProvider* provider);
+	virtual ~LabelObject() noexcept = default;
 private:
 	ResultType execAntiSideEffect(Handler<Heap> const& heap, AntiSideEffect const& val);
 public:
@@ -57,10 +55,10 @@ public:
 	void loadImpl( Handler<Heap> const& heap, XValue const& data ) override final;
 };
 
-class TextAreaProvider : public ElementProviderBaseT<TextAreaProvider, TextAreaObject, TextArea, TextAreaSideEffect> {
+class LabelProvider : public ElementProviderBaseT<LabelProvider, LabelObject, Label, LabelSideEffect> {
 public:
-	TextAreaProvider(Handler<Heap> const& heap, Handler<World> const& world);
-	virtual ~TextAreaProvider() noexcept = default;
+	LabelProvider(Handler<Heap> const& heap, Handler<World> const& world);
+	virtual ~LabelProvider() noexcept = default;
 };
 
 }}

@@ -32,12 +32,14 @@ namespace tk {
 
 const std::string TextArea::AttrName::Description("desc");
 const std::string TextArea::AttrName::TextSize("text-size");
+const std::string TextArea::AttrName::FrameColor("frame-color");
 
 static constexpr geom::Space TextMargin(3.0f);
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(TextArea, Element)
 ,textSize_(32.0f)
 ,description_()
+,frameColor_(gl::Black)
 ,text_()
 ,editing_(false)
 ,textImage_()
@@ -53,6 +55,7 @@ CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(TextArea, Element)
 	this->padding(geom::Space(2.5f));
 	this->addAttribute(AttrName::Description, this->description_);
 	this->addAttribute(AttrName::TextSize, this->textSize_);
+	this->addAttribute(AttrName::FrameColor, this->frameColor_);
 }
 
 TextArea::~TextArea() noexcept
@@ -129,7 +132,7 @@ void TextArea::renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom:
 			}
 		}
 	}else{
-		canvas.drawRect(2.0f, gl::Black, screenArea);
+		canvas.drawRect(2.0f, this->frameColor(), screenArea);
 		if(this->text_.empty()) {
 			Handler<gl::TextDrawable> spr(this->descImage());
 			spr->draw(canvas, textArea.point()+(textArea.box() - spr->size())/2.0f);

@@ -31,10 +31,12 @@ public:
 	struct AttrName{
 		const static std::string Description;
 		const static std::string TextSize;
+		const static std::string FrameColor;
 	};
 private: /* 設定されうるリソース */
 	float textSize_;
 	std::string description_;
+	gl::Color frameColor_;
 private: /* 変化するリソース */
 	std::string text_;
 private: /* 描画のための一時的なリソース */
@@ -56,10 +58,12 @@ public:
 	void text(std::string const& text);
 	void description(std::string const& text);
 	void textSize(float const& size);
+	void frameColor(gl::Color const& c) { this->frameColor_ = c; };
 public:
-	inline std::string text() const noexcept{ return this->text_; };
-	inline std::string description() const noexcept{ return this->description_; };
-	inline float textSize() const noexcept { return this->textSize_; };
+	inline std::string const& text() const noexcept{ return this->text_; };
+	inline std::string const& description() const noexcept{ return this->description_; };
+	inline float const& textSize() const noexcept { return this->textSize_; };
+	inline gl::Color const& frameColor() const noexcept { return this->frameColor_; };
 private:
 	virtual void idle(const float delta_ms) override;
 	virtual std::string toString() const override final;

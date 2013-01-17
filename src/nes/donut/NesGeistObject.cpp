@@ -34,15 +34,30 @@ NesGeistProvider::NesGeistProvider(Handler< ::donut::Heap> const& heap)
 
 		return std::make_tuple(fname,false,side);
 	});
-	this->registerReactiveNativeClosure("writeNES",[](NesGeistObject* obj, uint16_t addr, uint16_t val){
-		Handler<NesGeist> geist(obj->geist());
-		NesGeist::MachineLock lock(geist);
+	this->registerReactiveNativeClosure("writeNES",[](NesGeistObject* obj, uint16_t addr, std::string vals){
+		bool succeed;
+		while(vals[0]=='0') {
+			vals = vals.substr(1);
+		}
+		int val = ::tarte::parseAs<int>(vals, &succeed);
 		NesGeistSideEffect side;
-		side.op = NesGeistSideEffect::LoadSave;
-		side.save = geist->machine()->save();
-		geist->machine()->debuggerWrite(addr, val);
-
-		return std::make_tuple(val,true,side);
+		if( !succeed ){
+			side.op = NesGeistSideEffect::None;
+			return std::make_tuple("正しい数字ではありません。",true,side);
+		}else if( val < 0 ){
+			side.op = NesGeistSideEffect::None;
+			return std::make_tuple("0以上の数字を入れて下さい。",true,side);
+		}else if( val > 255 ){
+			side.op = NesGeistSideEffect::None;
+			return std::make_tuple("255以下の数字を入れて下さい。",true,side);
+		}else{
+			Handler<NesGeist> geist(obj->geist());
+			NesGeist::MachineLock lock(geist);
+			side.op = NesGeistSideEffect::LoadSave;
+			side.save = geist->machine()->save();
+			geist->machine()->debuggerWrite(addr, val);
+			return std::make_tuple("",true,side);
+		}
 	});
 	this->registerReactiveNativeClosure("selectReset",[](NesGeistObject* obj){
 		Handler<NesGeist> geist(obj->geist());
