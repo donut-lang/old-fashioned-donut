@@ -36,8 +36,10 @@ NesGeistProvider::NesGeistProvider(Handler< ::donut::Heap> const& heap)
 	});
 	this->registerReactiveNativeClosure("writeNES",[](NesGeistObject* obj, uint16_t addr, std::string vals){
 		bool succeed;
-		while(vals[0]=='0') {
-			vals = vals.substr(1);
+		if(! ::tarte::startsWith(vals, "0x")){ //XXX: 今日だけでは
+			while(vals[0]=='0') {
+				vals = vals.substr(1);
+			}
 		}
 		int val = ::tarte::parseAs<int>(vals, &succeed);
 		NesGeistSideEffect side;
