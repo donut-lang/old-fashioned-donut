@@ -17,8 +17,8 @@ public:
 	virtual ~Mapper23();
 
 	/* for CPU */
-	void writeBankHigh(uint16_t addr, uint8_t val);
-	void writeBankLow(uint16_t addr, uint8_t val);
+	virtual void writeBankHigh(uint16_t addr, uint8_t val) override final;
+	virtual void writeBankLow(uint16_t addr, uint8_t val) override final;
 };
 
 }

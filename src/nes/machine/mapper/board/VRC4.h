@@ -12,7 +12,7 @@ namespace nes {
 
 class VRC4 : public Cartridge
 {
-public:
+protected:
 	VRC4(VirtualMachine& vm, const NesFile* nesFile);
 	virtual ~VRC4();
 protected:
@@ -91,12 +91,16 @@ protected:
 	void run(uint16_t clockDelta);
 
 	/* for PPU */
-	uint8_t readPatternTableHigh(uint16_t addr);
-	uint8_t readPatternTableLow(uint16_t addr);
+	uint8_t readPatternTableHigh(uint16_t addr) override final;
+	uint8_t readPatternTableLow(uint16_t addr) override final;
 
 	/* for CPU */
-	uint8_t readBankHigh(uint16_t addr);
-	uint8_t readBankLow(uint16_t addr);
+	virtual uint8_t readBankHigh(uint16_t addr) override final;
+	virtual uint8_t readBankLow(uint16_t addr) override final;
+	virtual uint8_t debuggerReadBankHigh(uint16_t addr) override final;
+	virtual void debuggerWriteBankHigh(uint16_t addr, uint8_t val) override final;
+	virtual uint8_t debuggerReadBankLow(uint16_t addr) override final;
+	virtual void debuggerWriteBankLow(uint16_t addr, uint8_t val) override final;
 
 	uint8_t readSaveArea(uint16_t addr);
 	void writeSaveArea(uint16_t addr, uint8_t val);

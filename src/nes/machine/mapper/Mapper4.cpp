@@ -76,6 +76,14 @@ uint8_t Mapper4::readBankHigh(uint16_t addr)
 {
 	return nesFile->readPrg(prgAddrMask[(addr >> 13) & 3] | (addr & 0x1fff));
 }
+uint8_t Mapper4::debuggerReadBankHigh(uint16_t addr)
+{
+	return readBankHigh(addr);
+}
+void Mapper4::debuggerWriteBankHigh(uint16_t addr, uint8_t val)
+{
+	nesFile->writePrg(prgAddrMask[(addr >> 13) & 3] | (addr & 0x1fff), val);
+}
 
 void Mapper4::writeBankHigh(uint16_t addr, uint8_t val)
 {
@@ -99,6 +107,14 @@ void Mapper4::writeBankHigh(uint16_t addr, uint8_t val)
 uint8_t Mapper4::readBankLow(uint16_t addr)
 {
 	return nesFile->readPrg(prgAddrMask[(addr >> 13) & 3] | (addr & 0x1fff));
+}
+uint8_t Mapper4::debuggerReadBankLow(uint16_t addr)
+{
+	return readBankLow(addr);
+}
+void Mapper4::debuggerWriteBankLow(uint16_t addr, uint8_t val)
+{
+	nesFile->writePrg(prgAddrMask[(addr >> 13) & 3] | (addr & 0x1fff), val);
 }
 
 void Mapper4::writeBankLow(uint16_t addr, uint8_t val)

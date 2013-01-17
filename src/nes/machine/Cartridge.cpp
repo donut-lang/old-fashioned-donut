@@ -52,7 +52,17 @@ uint8_t Cartridge::readRegisterArea(uint16_t addr)
 	//http://nocash.emubase.de/everynes.htm#unpredictablethings
 	return addr >> 8;
 }
+uint8_t Cartridge::debuggerReadRegisterArea(uint16_t addr)
+{
+	//http://nocash.emubase.de/everynes.htm#unpredictablethings
+	return addr >> 8;
+}
+
 void Cartridge::writeRegisterArea(uint16_t addr, uint8_t val)
+{
+	//have no effect.
+}
+void Cartridge::debuggerWriteRegisterArea(uint16_t addr, uint8_t val)
 {
 	//have no effect.
 }
@@ -61,7 +71,15 @@ uint8_t Cartridge::readSaveArea(uint16_t addr)
 {
 	return readSram(addr);
 }
+uint8_t Cartridge::debuggerReadSaveArea(uint16_t addr)
+{
+	return readSram(addr);
+}
 void Cartridge::writeSaveArea(uint16_t addr, uint8_t val)
+{
+	writeSram(addr, val);
+}
+void Cartridge::debuggerWriteSaveArea(uint16_t addr, uint8_t val)
 {
 	writeSram(addr, val);
 }
@@ -76,7 +94,13 @@ void Cartridge::writePatternTableLow(uint16_t addr, uint8_t val)
 void Cartridge::writeBankLow(uint16_t addr, uint8_t val)
 {
 }
+void Cartridge::debuggerWriteBankLow(uint16_t addr, uint8_t val)
+{
+}
 void Cartridge::writeBankHigh(uint16_t addr, uint8_t val)
+{
+}
+void Cartridge::debuggerWriteBankHigh(uint16_t addr, uint8_t val)
 {
 }
 

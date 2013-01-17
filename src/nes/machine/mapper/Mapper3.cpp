@@ -34,6 +34,13 @@ uint8_t Mapper3::readBankHigh(uint16_t addr)
 {
 	return nesFile->readPrg(prgHighBankAddrBase | (addr & 0x3fff));
 }
+uint8_t Mapper3::debuggerReadBankHigh(uint16_t addr)
+{
+	return readBankHigh(addr);
+}
+void Mapper3::debuggerWriteBankHigh(uint16_t addr, uint8_t val){
+	nesFile->writePrg(prgHighBankAddrBase | (addr & 0x3fff), val);
+}
 void Mapper3::writeBankHigh(uint16_t addr, uint8_t val)
 {
 	writeReg(addr, val);
@@ -41,6 +48,14 @@ void Mapper3::writeBankHigh(uint16_t addr, uint8_t val)
 uint8_t Mapper3::readBankLow(uint16_t addr)
 {
 	return nesFile->readPrg(addr & 0x3fff);
+}
+uint8_t Mapper3::debuggerReadBankLow(uint16_t addr)
+{
+	return readBankLow(addr);
+}
+void Mapper3::debuggerWriteBankLow(uint16_t addr, uint8_t val)
+{
+	nesFile->writePrg(addr & 0x3fff, val);
 }
 void Mapper3::writeBankLow(uint16_t addr, uint8_t val)
 {

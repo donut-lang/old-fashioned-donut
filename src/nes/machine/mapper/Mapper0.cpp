@@ -67,4 +67,23 @@ void Mapper0::writeBankLow(uint16_t addr, uint8_t val)
 	//have no effect
 }
 
+//---------
+
+uint8_t Mapper0::debuggerReadBankHigh(uint16_t addr)
+{
+	return readBankHigh(addr);
+}
+void Mapper0::debuggerWriteBankHigh(uint16_t addr, uint8_t val)
+{
+	this->nesFile->writePrg(addr & addrMask, val);
+}
+uint8_t Mapper0::debuggerReadBankLow(uint16_t addr)
+{
+	return readBankLow(addr);
+}
+void Mapper0::debuggerWriteBankLow(uint16_t addr, uint8_t val)
+{
+	this->nesFile->writePrg(addr & addrMask, val);
+}
+
 }

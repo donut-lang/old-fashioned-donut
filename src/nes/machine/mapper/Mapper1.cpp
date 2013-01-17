@@ -66,6 +66,14 @@ uint8_t Mapper1::readBankHigh(uint16_t addr)
 {
 	return this->nesFile->readPrg(highPrgAddrBase | (addr & 0x3fff));
 }
+uint8_t Mapper1::debuggerReadBankHigh(uint16_t addr)
+{
+	return readBankHigh(addr);
+}
+void Mapper1::debuggerWriteBankHigh(uint16_t addr, uint8_t val)
+{
+	this->nesFile->writePrg(lowPrgAddrBase | (addr & 0x3fff), val);
+}
 void Mapper1::writeBankHigh(uint16_t addr, uint8_t val)
 {
 	if((val & 0x80) == 0x80){
@@ -94,6 +102,14 @@ void Mapper1::writeBankHigh(uint16_t addr, uint8_t val)
 uint8_t Mapper1::readBankLow(uint16_t addr)
 {
 	return this->nesFile->readPrg(lowPrgAddrBase | (addr & 0x3fff));
+}
+uint8_t Mapper1::debuggerReadBankLow(uint16_t addr)
+{
+	return readBankLow(addr);
+}
+void Mapper1::debuggerWriteBankLow(uint16_t addr, uint8_t val)
+{
+	this->nesFile->writePrg(lowPrgAddrBase | (addr & 0x3fff), val);
 }
 void Mapper1::writeBankLow(uint16_t addr, uint8_t val)
 {

@@ -66,10 +66,26 @@ uint8_t VRC4::readBankHigh(uint16_t addr)
 {
 	return nesFile->readPrg(prgAddrBase[(addr >> 13) & 3] | (addr & 0x1fff));
 }
+uint8_t VRC4::debuggerReadBankHigh(uint16_t addr)
+{
+	return readBankHigh(addr);
+}
+void VRC4::debuggerWriteBankHigh(uint16_t addr, uint8_t val)
+{
+	return nesFile->writePrg(prgAddrBase[(addr >> 13) & 3] | (addr & 0x1fff), val);
+}
 
 uint8_t VRC4::readBankLow(uint16_t addr)
 {
 	return nesFile->readPrg(prgAddrBase[(addr >> 13) & 3] | (addr & 0x1fff));
+}
+uint8_t VRC4::debuggerReadBankLow(uint16_t addr)
+{
+	return readBankLow(addr);
+}
+void VRC4::debuggerWriteBankLow(uint16_t addr, uint8_t val)
+{
+	return nesFile->writePrg(prgAddrBase[(addr >> 13) & 3] | (addr & 0x1fff), val);
 }
 
 uint8_t VRC4::readSaveArea(uint16_t addr)

@@ -71,6 +71,11 @@ public:
 	{
 		return this->chrRom[addr];
 	}
+public: /* XXX: for debug 実際にはこれは中間オブジェクトにしておくべきなのでは。 */
+	inline void writePrg(uint32_t addr, uint8_t const& val) const
+	{
+		const_cast<uint8_t&>(this->prgRom[addr]) = val;
+	}
 private:
 	const std::string filename;
 	uint8_t mapperNo;

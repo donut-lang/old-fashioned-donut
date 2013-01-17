@@ -46,21 +46,33 @@ uint8_t Mapper2::readBankHigh(uint16_t addr)
 	return nesFile->readPrg((addr & 0x3fff) | highBankAddrBase);
 }
 
-
+uint8_t Mapper2::debuggerReadBankHigh(uint16_t addr)
+{
+	return readBankHigh(addr);
+}
 
 void Mapper2::writeBankHigh(uint16_t addr, uint8_t val)
 {
 	lowBankAddrBase = NesFile::PRG_ROM_PAGE_SIZE * (val & 0xf);
 }
 
-
+void Mapper2::debuggerWriteBankHigh(uint16_t addr, uint8_t val)
+{
+	return nesFile->writePrg((addr & 0x3fff) | highBankAddrBase, val);
+}
 
 uint8_t Mapper2::readBankLow(uint16_t addr)
 {
 	return nesFile->readPrg((addr & 0x3fff) | lowBankAddrBase);
 }
-
-
+uint8_t Mapper2::debuggerReadBankLow(uint16_t addr)
+{
+	return readBankLow(addr);
+}
+void Mapper2::debuggerWriteBankLow(uint16_t addr, uint8_t val)
+{
+	return nesFile->writePrg((addr & 0x3fff) | lowBankAddrBase, val);
+}
 
 void Mapper2::writeBankLow(uint16_t addr, uint8_t val)
 {

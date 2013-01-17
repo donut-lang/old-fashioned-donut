@@ -52,15 +52,23 @@ public:
 	/* from CPU */
 	virtual uint8_t readRegisterArea(uint16_t addr);
 	virtual void writeRegisterArea(uint16_t addr, uint8_t val);
+	virtual uint8_t debuggerReadRegisterArea(uint16_t addr);
+	virtual void debuggerWriteRegisterArea(uint16_t addr, uint8_t val);
 
 	virtual uint8_t readSaveArea(uint16_t addr);
 	virtual void writeSaveArea(uint16_t addr, uint8_t val);
+	virtual uint8_t debuggerReadSaveArea(uint16_t addr);
+	virtual void debuggerWriteSaveArea(uint16_t addr, uint8_t val);
 
 	virtual uint8_t readBankHigh(uint16_t addr) = 0;
 	virtual void writeBankHigh(uint16_t addr, uint8_t val);
+	virtual uint8_t debuggerReadBankHigh(uint16_t addr) = 0;
+	virtual void debuggerWriteBankHigh(uint16_t addr, uint8_t val);
 
 	virtual uint8_t readBankLow(uint16_t addr) = 0;
 	virtual void writeBankLow(uint16_t addr, uint8_t val);
+	virtual uint8_t debuggerReadBankLow(uint16_t addr) = 0;
+	virtual void debuggerWriteBankLow(uint16_t addr, uint8_t val);
 
 	void connectInternalVram(uint8_t* internalVram);
 	void changeMirrorType(NesFile::MirrorType mirrorType);
@@ -668,16 +676,16 @@ public:
 				}else if(addr < 0x4018){
 					return 0;
 				}else{
-					return cartridge_->readRegisterArea(addr); //XXX: 副作用避け
+					return cartridge_->debuggerReadRegisterArea(addr); //XXX: 副作用避け
 				}
 			case 0x6000:
-				return cartridge_->readSaveArea(addr); //XXX: 副作用避け
+				return cartridge_->debuggerReadSaveArea(addr); //XXX: 副作用避け
 			case 0x8000:
 			case 0xA000:
-				return cartridge_->readBankLow(addr); //XXX: 副作用避け
+				return cartridge_->debuggerReadBankLow(addr); //XXX: 副作用避け
 			case 0xC000:
 			case 0xE000:
-				return cartridge_->readBankHigh(addr); //XXX: 副作用避け
+				return cartridge_->debuggerReadBankHigh(addr); //XXX: 副作用避け
 			default:
 				return 0;
 		}
@@ -734,19 +742,19 @@ public:
 				}else if(addr < 0x4018){
 					audio_.debuggerWriteReg(addr, value);
 				}else{
-					cartridge_->writeRegisterArea(addr, value); //XXX: 副作用避け
+					cartridge_->debuggerWriteRegisterArea(addr, value); //XXX: 副作用避け
 				}
 				break;
 			case 0x6000:
-				cartridge_->writeSaveArea(addr, value); //XXX: 副作用避け
+				cartridge_->debuggerWriteSaveArea(addr, value); //XXX: 副作用避け
 				break;
 			case 0x8000:
 			case 0xA000:
-				cartridge_->writeBankLow(addr, value); //XXX: 副作用避け
+				cartridge_->debuggerWriteBankLow(addr, value); //XXX: 副作用避け
 				break;
 			case 0xC000:
 			case 0xE000:
-				cartridge_->writeBankHigh(addr, value); //XXX: 副作用避け
+				cartridge_->debuggerWriteBankHigh(addr, value); //XXX: 副作用避け
 				break;
 			default:
 				break;
