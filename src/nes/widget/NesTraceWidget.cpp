@@ -143,7 +143,9 @@ void NesTraceWidget::renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const& 
 		return;
 	}
 	VirtualMachine& vm = *geist->machine();
-	Disassembler& disasm = vm.debugger().disassembler();
+	Debugger& dbg = vm.debugger();
+	Disassembler& disasm = dbg.disassembler();
+	bool const isBreak = geist->isBreak();
 
 	float offset = 0;
 	float const rowHeight = this->symRenderer_.maxHeight();
@@ -172,7 +174,7 @@ void NesTraceWidget::renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const& 
 		}
 	}
 
-	if( lastPC_ < lastDrawnPCStart_ ) {
+	if( !isBreak && lastPC_ < lastDrawnPCStart_ ) {
 		this->lastDrawnPCStart_ = lastPC_;
 		int pc = lastPC_;
 		int row = 0;
@@ -190,7 +192,7 @@ void NesTraceWidget::renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const& 
 			}
 		} while( row <= endRow && pc < 0x10000 );
 		lastDrawnPCEnd_ = pc;
-	}else if( lastPC_ > lastDrawnPCEnd_ ) {
+	}else if( !isBreak && lastPC_ > lastDrawnPCEnd_ ) {
 		lastDrawnPCEnd_ = lastPC_;
 		int pc = lastPC_;
 		int row = endRow;
@@ -598,6 +600,7 @@ chisa::geom::Area NesTraceWidget::addrToArea(const uint16_t& addr)
 			++row;
 		}else{
 			++pc;
+			next=pc;
 		}
 	}
 	const float rowHeight = numRenderer_.maxHeight();
@@ -608,7 +611,7 @@ uint16_t NesTraceWidget::ptToAddr(const chisa::geom::Point& pt)
 {
 	Handler<NesGeist> geist = this->geist_.lock();
 	if( unlikely(!geist) ){
-		return true;
+		return 0;
 	}
 	const float rowHeight = numRenderer_.maxHeight();
 	Debugger& dbg = geist->machine()->debugger();
@@ -616,7 +619,7 @@ uint16_t NesTraceWidget::ptToAddr(const chisa::geom::Point& pt)
 	int row = std::max(0, static_cast<int>(pt.y()/rowHeight));
 	uint16_t pc = lastDrawnPCStart_;
 	Instruction inst;
-	while(row){
+	while(row > 0){
 		if(disasm.decodeAt(pc, inst)){
 			pc+=inst.binLength_;
 			--row;

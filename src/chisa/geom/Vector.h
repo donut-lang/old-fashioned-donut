@@ -300,8 +300,8 @@ public:
 	inline void height(const ValType height) noexcept { this->y(height); };
 	inline constexpr bool empty() const noexcept {
 		return
-				std::fabs(this->x()) < geom::VerySmall ||
-				std::fabs(this->y()) < geom::VerySmall;
+				!(std::fabs(this->x()) >= geom::VerySmall &&
+				std::fabs(this->y()) >= geom::VerySmall);
 	}
 };
 constexpr Vector ZERO = Vector(0,0);

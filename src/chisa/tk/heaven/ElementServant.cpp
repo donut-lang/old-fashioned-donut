@@ -48,6 +48,10 @@ void ElementServant::renderImpl(gl::Canvas& canvas)
 	geom::Box box = this->element_->size();
 	geom::Area area = this->target()->findScreenArea();
 
+	if(area.empty()){
+		return;
+	}
+
 	float offsetX = 0;
 	float lineOffsetX = 0;
 	float midX;
