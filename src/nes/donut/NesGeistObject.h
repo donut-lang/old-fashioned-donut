@@ -25,13 +25,15 @@
 namespace nes {
 
 struct NesGeistSideEffect {
-	enum {
+	enum Operation{
 		None=0,
 		LoadSave,
 		LoadSaveAndRun
-	} op;
-	::tarte::XValue save;
-	::tarte::XValue cmpSave;
+	};
+	Operation op_before;
+	Operation op_after;
+	::tarte::XValue before;
+	::tarte::XValue after;
 	NesGeistSideEffect()
 	:op(None)
 	{
@@ -46,8 +48,6 @@ class NesGeistObject : public ::chisa::tk::GeistObjectBaseT<NesGeistProvider, Ne
 public:
 	NesGeistObject(NesGeistProvider* provider);
 	virtual ~NesGeistObject() noexcept = default;
-private:
-	ResultType execAntiSideEffect(Handler< ::donut::Heap> const& heap, AntiSideEffect const& val);
 public:
 	void onFutureDiscarded(Handler< ::donut::Heap> const& heap);
 	void onHistoryDiscarded(Handler< ::donut::Heap> const& heap);
