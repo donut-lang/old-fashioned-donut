@@ -19,6 +19,7 @@
 #pragma once
 #include <cstddef>
 #include <cstdint>
+#include <string>
 
 namespace nes {
 
@@ -120,6 +121,7 @@ public:
 	inline bool isInvalidInstruction() const noexcept{
 		return (op_ == Operation::Invalid) || (addrMode_ == AddrMode::Invalid);
 	}
+	std::string toString() const noexcept;
 public:
 	template <typename Archiver>
 	void serialize(Archiver& arc){

@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <sstream>
 #include <tarte/Exception.h>
 #include "Disassembler.h"
 #include "../VirtualMachine.h"
@@ -115,6 +116,242 @@ bool Disassembler::decodeAt(uint16_t addr, Instruction& inst)
 			break;
 	}
 	return !inst.isInvalidInstruction();
+}
+
+
+std::string Instruction::toString() const noexcept
+{
+	std::stringstream ss;
+	switch(this->op_){
+	case Operation::LDA :
+		ss << "LDA";
+		break;
+	case Operation::LDX :
+		ss << "LDX";
+		break;
+	case Operation::LDY :
+		ss << "LDY";
+		break;
+	case Operation::STA :
+		ss << "STA";
+		break;
+	case Operation::STX :
+		ss << "STX";
+		break;
+	case Operation::STY :
+		ss << "STY";
+		break;
+	case Operation::TAX :
+		ss << "TAX";
+		break;
+	case Operation::TAY :
+		ss << "TAY";
+		break;
+	case Operation::TSX :
+		ss << "TSX";
+		break;
+	case Operation::TXA :
+		ss << "TXA";
+		break;
+	case Operation::TXS :
+		ss << "TXS";
+		break;
+	case Operation::TYA :
+		ss << "TYA";
+		break;
+	case Operation::ADC :
+		ss << "ADC";
+		break;
+	case Operation::AND :
+		ss << "AND";
+		break;
+	case Operation::ASL :
+		ss << "ASL";
+		break;
+	case Operation::ASL_:
+		ss << "ASL";
+		break;
+	case Operation::BIT :
+		ss << "BIT";
+		break;
+	case Operation::CMP :
+		ss << "CMP";
+		break;
+	case Operation::CPX :
+		ss << "CPX";
+		break;
+	case Operation::CPY :
+		ss << "CPY";
+		break;
+	case Operation::DEC :
+		ss << "DEC";
+		break;
+	case Operation::DEX :
+		ss << "DEX";
+		break;
+	case Operation::DEY :
+		ss << "DEY";
+		break;
+	case Operation::EOR :
+		ss << "EOR";
+		break;
+	case Operation::INC :
+		ss << "INC";
+		break;
+	case Operation::INX :
+		ss << "INX";
+		break;
+	case Operation::INY :
+		ss << "INY";
+		break;
+	case Operation::LSR :
+		ss << "LSR";
+		break;
+	case Operation::LSR_:
+		ss << "LSR";
+		break;
+	case Operation::ORA :
+		ss << "ORA";
+		break;
+	case Operation::ROL :
+		ss << "ROL";
+		break;
+	case Operation::ROL_:
+		ss << "ROL";
+		break;
+	case Operation::ROR :
+		ss << "ROR";
+		break;
+	case Operation::ROR_:
+		ss << "ROR";
+		break;
+	case Operation::SBC :
+		ss << "SBC";
+		break;
+	case Operation::PHA :
+		ss << "PHA";
+		break;
+	case Operation::PHP :
+		ss << "PHP";
+		break;
+	case Operation::PLA :
+		ss << "PLA";
+		break;
+	case Operation::PLP :
+		ss << "PLP";
+		break;
+	case Operation::CLC :
+		ss << "CLC";
+		break;
+	case Operation::CLD :
+		ss << "CLD";
+		break;
+	case Operation::CLI :
+		ss << "CLI";
+		break;
+	case Operation::CLV :
+		ss << "CLV";
+		break;
+	case Operation::SEC :
+		ss << "SEC";
+		break;
+	case Operation::SED :
+		ss << "SED";
+		break;
+	case Operation::SEI :
+		ss << "SEI";
+		break;
+	case Operation::BRK :
+		ss << "BRK";
+		break;
+	case Operation::NOP :
+		ss << "NOP";
+		break;
+	case Operation::RTS :
+		ss << "RTS";
+		break;
+	case Operation::RTI :
+		ss << "RTI";
+		break;
+	case Operation::JMP :
+		ss << "JMP";
+		break;
+	case Operation::JSR :
+		ss << "JSR";
+		break;
+	case Operation::BCC :
+		ss << "BCC";
+		break;
+	case Operation::BCS :
+		ss << "BCS";
+		break;
+	case Operation::BEQ :
+		ss << "BEQ";
+		break;
+	case Operation::BMI :
+		ss << "BMI";
+		break;
+	case Operation::BNE :
+		ss << "BNE";
+		break;
+	case Operation::BPL :
+		ss << "BPL";
+		break;
+	case Operation::BVC :
+		ss << "BVC";
+		break;
+	case Operation::BVS :
+		ss << "BVS";
+		break;
+	case Operation::Invalid:
+		ss << "???";
+		break;
+	}
+	switch(this->addrMode_){
+		case AddrMode::Immediate:
+			ss << " " << ::tarte::toString(this->bin[1], 16);
+			break;
+		case AddrMode::Zeropage:
+			ss << " [" << ::tarte::toString(this->bin[1], 16) << "]";
+			break;
+		case AddrMode::ZeropageX:
+			ss << " [" << ::tarte::toString(this->bin[1], 16) << ",X]";
+			break;
+		case AddrMode::ZeropageY:
+			ss << " [" << ::tarte::toString(this->bin[1], 16) << ",Y]";
+			break;
+		case AddrMode::Absolute:
+			ss << " <" << ::tarte::toString(this->bin[1] | bin[2] << 8, 16)  << ">";
+			break;
+		case AddrMode::AbsoluteX:
+			ss << " <" << ::tarte::toString(this->bin[1] | bin[2] << 8, 16)  << ",X>";
+			break;
+		case AddrMode::AbsoluteY:
+			ss << " <" << ::tarte::toString(this->bin[1] | bin[2] << 8, 16)  << ",Y>";
+			break;
+		case AddrMode::Indirect: {
+			ss << " (" << ::tarte::toString(this->bin[1] | bin[2] << 8, 16)  << ")";
+			break;
+		}
+		case AddrMode::IndirectX: {
+			ss << " (" << ::tarte::toString(this->bin[1], 16)  << ",X)";
+			break;
+		}
+		case AddrMode::IndirectY: {
+			ss << " (" << ::tarte::toString(this->bin[1], 16)  << "),Y";
+			break;
+		}
+		case AddrMode::Relative:
+			ss << " " << ((this->bin[1] >=128) ? (static_cast<int>(this->bin[1])-256) : this->bin[1]);
+			break;
+		case AddrMode::None:
+			break;
+		case AddrMode::Invalid:
+			break;
+		default:
+			TARTE_EXCEPTION(Exception, "[BUG] Oops. Invalid instruction.");
+			break;
+	}	return ss.str();
 }
 
 }
