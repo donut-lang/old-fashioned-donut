@@ -17,8 +17,8 @@
 					<button text="TETRIS" split-weight="1">Geist.loadNES("__roms__/lj65/lj65.nes");</button>
 				</horizontal>
 				<horizontal>
-					<button text="" split-weight="1"></button>
-					<button text="" split-weight="1"></button>
+					<button text="thwaite" split-weight="1">Geist.loadNES("__roms__/thwaite/thwaite.nes");</button>
+					<button text="Chase" split-weight="1">Geist.loadNES("__roms__/chase/Chase.nes");</button>
 				</horizontal>
 				<widget widget-klass="nes-trace" widget-id="nes-trace" fit="expand" split-weight="1" />
 			</vertical>
