@@ -32,6 +32,7 @@ NesGeistProvider::NesGeistProvider(Handler< ::donut::Heap> const& heap)
 		NesGeistSideEffect side;
 		geist->machine()->loadCartridge((geist->world()->resolveUniverseFilepath(fname)).c_str());
 		geist->machine()->sendHardReset();
+		geist->machine()->debugger().watcher().stepRunning();
 
 		return std::make_tuple(fname,false,side);
 	});
@@ -279,7 +280,7 @@ std::tuple<std::string, bool, NesGeistObject::AntiSideEffect> NesGeistObject::wr
 		Instruction inst = encodeInst(val);
 		if(inst.op_ == Operation::Invalid) {
 			msg = "無効な命令です。";
-		}else if( orig.binLength_ > inst.binLength_ ){
+		}else if( orig.binLength_ < inst.binLength_ ){
 			msg = "命令が入りきりません";
 		}else{
 			for(int i=0;i<inst.binLength_;++i){

@@ -103,8 +103,8 @@ public:
 public:
 	void stepRunning();
 	void resumeRunning();
+	void onBreak(); //XXX: 本当はプライベート
 private:
-	void onBreak();
 	inline break_id_t createBreakUniq() noexcept { return ++this->breakUniq_; };
 public:
 	break_id_t addMemoryReadBreak(uint16_t addr_begin,uint16_t addr_end);

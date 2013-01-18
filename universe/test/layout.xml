@@ -179,6 +179,7 @@
 				World.findElementById("status").setText("");
 				World.heaven().detatchAngel(angel);
 				Global.__mem__widget_angel = null;
+				Global.__mem__widget_angel_erase = true;
 			};
 		</button>
 	</horizontal>
@@ -193,8 +194,9 @@
 				World.findElementById("status").setText(res);
 			}else{
 				World.findElementById("status").setText("");
-//				World.heaven().detatchAngel(angel);
-//				Global.__mem__widget_angel = null;
+				World.heaven().detatchAngel(angel);
+				Global.__mem__widget_angel = null;
+				Global.__mem__widget_angel_erase = true;
 			};
 		</button>
 	</horizontal>

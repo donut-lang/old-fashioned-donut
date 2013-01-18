@@ -237,7 +237,9 @@ bool NesMemoryCompare::onSingleTapUp(const float& timeMs, const chisa::geom::Poi
 		auto src = donut->parse(std::string("")+R"delimiter(
 h = World.heaven();
 if( Global.has("__mem__widget_angel") ){
-h.detatchAngel(Global.__mem__widget_angel);
+  if(!Global.__mem__widget_angel_erase){
+    h.detatchAngel(Global.__mem__widget_angel);
+  }else{};
 }else{
 };
 angel = h.newTwinAngel();
@@ -253,6 +255,7 @@ t2.attatchServant(elm);
 angel.attatchTarget(t1);
 angel.attatchTarget(t2);
 Global.attatched = h.attatchAngel(angel);
+Global.__mem__widget_angel_erase=false;
 )delimiter");
 		donut->queryMachine()->start(src);
 	});
