@@ -40,6 +40,8 @@ private:
 		Dollar    , // "$"
 		RightParen, // "("
 		LeftParen , // ")"
+		SqRightParen, // "["
+		SqLeftParen , // "]"
 		Eq        , // "="
 		Comma     , //","
 		AtMark    , //"@"

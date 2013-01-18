@@ -230,8 +230,8 @@ static int readAddrMode(Instruction& inst, std::string const& str){
 	case '+':
 	{
 		std::string left;
-		unsigned int i = readInt(inst, &str.c_str()[1], left);
-		inst.bin[1] = i & 0xff;
+		int i = readInt(inst, str.c_str(), left);
+		inst.bin[1] = static_cast<unsigned int>(i) & 0xff;
 		inst.addrMode_ = AddrMode::Immediate;
 		inst.binLength_ = 2;
 		break;

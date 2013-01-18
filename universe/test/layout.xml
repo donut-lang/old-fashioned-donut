@@ -193,8 +193,8 @@
 				World.findElementById("status").setText(res);
 			}else{
 				World.findElementById("status").setText("");
-				World.heaven().detatchAngel(angel);
-				Global.__mem__widget_angel = null;
+//				World.heaven().detatchAngel(angel);
+//				Global.__mem__widget_angel = null;
 			};
 		</button>
 	</horizontal>

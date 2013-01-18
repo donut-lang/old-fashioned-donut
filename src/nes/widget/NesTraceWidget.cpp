@@ -124,6 +124,8 @@ NesTraceWidget::NesTraceWidget(chisa::Logger& log, chisa::HandlerW<chisa::tk::Wo
 	this->symRenderer_.registerSymbol(Dollar        ,"$" );
 	this->symRenderer_.registerSymbol(RightParen    ,"(" );
 	this->symRenderer_.registerSymbol(LeftParen     ,")" );
+	this->symRenderer_.registerSymbol(SqRightParen  ,"[" );
+	this->symRenderer_.registerSymbol(SqLeftParen   ,"]" );
 	this->symRenderer_.registerSymbol(Eq            ,"=" );
 	this->symRenderer_.registerSymbol(Comma         ,"," );
 	this->symRenderer_.registerSymbol(AtMark        ,"@" );
@@ -270,12 +272,14 @@ void NesTraceWidget::renderInst(chisa::gl::Canvas& cv, VirtualMachine& vm, uint1
 			startX += this->numRenderer_.renderSyms(cv, Point(startX,offsetY), numSym, 0.0f).width();
 		}
 			break;
-		case AddrMode::Zeropage: { //$xx(=xx)
+		case AddrMode::Zeropage: { //[$xx](=xx)
+			startX += symRenderer_.renderSym(cv, Point(startX,offsetY), SqRightParen, 0.0f).width();
 			startX += symRenderer_.renderSym(cv, Point(startX,offsetY), Dollar, 0.0f).width();
 			uint8_t operand = vm.debuggerRead( pc+1 );
 			numSym[0] = (operand >> 4) & 0xf;
 			numSym[1] = (operand >> 0) & 0xf;
 			startX += this->numRenderer_.renderSyms(cv, Point(startX,offsetY), numSym, 0.0f).width();
+			startX += symRenderer_.renderSym(cv, Point(startX,offsetY), SqLeftParen, 0.0f).width();
 			startX += symRenderer_.renderSym(cv, Point(startX,offsetY), RightParen, 0.0f).width();
 			startX += symRenderer_.renderSym(cv, Point(startX,offsetY), Eq, 0.0f).width();
 			uint8_t val = vm.debuggerRead( inst.addr_ );
@@ -285,7 +289,8 @@ void NesTraceWidget::renderInst(chisa::gl::Canvas& cv, VirtualMachine& vm, uint1
 			startX += symRenderer_.renderSym(cv, Point(startX,offsetY), LeftParen, 0.0f).width();
 		}
 			break;
-		case AddrMode::ZeropageX: { //$xx,X @ $xxxx(=xx)
+		case AddrMode::ZeropageX: { //[$xx,X] @ $xxxx(=xx)
+			startX += symRenderer_.renderSym(cv, Point(startX,offsetY), SqRightParen, 0.0f).width();
 			startX += symRenderer_.renderSym(cv, Point(startX,offsetY), Dollar, 0.0f).width();
 			uint8_t operand = vm.debuggerRead( pc+1 );
 			numSym[0] = (operand >> 4) & 0xf;
@@ -293,6 +298,7 @@ void NesTraceWidget::renderInst(chisa::gl::Canvas& cv, VirtualMachine& vm, uint1
 			startX += this->numRenderer_.renderSyms(cv, Point(startX,offsetY), numSym, 0.0f).width();
 			startX += symRenderer_.renderSym(cv, Point(startX,offsetY), Comma, 0.0f).width();
 			startX += symRenderer_.renderSym(cv, Point(startX,offsetY), SymX, 0.0f).width();
+			startX += symRenderer_.renderSym(cv, Point(startX,offsetY), SqLeftParen, 0.0f).width();
 			startX += spaceSize;
 			startX += symRenderer_.renderSym(cv, Point(startX,offsetY), AtMark, 0.0f).width();
 			startX += spaceSize;
@@ -313,7 +319,8 @@ void NesTraceWidget::renderInst(chisa::gl::Canvas& cv, VirtualMachine& vm, uint1
 			startX += symRenderer_.renderSym(cv, Point(startX,offsetY), LeftParen, 0.0f).width();
 		}
 			break;
-		case AddrMode::ZeropageY: { //$xx,Y @ $xxxx(=xx)
+		case AddrMode::ZeropageY: { //[$xx,Y] @ $xxxx(=xx)
+			startX += symRenderer_.renderSym(cv, Point(startX,offsetY), SqRightParen, 0.0f).width();
 			startX += symRenderer_.renderSym(cv, Point(startX,offsetY), Dollar, 0.0f).width();
 			uint8_t operand = vm.debuggerRead( pc+1 );
 			numSym[0] = (operand >> 4) & 0xf;
@@ -321,6 +328,7 @@ void NesTraceWidget::renderInst(chisa::gl::Canvas& cv, VirtualMachine& vm, uint1
 			startX += this->numRenderer_.renderSyms(cv, Point(startX,offsetY), numSym, 0.0f).width();
 			startX += symRenderer_.renderSym(cv, Point(startX,offsetY), Comma, 0.0f).width();
 			startX += symRenderer_.renderSym(cv, Point(startX,offsetY), SymY, 0.0f).width();
+			startX += symRenderer_.renderSym(cv, Point(startX,offsetY), SqLeftParen, 0.0f).width();
 			startX += spaceSize;
 			startX += symRenderer_.renderSym(cv, Point(startX,offsetY), AtMark, 0.0f).width();
 			startX += spaceSize;

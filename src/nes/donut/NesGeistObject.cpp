@@ -268,12 +268,30 @@ std::tuple<std::nullptr_t, bool, NesGeistObject::AntiSideEffect> NesGeistObject:
 
 std::tuple<std::string, bool, NesGeistObject::AntiSideEffect> NesGeistObject::writeAsmNES(uint16_t addr, std::string val)
 {
+	Handler<NesGeist> geist(this->geist());
+	NesGeist::MachineLock lock(geist);
 	NesGeistSideEffect side;
-	Instruction inst = encodeInst(val);
-	if(inst.op_ == Operation::Invalid) {
-		return std::tuple<std::string, bool, NesGeistObject::AntiSideEffect>("無効な命令です。",true,side);
-	}
-	return std::tuple<std::string, bool, NesGeistObject::AntiSideEffect>("",true,side);
+	std::string msg;
+	Instruction orig;
+	geist->machine()->debugger().disassembler().decodeAt(addr, orig);
+	side.op_before = geist->isBreak() ? NesGeistSideEffect::LoadSave : NesGeistSideEffect::LoadSaveAndRun;
+	side.before = geist->machine()->save();
+		Instruction inst = encodeInst(val);
+		if(inst.op_ == Operation::Invalid) {
+			msg = "無効な命令です。";
+		}else if( orig.binLength_ > inst.binLength_ ){
+			msg = "命令が入りきりません";
+		}else{
+			for(int i=0;i<inst.binLength_;++i){
+				geist->machine()->debuggerWrite(addr+i, inst.bin[i]);
+			}
+			for(int i=inst.binLength_;i<orig.binLength_;++i){
+				geist->machine()->debuggerWrite(addr+i, 0xea);
+			}
+		}
+	side.after = geist->machine()->save();
+	side.op_after = geist->isBreak() ? NesGeistSideEffect::LoadSave : NesGeistSideEffect::LoadSaveAndRun;
+	return std::tuple<std::string, bool, NesGeistObject::AntiSideEffect>(msg,true,side);
 }
 
 }
