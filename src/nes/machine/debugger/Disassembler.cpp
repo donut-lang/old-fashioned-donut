@@ -309,36 +309,36 @@ std::string Instruction::toString() const noexcept
 	}
 	switch(this->addrMode_){
 		case AddrMode::Immediate:
-			ss << " " << ::tarte::toString(this->bin[1], 16);
+			ss << " " << ::tarte::format("0x%02x",this->bin[1]);
 			break;
 		case AddrMode::Zeropage:
-			ss << " [" << ::tarte::toString(this->bin[1], 16) << "]";
+			ss << " [" << ::tarte::format("0x%02x",this->bin[1]) << "]";
 			break;
 		case AddrMode::ZeropageX:
-			ss << " [" << ::tarte::toString(this->bin[1], 16) << ",X]";
+			ss << " [" << ::tarte::format("0x%02x",this->bin[1]) << ",X]";
 			break;
 		case AddrMode::ZeropageY:
-			ss << " [" << ::tarte::toString(this->bin[1], 16) << ",Y]";
+			ss << " [" << ::tarte::format("0x%02x",this->bin[1]) << ",Y]";
 			break;
 		case AddrMode::Absolute:
-			ss << " <" << ::tarte::toString(this->bin[1] | bin[2] << 8, 16)  << ">";
+			ss << " <" << ::tarte::format("0x%04x",this->bin[1] | bin[2] << 8)  << ">";
 			break;
 		case AddrMode::AbsoluteX:
-			ss << " <" << ::tarte::toString(this->bin[1] | bin[2] << 8, 16)  << ",X>";
+			ss << " <" << ::tarte::format("0x%04x",this->bin[1] | bin[2] << 8)  << ",X>";
 			break;
 		case AddrMode::AbsoluteY:
-			ss << " <" << ::tarte::toString(this->bin[1] | bin[2] << 8, 16)  << ",Y>";
+			ss << " <" << ::tarte::format("0x%04x",this->bin[1] | bin[2] << 8)  << ",Y>";
 			break;
 		case AddrMode::Indirect: {
-			ss << " (" << ::tarte::toString(this->bin[1] | bin[2] << 8, 16)  << ")";
+			ss << " (" << ::tarte::format("0x%04x",this->bin[1] | bin[2] << 8)  << ")";
 			break;
 		}
 		case AddrMode::IndirectX: {
-			ss << " (" << ::tarte::toString(this->bin[1], 16)  << ",X)";
+			ss << " (" << ::tarte::format("0x%02x",this->bin[1])  << ",X)";
 			break;
 		}
 		case AddrMode::IndirectY: {
-			ss << " (" << ::tarte::toString(this->bin[1], 16)  << "),Y";
+			ss << " (" << ::tarte::format("0x%02x",this->bin[1])  << "),Y";
 			break;
 		}
 		case AddrMode::Relative:
