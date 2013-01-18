@@ -177,9 +177,26 @@
 				World.findElementById("status").setText(res);
 			}else{
 				World.findElementById("status").setText("");
+				World.heaven().detatchAngel(angel);
+				Global.__mem__widget_angel = null;
 			};
 		</button>
 	</horizontal>
-	<label id="label" text="NES"></label>
+	<horizontal id="asm-edit">
+		<textarea id="val" desc=" コンパイル " />
+		<button text=" 変更 ">
+			angel = Global.__mem__widget_angel;
+			elm = angel.findElementById("val");
+			res = Geist.writeAsmNES(Global.__mem__widget_addr, elm.getText());
+			if( !res.isEmpty() ) {
+				elm.setFrameColor("red");
+				World.findElementById("status").setText(res);
+			}else{
+				World.findElementById("status").setText("");
+				World.heaven().detatchAngel(angel);
+				Global.__mem__widget_angel = null;
+			};
+		</button>
+	</horizontal>
 </world>
 

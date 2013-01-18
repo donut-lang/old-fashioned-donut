@@ -35,7 +35,7 @@ struct NesGeistSideEffect {
 	::tarte::XValue before;
 	::tarte::XValue after;
 	NesGeistSideEffect()
-	:op(None)
+	:op_before(None),op_after(None)
 	{
 	}
 	template <typename Arc>

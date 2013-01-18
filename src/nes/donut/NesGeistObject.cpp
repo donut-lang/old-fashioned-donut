@@ -44,13 +44,13 @@ NesGeistProvider::NesGeistProvider(Handler< ::donut::Heap> const& heap)
 		int val = ::tarte::parseAs<int>(vals, &succeed);
 		NesGeistSideEffect side;
 		if( !succeed ){
-			side.op = NesGeistSideEffect::None;
+			side.op_before = side.op_after = NesGeistSideEffect::None;
 			return std::make_tuple("正しい数字ではありません。",true,side);
 		}else if( val < 0 ){
-			side.op = NesGeistSideEffect::None;
+			side.op_before = side.op_after = NesGeistSideEffect::None;
 			return std::make_tuple("0以上の数字を入れて下さい。",true,side);
 		}else if( val > 255 ){
-			side.op = NesGeistSideEffect::None;
+			side.op_before = side.op_after = NesGeistSideEffect::None;
 			return std::make_tuple("255以下の数字を入れて下さい。",true,side);
 		}else{
 			Handler<NesGeist> geist(obj->geist());

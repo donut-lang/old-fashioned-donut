@@ -96,7 +96,7 @@ geom::Box ElementServant::reshapeImpl(const geom::Area& area)
 {
 	geom::Box requested(element()->measure(geom::Box()));
 	geom::Box _size(
-			geom::isUnspecified(requested.width()) || (area.box().width()/4 <= requested.width()) ? area.box().width()/4 : requested.width(),
+			geom::isUnspecified(requested.width()) || (area.box().width()/2 <= requested.width()) ? area.box().width()/2 : requested.width(),
 			geom::isUnspecified(requested.height() || (area.box().height()/4 <= requested.height())) ? area.box().height()/4 : requested.height()
 			);
 	element()->layout(geom::ZERO, _size);
