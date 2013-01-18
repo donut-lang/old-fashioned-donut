@@ -60,6 +60,7 @@ public:
 	std::tuple<bool, bool, AntiSideEffect> removeExecBreak(break_id_t id);
 	std::tuple<std::nullptr_t, bool, AntiSideEffect> stepRunning();
 	std::tuple<std::nullptr_t, bool, AntiSideEffect> continueRunning();
+	std::tuple<std::string, bool, AntiSideEffect> writeAsmNES(uint16_t addr, std::string val);
 };
 
 class NesGeistProvider : public ::chisa::tk::GeistProviderBaseT<NesGeistProvider, NesGeistObject, NesGeist, NesGeistSideEffect> {

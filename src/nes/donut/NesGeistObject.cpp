@@ -18,6 +18,7 @@
 
 #include "NesGeistObject.h"
 #include "../../chisa/tk/World.h"
+#include "../machine/debugger/Assembler.h"
 
 namespace nes {
 using namespace tarte;
@@ -127,6 +128,7 @@ NesGeistProvider::NesGeistProvider(Handler< ::donut::Heap> const& heap)
 	this->registerReactiveNativeClosure("removeExecBreak", &NesGeistObject::removeExecBreak);
 	this->registerReactiveNativeClosure("stepRunning",&NesGeistObject::stepRunning);
 	this->registerReactiveNativeClosure("continueRunning",&NesGeistObject::continueRunning);
+	this->registerReactiveNativeClosure("writeAsmNES",&NesGeistObject::writeAsmNES);
 }
 
 //---------------------------------------------------------------------------------------
@@ -262,6 +264,16 @@ std::tuple<std::nullptr_t, bool, NesGeistObject::AntiSideEffect> NesGeistObject:
 	side.after = geist->machine()->save();
 	side.op_after = geist->isBreak() ? NesGeistSideEffect::LoadSave : NesGeistSideEffect::LoadSaveAndRun;
 	return std::tuple<std::nullptr_t, bool, NesGeistObject::AntiSideEffect>(nullptr,true,side);
+}
+
+std::tuple<std::string, bool, NesGeistObject::AntiSideEffect> NesGeistObject::writeAsmNES(uint16_t addr, std::string val)
+{
+	NesGeistSideEffect side;
+	Instruction inst = encodeInst(val);
+	if(inst.op_ == Operation::Invalid) {
+		return std::tuple<std::string, bool, NesGeistObject::AntiSideEffect>("無効な命令です。",true,side);
+	}
+	return std::tuple<std::string, bool, NesGeistObject::AntiSideEffect>("",true,side);
 }
 
 }

@@ -226,6 +226,8 @@ static int readAddrMode(Instruction& inst, std::string const& str){
 	case '7':
 	case '8':
 	case '9':
+	case '-':
+	case '+':
 	{
 		std::string left;
 		unsigned int i = readInt(inst, &str.c_str()[1], left);
@@ -236,6 +238,7 @@ static int readAddrMode(Instruction& inst, std::string const& str){
 	}
 	default:
 		inst.addrMode_ = AddrMode::None;
+		inst.binLength_ = 1;
 		break;
 	}
 	return 0;
@@ -247,13 +250,20 @@ const static unsigned int symCode[256] = {static_cast<unsigned int>(AddrMode::No
 Instruction encodeInst(std::string const& dis_)
 {
 	Instruction inst;
-	std::string __dis;
+	std::string dis;
+	bool not_num = true;
 	for(char s : dis_){
-		if(::isalnum(s)){
-			__dis += s;
+		if(!not_num){
+			dis += s;
+		}else if(::isalpha(s)){
+			dis += static_cast<char>(::toupper(s));
+		}else if(::isdigit(s)){
+			not_num = false;
+			dis += s;
+		}else if(!::isspace(s)){
+			dis += s;
 		}
 	}
-	std::string dis(::tarte::toUpper(__dis));
 	if(readOperation(inst, dis) < 0) {
 		inst.op_ = Operation::Invalid;
 	}else if(readAddrMode(inst, dis.substr(3)) < 0){
