@@ -663,8 +663,9 @@ void Processor::run(uint16_t clockDelta)
 			break;
 		//case 0xFF: // Future Expansion
 		default:
-			--this->PC;
-			this->debugger_.watcher().onBreak();
+			uint16_t opcodeBig = opcode;
+			uint16_t opcodePC = --this->PC;
+			throw EmulatorException("[FIXME] Invalid opcode: 0x") << std::hex << opcodeBig << " in 0x" << opcodePC;
 			break;
 	}
 	consumeClock(CycleTable[opcode]);

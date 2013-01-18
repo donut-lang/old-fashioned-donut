@@ -155,14 +155,26 @@ void NesGeist::queryStop()
 	this->running_ = false;
 }
 
-void NesGeist::operator ()()
+void NesGeist::run()
 {
-	MachineLock l(*this);
 	while( likely(this->running_) ){
 		for(int x=100; x>0;--x){
 			this->machine_->run();
 		}
 	}
 }
+
+void NesGeist::operator ()()
+{
+	MachineLock l(*this);
+	while( likely(this->running_) ){
+		try {
+			run();
+		} catch (...) {
+			this->machine_->debugger().watcher().onBreak();
+		}
+	}
+}
+
 }
 

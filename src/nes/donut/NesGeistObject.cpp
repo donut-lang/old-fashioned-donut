@@ -154,7 +154,7 @@ typename NesGeistObject::ResultType NesGeistObject::onBack(const Handler< ::donu
 	anti.op_before = val.op_before;
 	anti.op_after = val.op_after;
 	anti.before = val.before;
-	anti.before = val.after;
+	anti.after = val.after;
 	switch(val.op_before){
 	case AntiSideEffect::None:
 		return Super::onBack(heap,anti);
@@ -181,7 +181,7 @@ typename NesGeistObject::ResultType NesGeistObject::onForward(const Handler< ::d
 	anti.op_before = val.op_before;
 	anti.op_after = val.op_after;
 	anti.before = val.before;
-	anti.before = val.after;
+	anti.after = val.after;
 	switch(val.op_after){
 	case AntiSideEffect::None:
 		return Super::onForward(heap,val);

@@ -124,6 +124,7 @@ public:
 	inline Gamepad& gamepad() noexcept { return gamepad_; };
 public:
 	void queryStop();
+	void run();
 	void operator()();
 
 private:
