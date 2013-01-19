@@ -21,6 +21,8 @@
 #include <cmath>
 #include <utility>
 #include <string>
+#undef isnan
+#undef isnanf
 
 namespace chisa {
 namespace gl {

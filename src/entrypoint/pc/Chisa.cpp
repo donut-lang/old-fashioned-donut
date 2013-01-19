@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
 	gChisa = Handler<Chisa>(new Chisa(log, platform, hexe));
 	{
 		try {
-			gChisa->init("Chisa", 1024,768, 8, 8, 8, 8, 16, 0);
+			gChisa->init("Chisa", 1280,720, 8, 8, 8, 8, 16, 0);
 			glDisable(GL_ALPHA_TEST);
 			glDisable(GL_STENCIL_TEST);
 

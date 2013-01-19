@@ -184,10 +184,10 @@
 		</button>
 	</horizontal>
 	<horizontal id="asm-edit">
-		<textarea id="val" desc=" コンパイル " />
+		<textarea id="asm" desc=" コンパイル " />
 		<button text=" 変更 ">
 			angel = Global.__mem__widget_angel;
-			elm = angel.findElementById("val");
+			elm = angel.findElementById("asm");
 			res = Geist.writeAsmNES(Global.__mem__widget_addr, elm.getText());
 			if( !res.isEmpty() ) {
 				elm.setFrameColor("red");

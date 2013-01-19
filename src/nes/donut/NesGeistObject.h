@@ -61,6 +61,7 @@ public:
 	std::tuple<std::nullptr_t, bool, AntiSideEffect> stepRunning();
 	std::tuple<std::nullptr_t, bool, AntiSideEffect> continueRunning();
 	std::tuple<std::string, bool, AntiSideEffect> writeAsmNES(uint16_t addr, std::string val);
+	std::tuple<std::string, bool, AntiSideEffect> writeMemNES(uint16_t addr, std::string val);
 };
 
 class NesGeistProvider : public ::chisa::tk::GeistProviderBaseT<NesGeistProvider, NesGeistObject, NesGeist, NesGeistSideEffect> {

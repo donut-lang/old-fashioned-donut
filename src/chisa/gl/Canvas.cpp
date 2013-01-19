@@ -20,8 +20,8 @@
 #include "../geom/Vector.h"
 #include "../geom/Area.h"
 #include "Util.h"
+#include "OpenGL.h"
 #include <algorithm>
-#include <GL/gl.h>
 
 namespace chisa {
 namespace gl {

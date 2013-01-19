@@ -20,6 +20,8 @@
 #include <cmath>
 #include <string>
 #include <tarte/String.h>
+#undef isnan
+#undef isnanf
 
 #define SETUP(Klass)\
 public:\

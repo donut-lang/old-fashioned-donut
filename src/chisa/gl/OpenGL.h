@@ -18,7 +18,12 @@
 
 #pragma once
 #include <tarte/Platform.h>
+
+#if CHISA_ANDROID
+#include <GLES/gl.h>
+#else
 #include <GL/gl.h>
+#endif
 
 #undef min
 #undef max

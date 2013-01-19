@@ -670,7 +670,7 @@ t2.attatchServant(t2.newHaloServant("red"));
 elm = t2.newElementServant("mem-edit");
 elm.element().findElementById("val").setText(")delimiter"+val+R"delimiter(");
 elm1 = t1.newElementServant("asm-edit");
-elm1.element().findElementById("val").setText(")delimiter"+instStr+R"delimiter(");
+elm1.element().findElementById("asm").setText(")delimiter"+instStr+R"delimiter(");
 t2.attatchServant(elm);
 t1.attatchServant(elm1);
 angel.attatchTarget(t1);
