@@ -208,9 +208,10 @@ PARSE_STRTO(unsigned int, strtoul);
 PARSE_STRTO(long int, strtol);
 PARSE_STRTO(long unsigned int, strtoul);
 
+#if HAVE_LONG_LONG
 PARSE_STRTO(long long int, strtoll);
 PARSE_STRTO(unsigned long long int, strtoull);
-
+#endif
 
 #define PARSE_STRTO_F(TYPE, FUNC) \
 	template <> TYPE parseAs<TYPE>(std::string const& str, bool* succeed)\
@@ -232,7 +233,9 @@ PARSE_STRTO(unsigned long long int, strtoull);
 
 PARSE_STRTO_F(float, strtof);
 PARSE_STRTO_F(double, strtod);
+#if HAVE_LONG_DOUBLE
 PARSE_STRTO_F(long double, strtold);
+#endif
 
 #undef PARSE_STRTO_F
 #undef PARSE_STRTO

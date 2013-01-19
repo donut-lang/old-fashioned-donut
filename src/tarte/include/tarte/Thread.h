@@ -20,7 +20,7 @@
 #include "Common.h"
 #include "Platform.h"
 
-#if CHISA_WINDOWS
+#if CHISA_WINDOWS || CHISA_ANDROID
 #include <boost/thread.hpp>
 #include <boost/interprocess/detail/atomic.hpp>
 #include <boost/atomic.hpp>

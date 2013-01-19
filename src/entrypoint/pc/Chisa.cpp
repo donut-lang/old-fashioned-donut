@@ -17,7 +17,6 @@
  */
 
 #include <iostream>
-#include <GL/glfw.h>
 #include <tarte/Exception.h>
 #include <tarte/Logger.h>
 

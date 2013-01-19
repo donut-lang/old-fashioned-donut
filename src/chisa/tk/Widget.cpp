@@ -18,7 +18,6 @@
 
 #include "Widget.h"
 #include "element/WidgetElement.h"
-#include <GL/gl.h>
 
 namespace chisa {
 namespace tk {
