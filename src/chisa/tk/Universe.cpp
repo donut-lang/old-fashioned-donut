@@ -48,6 +48,7 @@ void Universe::render()
 	//TODO: 下のスタックについて、オフスクリーンレンダリングしたほうがいい？？
 	if(Handler<World> topWorld = this->worldStack.top()){
 		topWorld->render(this->canvas_);
+		this->canvas_.flush();
 	}
 }
 void Universe::idle(const float delta_ms)

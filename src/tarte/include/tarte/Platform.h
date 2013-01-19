@@ -24,8 +24,8 @@
 #define CHISA_WINDOWS (defined(WIN32) || defined(WIN64) || defined(__WIN32__) || defined(__WIN64__))
 #define CHISA_ANDROID (defined(ANDROID))
 
-#define HAVE_LONG_DOUBLE defined(LDBL_MAX)
-#define HAVE_LONG_LONG defined(LLONG_MAX)
+#define HAVE_LONG_DOUBLE (!CHISA_ANDROID && defined(LDBL_MAX))
+#define HAVE_LONG_LONG (!CHISA_ANDROID && defined(LLONG_MAX))
 
 #if CHISA_WINDOWS
 #define IS_BIG_ENDIAN 0

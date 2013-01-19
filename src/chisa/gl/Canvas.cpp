@@ -32,7 +32,15 @@ Canvas::Canvas(Logger& log)
 :log_(log)
 ,width_(NAN)
 ,height_(NAN)
+,glOperation_(None)
+,vertexs_()
+,texCoords_()
+,nowColor_()
+,nowLineWidth_(-1)
 ,nowScissor_(nullptr)
+,vertexArrayEnabled_(false)
+,textureEnabled_(false)
+,nowTexId_(0)
 {
 
 }
@@ -44,7 +52,11 @@ Canvas::~Canvas()
 
 void Canvas::ortho(const float left, const float right, const float bottom, const float top, const float near_val, const float far_val)
 {
+#if IS_GLES
+	glOrthof(left, right, bottom, top, near_val, far_val);
+#else
 	glOrtho(left, right, bottom, top, near_val, far_val);
+#endif
 	const GLenum err = glGetError();
 #ifdef DEBUG
 	if(err != GL_NO_ERROR){
@@ -132,22 +144,14 @@ void Canvas::drawTexture(unsigned int texId, geom::Area const& areaInRoot, geom:
 	const float left = coordinateInSprite.x();
 	const float right = coordinateInSprite.x()+coordinateInSprite.width();
 	const float bottom = coordinateInSprite.y()+coordinateInSprite.height();
-	glBindTexture(GL_TEXTURE_2D, texId);
-	glEnable(GL_TEXTURE_2D);
+	this->bindTexture(texId);
 	this->setColor(color);
-	glBegin(GL_POLYGON);
-		glTexCoord2f(left ,top   );glVertex3f(x      , y       , depth);
-		glTexCoord2f(left ,bottom);glVertex3f(x      , y+height, depth);
-		glTexCoord2f(right,bottom);glVertex3f(x+width, y+height, depth);
-		glTexCoord2f(right,top   );glVertex3f(x+width, y       , depth);
-	glEnd();
-#ifdef DEBUG
-	const GLenum err = glGetError();
-	if(err != GL_NO_ERROR){
-		TARTE_EXCEPTION(Exception, "[BUG] Failed to exec drawTexture: 0x%08x", err);
-	}
-#endif
-	glDisable(GL_TEXTURE_2D);
+	this->setOperation(Texture);
+	pushTexCoord(left ,top   );pushVertex(x      , y       , depth);
+	pushTexCoord(left ,bottom);pushVertex(x      , y+height, depth);
+	pushTexCoord(right,bottom);pushVertex(x+width, y+height, depth);
+	pushTexCoord(right,top   );pushVertex(x+width, y       , depth);
+	flushGL();
 }
 
 void Canvas::drawLine(const float width, Color const& color, geom::Point const& start, geom::Point const& end, const float depth)
@@ -155,18 +159,12 @@ void Canvas::drawLine(const float width, Color const& color, geom::Point const& 
 	if(color.isInvalid() || !(width > 0)){
 		return;
 	}
-	glLineWidth(width);
+	this->setLineWidth(width);
 	this->setColor(color);
-	glBegin(GL_LINES);
-		glVertex3f(start.x(), start.y(), depth);
-		glVertex3f(end.x()  , end.y(), depth);
-	glEnd();
-#ifdef DEBUG
-	const GLenum err = glGetError();
-	if(err != GL_NO_ERROR){
-		TARTE_EXCEPTION(Exception, "[BUG] Failed to exec drawLine: 0x%08x", err);
-	}
-#endif
+	this->setOperation(Lines);
+	pushVertex(start.x(), start.y(), depth);
+	pushVertex(end.x()  , end.y(), depth);
+	flushGL();
 }
 
 void Canvas::drawLines(const float width, Color const& color, std::vector<geom::Point> const& pts, const float depth)
@@ -174,77 +172,278 @@ void Canvas::drawLines(const float width, Color const& color, std::vector<geom::
 	if(color.isInvalid() || !(width > 0)){
 		return;
 	}
-	glLineWidth(width);
+	this->setLineWidth(width);
 	this->setColor(color);
-	glBegin(GL_LINE_STRIP);
+	this->setOperation(LineStrip);
 	for(geom::Point const& pt : pts){
-		glVertex3f(pt.x(), pt.y(), depth);
+		pushVertex(pt.x(), pt.y(), depth);
 	}
-	glEnd();
-#ifdef DEBUG
-	const GLenum err = glGetError();
-	if(err != GL_NO_ERROR){
-		TARTE_EXCEPTION(Exception, "[BUG] Failed to exec drawLine: 0x%08x", err);
-	}
-#endif
+	flushGL();
 }
 void Canvas::drawRect(const float width, Color const& color, geom::Area const& area, const float depth)
 {
 	if(color.isInvalid() || !(width > 0)){
 		return;
 	}
-	glLineWidth(width);
-	this->setColor(color);
 	float const sx = area.x();
 	float const ex = area.x()+area.width();
 	float const sy = area.y();
 	float const ey = area.y()+area.height();
-	glBegin(GL_LINE_LOOP);
-	{
-		glVertex3f(sx, sy, depth);
-		glVertex3f(ex, sy, depth);
-		glVertex3f(ex, ey, depth);
-		glVertex3f(sx, ey, depth);
-	}
-	glEnd();
-#ifdef DEBUG
-	const GLenum err = glGetError();
-	if(err != GL_NO_ERROR){
-		TARTE_EXCEPTION(Exception, "[BUG] Failed to exec drawRect: 0x%08x", err);
-	}
-#endif
+	this->setColor(color);
+	this->setLineWidth(width);
+	this->setOperation(Lines);
+	pushVertex(sx, sy, depth);
+	pushVertex(ex, sy, depth);
+
+	pushVertex(ex, sy, depth);
+	pushVertex(ex, ey, depth);
+
+	pushVertex(ex, ey, depth);
+	pushVertex(sx, ey, depth);
+
+	pushVertex(sx, ey, depth);
+	pushVertex(sx, sy, depth);
+	flushGL();
 }
 void Canvas::fillRect(Color const& color, geom::Area const& area, const float depth)
 {
 	if(color.isInvalid() || area.empty()){
 		return;
 	}
-	this->setColor(color);
 	float const sx = area.x();
 	float const ex = area.x()+area.width();
 	float const sy = area.y();
 	float const ey = area.y()+area.height();
-	glBegin(GL_TRIANGLE_FAN);
-	{
-		glVertex3f(sx, sy, depth);
-		glVertex3f(ex, sy, depth);
-		glVertex3f(ex, ey, depth);
-		glVertex3f(sx, ey, depth);
+	this->setColor(color);
+	this->setOperation(Rect);
+	pushVertex(sx, sy, depth);
+	pushVertex(ex, sy, depth);
+	pushVertex(ex, ey, depth);
+	pushVertex(sx, ey, depth);
+	flushGL();
+}
+
+void Canvas::flushGL()
+{
+	switch( this->glOperation_ ) {
+	case None:
+		break;
+	case Lines: {
+		enableVertexArray();
+		disableTexture();
+		glVertexPointer(3, GL_FLOAT, 0, this->vertexs_.data());
+		glDrawArrays(GL_LINES, 0, this->vertexs_.size()/3);
+#ifdef DEBUG
+		{
+			const GLenum err = glGetError();
+			if(err != GL_NO_ERROR){
+				TARTE_EXCEPTION(Exception, "[BUG] Failed to draw arrays: 0x%08x", err);
+			}
+		}
+#endif
+		break;
 	}
-	glEnd();
+	case LineStrip: {
+		enableVertexArray();
+		disableTexture();
+		glVertexPointer(3, GL_FLOAT, 0, this->vertexs_.data());
+#ifdef DEBUG
+		{
+			const GLenum err = glGetError();
+			if(err != GL_NO_ERROR){
+				TARTE_EXCEPTION(Exception, "[BUG] Failed to set vertex pointer: 0x%08x", err);
+			}
+		}
+#endif
+		glDrawArrays(GL_LINE_STRIP, 0, this->vertexs_.size()/3);
+#ifdef DEBUG
+		{
+			const GLenum err = glGetError();
+			if(err != GL_NO_ERROR){
+				TARTE_EXCEPTION(Exception, "[BUG] Failed to draw arrays: 0x%08x", err);
+			}
+		}
+#endif
+		break;
+	}
+	case Texture: {
+		enableVertexArray();
+		enableTexture();
+		glVertexPointer(3, GL_FLOAT, 0, this->vertexs_.data());
+#ifdef DEBUG
+		{
+			const GLenum err = glGetError();
+			if(err != GL_NO_ERROR){
+				TARTE_EXCEPTION(Exception, "[BUG] Failed to set vertex pointer: 0x%08x", err);
+			}
+		}
+#endif
+		glTexCoordPointer(2, GL_FLOAT, 0, this->texCoords_.data());
+#ifdef DEBUG
+		{
+			const GLenum err = glGetError();
+			if(err != GL_NO_ERROR){
+				TARTE_EXCEPTION(Exception, "[BUG] Failed to set vertex pointer: 0x%08x", err);
+			}
+		}
+#endif
+		glDrawArrays(GL_QUADS, 0, this->vertexs_.size()/3);
+#ifdef DEBUG
+		{
+			const GLenum err = glGetError();
+			if(err != GL_NO_ERROR){
+				TARTE_EXCEPTION(Exception, "[BUG] Failed to draw arrays: 0x%08x", err);
+			}
+		}
+#endif
+		break;
+	}
+	case Rect: {
+		enableVertexArray();
+		disableTexture();
+		glVertexPointer(3, GL_FLOAT, 0, this->vertexs_.data());
+#ifdef DEBUG
+		{
+			const GLenum err = glGetError();
+			if(err != GL_NO_ERROR){
+				TARTE_EXCEPTION(Exception, "[BUG] Failed to set vertex pointer: 0x%08x", err);
+			}
+		}
+#endif
+		glDrawArrays(GL_QUADS, 0, this->vertexs_.size()/3);
+#ifdef DEBUG
+		{
+			const GLenum err = glGetError();
+			if(err != GL_NO_ERROR){
+				TARTE_EXCEPTION(Exception, "[BUG] Failed to draw arrays: 0x%08x", err);
+			}
+		}
+#endif
+		break;
+	}
+	default:
+		TARTE_EXCEPTION(Exception, "Unknown Operation", this->glOperation_);
+		break;
+	}
+	vertexs_.clear();
+	texCoords_.clear();
+	this->glOperation_ = None;
+}
+
+void Canvas::disableVertexArray()
+{
+	if(vertexArrayEnabled_) {
+		glDisableClientState(GL_VERTEX_ARRAY);
 #ifdef DEBUG
 	const GLenum err = glGetError();
 	if(err != GL_NO_ERROR){
-		TARTE_EXCEPTION(Exception, "[BUG] Failed to exec fillRect: 0x%08x", err);
+		TARTE_EXCEPTION(Exception, "[BUG] Failed to disable vertex array: 0x%08x", err);
 	}
 #endif
+		vertexArrayEnabled_ = false;
+	}
 }
 
+void Canvas::flush()
+{
+	flushGL();
+}
+
+void Canvas::enableVertexArray()
+{
+	if(!vertexArrayEnabled_) {
+		glEnableClientState(GL_VERTEX_ARRAY);
+#ifdef DEBUG
+		const GLenum err = glGetError();
+		if(err != GL_NO_ERROR){
+			TARTE_EXCEPTION(Exception, "[BUG] Failed to enable vertex array: 0x%08x", err);
+		}
+#endif
+		vertexArrayEnabled_ = true;
+	}
+}
+void Canvas::disableTexture()
+{
+	if(textureEnabled_){
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisable(GL_TEXTURE_2D);
+#ifdef DEBUG
+		const GLenum err = glGetError();
+		if(err != GL_NO_ERROR){
+			TARTE_EXCEPTION(Exception, "[BUG] Failed to disable texture: 0x%08x", err);
+		}
+#endif
+		textureEnabled_=false;
+	}
+}
+void Canvas::enableTexture()
+{
+	if(!textureEnabled_){
+		glEnable(GL_TEXTURE_2D);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+#ifdef DEBUG
+		const GLenum err = glGetError();
+		if(err != GL_NO_ERROR){
+			TARTE_EXCEPTION(Exception, "[BUG] Failed to enable texture: 0x%08x", err);
+		}
+#endif
+		textureEnabled_=true;
+	}
+}
 
 void Canvas::setColor(Color const& color)
 {
-	glColor4f(color.red(), color.green(), color.blue(), color.alpha());
+	if( color != nowColor_ ){
+		flushGL();
+		this->nowColor_ = color;
+		glColor4f(nowColor_.red(), nowColor_.green(), nowColor_.blue(), nowColor_.alpha());
+	#ifdef DEBUG
+		const GLenum err = glGetError();
+		if(err != GL_NO_ERROR){
+			TARTE_EXCEPTION(Exception, "[BUG] Failed to flush color: 0x%08x", err);
+		}
+	#endif
+	}
 }
+void Canvas::setOperation(GLOperation const& op)
+{
+	if( op != glOperation_ ){
+		flushGL();
+		this->glOperation_ = op;
+	}
+}
+void Canvas::setLineWidth( float const& lineWidth )
+{
+
+	if( std::fabs(nowLineWidth_-lineWidth) >= 1.0f ) {
+		flushGL();
+		this->nowLineWidth_ = lineWidth;
+		glLineWidth(nowLineWidth_);
+	#ifdef DEBUG
+		const GLenum err = glGetError();
+		if(err != GL_NO_ERROR){
+			TARTE_EXCEPTION(Exception, "[BUG] Failed to flush line width: 0x%08x", err);
+		}
+	#endif
+	}
+}
+
+void Canvas::bindTexture(GLuint texId)
+{
+	if(nowTexId_ != texId){
+		flushGL();
+		this->nowTexId_ = texId;
+		glBindTexture(GL_TEXTURE_2D, nowTexId_);
+	#ifdef DEBUG
+		const GLenum err = glGetError();
+		if(err != GL_NO_ERROR){
+			TARTE_EXCEPTION(Exception, "[BUG] Failed to flush texture: 0x%08x", err);
+		}
+	#endif
+	}
+}
+
+//---------------------------------------------------------------------------------------
 
 Canvas::ScissorScope::ScissorScope(Canvas& canvas, geom::Area const& area)
 :canvas_(canvas)
@@ -272,10 +471,22 @@ Canvas::AffineScope::AffineScope(Canvas& canvas)
 :canvas_(canvas)
 {
 	glPushMatrix();
+#ifdef DEBUG
+	const GLenum err = glGetError();
+	if(err != GL_NO_ERROR){
+		TARTE_EXCEPTION(Exception, "[BUG] Failed to push martix: 0x%08x", err);
+	}
+#endif
 }
 Canvas::AffineScope::~AffineScope()
 {
 	glPopMatrix();
+#ifdef DEBUG
+	const GLenum err = glGetError();
+	if(err != GL_NO_ERROR){
+		TARTE_EXCEPTION(Exception, "[BUG] Failed to pop matrix: 0x%08x", err);
+	}
+#endif
 }
 
 

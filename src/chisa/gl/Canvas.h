@@ -55,6 +55,7 @@ public:
 	void drawRect(const float width, Color const& color, geom::Area const& area, const float depth=0.0f);
 	void fillRect(Color const& color, geom::Area const& area, const float depth=0.0f);
 	void drawTexture(unsigned int texId, geom::Area const& areaInRoot, geom::Area const& coordinateInSprite, const float depth, Color const& color);
+	void flush();
 public:
 	class ScissorScope {
 	private:
@@ -73,9 +74,36 @@ public:
 		virtual ~AffineScope();
 	};
 private:
+	enum GLOperation{
+		None=0,
+		Lines,
+		LineStrip,
+		Texture,
+		Rect
+	} glOperation_;
+	std::vector<float> vertexs_;
+	std::vector<float> texCoords_;
+	gl::Color nowColor_;
+	float nowLineWidth_;
 	ScissorScope* nowScissor_;
+	bool vertexArrayEnabled_;
+	bool textureEnabled_;
+	GLuint nowTexId_;
+private: /* 次の状態を設定 */
+	void setOperation(GLOperation const& op);
+	void setColor( gl::Color const& nextColor );
+	void setLineWidth( float const& lineWidth );
+	void bindTexture(GLuint texId);
+	inline void pushVertex( float const& x, float const& y, float const& z=0 ) { vertexs_.push_back(x);vertexs_.push_back(y);vertexs_.push_back(z); };
+	inline void pushTexCoord( float const& x, float const& y ) { texCoords_.push_back(x);texCoords_.push_back(y); };
+private:
 	void scissor(geom::Area const& area);
-	void setColor(Color const& color);
+private:
+	void flushGL();
+	void disableVertexArray();
+	void enableVertexArray();
+	void disableTexture();
+	void enableTexture();
 };
 
 }}

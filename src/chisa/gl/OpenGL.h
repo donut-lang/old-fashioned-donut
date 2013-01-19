@@ -21,9 +21,18 @@
 
 #if CHISA_ANDROID
 #include <GLES/gl.h>
+#define IS_GLES (1)
+#define IS_GLES11 (1)
+#define IS_GLES20 (0)
+#define IS_GL (0)
 #else
 #include <GL/gl.h>
+#define IS_GLES (0)
+#define IS_GLES11 (0)
+#define IS_GLES20 (0)
+#define IS_GL (1)
 #endif
+
 
 #undef min
 #undef max
