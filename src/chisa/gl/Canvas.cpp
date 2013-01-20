@@ -116,6 +116,7 @@ void Canvas::resize2d(geom::Box const& box)
 
 void Canvas::scissor(geom::Area const& area)
 {
+	flushGL();
 	glScissor(area.x(), this->height_-area.height()-area.y(),area.width(), area.height());
 #ifdef DEBUG
 	const GLenum err = glGetError();
@@ -224,7 +225,6 @@ void Canvas::fillRect(Color const& color, geom::Area const& area, const float de
 	pushVertex(ex, sy, depth);
 	pushVertex(sx, ey, depth);
 	pushVertex(ex, ey, depth);
-	flushGL();
 }
 
 void Canvas::flushGL()
@@ -473,6 +473,7 @@ Canvas::ScissorScope::~ScissorScope()
 Canvas::AffineScope::AffineScope(Canvas& canvas)
 :canvas_(canvas)
 {
+	canvas_.flushGL();
 	glPushMatrix();
 #ifdef DEBUG
 	const GLenum err = glGetError();
@@ -483,6 +484,7 @@ Canvas::AffineScope::AffineScope(Canvas& canvas)
 }
 Canvas::AffineScope::~AffineScope()
 {
+	canvas_.flushGL();
 	glPopMatrix();
 #ifdef DEBUG
 	const GLenum err = glGetError();
