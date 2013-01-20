@@ -52,6 +52,7 @@ public:
 
 class DrawableManager : public HandlerBody<DrawableManager> {
 	DEFINE_MEMBER_REF(private, Logger, log);
+	Canvas& canvas_;
 private:
 	typedef std::function<Handler<Drawable>(HandlerW<DrawableManager>, geom::Box const&, std::string const&)> constructor;
 	VectorMap<std::string, constructor> factories_;
@@ -60,7 +61,7 @@ private:
 	Handler<internal::ImageManager> imageManager_;
 	Handler<internal::FontManager> fontManager_;
 public:
-	DrawableManager(Logger& log, DrawableSetting const& setting);
+	DrawableManager(Logger& log, Canvas& canvas, DrawableSetting const& setting);
 	virtual ~DrawableManager() noexcept = default;
 public:
 	Handler<Sprite> queryRawSprite(ImageFormat const format, const int width, const int height);

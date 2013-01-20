@@ -18,6 +18,7 @@
 
 #include "../../TestCommon.h"
 #include "../../../src/chisa/gl/DrawableManager.h"
+#include "../../../src/chisa/gl/Canvas.h"
 
 namespace chisa {
 namespace gl {
@@ -25,13 +26,16 @@ namespace gl {
 class DrawableTest : public ::testing::Test
 {
 protected:
+	Canvas *cv;
 	Handler<DrawableManager> dmanager;
 public:
 	void SetUp(){
-		dmanager = Handler<DrawableManager>(new DrawableManager(log_trace, DrawableSetting(MATERIAL_DIR"/font")));
+		cv = new Canvas(log_trace);
+		dmanager = Handler<DrawableManager>(new DrawableManager(log_trace, *cv, DrawableSetting(MATERIAL_DIR"/font")));
 	}
 	void TearDown(){
 		dmanager.reset();
+		delete cv;
 	}
 };
 TEST_F(DrawableTest, ColorDrawableTest)

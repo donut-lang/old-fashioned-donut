@@ -33,7 +33,7 @@ Universe::Universe(Logger& log, Handler<PlatformFairy> fairy, Handler<Hexe> hexe
 ,platformFairy_(fairy)
 ,hexe_(hexe)
 ,canvas_(log)
-,drawableManager_( new gl::DrawableManager(log, gl::DrawableSetting(this->resolveUniverseFilepath("__font__"))) )
+,drawableManager_( new gl::DrawableManager(log, canvas_, gl::DrawableSetting(this->resolveUniverseFilepath("__font__"))) )
 {
 }
 Universe::~Universe() noexcept{

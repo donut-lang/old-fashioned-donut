@@ -19,6 +19,7 @@
 #include "../../../TestCommon.h"
 #include "../../src/chisa/gl/DrawableManager.h"
 #include "../../src/chisa/gl/Color.h"
+#include "../../src/chisa/gl/Canvas.h"
 #include "../../src/chisa/doc/render/RenderTree.h"
 #include "../../src/chisa/doc/dispose/TextContext.h"
 #include <math.h>
@@ -29,12 +30,14 @@ namespace doc {
 class TextContextTest : public ::testing::Test
 {
 protected:
+	gl::Canvas* canvas;
 	Handler<gl::DrawableManager> mgr;
 	Handler<RenderTree> tree;
 	TextContext* r;
 public:
 	void SetUp(){
-		mgr = Handler<gl::DrawableManager>(new gl::DrawableManager(log_trace, gl::DrawableSetting(MATERIAL_DIR"/font")));
+		canvas = new gl::Canvas(log_trace);
+		mgr = Handler<gl::DrawableManager>(new gl::DrawableManager(log_trace, *canvas, gl::DrawableSetting(MATERIAL_DIR"/font")));
 		tree = Handler<RenderTree>(new RenderTree(log_trace, mgr));
 		r = new TextContext(log_trace, tree);
 	}
@@ -42,6 +45,7 @@ public:
 		delete r;
 		tree.reset();
 		mgr.reset();
+		delete canvas;
 	}
 };
 

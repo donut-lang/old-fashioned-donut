@@ -149,8 +149,11 @@ void Canvas::drawTexture(unsigned int texId, geom::Area const& areaInRoot, geom:
 	this->setOperation(Texture);
 	pushTexCoord(left ,top   );pushVertex(x      , y       , depth);
 	pushTexCoord(left ,bottom);pushVertex(x      , y+height, depth);
-	pushTexCoord(right,bottom);pushVertex(x+width, y+height, depth);
 	pushTexCoord(right,top   );pushVertex(x+width, y       , depth);
+
+	pushTexCoord(right,top   );pushVertex(x+width, y       , depth);
+	pushTexCoord(left ,bottom);pushVertex(x      , y+height, depth);
+	pushTexCoord(right,bottom);pushVertex(x+width, y+height, depth);
 	flushGL();
 }
 
@@ -164,7 +167,6 @@ void Canvas::drawLine(const float width, Color const& color, geom::Point const& 
 	this->setOperation(Lines);
 	pushVertex(start.x(), start.y(), depth);
 	pushVertex(end.x()  , end.y(), depth);
-	flushGL();
 }
 
 void Canvas::drawLines(const float width, Color const& color, std::vector<geom::Point> const& pts, const float depth)
@@ -203,7 +205,6 @@ void Canvas::drawRect(const float width, Color const& color, geom::Area const& a
 
 	pushVertex(sx, ey, depth);
 	pushVertex(sx, sy, depth);
-	flushGL();
 }
 void Canvas::fillRect(Color const& color, geom::Area const& area, const float depth)
 {
@@ -217,9 +218,12 @@ void Canvas::fillRect(Color const& color, geom::Area const& area, const float de
 	this->setColor(color);
 	this->setOperation(Rect);
 	pushVertex(sx, sy, depth);
-	pushVertex(ex, sy, depth);
-	pushVertex(ex, ey, depth);
 	pushVertex(sx, ey, depth);
+	pushVertex(ex, sy, depth);
+
+	pushVertex(ex, sy, depth);
+	pushVertex(sx, ey, depth);
+	pushVertex(ex, ey, depth);
 	flushGL();
 }
 
@@ -287,7 +291,7 @@ void Canvas::flushGL()
 			}
 		}
 #endif
-		glDrawArrays(GL_TRIANGLE_FAN, 0, this->vertexs_.size()/3);
+		glDrawArrays(GL_TRIANGLES, 0, this->vertexs_.size()/3);
 #ifdef DEBUG
 		{
 			const GLenum err = glGetError();
@@ -310,7 +314,7 @@ void Canvas::flushGL()
 			}
 		}
 #endif
-		glDrawArrays(GL_TRIANGLE_FAN, 0, this->vertexs_.size()/3);
+		glDrawArrays(GL_TRIANGLES, 0, this->vertexs_.size()/3);
 #ifdef DEBUG
 		{
 			const GLenum err = glGetError();
@@ -432,8 +436,7 @@ void Canvas::bindTexture(GLuint texId)
 {
 	if(nowTexId_ != texId){
 		flushGL();
-		this->nowTexId_ = texId;
-		glBindTexture(GL_TEXTURE_2D, nowTexId_);
+		glBindTexture(GL_TEXTURE_2D, this->nowTexId_ = texId);
 	#ifdef DEBUG
 		const GLenum err = glGetError();
 		if(err != GL_NO_ERROR){

@@ -32,13 +32,14 @@ class Buffer;
 
 class SpriteManager: public HandlerBody<SpriteManager> {
 	DEFINE_MEMBER_REF(private, Logger, log)
+	Canvas& canvas_;
 private:
 	static constexpr size_t MaxCachedSpriteCount = 200;
 	static constexpr size_t MaxCachedBufferCount = 200;
 	std::deque<Sprite*> unusedSprite_;
 	std::deque<internal::Buffer*> unusedBuffer_;
 public:
-	SpriteManager(Logger& log);
+	SpriteManager(Logger& log, Canvas& canvas);
 	virtual ~SpriteManager() noexcept;
 	inline bool onFree() noexcept { return false; };
 	Handler<Sprite> queryRawSprite(ImageFormat const foramt, const int width, const int height);

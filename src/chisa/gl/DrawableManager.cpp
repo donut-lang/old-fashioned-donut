@@ -21,9 +21,10 @@
 namespace chisa {
 namespace gl {
 
-DrawableManager::DrawableManager(Logger& log, DrawableSetting const& setting)
+DrawableManager::DrawableManager(Logger& log, Canvas& canvas, DrawableSetting const& setting)
 :log_(log)
-,spriteManager_(new gl::internal::SpriteManager(log))
+,canvas_(canvas)
+,spriteManager_(new gl::internal::SpriteManager(log, canvas))
 ,imageManager_(new gl::internal::ImageManager(log, this->spriteManager_))
 ,fontManager_(new gl::internal::FontManager(log, setting.fontdir()))
 {
