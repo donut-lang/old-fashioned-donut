@@ -49,7 +49,7 @@ void usage(int argc, char* argv[]){
 }
 
 void version(int argc, char* argv[]){
-	std::cout << "Chisa - a GUI toolkit for time leapers!" << ": " <<" (build at " << __DATE__ << " " << __TIME__ << " )" << std::endl;
+	std::cout << "Chisa - a GUI toolkit for time leapers!" << ": " <<" (build at " << __DATE__ << " " << __TIME__ << ")" << std::endl;
 	exit(0);
 }
 

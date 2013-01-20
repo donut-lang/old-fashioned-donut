@@ -81,6 +81,34 @@ std::string readAll(std::istream& stream) {
 	return source_.str();
 }
 
+int runDonut(Logger& log, int argc, char** argv)
+{
+
+	std::string source;
+	std::string filename;
+	if(0 == argc){
+		log.t(TAG, "Read from std::cin");
+		source = readAll(std::cin);
+		filename = "<CIN>";
+	}else{
+		log.t(TAG, "Read from file: %s", argv[0]);
+		std::ifstream in(argv[0]);
+		source = readAll(in);
+		filename = argv[0];
+	}
+	log.t(TAG, "Source: \n%s", source.c_str());
+	log.t(TAG, "Start executing...");
+
+	{ //実行
+		Handler<Donut> donut(new Donut(log, Handler<Patron>(new SystemPatron(argc, argv))));
+		donut->bootstrap();
+		Handler<Machine> machine = donut->queryMachine();
+		Handler<Source> src = donut->parse( source, filename );
+		Handler<Object> obj = machine->start( src );
+	}
+	return 0;
+}
+
 int main(int argc, char* argv[]){
 
 	int indexptr=0;
@@ -126,31 +154,7 @@ int main(int argc, char* argv[]){
 	Logger log(std::cout, level);
 	log.t(TAG, "Logger created. Level: %d", level);
 
-	std::string source;
-	std::string filename;
-	if(optind == argc){
-		log.t(TAG, "Read from std::cin");
-		source = readAll(std::cin);
-		filename = "<CIN>";
-	}else{
-		log.t(TAG, "Read from file: %s", argv[optind]);
-		std::ifstream in(argv[optind]);
-		source = readAll(in);
-		filename = argv[optind];
-		optind++;
-	}
-	log.t(TAG, "Source: \n%s", source.c_str());
-	log.t(TAG, "Start executing...");
-
-	{ //実行
-		Handler<Donut> donut(new Donut(log, Handler<Patron>(new SystemPatron(argc-optind, argv))));
-		donut->bootstrap();
-		Handler<Machine> machine = donut->queryMachine();
-		Handler<Source> src = donut->parse( source, filename );
-		Handler<Object> obj = machine->start( src );
-	}
-
-	return 0;
+	return runDonut(log, argc-optind, &argv[optind]);
 }
 
 }
