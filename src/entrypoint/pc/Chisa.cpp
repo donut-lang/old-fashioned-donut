@@ -65,7 +65,7 @@ const struct option ARG_OPTIONS[] = {
 		{0,0,0,0}
 };
 
-int exec(Logger& log){
+int runChisa(Logger& log){
 	int returnCode=0;
 	Handler<SDLPlatformFairy> platform(new SDLPlatformFairy(log));
 #if CHISA_ANDROID
@@ -151,7 +151,7 @@ int main(int argc, char** argv) {
 
 	Logger log(std::cout, level);
 	log.t(TAG, "Logger created. Level: %d", level);
-	return exec(log);
+	return runChisa(log);
 }
 
 }}}
