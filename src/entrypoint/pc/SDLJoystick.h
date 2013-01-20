@@ -26,46 +26,18 @@ class SDLJoystick: public Joystick {
 private:
 	SDL_Joystick* joy_;
 public:
-	SDLJoystick(Handler<JoystickManager> manager, SDL_Joystick* joy)
-			: Joystick(manager), joy_(joy)
-	{
-
-	}
-	virtual ~SDLJoystick() noexcept
-	{
-		SDL_JoystickClose(joy_);
-	}
+	SDLJoystick(Handler<JoystickManager> manager, SDL_Joystick* joy);
+	virtual ~SDLJoystick() noexcept;
 protected:
-	virtual unsigned int numAxesImpl() noexcept
-	{
-		return SDL_JoystickNumAxes(joy_);
-	}
-	virtual unsigned int numBallsImpl() noexcept
-	{
-		return SDL_JoystickNumBalls(joy_);
-	}
-	virtual unsigned int numButtonsImpl() noexcept
-	{
-		return SDL_JoystickNumButtons(joy_);
-	}
+	virtual unsigned int numAxesImpl() noexcept;
+	virtual unsigned int numBallsImpl() noexcept;
+	virtual unsigned int numButtonsImpl() noexcept;
 protected:
-	virtual int axisImpl(unsigned int const& idx) noexcept
-	{
-		return SDL_JoystickGetAxis(joy_, idx);
-	}
-	virtual void ballImpl(unsigned int const& idx, int& dx, int& dy)
-	{
-		SDL_JoystickGetBall(joy_, idx, &dx, &dy);
-	}
-	virtual bool buttonImpl(unsigned int const& idx) noexcept
-	{
-		return SDL_JoystickGetButton(joy_, idx) != 0;
-	}
+	virtual int axisImpl(const unsigned int& idx) noexcept;
+	virtual void ballImpl(const unsigned int& idx, int& dx, int& dy);
+	virtual bool buttonImpl(const unsigned int& idx) noexcept;
 protected:
-	virtual void updateImpl() noexcept
-	{
-		SDL_JoystickUpdate();
-	}
+	virtual void updateImpl() noexcept;
 };
 
 }
