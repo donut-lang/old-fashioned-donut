@@ -16,7 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <getopt.h>
 #include <iostream>
+#include <iomanip>
 #include <tarte/Exception.h>
 #include <tarte/Logger.h>
 
@@ -30,6 +32,39 @@ using namespace std;
 namespace chisa {
 namespace entrypoint {
 namespace pc {
+
+static const std::string TAG("ChisaEntry");
+void usage(int argc, char* argv[]){
+	static const std::string USAGE_TAB="    ";
+	std::cout << "Usage: " << basename(argv[0]) << " [switches] [--] [main universe name] [arguments]" << std::endl;
+	std::cout << USAGE_TAB << std::left << std::setw(15) << "--trace" << "set log level." << std::endl;
+	std::cout << USAGE_TAB << std::left << std::setw(15) << "--verbose" << "set log level." << std::endl;
+	std::cout << USAGE_TAB << std::left << std::setw(15) << "--debug"<<"set log level." << std::endl;
+	std::cout << USAGE_TAB << std::left << std::setw(15) << "--warning"<<"set log level." << std::endl;
+	std::cout << USAGE_TAB << std::left << std::setw(15) << "--info"<<"set log level." << std::endl;
+	std::cout << USAGE_TAB << std::left << std::setw(15) << "--error"<<"set log level." << std::endl;
+	std::cout << USAGE_TAB << std::left << std::setw(15) << "--version"<<"output the version, then exit." << std::endl;
+	std::cout << USAGE_TAB << std::left << std::setw(15) << "-h, --help"<<"output the help, then exit." << std::endl;
+	exit(0);
+}
+
+void version(int argc, char* argv[]){
+	std::cout << "Chisa - a GUI toolkit for time leapers!" << ": " <<" (build at " << __DATE__ << " " << __TIME__ << " )" << std::endl;
+	exit(0);
+}
+
+const struct option ARG_OPTIONS[] = {
+		{"trace", no_argument, 0, 1},
+		{"verbose", no_argument, 0, 2},
+		{"debug", no_argument, 0, 3},
+		{"warning", no_argument, 0, 4},
+		{"info", no_argument, 0, 5},
+		{"error", no_argument, 0, 6},
+		{"help", no_argument, 0, 7},
+		{"version", no_argument, 0, 8},
+		{0,0,0,0}
+};
+
 
 Logger log(std::cout, Logger::TRACE_);
 Handler<Chisa> gChisa;
@@ -54,9 +89,12 @@ int main(int argc, char** argv) {
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			gChisa->start("test");
-			//XXX ::donut::Exceptionが隠れてしまってる
 		} catch ( ::tarte::Exception& e) {
 			std::cerr << "Exception caught at " << e.file() << ":" << e.line() << std::endl;
+			std::cerr << "<msg>" << e.msg() << std::endl;
+			returnCode = -1;
+		} catch ( ::donut::DonutException& e) {
+			std::cerr << "Donut Exception caught at " << e.file() << ":" << e.line() << std::endl;
 			std::cerr << "<msg>" << e.msg() << std::endl;
 			returnCode = -2;
 		} catch (nes::EmulatorException& e) {

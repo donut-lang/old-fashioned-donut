@@ -27,6 +27,7 @@
 #include <donut/Donut.h>
 #include "SystemProvider.h"
 #include "SystemObject.h"
+#include "SystemPatron.h"
 
 namespace donut_cli {
 using namespace tarte;
@@ -49,7 +50,7 @@ void usage(int argc, char* argv[]){
 }
 
 void version(int argc, char* argv[]){
-	std::cout << "chisa::donut" << ": " <<" (build at " << __DATE__ << " " << __TIME__ << " )" << std::endl;
+	std::cout << "donut - a programming language for time leapers!" << ": " <<" (build at " << __DATE__ << " " << __TIME__ << " )" << std::endl;
 	exit(0);
 }
 
@@ -79,26 +80,6 @@ std::string readAll(std::istream& stream) {
 	}
 	return source_.str();
 }
-
-class Patron : public donut::Patron {
-	int argc_;
-	char** argv_;
-	Handler<SystemProvider> systemProvider_;
-public:
-	Patron(int argc, char** argv): argc_(argc), argv_(argv){
-
-	}
-	virtual ~Patron() noexcept = default;
-public:
-	virtual void onRegisterProvider(Handler<Heap> const& heap) override final
-	{
-		heap->registerProvider(systemProvider_ = Handler<SystemProvider>(new SystemProvider(heap, argc_, argv_)));
-	}
-	virtual void onGlobalObjectInitialized(Handler<Heap> const& heap) override final
-	{
-		heap->setGlobalObject("System", systemProvider_->newInstance(heap));
-	}
-};
 
 int main(int argc, char* argv[]){
 
@@ -162,7 +143,7 @@ int main(int argc, char* argv[]){
 	log.t(TAG, "Start executing...");
 
 	{ //実行
-		Handler<Donut> donut(new Donut(log, Handler<Patron>(new Patron(argc-optind, argv))));
+		Handler<Donut> donut(new Donut(log, Handler<Patron>(new SystemPatron(argc-optind, argv))));
 		donut->bootstrap();
 		Handler<Machine> machine = donut->queryMachine();
 		Handler<Source> src = donut->parse( source, filename );
