@@ -28,9 +28,9 @@ namespace nes {
 
 NesTraceWidget::NesTraceWidget(chisa::Logger& log, chisa::HandlerW<chisa::tk::World> _world, tinyxml2::XMLElement* element)
 :Widget(log, _world, element)
-,asmRenderer_(log, _world.lock()->drawableManager(), 24.0f)
-,numRenderer_(log, _world.lock()->drawableManager(), 24.0f)
-,symRenderer_(log, _world.lock()->drawableManager(), 24.0f)
+,asmRenderer_(log, _world.lock()->drawableManager(), 16.0f)
+,numRenderer_(log, _world.lock()->drawableManager(), 16.0f)
+,symRenderer_(log, _world.lock()->drawableManager(), 16.0f)
 ,addrWidth_(0)
 ,pcDelta_(0)
 ,lastPC_(0)
