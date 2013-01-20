@@ -39,6 +39,7 @@ NesMemoryWidget::NesMemoryWidget(chisa::Logger& log, chisa::HandlerW<chisa::tk::
 	numRenderer_.registerSymbol(14, "e");
 	numRenderer_.registerSymbol(15, "f");
 	numRenderer_.registerSymbol(16, "$");
+	numRenderer_.compile();
 
 	this->addrWidth_ = numRenderer_.maxWidth()*(1+4+1);
 }
@@ -82,6 +83,7 @@ void NesMemoryWidget::renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const&
 			this->numRenderer_.renderSyms(cv, pt, num, 0.0f);
 		}
 	}
+	numRenderer_.flush(cv);
 	cv.fillRect(gl::White, geom::Area(this->addrWidth_-symwidth,area.y(), symwidth, area.height()));
 	for(int x=colStart; x <= colEnd;++x) {
 		float const colOffset = this->addrWidth_ + (x+1)*dwidth-1;

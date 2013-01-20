@@ -99,6 +99,14 @@ void Sprite::drawImpl(Canvas* const canvas, geom::Point const& ptInRoot, const f
 			color);
 }
 
+void Sprite::drawImpl(Canvas* const canvas, std::vector<float> const& pts, std::vector<float> const texCoords, Color const& color)
+{
+	this->flushBuffer();
+	canvas->drawTexture(
+			this->texture_.textureID(),
+			pts, texCoords, color);
+}
+
 void Sprite::flushBuffer()
 {
 	if(this->buffer_.mem_){

@@ -40,6 +40,11 @@ Handler<Sprite> DrawableManager::queryRawSprite(ImageFormat const format, const 
 	return this->spriteManager_->queryRawSprite(format, width, height);
 }
 
+int DrawableManager::maxTextureSize() const noexcept
+{
+	return this->spriteManager_->maxTextureSize();
+}
+
 Handler<Sprite> DrawableManager::queryImage(std::string const& filename)
 {
 	return this->imageManager_->queryImage(filename);

@@ -103,6 +103,7 @@ NesTraceWidget::NesTraceWidget(chisa::Logger& log, chisa::HandlerW<chisa::tk::Wo
 	this->asmRenderer_.registerSymbol(static_cast<unsigned int>(Operation::BVC ),"BVC");
 	this->asmRenderer_.registerSymbol(static_cast<unsigned int>(Operation::BVS ),"BVS");
 	this->asmRenderer_.registerSymbol(static_cast<unsigned int>(Operation::Invalid ),"???");
+	asmRenderer_.compile();
 
 	this->numRenderer_.registerSymbol(0, "0");
 	this->numRenderer_.registerSymbol(1, "1");
@@ -120,6 +121,7 @@ NesTraceWidget::NesTraceWidget(chisa::Logger& log, chisa::HandlerW<chisa::tk::Wo
 	this->numRenderer_.registerSymbol(13, "d");
 	this->numRenderer_.registerSymbol(14, "e");
 	this->numRenderer_.registerSymbol(15, "f");
+	numRenderer_.compile();
 
 	this->symRenderer_.registerSymbol(Dollar        ,"$" );
 	this->symRenderer_.registerSymbol(RightParen    ,"(" );
@@ -131,6 +133,7 @@ NesTraceWidget::NesTraceWidget(chisa::Logger& log, chisa::HandlerW<chisa::tk::Wo
 	this->symRenderer_.registerSymbol(AtMark        ,"@" );
 	this->symRenderer_.registerSymbol(SymX          ,"X" );
 	this->symRenderer_.registerSymbol(SymY          ,"Y" );
+	symRenderer_.compile();
 }
 
 void NesTraceWidget::renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const& area)

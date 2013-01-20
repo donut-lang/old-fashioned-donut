@@ -132,6 +132,7 @@ public: /* from Handler */
 public: /* from Canvas */
 	void drawImpl(Canvas* const canvas, geom::Point const& ptInRoot, geom::Area const& mask, const float depth, Color const& color);
 	void drawImpl(Canvas* const canvas, geom::Point const& ptInRoot, const float depth, Color const& color);
+	void drawImpl(Canvas* const canvas, std::vector<float> const& pts, std::vector<float> const texCoords, Color const& color);
 public:
 	struct CompareByTexture{
 		inline bool operator()(Sprite const* const& a, Sprite const* const& b) const noexcept

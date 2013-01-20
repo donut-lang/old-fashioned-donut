@@ -50,11 +50,14 @@ public:
 	void scale(geom::ScaleVector const& scale);
 	void drawSprite(Handler<Sprite> const& sprite, geom::Point const& pt, const float depth = 0.0f, Color const& color=White);
 	void drawSprite(Handler<Sprite> const& sprite, geom::Point const& pt, geom::Area const& mask, const float depth = 0.0f, Color const& color=White);
+	void drawSprite(Handler<Sprite> const& sprite, std::vector<float> const& pts, std::vector<float> const texCoords, Color const& color=White);
+	void drawTexture(unsigned int texId, geom::Area const& areaInRoot, geom::Area const& coordinateInSprite, const float depth, Color const& color);
+	void drawTexture(unsigned int texId, std::vector<float> const& pts, std::vector<float> const texCoords, Color const& color);
+
 	void drawLine(const float width, Color const& color, geom::Point const& start, geom::Point const& end, const float depth=0.0f);
 	void drawLines(const float width, Color const& color, std::vector<geom::Point> const& pts, const float depth);
 	void drawRect(const float width, Color const& color, geom::Area const& area, const float depth=0.0f);
 	void fillRect(Color const& color, geom::Area const& area, const float depth=0.0f);
-	void drawTexture(unsigned int texId, geom::Area const& areaInRoot, geom::Area const& coordinateInSprite, const float depth, Color const& color);
 	void flush();
 public:
 	class ScissorScope {

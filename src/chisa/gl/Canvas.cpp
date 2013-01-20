@@ -134,6 +134,12 @@ void Canvas::drawSprite(Handler<Sprite> const& sprite, geom::Point const& ptInRo
 {
 	sprite->drawImpl(this, ptInRoot, mask, depth, color);
 }
+
+void Canvas::drawSprite(Handler<Sprite> const& sprite, std::vector<float> const& pts, std::vector<float> const texCoords, Color const& color)
+{
+	sprite->drawImpl(this, pts, texCoords, color);
+}
+
 void Canvas::drawTexture(unsigned int texId, geom::Area const& areaInRoot, geom::Area const& coordinateInSprite, const float depth, Color const& color)
 {
 	const float x=areaInRoot.x();
@@ -155,6 +161,15 @@ void Canvas::drawTexture(unsigned int texId, geom::Area const& areaInRoot, geom:
 	pushTexCoord(right,top   );pushVertex(x+width, y       , depth);
 	pushTexCoord(left ,bottom);pushVertex(x      , y+height, depth);
 	pushTexCoord(right,bottom);pushVertex(x+width, y+height, depth);
+	flushGL();
+}
+void Canvas::drawTexture(unsigned int texId, std::vector<float> const& pts, std::vector<float> const texCoords, Color const& color)
+{
+	this->bindTexture(texId);
+	this->setColor(color);
+	this->setOperation(Texture);
+	this->texCoords_.insert(texCoords_.end(), texCoords.begin(), texCoords.end());
+	this->vertexs_.insert(vertexs_.end(), pts.begin(), pts.end());
 	flushGL();
 }
 

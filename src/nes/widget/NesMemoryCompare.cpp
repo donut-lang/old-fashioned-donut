@@ -62,6 +62,7 @@ NesMemoryCompare::NesMemoryCompare(chisa::Logger& log, chisa::HandlerW<chisa::tk
 	numRenderer_.registerSymbol(LParen, "(");
 	numRenderer_.registerSymbol(RParen, ")");
 	numRenderer_.registerSymbol(Space, " ");
+	numRenderer_.compile();
 
 	chisa::Handler<nes::NesGeist> geist(world->geist().cast<nes::NesGeist>());
 	this->geist_ = geist;
@@ -145,6 +146,7 @@ void NesMemoryCompare::renderImpl(chisa::gl::Canvas& cv, const chisa::geom::Area
 			++idx;
 		}
 	}
+	numRenderer_.flush(cv);
 
 	{ //ラベル
 		cv.fillRect(parent->backgroundColor(), Area(ZERO, Point(width_, rowHeight+area.y())));

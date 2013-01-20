@@ -65,6 +65,7 @@ public:
 	virtual ~DrawableManager() noexcept = default;
 public:
 	Handler<Sprite> queryRawSprite(ImageFormat const format, const int width, const int height);
+	int maxTextureSize() const noexcept;
 	Handler<Sprite> queryImage(std::string const& filename);
 	Handler<Drawable> queryDrawable(std::string const& repl, geom::Box const& box=geom::Box());
 	Handler<Font> queryFont( std::string const& name = std::string() );

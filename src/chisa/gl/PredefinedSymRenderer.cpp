@@ -29,8 +29,6 @@ static const std::string TAG("PredefinedStringRenderer");
 PredefinedSymRenderer::PredefinedSymRenderer(Logger& log, Handler<DrawableManager> drawableManager, float size)
 :log_(log)
 ,drawableManager_(drawableManager)
-,maxWidth_(0)
-,maxHeight_(0)
 ,font_(drawableManager->queryFont())
 ,size_(size)
 {
@@ -38,45 +36,127 @@ PredefinedSymRenderer::PredefinedSymRenderer(Logger& log, Handler<DrawableManage
 
 void PredefinedSymRenderer::registerSymbol( unsigned int symbol, std::string const& str )
 {
-	auto it = this->spriteTable_.find(symbol);
-	if(it != this->spriteTable_.end()){
-		this->log().w(TAG, "Symbol: %d is already defined, and replaced with: %s", symbol, str.c_str());
-		this->spriteTable_.erase(it);
+	if( unlikely(!this->renderBuffer_.empty()) ) {
+		TARTE_EXCEPTION(Exception, "[BUG] Oops. PredefinedSymRenderer already compiled.");
 	}
-	Handler<TextDrawable> spr = drawableManager_->queryText(str);
-	this->maxWidth_ = geom::max(spr->width(), maxWidth_);
-	this->maxHeight_ = geom::max(spr->height(), maxHeight_);
-	this->spriteTable_.insert( std::pair<unsigned int, Handler<TextDrawable> >( symbol, spr ) );
+	auto it = this->entryTable_.find(symbol);
+	if(it != this->entryTable_.end()){
+		this->log().w(TAG, "Symbol: %d is already defined, and replaced with: %s", symbol, str.c_str());
+		this->entryTable_.erase(it);
+	}
+	Entry ent;
+	ent.str = str;
+	ent.glyphs = font_->lookupGlyph(str, size_, ascent_, descent_, height_);
+	int totalX = 0;
+	for(Handler<BitmapGlyph> const& g : ent.glyphs){
+		totalX += g->get()->root.advance.x;
+	}
+	float const width = FLOAT_FROM_16_16(totalX);
+	ent.areaInSprite.width(width);
+	ent.areaInSprite.height(height_);
+
+	this->maxWidth_ = geom::max(width, maxWidth_);
+	this->entryTable_.insert( std::pair<unsigned int, Entry >( symbol, ent ) );
+}
+
+void PredefinedSymRenderer::compile()
+{
+	int nowSprite = 0;
+	int const maxSize = drawableManager_->maxTextureSize();
+	Image image;
+	image.sprite = this->drawableManager_->queryRawSprite(ImageFormat::RGBA8, maxSize, maxSize);
+
+	int nowX = 0;
+	int nowY = 0;
+
+	for(std::pair<const Symbol, Entry>& p : entryTable_) {
+		Entry& ent = p.second;
+		if(ent.areaInSprite.width() + FLOAT_FROM_16_16(nowX) > image.sprite->width()) {
+			nowX = 0;
+			nowY += height_;
+		}
+		if( nowY + height_ > image.sprite->height()){
+			nowX = 0;
+			nowY = 0;
+			this->renderBuffer_.push_back(image);
+			image.sprite = this->drawableManager_->queryRawSprite(ImageFormat::RGBA8, maxSize, maxSize);
+			++nowSprite;
+		}
+		ent.spriteNo = nowSprite;
+		ent.areaInSprite.x(FLOAT_FROM_16_16(nowX));
+		ent.areaInSprite.y(nowY);
+		Sprite::Session ss(image.sprite);
+		int const spriteAlign = ss.align();
+		int const spriteStride = ss.stride();
+		unsigned char* const spriteBuf = ss.data();
+
+		for( Handler<BitmapGlyph> const& glyph : ent.glyphs ) {
+			FT_BitmapGlyph g = glyph->get();
+			int const startX = INT_FROM_16_16_FLOOR(nowX)+g->left;
+			int const bmpPitch = g->bitmap.pitch;
+			int const bmpWidth = g->bitmap.width;
+
+			int const startY = ascent_-g->top;
+			int const endY = g->bitmap.rows+startY;
+
+			int bmpY = 0;
+			for(int y=startY;y<endY;++y,++bmpY) {
+				unsigned int* const sprBuf = reinterpret_cast<unsigned int*>(&spriteBuf[((nowY+y)*spriteStride)+(startX*spriteAlign)]);
+				unsigned char* const bmpBuf = &g->bitmap.buffer[bmpPitch*bmpY];
+				for(int x=0;x<bmpWidth; ++x) {
+				#if IS_BIG_ENDIAN
+					sprBuf[x] = bmpBuf[x] | 0xffffff00;
+				#else
+					sprBuf[x] = bmpBuf[x] << 24 | 0xffffff;
+				#endif
+				}
+			}
+			nowX += g->root.advance.x;
+		}
+		ent.glyphs.clear();
+		ent.glyphs.shrink_to_fit();
+	}
+	this->renderBuffer_.push_back(image);
+}
+
+void PredefinedSymRenderer::flush( Canvas& cv )
+{
+	for(Image& img : renderBuffer_){
+		cv.drawSprite(img.sprite, img.vertexBuffer, img.coordBuffer, this->color_);
+		img.vertexBuffer.clear();
+		img.coordBuffer.clear();
+	}
 }
 
 geom::Area PredefinedSymRenderer::renderSyms( Canvas& cv, geom::Point const& point, SymList const& str, float depth)
 {
 	float x=0.0f;
 	for(unsigned int symbol : str){
-		auto it = this->spriteTable_.find(symbol);
-		if(it == this->spriteTable_.end()){
+		auto it = this->entryTable_.find(symbol);
+		if(it == this->entryTable_.end()){
 			this->log().w(TAG, "Unknown symbol: %d", symbol);
 			continue;
 		}
-		Handler<TextDrawable> const& spr( it->second );
-		geom::Point rendered( point.x()+x, point.y()+(this->maxHeight_-spr->height())/2 );
-		spr->draw(cv, rendered, depth);
-		x += spr->width();
+		Entry const& ent( it->second );
+		Image& img = renderBuffer_[ent.spriteNo];
+		geom::Point rendered( point.x()+x, point.y() );
+		img.add(rendered, ent.areaInSprite);
+		x += ent.areaInSprite.width();
 	}
-	return geom::Area(point, geom::Box(x,this->maxHeight_));
+	return geom::Area(point, geom::Box(x,this->height_));
 }
 
 geom::Area PredefinedSymRenderer::renderSym( Canvas& cv, geom::Point const& point, Symbol const& symbol, float depth)
 {
-	auto it = this->spriteTable_.find(symbol);
-	if(it == this->spriteTable_.end()){
+	auto it = this->entryTable_.find(symbol);
+	if( unlikely(it == this->entryTable_.end()) ){
 		this->log().w(TAG, "Unknown symbol: %d", symbol);
 		return geom::Area();
 	}
-	Handler<TextDrawable> const& spr( it->second );
-	geom::Point rendered( point.x(), point.y()+(this->maxHeight_-spr->height())/2 );
-	spr->draw(cv, rendered, depth);
-	return geom::Area(point, geom::Box(spr->width(),this->maxHeight_));
+	Entry const& ent( it->second );
+	Image& img = renderBuffer_[ent.spriteNo];
+	img.add(point, ent.areaInSprite);
+	return geom::Area(point, geom::Box(ent.areaInSprite.width(),this->height_));
 }
 
 
