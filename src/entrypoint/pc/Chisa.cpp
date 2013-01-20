@@ -65,11 +65,7 @@ const struct option ARG_OPTIONS[] = {
 		{0,0,0,0}
 };
 
-
-Logger log(std::cout, Logger::TRACE_);
-Handler<Chisa> gChisa;
-
-int main(int argc, char** argv) {
+int exec(Logger& log){
 	int returnCode=0;
 	Handler<SDLPlatformFairy> platform(new SDLPlatformFairy(log));
 #if CHISA_ANDROID
@@ -78,17 +74,17 @@ int main(int argc, char** argv) {
 	std::string basepath(".");
 #endif
 	Handler<Hexe> hexe(new nes::Hexe(log, basepath+"/universe"));
-	gChisa = Handler<Chisa>(new Chisa(log, platform, hexe));
+	Handler<Chisa> chisa (new Chisa(log, platform, hexe));
 	{
 		try {
-			gChisa->init("Chisa", 1280,720, 8, 8, 8, 8, 16, 0);
+			chisa->init("Chisa", 1280,720, 8, 8, 8, 8, 16, 0);
 			glDisable(GL_ALPHA_TEST);
 			glDisable(GL_STENCIL_TEST);
 
 			//glEnable(GL_DEPTH_TEST);
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			gChisa->start("test");
+			chisa->start("test");
 		} catch ( ::tarte::Exception& e) {
 			std::cerr << "Exception caught at " << e.file() << ":" << e.line() << std::endl;
 			std::cerr << "<msg>" << e.msg() << std::endl;
@@ -109,10 +105,53 @@ int main(int argc, char** argv) {
 		}
 		std::cout << "exit successfully." << std::endl << std::flush;
 	}
-	gChisa.reset();
-	hexe.reset();
-	platform.reset();
 	return returnCode;
+}
+
+int main(int argc, char** argv) {
+	int indexptr=0;
+	Logger::Level level = Logger::Level::WARN_;
+	while(1){
+		int opt = getopt_long(argc, argv, "h", ARG_OPTIONS, &indexptr);
+		if(opt < 0){
+			break;
+		}
+		switch(opt)
+		{
+		case 1:
+			level = Logger::TRACE_;
+			break;
+		case 2:
+			level = Logger::VERBOSE_;
+			break;
+		case 3:
+			level = Logger::DEBUG_;
+			break;
+		case 4:
+			level = Logger::INFO_;
+			break;
+		case 5:
+			level = Logger::WARN_;
+			break;
+		case 6:
+			level = Logger::ERROR_;
+			break;
+		case 7:
+		case 'h':
+			usage(argc, argv);
+			break;
+		case 8:
+			version(argc, argv);
+			break;
+		case '?':
+			exit(0);
+			break;
+		}
+	}
+
+	Logger log(std::cout, level);
+	log.t(TAG, "Logger created. Level: %d", level);
+	return exec(log);
 }
 
 }}}
