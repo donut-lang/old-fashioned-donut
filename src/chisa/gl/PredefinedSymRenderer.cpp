@@ -31,6 +31,11 @@ PredefinedSymRenderer::PredefinedSymRenderer(Logger& log, Handler<DrawableManage
 ,drawableManager_(drawableManager)
 ,font_(drawableManager->queryFont())
 ,size_(size)
+,color_(gl::Black)
+,ascent_(0)
+,descent_(0)
+,height_(0)
+,maxWidth_(0)
 {
 }
 
@@ -61,31 +66,35 @@ void PredefinedSymRenderer::registerSymbol( unsigned int symbol, std::string con
 
 void PredefinedSymRenderer::compile()
 {
+	if( unlikely(!this->renderBuffer_.empty()) ) {
+		TARTE_EXCEPTION(Exception, "[BUG] Oops. PredefinedSymRenderer already compiled.");
+	}
 	int nowSprite = 0;
 	int const maxSize = drawableManager_->maxTextureSize();
-	Image image;
-	image.sprite = this->drawableManager_->queryRawSprite(ImageFormat::RGBA8, maxSize, maxSize);
+	this->renderBuffer_.resize(1);
+	Image* image = &renderBuffer_.back();
+	image->sprite = this->drawableManager_->queryRawSprite(ImageFormat::RGBA8, maxSize, maxSize);
 
 	int nowX = 0;
 	int nowY = 0;
 
 	for(std::pair<const Symbol, Entry>& p : entryTable_) {
 		Entry& ent = p.second;
-		if(ent.areaInSprite.width() + FLOAT_FROM_16_16(nowX) > image.sprite->width()) {
+		if(ent.areaInSprite.width() + FLOAT_FROM_16_16(nowX) > image->sprite->width()) {
 			nowX = 0;
 			nowY += height_;
 		}
-		if( nowY + height_ > image.sprite->height()){
+		if( nowY + height_ > image->sprite->height()){
 			nowX = 0;
 			nowY = 0;
-			this->renderBuffer_.push_back(image);
-			image.sprite = this->drawableManager_->queryRawSprite(ImageFormat::RGBA8, maxSize, maxSize);
-			++nowSprite;
+			renderBuffer_.resize((++nowSprite)+1);
+			image = &renderBuffer_.back();
+			image->sprite = this->drawableManager_->queryRawSprite(ImageFormat::RGBA8, maxSize, maxSize);
 		}
 		ent.spriteNo = nowSprite;
 		ent.areaInSprite.x(FLOAT_FROM_16_16(nowX));
 		ent.areaInSprite.y(nowY);
-		Sprite::Session ss(image.sprite);
+		Sprite::Session ss(image->sprite);
 		int const spriteAlign = ss.align();
 		int const spriteStride = ss.stride();
 		unsigned char* const spriteBuf = ss.data();
@@ -116,7 +125,6 @@ void PredefinedSymRenderer::compile()
 		ent.glyphs.clear();
 		ent.glyphs.shrink_to_fit();
 	}
-	this->renderBuffer_.push_back(image);
 }
 
 void PredefinedSymRenderer::flush( Canvas& cv )

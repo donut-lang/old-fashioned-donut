@@ -53,6 +53,7 @@ private:
 		std::vector<float> coordBuffer;
 	public:
 		void add(geom::Point const& pt, geom::Area const& spriteArea){
+			Handler<Sprite> const& spr = this->sprite;
 			//
 			vertexBuffer.push_back(pt.x());vertexBuffer.push_back(pt.y());vertexBuffer.push_back(0);
 			vertexBuffer.push_back(pt.x() + spriteArea.width());vertexBuffer.push_back(pt.y());vertexBuffer.push_back(0);
@@ -63,13 +64,13 @@ private:
 			vertexBuffer.push_back(pt.x() + spriteArea.width());vertexBuffer.push_back(pt.y() +spriteArea.height() );vertexBuffer.push_back(0);
 
 			//
-			coordBuffer.push_back(spriteArea.x()); coordBuffer.push_back(spriteArea.y());
-			coordBuffer.push_back(spriteArea.x() + spriteArea.width() ); coordBuffer.push_back(spriteArea.y());
-			coordBuffer.push_back(spriteArea.x()); coordBuffer.push_back(spriteArea.y() + spriteArea.height());
+			coordBuffer.push_back((spriteArea.x()                     ) / spr->width()); coordBuffer.push_back((spriteArea.y()                     )  / spr->height());
+			coordBuffer.push_back((spriteArea.x() + spriteArea.width() ) / spr->width()); coordBuffer.push_back((spriteArea.y()                     )  / spr->height());
+			coordBuffer.push_back((spriteArea.x()                     ) / spr->width()); coordBuffer.push_back((spriteArea.y() + spriteArea.height() ) / spr->height());
 
-			coordBuffer.push_back(spriteArea.x()); coordBuffer.push_back(spriteArea.y() + spriteArea.height());
-			coordBuffer.push_back(spriteArea.x() + spriteArea.width() ); coordBuffer.push_back(spriteArea.y());
-			coordBuffer.push_back(spriteArea.x() + spriteArea.width() ); coordBuffer.push_back(spriteArea.y() + spriteArea.height() );
+			coordBuffer.push_back((spriteArea.x()                    ) / spr->width() ); coordBuffer.push_back((spriteArea.y() + spriteArea.height()) / spr->height());
+			coordBuffer.push_back((spriteArea.x() + spriteArea.width()) / spr->width() ); coordBuffer.push_back((spriteArea.y()                     ) / spr->height());
+			coordBuffer.push_back((spriteArea.x() + spriteArea.width()) / spr->width() ); coordBuffer.push_back((spriteArea.y() + spriteArea.height()) / spr->height());
 }
 	};
 private:

@@ -228,6 +228,9 @@ void NesTraceWidget::renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const& 
 		} while( row <= endRow && pc < 0x10000);
 		lastDrawnPCEnd_ = pc;
 	}
+	asmRenderer_.flush(cv);
+	numRenderer_.flush(cv);
+	symRenderer_.flush(cv);
 }
 
 void NesTraceWidget::renderInst(chisa::gl::Canvas& cv, VirtualMachine& vm, uint16_t const& nowPC, Instruction const& inst, float const& rowWidth, float const& rowHeight, float const& offsetY)
