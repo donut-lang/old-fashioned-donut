@@ -96,7 +96,6 @@ public: /* 登録 */
 		static_assert(std::is_base_of<Element, ElementKlass>::value, "Please register layout for element class.");
 		this->registerLayout(xmlElementName, elementConstructor<ElementKlass>);
 	}
-	//XXX: ここだめ！！！ヒープごとにプロバイダは作られるので、コンストラクタを登録しないと。
 	template <typename ElementKlass>
 	void registerProvider(Handler<ElementProvider> const& provider)
 	{

@@ -53,7 +53,7 @@ NesGeist::~NesGeist() noexcept
 		quartet->removeInstrument(this->audio_.instrument());
 		log().d(TAG, "Audio fairy detatched.");
 	}
-	this->machine_->debugger().watcher().resumeRunning(); //XXX:どうなのだろう
+	this->machine_->debugger().watcher().resumeRunning(); //XXX:再開してから死なないとデッドロックする
 	this->stopNES();
 	delete this->machine_;
 }

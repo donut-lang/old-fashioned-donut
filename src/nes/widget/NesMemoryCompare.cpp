@@ -33,7 +33,6 @@ NesMemoryCompare::NesMemoryCompare(chisa::Logger& log, chisa::HandlerW<chisa::tk
 	using namespace chisa::gl;
 	Handler<World> world = _world.lock();
 	Handler<DrawableManager> dm = world->drawableManager();
-	// TODO Auto-generated constructor stub
 	this->lAddr_ = dm->queryText("アドレス", 16);
 	this->lLast_ = dm->queryText("記録メモ", 16);
 	this->lNow_ = dm->queryText("今の値", 16);
