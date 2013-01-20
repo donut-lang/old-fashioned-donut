@@ -30,8 +30,11 @@ static const std::string TAG("RawSpriteManager");
 SpriteManager::SpriteManager(Logger& log, Canvas& canvas)
 :log_(log)
 ,canvas_(canvas)
+,maxTextureSize_(0)
 {
-
+	glGetIntegerv( GL_MAX_TEXTURE_SIZE, &maxTextureSize_ );
+	log_.i(TAG, "Max texture size:%dx%d ", maxTextureSize_, maxTextureSize_);
+	maxTextureSize_ = std::max(1024, maxTextureSize_);
 }
 SpriteManager::~SpriteManager() noexcept
 {
