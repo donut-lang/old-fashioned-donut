@@ -27,16 +27,18 @@
 namespace chisa {
 namespace gl {
 
+typedef float color_t;
+
 class Color {
 	STACK_OBJECT(Color);
 public:
-	DEFINE_MEMBER_LITERAL(public, public, float, red);
-	DEFINE_MEMBER_LITERAL(public, public, float, green);
-	DEFINE_MEMBER_LITERAL(public, public, float, blue);
-	DEFINE_MEMBER_LITERAL(public, public, float, alpha);
+	DEFINE_MEMBER_LITERAL(public, public, color_t, red);
+	DEFINE_MEMBER_LITERAL(public, public, color_t, green);
+	DEFINE_MEMBER_LITERAL(public, public, color_t, blue);
+	DEFINE_MEMBER_LITERAL(public, public, color_t, alpha);
 public:
 	constexpr Color() noexcept:red_(0), green_(0), blue_(0), alpha_(0){};
-	constexpr Color(float r, float g, float b, float a) noexcept:red_(r), green_(g), blue_(b), alpha_(a){};
+	constexpr Color(color_t r, color_t g, color_t b, color_t a) noexcept:red_(r), green_(g), blue_(b), alpha_(a){};
 	constexpr Color(Color const& other) = default;
 	constexpr Color(Color&& other) = default;
 	static Color fromString( std::string const& name );
@@ -45,9 +47,9 @@ public:
 	~Color() noexcept = default;
 	std::string toString() const noexcept;
 private:
-	static constexpr float DELTA = 1.0f/255.0f;
+	static constexpr color_t DELTA = 1.0f/255.0f;
 public:
-	constexpr Color multAlpha(const float alpha) const noexcept{
+	constexpr Color multAlpha(float const& alpha) const noexcept{
 		return Color(red_,green_, blue_, alpha_*alpha);
 	}
 	constexpr bool isInvalid() const noexcept{
