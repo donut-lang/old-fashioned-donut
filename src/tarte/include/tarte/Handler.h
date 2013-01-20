@@ -386,7 +386,7 @@ private:
 protected:
 	HandlerBody()
 	:refcount_(0), deleted(false), weakEntity_(nullptr) {}
-	virtual ~HandlerBody() noexcept (true) {}; //XXX: GCCのバグでデフォルトにできない？
+	virtual ~HandlerBody() noexcept = default;
 protected:
 	inline int refcount() const noexcept { return this->refcount_; };
 	inline Handler<const Derived> self() const { return Handler<Derived>::__internal__fromRawPointerWithoutCheck(static_cast<const Derived*>(this)); };
