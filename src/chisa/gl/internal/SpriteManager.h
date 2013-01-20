@@ -45,7 +45,7 @@ public:
 	virtual ~SpriteManager() noexcept;
 	inline bool onFree() noexcept { return false; };
 	Handler<Sprite> queryRawSprite(ImageFormat const foramt, const int width, const int height);
-	inline int const& maxTextureSize() const noexcept { return this->maxTextureSize_; };
+	inline int maxTextureSize() const noexcept { return this->maxTextureSize_; };
 public:
 	void backSprite(Sprite* spr);
 	internal::Buffer* queryBuffer(std::size_t size);
