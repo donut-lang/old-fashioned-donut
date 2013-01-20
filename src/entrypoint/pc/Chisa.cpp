@@ -37,7 +37,12 @@ Handler<Chisa> gChisa;
 int main(int argc, char** argv) {
 	int returnCode=0;
 	Handler<SDLPlatformFairy> platform(new SDLPlatformFairy(log));
-	Handler<Hexe> hexe(new nes::Hexe(log, "./universe"));
+#if CHISA_ANDROID
+	std::string basepath("/sdcard");//SDL_AndroidGetExternalStoragePath());
+#else
+	std::string basepath(".");
+#endif
+	Handler<Hexe> hexe(new nes::Hexe(log, basepath+"/universe"));
 	gChisa = Handler<Chisa>(new Chisa(log, platform, hexe));
 	{
 		try {

@@ -1,5 +1,5 @@
 #! /bin/sh
-DIRNAME=$(cd $(dirname $0);cd ..;pwd)/build/debug
+DIRNAME=$(cd $(dirname $0);cd ..;pwd)/build/release
 export CPUPROFILE=/tmp/prof.out
 RUN_PROG=${DIRNAME}/chisa
 ${RUN_PROG}

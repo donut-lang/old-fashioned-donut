@@ -287,7 +287,7 @@ void Canvas::flushGL()
 			}
 		}
 #endif
-		glDrawArrays(GL_QUADS, 0, this->vertexs_.size()/3);
+		glDrawArrays(GL_TRIANGLE_FAN, 0, this->vertexs_.size()/3);
 #ifdef DEBUG
 		{
 			const GLenum err = glGetError();
@@ -310,7 +310,7 @@ void Canvas::flushGL()
 			}
 		}
 #endif
-		glDrawArrays(GL_QUADS, 0, this->vertexs_.size()/3);
+		glDrawArrays(GL_TRIANGLE_FAN, 0, this->vertexs_.size()/3);
 #ifdef DEBUG
 		{
 			const GLenum err = glGetError();
