@@ -106,12 +106,14 @@ handleNES = func(msg){
 	};
 };
 
-running = true;
-while(running){
-	msg = interrupt null;
-	if( handleNES(msg) ){
-	}else{};
+main = func(){
+	running = true;
+	while(running){
+		msg = interrupt null;
+		if( handleNES(msg) ){
+		}else{};
+	};
 };
 
 
-
+main();

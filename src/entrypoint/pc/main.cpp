@@ -66,7 +66,7 @@ const struct option ARG_OPTIONS[] = {
 		{0,0,0,0}
 };
 
-int runChisa(Logger& log){
+int runChisa(Logger& log, int argc, char** argv){
 	int returnCode=0;
 	Handler<SDLPlatformFairy> platform(new SDLPlatformFairy(log));
 #if CHISA_ANDROID
@@ -85,7 +85,7 @@ int runChisa(Logger& log){
 			//glEnable(GL_DEPTH_TEST);
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			chisa->start("test");
+			chisa->start(argc > 0 ? argv[0] : "main");
 		} catch ( ::tarte::Exception& e) {
 			std::cerr << "Exception caught at " << e.file() << ":" << e.line() << std::endl;
 			std::cerr << "<msg>" << e.msg() << std::endl;
@@ -152,7 +152,7 @@ int main(int argc, char** argv) {
 
 	Logger log(std::cout, level);
 	log.t(TAG, "Logger created. Level: %d", level);
-	return runChisa(log);
+	return runChisa(log, argc-optind, &argv[optind]);
 }
 
 }}}
