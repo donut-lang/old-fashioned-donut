@@ -40,11 +40,11 @@ geom::Area AngelWidgetTarget::findScreenAreaImpl()
 	if( unlikely(!world) ) {
 		return geom::Area();
 	}
-	WidgetElement* const element = world->getWidgetById(id_);
+	Handler<WidgetElement> const element = world->getWidgetById(id_);
 	if( unlikely(!element) ) {
 		return geom::Area();
 	}
-	Widget* const widget = element->widget();
+	Handler<Widget> const& widget = element->widget();
 	if( unlikely(!widget) ) {
 		return geom::Area();
 	}
@@ -82,7 +82,7 @@ void AngelWidgetTarget::onAttatchedImpl()
 	if( unlikely(!world) ) {
 		return;
 	}
-	WidgetElement* element = world->getWidgetById(id_);
+	Handler<WidgetElement> const element = world->getWidgetById(id_);
 	if( unlikely(!element) ) {
 		return;
 	}

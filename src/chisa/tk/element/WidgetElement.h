@@ -32,8 +32,8 @@ public:
 		Expand
 	};
 private:
-	WidgetElement* borrowed_;
-	DEFINE_MEMBER(public, private, Widget*, widget);
+	HandlerW<WidgetElement> borrowed_;
+	Handler<Widget> widget_;
 	std::string widgetId_;
 	FitMode fitMode_;
 	DEFINE_MEMBER(private, private, geom::ScaleVector, widgetScale);
@@ -54,6 +54,7 @@ private:
 private:
 	virtual void notifyRelayoutFinished();
 public:
+	inline Handler<Widget> const& widget() const noexcept { return this->widget_; };
 	geom::Point calcPtInWidgetRel(geom::Point const& ptInRoot);
 	geom::Point calcPtInWidgetAbs(geom::Point const& ptInRoot);
 	geom::Point calcPtInElement(geom::Point const& ptInWidgetAbs);

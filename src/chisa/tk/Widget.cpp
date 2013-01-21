@@ -18,6 +18,7 @@
 
 #include "Widget.h"
 #include "element/WidgetElement.h"
+#include "World.h"
 
 namespace chisa {
 namespace tk {
@@ -86,9 +87,35 @@ void Widget::requestRelayout()
 	}
 }
 
+std::string Widget::toString() const
+{
+	return ::tarte::format("(Widget: %p)", this);
+}
+
 void Widget::notifyRelayoutFinished()
 {
 	this->notifyRelayoutFinishedImpl();
+}
+
+Handler<WidgetObject> Widget::donutObject()
+{
+	if(!this->donutObject_.expired()){
+		return this->donutObject_.lock();
+	}
+	Handler<World> world = this->world().lock();
+	if( unlikely(!world) ){
+		TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
+	}
+	Handler< ::donut::Donut> donut( world->donut() );
+	WidgetFactory* factory = world->widgetFactory();
+	Handler<WidgetProvider> provider(factory->getProviderOf(this));
+	if( unlikely(!provider) ){
+		TARTE_EXCEPTION(Exception, "[BUG] Oops. Provider is not found for \"%s\"", toString().c_str());
+	}
+	Handler< ::donut::Heap> const& heap = donut->heap();
+	Handler<WidgetObject> eobj ( provider->newInstance(heap, self()) );
+	this->donutObject_ = eobj;
+	return eobj;
 }
 
 void Widget::notifyViewRefreshed()

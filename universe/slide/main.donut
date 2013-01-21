@@ -1,4 +1,14 @@
 main = func(){
+	interrupt null;
+	doc = World.findWidgetById("slide");
+	doc.loadDocument("2");
+	interrupt null;
+	doc.loadDocument("3");
+	interrupt null;
+	doc.loadDocument("4");
+	interrupt null;
+	doc.loadDocument("5");
+	
 	running = true;
 	while(running){
 		msg = interrupt null;

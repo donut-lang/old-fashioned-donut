@@ -64,7 +64,7 @@ private:
 	TaskHandler taskHandler_;
 	Stack<Handler<Element> > elementStack_;
 	Handler<Heaven> heaven_;
-	std::unordered_map<std::string, WidgetElement*> widgetMap_;
+	std::unordered_map<std::string, HandlerW<WidgetElement> > widgetMap_;
 	DEFINE_MEMBER(public, private, geom::Area, area);
 private:
 	tinyxml2::XMLDocument* doc_;
@@ -93,10 +93,10 @@ public:
 	 * ウィジット管理
 	 ******************************************************************************/
 public:
-	WidgetElement* getWidgetById(std::string const& name);
-	bool replaceWidget(std::string const& widgetId, WidgetElement* const newHandler);
-	bool deleteWidget(std::string const& widgetId, WidgetElement* const handler);
-	Widget* createWidget(std::string const& klass, tinyxml2::XMLElement* elem);
+	Handler<WidgetElement> getWidgetById(std::string const& name);
+	bool replaceWidget(std::string const& widgetId, HandlerW<WidgetElement> const& widget);
+	bool deleteWidget(std::string const& widgetId, Handler<WidgetElement> const& widget);
+	Handler<Widget> createWidget(std::string const& klass, tinyxml2::XMLElement* elem);
 	/******************************************************************************
 	 * エレメント管理
 	 ******************************************************************************/

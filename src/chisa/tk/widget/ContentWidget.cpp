@@ -47,7 +47,7 @@ void ContentWidget::loadDocument(std::string const& id)
 			}
 			this->renderTree_ = Handler<doc::RenderTree>(new doc::RenderTree(this->log(), world().lock()->drawableManager()));
 			return;
-		}else{
+		} else {
 			if(this->log().t()){
 				this->log().t(TAG, "Document id \"%s\" != \"%s\"", elm->Attribute("id"), id.c_str());
 			}

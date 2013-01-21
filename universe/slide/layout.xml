@@ -2,7 +2,7 @@
 <world geist="nes">
 	<script src="main.donut" />
 	<vertical id="main" split-weight="1">
-		<widget widget-klass="content" split-weight="1">
+		<widget widget-klass="content" split-weight="1" widget-id="slide">
 			<doc id="main" background="stretch:image:universe/slide/back.png">
 				<font size="120">
 					<p>CPUの理解を容易にするシステムと解説サイトの構築</p>

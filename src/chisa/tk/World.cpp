@@ -241,32 +241,33 @@ Handler<Element> World::findElementById(std::string const& id)
 	return Handler<Element>();
 }
 
-WidgetElement* World::getWidgetById(std::string const& name)
+Handler<WidgetElement> World::getWidgetById(std::string const& name)
 {
 	auto it = this->widgetMap_.find(name);
 	if(it == this->widgetMap_.end()){
-		return nullptr;
+		return Handler<WidgetElement>();
 	}
-	return it->second;
+	return it->second.lock();
 }
 
-bool World::replaceWidget(std::string const& widgetId, WidgetElement* const newHandler)
+bool World::replaceWidget(std::string const& widgetId, HandlerW<WidgetElement> const& newHandler)
 {
-	std::unordered_map<std::string, WidgetElement*>::iterator it = this->widgetMap_.find(widgetId);
+	std::unordered_map<std::string, HandlerW<WidgetElement> >::iterator it = this->widgetMap_.find(widgetId);
 	if(it != widgetMap_.end()) {
 		this->widgetMap_.erase(it);
 	}
-	this->widgetMap_.insert(std::pair<std::string, WidgetElement*>(widgetId, newHandler));
+	this->widgetMap_.insert(std::pair<std::string, HandlerW<WidgetElement> >(widgetId, newHandler));
 	return true;
 }
-bool World::deleteWidget(std::string const& widgetId, WidgetElement* const handler)
+bool World::deleteWidget(std::string const& widgetId, Handler<WidgetElement> const& handler)
 {
-	std::unordered_map<std::string, WidgetElement*>::iterator it = this->widgetMap_.find(widgetId);
+	std::unordered_map<std::string, HandlerW<WidgetElement> >::iterator it = this->widgetMap_.find(widgetId);
 	if(it != widgetMap_.end()) {
 		log_.w(TAG, "Oops. WidgetID: %s not found.", widgetId.c_str());
 		return false;
 	}
-	if(it->second != handler) {
+	Handler<WidgetElement> widget = it->second.lock();
+	if(!widget || widget != handler) {
 		log_.w(TAG, "Oops. WidgetID: %s query delete, but the handler is not correct.", widgetId.c_str());
 		return false;
 	}
@@ -274,7 +275,7 @@ bool World::deleteWidget(std::string const& widgetId, WidgetElement* const handl
 	return true;
 }
 
-Widget* World::createWidget(std::string const& klass, tinyxml2::XMLElement* elem)
+Handler<Widget> World::createWidget(std::string const& klass, tinyxml2::XMLElement* elem)
 {
 	return this->widgetFactory_->createWidget(klass, elem);
 }
@@ -292,6 +293,11 @@ void World::onTouchDown(float const& timeMs, const unsigned int pointerIndex, ge
 {
 	if(this->gestureMediator_){
 		this->gestureMediator_->onTouchDown(timeMs, pointerIndex, screenPoint);
+	}
+	{
+		Handler<XObject> obj(new XObject);
+		obj->set("action","onClick");
+		sendMessage(obj);
 	}
 }
 

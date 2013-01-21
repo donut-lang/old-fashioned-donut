@@ -41,20 +41,25 @@ namespace tk {
 class WidgetElement;
 class Element;
 class World;
+class WidgetObject;
 
-class Widget {
+class Widget : public HandlerBody<Widget> {
 	DISABLE_COPY_AND_ASSIGN(Widget);
 	DEFINE_MEMBER_REF(protected, Logger, log);
 	DEFINE_MEMBER(protected, private, HandlerW<World>, world)
 	DEFINE_MEMBER(protected, private, HandlerW<WidgetElement>, wrapper);
 private: /* どーなつとの接続 */
-//	HandlerW<WidgetObject> donutObject_;
+	HandlerW<WidgetObject> donutObject_;
+public:
+	Handler<WidgetObject> donutObject();
 private:
 	geom::Box size_;
 	geom::Area lastDrawnArea_;
 public:
 	Widget(Logger& log, HandlerW<World> world, tinyxml2::XMLElement* element);
 	virtual ~Widget() noexcept = default;
+	inline bool onFree() const noexcept { return false; };
+	virtual std::string toString() const;
 public:
 	inline geom::Area const& lastDrawnArea() const noexcept { return this->lastDrawnArea_; };
 	inline geom::Box const& size() const noexcept { return size_; };

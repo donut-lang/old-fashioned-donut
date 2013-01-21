@@ -40,7 +40,7 @@ WidgetElement::~WidgetElement() noexcept
 	if(!this->widget()){
 		return;
 	}
-	if(this->borrowed_){
+	if(this->borrowed_.lock()){
 		if(Handler<World> world = this->world().lock() ){
 			//ワールドの書き換えと、ウィジットへの現親レイアウトの通知
 			if(world->replaceWidget(this->widgetId_, this->borrowed_)) {
@@ -51,8 +51,7 @@ WidgetElement::~WidgetElement() noexcept
 	}else{
 		//このラッパの所属するワールドが所有権を持つので、何もせず黙って削除。
 		// INFO: ここで上のワールドはすでに開放済みなので、さわれません。
-		delete widget();
-		this->widget(nullptr);
+		this->widget_.reset();
 	}
 }
 
@@ -199,12 +198,14 @@ void WidgetElement::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElem
 		return;
 	}
 	if(Handler<World> world = this->world().lock()){
-		if(widgetId && (this->borrowed_ = world->getWidgetById(widgetId))){
+		Handler<WidgetElement> parent = world->getWidgetById(widgetId);
+		if(widgetId && parent){
+			this->borrowed_ = parent;
 			world->replaceWidget(widgetId, this);
-			this->widget(this->borrowed_->widget());
+			this->widget_ = parent->widget();
 			this->widget()->updateWrapper(this->self().cast<WidgetElement>());
 		}else{
-			this->widget(world->createWidget(widgetKlass, element));
+			this->widget_ = world->createWidget(widgetKlass, element);
 			if(widgetId){
 				world->replaceWidget(widgetId, this);
 			}

@@ -21,6 +21,7 @@
 #include "WidgetFactory.h"
 #include "ImageWidget.h"
 #include "ContentWidget.h"
+#include "../World.h"
 
 namespace chisa {
 namespace tk {
@@ -37,16 +38,40 @@ WidgetFactory::~WidgetFactory()
 {
 }
 
-void WidgetFactory::registerWidget(std::string const& klass, std::function<Widget*(Logger& log, HandlerW<World> world, tinyxml2::XMLElement* elem)> func)
+void WidgetFactory::registerWidget(std::string const& klass, ConstructorType const& func)
 {
 	this->widgetMap_.update(klass, func);
 }
 
-Widget* WidgetFactory::createWidget(std::string const& klass, tinyxml2::XMLElement* elem)
+Handler<WidgetProvider> WidgetFactory::getProviderOf(Widget* me)
+{
+
+	std::string const demangled(::tarte::demangle(me));
+	VectorMap<std::string, Handler<WidgetProvider> >::Iterator it =
+			this->demangledWidgetNameToDonutProviderMap_.find(demangled);
+	if(it == this->demangledWidgetNameToDonutProviderMap_.end()){
+		return Handler<WidgetProvider>();
+	}
+	VectorMap<std::string, Handler<WidgetProvider> >::Pair const& p(*it);
+	return p.second;
+}
+
+void WidgetFactory::registerProvider(const std::string& demangledElementName, const Handler<WidgetProvider>& provider)
+{
+	if(!this->demangledWidgetNameToDonutProviderMap_.insert(demangledElementName, provider)){
+		TARTE_EXCEPTION(Exception, "[BUG] Oops. Provider for \"%s\" is already registered");
+	}
+	if( unlikely(!heap_) ) {
+		TARTE_EXCEPTION(Exception, "[BUG] Oops. Heap is not specified.");
+	}
+	heap_->registerProvider(provider);
+}
+
+Handler<Widget> WidgetFactory::createWidget(std::string const& klass, tinyxml2::XMLElement* elem)
 {
 	auto it = this->widgetMap_.find(klass);
 	if(it == this->widgetMap_.end()){
-		return nullptr;
+		TARTE_EXCEPTION(Exception, "[BUG] There is no widget named: \"%s\"", klass.c_str());
 	}
 	VectorMap<std::string, ConstructorType>::Pair const& pair = *it;
 	return pair.second(log_, world_, elem);
@@ -54,6 +79,11 @@ Widget* WidgetFactory::createWidget(std::string const& klass, tinyxml2::XMLEleme
 
 void WidgetFactory::registerDonutProvider(Handler< ::donut::Heap> const& heap)
 {
+	HeapLock lock(*this, heap);
+	Handler<World> world(this->world_.lock());
+	if( unlikely(!world) ){
+		TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
+	}
 }
 
 }}
