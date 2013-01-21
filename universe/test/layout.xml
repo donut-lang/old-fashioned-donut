@@ -70,13 +70,13 @@
 							<button text="同じ" split-weight="1">
 								<xobject>
 									<xstring name="action">memcompare-const</xstring>
-									<xstring name="method">selectEq</xstring>
+									<xstring name="method">selectConstEq</xstring>
 								</xobject>
 							</button>
 							<button text="違う" split-weight="1">
 								<xobject>
 									<xstring name="action">memcompare-const</xstring>
-									<xstring name="method">selectNe</xstring>
+									<xstring name="method">selectConstNe</xstring>
 								</xobject>
 							</button>
 						</horizontal>
@@ -84,13 +84,13 @@
 							<button text="大きい" split-weight="1">
 								<xobject>
 									<xstring name="action">memcompare-const</xstring>
-									<xstring name="method">selectGt</xstring>
+									<xstring name="method">selectConstGt</xstring>
 								</xobject>
 							</button>
 							<button text="小さい" split-weight="1">
 								<xobject>
 									<xstring name="action">memcompare-const</xstring>
-									<xstring name="method">selectLt</xstring>
+									<xstring name="method">selectConstLt</xstring>
 								</xobject>
 							</button>
 						</horizontal>
@@ -98,13 +98,13 @@
 							<button text="以上" split-weight="1">
 								<xobject>
 									<xstring name="action">memcompare-const</xstring>
-									<xstring name="method">selectGe</xstring>
+									<xstring name="method">selectConstGe</xstring>
 								</xobject>
 							</button>
 							<button text="以下" split-weight="1">
 								<xobject>
 									<xstring name="action">memcompare-const</xstring>
-									<xstring name="method">selectLe</xstring>
+									<xstring name="method">selectConstLe</xstring>
 								</xobject>
 							</button>
 						</horizontal>

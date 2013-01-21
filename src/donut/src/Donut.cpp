@@ -169,7 +169,7 @@ void Donut::discardFuture()
 }
 void Donut::discardHistory()
 {
-	this->clock_->discardFuture();
+	this->clock_->discardHistory();
 }
 unsigned int Donut::lastTime() const noexcept
 {

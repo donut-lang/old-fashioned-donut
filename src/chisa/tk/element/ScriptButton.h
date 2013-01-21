@@ -31,8 +31,8 @@ private:
 		const static std::string DonutMachineName;
 	};
 private:
-	std::string donutMachineName_;
-	Handler< ::donut::Source> script_;
+	std::string machineName_;
+	XValue message_;
 public:
 	virtual std::string toString() const override;
 private:

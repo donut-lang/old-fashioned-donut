@@ -31,10 +31,10 @@ static std::string const TAG("ScriptButton");
 const std::string ScriptButton::AttrName::DonutMachineName("donut");
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(ScriptButton, ClickButton)
-,donutMachineName_()
-,script_(nullptr)
+,machineName_()
+,message_(nullptr)
 {
-	this->addAttribute(AttrName::DonutMachineName, this->donutMachineName_);
+	this->addAttribute(AttrName::DonutMachineName, this->machineName_);
 }
 
 ScriptButton::~ScriptButton() noexcept
@@ -48,19 +48,15 @@ std::string ScriptButton::toString() const
 
 void ScriptButton::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
-	const char* src = element->GetText();;
-	if( src ) {
-		Handler<World> world( this->world().lock() );
-		if( unlikely(!world) ) {
-			TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
-		}
-		this->script_ = world->donut()->parse(src, "Button-Innnter", 0);
+	if( element->FirstChildElement() != nullptr ){
+		this->message_ = XValue::fromXML(element->FirstChildElement());
 	}
+
 }
 
 void ScriptButton::onClick()
 {
-	if(this->script_){
+	if(!this->message_.is<XNull>()){
 		if(this->log().d()){
 			this->log().d(TAG, "Executing script.");
 		}
@@ -69,11 +65,11 @@ void ScriptButton::onClick()
 			TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
 		}
 		Handler<Donut> donut(world->donut());
-		Handler<Machine> vm(donut->queryMachine(this->donutMachineName_));
+		Handler<Machine> vm(donut->queryMachine(this->machineName_));
 		if(this->log().d()){
-			this->log().d(TAG, "Execute script on: %s", this->donutMachineName_.c_str());
+			this->log().d(TAG, "Execute script on: \"%s\"", this->machineName_.c_str());
 		}
-		vm->start(this->script_);
+		vm->resume(donut->heap()->createObject(this->message_));
 	}else{
 		if(this->log().d()){
 			this->log().d(TAG, "Button script is empty.");

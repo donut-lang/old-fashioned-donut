@@ -124,6 +124,7 @@ void World::init()
 			this->log().w(TAG, "Oops. There is a script element but src is not specified.");
 		}
 	}
+	donut_->discardHistory();
 }
 
 void World::initGeist(Handler<Universe> const& universe)
@@ -192,9 +193,6 @@ void World::back()
 		return;
 	}
 	clk->back();
-	while(!vm->isCallstackEmpty() && clk->canBack()) {
-		clk->back();
-	}
 }
 void World::forward()
 {
@@ -204,9 +202,6 @@ void World::forward()
 		return;
 	}
 	clk->forward();
-	while(!vm->isCallstackEmpty() && clk->canAdvance()) {
-		clk->forward();
-	}
 }
 
 Handler<Heaven> World::heaven()
