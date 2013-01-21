@@ -44,7 +44,11 @@ geom::Area AngelWidgetTarget::findScreenAreaImpl()
 	if( unlikely(!element) ) {
 		return geom::Area();
 	}
-	return element->widget()->findTargetInRoot(guide_);
+	Widget* widget = element->widget();
+	if( unlikely(!widget) ) {
+		return geom::Area();
+	}
+	return widget->findTargetInRoot(guide_);
 }
 
 Handler<AngelWidgetTarget> AngelWidgetTarget::matchToWidgetTarget(const std::string& widgetId, const std::string& widgetGuide) noexcept

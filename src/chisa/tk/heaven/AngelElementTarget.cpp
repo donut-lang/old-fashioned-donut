@@ -31,11 +31,11 @@ AngelElementTarget::AngelElementTarget(const Handler<Angel>& angel, const std::s
 
 geom::Area AngelElementTarget::findScreenAreaImpl()
 {
-	Handler<World> world = this->world();
+	Handler<World> const world = this->world();
 	if( unlikely(!world) ) {
 		return geom::Area();
 	}
-	Handler<Element> element = world->findElementById(id_);
+	Handler<Element> const element = world->findElementById(id_);
 	if( unlikely(!element) ) {
 		return geom::Area();
 	}
