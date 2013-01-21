@@ -185,6 +185,15 @@ void World::popElement()
 	}
 }
 
+void World::sendMessage( ::tarte::XValue const& xv, std::string const& machineName )
+{
+	if(this->log().d()){
+		this->log().d(TAG, "Message received on \"%s\"", machineName.c_str());
+	}
+	this->sendTask([this, machineName, xv](){
+		this->donut_->queryMachine(machineName)->resume(this->donut_->heap()->createObject(xv));
+	});
+}
 void World::back()
 {
 	Handler< ::donut::Machine> vm = this->donut_->queryMachine();

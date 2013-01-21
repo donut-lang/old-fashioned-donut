@@ -57,19 +57,17 @@ void ScriptButton::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLEleme
 void ScriptButton::onClick()
 {
 	if(!this->message_.is<XNull>()){
-		if(this->log().d()){
-			this->log().d(TAG, "Executing script.");
+		if(this->log().t()){
+			this->log().t(TAG, "Sending message.");
 		}
 		Handler<World> world( this->world().lock() );
 		if( unlikely(!world) ) {
 			TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
 		}
-		Handler<Donut> donut(world->donut());
-		Handler<Machine> vm(donut->queryMachine(this->machineName_));
 		if(this->log().d()){
-			this->log().d(TAG, "Execute script on: \"%s\"", this->machineName_.c_str());
+			this->log().d(TAG, "Sending message on \"%s\"", this->machineName_.c_str());
 		}
-		vm->resume(donut->heap()->createObject(this->message_));
+		world->sendMessage(this->message_);
 	}else{
 		if(this->log().d()){
 			this->log().d(TAG, "Button script is empty.");

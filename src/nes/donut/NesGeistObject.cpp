@@ -26,6 +26,11 @@ using namespace tarte;
 NesGeistProvider::NesGeistProvider(Handler< ::donut::Heap> const& heap)
 :Super(heap)
 {
+	this->registerPureNativeClosure("disasmAt", [](NesGeistObject* self, int addr){
+		Instruction inst;
+		self->geist()->machine()->debugger().disassembler().decodeAt(addr, inst);
+		return inst.toString();
+	});
 	this->registerReactiveNativeClosure("loadNES",[this](NesGeistObject* obj, std::string fname){
 		Handler<NesGeist> geist(obj->geist());
 		NesGeist::MachineLock lock(geist);

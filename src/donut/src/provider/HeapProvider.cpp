@@ -16,38 +16,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <donut/Exception.h>
-#include <donut/provider/NullProvider.h>
+#include <sstream>
+#include <tarte/String.h>
 #include <donut/object/Heap.h>
+#include <donut/object/Object.h>
+#include <donut/provider/Provider.h>
 
 namespace donut {
+using namespace tarte;
 
-static const std::string TAG("NullProvider");
+static const std::string TAG("HeapProvider");
 
-NullProvider::NullProvider(Handler<Heap> const& heap)
-:Provider(heap, "Null")
+HeapProvider::HeapProvider( Handler<Heap> const& heap, std::string const& name )
+:Provider(heap, name)
 {
-	this->registerPureNativeClosure("opEq", [&](Object* self, Object* obj) {
-		return self->isNull() && obj->isNull();
+	this->registerPureNativeClosure("opEq", [this](Object* self, Object* other) {
+		return self == other;
 	});
-	this->registerPureNativeClosure("opNe", [&](Object* self, Object* obj) {
-		return !self->isNull() || !obj->isNull();
+	this->registerPureNativeClosure("opNe", [this](Object* self, Object* other) {
+		return self != other;
 	});
-}
-
-std::string NullProvider::repr(const Object* ptr) const
-{
-	return std::string("null");
-}
-
-std::string NullProvider::print(const Object* ptr) const
-{
-	return std::string("");
-}
-
-Handler<Object> NullProvider::createNull()
-{
-	return Handler<Object>::__internal__fromRawPointerWithoutCheck( NullProvider::toPointer() );
 }
 
 }

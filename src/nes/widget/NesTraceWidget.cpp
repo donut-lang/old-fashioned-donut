@@ -649,43 +649,21 @@ bool NesTraceWidget::onSingleTapUp(const float& timeMs, const chisa::geom::Point
 	Debugger& dbg = geist->machine()->debugger();
 	Disassembler& disasm = dbg.disassembler();
 
-	uint16_t const addr_ = this->ptToAddr(ptInWidget);
-	std::string addr( ::tarte::toString(addr_, 16));
-	std::string val ( ::tarte::toString(geist->machine()->debuggerRead(addr_)));
+	uint16_t const addr = this->ptToAddr(ptInWidget);
+	uint8_t val ( geist->machine()->debuggerRead(addr) );
+
 	Instruction inst;
-	disasm.decodeAt(addr_, inst);
+	disasm.decodeAt(addr, inst);
 	std::string instStr = inst.toString();
 
-	world->sendTask([this, world,addr,val,instStr]()->void{
-		Handler< ::donut::Donut> donut(world->donut());
-		auto src = donut->parse(std::string("")+R"delimiter(
-h = World.heaven();
-if( Global.has("__mem__widget_angel") ){
-  if(!Global.__mem__widget_angel_erase){
-    h.detatchAngel(Global.__mem__widget_angel);
-  }else{};
-}else{
-};
-angel = h.newTwinAngel();
-Global.__mem__widget_angel = angel;
-Global.__mem__widget_addr = )delimiter"+addr+R"delimiter(;
-t1 = angel.newWidgetTarget("nes-trace", ")delimiter"+addr+R"delimiter(");
-t2 = angel.newWidgetTarget("nes-watcher", ")delimiter"+addr+R"delimiter(");
-t1.attatchServant(t1.newHaloServant("red"));
-t2.attatchServant(t2.newHaloServant("red"));
-elm = t2.newElementServant("mem-edit");
-elm.element().findElementById("val").setText(")delimiter"+val+R"delimiter(");
-elm1 = t1.newElementServant("asm-edit");
-elm1.element().findElementById("asm").setText(")delimiter"+instStr+R"delimiter(");
-t2.attatchServant(elm);
-t1.attatchServant(elm1);
-angel.attatchTarget(t1);
-angel.attatchTarget(t2);
-Global.attatched = h.attatchAngel(angel);
-Global.__mem__widget_angel_erase=false;
-)delimiter");
-		donut->queryMachine()->start(src);
-	});
+	{
+		Handler<XObject> obj(new XObject);
+		obj->set("action","new-angel");
+		obj->set("addr", addr);
+		obj->set("val", val);
+
+		world->sendMessage(obj);
+	}
 
 	return true;
 }

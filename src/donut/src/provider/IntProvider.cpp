@@ -71,11 +71,11 @@ IntProvider::IntProvider(Handler<Heap> const& heap)
 	this->registerPureNativeClosure("opGe", [&](int self, int v) {
 		return self >= v;
 	});
-	this->registerPureNativeClosure("opEq", [&](int self, int v) {
-		return self == v;
+	this->registerPureNativeClosure("opEq", [&](int self, Object* obj) {
+		return obj->isInt() && self == obj->toInt(this->heap().lock());
 	});
-	this->registerPureNativeClosure("opNe", [&](int self, int v) {
-		return self != v;
+	this->registerPureNativeClosure("opNe", [&](int self, Object* obj) {
+		return obj->isInt() && self != obj->toInt(this->heap().lock());
 	});
 	this->registerPureNativeClosure("toString", [&](int self) {
 		return toString(self);

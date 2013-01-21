@@ -163,7 +163,7 @@
 				<button text="候補をリセット" send-to="main">
 					<xobject>
 						<xstring name="action">memcompare</xstring>
-						<xstring name="method">reset</xstring>
+						<xstring name="method">selectReset</xstring>
 					</xobject>
 				</button>
 			</vertical>
@@ -182,11 +182,17 @@
 	<horizontal id="mem-edit">
 		<textarea id="val" desc="値を入力" />
 		<button text=" 変更 ">
+			<xobject>
+				<xstring name="action">memchange</xstring>
+			</xobject>
 		</button>
 	</horizontal>
 	<horizontal id="asm-edit">
 		<textarea id="asm" desc=" コンパイル " />
 		<button text=" 変更 ">
+			<xobject>
+				<xstring name="action">compile</xstring>
+			</xobject>
 		</button>
 	</horizontal>
 </world>

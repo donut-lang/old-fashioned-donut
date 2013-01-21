@@ -72,6 +72,8 @@ public:
 	inline bool isNull() const noexcept { return Tag::Null==tag(); };
 	inline bool isBool() const noexcept { return Tag::Bool==tag(); };
 	inline bool isInt() const noexcept { return Tag::Int==tag(); };
+	bool isString() const;
+	bool isFloat() const;
 	inline int tag() const noexcept { return static_cast<int>( reinterpret_cast<std::intptr_t>(this) ) & Tag::Mask; };
 	inline void incref( bool check ) const { if(isObject()) { this->HandlerBody<Object>::incref(check); } }
 	inline void decref() const { if(isObject()) { this->HandlerBody<Object>::decref(); } };

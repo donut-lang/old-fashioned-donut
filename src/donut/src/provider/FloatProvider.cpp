@@ -59,11 +59,11 @@ FloatProvider::FloatProvider(Handler<Heap> const& heap)
 	this->registerPureNativeClosure("opGe", [&](float self, float v) {
 		return self >= v;
 	});
-	this->registerPureNativeClosure("opEq", [&](float self, float v) {
-		return self == v;
+	this->registerPureNativeClosure("opEq", [this](float self, Object* obj) {
+		return (obj->isFloat()) && self == obj->toFloat(this->heap().lock());
 	});
-	this->registerPureNativeClosure("opNe", [](float self, float v) {
-		return self != v;
+	this->registerPureNativeClosure("opNe", [this](float self, Object* obj) {
+		return (!obj->isFloat()) || self != obj->toFloat(this->heap().lock());
 	});
 	this->registerPureNativeClosure("toInteger", [&](float self) {
 		return static_cast<int>(self);

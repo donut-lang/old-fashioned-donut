@@ -38,7 +38,7 @@ protected:
 	Provider( Handler<Heap> const& heap, std::string const& name );
 	template <typename T>
 	bool registerPureNativeClosure( std::string const& name, T f) {
-		return (!pureNativeClosures_.have(name)) && pureNativeClosures_.update( name, native::createBindPure(f) );
+		return pureNativeClosures_.update( name, native::createBindPure(f) );
 	}
 public:
 	virtual ~Provider() noexcept = default;
@@ -62,7 +62,7 @@ protected:
 class HeapProvider : public Provider {
 	friend class Heap;
 protected:
-	HeapProvider( Handler<Heap> const& heap, std::string const& name ):Provider(heap, name){};
+	HeapProvider( Handler<Heap> const& heap, std::string const& name );
 	virtual HeapObject* __internal__createInstanceForLoading() = 0;
 public:
 	virtual ~HeapProvider() noexcept = default;
@@ -108,19 +108,19 @@ namespace internal {
 template <typename __AntiSideEffect, typename __F>
 struct _Reactive_ClosureRegisterer{
 	static inline bool exec(ReactiveProviderAspectT< __AntiSideEffect> * self, std::string const& name, __F f){
-		return (!self->reactiveNativeClosures_.have(name)) && self->reactiveNativeClosures_.update( name, native::createBindReactive(f) );
+		return self->reactiveNativeClosures_.update( name, native::createBindReactive(f) );
 	}
 };
 template <typename __AntiSideEffect>
 struct _Reactive_ClosureRegisterer<__AntiSideEffect, typename ReactiveNativeClosureBaseT<__AntiSideEffect>::Function> {
 	static inline bool exec(ReactiveProviderAspectT<__AntiSideEffect> * self, std::string const& name, typename ReactiveNativeClosureBaseT<__AntiSideEffect>::Function f){
-		return (!self->reactiveNativeClosures_.have(name)) && self->reactiveNativeClosures_.update( name, f );
+		return self->reactiveNativeClosures_.update( name, f );
 	}
 };
 template <typename __AntiSideEffect>
 struct _Reactive_ClosureRegisterer<__AntiSideEffect, typename ReactiveNativeClosureBaseT<__AntiSideEffect>::Signature> {
 	static inline bool exec(ReactiveProviderAspectT<__AntiSideEffect> * self, std::string const& name, typename ReactiveNativeClosureBaseT<__AntiSideEffect>::Function f){
-		return (!self->reactiveNativeClosures_.have(name)) && self->reactiveNativeClosures_.update( name, f );
+		return self->reactiveNativeClosures_.update( name, f );
 	}
 };
 }

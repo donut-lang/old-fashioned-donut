@@ -38,6 +38,12 @@ BoolProvider::BoolProvider(Handler<Heap> const& heap)
 	this->registerPureNativeClosure("opNot", [&](bool self){
 		return !self;
 	});
+	this->registerPureNativeClosure("opEq", [&](bool self, Object* obj){
+		return obj->isBool() && obj->toBool(this->heap().lock()) == self;
+	});
+	this->registerPureNativeClosure("opNe", [&](bool self, Object* obj){
+		return obj->isBool() && obj->toBool(this->heap().lock()) != self;
+	});
 	this->registerPureNativeClosure("toString", [&](bool self){
 		return ::tarte::toString(self);
 	});

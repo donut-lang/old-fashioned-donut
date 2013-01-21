@@ -34,6 +34,12 @@ DonutProvider::DonutProvider( Handler<Heap> const& heap )
 	this->registerPureNativeClosure("hasOwn",[this](DonutObject* obj, std::string name){
 		return obj->has(this->heap().lock(), name);
 	});
+	this->registerPureNativeClosure("opEq",[this](DonutObject* self, Object* obj){
+		return self == obj;
+	});
+	this->registerPureNativeClosure("opNe",[this](DonutObject* self, Object* obj){
+		return self != obj;
+	});
 }
 DonutClosureProvider::DonutClosureProvider( Handler<Heap> const& heap )
 :Super(heap,"DonutClosureObject")

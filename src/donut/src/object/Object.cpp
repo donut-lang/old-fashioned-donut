@@ -280,4 +280,12 @@ Handler<DonutClosureObject> Object::tryCastToDonutClosureObjectImpl()
 {
 	return Handler<DonutClosureObject>();
 }
+
+bool Object::isString() const {
+	return bool(this->toStringObjectImpl());
+}
+bool Object::isFloat() const {
+	return bool(this->toFloatObjectImpl());
+}
+
 }

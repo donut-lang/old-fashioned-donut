@@ -107,7 +107,7 @@ chisa::geom::Box NesMemoryWidget::measureImpl(chisa::geom::Box const& constraint
 
 chisa::geom::Area NesMemoryWidget::findTargetImpl(const std::string& target)
 {
-	return addrToArea( ::tarte::parseAs<uint16_t>(target,16) );
+	return addrToArea( ::tarte::parseAs<uint16_t>(target) );
 }
 
 chisa::geom::Area NesMemoryWidget::addrToArea(uint16_t const& addr)
@@ -134,43 +134,18 @@ bool NesMemoryWidget::onSingleTapUp(const float& timeMs, const chisa::geom::Poin
 	if( unlikely(!world) ) {
 		return true;
 	}
-	uint16_t const addr_ = this->ptToAddr(ptInWidget);
-	std::string addr( ::tarte::toString(addr_, 16));
+	uint16_t const addr = this->ptToAddr(ptInWidget);
 	Handler<NesGeist> geist = this->geist_.lock();
-	std::string val ( ::tarte::toString(geist->machine()->debuggerRead(addr_)));
+	uint8_t val ( geist->machine()->debuggerRead(addr) );
 
-	world->sendTask([this, world,addr,val]()->void{
-		Handler< ::donut::Donut> donut(world->donut());
-		auto src = donut->parse(std::string("")+R"delimiter(
-h = World.heaven();
-if( Global.has("__mem__widget_angel") ){
-  if(!Global.__mem__widget_angel_erase){
-    h.detatchAngel(Global.__mem__widget_angel);
-  }else{};
-}else{
-};
-angel = h.newTwinAngel();
-Global.__mem__widget_angel = angel;
-Global.__mem__widget_addr = )delimiter"+addr+R"delimiter(;
-if(Global.__mem__widget_addr >= 0x8000) {
-  t1 = angel.newWidgetTarget("nes-trace", ")delimiter"+addr+R"delimiter(");
-} else {
-  t1 = angel.newWidgetTarget("nes-compare", ")delimiter"+addr+R"delimiter(");
-};
-t2 = angel.newWidgetTarget("nes-watcher", ")delimiter"+addr+R"delimiter(");
-t1.attatchServant(t1.newHaloServant("red"));
-t2.attatchServant(t2.newHaloServant("red"));
-elm = t2.newElementServant("mem-edit");
-elm.element().findElementById("val").setText(")delimiter"+val+R"delimiter(");
-t2.attatchServant(elm);
-angel.attatchTarget(t1);
-angel.attatchTarget(t2);
-Global.attatched = h.attatchAngel(angel);
-Global.__mem__widget_angel_erase=false;
-)delimiter");
-		donut->queryMachine()->start(src);
-	});
+	{
+		Handler<XObject> obj(new XObject);
+		obj->set("action","new-angel");
+		obj->set("addr", addr);
+		obj->set("val", val);
 
+		world->sendMessage(obj);
+	}
 	return true;
 }
 

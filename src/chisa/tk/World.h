@@ -86,6 +86,7 @@ public:
 	Handler< ::chisa::tk::Patron> const& patron() const noexcept { return this->patron_; };
 	Handler< ::donut::Donut> const& donut() const noexcept { return this->donut_; };
 	Handler< ::donut::Object> donutObject(Handler< ::donut::Heap> const& heap);
+	void sendMessage( ::tarte::XValue const& xv, std::string const& machineName="" );
 	void back();
 	void forward();
 	/******************************************************************************

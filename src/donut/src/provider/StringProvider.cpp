@@ -48,17 +48,13 @@ StringProvider::StringProvider(Handler<Heap> const& heap )
 		std::string const ostr = other->print(heap);
 		return str + ostr;
 	});
-	this->registerPureNativeClosure("opEq", [this](StringObject* self, StringObject* other) {
+	this->registerPureNativeClosure("opEq", [this](StringObject* self, Object* other) {
 		Handler<Heap> heap(this->heap().lock());
-		std::string const str = self->toString(heap);
-		std::string const ostr = other->toString(heap);
-		return str == ostr;
+		return other->isString() && self->toString(heap) == other->toString(heap);
 	});
-	this->registerPureNativeClosure("opNe", [this](StringObject* self, StringObject* other) {
+	this->registerPureNativeClosure("opNe", [this](StringObject* self, Object* other) {
 		Handler<Heap> heap(this->heap().lock());
-		std::string const str = self->toString(heap);
-		std::string const ostr = other->toString(heap);
-		return str != ostr;
+		return !other->isString() || self->toString(heap) != other->toString(heap);
 	});
 	this->registerPureNativeClosure("opLt", [this](StringObject* self, StringObject* other) {
 		Handler<Heap> heap(this->heap().lock());
