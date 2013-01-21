@@ -105,7 +105,7 @@ void World::init()
 	this->pushElement("main");
 
 	//run-script
-	for( tinyxml2::XMLElement* e = doc_->RootElement()->FirstChildElement("script"); e; e->NextSiblingElement("script") ) {
+	for( tinyxml2::XMLElement* e = doc_->RootElement()->FirstChildElement("script"); e; e=e->NextSiblingElement("script") ) {
 		char const* vm_name_ = e->Attribute("machine");
 		std::string const vm_name ( vm_name_ ? vm_name_ : "" );
 		if( char const* src = e->Attribute("src") ) {
