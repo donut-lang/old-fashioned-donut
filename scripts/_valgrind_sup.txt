@@ -462,7 +462,11 @@
    obj:/usr/lib64/dri/fglrx_dri.so
    obj:*
 }
-
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Addr1
+   obj:/usr/lib64/dri/fglrx_dri.so
+}
 
 
 

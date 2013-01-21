@@ -68,7 +68,6 @@ struct WidgetSideEffect {
 	enum {
 		None,
 	} op;
-	bool enabled;
 	typedef WidgetSideEffect Super;
 	template <typename Arc>
 	void serialize(Arc& arc) {

@@ -23,6 +23,8 @@
 #include "ContentWidget.h"
 #include "../World.h"
 
+#include "../donut/widget/ContentObject.h"
+
 namespace chisa {
 namespace tk {
 
@@ -84,6 +86,7 @@ void WidgetFactory::registerDonutProvider(Handler< ::donut::Heap> const& heap)
 	if( unlikely(!world) ){
 		TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
 	}
+	this->registerProvider<ContentWidget>(Handler<WidgetProvider>(new ContentProvider(heap, world)));
 }
 
 }}
