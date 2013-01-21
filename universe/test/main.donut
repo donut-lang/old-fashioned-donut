@@ -54,18 +54,18 @@ MemoryAngel.handle = func(msg){
 			World.heaven().detatchAngel(angel);
 			self.angel = null;
 		};
-	}else if(msg.action == "compile"){
+	}else if(msg.action == "compile") {
 		elm = self.angel.findElementById("asm");
 		res = Geist.writeAsmNES(self.addr, elm.getText());
 		if( !res.isEmpty() ) {
 			elm.setFrameColor("red");
 			World.findElementById("status").setText(res);
-		}else{
+		} else {
 			World.findElementById("status").setText("");
 			World.heaven().detatchAngel(angel);
 			self.angel = null;
 		};
-	};
+	}else{};
 	return false;
 };
 

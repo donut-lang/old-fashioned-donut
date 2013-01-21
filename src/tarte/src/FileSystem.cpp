@@ -26,11 +26,35 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #endif
+#include <sstream>
+#include <fstream>
 
 namespace tarte {
 namespace file {
 namespace internal {
 
+}
+
+std::string readAsString(std::istream& stream)
+{
+	std::stringstream source_;
+	std::string buf;
+	while(stream && std::getline(stream, buf)){
+		while(buf.size() > 0 && (buf.at(buf.size()-1)=='\r' || buf.at(buf.size()-1)=='\n')){
+			buf=buf.substr(0, buf.size()-1);
+		}
+		while(buf.size() > 0 && (buf.at(0)=='\r' || buf.at(0)=='\n')){
+			buf=buf.substr(1);
+		}
+		source_ << buf << std::endl;
+	}
+	return source_.str();
+}
+
+std::string readAsString(std::string const& fname)
+{
+	std::ifstream stream(fname);
+	return readAsString(stream);
 }
 
 #if CHISA_WINDOWS

@@ -103,6 +103,27 @@ void World::init()
 
 	//init-element
 	this->pushElement("main");
+
+	//run-script
+	for( tinyxml2::XMLElement* e = doc_->RootElement()->FirstChildElement("script"); e; e->NextSiblingElement("script") ) {
+		char const* vm_name_ = e->Attribute("machine");
+		std::string const vm_name ( vm_name_ ? vm_name_ : "" );
+		if( char const* src = e->Attribute("src") ) {
+			if( this->log().d() ) {
+				this->log().d( TAG, "Running donut from: \"%s\"",src );
+			}
+			Handler<Machine> m = donut_->queryMachine(vm_name);
+			m->start(donut_->parse(::tarte::file::readAsString(universe->resolveWorldFilepath(name_, src)), src, 1));
+		}else if(char const* src = e->GetText()){
+			if( this->log().d() ) {
+				this->log().d( TAG, "Running embedded donut: \n\"%s\"",src );
+			}
+			Handler<Machine> m = donut_->queryMachine(vm_name);
+			m->start(donut_->parse(src, "ScriptElement", 1));
+		}else{
+			this->log().w(TAG, "Oops. There is a script element but src is not specified.");
+		}
+	}
 }
 
 void World::initGeist(Handler<Universe> const& universe)

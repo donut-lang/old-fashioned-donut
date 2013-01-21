@@ -34,5 +34,7 @@ constexpr typename internal::FileConstants<T>::string_type join(const T& a, Args
 }
 
 std::vector<std::string> enumFiles(std::string const& dir, bool recursive=false);
+std::string readAsString(std::istream& stream);
+std::string readAsString(std::string const& fname);
 
 }}

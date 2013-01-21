@@ -24,6 +24,7 @@
 #include <cstdlib>
 #include <exception>
 #include <sstream>
+#include <tarte/FileSystem.h>
 #include <donut/Donut.h>
 #include "SystemProvider.h"
 #include "SystemObject.h"
@@ -66,21 +67,6 @@ const struct option ARG_OPTIONS[] = {
 		{0,0,0,0}
 };
 
-std::string readAll(std::istream& stream) {
-	std::stringstream source_;
-	std::string buf;
-	while(std::cin && std::getline(stream, buf)){
-		while(buf.size() > 0 && (buf.at(buf.size()-1)=='\r' || buf.at(buf.size()-1)=='\n')){
-			buf=buf.substr(0, buf.size()-1);
-		}
-		while(buf.size() > 0 && (buf.at(0)=='\r' || buf.at(0)=='\n')){
-			buf=buf.substr(1);
-		}
-		source_ << buf << std::endl;
-	}
-	return source_.str();
-}
-
 int runDonut(Logger& log, int argc, char** argv)
 {
 
@@ -88,12 +74,12 @@ int runDonut(Logger& log, int argc, char** argv)
 	std::string filename;
 	if(0 == argc){
 		log.t(TAG, "Read from std::cin");
-		source = readAll(std::cin);
+		source = ::tarte::file::readAsString(std::cin);
 		filename = "<CIN>";
 	}else{
 		log.t(TAG, "Read from file: %s", argv[0]);
 		std::ifstream in(argv[0]);
-		source = readAll(in);
+		source = ::tarte::file::readAsString(in);
 		filename = argv[0];
 	}
 	log.t(TAG, "Source: \n%s", source.c_str());
