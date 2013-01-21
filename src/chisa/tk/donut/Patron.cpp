@@ -27,13 +27,18 @@ namespace tk {
 
 const static std::string TAG("Patron");
 
-Patron::Patron(Handler<World> const& world)
-:world_(world)
+Patron::Patron(Handler<Universe> const& universe, Handler<World> const& world)
+:universe_(universe)
+,world_(world)
 {
 }
 
 void Patron::onRegisterProvider(Handler< ::donut::Heap> const& heap)
 {
+	Handler<Universe> universe = this->universe_.lock();
+	if( unlikely(!universe) ){
+		DONUT_EXCEPTION(Exception, "[BUG] Failed to lock universe.");
+	}
 	Handler<World> world = this->world_.lock();
 	if( unlikely(!world) ){
 		DONUT_EXCEPTION(Exception, "[BUG] Failed to lock world.");
@@ -54,6 +59,9 @@ void Patron::onRegisterProvider(Handler< ::donut::Heap> const& heap)
 	//ウィジットのプロバイダを設定
 	world->elementFactory()->registerDonutProvider(heap);
 	//world->widgetFactory()->registerDonutProvider(heap);
+
+	universe->hexe()->registerGeistProvider(heap);
+
 }
 
 void Patron::onGlobalObjectInitialized(Handler< ::donut::Heap> const& heap)

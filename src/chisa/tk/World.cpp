@@ -95,10 +95,8 @@ void World::init()
 	this->gestureMediator_ = new ActionMediator(this->log_, self);
 
 	{ //init-donut
-		this->patron_ = Handler<Patron>(new Patron(self));
+		this->patron_ = Handler<Patron>(new Patron(universe, self));
 		this->donut_ = Handler< ::donut::Donut>(new ::donut::Donut(this->log_, this->patron_));
-		// XXX: 何にせよ、見苦しい
-		universe->hexe()->registerGeistProvider(donut_->heap());
 		this->donut_->bootstrap();
 		donut_->heap()->setGlobalObject("Geist", this->geist()->donutObject(donut_->heap()));
 	}

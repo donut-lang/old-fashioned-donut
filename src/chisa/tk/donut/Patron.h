@@ -32,6 +32,7 @@ namespace tk {
 class World;
 
 class Patron : public donut::Patron {
+	HandlerW<Universe> universe_;
 	HandlerW<World> world_;
 private:
 	Handler<WorldProvider> worldProvider_;
@@ -43,7 +44,7 @@ private:
 	Handler<ElementServantProvider> elementServantProvider_;
 	Handler<HaloServantProvider> haloServantProvider_;
 public:
-	Patron(Handler<World> const& world);
+	Patron(Handler<Universe> const& universe, Handler<World> const& world);
 	virtual ~Patron() noexcept = default;
 public:
 	virtual void onRegisterProvider(Handler< ::donut::Heap> const& heap) override final;
