@@ -15,12 +15,12 @@ Nes.handle = func(msg) {
 		World.findElementById("select-lt").setEnabled(false);
 	}else if(msg.action == "take-snapshot"){
 		Geist.selectTakeSnapshot();
-		World.findelementbyid("select-ne").setenabled(true);
-		World.findelementbyid("select-eq").setenabled(true);
-		World.findelementbyid("select-ge").setenabled(true);
-		World.findelementbyid("select-le").setenabled(true);
-		World.findelementbyid("select-gt").setenabled(true);
-		World.findelementbyid("select-lt").setenabled(true);
+		World.findElementById("select-ne").setEnabled(true);
+		World.findElementById("select-eq").setEnabled(true);
+		World.findElementById("select-ge").setEnabled(true);
+		World.findElementById("select-le").setEnabled(true);
+		World.findElementById("select-gt").setEnabled(true);
+		World.findElementById("select-lt").setEnabled(true);
 	}else if(msg.action == "nes-step"){
 		if(self.step_break == 0){
 			self.step_break = Geist.addExecBreak(0,0xffff);
