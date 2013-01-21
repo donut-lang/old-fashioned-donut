@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <world geist="nes">
-	<script src="nes.donut" />
 	<script src="main.donut" />
 	<vertical id="main">
 		<horizontal split-weight="1">
@@ -171,8 +170,14 @@
 		</horizontal>
 		<horizontal>
 			<button text="ステップ" id="step">
+				<xobject>
+					<xstring name="action">nes-step</xstring>
+				</xobject>
 			</button>
 			<button text="再開" id="continue" enabled="false">
+				<xobject>
+					<xstring name="action">nes-cont</xstring>
+				</xobject>
 			</button>
 			<label split-weight="1" id="status" />
 			<clockbutton text="戻る" op="back" />
