@@ -69,11 +69,22 @@ MemoryAngel.handle = func(msg){
 	return false;
 };
 
+handleNES = func(msg){
+	if(Nes.handle(msg)){
+		return true;
+	}else if(MemoryAngel.handle(msg)){
+		return true;
+	}else{
+		return false;
+	};
+};
+
 running = true;
 while(running){
 	msg = interrupt null;
-	if(Nes.handle(msg)){
-	}else if(MemoryAngel.handle(msg)){
+	if( handleNES(msg) ){
 	}else{};
 };
+
+
 
