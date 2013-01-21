@@ -36,15 +36,15 @@ AngelWidgetTarget::AngelWidgetTarget(const Handler<Angel>& angel, const std::str
 
 geom::Area AngelWidgetTarget::findScreenAreaImpl()
 {
-	Handler<World> world = this->world();
+	Handler<World> const world = this->world();
 	if( unlikely(!world) ) {
 		return geom::Area();
 	}
-	WidgetElement* element = world->getWidgetById(id_);
+	WidgetElement* const element = world->getWidgetById(id_);
 	if( unlikely(!element) ) {
 		return geom::Area();
 	}
-	Widget* widget = element->widget();
+	Widget* const widget = element->widget();
 	if( unlikely(!widget) ) {
 		return geom::Area();
 	}

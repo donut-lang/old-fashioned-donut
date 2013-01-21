@@ -66,9 +66,11 @@ void Chisa::loop()
 				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 				this->universe_->render();
 				this->fairy_->swapBuffer();
-			}
-			float now = fairy_->getTimeMs();
-			if(now < nextFrame){
+				now = fairy_->getTimeMs();
+				if(now < nextFrame){
+					fairy_->sleepMs(nextFrame-now);
+				}
+			}else{
 				fairy_->sleepMs(nextFrame-now);
 			}
 		}
