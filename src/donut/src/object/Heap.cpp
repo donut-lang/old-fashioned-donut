@@ -210,6 +210,48 @@ Handler<Object> Heap::createNull()
 	return this->nullProvider()->createNull();
 }
 
+Handler<Object> Heap::createObject( XValue const& xvalue )
+{
+	switch(xvalue.type()){
+	case XValue::NullT:
+		return createNull();
+	case XValue::UIntT:
+		return createInt(xvalue.as<XUInt>());
+	case XValue::SIntT:
+		return createInt(xvalue.as<XSInt>());
+	case XValue::FloatT:
+		return createFloatObject(xvalue.as<XFloat>());
+	case XValue::BoolT:
+		return createBool(xvalue.as<XBool>());
+	case XValue::StringT:
+		return createStringObject(xvalue.as<XString>());
+	case XValue::BinaryT:
+		DONUT_EXCEPTION(Exception, "[BUG] Oops. You cannot convert XBinary to Donut object.");
+		return createNull();
+	case XValue::ArrayT: {
+		Handler<XArray> array(xvalue.as<XArray>());
+		Handler<Heap> self(this->self());
+		Handler<DonutObject> obj(createEmptyDonutObject());
+		int cnt = 0;
+		for( XValue const& v : *array ) {
+			obj->set(self, cnt++, createObject(v));
+		}
+		return obj;
+	}
+	case XValue::ObjectT: {
+		Handler<XObject> array(xvalue.as<XObject>());
+		Handler<Heap> self(this->self());
+		Handler<DonutObject> obj(createEmptyDonutObject());
+		for( std::pair<std::string, XValue> const& pair : *array ) {
+			obj->set(self, pair.first, createObject(pair.second));
+		}
+		return obj;
+	}
+	default:
+		DONUT_EXCEPTION(Exception, "[BUG] Oops. Invalid XValue type: \"%s\"", xvalue.typeString().c_str());
+	}
+}
+
 /**********************************************************************************
  * 外部との接続
  **********************************************************************************/

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <world geist="nes">
+	<script src="main.donut" />
 	<vertical id="main">
 		<horizontal split-weight="1">
 			<vertical>
@@ -9,16 +10,46 @@
 					</xobject>
 				</widget>
 				<horizontal>
-					<button text="Lesson1" split-weight="1"> Geist.loadNES("__roms__/workshop/rom1.nes"); </button>
-					<button text="AlterEgo" split-weight="1"> Geist.loadNES("__roms__/alter_ego/Alter_Ego.nes"); </button>
+					<button text="Lesson1" split-weight="1">
+						<xobject>
+							<xstring name="action">nes-open</xstring>
+							<xstring name="filename">__roms__/workshop/rom1.nes</xstring>
+						</xobject>
+					</button>
+					<button text="AlterEgo" split-weight="1">
+						<xobject>
+							<xstring name="action">nes-open</xstring>
+							<xstring name="filename">__roms__/alter_ego/Alter_Ego.nes</xstring>
+						</xobject>
+					</button>
 				</horizontal>
 				<horizontal>
-					<button text="Lesson2" split-weight="1"> Geist.loadNES("__roms__/workshop/rom2.nes"); </button>
-					<button text="TETRIS" split-weight="1">Geist.loadNES("__roms__/lj65/lj65.nes");</button>
+					<button text="Lesson2" split-weight="1">
+						<xobject>
+							<xstring name="action">nes-open</xstring>
+							<xstring name="filename">__roms__/workshop/rom2.nes</xstring>
+						</xobject>
+					</button>
+					<button text="TETRIS" split-weight="1">
+						<xobject>
+							<xstring name="action">nes-open</xstring>
+							<xstring name="filename">__roms__/lj65/lj65.nes</xstring>
+						</xobject>
+					</button>
 				</horizontal>
 				<horizontal>
-					<button text="thwaite" split-weight="1">Geist.loadNES("__roms__/thwaite/thwaite.nes");</button>
-					<button text="Chase" split-weight="1">Geist.loadNES("__roms__/chase/Chase.nes");</button>
+					<button text="thwaite" split-weight="1">
+						<xobject>
+							<xstring name="action">nes-open</xstring>
+							<xstring name="filename">__roms__/thwaite/thwaite.nes</xstring>
+						</xobject>
+					</button>
+					<button text="Chase" split-weight="1">
+						<xobject>
+							<xstring name="action">nes-open</xstring>
+							<xstring name="filename">__roms__/chase/Chase.nes</xstring>
+						</xobject>
+					</button>
 				</horizontal>
 				<widget widget-klass="nes-trace" widget-id="nes-trace" fit="expand" split-weight="1" />
 			</vertical>
@@ -37,128 +68,110 @@
 						<textarea desc="この値と比較して" id="cmpval" />
 						<horizontal>
 							<button text="同じ" split-weight="1">
-								Geist.selectConstEq(World.findElementById("cmpval").getText().toInteger());
+								<xobject>
+									<xstring name="action">memcompare-const</xstring>
+									<xstring name="method">selectEq</xstring>
+								</xobject>
 							</button>
 							<button text="違う" split-weight="1">
-								Geist.selectConstNe(World.findElementById("cmpval").getText().toInteger());
+								<xobject>
+									<xstring name="action">memcompare-const</xstring>
+									<xstring name="method">selectNe</xstring>
+								</xobject>
 							</button>
 						</horizontal>
 						<horizontal>
 							<button text="大きい" split-weight="1">
-								Geist.selectConstGt(World.findElementById("cmpval").getText().toInteger());
+								<xobject>
+									<xstring name="action">memcompare-const</xstring>
+									<xstring name="method">selectGt</xstring>
+								</xobject>
 							</button>
 							<button text="小さい" split-weight="1">
-								Geist.selectConstLt(World.findElementById("cmpval").getText().toInteger());
+								<xobject>
+									<xstring name="action">memcompare-const</xstring>
+									<xstring name="method">selectLt</xstring>
+								</xobject>
 							</button>
 						</horizontal>
 						<horizontal>
 							<button text="以上" split-weight="1">
-								Geist.selectConstGe(World.findElementById("cmpval").getText().toInteger());
+								<xobject>
+									<xstring name="action">memcompare-const</xstring>
+									<xstring name="method">selectGe</xstring>
+								</xobject>
 							</button>
 							<button text="以下" split-weight="1">
-								Geist.selectConstLe(World.findElementById("cmpval").getText().toInteger());
+								<xobject>
+									<xstring name="action">memcompare-const</xstring>
+									<xstring name="method">selectLe</xstring>
+								</xobject>
 							</button>
 						</horizontal>
 					</vertical>
 					<vertical split-weight="1">
 						<button text="記録メモを取る">
-								Geist.selectTakeSnapshot();
-								World.findElementById("select-ne").setEnabled(true);
-								World.findElementById("select-eq").setEnabled(true);
-								World.findElementById("select-ge").setEnabled(true);
-								World.findElementById("select-le").setEnabled(true);
-								World.findElementById("select-gt").setEnabled(true);
-								World.findElementById("select-lt").setEnabled(true);
+							<xobject>
+								<xstring name="action">take-snapshot</xstring>
+							</xobject>
 						</button>
 						<label text="記録メモと比較して" />
 						<horizontal>
 							<button id="select-ne" text="変わってない" split-weight="1" enabled="false">
-								Geist.selectEq();
-								World.findElementById("select-ne").setEnabled(false);
-								World.findElementById("select-eq").setEnabled(false);
-								World.findElementById("select-ge").setEnabled(false);
-								World.findElementById("select-le").setEnabled(false);
-								World.findElementById("select-gt").setEnabled(false);
-								World.findElementById("select-lt").setEnabled(false);
+								<xobject>
+									<xstring name="action">memcompare</xstring>
+									<xstring name="method">selectEq</xstring>
+								</xobject>
 							</button>
 							<button id="select-eq" text="変わった" split-weight="1" enabled="false">
-								Geist.selectNe();
-								World.findElementById("select-ne").setEnabled(false);
-								World.findElementById("select-eq").setEnabled(false);
-								World.findElementById("select-ge").setEnabled(false);
-								World.findElementById("select-le").setEnabled(false);
-								World.findElementById("select-gt").setEnabled(false);
-								World.findElementById("select-lt").setEnabled(false);
+								<xobject>
+									<xstring name="action">memcompare</xstring>
+									<xstring name="method">selectNe</xstring>
+								</xobject>
 							</button>
 						</horizontal>
 						<horizontal>
 							<button id="select-gt" text="大きくなった" split-weight="1" enabled="false">
-								Geist.selectGt();
-								World.findElementById("select-ne").setEnabled(false);
-								World.findElementById("select-eq").setEnabled(false);
-								World.findElementById("select-ge").setEnabled(false);
-								World.findElementById("select-le").setEnabled(false);
-								World.findElementById("select-gt").setEnabled(false);
-								World.findElementById("select-lt").setEnabled(false);
+								<xobject>
+									<xstring name="action">memcompare</xstring>
+									<xstring name="method">selectGt</xstring>
+								</xobject>
 							</button>
 							<button id="select-lt" text="小さくなった" split-weight="1" enabled="false">
-								Geist.selectLt();
-								World.findElementById("select-ne").setEnabled(false);
-								World.findElementById("select-eq").setEnabled(false);
-								World.findElementById("select-ge").setEnabled(false);
-								World.findElementById("select-le").setEnabled(false);
-								World.findElementById("select-gt").setEnabled(false);
-								World.findElementById("select-lt").setEnabled(false);
+								<xobject>
+									<xstring name="action">memcompare</xstring>
+									<xstring name="method">selectLt</xstring>
+								</xobject>
 							</button>
 						</horizontal>
 						<horizontal>
 							<button id="select-ge" text="同じか大きく" split-weight="1" enabled="false">
-								Geist.selectGe();
-								World.findElementById("select-ne").setEnabled(false);
-								World.findElementById("select-eq").setEnabled(false);
-								World.findElementById("select-ge").setEnabled(false);
-								World.findElementById("select-le").setEnabled(false);
-								World.findElementById("select-gt").setEnabled(false);
-								World.findElementById("select-lt").setEnabled(false);
+								<xobject>
+									<xstring name="action">memcompare</xstring>
+									<xstring name="method">selectGe</xstring>
+								</xobject>
 							</button>
 							<button id="select-le" text="同じか小さく" split-weight="1" enabled="false">
-								Geist.selectLe();
-								World.findElementById("select-ne").setEnabled(false);
-								World.findElementById("select-eq").setEnabled(false);
-								World.findElementById("select-ge").setEnabled(false);
-								World.findElementById("select-le").setEnabled(false);
-								World.findElementById("select-gt").setEnabled(false);
-								World.findElementById("select-lt").setEnabled(false);
+								<xobject>
+									<xstring name="action">memcompare</xstring>
+									<xstring name="method">selectLe</xstring>
+								</xobject>
 							</button>
 						</horizontal>
 					</vertical>
 				</horizontal>
-				<button text="候補をリセット">
-					Geist.selectReset();
-					World.findElementById("select-ne").setEnabled(false);
-					World.findElementById("select-eq").setEnabled(false);
-					World.findElementById("select-ge").setEnabled(false);
-					World.findElementById("select-le").setEnabled(false);
-					World.findElementById("select-gt").setEnabled(false);
-					World.findElementById("select-lt").setEnabled(false);
+				<button text="候補をリセット" send-to="main">
+					<xobject>
+						<xstring name="action">memcompare</xstring>
+						<xstring name="method">reset</xstring>
+					</xobject>
 				</button>
 			</vertical>
 		</horizontal>
 		<horizontal>
 			<button text="ステップ" id="step">
-				if(!Global.has("step_break")) {
-					Global.step_break = Geist.addExecBreak(0,0xffff);
-				}else if( Global.step_break == 0 ){
-					Global.step_break = Geist.addExecBreak(0,0xffff);
-				}else{
-					Geist.stepRunning();
-				};
-				World.findElementById("continue").setEnabled(true);
 			</button>
 			<button text="再開" id="continue" enabled="false">
-				Geist.continueRunning();
-				Global.step_break = 0;
-				World.findElementById("continue").setEnabled(false);
 			</button>
 			<label split-weight="1" id="status" />
 			<clockbutton text="戻る" op="back" />
@@ -169,35 +182,11 @@
 	<horizontal id="mem-edit">
 		<textarea id="val" desc="値を入力" />
 		<button text=" 変更 ">
-			angel = Global.__mem__widget_angel;
-			elm = angel.findElementById("val");
-			res = Geist.writeNES(Global.__mem__widget_addr, elm.getText());
-			if( !res.isEmpty() ) {
-				elm.setFrameColor("red");
-				World.findElementById("status").setText(res);
-			}else{
-				World.findElementById("status").setText("");
-				World.heaven().detatchAngel(angel);
-				Global.__mem__widget_angel = null;
-				Global.__mem__widget_angel_erase = true;
-			};
 		</button>
 	</horizontal>
 	<horizontal id="asm-edit">
 		<textarea id="asm" desc=" コンパイル " />
 		<button text=" 変更 ">
-			angel = Global.__mem__widget_angel;
-			elm = angel.findElementById("asm");
-			res = Geist.writeAsmNES(Global.__mem__widget_addr, elm.getText());
-			if( !res.isEmpty() ) {
-				elm.setFrameColor("red");
-				World.findElementById("status").setText(res);
-			}else{
-				World.findElementById("status").setText("");
-				World.heaven().detatchAngel(angel);
-				Global.__mem__widget_angel = null;
-				Global.__mem__widget_angel_erase = true;
-			};
 		</button>
 	</horizontal>
 </world>

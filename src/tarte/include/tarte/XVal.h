@@ -125,6 +125,7 @@ public: /* constructors */
 	~XValue() noexcept { this->remove(); }
 	inline bool onFree() const noexcept { return false; };
 public:
+	inline Type const& type() const noexcept { return this->type_; };
 	template <typename T> bool is() const noexcept;
 	template <typename T> typename _TypeAdapter<T>::return_type as();
 	template <typename T> typename _TypeAdapter<T>::return_const_type as() const;

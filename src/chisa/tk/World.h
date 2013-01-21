@@ -186,6 +186,7 @@ public:
 private:
 	World(Logger& log, HandlerW<Universe> _universe, std::string const& worldname);
 	void init();
+	void initGeist(Handler<Universe> const& universe);
 public:
 	static Handler<World> create(Logger& log, HandlerW<Universe> _universe, std::string const& worldname)
 	{

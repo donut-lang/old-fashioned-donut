@@ -1,0 +1,79 @@
+Nes = {};
+Nes.step_break = 0;
+Nes.handle = func(msg) {
+	if(msg.action == "nes-open"){
+		Geist.loadNES(msg.filename);
+	}else if(msg.action == "memcompare-const"){
+		Geist[msg.method](World.findElementById("cmpval").getText().toInteger());
+	}else if(msg.action == "memcompare"){
+		Geist[msg.method]();
+		World.findElementById("select-ne").setEnabled(false);
+		World.findElementById("select-eq").setEnabled(false);
+		World.findElementById("select-ge").setEnabled(false);
+		World.findElementById("select-le").setEnabled(false);
+		World.findElementById("select-gt").setEnabled(false);
+		World.findElementById("select-lt").setEnabled(false);
+	}else if(msg.action == "take-snapshot"){
+		Geist.selectTakeSnapshot();
+		World.findelementbyid("select-ne").setenabled(true);
+		World.findelementbyid("select-eq").setenabled(true);
+		World.findelementbyid("select-ge").setenabled(true);
+		World.findelementbyid("select-le").setenabled(true);
+		World.findelementbyid("select-gt").setenabled(true);
+		World.findelementbyid("select-lt").setenabled(true);
+	}else if(msg.action == "nes-step"){
+		if(self.step_break == 0){
+			self.step_break = Geist.addExecBreak(0,0xffff);
+		}else{
+			Geist.stepRunning();
+		};
+		World.findElementById("continue").setEnabled(true);
+	}else if(msg.action == "nes-cont"){
+		Geist.continueRunning();
+		self.step_break = 0;
+		World.findElementById("continue").setEnabled(false);
+	}else{
+		return false;
+	};
+	return true;
+};
+
+MemoryAngel = {};
+MemoryAngel.angel = null;
+MemoryAngel.handle = func(msg){
+	if(msg.action == "angel-new"){
+		
+	}else if(msg.action == "memchange"){
+		elm = self.angel.findElementById("val");
+		res = Geist.writeNES(self.addr, elm.getText());
+		if( !res.isEmpty() ) {
+			elm.setFrameColor("red");
+			World.findElementById("status").setText(res);
+		}else{
+			World.findElementById("status").setText("");
+			World.heaven().detatchAngel(angel);
+			self.angel = null;
+		};
+	}else if(msg.action == "compile"){
+		elm = self.angel.findElementById("asm");
+		res = Geist.writeAsmNES(self.addr, elm.getText());
+		if( !res.isEmpty() ) {
+			elm.setFrameColor("red");
+			World.findElementById("status").setText(res);
+		}else{
+			World.findElementById("status").setText("");
+			World.heaven().detatchAngel(angel);
+			self.angel = null;
+		};
+	};
+	return false;
+};
+
+running = true;
+while(running){
+	msg = interrupt null;
+	if(Nes.handle(msg)){
+	}else if(MemoryAngel.handle(msg)){
+	}else{};
+};
+
