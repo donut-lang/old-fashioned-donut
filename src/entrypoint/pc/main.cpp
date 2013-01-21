@@ -19,6 +19,7 @@
 #include <getopt.h>
 #include <iostream>
 #include <iomanip>
+#include <libgen.h>
 #include <tarte/Exception.h>
 #include <tarte/Logger.h>
 
