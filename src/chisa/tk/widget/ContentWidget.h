@@ -37,7 +37,10 @@ class ContentWidget: public chisa::tk::Widget {
 	Handler<doc::RenderTree> renderTree_;
 	DEFINE_MEMBER(private, private, float, lastWidth);
 	DEFINE_MEMBER(private, private, geom::Box, lastSize);
+private:
+	tinyxml2::XMLElement* root_;
 public:
+	void loadDocument(std::string const& id);
 	virtual void renderImpl(gl::Canvas& cv, geom::Area const& area) override;
 	virtual void idleImpl(const float delta_ms) override;
 	virtual void reshapeImpl(geom::Box const& areaSize) override;

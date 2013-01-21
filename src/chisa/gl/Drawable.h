@@ -44,6 +44,7 @@ public:
 	virtual float width();
 	virtual float height();
 	virtual geom::Box size() = 0;
+	virtual void notifyDrawnSize(geom::Box const& size) {};
 	virtual void draw(Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask, const float depth=0.0f) = 0;
 	virtual void draw(Canvas& canvas, geom::Point const& ptInRoot, const float depth=0.0f)
 	{
@@ -75,6 +76,7 @@ public:
 	virtual ~ColorDrawable() noexcept = default;
 public:
 	Color color() const noexcept;
+	virtual void notifyDrawnSize(geom::Box const& size) override final { if(!this->size_.isSpecified()){ this->size_=size; } };
 	virtual geom::Box size() override { return this->size_; };
 	virtual void draw(Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask, const float depth=0.0f) override;
 	virtual std::string toString() const override;
@@ -105,6 +107,7 @@ public:
 	static Handler<Drawable> create( HandlerW<DrawableManager> manager, geom::Box const& size, std::string const& repl );
 	virtual ~RepeatDrawable() noexcept = default;
 	Handler<Drawable> child() const;
+	virtual void notifyDrawnSize(geom::Box const& size) override final { if(!this->size_.isSpecified()){ this->size_=size; } };
 	virtual geom::Box size() override;
 	virtual void draw(Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask, const float depth=0.0f) override;
 	virtual std::string toString() const override;
@@ -120,6 +123,7 @@ public:
 	virtual ~StretchDrawable() noexcept = default;
 	Handler<Drawable> child() const;
 	virtual geom::Box size() override;
+	virtual void notifyDrawnSize(geom::Box const& size) override final { if(!this->size_.isSpecified()){ this->size_=size; } };
 	virtual void draw(Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask, const float depth=0.0f) override;
 	virtual std::string toString() const override;
 };

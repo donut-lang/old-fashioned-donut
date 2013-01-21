@@ -193,7 +193,7 @@ void StretchDrawable::draw(Canvas& canvas, geom::Point const& ptInRoot, geom::Ar
 	Canvas::AffineScope as(canvas);
 	{
 		canvas.translate(ptInRoot);
-		geom::ScaleVector scale(child_->size() / size_);
+		geom::ScaleVector scale(size_ / child_->size());
 		canvas.scale(scale);
 		this->child_->draw(canvas, geom::ZERO, mask*scale, depth);
 	}

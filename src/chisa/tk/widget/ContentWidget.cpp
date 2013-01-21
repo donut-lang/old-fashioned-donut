@@ -21,6 +21,7 @@
 #include "../../geom/Vector.h"
 #include "../../doc/node/NodeReader.h"
 #include "../../doc/dispose/Disposer.h"
+#include "../Widget.h"
 #include "ContentWidget.h"
 #include <tinyxml2.h>
 
@@ -31,13 +32,28 @@ static std::string const TAG("ContentWidget");
 
 CHISA_WIDGET_SUBKLASS_CONSTRUCTOR_DEF(ContentWidget)
 ,lastWidth_(NAN)
+,root_(element)
 {
-	tinyxml2::XMLElement* docElem = element->FirstChildElement("doc");
-	this->rootNode(doc::NodeReader().parseTree(docElem));
-	if(this->log().t()){
-		this->log().t(TAG, "Content Parsed.");
+	this->loadDocument("main");
+}
+
+void ContentWidget::loadDocument(std::string const& id)
+{
+	for(tinyxml2::XMLElement* elm = root_->FirstChildElement("doc"); elm; elm = elm->NextSiblingElement("doc")){
+		if(id == elm->Attribute("id")) {
+			this->rootNode(doc::NodeReader().parseTree(elm));
+			if(this->log().t()){
+				this->log().t(TAG, "Document id \"%s\" Parsed.", id.c_str());
+			}
+			this->renderTree_ = Handler<doc::RenderTree>(new doc::RenderTree(this->log(), world().lock()->drawableManager()));
+			return;
+		}else{
+			if(this->log().t()){
+				this->log().t(TAG, "Document id \"%s\" != \"%s\"", elm->Attribute("id"), id.c_str());
+			}
+		}
 	}
-	this->renderTree_ = Handler<doc::RenderTree>(new doc::RenderTree(this->log(), world.lock()->drawableManager()));
+	TARTE_EXCEPTION(Exception, "[BUG] Document for \"%s\" not found.", id.c_str());
 }
 
 void ContentWidget::renderImpl(gl::Canvas& cv, geom::Area const& area)

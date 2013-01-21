@@ -1,7 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <world geist="nes">
 	<script src="main.donut" />
-	<vertical id="main">
+	<vertical id="main" split-weight="1">
+		<widget widget-klass="content" split-weight="1">
+			<doc id="main" background="stretch:image:universe/slide/back.png">
+				<font size="120">
+					<p>CPUの理解を容易にするシステムと解説サイトの構築</p>
+					<p>ψ（プサイ） a.k.a. 平藤燎</p>
+				</font>
+			</doc>
+			<doc id="2">
+				<font size="120">
+				いったいおまえは何者だ？生物なのか。
+				</font>
+			</doc>
+			<doc id="3">
+				<font size="120">
+					われは、われである。
+				</font>
+			</doc>
+			<doc id="4">
+				<font size="120">
+					東京大学　理科２類<br />
+				</font>
+			</doc>
+			<doc id="5">
+				<font size="120">
+					東京大学　理科２類<br />
+					→<font color="red">獣医学</font>
+				</font>
+			</doc>
+		</widget>
+	</vertical>
+	<vertical id="nes">
 		<horizontal split-weight="1">
 			<vertical>
 				<widget widget-klass="nes-screen" fit="fit" id="nes">

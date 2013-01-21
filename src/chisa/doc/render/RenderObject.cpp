@@ -64,6 +64,7 @@ Handler<gl::Drawable> RenderObject::drawable()
 	}
 	this->drawablew_.reset();
 	this->drawable_ = this->realize();
+	drawable_->notifyDrawnSize(this->area_.box());
 	this->dirty_ = false;
 	this->cachedSize_ = this->drawable_->size();
 	return this->drawable_;
