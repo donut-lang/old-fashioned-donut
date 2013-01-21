@@ -40,7 +40,7 @@ using namespace tarte;
 	Handler<Machine> machine = donut->queryMachine();
 
 #define EXECUTE_SRC(src) INIT_DONUT\
-	Handler<Object> result = machine->start( donut->parse(src, "<MEM>", 0) );
+	Handler<Object> result = machine->start( donut->parse(src, __FILE__, __LINE__) );
 
 #define SOURCE_TEST_THROW(src) INIT_DONUT\
 {\

@@ -324,11 +324,11 @@ apply [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist 
 		$asmlist.insert($asmlist.end(), $ex.asmlist.begin(), $ex.asmlist.end());
 		$asmlist.push_back(Inst::Apply | $ex.count);
 	}
-	| ^(APPLY ^(DOT obj=expr[$code] IDENT) ex=arglist[$code])
+	| ^(APPLY ^(DOT obj=expr[$code] ac=accessor[$code]) ex=arglist[$code])
 	{
 		$asmlist.insert($asmlist.end(), $obj.asmlist.begin(), $obj.asmlist.end());
 		$asmlist.push_back(Inst::PushCopy);
-		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
+		$asmlist.insert($asmlist.end(), $ac.asmlist.begin(), $ac.asmlist.end());
 		$asmlist.push_back(Inst::LoadObj);
 		$asmlist.insert($asmlist.end(), $ex.asmlist.begin(), $ex.asmlist.end());
 		$asmlist.push_back(Inst::Apply | $ex.count);

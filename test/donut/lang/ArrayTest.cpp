@@ -63,4 +63,13 @@ TEST(ArrayTest, StringIndex)
 	SOURCE_TEST_INT(2, "array={};array['a']=1;array['b']=2;array['c']=3;array['b'];");
 }
 
+TEST(ArrayTest, FuncCall)
+{
+	SOURCE_TEST_INT(2, "array={};array.f=func(z){z+1}; array[\"f\"](1);");
+}
+TEST(ArrayTest, FuncCallWithVariable)
+{
+	SOURCE_TEST_INT(2, "array={}; name='f'; array.f=func(z){z+1}; array[name](1);");
+}
+
 }
