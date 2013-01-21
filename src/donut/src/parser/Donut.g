@@ -184,7 +184,7 @@ RETURN: 'return';
 INTERRUPT: 'interrupt';
 
 IDENT:
-	LETTER (LETTER | DIGIT)*;
+	LETTER (LETTER | '!' | '?' | DIGIT)*;
 
 fragment
 LETTER:
