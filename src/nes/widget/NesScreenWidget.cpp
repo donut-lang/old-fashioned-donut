@@ -99,4 +99,16 @@ bool NesScreenWidget::onKeyUp(const float& timeMs, const SDL_Keysym& sym)
 	return true;
 }
 
+chisa::geom::Area NesScreenWidget::findTargetImpl(const std::string& target)
+{
+	int x;
+	int y;
+	int w = 0;
+	int h = 0;
+	if(sscanf(target.c_str(), "%dx%dx%dx%d", &x, &y, &w, &h) < 2) {
+		return chisa::geom::Area();
+	}
+	return chisa::geom::Area(x,y,w,h);
+}
+
 }

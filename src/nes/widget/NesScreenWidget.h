@@ -44,6 +44,7 @@ public:
 	virtual void onFocusLost(float const& timeMs) override;
 	virtual bool onKeyDown(float const& timeMs, bool isRepeat, SDL_Keysym const& sym) override final;
 	virtual bool onKeyUp(float const& timeMs, SDL_Keysym const& sym) override final;
+	virtual chisa::geom::Area findTargetImpl(std::string const& target);
 };
 
 }
