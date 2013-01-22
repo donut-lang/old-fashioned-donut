@@ -43,7 +43,7 @@ private:
 	Handler<LoneAngelProvider> loneAngelProvider_;
 	Handler<ElementServantProvider> elementServantProvider_;
 	Handler<HaloServantProvider> haloServantProvider_;
-	//Handler<ContentUnderlineServantProvider> contentUnderlineServantProvider_;
+	Handler<ContentUnderlineServantProvider> contentUnderlineServantProvider_;
 public:
 	Patron(Handler<Universe> const& universe, Handler<World> const& world);
 	virtual ~Patron() noexcept = default;
@@ -57,6 +57,7 @@ public:
 	const Handler<AngelWidgetTargetProvider>& angelWidgetTargetProvider() const { return angelWidgetTargetProvider_; }
 	const Handler<ElementServantProvider>& elementServantProvider() const { return elementServantProvider_; }
 	const Handler<HaloServantProvider>& haloServantProvider() const { return haloServantProvider_; }
+	const Handler<ContentUnderlineServantProvider>& contentUnderlineServantProvider() const { return contentUnderlineServantProvider_; }
 	const Handler<LoneAngelProvider>& loneAngelProvider() const { return loneAngelProvider_; }
 	const Handler<TwinAngelProvider>& twinAngelProvider() const { return twinAngelProvider_; }
 	const HandlerW<World>& world() const { return world_; }

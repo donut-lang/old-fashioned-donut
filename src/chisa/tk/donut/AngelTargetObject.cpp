@@ -21,6 +21,7 @@
 #include "ElementObject.h"
 #include "../heaven/HaloServant.h"
 #include "../heaven/ElementServant.h"
+#include "../heaven/ContentUnderlineServant.h"
 #include "ServantObject.h"
 
 namespace chisa {
@@ -41,6 +42,9 @@ AngelTargetProvider::AngelTargetProvider(Handler<Heap> const& heap, std::string 
 	});
 	this->registerPureNativeClosure("newElementServant", [this]( AngelTargetObject* target, std::string elemId )->Handler<Object>{
 		return target->angelTarget()->newElementServant(elemId)->donutObject(this->heap().lock());
+	});
+	this->registerPureNativeClosure("newContentUnderlineServant", [this]( AngelTargetObject* target, std::string color, std::string docId )->Handler<Object>{
+		return target->angelTarget()->newContentUnderlineServant(gl::Color::fromString(color), docId)->donutObject(this->heap().lock());
 	});
 }
 

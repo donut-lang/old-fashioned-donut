@@ -184,7 +184,7 @@ std::string ElementServantObject::reprImpl(const Handler<Heap>& heap) const
 
 
 /**********************************************************************************************************************
- * Widget
+ * Halo
  **********************************************************************************************************************/
 
 HaloServantProvider::HaloServantProvider(const Handler<Heap>& heap, const Handler<Heaven>& heaven)
@@ -237,6 +237,59 @@ std::string HaloServantObject::reprImpl(const Handler<Heap>& heap) const
 	return ::tarte::format("(HaloServantObject: %p)", this);
 }
 
+/**********************************************************************************************************************
+ * ContentUnderline
+ **********************************************************************************************************************/
+
+ContentUnderlineServantProvider::ContentUnderlineServantProvider(const Handler<Heap>& heap, const Handler<Heaven>& heaven)
+:Super(heap, "ContentUnderlineServant", heaven)
+{
+}
+
+//---------------------------------------------------------
+
+ContentUnderlineServantObject::ContentUnderlineServantObject(ContentUnderlineServantProvider* provider)
+:Super(provider)
+{
+}
+
+void ContentUnderlineServantObject::bootstrap(const Handler<Heap>& heap, const Handler<ContentUnderlineServant>& servant)
+{
+	Super::bootstrap(heap, servant);
+}
+
+void ContentUnderlineServantObject::onFutureDiscarded(const Handler<Heap>& heap)
+{
+	Super::onFutureDiscarded(heap);
+}
+
+void ContentUnderlineServantObject::onHistoryDiscarded(const Handler<Heap>& heap)
+{
+	Super::onHistoryDiscarded(heap);
+}
+
+ContentUnderlineServantObject::ResultType ContentUnderlineServantObject::onBack(const Handler<Heap>& heap, const AntiSideEffect& val)
+{
+	return Super::onBack(heap, val);
+}
+
+ContentUnderlineServantObject::ResultType ContentUnderlineServantObject::onForward(const Handler<Heap>& heap, const AntiSideEffect& val)
+{
+	return Super::onForward(heap, val);
+}
+
+XValue ContentUnderlineServantObject::saveImpl(const Handler<Heap>& heap)
+{
+}
+
+void ContentUnderlineServantObject::loadImpl(const Handler<Heap>& heap, const XValue& data)
+{
+}
+
+std::string ContentUnderlineServantObject::reprImpl(const Handler<Heap>& heap) const
+{
+	return ::tarte::format("(ContentUnderlineServantObject: %p)", this);
+}
 }}
 
 

@@ -55,6 +55,7 @@ void Patron::onRegisterProvider(Handler< ::donut::Heap> const& heap)
 	heap->registerProvider(this->angelWidgetTargetProvider_ = Handler<AngelWidgetTargetProvider>( new AngelWidgetTargetProvider(heap, world->heaven()) ));
 	// servant
 	heap->registerProvider(this->haloServantProvider_ = Handler<HaloServantProvider>( new HaloServantProvider(heap, world->heaven()) ));
+	heap->registerProvider(this->contentUnderlineServantProvider_ = Handler<ContentUnderlineServantProvider>( new ContentUnderlineServantProvider(heap, world->heaven()) ));
 	heap->registerProvider(this->elementServantProvider_ = Handler<ElementServantProvider>( new ElementServantProvider(heap, world->heaven()) ));
 	//ウィジットのプロバイダを設定
 	world->elementFactory()->registerDonutProvider(heap);

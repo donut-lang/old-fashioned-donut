@@ -26,6 +26,7 @@
 #include "../Angel.h"
 #include "../heaven/ElementServant.h"
 #include "../heaven/HaloServant.h"
+#include "../heaven/ContentUnderlineServant.h"
 
 namespace chisa {
 using namespace tarte;
@@ -186,6 +187,43 @@ private:
 		return new HaloServantObject(this);
 	}
 };
+/**********************************************************************************************************************
+ * ContentUnderlineServant
+ **********************************************************************************************************************/
+struct ContentUnderlineServantSideEffect : public ServantSideEffect{
+	template <typename Arc>
+	void serialize(Arc& arc) {
 
+	}
+};
+
+class ContentUnderlineServantProvider;
+class ContentUnderlineServantObject : public ServantObjectBaseT<ContentUnderlineServantProvider, ContentUnderlineServantObject, ContentUnderlineServant, ContentUnderlineServantSideEffect> {
+public:
+	ContentUnderlineServantObject(ContentUnderlineServantProvider* provider);
+	virtual ~ContentUnderlineServantObject() noexcept = default;
+public:
+	void bootstrap(Handler<Heap> const& heap, Handler<ContentUnderlineServant> const& servant);
+public:
+	Handler<World> world() const;
+public:
+	void onFutureDiscarded(Handler<Heap> const& heap);
+	void onHistoryDiscarded(Handler<Heap> const& heap);
+	ResultType onBack(Handler<Heap> const& heap, AntiSideEffect const& val);
+	ResultType onForward(Handler<Heap> const& heap, AntiSideEffect const& val);
+	XValue saveImpl( Handler<Heap> const& heap ) override final;
+	void loadImpl( Handler<Heap> const& heap, XValue const& data ) override final;
+private:
+	virtual std::string reprImpl(Handler<Heap> const& heap) const override final;
+};
+class ContentUnderlineServantProvider : public ServantProviderBaseT<ContentUnderlineServantProvider, ContentUnderlineServantObject, ContentUnderlineServant, ContentUnderlineServantSideEffect> {
+public:
+	ContentUnderlineServantProvider(Handler<Heap> const& heap, Handler<Heaven> const& heaven);
+	virtual ~ContentUnderlineServantProvider() noexcept = default;
+private:
+	virtual ::donut::HeapObject* __internal__createInstanceForLoading() override final {
+		return new ContentUnderlineServantObject(this);
+	}
+};
 
 }}

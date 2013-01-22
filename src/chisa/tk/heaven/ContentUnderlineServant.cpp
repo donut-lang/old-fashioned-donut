@@ -40,7 +40,7 @@ Handler<ContentUnderlineServant> ContentUnderlineServant::self() noexcept
 
 Handler< ::donut::Object> ContentUnderlineServant::createDonutObject(Handler< ::donut::Heap> const& heap)
 {
-	//return Handler< ::donut::Object>( world()->patron()->haloServantProvider()->newInstance(heap, self()) );
+	return Handler< ::donut::Object>( world()->patron()->contentUnderlineServantProvider()->newInstance(heap, self()) );
 }
 
 void ContentUnderlineServant::renderImpl(gl::Canvas& canvas)
