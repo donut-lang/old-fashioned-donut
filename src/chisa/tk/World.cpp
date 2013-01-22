@@ -241,7 +241,7 @@ Handler<Element> World::findElementById(std::string const& id)
 	return Handler<Element>();
 }
 
-Handler<WidgetElement> World::getWidgetById(std::string const& name)
+Handler<WidgetElement> World::findWidgetById(std::string const& name)
 {
 	auto it = this->widgetMap_.find(name);
 	if(it == this->widgetMap_.end()){

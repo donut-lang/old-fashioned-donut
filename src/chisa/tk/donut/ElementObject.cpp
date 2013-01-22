@@ -26,7 +26,7 @@ namespace native {
 template <>
 Handler<Object> encode< ::tarte::Handler<chisa::tk::Element> >(Handler<Heap> const& heap, ::tarte::Handler<chisa::tk::Element> val)
 {
-	return val->donutObject();
+	return val ? Handler<Object>(val->donutObject()) : heap->createNull();
 }
 
 }}

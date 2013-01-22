@@ -38,8 +38,15 @@ protected:
 	Provider( Handler<Heap> const& heap, std::string const& name );
 	template <typename T>
 	bool registerPureNativeClosure( std::string const& name, T f) {
-		return pureNativeClosures_.update( name, native::createBindPure(f) );
+		return this->pureNativeClosures_.update( name, native::createBindPure(f) );
 	}
+	bool registerPureNativeClosure( std::string const& name, PureNativeClosureObject::Signature f) {
+		return this->pureNativeClosures_.update( name, f );
+	}
+	bool registerPureNativeClosure( std::string const& name, PureNativeClosureObject::Function f) {
+		return this->pureNativeClosures_.update( name, f );
+	}
+
 public:
 	virtual ~Provider() noexcept = default;
 	inline bool onFree() noexcept { return false; };
@@ -119,7 +126,7 @@ struct _Reactive_ClosureRegisterer<__AntiSideEffect, typename ReactiveNativeClos
 };
 template <typename __AntiSideEffect>
 struct _Reactive_ClosureRegisterer<__AntiSideEffect, typename ReactiveNativeClosureBaseT<__AntiSideEffect>::Signature> {
-	static inline bool exec(ReactiveProviderAspectT<__AntiSideEffect> * self, std::string const& name, typename ReactiveNativeClosureBaseT<__AntiSideEffect>::Function f){
+	static inline bool exec(ReactiveProviderAspectT<__AntiSideEffect> * self, std::string const& name, typename ReactiveNativeClosureBaseT<__AntiSideEffect>::Signature f){
 		return self->reactiveNativeClosures_.update( name, f );
 	}
 };

@@ -93,7 +93,7 @@ public:
 	 * ウィジット管理
 	 ******************************************************************************/
 public:
-	Handler<WidgetElement> getWidgetById(std::string const& name);
+	Handler<WidgetElement> findWidgetById(std::string const& name);
 	bool replaceWidget(std::string const& widgetId, HandlerW<WidgetElement> const& widget);
 	bool deleteWidget(std::string const& widgetId, Handler<WidgetElement> const& widget);
 	Handler<Widget> createWidget(std::string const& klass, tinyxml2::XMLElement* elem);

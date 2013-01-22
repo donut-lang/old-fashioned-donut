@@ -20,6 +20,7 @@
 #include "WorldObject.h"
 #include "ElementObject.h"
 #include "../Heaven.h"
+#include "../element/WidgetElement.h"
 
 namespace chisa {
 namespace tk {
@@ -30,15 +31,9 @@ WorldProvider::WorldProvider(const Handler<Heap>& heap, const Handler<World>& wo
 :Super(heap, "chisa::tk::WorldObject")
 ,world_(world)
 {
-	this->registerPureNativeClosure("findElementById",
-			[&](WorldObject* wobj, std::string const& name) {
-				Handler<World> const world = wobj->world();
-				return world->findElementById(name)->donutObject();
-			});
-	this->registerPureNativeClosure("heaven",[this](WorldObject* wobj){
-		Handler<World> const world = wobj->world();
-		return world->heaven()->donutObject(this->heap().lock());
-	});
+	this->registerPureNativeClosure("findElementById", &WorldObject::findElementById);
+	this->registerPureNativeClosure("heaven", &WorldObject::heaven);
+	this->registerPureNativeClosure("findWidgetById", &WorldObject::findWidgetById);
 }
 
 Handler<World> WorldProvider::world() const
@@ -98,6 +93,28 @@ void WorldObject::onHistoryDiscarded(const Handler<Heap>& heap)
 void WorldObject::loadImpl(const Handler<Heap>& heap, const XValue& data)
 {
 	//XXX
+}
+
+Handler< ::donut::Object> WorldObject::heaven( Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args )
+{
+	Handler<World> const world = self.cast<WorldObject>()->world();
+	return world->heaven()->donutObject(heap);
+}
+
+Handler<ElementObject> WorldObject::findElementById(const std::string& id)
+{
+	Handler<World> const world = this->world();
+	return world->findElementById(id)->donutObject();
+}
+
+Handler<WidgetObject> WorldObject::findWidgetById(const std::string& widgetid)
+{
+	Handler<World> const world = this->world();
+	Handler<WidgetElement> elm(world->findWidgetById(widgetid));
+	if( !elm ) {
+		return Handler<WidgetObject>();
+	}
+	return elm->widget()->donutObject();
 }
 
 }}

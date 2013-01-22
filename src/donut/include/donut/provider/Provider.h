@@ -30,6 +30,14 @@ template <> bool Provider::registerPureNativeClosure<PureNativeClosureObject::Si
 
 }
 
+
+namespace donut {
+namespace internal {
+
+
+
+}}
+
 namespace donut {
 
 template <typename __AntiSideEffect>

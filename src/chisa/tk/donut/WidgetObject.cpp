@@ -21,6 +21,16 @@
 #include "WorldObject.h"
 #include "../element/WidgetElement.h"
 
+namespace donut {
+namespace native {
+
+template <>
+Handler<Object> encode< ::tarte::Handler<chisa::tk::Widget> >(Handler<Heap> const& heap, ::tarte::Handler<chisa::tk::Widget> val)
+{
+	return val ? Handler<Object>(val->donutObject()) : heap->createNull();
+}
+
+}}
 namespace chisa {
 namespace tk {
 

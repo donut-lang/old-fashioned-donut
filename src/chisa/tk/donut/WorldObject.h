@@ -73,6 +73,10 @@ public:
 	ResultType onForward(Handler<Heap> const& heap, AntiSideEffect const& val);
 	XValue saveImpl( Handler<Heap> const& heap ) override final;
 	void loadImpl( Handler<Heap> const& heap, XValue const& data ) override final;
+public:
+	static Handler< ::donut::Object> heaven(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args);
+	Handler<ElementObject> findElementById(std::string const& id);
+	Handler<WidgetObject> findWidgetById(std::string const& widgetid);
 };
 
 }}
