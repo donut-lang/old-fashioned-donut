@@ -16,9 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <donut/object/Heap.h>
 #include "ContentObject.h"
 
 namespace chisa {
+using namespace tarte;
+using namespace donut;
 namespace tk {
 
 ContentObject::ContentObject(ContentProvider* provider)
@@ -38,6 +41,11 @@ typename ContentObject::ResultType ContentObject::execAntiSideEffect(Handler<Hea
 {
 	AntiSideEffect anti;
 	switch(val.op){
+	case AntiSideEffect::LoadDocument:
+		anti.op = AntiSideEffect::LoadDocument;
+		anti.docId = this->widget()->documentId();
+		this->widget()->loadDocument(val.docId);
+		break;
 	case AntiSideEffect::None:
 		break;
 	}
@@ -68,11 +76,24 @@ void ContentObject::loadImpl(const Handler<Heap>& heap, const XValue& data)
 {
 }
 
+std::tuple<std::string,bool, ContentSideEffect> ContentObject::loadDocument(const std::string& id)
+{
+	ContentSideEffect anti;
+	Handler<ContentWidget> cwidget = this->widget();
+	anti.op = ContentSideEffect::LoadDocument;
+	anti.docId = cwidget->documentId();
+	cwidget->loadDocument(id);
+	return std::tuple<std::string,bool, ContentSideEffect>(id, true, anti);
+}
+
 //---------------------------------------------------------------------------------------
 
 ContentProvider::ContentProvider(Handler<Heap> const& heap, Handler<World> const& world)
 :Super(heap, world)
 {
+	this->registerReactiveNativeClosure("loadDocument", &ContentObject::loadDocument);
 }
 
-}}
+}
+}
+

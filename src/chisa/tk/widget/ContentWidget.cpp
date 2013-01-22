@@ -41,6 +41,7 @@ void ContentWidget::loadDocument(std::string const& id)
 {
 	for(tinyxml2::XMLElement* elm = root_->FirstChildElement("doc"); elm; elm = elm->NextSiblingElement("doc")){
 		if(id == elm->Attribute("id")) {
+			this->documentId_ = id;
 			this->rootNode(doc::NodeReader().parseTree(elm));
 			if(this->log().t()){
 				this->log().t(TAG, "Document id \"%s\" Parsed.", id.c_str());

@@ -39,6 +39,9 @@ class ContentWidget: public chisa::tk::Widget {
 	DEFINE_MEMBER(private, private, geom::Box, lastSize);
 private:
 	tinyxml2::XMLElement* root_;
+	std::string documentId_;
+public:
+	inline std::string documentId() const noexcept { return this->documentId_; };
 public:
 	void loadDocument(std::string const& id);
 	virtual void renderImpl(gl::Canvas& cv, geom::Area const& area) override;

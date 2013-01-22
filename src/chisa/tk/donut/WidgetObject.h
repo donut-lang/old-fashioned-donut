@@ -104,7 +104,7 @@ public:
 protected:
 	inline ProviderT provider() const noexcept { return static_cast<ProviderT*>(this->WidgetObject::provider()); };
 public:
-	Handler<WidgetT> widget() const { return Handler<WidgetT>::__internal__fromRawPointerWithoutCheck(static_cast<WidgetT*>(this->widget().get())); };
+	Handler<WidgetT> widget() const { return Handler<WidgetT>::__internal__fromRawPointerWithoutCheck(static_cast<WidgetT*>(WidgetObject::widget().get())); };
 protected:
 	WidgetObjectBaseT(ProviderT* provider);
 	virtual ~WidgetObjectBaseT() noexcept = default;
