@@ -26,12 +26,12 @@ showUnderline = func(){
 	heaven.detatchAngel(ang2);
 };
 
-showTraceAngel = func(){
+showLabelAngel = func(widget, element){
 	heaven = World.heaven();
 	ang = heaven.newLoneAngel();
-	target = ang.newElementTarget("nes-tracer");
+	target = ang.newElementTarget(widget);
 	halo = target.newHaloServant("red");
-	elm = target.newElementServant("its_a_trace");
+	elm = target.newElementServant(element);
 	
 	target.attatchServant(halo);
 	target.attatchServant(elm);
@@ -70,8 +70,14 @@ main = func(){
 
 	World.pushElement("nes");
 	
-	showTraceAngel();
+	interrupt null;
+	showLabelAngel("nes-tracer", "its_a_tracer");
+	showLabelAngel("memory-viewer", "its_a_viewer");
 };
 
 main();
+
+while(true) {
+	interrupt null;
+};
 

@@ -119,7 +119,6 @@ Handler<Angel> Heaven::detatchAngel(const Handler<Angel>& angel)
 {
 	for( auto it = this->angelMap_.begin(); it != this->angelMap_.end(); ++it ) {
 		VectorMap<std::string, Handler<Angel> >::Pair& p = *it;
-		Handler<Angel> const& angel = p.second;
 		if(p.second == angel){
 			this->angelMap_.erase(it);
 			return angel;

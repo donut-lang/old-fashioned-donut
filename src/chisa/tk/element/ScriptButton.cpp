@@ -67,7 +67,7 @@ void ScriptButton::onClick()
 		if(this->log().d()){
 			this->log().d(TAG, "Sending message on \"%s\"", this->machineName_.c_str());
 		}
-		world->sendMessage(this->message_);
+		world->sendMessage(this->message_, this->machineName_);
 	}else{
 		if(this->log().d()){
 			this->log().d(TAG, "Button script is empty.");
