@@ -1,3 +1,31 @@
+showUnderline = func(){
+	heaven = World.heaven();
+	ang1 = heaven.newLoneAngel();
+	target1 = ang1.newWidgetTarget("slide","text:one");
+	underline1 = target1.newContentUnderlineServant("red", "one");
+	target1.attatchServant(underline1);
+	ang1.attatchTarget(target1);
+	heaven.attatchAngel(ang1);
+	
+	interrupt null;
+	ang2 = heaven.newLoneAngel();
+	target2 = ang2.newWidgetTarget("slide","text:two");
+	underline2 = target2.newContentUnderlineServant("red", "two");
+	target2.attatchServant(underline2);
+	ang2.attatchTarget(target2);
+	heaven.attatchAngel(ang2);
+	
+	interrupt null;
+	l1 = target1.newElementServant("hatena");
+	l2 = target2.newElementServant("hatena");
+	target1.attatchServant(l1);
+	target2.attatchServant(l2);
+	
+	interrupt null;
+	heaven.detatchAngel(ang1);
+	heaven.detatchAngel(ang2);
+};
+
 main = func(){
 	interrupt null;
 	doc = World.findWidgetById("slide");
@@ -16,8 +44,9 @@ main = func(){
 	doc.loadDocument("7");
 	interrupt null;
 	doc.loadDocument("8");
-
 	interrupt null;
+	showUnderline();
+
 	World.pushElement("nes");
 	running = true;
 	while(running){

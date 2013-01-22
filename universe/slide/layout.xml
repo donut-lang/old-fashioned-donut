@@ -52,8 +52,8 @@
 			</doc>
 			<doc id="8">
 				<font size="112">
-					<font color="darkred">ファミコンを<font color="darkblue">生きたまま解剖</font>できるコンテンツ</font>と
-					<font color="darkred"><font color="darkblue">時を司る</font>スクリプト言語を作った</font>
+					<font color="darkred">ファミコンを<font color="darkblue" id="one">生きたまま解剖</font>できるコンテンツ</font>と
+					<font color="darkred"><font color="darkblue" id="two">時を司る</font>スクリプト言語を作った</font>
 				</font>
 			</doc>
 			<doc id="9">
@@ -64,6 +64,7 @@
 			</doc>
 		</widget>
 	</vertical>
+	<label font-size="128" text="？？？？" id="hatena" />
 	<vertical id="nes">
 		<horizontal split-weight="1">
 			<vertical>

@@ -124,11 +124,40 @@ doc::TreeNode* ContentWidget::findTreeNodeById(const std::string& id)
 
 chisa::geom::Area ContentWidget::findTargetImpl(const std::string& target)
 {
-	doc::TreeNode* node = this->rootNode_->findTreeNodeById(target);
+	enum Mode {
+		Block,
+		Text
+	} mode;
+	std::string id;
+	if(::tarte::startsWith(target, "block:")) {
+		mode = Block;
+		id = target.substr(6);
+	}else if(::tarte::startsWith(target, "text:")) {
+		mode = Text;
+		id = target.substr(5);
+	}else{
+		mode = Block;
+		id = target;
+	}
+	doc::TreeNode* node = this->rootNode_->findTreeNodeById(id);
 	if( unlikely(!node || !node->block()) ){
 		return chisa::geom::Area();
 	}
-	return node->block()->area();
+	switch( mode ){
+	case Block:
+		return node->block()->area();
+	case Text: {
+		doc::Text* tex = node->findFirstTextNode();
+		if( tex->objectCount() > 0 ) {
+			geom::Area area(tex->objectAt(0)->area());
+			return geom::Area(area.left(), area.bottom(), 1, 1);
+		}
+		break;
+	}
+	default:
+		break;
+	}
+	return chisa::geom::Area();
 }
 
 }}
