@@ -36,7 +36,9 @@ Universe::Universe(Logger& log, Handler<PlatformFairy> fairy, Handler<Hexe> hexe
 ,drawableManager_( new gl::DrawableManager(log, canvas_, gl::DrawableSetting(this->resolveUniverseFilepath("__font__"))) )
 {
 }
-Universe::~Universe() noexcept{
+
+Universe::~Universe() noexcept
+{
 }
 
 void Universe::init()
@@ -94,6 +96,21 @@ void Universe::notifyWorldEnd(HandlerW<World> me)
 		log().w(TAG, "notified world end, but world was already dead.");
 	}
 }
+
+void Universe::onMouseBack(const float& timeMs)
+{
+	if(Handler<World> topWorld = this->worldStack.top()){
+		topWorld->back();
+	}
+}
+
+void Universe::onMouseForward(const float& timeMs)
+{
+	if(Handler<World> topWorld = this->worldStack.top()){
+		topWorld->forward();
+	}
+}
+
 void Universe::onTouchDown(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)
 {
 	if(Handler<World> topWorld = this->worldStack.top()){

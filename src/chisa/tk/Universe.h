@@ -83,6 +83,8 @@ public:
 	 * ユーザーアクション
 	 ******************************************************************************/
 public:
+	void onMouseBack(float const& timeMs);
+	void onMouseForward(float const& timeMs);
 	void onTouchDown(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
 	void onTouchUp(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);
 	void onTouchMove(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint);

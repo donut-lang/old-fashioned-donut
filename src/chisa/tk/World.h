@@ -109,8 +109,9 @@ public:
 	Handler<Element> findElementById(std::string const& id);
 	Handler<Element> rootElement();
 private:
-	void popElement();
-	void pushElement(std::string const& elementId);
+	Handler<Element> popElement();
+	Handler<Element> pushElement(std::string const& elementId);
+	Handler<Element> pushElement(Handler<Element> const& elm);
 	/******************************************************************************
 	 * Angel管理
 	 ******************************************************************************/

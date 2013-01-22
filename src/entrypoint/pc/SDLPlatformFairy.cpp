@@ -112,13 +112,27 @@ bool SDLPlatformFairy::pollEvent(Chisa& chisa)
 			break;
 		}
 		case SDL_MOUSEBUTTONDOWN:
-			if (ev.button.button == SDL_BUTTON_LEFT) {
+			switch (ev.button.button) {
+			case SDL_BUTTON_LEFT:
 				chisa.pointerDown(ev.button.timestamp, 0, geom::Point(ev.button.x, ev.button.y));
+				break;
+			case 8:
+				chisa.onMouseBack(ev.button.timestamp);
+				break;
+			case 9:
+				chisa.onMouseForward(ev.button.timestamp);
+				break;
+			default:
+				break;
 			}
 			break;
 		case SDL_MOUSEBUTTONUP:
-			if (ev.button.button == SDL_BUTTON_LEFT) {
+			switch (ev.button.button) {
+			case SDL_BUTTON_LEFT:
 				chisa.pointerUp(ev.button.timestamp, 0, geom::Point(ev.button.x, ev.button.y));
+				break;
+			default:
+				break;
 			}
 			break;
 		case SDL_MOUSEMOTION:

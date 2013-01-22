@@ -91,9 +91,12 @@ constexpr Color InvalidColor(NAN, NAN, NAN, NAN);
 constexpr Color White(1,1,1,1);
 constexpr Color Black(0,0,0,1);
 constexpr Color Red(1,0,0,1);
+constexpr Color DarkRed(.7f,0,0,1);
 constexpr Color Blue(0,0,1,1);
+constexpr Color DarkBlue(0,0,.7f,1);
 constexpr Color LightBlue(0.3f,0.3f,1,1);
 constexpr Color Green(0,1,0,1);
+constexpr Color DarkGreen(0,.7f,0,1);
 constexpr Color Yellow(1,1,0,1);
 constexpr Color DarkYellow(0.85f,0.85f,0,1);
 constexpr Color Gray(.5,.5,.5,1);
@@ -105,9 +108,12 @@ const std::pair<std::string, gl::Color> COLOR_TABLE[] = {
 		std::pair<std::string, gl::Color>("white", gl::White),
 		std::pair<std::string, gl::Color>("black", gl::Black),
 		std::pair<std::string, gl::Color>("red", gl::Red),
+		std::pair<std::string, gl::Color>("darkred", gl::DarkRed),
 		std::pair<std::string, gl::Color>("blue", gl::Blue),
+		std::pair<std::string, gl::Color>("darkblue", gl::DarkBlue),
 		std::pair<std::string, gl::Color>("lightblue", gl::LightBlue),
 		std::pair<std::string, gl::Color>("green", gl::Green),
+		std::pair<std::string, gl::Color>("darkgreen", gl::DarkGreen),
 		std::pair<std::string, gl::Color>("yellow", gl::Yellow),
 		std::pair<std::string, gl::Color>("darkyellow", gl::DarkYellow),
 		std::pair<std::string, gl::Color>("gray", gl::Gray),

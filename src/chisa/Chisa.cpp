@@ -131,6 +131,17 @@ void Chisa::keyDown(float const& timeMs, const bool isRepeat, SDL_Keysym const& 
 {
 	this->universe_->onKeyDown(timeMs, isRepeat, sym);
 }
+
+void Chisa::onMouseBack(float const& timeMs)
+{
+	this->universe_->onMouseBack(timeMs);
+}
+
+void Chisa::onMouseForward(float const& timeMs)
+{
+	this->universe_->onMouseForward(timeMs);
+}
+
 void Chisa::keyUp(float const& timeMs, SDL_Keysym const& sym)
 {
 	this->universe_->onKeyUp(timeMs, sym);

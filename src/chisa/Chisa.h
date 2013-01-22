@@ -44,6 +44,8 @@ public:
 private:
 	void loop();
 public:
+	void onMouseBack(float const& timeMs);
+	void onMouseForward(float const& timeMs);
 	void onShown();
 	void onHidden();
 	void reshape(float const& width, float const& height);

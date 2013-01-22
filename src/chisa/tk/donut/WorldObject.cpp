@@ -65,16 +65,28 @@ Handler<World> WorldObject::world() const
 	return this->world_.lock();
 }
 
+WorldObject::ResultType WorldObject::execAntiSideEffect(const Handler<Heap>& heap, const AntiSideEffect& val)
+{
+	AntiSideEffect anti;
+	switch(val.op){
+	case AntiSideEffect::PushElement:
+		anti.op = AntiSideEffect::PushElement;
+		anti.elm = this->world()->rootElement();
+		this->world()->pushElement(val.elm);
+		break;
+	}
+
+	return std::tuple<bool, AntiSideEffect>(true, anti);
+}
+
 WorldObject::ResultType WorldObject::onBack(const Handler<Heap>& heap, const WorldSideEffect& val)
 {
-	//XXX
-	return ResultType(true, WorldSideEffect());
+	return this->execAntiSideEffect(heap, val);
 }
 
 WorldObject::ResultType WorldObject::onForward(const Handler<Heap>& heap, const WorldSideEffect& val)
 {
-	//XXX
-	return ResultType(true, WorldSideEffect());
+	return this->execAntiSideEffect(heap, val);
 }
 
 XValue WorldObject::saveImpl(const Handler<Heap>& heap)
@@ -117,10 +129,14 @@ Handler<WidgetObject> WorldObject::findWidgetById(const std::string& widgetid)
 	}
 	return elm->widget()->donutObject();
 }
+
+
 std::tuple<Handler<ElementObject>, bool, WorldSideEffect> WorldObject::pushElement(std::string const& elementId)
 {
-	WorldSideEffect anti;
 	Handler<World> const world = this->world();
+	WorldSideEffect anti;
+	anti.op = AntiSideEffect::PushElement;
+	anti.elm = world->rootElement();
 	world->pushElement(elementId);
 	return std::tuple<Handler<ElementObject>, bool, WorldSideEffect>(world->rootElement()->donutObject(), true, anti);
 }

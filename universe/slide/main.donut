@@ -10,6 +10,12 @@ main = func(){
 	doc.loadDocument("4");
 	interrupt null;
 	doc.loadDocument("5");
+	interrupt null;
+	doc.loadDocument("6");
+	interrupt null;
+	doc.loadDocument("7");
+	interrupt null;
+	doc.loadDocument("8");
 
 	interrupt null;
 	World.pushElement("nes");

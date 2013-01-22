@@ -12,13 +12,12 @@
 			</doc>
 			<doc id="1" background="stretch:image:universe/slide/back.png">
 				<font size="112">
-				いったいおまえは何者だ？生物なのか。
+				　<br />いったいおまえは何者だ？生物なのか。
 				</font>
 			</doc>
-			<doc id="2">
-				<font size="112">
-					<br />
-					われは、われである。
+			<doc id="2" padding="100">
+				<font size="112"><p>　<br />われは、われである。<br />　<br />
+					<font color="darkblue" size="64">#無人化すべきである</font></p>
 				</font>
 			</doc>
 			<doc id="3">
@@ -29,7 +28,6 @@
 			</doc>
 			<doc id="4">
 				<font size="112">
-					<br />
 					東京大学　理科２類<br />
 					→
 				</font>
@@ -41,6 +39,27 @@
 					＿人人人人人＿<br />
 					＞　<font color="red">獣医学</font>　＜<br />
 					￣Y^Y^Y^Y￣ <br />
+				</font>
+			</doc>
+			<doc id="6">
+				<font size="136">　<br />で、一体何を作ったのか<br />
+				</font>
+			</doc>
+			<doc id="7">
+				<font size="112">
+					<font color="darkred">ファミコンを<font color="darkblue">生きたまま解剖</font>できるコンテンツ</font>と
+				</font>
+			</doc>
+			<doc id="8">
+				<font size="112">
+					<font color="darkred">ファミコンを<font color="darkblue">生きたまま解剖</font>できるコンテンツ</font>と
+					<font color="darkred"><font color="darkblue">時を司る</font>スクリプト言語を作った</font>
+				</font>
+			</doc>
+			<doc id="9">
+				<font size="112">
+					<font color="darkred">ファミコンを<font color="darkblue">生きたまま解剖</font>できるコンテンツ</font>と
+					<font color="darkred">時を司るスクリプト言語を作った</font>
 				</font>
 			</doc>
 		</widget>

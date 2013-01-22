@@ -31,12 +31,12 @@ using namespace donut;
 
 struct WorldSideEffect{
 	enum {
-		CreateAngel,
-		RemoveAngel
+		PushElement
 	} op;
 	union {
 
 	};
+	Handler<Element> elm;
 	template <typename Arc>
 	void serialize(Arc& arc) {
 
@@ -66,6 +66,8 @@ public:
 	Handler<World> world() const;
 private:
 	virtual std::string reprImpl(Handler<Heap> const& heap) const override final;
+private:
+	ResultType execAntiSideEffect(Handler<Heap> const& heap, AntiSideEffect const& val);
 public:
 	void onFutureDiscarded(Handler<Heap> const& heap);
 	void onHistoryDiscarded(Handler<Heap> const& heap);
