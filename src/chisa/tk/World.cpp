@@ -319,11 +319,6 @@ void World::onTouchDown(float const& timeMs, const unsigned int pointerIndex, ge
 	if(this->gestureMediator_){
 		this->gestureMediator_->onTouchDown(timeMs, pointerIndex, screenPoint);
 	}
-	{
-		Handler<XObject> obj(new XObject);
-		obj->set("action","onClick");
-		sendMessage(obj);
-	}
 }
 
 void World::onTouchUp(float const& timeMs, const unsigned int pointerIndex, geom::Point const& screenPoint)

@@ -40,30 +40,42 @@ std::string FrameCombo::toString() const
 
 void FrameCombo::renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
-	if( Handler<Element> elm = this->frontChild() ){
-		elm->render(canvas,ptInRoot,mask);
+	for(std::pair<Handler<Element>, bool> pair : this->children()) {
+		pair.first->render(canvas,ptInRoot,mask);
+		if( !pair.second ) {
+			break;
+		}
 	}
 }
 
 geom::Box FrameCombo::measureImpl(geom::Box const& constraint)
 {
-	if( Handler<Element> elm = this->frontChild() ){
-		return elm->measure( constraint );
+	geom::Box size;
+	for(std::pair<Handler<Element>, bool> pair : this->children()) {
+		size = geom::max(pair.first->measure( constraint ), size);
+		if( !pair.second ) {
+			break;
+		}
 	}
-	return constraint;
+	return size.isSpecified() ? size : constraint;
 }
 
 void FrameCombo::layoutImpl(geom::Distance const& offsetFromParent, geom::Box const& size)
 {
-	if( Handler<Element> elm = this->frontChild() ){
-		elm->layout(offsetFromParent, size);
+	for(std::pair<Handler<Element>, bool> pair : this->children()) {
+		pair.first->layout(offsetFromParent, size);
+		if( !pair.second ) {
+			break;
+		}
 	}
 }
 
 void FrameCombo::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
 	for( tinyxml2::XMLElement* e = element->FirstChildElement(); e; e=e->NextSiblingElement() ){
-		this->addChild( factory->parseTree(this->self(), e) );
+		bool transparent;
+		::tarte::xml::parseAttr("transparent", transparent, false, e);
+		this->addChild( factory->parseTree(this->self(), e), transparent);
 	}
 }
 

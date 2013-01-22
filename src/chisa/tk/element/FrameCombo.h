@@ -18,11 +18,12 @@
 
 #pragma once
 #include "ElementGroup.h"
+#include "../Element.h"
 
 namespace chisa {
 namespace tk {
 
-class FrameCombo : public ElementGroupBase<std::nullptr_t> {
+class FrameCombo : public ElementGroupBase<bool> {
 	CHISA_ELEMENT_SUBKLASS(FrameCombo);
 public:
 	virtual std::string toString() const override;
