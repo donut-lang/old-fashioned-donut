@@ -30,11 +30,15 @@ public:
 	struct AttrName{
 		const static std::string Text;
 		const static std::string FontSize;
+		const static std::string DonutMachineName;
 	};
 private: /* 設定されうるリソース */
 	std::string text_;
 	float fontSize_;
 	bool vertical_;
+private:
+	std::string machineName_;
+	XValue message_;
 private: /* 描画のための一時的なリソース */
 	Handler<gl::TextDrawable> textImage_;
 public:
@@ -54,6 +58,7 @@ protected:
 	virtual void layoutImpl(geom::Distance const& offsetFromParent, geom::Box const& size) override;
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
 	virtual bool notifyViewRefreshedImpl() override;
+	virtual bool onSingleTapUp(float const& timeMs, geom::Point const& ptInScreen) override final;
 };
 
 }}

@@ -30,6 +30,7 @@ namespace tk {
 
 const std::string Label::AttrName::Text("text");
 const std::string Label::AttrName::FontSize("font-size");
+const std::string Label::AttrName::DonutMachineName("donut");
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(Label, Element)
 ,text_()
@@ -43,6 +44,7 @@ CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(Label, Element)
 	this->edgeColor(gl::Transparent);
 	this->addAttribute(AttrName::Text, this->text_);
 	this->addAttribute(AttrName::FontSize, this->fontSize_);
+	this->addAttribute(AttrName::DonutMachineName, this->machineName_);
 }
 
 Label::~Label() noexcept
@@ -97,6 +99,9 @@ void Label::layoutImpl(geom::Distance const& offsetFromParent, geom::Box const& 
 }
 void Label::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {
+	if( element->FirstChildElement() != nullptr ){
+		this->message_ = XValue::fromXML(element->FirstChildElement());
+	}
 }
 
 void Label::text(std::string const& text)
@@ -126,6 +131,14 @@ bool Label::notifyViewRefreshedImpl()
 {
 	this->textImage_.reset();
 	return true;
+}
+
+bool Label::onSingleTapUp(const float& timeMs, const geom::Point& ptInScreen)
+{
+	if(!this->message_.is<XNull>()) {
+		this->world().lock()->sendMessage(this->message_, this->machineName_);
+	}
+	return false;
 }
 
 }}
