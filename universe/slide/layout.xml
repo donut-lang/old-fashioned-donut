@@ -72,6 +72,7 @@
 		</frame>
 	</vertical>
 	<label font-size="128" text="？？？？" id="hatena" background-color="#ffffffa0" />
+	<label font-size="128" text="命令語" id="its_a_trace" background-color="#ffffffa0" />
 	<vertical id="nes">
 		<horizontal split-weight="1">
 			<vertical>
@@ -122,7 +123,7 @@
 						</xobject>
 					</button>
 				</horizontal>
-				<widget widget-klass="nes-trace" widget-id="nes-trace" fit="expand" split-weight="1" />
+				<widget widget-klass="nes-trace" widget-id="nes-trace" fit="expand" split-weight="1" id="nes-tracer" />
 			</vertical>
 			<vertical split-weight="1">
 				<horizontal split-weight="2" id="content">

@@ -26,6 +26,21 @@ showUnderline = func(){
 	heaven.detatchAngel(ang2);
 };
 
+showTraceAngel = func(){
+	heaven = World.heaven();
+	ang = heaven.newLoneAngel();
+	target = ang.newElementTarget("nes-tracer");
+	halo = target.newHaloServant("red");
+	elm = target.newElementServant("its_a_trace");
+	
+	target.attatchServant(halo);
+	target.attatchServant(elm);
+	ang.attatchTarget(target);
+	heaven.attatchAngel(ang);
+	interrupt null;
+	heaven.detatchAngel(ang);
+};
+
 main = func(){
 	interrupt null;
 	doc = World.findWidgetById("slide");
@@ -54,13 +69,8 @@ main = func(){
 	interrupt null;
 
 	World.pushElement("nes");
-	running = true;
-	while(running){
-		msg = interrupt null;
-		if( handleNES(msg) ){
-		}else{
-		}
-	};
+	
+	showTraceAngel();
 };
 
 main();
