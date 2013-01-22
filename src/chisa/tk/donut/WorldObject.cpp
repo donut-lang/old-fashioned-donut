@@ -34,6 +34,7 @@ WorldProvider::WorldProvider(const Handler<Heap>& heap, const Handler<World>& wo
 	this->registerPureNativeClosure("findElementById", &WorldObject::findElementById);
 	this->registerPureNativeClosure("heaven", &WorldObject::heaven);
 	this->registerPureNativeClosure("findWidgetById", &WorldObject::findWidgetById);
+	this->registerReactiveNativeClosure("pushElement", &WorldObject::pushElement);
 }
 
 Handler<World> WorldProvider::world() const
@@ -115,6 +116,13 @@ Handler<WidgetObject> WorldObject::findWidgetById(const std::string& widgetid)
 		return Handler<WidgetObject>();
 	}
 	return elm->widget()->donutObject();
+}
+std::tuple<Handler<ElementObject>, bool, WorldSideEffect> WorldObject::pushElement(std::string const& elementId)
+{
+	WorldSideEffect anti;
+	Handler<World> const world = this->world();
+	world->pushElement(elementId);
+	return std::tuple<Handler<ElementObject>, bool, WorldSideEffect>(world->rootElement()->donutObject(), true, anti);
 }
 
 }}

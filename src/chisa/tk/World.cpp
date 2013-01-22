@@ -185,6 +185,11 @@ void World::popElement()
 	}
 }
 
+Handler<Element> World::rootElement()
+{
+	return elementStack_.top();
+}
+
 void World::sendMessage( ::tarte::XValue const& xv, std::string const& machineName )
 {
 	if(this->log().d()){

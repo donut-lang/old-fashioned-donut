@@ -1,31 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <world geist="nes">
+	<script src="nes.donut" />
 	<script src="main.donut" />
 	<vertical id="main" split-weight="1">
 		<widget widget-klass="content" split-weight="1" widget-id="slide">
 			<doc id="main" background="stretch:image:universe/slide/back.png">
-				<font size="100">
+				<font size="112">
 					<p>CPUの理解を容易にするシステムと解説サイトの構築</p>
 					<p>ψ（プサイ） a.k.a. 平藤燎</p>
 				</font>
 			</doc>
-			<doc id="2" background="stretch:image:universe/slide/back.png">
-				<font size="100">
+			<doc id="1" background="stretch:image:universe/slide/back.png">
+				<font size="112">
 				いったいおまえは何者だ？生物なのか。
 				</font>
 			</doc>
-			<doc id="3">
-				<font size="100">
+			<doc id="2">
+				<font size="112">
+					<br />
 					われは、われである。
 				</font>
 			</doc>
-			<doc id="4">
-				<font size="100">
+			<doc id="3">
+				<font size="112">
+					<br />
 					東京大学　理科２類<br />
 				</font>
 			</doc>
-			<doc id="5">
-				<font size="100">
+			<doc id="4">
+				<font size="112">
+					<br />
 					東京大学　理科２類<br />
 					→<font color="red">獣医学</font>
 				</font>

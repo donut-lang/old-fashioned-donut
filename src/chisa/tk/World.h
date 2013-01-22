@@ -57,10 +57,13 @@ class Patron;
 class WorldObject;
 
 class World : public HandlerBody<World> {
+	friend WorldObject;
 private:
 	DEFINE_MEMBER_REF(public, Logger, log);
+private:
 	HandlerW<Universe> const universe_;
 	DEFINE_MEMBER_CONST(public, std::string, name);
+private:
 	TaskHandler taskHandler_;
 	Stack<Handler<Element> > elementStack_;
 	Handler<Heaven> heaven_;
@@ -104,6 +107,7 @@ public:
 	Handler<Element> realizeElement( std::string const& templateId );
 	Handler<Element> findElementByPoint(geom::Point const& screenVector);
 	Handler<Element> findElementById(std::string const& id);
+	Handler<Element> rootElement();
 private:
 	void popElement();
 	void pushElement(std::string const& elementId);

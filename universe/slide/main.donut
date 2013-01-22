@@ -1,14 +1,15 @@
 main = func(){
 	interrupt null;
 	doc = World.findWidgetById("slide");
+	doc.loadDocument("1");
+	interrupt null;
 	doc.loadDocument("2");
 	interrupt null;
 	doc.loadDocument("3");
 	interrupt null;
 	doc.loadDocument("4");
-	interrupt null;
-	doc.loadDocument("5");
 	
+	World.pushElement("nes");
 	running = true;
 	while(running){
 		msg = interrupt null;
