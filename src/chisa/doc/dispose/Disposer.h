@@ -31,12 +31,12 @@ class BlockSession;
 class Disposer: public chisa::doc::NodeWalker {
 	DEFINE_MEMBER_REF(private, Logger, log)
 public:
-	Disposer(Logger& log, Handler<RenderTree> renderTree, const float widgetWidth);
+	Disposer(Logger& log, Handler<RenderTree> renderTree, geom::Box const& constraint);
 	virtual ~Disposer() noexcept(true) = default;
 private:
 	Handler<RenderTree> renderTree_;
 	Handler<gl::DrawableManager> dmanager_;
-	const float widgetWidth_;
+	geom::Box const widgetSize_;
 	TextContext textContext_;
 	BlockSession* nowSession_;
 	float nowDepth_;

@@ -33,7 +33,7 @@ private:
 private:
 	BlockNode::Direction dir_;
 private:
-	float const widthLimit_;
+	geom::Box const limitSize_;
 private:
 	float consumedHeight_;
 	float consumedWidth_;
@@ -47,7 +47,7 @@ private:
 	float blockPosX_;
 public:
 	BlockSession(Disposer* disposer, BlockNode* node);
-	BlockSession(Disposer* disposer, const float widthLimit);
+	BlockSession(Disposer* disposer, geom::Box const& limitSize);
 	~BlockSession() noexcept;
 private:
 	void newBlockLine();

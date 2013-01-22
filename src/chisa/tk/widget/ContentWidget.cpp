@@ -31,8 +31,8 @@ namespace tk {
 static std::string const TAG("ContentWidget");
 
 CHISA_WIDGET_SUBKLASS_CONSTRUCTOR_DEF(ContentWidget)
-,lastWidth_(NAN)
 ,renderTree_(new doc::RenderTree(this->log(), world.lock()->drawableManager()))
+,lastConstraintSize_()
 ,reload_(false)
 ,root_(element)
 {
@@ -81,8 +81,13 @@ void ContentWidget::reshapeImpl(geom::Box const& areaSize)
 
 geom::Box ContentWidget::measureImpl(geom::Box const& constraintSize)
 {
-	if(reload_ || geom::isUnspecified(this->lastWidth()) || std::fabs(constraintSize.width()-this->lastWidth()) >= geom::VerySmall){
-		this->lastWidth(constraintSize.width());
+	if(reload_
+			|| geom::isUnspecified(this->lastConstraintSize_.width())
+			|| geom::isUnspecified(this->lastConstraintSize_.height())
+			|| !(std::fabs(constraintSize.width()-this->lastConstraintSize_.width()) < geom::VerySmall)
+			|| !(std::fabs(constraintSize.height()-this->lastConstraintSize_.height()) < geom::VerySmall)
+	){
+		this->lastConstraintSize( constraintSize );
 		this->lastSize(
 			doc::Disposer(log(), renderTree_, constraintSize).start(this->rootNode_)
 		);

@@ -27,11 +27,11 @@ namespace doc {
 
 const static std::string TAG("Disposer");
 
-Disposer::Disposer(Logger& log, Handler<RenderTree> renderTree, const float widgetWidth)
+Disposer::Disposer(Logger& log, Handler<RenderTree> renderTree, geom::Box const& constraint)
 :log_(log)
 ,renderTree_(renderTree)
 ,dmanager_(renderTree->drawableManager())
-,widgetWidth_(widgetWidth)
+,widgetSize_(constraint)
 ,textContext_(log, renderTree_)
 ,nowSession_(nullptr)
 ,nowDepth_(0.0f)
@@ -53,7 +53,7 @@ void Disposer::rewriteSession(BlockSession* session)
 geom::Box Disposer::start(std::shared_ptr<Document> doc)
 {
 	this->renderTree_->reset();
-	BlockSession ss(this, widgetWidth_);
+	BlockSession ss(this, widgetSize_);
 	this->NodeWalker::start(doc);
 	doc::PostDisposer(log()).start(doc);
 	return doc->areaInBlock().box();

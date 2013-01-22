@@ -27,7 +27,7 @@ BlockSession::BlockSession(Disposer* disposer, BlockNode* node)
 ,parentSession_(disposer->nowSession() )
 ,node_(node)
 ,dir_(BlockNode::Direction::Unspecified)
-,widthLimit_( parentSession_->calcBlockLimit() - node->margin().totalWidth() )
+,limitSize_( parentSession_->calcBlockLimit() - node->margin().totalWidth(), parentSession_->limitSize_.height() )
 ,consumedHeight_(0.0f)
 ,consumedWidth_(0.0f)
 ,inlineConsumedHeight_(0.0f)
@@ -39,12 +39,12 @@ BlockSession::BlockSession(Disposer* disposer, BlockNode* node)
 	disposer->rewriteSession(this);
 }
 
-BlockSession::BlockSession(Disposer* disposer, const float widthLimit)
+BlockSession::BlockSession(Disposer* disposer, geom::Box const& limitSize)
 :dispoer_(disposer)
 ,parentSession_( nullptr )
 ,node_(nullptr)
 ,dir_(BlockNode::Direction::Unspecified)
-,widthLimit_( widthLimit )
+,limitSize_( limitSize )
 ,consumedHeight_(0.0f)
 ,consumedWidth_(0.0f)
 ,inlineConsumedHeight_(0.0f)
@@ -60,7 +60,7 @@ BlockSession::~BlockSession() noexcept
 	this->newInline();
 	this->newBlockLine();
 	if(this->node_){
-		this->node_->areaInBlock(geom::Area(0,0,this->consumedWidth_, this->consumedHeight_));
+		this->node_->areaInBlock(geom::Area(0,0,this->consumedWidth_, node_->isRoot() ? std::max(this->consumedHeight_, limitSize_.height()) : this->consumedHeight_));
 		if(this->parentSession_){
 			this->parentSession_->extendBlock(this->node_);
 		}
@@ -127,7 +127,7 @@ void BlockSession::extendInline(Handler<RenderObject> obj)
 
 float BlockSession::calcBlockLimit() const
 {
-	return this->widthLimit_ - this->blockPosX_;
+	return this->limitSize_.width() - this->blockPosX_;
 }
 
 void BlockSession::extendBlock(BlockNode* blockNode)
@@ -146,7 +146,7 @@ void BlockSession::extendBlock(BlockNode* blockNode)
 	switch (this->dir_) {
 	case BlockNode::Direction::None:
 		this->newBlockLine();
-		blockNode->areaInBlock(geom::Area(0, this->consumedHeight_, widthLimit_, size.height()));
+		blockNode->areaInBlock(geom::Area(0, this->consumedHeight_, limitSize_.width(), size.height()));
 		this->consumedHeight_ += size.height();
 		break;
 	case BlockNode::Direction::Right:
@@ -163,7 +163,7 @@ void BlockSession::extendBlock(BlockNode* blockNode)
 			this->newBlockLine();
 			this->dir_ = blockNode->direction();
 		}
-		blockNode->areaInBlock(geom::Area(widthLimit_ - this->blockPosX_ - size.width(), this->consumedHeight_, size.width(), size.height()));
+		blockNode->areaInBlock(geom::Area(limitSize_.width() - this->blockPosX_ - size.width(), this->consumedHeight_, size.width(), size.height()));
 		this->blockConsumedHeight_ = std::max(this->blockConsumedHeight_, size.height());
 		this->blockPosX_ += size.width();
 		break;

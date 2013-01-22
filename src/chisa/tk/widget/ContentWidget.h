@@ -36,7 +36,7 @@ class ContentWidget: public chisa::tk::Widget {
 	std::shared_ptr<doc::Document> rootNode_;
 	Handler<doc::RenderTree> renderTree_;
 	bool reload_;
-	DEFINE_MEMBER(private, private, float, lastWidth);
+	DEFINE_MEMBER(private, private, geom::Box, lastConstraintSize);
 	DEFINE_MEMBER(private, private, geom::Box, lastSize);
 private:
 	tinyxml2::XMLElement* root_;
