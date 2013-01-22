@@ -58,7 +58,7 @@ void Patron::onRegisterProvider(Handler< ::donut::Heap> const& heap)
 	heap->registerProvider(this->elementServantProvider_ = Handler<ElementServantProvider>( new ElementServantProvider(heap, world->heaven()) ));
 	//ウィジットのプロバイダを設定
 	world->elementFactory()->registerDonutProvider(heap);
-	//world->widgetFactory()->registerDonutProvider(heap);
+	world->widgetFactory()->registerDonutProvider(heap);
 
 	universe->hexe()->registerGeistProvider(heap);
 
