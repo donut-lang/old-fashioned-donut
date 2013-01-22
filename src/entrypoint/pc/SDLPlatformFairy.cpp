@@ -35,9 +35,14 @@ SDLPlatformFairy::SDLPlatformFairy(Logger& log)
 SDLPlatformFairy::~SDLPlatformFairy() noexcept
 {
 	SDL_LockAudio();
+	this->log().d("SDL", "Pausing audio...");
 	SDL_PauseAudio(1);
+	this->log().d("SDL", "paused.");
 	SDL_UnlockAudio();
+	this->log().d("SDL", "Closing audio...");
 	SDL_CloseAudio();
+	this->log().d("SDL", "Closed.");
+	this->log().d("SDL", "Deleting GL context...");
 	SDL_GL_DeleteContext(gl_);
 	this->log().d("SDL", "Context deleted.");
 	SDL_DestroyWindow(this->window_);

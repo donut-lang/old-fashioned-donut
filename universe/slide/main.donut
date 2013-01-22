@@ -8,7 +8,10 @@ main = func(){
 	doc.loadDocument("3");
 	interrupt null;
 	doc.loadDocument("4");
-	
+	interrupt null;
+	doc.loadDocument("5");
+
+	interrupt null;
 	World.pushElement("nes");
 	running = true;
 	while(running){

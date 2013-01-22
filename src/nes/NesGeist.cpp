@@ -54,7 +54,9 @@ NesGeist::~NesGeist() noexcept
 		log().d(TAG, "Audio fairy detatched.");
 	}
 	this->machine_->debugger().watcher().resumeRunning(); //XXX:再開してから死なないとデッドロックする
+	log().d(TAG, "Sending stop request to emulator...");
 	this->stopNES();
+	log().d(TAG, "Emulator stopped.");
 	delete this->machine_;
 }
 

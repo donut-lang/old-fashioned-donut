@@ -175,13 +175,17 @@ Handler< ::donut::Object> World::donutObject(Handler< ::donut::Heap> const& heap
 void World::pushElement(std::string const& elementId)
 {
 	this->elementStack_.push(realizeElement(elementId));
+	if( this->area().box().isSpecified() ) {
+		reshape(this->area());
+	}
 }
 
 void World::popElement()
 {
 	this->elementStack_.pop();
-	if(Handler<Element> elm = this->elementStack_.top()){
-		this->reshape(this->area());
+	Handler<Element> elm = this->elementStack_.top();
+	if(elm && this->area().box().isSpecified() ) {
+		reshape(this->area());
 	}
 }
 

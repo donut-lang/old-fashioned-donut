@@ -258,7 +258,7 @@ void SplitCombo::layoutImpl(geom::Distance const& offsetFromParent, geom::Box co
 {
 #ifdef DEBUG
 		if(geom::isUnspecified((size.*changed_getter)())) {
-			TARTE_EXCEPTION(Exception, "[BUG] Fixed size is unspecified for SplitCombo.");
+			TARTE_EXCEPTION(Exception, "[BUG] Changed size is unspecified for SplitCombo.");
 		}
 		if(geom::isUnspecified((size.*fixed_getter)())) {
 			TARTE_EXCEPTION(Exception, "[BUG] Fixed size is unspecified for SplitCombo.");

@@ -198,8 +198,8 @@ void WidgetElement::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElem
 		return;
 	}
 	if(Handler<World> world = this->world().lock()){
-		Handler<WidgetElement> parent = world->findWidgetById(widgetId);
-		if(widgetId && parent){
+		Handler<WidgetElement> parent;;
+		if(widgetId && (parent = world->findWidgetById(widgetId))){
 			this->borrowed_ = parent;
 			world->replaceWidget(widgetId, this);
 			this->widget_ = parent->widget();

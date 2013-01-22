@@ -18,7 +18,7 @@
 
 #pragma once
 #include <unordered_set>
-#include <vector>
+#include <list>
 #include <functional>
 #include <tarte/Logger.h>
 #include <tarte/TypeTrans.h>
@@ -45,7 +45,7 @@ class TaskHandler {
 private:
 	Logger& log;
 private:
-	std::vector<std::function<bool(float)> > lambas_;
+	std::list<std::function<bool(float)> > lambas_;
 public:
 	TaskHandler(Logger& log);
 	virtual ~TaskHandler() = default;
