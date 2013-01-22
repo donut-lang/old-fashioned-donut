@@ -158,6 +158,15 @@ geom::Box Element::measure(geom::Box const& constraint)
 	return this->measureImpl(constraint-total)+total;
 }
 
+void Element::onShown()
+{
+	this->onShownImpl();
+}
+void Element::onHidden()
+{
+	this->onHiddenImpl();
+}
+
 void Element::render(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
 	if( this->relayoutRequested_ ){

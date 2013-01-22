@@ -123,6 +123,8 @@ public:
 	inline bool enabled() noexcept { return this->enabledImpl(); };
 	inline void enabled( bool const& newState ) noexcept { this->enabledImpl(newState); };
 public: /* レンダリング(非virtual) */
+	virtual void onShown();
+	virtual void onHidden();
 	void render(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask);
 	geom::Box measure(geom::Box const& constraint);
 	void layout(geom::Distance const& offsetFromParent, geom::Box const& size);
@@ -146,6 +148,8 @@ public:
 	virtual void onFocusGained(float const& timeMs, geom::Point const& lastPtInScreen) override;
 	virtual void onFocusLost(float const& timeMs) override;
 protected:  /* 子供が必ず実装するメソッド */
+	virtual void onShownImpl(){};
+	virtual void onHiddenImpl(){};
 	virtual void renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask) = 0;
 	virtual geom::Box measureImpl(geom::Box const& constraint) = 0;
 	virtual void layoutImpl(geom::Distance const& offsetFromParent, geom::Box const& size) = 0;

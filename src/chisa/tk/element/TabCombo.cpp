@@ -62,6 +62,21 @@ TabCombo::~TabCombo() noexcept
 
 }
 
+void TabCombo::onShown()
+{
+	this->top_->onShown();
+	this->frame_->onShown();
+	this->buttons_->onShown();
+	Element::onShown();
+}
+void TabCombo::onHidden()
+{
+	this->top_->onHidden();
+	this->frame_->onHidden();
+	this->buttons_->onHidden();
+	Element::onHidden();
+}
+
 std::size_t TabCombo::getChildCount() const noexcept
 {
 	return this->frame_->getChildCount();

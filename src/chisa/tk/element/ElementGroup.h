@@ -39,6 +39,8 @@ public: /* ツリー操作 */
 	virtual std::size_t bringChildToLast(Handler<Element> const& e) = 0;
 	virtual std::size_t bringChildToFront(Handler<Element> const& e) = 0;
 public: /* ツリー操作 */
+	virtual void onShown() override = 0;
+	virtual void onHidden() override = 0;
 	virtual Handler<Element> findElementById(std::string const& id) override = 0;
 	virtual Handler<Element> findElementByPoint(geom::Vector const& screenPoint) override = 0;
 	virtual void notifyRelayoutFinished() = 0;
@@ -65,6 +67,18 @@ protected:
 	inline std::vector<ContainerType>& children() noexcept { return this->children_; };
 	inline std::vector<ContainerType> const& children() const noexcept { return this->children_; };
 public: /* ツリー操作 */
+	virtual void onShown() override final{
+		for(auto p : this->children_){
+			p.first->onShown();
+		}
+		Element::onShown();
+	}
+	virtual void onHidden() override final{
+		for(auto p : this->children_){
+			p.first->onHidden();
+		}
+		Element::onHidden();
+	}
 	virtual std::size_t getChildCount() const noexcept override final{
 		return this->children_.size();
 	}

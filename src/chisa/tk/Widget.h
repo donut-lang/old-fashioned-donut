@@ -66,6 +66,8 @@ public:
 public:
 	void updateWrapper(HandlerW<WidgetElement> wrapper) { this->wrapper_ = wrapper; };
 public:
+	void onShown();
+	void onHidden();
 	void render(gl::Canvas& cv, geom::Area const& area);
 	void idle(const float delta_ms);
 	void reshape(geom::Box const& areaSize);
@@ -76,6 +78,8 @@ public:
 	geom::Area findTargetInElement(std::string const& target);
 	void showPoint(geom::Point const& pt);
 protected:
+	virtual void onShownImpl(){};
+	virtual void onHiddenImpl(){};
 	virtual void renderImpl(gl::Canvas& cv, geom::Area const& area) = 0;
 	virtual void idleImpl(const float delta_ms) = 0;
 	virtual void reshapeImpl(geom::Box const& areaSize) = 0;

@@ -298,6 +298,16 @@ void chisa::tk::WidgetElement::onFocusLost(const float& timeMs)
 	widget_->onFocusLost(timeMs);
 }
 
+void chisa::tk::WidgetElement::onShownImpl()
+{
+	widget_->onShown();
+}
+
+void chisa::tk::WidgetElement::onHiddenImpl()
+{
+	widget_->onHidden();
+}
+
 bool WidgetElement::onKeyUp(const float& timeMs, const SDL_Keysym& sym)
 {
 	return widget_->onKeyUp(timeMs, sym);

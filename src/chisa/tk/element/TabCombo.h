@@ -44,6 +44,8 @@ private:
 	ButtonPosition buttonPosition_;
 	VectorMap<Handler<Element>, Handler<TabButton> > buttonMap_;
 public: /* ツリー操作 */
+	virtual void onShown() override final;
+	virtual void onHidden() override final;
 	virtual std::size_t getChildCount() const noexcept override final;
 	virtual Handler<Element> getChildAt( std::size_t const& idx ) const noexcept override final;
 	virtual void addChild(Handler<Element> const& h) override final;

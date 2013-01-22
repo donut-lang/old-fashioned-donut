@@ -31,6 +31,15 @@ Widget::Widget(Logger& log, HandlerW<World> world, tinyxml2::XMLElement* element
 {
 }
 
+void Widget::onShown()
+{
+	this->onShownImpl();
+}
+
+void Widget::onHidden()
+{
+	this->onHiddenImpl();
+}
 void Widget::render(gl::Canvas& cv, geom::Area const& area)
 {
 	this->renderImpl(cv, area);
