@@ -54,6 +54,7 @@ public:
 	virtual bool onUpRaw(float const& timeMs, geom::Point const& ptInWidget) override;
 	virtual bool onSingleTapUp(float const& timeMs, geom::Point const& ptInWidget) override;
 	virtual bool onZoom(float const& timeMs, geom::Point const& center, const float ratio) override;
+	virtual chisa::geom::Area findTargetImpl(std::string const& target);
 };
 
 }}

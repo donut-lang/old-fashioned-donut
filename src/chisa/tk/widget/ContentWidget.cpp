@@ -20,6 +20,7 @@
 #include "../../geom/Area.h"
 #include "../../geom/Vector.h"
 #include "../../doc/node/NodeReader.h"
+#include "../../doc/node/Node.h"
 #include "../../doc/dispose/Disposer.h"
 #include "../Widget.h"
 #include "ContentWidget.h"
@@ -32,8 +33,8 @@ static std::string const TAG("ContentWidget");
 
 CHISA_WIDGET_SUBKLASS_CONSTRUCTOR_DEF(ContentWidget)
 ,renderTree_(new doc::RenderTree(this->log(), world.lock()->drawableManager()))
-,lastConstraintSize_()
 ,reload_(false)
+,lastConstraintSize_()
 ,root_(element)
 {
 	this->loadDocument("main",true);
@@ -114,6 +115,19 @@ bool ContentWidget::onSingleTapUp(float const& timeMs, geom::Point const& ptInWi
 bool ContentWidget::onZoom(float const& timeMs, geom::Point const& center, const float ratio)
 {
 	return true;
+}
+
+chisa::geom::Area ContentWidget::findTargetImpl(const std::string& target)
+{
+	doc::TreeNode* node = this->rootNode_->findTreeNodeById(target);
+	if( unlikely(!node) ){
+		return chisa::geom::Area();
+	}
+	doc::Text* text = node->findFirstTextNode();
+	if( unlikely(!text || text->objectCount() <= 0) ){
+		return chisa::geom::Area();
+	}
+	return text->objectAt(0)->area();
 }
 
 }}
