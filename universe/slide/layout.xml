@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <world geist="nes">
 	<script src="nes.donut" />
-	<script src="main.donut" />
+	<script src="main.donut" machine="demo" />
 	<vertical id="main" split-weight="1">
 		<frame split-weight="1">
-			<label background-color="#0000" transparent="true"><xstring>msg</xstring></label>
+			<label background-color="#0000" transparent="true" machine="demo"><xstring>msg</xstring></label>
 			<widget widget-klass="content" widget-id="slide">
 				<doc id="main" background="stretch:image:universe/slide/back.png">
 					<font size="112">

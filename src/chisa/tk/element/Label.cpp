@@ -30,7 +30,7 @@ namespace tk {
 
 const std::string Label::AttrName::Text("text");
 const std::string Label::AttrName::FontSize("font-size");
-const std::string Label::AttrName::DonutMachineName("donut");
+const std::string Label::AttrName::DonutMachineName("machine");
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(Label, Element)
 ,text_()

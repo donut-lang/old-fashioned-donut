@@ -110,13 +110,13 @@ void World::init()
 		std::string const vm_name ( vm_name_ ? vm_name_ : "" );
 		if( char const* src = e->Attribute("src") ) {
 			if( this->log().d() ) {
-				this->log().d( TAG, "Running donut from: \"%s\"",src );
+				this->log().d( TAG, "Running donut from: \"%s\" on \"%s\"",src, vm_name.c_str());
 			}
 			Handler<Machine> m = donut_->queryMachine(vm_name);
 			m->start(donut_->parse(::tarte::file::readAsString(universe->resolveWorldFilepath(name_, src)), src, 1));
 		}else if(char const* src = e->GetText()){
 			if( this->log().d() ) {
-				this->log().d( TAG, "Running embedded donut: \n\"%s\"",src );
+				this->log().d( TAG, "Running embedded donut-lang on \"%s\": \n\"%s\"",vm_name.c_str(),src );
 			}
 			Handler<Machine> m = donut_->queryMachine(vm_name);
 			m->start(donut_->parse(src, "ScriptElement", 1));

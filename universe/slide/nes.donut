@@ -96,7 +96,7 @@ MemoryAngel.handle = func(msg){
 	return false;
 };
 
-Global.handleNES = func(msg){
+handleNES = func(msg){
 	if(Nes.handle(msg)){
 		return true;
 	}else if(MemoryAngel.handle(msg)){
@@ -104,5 +104,13 @@ Global.handleNES = func(msg){
 	}else{
 		return false;
 	};
+};
+
+running = true;
+while(running){
+	msg = interrupt null;
+	if( handleNES(msg) ){
+	}else{
+	}
 };
 

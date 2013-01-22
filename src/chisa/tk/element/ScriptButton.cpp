@@ -28,7 +28,7 @@ namespace chisa {
 namespace tk {
 
 static std::string const TAG("ScriptButton");
-const std::string ScriptButton::AttrName::DonutMachineName("donut");
+const std::string ScriptButton::AttrName::DonutMachineName("machine");
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(ScriptButton, ClickButton)
 ,machineName_()

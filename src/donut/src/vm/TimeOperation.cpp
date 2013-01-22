@@ -58,8 +58,8 @@ void Machine::onForwardNotify()
 void Machine::onDiscardFutureNotify()
 {
 	timestamp_t const time = clock_->now();
-	int idx = 0;
-	for(int i=this->contextRevs_.size()-1; i>=0;--i){
+	int idx = 1;
+	for(int i=this->contextRevs_.size()-1; i>=1;--i){
 		Context& c = this->contextRevs_[i];
 		if(time >= c.time_){
 			idx = i+1;
@@ -76,9 +76,9 @@ void Machine::onDiscardFutureNotify()
 void Machine::onDiscardHistoryNotify()
 {
 	timestamp_t const time = clock_->now();
-	int idx = this->contextRevs_.size();
+	int idx = this->contextRevs_.size()-1;
 	const int max = this->contextRevs_.size();
-	for(int i=0; i<max;++i){
+	for(int i=0; i<max-1;++i){
 		Context& c = this->contextRevs_[i];
 		if( c.time_ >= time ){
 			idx = i;

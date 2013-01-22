@@ -58,7 +58,8 @@ main = func(){
 	while(running){
 		msg = interrupt null;
 		if( handleNES(msg) ){
-		}else{};
+		}else{
+		}
 	};
 };
 
