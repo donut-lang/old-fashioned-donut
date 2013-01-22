@@ -27,10 +27,13 @@ class ElementServant : public Servant {
 private:
 	Handler<Element> element_;
 	float anim_;
+	bool animEnabled_;
 public:
 	inline Handler<Element> const& element() const { return this->element_; };
 public:
 	Handler<ElementServant> self() noexcept;
+	inline bool const& animEnabled() const noexcept { return this->animEnabled_; };
+	inline void animEnabled(bool const& enabled) noexcept { this->animEnabled_ = enabled; };
 public:
 	ElementServant(Handler<AngelTarget> const& angelTarget, Handler<Element> const& elem);
 	virtual ~ElementServant() noexcept = default;

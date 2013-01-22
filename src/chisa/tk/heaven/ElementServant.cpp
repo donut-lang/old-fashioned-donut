@@ -29,6 +29,7 @@ ElementServant::ElementServant(Handler<AngelTarget> const& angelTarget, Handler<
 :Servant(angelTarget)
 ,element_(elem)
 ,anim_(0)
+,animEnabled_(true)
 {
 
 }
@@ -77,8 +78,8 @@ void ElementServant::renderImpl(gl::Canvas& canvas)
 		offsetY = 0;
 	}
 
-	float const cycleY = std::sin( anim_/1000.0f ) * box.height() * 0.1f;
-	float const cycleX = std::sin( anim_/1740.0f ) * box.width() * 0.1f;
+	float const cycleY = animEnabled_ ? std::sin( anim_/1000.0f ) * box.height() * 0.1f : 0;
+	float const cycleX = animEnabled_ ? std::sin( anim_/1740.0f ) * box.width() * 0.1f : 0;
 
 	geom::Point pt(offsetX+cycleX, offsetY+cycleY);
 	geom::Box leftSize( renderArea().width()-offsetX, renderArea().height()-offsetY );

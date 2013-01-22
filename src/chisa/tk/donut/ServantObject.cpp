@@ -135,6 +135,22 @@ ElementServantProvider::ElementServantProvider(const Handler<Heap>& heap, const 
 	this->registerPureNativeClosure("element", [this](ElementServantObject* servant){
 		return servant->servant()->element()->donutObject();
 	});
+	this->registerReactiveNativeClosure("enableAnimation", [this](ElementServantObject* servant_){
+		auto servant = servant_->servant();
+		bool enabled = servant->animEnabled();
+		servant->animEnabled(true);
+		AntiSideEffect anti;
+		anti.op = enabled ? AntiSideEffect::None : AntiSideEffect::DisableAnimation;
+		return std::tuple<bool,bool,AntiSideEffect>(enabled, true, anti);
+	});
+	this->registerReactiveNativeClosure("disableAnimation", [this](ElementServantObject* servant_){
+		auto servant = servant_->servant();
+		bool enabled = servant->animEnabled();
+		servant->animEnabled(false);
+		AntiSideEffect anti;
+		anti.op = !enabled ? AntiSideEffect::None : AntiSideEffect::EnableAnimation;
+		return std::tuple<bool,bool,AntiSideEffect>(enabled, true, anti);
+	});
 }
 
 //---------------------------------------------------------
@@ -159,14 +175,42 @@ void ElementServantObject::onHistoryDiscarded(const Handler<Heap>& heap)
 	Super::onHistoryDiscarded(heap);
 }
 
+ElementServantObject::ResultType ElementServantObject::execAntiSideEffect(const Handler<Heap>& heap, const AntiSideEffect& val)
+{
+	AntiSideEffect anti;
+	auto servant = this->servant();
+	switch(val.op){
+	case AntiSideEffect::EnableAnimation:
+		anti.op = servant->animEnabled() ? AntiSideEffect::None : AntiSideEffect::DisableAnimation;
+		servant->animEnabled(true);
+		break;
+	case AntiSideEffect::DisableAnimation:
+		anti.op = !servant->animEnabled() ? AntiSideEffect::None : AntiSideEffect::EnableAnimation;
+		servant->animEnabled(false);
+		break;
+	case AntiSideEffect::None:
+		TARTE_EXCEPTION(Exception, "[BUG] None operation is not handled.")
+	}
+	return ResultType(true, anti);
+}
 ElementServantObject::ResultType ElementServantObject::onBack(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
-	return Super::onBack(heap, val);
+	switch(val.op){
+	case AntiSideEffect::None:
+		return Super::onBack(heap, val);
+	default:
+		return execAntiSideEffect(heap, val);
+	}
 }
 
 ElementServantObject::ResultType ElementServantObject::onForward(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
-	return Super::onForward(heap, val);
+	switch(val.op){
+	case AntiSideEffect::None:
+		return Super::onForward(heap, val);
+	default:
+		return execAntiSideEffect(heap, val);
+	}
 }
 
 XValue ElementServantObject::saveImpl(const Handler<Heap>& heap)

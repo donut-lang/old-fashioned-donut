@@ -116,6 +116,11 @@ public:
  * ElementServant
  **********************************************************************************************************************/
 struct ElementServantSideEffect : public ServantSideEffect{
+	enum {
+		None,
+		DisableAnimation,
+		EnableAnimation,
+	} op;
 	template <typename Arc>
 	void serialize(Arc& arc) {
 
@@ -129,6 +134,8 @@ public:
 	virtual ~ElementServantObject() noexcept = default;
 public:
 	void bootstrap(Handler<Heap> const& heap, Handler<ElementServant> const& servant);
+private:
+	ResultType execAntiSideEffect(Handler<Heap> const& heap, AntiSideEffect const& val);
 public:
 	void onFutureDiscarded(Handler<Heap> const& heap);
 	void onHistoryDiscarded(Handler<Heap> const& heap);

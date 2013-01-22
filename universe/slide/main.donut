@@ -47,6 +47,7 @@ showBiggerScreen = func(){
 	target = ang.newElementTarget("nes-screen");
 	halo = target.newHaloServant("red");
 	elm = target.newElementServant("nes-screen-bigger");
+	elm.disableAnimation();
 	
 	target.attatchServant(halo);
 	target.attatchServant(elm);
