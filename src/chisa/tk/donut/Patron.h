@@ -43,6 +43,7 @@ private:
 	Handler<LoneAngelProvider> loneAngelProvider_;
 	Handler<ElementServantProvider> elementServantProvider_;
 	Handler<HaloServantProvider> haloServantProvider_;
+	//Handler<ContentUnderlineServantProvider> contentUnderlineServantProvider_;
 public:
 	Patron(Handler<Universe> const& universe, Handler<World> const& world);
 	virtual ~Patron() noexcept = default;

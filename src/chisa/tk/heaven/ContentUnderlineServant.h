@@ -19,30 +19,28 @@
 #pragma once
 
 #include "../Angel.h"
+#include "../../gl/Color.h"
 
 namespace chisa {
 namespace tk {
 
-class AngelElementTarget : public AngelTarget {
-public:
-	AngelElementTarget(Handler<Angel> const& angel, std::string const& id);
-	virtual ~AngelElementTarget() noexcept = default;
+class ContentUnderlineServant : public Servant {
 private:
-	std::string const id_;
-	HandlerW<Element> target_;
+	gl::Color color_;
+	std::string docId_;
 public:
-	Handler<AngelElementTarget> self() noexcept;
-	Handler<Element> findElement();
+	inline gl::Color const& color() const { return this->color_; };
+public:
+	ContentUnderlineServant(Handler<AngelTarget> const& angelTarget, gl::Color const& color, std::string const& docId);
+	virtual ~ContentUnderlineServant() noexcept = default;
+public:
+	Handler<ContentUnderlineServant> self() noexcept;
 private:
-	virtual geom::Area findScreenAreaImpl();
-	virtual Handler<AngelElementTarget> matchToElementTarget(std::string const& elementId) noexcept override final;
 	virtual Handler< ::donut::Object> createDonutObject(Handler< ::donut::Heap> const& heap) override final;
 private:
-	virtual void onAttatchedImpl() override final;
 	virtual void renderImpl(gl::Canvas& canvas) override final;
 	virtual void idleImpl(const float delta_ms) override final;
 	virtual geom::Box reshapeImpl(geom::Area const& area) override final;
-	virtual Handler<AngelElementTarget> toElementTarget();
 };
 
 }}

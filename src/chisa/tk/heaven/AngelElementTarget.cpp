@@ -29,13 +29,17 @@ AngelElementTarget::AngelElementTarget(const Handler<Angel>& angel, const std::s
 {
 }
 
-geom::Area AngelElementTarget::findScreenAreaImpl()
+Handler<Element> AngelElementTarget::findElement()
 {
 	Handler<World> const world = this->world();
 	if( unlikely(!world) ) {
-		return geom::Area();
+		return Handler<Element>();
 	}
-	Handler<Element> const element = world->findElementById(id_);
+	return world->findElementById(id_);
+}
+geom::Area AngelElementTarget::findScreenAreaImpl()
+{
+	Handler<Element> const element = findElement();
 	if( unlikely(!element) ) {
 		return geom::Area();
 	}
@@ -83,6 +87,13 @@ void AngelElementTarget::onAttatchedImpl()
 geom::Box AngelElementTarget::reshapeImpl(const geom::Area& area)
 {
 	return geom::ZERO;
+}
+
+
+
+Handler<AngelElementTarget> AngelElementTarget::toElementTarget()
+{
+	return self();
 }
 
 }}

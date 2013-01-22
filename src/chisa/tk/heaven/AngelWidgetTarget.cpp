@@ -33,18 +33,27 @@ AngelWidgetTarget::AngelWidgetTarget(const Handler<Angel>& angel, const std::str
 ,guide_(guide)
 {
 }
-
-geom::Area AngelWidgetTarget::findScreenAreaImpl()
+Handler<WidgetElement> AngelWidgetTarget::findElement()
 {
 	Handler<World> const world = this->world();
 	if( unlikely(!world) ) {
-		return geom::Area();
+		return Handler<WidgetElement>();
 	}
-	Handler<WidgetElement> const element = world->findWidgetById(id_);
+	return world->findWidgetById(id_);
+}
+
+Handler<Widget> AngelWidgetTarget::findWidget()
+{
+	Handler<WidgetElement> const element = findElement();
 	if( unlikely(!element) ) {
-		return geom::Area();
+		return Handler<Widget>();
 	}
-	Handler<Widget> const& widget = element->widget();
+	return element->widget();
+}
+
+geom::Area AngelWidgetTarget::findScreenAreaImpl()
+{
+	Handler<Widget> const& widget = findWidget();
 	if( unlikely(!widget) ) {
 		return geom::Area();
 	}
@@ -96,6 +105,11 @@ void AngelWidgetTarget::onAttatchedImpl()
 geom::Box AngelWidgetTarget::reshapeImpl(const geom::Area& area)
 {
 	return geom::ZERO;
+}
+
+Handler<AngelWidgetTarget> AngelWidgetTarget::toWidgetTarget()
+{
+	return self();
 }
 
 }}

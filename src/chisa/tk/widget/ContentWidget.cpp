@@ -117,6 +117,11 @@ bool ContentWidget::onZoom(float const& timeMs, geom::Point const& center, const
 	return true;
 }
 
+doc::TreeNode* ContentWidget::findTreeNodeById(const std::string& id)
+{
+	return this->rootNode_->findTreeNodeById(id);
+}
+
 chisa::geom::Area ContentWidget::findTargetImpl(const std::string& target)
 {
 	doc::TreeNode* node = this->rootNode_->findTreeNodeById(target);

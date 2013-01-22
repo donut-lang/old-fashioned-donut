@@ -142,6 +142,9 @@ protected:
 protected:
 	virtual Handler< ::donut::Object> createDonutObject(Handler< ::donut::Heap> const& heap) = 0;
 	virtual geom::Area findScreenAreaImpl() = 0;
+public:
+	virtual Handler<AngelWidgetTarget> toWidgetTarget();
+	virtual Handler<AngelElementTarget> toElementTarget();
 };
 
 class Angel : public HandlerBody<Angel> {

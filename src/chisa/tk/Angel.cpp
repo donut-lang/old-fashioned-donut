@@ -357,7 +357,15 @@ Handler<Element> Servant::findElementByPoint(const geom::Point& screenVector)
 	return Handler<Element>();
 }
 
+Handler<AngelWidgetTarget> AngelTarget::toWidgetTarget()
+{
+	return Handler<AngelWidgetTarget>();
+}
 
+Handler<AngelElementTarget> AngelTarget::toElementTarget()
+{
+	return Handler<AngelElementTarget>();
+}
 
 }}
 
