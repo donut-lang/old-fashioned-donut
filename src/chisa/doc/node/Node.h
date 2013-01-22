@@ -62,6 +62,8 @@ public: //オブジェクトの生成
 	}
 	static std::shared_ptr<Document> createRootDocument();
 	virtual ~Node() noexcept = default;
+public:
+	inline bool isRoot() const noexcept { return parent_ == nullptr; };
 };
 
 #define NODE_SUBKLASS_DESTRUCTOR(Klass) public: virtual ~Klass() noexcept = default;

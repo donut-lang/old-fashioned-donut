@@ -33,8 +33,9 @@ namespace tk {
 
 class ContentWidget: public chisa::tk::Widget {
 	CHISA_WIDGET_SUBKLASS(ContentWidget);
-	DEFINE_MEMBER(private, private, std::shared_ptr<doc::Document>, rootNode);
+	std::shared_ptr<doc::Document> rootNode_;
 	Handler<doc::RenderTree> renderTree_;
+	bool reload_;
 	DEFINE_MEMBER(private, private, float, lastWidth);
 	DEFINE_MEMBER(private, private, geom::Box, lastSize);
 private:
@@ -43,7 +44,7 @@ private:
 public:
 	inline std::string documentId() const noexcept { return this->documentId_; };
 public:
-	void loadDocument(std::string const& id);
+	void loadDocument(std::string const& id, bool onInit=false);
 	virtual void renderImpl(gl::Canvas& cv, geom::Area const& area) override;
 	virtual void idleImpl(const float delta_ms) override;
 	virtual void reshapeImpl(geom::Box const& areaSize) override;

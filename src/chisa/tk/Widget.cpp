@@ -42,11 +42,17 @@ void Widget::idle(const float delta_ms)
 }
 void Widget::reshape(geom::Box const& areaSize)
 {
+	if(this->log().t()){
+		this->log().t(TAG, "Reshape \"%s\" area: %s", this->toString().c_str(), areaSize.toString().c_str());
+	}
 	this->reshapeImpl(areaSize);
 	this->size_ = areaSize;
 }
 geom::Box Widget::measure(geom::Box const& constraintSize)
 {
+	if(this->log().t()){
+		this->log().t(TAG, "Measureing \"%s\" constraint: %s", this->toString().c_str(), constraintSize.toString().c_str());
+	}
 	return this->measureImpl(constraintSize);
 }
 

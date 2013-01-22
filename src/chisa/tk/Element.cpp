@@ -25,6 +25,8 @@
 namespace chisa {
 namespace tk {
 
+std::string static const TAG("Element");
+
 const std::string Element::AttrName::ForegroundColor("foreground-color");
 const std::string Element::AttrName::BackgroundColor("background-color");
 const std::string Element::AttrName::DisabledForegroundColor("disabled-foreground-color");
@@ -149,6 +151,9 @@ std::string Element::toString() const
 
 geom::Box Element::measure(geom::Box const& constraint)
 {
+	if(this->log().t()){
+		this->log().t(TAG, "onMeasure \"%s\" constraint: %s", this->toString().c_str(), constraint.toString().c_str());
+	}
 	geom::Distance total(this->margin_.totalSpace()+this->padding_.totalSpace());
 	return this->measureImpl(constraint-total)+total;
 }
@@ -194,6 +199,9 @@ void Element::render(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area
 
 void Element::layout(geom::Distance const& offsetFromParent, geom::Box const& size)
 {
+	if(this->log().t()){
+		this->log().t(TAG, "onLayoyut \"%s\" size: %s", this->toString().c_str(), size.toString().c_str());
+	}
 	this->offsetFromParent_ = offsetFromParent;
 	this->innerSize_ = size-(this->margin_.totalSpace()+this->padding_.totalSpace());
 	this->innerOffsetFromParent_ = offsetFromParent+this->margin_.offset()+this->padding_.offset();

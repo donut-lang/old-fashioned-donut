@@ -32,21 +32,29 @@ static std::string const TAG("ContentWidget");
 
 CHISA_WIDGET_SUBKLASS_CONSTRUCTOR_DEF(ContentWidget)
 ,lastWidth_(NAN)
+,renderTree_(new doc::RenderTree(this->log(), world.lock()->drawableManager()))
+,reload_(false)
 ,root_(element)
 {
-	this->loadDocument("main");
+	this->loadDocument("main",true);
 }
 
-void ContentWidget::loadDocument(std::string const& id)
+void ContentWidget::loadDocument(std::string const& id, bool onInit)
 {
 	for(tinyxml2::XMLElement* elm = root_->FirstChildElement("doc"); elm; elm = elm->NextSiblingElement("doc")){
 		if(id == elm->Attribute("id")) {
 			this->documentId_ = id;
-			this->rootNode(doc::NodeReader().parseTree(elm));
+			this->rootNode_ = doc::NodeReader().parseTree(elm);
 			if(this->log().t()){
 				this->log().t(TAG, "Document id \"%s\" Parsed.", id.c_str());
 			}
-			this->renderTree_ = Handler<doc::RenderTree>(new doc::RenderTree(this->log(), world().lock()->drawableManager()));
+			if(!onInit){
+				this->reload_ = true;
+				this->requestRelayout();
+				if(this->log().t()){
+					this->log().t(TAG, "Render tree for \"%s\" constructed.", id.c_str());
+				}
+			}
 			return;
 		} else {
 			if(this->log().t()){
@@ -73,11 +81,12 @@ void ContentWidget::reshapeImpl(geom::Box const& areaSize)
 
 geom::Box ContentWidget::measureImpl(geom::Box const& constraintSize)
 {
-	if(geom::isUnspecified(this->lastWidth()) || std::fabs(constraintSize.width()-this->lastWidth()) >= geom::VerySmall){
+	if(reload_ || geom::isUnspecified(this->lastWidth()) || std::fabs(constraintSize.width()-this->lastWidth()) >= geom::VerySmall){
 		this->lastWidth(constraintSize.width());
 		this->lastSize(
-			doc::Disposer(log(), renderTree_, constraintSize.width()).start(this->rootNode_)
+			doc::Disposer(log(), renderTree_, constraintSize).start(this->rootNode_)
 		);
+		reload_ = false;
 	}
 	return geom::Box(geom::max(constraintSize.width(), this->lastSize().width()), geom::max(constraintSize.height(), this->lastSize().height()));
 }
