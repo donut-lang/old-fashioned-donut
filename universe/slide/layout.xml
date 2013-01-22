@@ -74,10 +74,11 @@
 	<label font-size="128" text="？？？？" id="hatena" background-color="#ffffffa0" />
 	<label font-size="96" text="命令語" id="its_a_tracer" background-color="#ffffffa0" />
 	<label font-size="96" text="メモリー全体" id="its_a_viewer" background-color="#ffffffa0" />
+	<widget widget-klass="nes-screen" fit="expand" id="nes-screen-bigger" width="512" height="480" />
 	<vertical id="nes">
 		<horizontal split-weight="1">
 			<vertical>
-				<widget widget-klass="nes-screen" fit="fit" id="nes">
+				<widget widget-klass="nes-screen" fit="fit" id="nes-screen">
 					<xobject>
 						<xstring name="rom">__roms__/alter_ego/Alter_Ego.nes</xstring>
 					</xobject>

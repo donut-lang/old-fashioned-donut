@@ -190,8 +190,10 @@ public:
 		return dx*dx + dy*dy;
 	}
 public:
-	inline constexpr Val x() const noexcept{return x_;};
-	inline constexpr Val y() const noexcept{return y_;};
+	inline constexpr Val const& x() const noexcept{return x_;};
+	inline constexpr Val const& y() const noexcept{return y_;};
+	inline Val& x() noexcept{return x_;};
+	inline Val& y() noexcept{return y_;};
 	inline void x(const Val x) noexcept { x_=x; };
 	inline void y(const Val y) noexcept { y_=y; };
 	inline constexpr Self flip() const noexcept { return Self(y_, x_); };
@@ -296,8 +298,10 @@ public:
 				std::fabs(this->x() - other.x()) < precision &&
 				std::fabs(this->y() - other.y()) < precision;
 	}
-	inline constexpr ValType width() const noexcept{ return this->x(); };
-	inline constexpr ValType height() const noexcept{ return this->y(); };
+	inline constexpr ValType const& width() const noexcept{ return this->x(); };
+	inline constexpr ValType const& height() const noexcept{ return this->y(); };
+	inline ValType& width() noexcept{ return this->x(); };
+	inline ValType& height() noexcept{ return this->y(); };
 	inline void width(const ValType width) noexcept { this->x(width); };
 	inline void height(const ValType height) noexcept { this->y(height); };
 	inline constexpr bool empty() const noexcept {

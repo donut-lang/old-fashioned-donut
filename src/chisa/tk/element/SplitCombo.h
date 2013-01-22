@@ -70,11 +70,11 @@ private:
 		return changedSize;
 	}
 private: //どちらの方向に伸びるかで、アクセサを使い分ける
-	float (geom::Box::*changed_getter)() const;
+	float const& (geom::Box::*changed_getter)() const;
 	void (geom::Box::*changed_setter)(float);
-	float (geom::Box::*fixed_getter)() const;
+	float const& (geom::Box::*fixed_getter)() const;
 	void (geom::Box::*fixed_setter)(float);
-	float (geom::Point::*point_getter)(void) const;
+	float const& (geom::Point::*point_getter)(void) const;
 	void (geom::Point::*point_setter)(float);
 private:
 	void resetChildren();

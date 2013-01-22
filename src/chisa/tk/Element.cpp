@@ -59,6 +59,8 @@ Element::Element(Logger& log, HandlerW<World> world, HandlerW<Element> parent)
 ,onFocused_(false)
 ,enabled_(true)
 {
+	this->addAttribute(AttrName::Width, this->definedSize_.width());
+	this->addAttribute(AttrName::Height, this->definedSize_.height());
 	this->addAttribute(AttrName::Margin, this->margin_);
 	this->addAttribute(AttrName::Padding, this->padding_);
 	this->addAttribute(AttrName::EdgeWidth, this->edgeWidth_);
@@ -155,7 +157,8 @@ geom::Box Element::measure(geom::Box const& constraint)
 		this->log().t(TAG, "onMeasure \"%s\" constraint: %s", this->toString().c_str(), constraint.toString().c_str());
 	}
 	geom::Distance total(this->margin_.totalSpace()+this->padding_.totalSpace());
-	return this->measureImpl(constraint-total)+total;
+	geom::Box calcSize(this->measureImpl(constraint-total)+total);
+	return this->definedSize_.isSpecified() ? definedSize_ : calcSize;
 }
 
 void Element::onShown()

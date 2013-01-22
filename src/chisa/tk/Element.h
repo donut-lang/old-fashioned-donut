@@ -71,6 +71,7 @@ private: /* 所属 */
 private: /* ツリー */
 	DEFINE_MEMBER(public, private, HandlerW<Element>, parent); //親
 	DEFINE_MEMBER(public, private, std::string, id); //要素に付けられたID
+	geom::Box definedSize_;
 	geom::Space margin_;
 	geom::Space padding_;
 	gl::Color edgeColor_;

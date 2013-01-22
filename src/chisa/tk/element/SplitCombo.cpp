@@ -45,11 +45,11 @@ CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(SplitCombo, Super)
 void SplitCombo::setMode(enum SplitMode mode)
 {
 	this->splitMode(mode);
-	changed_getter = mode == Vertical ? (float(geom::Box::*)(void) const)&geom::Box::height : (float(geom::Box::*)(void) const)&geom::Box::width;
+	changed_getter = mode == Vertical ? (float const&(geom::Box::*)(void) const)&geom::Box::height : (float const&(geom::Box::*)(void) const)&geom::Box::width;
 	changed_setter = mode == Vertical ? (void(geom::Box::*)(float))&geom::Box::height : (void(geom::Box::*)(float))&geom::Box::width;
-	fixed_getter = mode == Vertical ? (float(geom::Box::*)(void) const)&geom::Box::width : (float(geom::Box::*)(void) const)&geom::Box::height;
+	fixed_getter = mode == Vertical ? (float const&(geom::Box::*)(void) const)&geom::Box::width : (float const&(geom::Box::*)(void) const)&geom::Box::height;
 	fixed_setter = mode == Vertical ? (void(geom::Box::*)(float))&geom::Box::width : (void(geom::Box::*)(float))&geom::Box::height;
-	point_getter = mode == Vertical ? (float(geom::Point::*)(void) const)&geom::Point::y : (float(geom::Point::*)(void) const)&geom::Point::x;
+	point_getter = mode == Vertical ? (float const&(geom::Point::*)(void) const)&geom::Point::y : (float const&(geom::Point::*)(void) const)&geom::Point::x;
 	point_setter = mode == Vertical ? (void(geom::Point::*)(float))&geom::Point::y : (void(geom::Point::*)(float))&geom::Point::x;
 }
 

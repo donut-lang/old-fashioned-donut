@@ -61,7 +61,6 @@ Donut::Donut(Handler<Patron> patron)
 ,heap_(new Heap(log_, clock_))
 ,patron_(patron)
 {
-
 }
 
 Handler<Machine> Donut::queryMachine( std::string const& name )

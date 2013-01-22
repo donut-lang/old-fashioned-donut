@@ -41,6 +41,21 @@ showLabelAngel = func(widget, element){
 	heaven.detatchAngel(ang);
 };
 
+showBiggerScreen = func(){
+	heaven = World.heaven();
+	ang = heaven.newLoneAngel();
+	target = ang.newElementTarget("nes-screen");
+	halo = target.newHaloServant("red");
+	elm = target.newElementServant("nes-screen-bigger");
+	
+	target.attatchServant(halo);
+	target.attatchServant(elm);
+	ang.attatchTarget(target);
+	heaven.attatchAngel(ang);
+	interrupt null;
+	heaven.detatchAngel(ang);
+};
+
 main = func(){
 	interrupt null;
 	doc = World.findWidgetById("slide");
@@ -73,6 +88,8 @@ main = func(){
 	interrupt null;
 	showLabelAngel("nes-tracer", "its_a_tracer");
 	showLabelAngel("memory-viewer", "its_a_viewer");
+	
+	showBiggerScreen();
 };
 
 main();
