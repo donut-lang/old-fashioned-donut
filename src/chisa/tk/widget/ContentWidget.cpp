@@ -120,14 +120,10 @@ bool ContentWidget::onZoom(float const& timeMs, geom::Point const& center, const
 chisa::geom::Area ContentWidget::findTargetImpl(const std::string& target)
 {
 	doc::TreeNode* node = this->rootNode_->findTreeNodeById(target);
-	if( unlikely(!node) ){
+	if( unlikely(!node || !node->block()) ){
 		return chisa::geom::Area();
 	}
-	doc::Text* text = node->findFirstTextNode();
-	if( unlikely(!text || text->objectCount() <= 0) ){
-		return chisa::geom::Area();
-	}
-	return text->objectAt(0)->area();
+	return node->block()->area();
 }
 
 }}
