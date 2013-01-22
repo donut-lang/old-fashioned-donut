@@ -29,11 +29,11 @@ namespace chisa {
 namespace tk {
 
 const std::string Label::AttrName::Text("text");
-const std::string Label::AttrName::TextSize("text-size");
+const std::string Label::AttrName::FontSize("font-size");
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(Label, Element)
 ,text_()
-,textSize_(32.0f)
+,fontSize_(32.0f)
 ,vertical_(false)
 ,textImage_()
 {
@@ -42,7 +42,7 @@ CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(Label, Element)
 	this->edgeWidth(0);
 	this->edgeColor(gl::Transparent);
 	this->addAttribute(AttrName::Text, this->text_);
-	this->addAttribute(AttrName::TextSize, this->textSize_);
+	this->addAttribute(AttrName::FontSize, this->fontSize_);
 }
 
 Label::~Label() noexcept
@@ -65,7 +65,7 @@ Handler<gl::TextDrawable> Label::textImage()
 			if(vertical_){
 				this->textImage_ = w->drawableManager()->queryVerticalText(
 						this->text(),
-						this->textSize_,
+						this->fontSize_,
 						Handler<gl::Font>(),
 						gl::TextDrawable::Style::Bold,
 						gl::TextDrawable::Decoration::None,
@@ -75,7 +75,7 @@ Handler<gl::TextDrawable> Label::textImage()
 			}else{
 				this->textImage_ = w->drawableManager()->queryText(
 						this->text(),
-						this->textSize_,
+						this->fontSize_,
 						Handler<gl::Font>(),
 						gl::TextDrawable::Style::Bold,
 						gl::TextDrawable::Decoration::None,
@@ -109,8 +109,8 @@ void Label::text(std::string const& text)
 
 void Label::textSize(float const& size)
 {
-	if( this->textSize_ != size ) {
-		this->textSize_ = size;
+	if( this->fontSize_ != size ) {
+		this->fontSize_ = size;
 		this->notifyViewRefreshed();
 	}
 }

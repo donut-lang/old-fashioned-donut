@@ -57,14 +57,18 @@
 				</font>
 			</doc>
 			<doc id="9">
-				<font size="112">
-					<font color="darkred">ファミコンを<font color="darkblue">生きたまま解剖</font>できるコンテンツ</font>と
-					<font color="darkred">時を司るスクリプト言語を作った</font>
-				</font>
+				<font size="112">　<br />とりあえずご覧頂こう</font>
+			</doc>
+			<doc id="10">
+				<font size="112">　<br />とりあえずご覧頂こう<br/>　…と言いたいところだけど…</font>
+			</doc>
+			<doc id="11">
+				<font size="112">　<br />実は</font><br />
+				<font size="112" color="red">　<br />これがそのシステム</font>
 			</doc>
 		</widget>
 	</vertical>
-	<label font-size="128" text="？？？？" id="hatena" />
+	<label font-size="128" text="？？？？" id="hatena" background-color="#ffffffa0" />
 	<vertical id="nes">
 		<horizontal split-weight="1">
 			<vertical>

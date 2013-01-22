@@ -46,6 +46,12 @@ main = func(){
 	doc.loadDocument("8");
 	interrupt null;
 	showUnderline();
+	doc.loadDocument("9");
+	interrupt null;
+	doc.loadDocument("10");
+	interrupt null;
+	doc.loadDocument("11");
+	interrupt null;
 
 	World.pushElement("nes");
 	running = true;

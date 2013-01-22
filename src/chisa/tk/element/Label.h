@@ -29,11 +29,11 @@ class Label: public Element {
 public:
 	struct AttrName{
 		const static std::string Text;
-		const static std::string TextSize;
+		const static std::string FontSize;
 	};
 private: /* 設定されうるリソース */
 	std::string text_;
-	float textSize_;
+	float fontSize_;
 	bool vertical_;
 private: /* 描画のための一時的なリソース */
 	Handler<gl::TextDrawable> textImage_;
@@ -43,7 +43,7 @@ public:
 	void setVertical(bool isVertical);
 public:
 	inline std::string text() const noexcept{ return this->text_; };
-	inline float textSize() const noexcept { return this->textSize_; };
+	inline float textSize() const noexcept { return this->fontSize_; };
 	inline bool isVertical() const noexcept { return this->vertical_; };
 protected:
 	virtual std::string toString() const override;
