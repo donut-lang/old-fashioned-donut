@@ -132,6 +132,7 @@ private:
 public:
 	inline bool isBreak() const noexcept { return this->isBreak_; };
 public:
+	bool isRunning() const noexcept { return this->runner_t_ != nullptr; };
 	void stopNES();
 	void loadNES(std::string const& abs_filename);
 	void startNES();

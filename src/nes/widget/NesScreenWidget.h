@@ -32,10 +32,13 @@ class NesScreenWidget: public ::chisa::tk::Widget {
 private:
 	HandlerW<nes::NesGeist> geist_;
 	Handler<XObject> conf_;
+	bool lastState_;
 public:
 	NesScreenWidget(Logger& log, chisa::HandlerW<chisa::tk::World> world, tinyxml2::XMLElement* element);
 	virtual ~NesScreenWidget() noexcept = default;
 public:
+	virtual void onShownImpl() override final;
+	virtual void onHiddenImpl() override final;
 	virtual void renderImpl(chisa::gl::Canvas& cv, chisa::geom::Area const& area) override;
 	virtual void idleImpl(const float delta_ms) override;
 	virtual void reshapeImpl(chisa::geom::Box const& areaSize) override;

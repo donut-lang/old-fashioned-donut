@@ -42,18 +42,12 @@ NesGeist::NesGeist(chisa::Logger& log, ::tarte::Handler<Hexe> const& hexe, ::tar
 	if( chisa::Handler<chisa::tk::World> world = this->world_.lock() ){
 		this->spr_ = world->drawableManager()->queryRawSprite(ImageFormat::RGBA8, 256, 240);
 	}
-	this->world()->quartet()->addInstrument(this->audio_.instrument());
 }
 
 NesGeist::~NesGeist() noexcept
 {
 	log().d(TAG, "Shutting down...");
 
-	if(Handler< ::chisa::Quartet> quartet = audio_.instrument()->quartet()){
-		quartet->removeInstrument(this->audio_.instrument());
-		log().d(TAG, "Audio fairy detatched.");
-	}
-	this->machine_->debugger().watcher().resumeRunning(); //XXX:再開してから死なないとデッドロックする
 	log().d(TAG, "Sending stop request to emulator...");
 	this->stopNES();
 	log().d(TAG, "Emulator stopped.");
@@ -83,6 +77,12 @@ void NesGeist::loadNES(std::string const& abs_filename)
 void NesGeist::stopNES()
 {
 	if(this->runner_t_){
+		this->machine_->debugger().watcher().resumeRunning(); //XXX:再開してから死なないとデッドロックする
+		if(Handler< ::chisa::Quartet> quartet = audio_.instrument()->quartet()){
+			log().d(TAG, "Audio fairy detaching....");
+			quartet->removeInstrument(this->audio_.instrument());
+			log().d(TAG, "Audio fairy detached.");
+		}
 		this->queryStop();
 		this->runner_t_->join();
 		delete this->runner_t_;
@@ -96,6 +96,7 @@ void NesGeist::startNES()
 	this->running_ = true;
 	this->runner_t_ = new std::thread(std::ref(*this));
 	this->time_ms_ = 0.0f;
+	this->world()->quartet()->addInstrument(this->audio_.instrument());
 	if( chisa::Handler<chisa::tk::World> world = this->world() ) {
 		world->sendTask([this](float delta_ms)->bool{
 			std::unique_lock<std::mutex> lock(this->cond_mutex_);

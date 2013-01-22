@@ -179,6 +179,10 @@ Handler<Element> World::pushElement(std::string const& elementId)
 
 Handler<Element> World::pushElement(Handler<Element> const& elm)
 {
+	if(	Handler<Element> elm = this->elementStack_.top() ){
+		elm->onHidden();
+	}
+	elm->onShown();
 	this->elementStack_.push(elm);
 	if( this->area().box().isSpecified() ) {
 		reshape(this->area());
@@ -187,12 +191,18 @@ Handler<Element> World::pushElement(Handler<Element> const& elm)
 }
 Handler<Element> World::popElement()
 {
-	this->elementStack_.pop();
-	Handler<Element> elm = this->elementStack_.top();
-	if(elm && this->area().box().isSpecified() ) {
-		reshape(this->area());
+	if(	Handler<Element> elm = this->elementStack_.top() ){
+		elm->onHidden();
+
+		this->elementStack_.pop();
+		Handler<Element> nelm = this->elementStack_.top();
+		if(nelm && this->area().box().isSpecified() ) {
+			reshape(this->area());
+		}
+		return elm;
+	}else{
+		return Handler<Element>();
 	}
-	return elm;
 }
 
 Handler<Element> World::rootElement()

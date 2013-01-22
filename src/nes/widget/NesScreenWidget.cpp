@@ -27,15 +27,14 @@ namespace nes {
 NesScreenWidget::NesScreenWidget(chisa::Logger& log, chisa::HandlerW<chisa::tk::World> _world, tinyxml2::XMLElement* element)
 :Widget(log, _world, element)
 ,conf_(new XObject)
+,lastState_(true)
 {
 	chisa::Handler<chisa::tk::World> world(_world.lock());
 	chisa::Handler<nes::NesGeist> geist(world->geist().cast<nes::NesGeist>());
 	this->geist_ = geist;
 	this->conf_->accumlate(element->FirstChildElement());
-
 	if(this->conf_->has<XString>("rom")){
-		geist->loadNES(world->resolveUniverseFilepath(this->conf_->get<XString>("rom")));
-		geist->startNES();
+		geist->loadNES(this->world().lock()->resolveUniverseFilepath(this->conf_->get<XString>("rom")));
 	}
 }
 
@@ -97,6 +96,26 @@ bool NesScreenWidget::onKeyUp(const float& timeMs, const SDL_Keysym& sym)
 		geist->gamepad().onKeyUp(sym);
 	}
 	return true;
+}
+
+void NesScreenWidget::onShownImpl()
+{
+	if( Handler<NesGeist> geist = this->geist_.lock() ) {
+		if(lastState_) {
+			geist->startNES();
+		}else{
+			geist->stopNES();
+		}
+	}
+}
+
+void NesScreenWidget::onHiddenImpl()
+{
+	if( Handler<NesGeist> geist = this->geist_.lock() ) {
+		if((lastState_ = geist->isRunning())){
+			geist->stopNES();
+		}
+	}
 }
 
 chisa::geom::Area NesScreenWidget::findTargetImpl(const std::string& target)
