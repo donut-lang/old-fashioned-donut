@@ -49,6 +49,7 @@ class AngelTarget;
 
 class HaloServant;
 class ElementServant;
+class ContentUnderlineServant;
 
 class Servant : public HandlerBody<Servant> {
 private:
@@ -121,6 +122,7 @@ public:
 	bool detatchServant( Handler<Servant> const& servant );
 public:
 	Handler<HaloServant> newHaloServant( gl::Color const& color );
+	Handler<ContentUnderlineServant> newContentUnderlineServant( gl::Color const& color, std::string const& docId );
 	Handler<ElementServant> newElementServant( Handler<Element> const& element );
 	Handler<ElementServant> newElementServant( std::string const& elemId );
 public:

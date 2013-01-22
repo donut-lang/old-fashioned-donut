@@ -25,6 +25,7 @@
 #include "heaven/AngelWidgetTarget.h"
 #include "heaven/HaloServant.h"
 #include "heaven/ElementServant.h"
+#include "heaven/ContentUnderlineServant.h"
 #include <tinyxml2.h>
 
 namespace chisa {
@@ -205,6 +206,11 @@ Handler<ElementServant> AngelTarget::newElementServant( Handler<Element> const& 
 	return Handler<ElementServant>(new ElementServant(self(), element));
 }
 
+Handler<ContentUnderlineServant> AngelTarget::newContentUnderlineServant(const gl::Color& color, std::string const& docId)
+{
+	return Handler<ContentUnderlineServant>(new ContentUnderlineServant(self(), color, docId));
+}
+
 Handler<ElementServant> AngelTarget::newElementServant( std::string const& elementId )
 {
 	Handler<World> world(this->world());
@@ -361,6 +367,7 @@ Handler<AngelWidgetTarget> AngelTarget::toWidgetTarget()
 {
 	return Handler<AngelWidgetTarget>();
 }
+
 
 Handler<AngelElementTarget> AngelTarget::toElementTarget()
 {
