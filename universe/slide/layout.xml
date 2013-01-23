@@ -18,8 +18,8 @@
 					</font>
 				</doc>
 				<doc id="2" padding="100" background="stretch:image:universe/slide/back2.png">
-					<font size="112"><p>　<br />われは、われである。<br />　<br />
-							<font color="darkblue" size="64">#無人化すべきである</font></p>
+					<font size="112"><p>　<br />われは、われである。<br />　<br />　<br />
+							<font color="darkblue" size="40">#無人化すべきである</font></p>
 					</font>
 				</doc>
 				<doc id="3" background="stretch:image:universe/slide/back2.png">
@@ -44,34 +44,43 @@
 					</font>
 				</doc>
 				<doc id="6" background="stretch:image:universe/slide/back2.png">
-					<font size="136">　<br />で、一体何を作ったのか<br />
+					<font size="136">　<br />コンピュータ関係ない<br />
 					</font>
 				</doc>
 				<doc id="7" background="stretch:image:universe/slide/back2.png">
+					<font size="136">　<br />はい<br />
+					</font>
+				</doc>
+				<doc id="8" background="stretch:image:universe/slide/back2.png">
+					<font size="136">　<br />で、一体何を作ったのか<br />
+					</font>
+				</doc>
+				
+				<doc id="9" background="stretch:image:universe/slide/back2.png">
 					<font size="112">
 						<font color="darkred">ファミコンを<font color="darkblue">生きたまま解剖</font>できるコンテンツ</font>と
 					</font>
 				</doc>
-				<doc id="8" background="stretch:image:universe/slide/back2.png">
+				<doc id="10" background="stretch:image:universe/slide/back2.png">
 					<font size="112">
-						<font color="darkred">ファミコンを<font color="darkblue" id="one">生きたまま解剖</font>できるコンテンツ</font>と
+						<font color="darkred">ファミコンを<font color="darkblue" id="one">生きたまま解剖</font>できるコンテンツ</font><br />と<br />
 						<font color="darkred"><font color="darkblue" id="two">時を司る</font>スクリプト言語を作った</font>
 					</font>
 				</doc>
-				<doc id="9" background="stretch:image:universe/slide/back2.png">
+				<doc id="11" background="stretch:image:universe/slide/back2.png">
 					<font size="112">　<br />とりあえずご覧頂こう</font>
 				</doc>
-				<doc id="10" background="stretch:image:universe/slide/back2.png">
+				<doc id="12" background="stretch:image:universe/slide/back2.png">
 					<font size="112">　<br />とりあえずご覧頂こう<br/>　…と言いたいところだけど…</font>
 				</doc>
-				<doc id="11" background="stretch:image:universe/slide/back2.png">
+				<doc id="13" background="stretch:image:universe/slide/back2.png">
 					<font size="112">　<br />実は</font><br />
 					<font size="112" color="red">　<br />既に目の前のこれです</font>
 				</doc>
 			</widget>
 		</frame>
 	</vertical>
-	<label font-size="128" text="？？？？" id="hatena" background-color="#ffffffa0" />
+	<label font-size="96" text="？？？？" id="hatena" background-color="#ffffffa0" />
 	<label font-size="96" text="命令語" id="its_a_tracer" background-color="#ffffffa0" />
 	<label font-size="96" text="メモリー全体" id="its_a_viewer" background-color="#ffffffa0" />
 	<widget widget-klass="nes-screen" fit="expand" id="nes-screen-bigger" width="512" height="480" />

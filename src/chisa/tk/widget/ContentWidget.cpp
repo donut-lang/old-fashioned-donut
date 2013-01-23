@@ -149,8 +149,8 @@ chisa::geom::Area ContentWidget::findTargetImpl(const std::string& target)
 	case Text: {
 		doc::Text* tex = node->findFirstTextNode();
 		if( tex->objectCount() > 0 ) {
-			geom::Area area(tex->objectAt(0)->area());
-			return geom::Area(area.left(), area.bottom(), 1, 1);
+			geom::Area area(tex->objectAt(tex->objectCount()-1)->area());
+			return geom::Area(area.right(), area.bottom(), 1, 1);
 		}
 		break;
 	}

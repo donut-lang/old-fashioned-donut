@@ -60,29 +60,15 @@ showBiggerScreen = func(){
 main = func(){
 	interrupt null;
 	doc = World.findWidgetById("slide");
-	doc.loadDocument("1");
-	interrupt null;
-	doc.loadDocument("2");
-	interrupt null;
-	doc.loadDocument("3");
-	interrupt null;
-	doc.loadDocument("4");
-	interrupt null;
-	doc.loadDocument("5");
-	interrupt null;
-	doc.loadDocument("6");
-	interrupt null;
-	doc.loadDocument("7");
-	interrupt null;
-	doc.loadDocument("8");
-	interrupt null;
+	for(i=1;i<=10;++i) {
+		doc.loadDocument(i.toString());
+		interrupt null;
+	};
 	showUnderline();
-	doc.loadDocument("9");
-	interrupt null;
-	doc.loadDocument("10");
-	interrupt null;
-	doc.loadDocument("11");
-	interrupt null;
+	for(;i<=13;++i){
+		doc.loadDocument(i.toString());
+		interrupt null;
+	};
 
 	World.pushElement("nes");
 	
