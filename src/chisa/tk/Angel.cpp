@@ -185,7 +185,7 @@ Handler<Angel> AngelTarget::angel() const
 void AngelTarget::attatchServant(const Handler<Servant>& servant)
 {
 	this->servants_.push_back(servant);
-	this->reshape( this->renderArea() );
+	this->reshape( this->world()->area() );
 }
 
 bool AngelTarget::detatchServant(const Handler<Servant>& servant)

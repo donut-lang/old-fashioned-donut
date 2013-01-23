@@ -89,6 +89,34 @@ showDemae1Angel = func(){
 	heaven.detatchAngel(ang);
 };
 
+showDemaeReaction = func(){
+	heaven = World.heaven();
+	angels = {};
+	angcnt = 0;
+	showAngel = func(pos, id) {
+		ang = heaven.newLoneAngel();
+		target = ang.newWidgetTarget("demae-image", pos);
+		halo = target.newHaloServant("red");
+		elm = target.newElementServant(id);
+		elm.disableAnimation();
+
+		target.attatchServant(halo);
+		target.attatchServant(elm);
+		ang.attatchTarget(target);
+		heaven.attatchAngel(ang);
+		angels[angcnt++] = ang;
+		interrupt null;
+	};
+	showAngel("39x165x85x70", "reaction1");
+	showAngel("670x222x85x70", "reaction2");
+	showAngel("222x316x85x70", "reaction3");
+	
+	cnt = 0;
+	for(i=0;i<angcnt;++i){
+		heaven.detatchAngel(angels[cnt++]);
+	};
+};
+
 main = func(){
 	interrupt null;
 	doc = World.findWidgetById("slide");
@@ -122,6 +150,20 @@ main = func(){
 	closeAllNesAngel();
 	World.popElement();
 	
+	for(;i<=32;++i){
+		doc.loadDocument(i.toString());
+		interrupt null;
+	};
+	
+	World.pushElement("demae1");
+	interrupt null;
+	showDemaeReaction();
+	World.popElement();
+	
+	for(;i<=100;++i){
+		doc.loadDocument(i.toString());
+		interrupt null;
+	};
 };
 
 main();
