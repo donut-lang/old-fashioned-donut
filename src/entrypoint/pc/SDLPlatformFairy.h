@@ -34,7 +34,7 @@ public:
 	SDLPlatformFairy(Logger& log);
 	virtual ~SDLPlatformFairy() noexcept;
 private:
-	virtual void init(const std::string& title, int width, int height, int redbits, int greenbits, int bluebits, int alphabits, int depthbits, int stencilbits);
+	virtual void init(const std::string& title, int width, int height, bool isFullScreen, int redbits, int greenbits, int bluebits, int alphabits, int depthbits, int stencilbits) override final;
 	virtual void setTitle(const std::string& name);
 	virtual void swapBuffer();
 	virtual unsigned int getTimeMs();

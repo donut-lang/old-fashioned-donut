@@ -38,7 +38,7 @@ private:
 private:
 	bool isHidden_;
 public:
-	void init(std::string const& windowTitle, int width, int height, int redbits, int greenbits, int bluebits, int alphabits, int depthbits, int stencilbits );
+	void init(std::string const& windowTitle, int width, int height, bool isFullScreen, int redbits, int greenbits, int bluebits, int alphabits, int depthbits, int stencilbits );
 	void setTitle(std::string const& name);
 	void start(std::string const& initialWorldName);
 private:

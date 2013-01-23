@@ -40,7 +40,7 @@ protected:
 public:
 	inline bool onFree() noexcept { return false; };
 public:
-	virtual void init(std::string const& windowTitle, int width, int height, int redbits, int greenbits, int bluebits, int alphabits, int depthbits, int stencilbits ) = 0;
+	virtual void init(std::string const& windowTitle, int width, int height, bool isFullScreen, int redbits, int greenbits, int bluebits, int alphabits, int depthbits, int stencilbits ) = 0;
 	virtual void setTitle(std::string const& name) = 0;
 public: /* 画面操作 */
 	virtual void swapBuffer() = 0;

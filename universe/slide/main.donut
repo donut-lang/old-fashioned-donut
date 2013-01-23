@@ -57,6 +57,22 @@ showBiggerScreen = func(){
 	heaven.detatchAngel(ang);
 };
 
+showDemae1Angel = func(){
+	heaven = World.heaven();
+	ang = heaven.newLoneAngel();
+	target = ang.newWidgetTarget("demae-image", "371x30x184x122");
+	halo = target.newHaloServant("red");
+	elm = target.newElementServant("its_a_chisa");
+	elm.disableAnimation();
+	
+	target.attatchServant(halo);
+	target.attatchServant(elm);
+	ang.attatchTarget(target);
+	heaven.attatchAngel(ang);
+	interrupt null;
+	heaven.detatchAngel(ang);
+};
+
 main = func(){
 	interrupt null;
 	doc = World.findWidgetById("slide");
@@ -65,7 +81,15 @@ main = func(){
 		interrupt null;
 	};
 	showUnderline();
-	for(;i<=13;++i){
+	doc.loadDocument("11");
+	interrupt null;
+	doc.loadDocument("12");
+	interrupt null;
+	World.pushElement("demae1");
+	interrupt null;
+	showDemae1Angel();
+	World.popElement();
+	for(i=13;i<=14;++i){
 		doc.loadDocument(i.toString());
 		interrupt null;
 	};
@@ -77,6 +101,7 @@ main = func(){
 	showLabelAngel("memory-viewer", "its_a_viewer");
 	showLabelAngel("memory-compare", "its_a_compare");
 	
+	closeAllNesAngel();
 	World.popElement();
 	
 	showBiggerScreen();

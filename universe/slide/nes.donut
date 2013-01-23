@@ -40,6 +40,12 @@ Nes.handle = func(msg) {
 
 MemoryAngel = {};
 MemoryAngel.angel = null;
+MemoryAngel.hide = func(){
+	if( self.angel != null ){
+		World.heaven().detatchAngel(self.angel);
+		self.angel  = null;
+	}else{};
+};
 MemoryAngel.handle = func(msg){
 	if(msg.action == "new-angel"){
 		heaven = World.heaven();
@@ -104,6 +110,10 @@ handleNES = func(msg){
 	}else{
 		return false;
 	};
+};
+
+Global.closeAllNesAngel = func(){
+	MemoryAngel.hide();
 };
 
 running = true;

@@ -30,9 +30,9 @@ Chisa::Chisa(Logger& log, Handler<PlatformFairy> fairy, Handler<Hexe> hexe)
 {
 }
 
-void Chisa::init(std::string const& windowTitle, int width, int height, int redbits, int greenbits, int bluebits, int alphabits, int depthbits, int stencilbits )
+void Chisa::init(std::string const& windowTitle, int width, int height, bool isFullScreen, int redbits, int greenbits, int bluebits, int alphabits, int depthbits, int stencilbits )
 {
-	fairy_->init(windowTitle, width, height, redbits, greenbits, bluebits, alphabits, depthbits, stencilbits);
+	fairy_->init(windowTitle, width, height, isFullScreen, redbits, greenbits, bluebits, alphabits, depthbits, stencilbits);
 	this->reshape(width, height);
 	this->universe_->reshape(geom::Area(0,0,width,height));
 }

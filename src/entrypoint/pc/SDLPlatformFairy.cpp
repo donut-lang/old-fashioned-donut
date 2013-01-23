@@ -51,11 +51,12 @@ SDLPlatformFairy::~SDLPlatformFairy() noexcept
 	this->log().d("SDL", "Quit.");
 }
 
-void SDLPlatformFairy::init(const std::string& title, int width, int height, int redbits, int greenbits, int bluebits, int alphabits, int depthbits, int stencilbits)
+void SDLPlatformFairy::init(const std::string& title, int width, int height, bool isFullScreen, int redbits, int greenbits, int bluebits, int alphabits, int depthbits, int stencilbits)
 {
 	this->window_ = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height,
 	//XXX: ワークアラウンド。SDL2がリサイズ出来るようにした時にうまく対処できない
 			SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN // | SDL_WINDOW_RESIZABLE
+			| (isFullScreen ? SDL_WINDOW_FULLSCREEN : 0)
 					);
 	if (!this->window_) {
 		TARTE_EXCEPTION(Exception, SDL_GetError());

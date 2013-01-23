@@ -64,7 +64,8 @@ void ElementServant::renderImpl(gl::Canvas& canvas)
 		lineOffsetX = area.left();
 		midX=0;
 	}else{
-		lineOffsetX = offsetX = 0;
+		lineOffsetX = area.left();
+		offsetX = 0;
 		midX=0;
 	}
 
@@ -101,8 +102,8 @@ geom::Box ElementServant::reshapeImpl(const geom::Area& area)
 {
 	geom::Box requested(element()->measure(geom::Box()));
 	geom::Box _size(
-			geom::isUnspecified(requested.width()) || (area.box().width()/2 <= requested.width()) ? area.box().width()/2 : requested.width(),
-			geom::isUnspecified(requested.height() || (area.box().height()/4 <= requested.height())) ? area.box().height()/4 : requested.height()
+			geom::isUnspecified(requested.width()) ? area.box().width()/4 : requested.width(),
+			geom::isUnspecified(requested.height()) ? area.box().height()/4 : requested.height()
 			);
 	element()->layout(geom::ZERO, _size);
 	return _size;
