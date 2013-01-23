@@ -75,14 +75,16 @@
 				</doc>
 				<doc id="13" background="stretch:image:universe/slide/back2.png">
 					<font size="112">　<br />実は</font><br />
-					<font size="112" color="red">　<br />既に目の前のこれです</font>
+					<font size="112" color="red">　<br />これがそのシステムだった</font>
 				</doc>
 			</widget>
 		</frame>
 	</vertical>
 	<label font-size="96" text="？？？？" id="hatena" background-color="#ffffffa0" />
-	<label font-size="96" text="命令語" id="its_a_tracer" background-color="#ffffffa0" />
-	<label font-size="96" text="メモリー全体" id="its_a_viewer" background-color="#ffffffa0" />
+	<label font-size="96" text="命令実行" id="its_a_tracer" background-color="#ffffffa0" />
+	<label font-size="96" text="メモリー空間" id="its_a_viewer" background-color="#ffffffa0" />
+	<label font-size="96" text="メモリ検索" id="its_a_compare" background-color="#ffffffa0" />
+	<label font-size="96" text="メモリ検索" id="its_a_compare" background-color="#ffffffa0" />
 	<widget widget-klass="nes-screen" fit="expand" id="nes-screen-bigger" width="512" height="480" />
 	<vertical id="nes">
 		<horizontal split-weight="1">

@@ -35,11 +35,14 @@ NesGeistProvider::NesGeistProvider(Handler< ::donut::Heap> const& heap)
 		Handler<NesGeist> geist(obj->geist());
 		NesGeist::MachineLock lock(geist);
 		NesGeistSideEffect side;
+		side.op_before = side.op_after = geist->isBreak() ? NesGeistSideEffect::LoadSave : NesGeistSideEffect::LoadSaveAndRun;
+		side.before = geist->machine()->save();
 		geist->machine()->loadCartridge((geist->world()->resolveUniverseFilepath(fname)).c_str());
 		geist->machine()->sendHardReset();
 		geist->machine()->debugger().watcher().stepRunning();
+		side.after = geist->machine()->save();
 
-		return std::make_tuple(fname,false,side);
+		return std::make_tuple(fname,true,side);
 	});
 	this->registerReactiveNativeClosure("writeNES", &NesGeistObject::writeMemNES);
 	this->registerReactiveNativeClosure("selectReset",[](NesGeistObject* obj){

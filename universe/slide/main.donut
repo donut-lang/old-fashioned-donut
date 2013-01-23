@@ -75,6 +75,7 @@ main = func(){
 	interrupt null;
 	showLabelAngel("nes-tracer", "its_a_tracer");
 	showLabelAngel("memory-viewer", "its_a_viewer");
+	showLabelAngel("memory-compare", "its_a_compare");
 	
 	World.popElement();
 	
