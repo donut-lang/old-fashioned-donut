@@ -159,13 +159,13 @@ bool ScrollCombo::onUpRaw(float const& timeMs, geom::Point const& ptInScreen)
 	return false;
 }
 
-void ScrollCombo::showPoint(const geom::Point& relPtFromParent)
+void ScrollCombo::showPointInner(const geom::Point& relPtFromParent)
 {
 	if(this->scrollMode_ & Vertical) {
-		this->scrollOffset_.y(relPtFromParent.y() - lastInnerDrawnAreaInRoot().height()/2);
+		this->scrollOffset_.y(geom::min(childSize_.height()-lastDrawnAreaInRoot().height(),geom::max(0, relPtFromParent.y() - lastInnerDrawnAreaInRoot().height()/2)));
 	}
 	if(this->scrollMode_ & Horizontal){
-		this->scrollOffset_.x(relPtFromParent.x() - lastInnerDrawnAreaInRoot().width()/2);
+		this->scrollOffset_.x(geom::min(childSize_.width()-lastDrawnAreaInRoot().width(),geom::max(0, relPtFromParent.x() - lastInnerDrawnAreaInRoot().width()/2)));
 	}
 }
 

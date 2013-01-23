@@ -51,7 +51,7 @@ private:
 	virtual geom::Box measureImpl(geom::Box const& constraint) override;
 	virtual void layoutImpl(geom::Distance const& offsetFromParent, geom::Box const& size) override;
 	virtual void loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element) override;
-	virtual void showPoint(geom::Point const& relPtFromParent);
+	virtual void showPointInner(geom::Point const& relPtFromParent) override;
 public:
 	virtual bool onDownRaw(float const& timeMs, geom::Point const& ptInScreen) override;
 	virtual bool onUpRaw(float const& timeMs, geom::Point const& ptInScreen) override;

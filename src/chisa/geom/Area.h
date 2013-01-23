@@ -66,6 +66,7 @@ public:
 	inline constexpr float height() const noexcept{ return box_.height(); };
 	inline void x(const float x) noexcept { point_.x(x); };
 	inline void y(const float y) noexcept { point_.y(y); };
+	inline constexpr Point center() const noexcept { return Point( x()+(width()/2), y()+(height()/2)); };
 	inline void width(const float width) noexcept { box_.width(width); };
 	inline void height(const float height) noexcept { box_.height(height); };
 	inline std::string toString() const{

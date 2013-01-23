@@ -249,19 +249,23 @@ Handler<Element> World::realizeElement( std::string const& templateId )
 }
 Handler<Element> World::findElementByPoint(geom::Point const& screenPoint)
 {
-	Handler<Element> elm = this->heaven_->findElementByPoint(screenPoint);
+	Handler<Element> const elm = this->heaven_->findElementByPoint(screenPoint);
 	if(elm){
 		return elm;
 	}
-	if(Handler<Element> elm = this->elementStack_.top()){
+	if(Handler<Element> const elm = this->elementStack_.top()){
 		return elm->findElementByPoint(screenPoint);
 	}
 	return Handler<Element>();
 }
 Handler<Element> World::findElementById(std::string const& id)
 {
-	if(Handler<Element> elm = this->elementStack_.top()){
+	if(Handler<Element> const elm = this->elementStack_.top()){
 		return elm->findElementById(id);
+	}
+	Handler<Element> const elm = this->heaven_->findElementById(id);
+	if(elm){
+		return elm;
 	}
 	return Handler<Element>();
 }

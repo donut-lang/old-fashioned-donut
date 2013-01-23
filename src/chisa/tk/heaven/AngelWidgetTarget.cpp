@@ -96,7 +96,7 @@ void AngelWidgetTarget::onAttatchedImpl()
 		return;
 	}
 	geom::Area area(element->widget()->findTargetInElement(guide_));
-	geom::Point center(area.point() + area.box()/2);
+	geom::Point center( area.center() );
 	if( !area.empty() && !element->lastInnerDrawnAreaInRoot().contain(center+element->lastPositionInRoot()) ) {
 		element->showPoint(center);
 	}

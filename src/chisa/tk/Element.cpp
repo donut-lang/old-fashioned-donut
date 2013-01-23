@@ -260,14 +260,21 @@ void Element::notifyViewRefreshed()
 	}
 }
 
-void Element::showPoint(geom::Point const& relPtFromParent)
+void Element::showPoint(geom::Point const& relPtInElement)
 {
 	Handler<Element> p = this->parent().lock();
 	if(p) {
-		p->showPoint(innerOffsetFromParent_+relPtFromParent);
+		p->showPointInner(innerOffsetFromParent_+relPtInElement);
 	}
 }
 
+void Element::showPointInner(geom::Point const& relPtFromParent)
+{
+	Handler<Element> p = this->parent().lock();
+	if(p) {
+		p->showPointInner(innerOffsetFromParent_+relPtFromParent);
+	}
+}
 
 bool Element::notifyViewRefreshedImpl()
 {

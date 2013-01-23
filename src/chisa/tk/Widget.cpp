@@ -90,7 +90,7 @@ geom::Area Widget::findTargetInElement(std::string const& target)
 void Widget::showPoint(geom::Point const& pt)
 {
 	Handler<WidgetElement> const elm = this->wrapper_.lock();
-	if(elm){
+	if( likely(elm) ){
 		elm->showPoint( elm->calcPtInElement( pt ) );
 	}
 }
