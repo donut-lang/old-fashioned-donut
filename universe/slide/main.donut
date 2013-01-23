@@ -57,6 +57,22 @@ showBiggerScreen = func(){
 	heaven.detatchAngel(ang);
 };
 
+showBiggerWatcher = func(){
+	heaven = World.heaven();
+	ang = heaven.newLoneAngel();
+	target = ang.newElementTarget("nes-screen");
+	halo = target.newHaloServant("red");
+	elm = target.newElementServant("nes-watcher-bigger");
+	elm.disableAnimation();
+	
+	target.attatchServant(halo);
+	target.attatchServant(elm);
+	ang.attatchTarget(target);
+	heaven.attatchAngel(ang);
+	interrupt null;
+	heaven.detatchAngel(ang);
+};
+
 showDemae1Angel = func(){
 	heaven = World.heaven();
 	ang = heaven.newLoneAngel();
@@ -100,11 +116,12 @@ main = func(){
 	showLabelAngel("nes-tracer", "its_a_tracer");
 	showLabelAngel("memory-viewer", "its_a_viewer");
 	showLabelAngel("memory-compare", "its_a_compare");
+	showBiggerWatcher();
+	showBiggerScreen();
 	
 	closeAllNesAngel();
 	World.popElement();
 	
-	showBiggerScreen();
 };
 
 main();

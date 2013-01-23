@@ -31,25 +31,19 @@ const static std::string TAG("HeavenObject");
 HeavenProvider::HeavenProvider(const Handler<Heap>& heap, const Handler<Heaven>& heaven)
 :Super(heap, "chisa::tk::HeavenObject")
 {
-	this->registerPureNativeClosure("findAngelById", [this](HeavenObject* obj, std::string id)->Handler< ::donut::Object>{
-		return obj->heaven()->findAngelById(id)->donutObject(this->heap().lock());
-	});
-	this->registerPureNativeClosure("findAngelId", [this](HeavenObject* obj, AngelObject* ang){
-		return obj->heaven()->findAngelId(ang->angel());
-	});
 	this->registerPureNativeClosure("newTwinAngel", [this](HeavenObject* obj){
 		return obj->heaven()->newTwinAngel()->donutObject(this->heap().lock());
 	});
 	this->registerPureNativeClosure("newLoneAngel", [this](HeavenObject* obj){
 		return obj->heaven()->newLoneAngel()->donutObject(this->heap().lock());
 	});
-	this->registerReactiveNativeClosure("attatchAngel", [this](HeavenObject* obj, AngelObject* angel)->std::tuple<std::string,bool,HeavenSideEffect>{
-		std::string id = obj->heaven()->attatchAngel(angel->angel());
+	this->registerReactiveNativeClosure("attatchAngel", [this](HeavenObject* obj, AngelObject* angel)->std::tuple<bool,bool,HeavenSideEffect>{
+		bool succeed = obj->heaven()->attatchAngel(angel->angel());
 
 		HeavenSideEffect side;
 		side.op = HeavenSideEffect::DetatchAngel;
 		side.detatchedAngel_ = angel->angel();
-		return std::tuple<std::string,bool,HeavenSideEffect>(id, true, side);
+		return std::tuple<bool,bool,HeavenSideEffect>(succeed, true, side);
 	});
 	this->registerReactiveNativeClosure("detatchAngel", [this](HeavenObject* obj, AngelObject* angel)->std::tuple<AngelObject* ,bool,HeavenSideEffect>{
 		obj->heaven()->detatchAngel(angel->angel());

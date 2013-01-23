@@ -96,6 +96,7 @@ void ElementServant::renderImpl(gl::Canvas& canvas)
 void ElementServant::idleImpl(const float delta_ms)
 {
 	this->anim_ += delta_ms;
+	this->element_->idle(delta_ms);
 }
 
 geom::Box ElementServant::reshapeImpl(const geom::Area& area)

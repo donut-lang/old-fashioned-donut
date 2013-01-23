@@ -247,7 +247,8 @@ Handler< ::donut::Object> AngelTarget::donutObject(Handler< ::donut::Heap> const
 Handler<Element> AngelTarget::findElementByPoint(const geom::Point& screenVector)
 {
 	Handler<Element> elm;
-	for(Handler<Servant> const& s : this->servants_){
+	for( auto it = this->servants_.crbegin(); it != this->servants_.crend();++it ) {
+		Handler<Servant> const& s = *it;
 		elm = s->findElementByPoint(screenVector);
 		if(elm) {
 			break;

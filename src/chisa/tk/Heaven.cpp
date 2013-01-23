@@ -49,65 +49,34 @@ Handler< ::donut::Object> Heaven::donutObject(Handler< ::donut::Heap> const& hea
 
 void Heaven::render(gl::Canvas& canvas)
 {
-	for(VectorMap<std::string, Handler<Angel> >::Pair& p : this->angelMap_ ) {
-		Handler<Angel> const& angel = p.second;
+	for( Handler<Angel> const& angel : this->angels_ ) {
 		angel->render(canvas);
 	}
 }
 
 void Heaven::idle(const float delta_ms)
 {
-	for(VectorMap<std::string, Handler<Angel> >::Pair& p : this->angelMap_ ) {
-		Handler<Angel> const& angel = p.second;
+	for( Handler<Angel> const& angel : this->angels_ ) {
 		angel->idle(delta_ms);
 	}
 }
 
 void Heaven::reshape(const geom::Area& area)
 {
-	for(VectorMap<std::string, Handler<Angel> >::Pair& p : this->angelMap_ ) {
-		Handler<Angel> const& angel = p.second;
+	for( Handler<Angel> const& angel : this->angels_ ) {
 		angel->reshape(area);
 	}
 }
 
-Handler<Angel> Heaven::findAngelById(const std::string& id)
+bool Heaven::attatchAngel(const Handler<Angel>& angel)
 {
-	VectorMap<std::string, Handler<Angel> >::Iterator it = this->angelMap_.find(id);
-	VectorMap<std::string, Handler<Angel> >::Pair& p = *it;
-	if( unlikely(it == angelMap_.end()) ) {
-		return Handler<Angel>();
+	auto it = std::find(angels_.begin(), angels_.end(), angel);
+	if( it != this->angels_.end() ) {
+		return false;
 	}
-	return p.second;
-}
-
-std::string Heaven::findAngelId(const Handler<Angel>& angel)
-{
-	for(VectorMap<std::string, Handler<Angel> >::Pair& p : this->angelMap_ ) {
-		Handler<Angel> const& angel = p.second;
-		if(p.second == angel){
-			return p.first;
-		}
-	}
-	return "";
-}
-
-void Heaven::attatchAngel(const std::string& id, const Handler<Angel>& angel)
-{
-	this->angelMap_.update(id, angel);
+	this->angels_.push_back(angel);
 	angel->reshape( this->world().lock()->area() );
-}
-
-std::string Heaven::attatchAngel(const Handler<Angel>& angel)
-{
-	do{
-		std::string const id( ::tarte::randomString(10));
-		if( this->angelMap_.insert(id, angel) ) {
-			angel->reshape( this->world().lock()->area() );
-			return id;
-		}
-	} while(true);
-	return "";
+	return true;
 }
 
 Handler<Angel> Heaven::newTwinAngel()
@@ -117,33 +86,20 @@ Handler<Angel> Heaven::newTwinAngel()
 
 Handler<Angel> Heaven::detatchAngel(const Handler<Angel>& angel)
 {
-	for( auto it = this->angelMap_.begin(); it != this->angelMap_.end(); ++it ) {
-		VectorMap<std::string, Handler<Angel> >::Pair& p = *it;
-		if(p.second == angel){
-			this->angelMap_.erase(it);
-			return angel;
-		}
-	}
-	return Handler<Angel>();
-}
-
-Handler<Angel> Heaven::detatchAngel(const std::string& id)
-{
-	VectorMap<std::string, Handler<Angel> >::Iterator it = this->angelMap_.find(id);
-	VectorMap<std::string, Handler<Angel> >::Pair& p = *it;
-	if( unlikely(it == angelMap_.end()) ) {
+	auto it = std::find(angels_.begin(), angels_.end(), angel);
+	if( it == this->angels_.end() ) {
 		return Handler<Angel>();
 	}
-	Handler<Angel> angel(p.second);
-	this->angelMap_.erase(it);
+	this->angels_.erase(it);
+
 	return angel;
 }
 
 Handler<Element> Heaven::findElementByPoint(geom::Point const& screenVector)
 {
 	Handler<Element> elm;
-	for(VectorMap<std::string, Handler<Angel> >::Pair& p : this->angelMap_ ) {
-		Handler<Angel> const& angel = p.second;
+	for( auto it = angels_.crbegin(); it != angels_.crend(); ++it ){
+		Handler<Angel> const& angel = *it;
 		elm = angel->findElementByPoint(screenVector);
 		if( elm ){
 			break;
@@ -155,8 +111,7 @@ Handler<Element> Heaven::findElementByPoint(geom::Point const& screenVector)
 Handler<Element> Heaven::findElementById(const std::string& id)
 {
 	Handler<Element> elm;
-	for(VectorMap<std::string, Handler<Angel> >::Pair& p : this->angelMap_ ) {
-		Handler<Angel> const& angel = p.second;
+	for( Handler<Angel> const& angel : this->angels_ ) {
 		elm = angel->findElementById(id);
 		if( elm ){
 			break;

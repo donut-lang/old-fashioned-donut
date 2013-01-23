@@ -55,13 +55,13 @@
 				</doc>
 				
 				<doc id="9" background="stretch:image:universe/slide/back2.png">
-					<font size="112">
-						<font color="darkred">ファミコンを<font color="darkblue">生きたまま解剖</font>できるコンテンツ</font>と
+					<font size="64">
+						<font color="darkred" size="112">ファミコンを<font color="darkblue" id="one">生きたまま解剖</font></font>できるコンテンツと、
 					</font>
 				</doc>
 				<doc id="10" background="stretch:image:universe/slide/back2.png">
 					<font size="64">
-						<font color="darkred" size="112">ファミコンを<font color="darkblue" id="one">生きたまま解剖</font></font>できるコンテンツと、<font color="darkred" size="112"><br /><font color="darkblue" id="two">時を司る</font>スクリプト言語を作った</font>
+						<font color="darkred" size="112">ファミコンを<font color="darkblue" id="one">生きたまま解剖</font></font>できるコンテンツと、<br /><font color="darkred" size="112"><font color="darkblue" id="two">時を司る</font>スクリプト言語</font>を作ってみた
 					</font>
 				</doc>
 				<doc id="11" background="stretch:image:universe/slide/back2.png">
@@ -78,7 +78,7 @@
 				</doc>
 				<doc id="14" background="stretch:image:universe/slide/back2.png">
 					<font size="112">実は</font><br />
-					<font size="112" color="red">　<br />そのシステムでスライドを作ってみた（ﾄﾞﾔ</font>
+					<font size="112" color="red">　<br />これがそのシステム</font>
 				</doc>
 			</widget>
 		</frame>
@@ -99,6 +99,11 @@
 		</frame>
 	</vertical>
 	<widget widget-klass="nes-screen" fit="expand" id="nes-screen-bigger" width="512" height="480" />
+	<vertical id="nes-watcher-bigger" width="1024" height="400" edge-color="red">
+		<scroll mode="vertical" split-weight="1">
+			<widget title="NES" widget-klass="nes-memory" widget-id="nes-watcher" fit="expand" />
+		</scroll>
+	</vertical>
 	<vertical id="nes">
 		<horizontal split-weight="1">
 			<vertical>

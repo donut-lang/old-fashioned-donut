@@ -46,7 +46,7 @@ class Element;
 class Heaven final : public HandlerBody<Heaven> {
 private:
 	HandlerW<World> world_;
-	VectorMap<std::string, Handler<Angel> > angelMap_;
+	std::vector<Handler<Angel> > angels_;
 	HandlerW< ::donut::Object> donutObject_;
 public:
 	Heaven(Handler<World> const& world);
@@ -64,12 +64,8 @@ public:
 	Handler<Element> findElementByPoint(geom::Point const& screenVector);
 	Handler<Element> findElementById(std::string const& id);
 public:
-	Handler<Angel> findAngelById( std::string const& id );
-	std::string findAngelId( Handler<Angel> const& angel );
-	void attatchAngel( std::string const& id, Handler<Angel> const& angel);
-	std::string attatchAngel( Handler<Angel> const& angel );
+	bool attatchAngel( Handler<Angel> const& angel );
 	Handler<Angel> detatchAngel( Handler<Angel> const& angel );
-	Handler<Angel> detatchAngel( std::string const& id );
 public:
 	Handler<Angel> newTwinAngel();
 	Handler<Angel> newLoneAngel();
