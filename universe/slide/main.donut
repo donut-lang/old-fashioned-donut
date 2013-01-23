@@ -90,6 +90,8 @@ main = func(){
 	showLabelAngel("nes-tracer", "its_a_tracer");
 	showLabelAngel("memory-viewer", "its_a_viewer");
 	
+	World.popElement();
+	
 	showBiggerScreen();
 };
 

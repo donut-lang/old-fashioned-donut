@@ -35,6 +35,7 @@ WorldProvider::WorldProvider(const Handler<Heap>& heap, const Handler<World>& wo
 	this->registerPureNativeClosure("heaven", &WorldObject::heaven);
 	this->registerPureNativeClosure("findWidgetById", &WorldObject::findWidgetById);
 	this->registerReactiveNativeClosure("pushElement", &WorldObject::pushElement);
+	this->registerReactiveNativeClosure("popElement", &WorldObject::popElement);
 }
 
 Handler<World> WorldProvider::world() const
@@ -70,9 +71,13 @@ WorldObject::ResultType WorldObject::execAntiSideEffect(const Handler<Heap>& hea
 	AntiSideEffect anti;
 	switch(val.op){
 	case AntiSideEffect::PushElement:
+		anti.op = AntiSideEffect::PopElement;
+		this->world()->pushElement(val.elm);
+		break;
+	case AntiSideEffect::PopElement:
 		anti.op = AntiSideEffect::PushElement;
 		anti.elm = this->world()->rootElement();
-		this->world()->pushElement(val.elm);
+		this->world()->popElement();
 		break;
 	}
 
@@ -135,10 +140,19 @@ std::tuple<Handler<ElementObject>, bool, WorldSideEffect> WorldObject::pushEleme
 {
 	Handler<World> const world = this->world();
 	WorldSideEffect anti;
-	anti.op = AntiSideEffect::PushElement;
-	anti.elm = world->rootElement();
+	anti.op = AntiSideEffect::PopElement;
 	world->pushElement(elementId);
 	return std::tuple<Handler<ElementObject>, bool, WorldSideEffect>(world->rootElement()->donutObject(), true, anti);
+}
+std::tuple<Handler<ElementObject>, bool, WorldSideEffect> WorldObject::popElement()
+{
+	Handler<World> const world = this->world();
+	WorldSideEffect anti;
+	anti.op = AntiSideEffect::PushElement;
+	anti.elm = world->rootElement();
+	world->popElement();
+	return std::tuple<Handler<ElementObject>, bool, WorldSideEffect>(anti.elm->donutObject(), true, anti);
+
 }
 
 }}

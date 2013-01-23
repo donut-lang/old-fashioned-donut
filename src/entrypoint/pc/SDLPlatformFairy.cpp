@@ -116,12 +116,21 @@ bool SDLPlatformFairy::pollEvent(Chisa& chisa)
 			case SDL_BUTTON_LEFT:
 				chisa.pointerDown(ev.button.timestamp, 0, geom::Point(ev.button.x, ev.button.y));
 				break;
+#if CHISA_WINDOWS
+			case 4:
+				chisa.onMouseBack(ev.button.timestamp);
+				break;
+			case 5:
+				chisa.onMouseForward(ev.button.timestamp);
+				break;
+#elif CHISA_LINUX
 			case 8:
 				chisa.onMouseBack(ev.button.timestamp);
 				break;
 			case 9:
 				chisa.onMouseForward(ev.button.timestamp);
 				break;
+#endif
 			default:
 				break;
 			}

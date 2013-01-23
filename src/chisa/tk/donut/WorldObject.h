@@ -31,7 +31,8 @@ using namespace donut;
 
 struct WorldSideEffect{
 	enum {
-		PushElement
+		PushElement,
+		PopElement
 	} op;
 	union {
 
@@ -80,6 +81,7 @@ public:
 	Handler<ElementObject> findElementById(std::string const& id);
 	Handler<WidgetObject> findWidgetById(std::string const& widgetid);
 	std::tuple<Handler<ElementObject>, bool, WorldSideEffect> pushElement(std::string const& elementId);
+	std::tuple<Handler<ElementObject>, bool, WorldSideEffect> popElement();
 
 };
 
