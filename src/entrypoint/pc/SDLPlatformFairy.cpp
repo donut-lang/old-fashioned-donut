@@ -162,7 +162,11 @@ bool SDLPlatformFairy::pollEvent(Chisa& chisa)
 			chisa.textEdit(ev.edit.timestamp, ev.edit.text, ev.edit.start, ev.edit.length);
 			break;
 		case SDL_KEYDOWN:
-			chisa.keyDown(ev.key.timestamp, ev.key.repeat, ev.key.keysym);
+			if( ev.key.keysym.scancode == SDL_SCANCODE_ESCAPE && ev.key.repeat == 0 ) {
+				return false;
+			}else{
+				chisa.keyDown(ev.key.timestamp, ev.key.repeat, ev.key.keysym);
+			}
 			break;
 		case SDL_KEYUP:
 			chisa.keyUp(ev.key.timestamp, ev.key.keysym);
