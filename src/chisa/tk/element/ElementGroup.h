@@ -86,10 +86,10 @@ public: /* ツリー操作 */
 		return children_.at(idx).first;
 	}
 	virtual void addChild(Handler<Element> const& h, Context const& ctx) {
-		this->children_.push_back(std::make_pair(h,ctx));
+		this->children_.push_back(ContainerType(h,ctx));
 	}
 	virtual void addChild(std::size_t const& idx, Handler<Element> const& h, Context const& ctx) {
-		this->children_.insert(this->children_.begin() + idx, std::make_pair(h,ctx));
+		this->children_.insert(this->children_.begin() + idx, ContainerType(h,ctx));
 	}
 	virtual void addChild(Handler<Element> const& h) override final {
 		this->addChild(h, Context());

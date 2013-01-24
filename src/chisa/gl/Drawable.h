@@ -31,7 +31,7 @@ class Canvas;
 class Sprite;
 class DrawableManager;
 
-constexpr const double PI = std::acos(-1.0);
+constexpr const double PI = M_PI;
 
 class Drawable : public HandlerBody<Drawable> {
 	HandlerW<DrawableManager> manager_;

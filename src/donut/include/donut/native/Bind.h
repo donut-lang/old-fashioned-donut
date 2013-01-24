@@ -47,7 +47,7 @@ template <typename R, typename S, typename... Args>
 std::function<Handler<Object>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)>
 createBindPure(std::function<R(S self, Args... args)> f)
 {
-	return [f](Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args){
+	return [f](Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)->Handler<Object>{
 		if (args.size() != sizeof...(Args)) {
 			DONUT_EXCEPTION(Exception, "this pure native closure needs %d arguments, but %d arguments applied.", sizeof...(Args), args.size());
 		}
@@ -92,7 +92,7 @@ template <typename __AntiSideEffect,typename R, typename S, typename... Args>
 std::function<std::tuple<Handler<Object>, bool, __AntiSideEffect>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)>
 createBindReactive(std::function<std::tuple<R, bool, __AntiSideEffect>(S self, Args... args)> f)
 {
-	return [f](Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args){
+	return [f](Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)->std::tuple<Handler<Object>, bool, __AntiSideEffect>{
 		if (args.size() != sizeof...(Args)) {
 			DONUT_EXCEPTION(Exception, "this reactive native closure needs %d arguments, but %d arguments applied.", sizeof...(Args), args.size());
 		}

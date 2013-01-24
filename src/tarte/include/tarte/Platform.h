@@ -21,6 +21,8 @@
 #include <cfloat>
 #include <climits>
 
+#define CHISA_IOS (defined(__IPHONE_OS_VERSION_MIN_REQUIRED))
+
 #define CHISA_LINUX (defined(__linux__) || defined(__linux) || defined(__gnu_linux__) || defined(linux))
 #define CHISA_WINDOWS (defined(WIN32) || defined(WIN64) || defined(__WIN32__) || defined(__WIN64__))
 #define CHISA_ANDROID (defined(ANDROID))

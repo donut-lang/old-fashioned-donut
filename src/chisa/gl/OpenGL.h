@@ -25,6 +25,12 @@
 #define IS_GLES11 (1)
 #define IS_GLES20 (0)
 #define IS_GL (0)
+#elif CHISA_IOS
+#include <OpenGLES/ES1/gl.h>
+#define IS_GLES (1)
+#define IS_GLES11 (1)
+#define IS_GLES20 (0)
+#define IS_GL (0)
 #else
 #include <GL/gl.h>
 #define IS_GLES (0)

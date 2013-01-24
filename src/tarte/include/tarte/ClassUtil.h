@@ -24,6 +24,7 @@
 	klass(klass&& other) = delete;\
 	klass& operator=(klass const& other) = delete;\
 	klass& operator=(klass&& other) = delete;
+
 #define DEFAULT_COPY_AND_ASSIGN(klass)\
 public:\
 	klass(klass const& other) = default;\
