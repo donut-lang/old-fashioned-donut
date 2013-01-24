@@ -82,6 +82,10 @@ NesGeist::Gamepad::Gamepad(NesGeist& self, Handler<chisa::JoystickManager> const
 					self.log().d(TAG, "Joystick found: %d %d buttons.", i, this->joystick_->numButtons());
 				}
 				break;
+			}else{
+				if(self.log().d()){
+					self.log().d(TAG, "This stick has only %d buttons...", this->joystick_->numButtons());
+				}
 			}
 		}
 	}
