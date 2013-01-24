@@ -107,7 +107,7 @@
 				</doc>
 				<doc id="21" background="stretch:image:universe/slide/back1.png">
 					<p margin="100">
-						<font size="112">バイナリは何処いった？？</font>
+						<font size="112">バイナリは、<br />２進数は、<br />何処いった？？</font>
 					</p>
 				</doc>
 				<doc id="22" background="stretch:image:universe/slide/back1.png">
@@ -142,7 +142,7 @@
 				</doc>
 				<doc id="28" background="stretch:image:universe/slide/back1.png">
 					<p margin-left="150" margin-top="50">
-						<font size="112">奇跡の、<br />　　　ゲ<br />　　　｜<br />　　　ム<br/>　　　機</font>
+						<font size="112">素朴な、<br />　　　ゲ<br />　　　｜<br />　　　ム<br/>　　　機</font>
 					</p>
 				</doc>
 				<doc id="29" background="stretch:image:universe/slide/back1.png">
@@ -199,7 +199,7 @@
 				</doc>
 				<doc id="37" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
-						<font size="112"><font color="#f22" size="128">未来に帰り</font><br /></font><br />
+						<font size="112"><font color="#f22" size="128">未来に還れる</font><br /></font><br />
 					</p>
 				</doc>
 				<doc id="38" background="stretch:image:universe/slide/back2.png">
@@ -217,10 +217,120 @@
 						<font size="320">は？</font><br />
 					</p>
 				</doc>
+				<doc id="41" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="128">さっきの出前授業画面</font><br />
+					</p>
+				</doc>
+				<doc id="42" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="100">ﾘｱﾙ本のように<br />理解出来なかった<br />所から<br /><font color="darkred" size="132">読みなおす</font></font>
+					</p>
+				</doc>
+				<doc id="43" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="100">これでやっと</font>
+					</p>
+				</doc>
+				<doc id="44" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="100"><font size="128" color="darkred">"本"</font>が<br />作れるようになった</font>
+					</p>
+				</doc>
+				
+				<doc id="45" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="128">時間操作による<br />フロー制御</font><br />
+					</p>
+				</doc>
+				<doc id="46" background="stretch:image:universe/slide/back2.png">
+					<p margin="50">
+						<font size="72">tabeta = 0;<br /><font id="before">time = Homura.tick();</font><br />++tabeta;<br />System.println<br />(tabeta,"番目のドーナッツを食べた。");<br /><font id="after">Homura.seek(time);</font></font><br />
+					</p>
+				</doc>
+				<doc id="47" background="stretch:image:universe/slide/back2.png">
+					<p margin="0"><font size="72">1番目のドーナッツを食べた。<br />1番目のドーナッツを食べた。<br />1番目のドーナッツを食べた。<br />1番目のドーナッツを食べた。<br />1番目のドーナッツを食べた。<br />1番目のドーナッツを食べた。<br />1番目のドーナッツを食べた。<br />1番目のドーナッツを食べた。
+						</font>
+					</p>
+				</doc>
+				<doc id="48" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="100">何度でも</font><br />
+						<font size="128" color="darkred">一つめの<br />ど～なっつを</font><br />
+						<font size="100">食べられる</font><br />
+					</p>
+				</doc>
+				<doc id="49" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="100">このスライドも</font>
+					</p>
+				</doc>
+				<doc id="50" background="stretch:image:universe/slide/back2.png">
+					<p margin-top="120" margin-left="20">
+						<font size="128">まとめ(*´ω｀*)</font>
+					</p>
+				</doc>
+				<doc id="51" background="stretch:image:universe/slide/back2.png">
+					<p margin="50">
+						<font size="100">ファミコンを<br /><font color="darkred" size="128">生きたまま解剖</font><br />した教材</font>
+					</p>
+				</doc>
+				<doc id="52" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="100"><font color="darkred">出前授業</font>、<br />なかなかの成功</font>
+					</p>
+				</doc>
+				<doc id="53" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="100"><font color="darkblue">時を司るスクリプト言語</font>で<br /><font color="darkred" size="128">真の"本"</font><br />が作れる</font>
+					</p>
+				</doc>
+				<doc id="54" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="160">今後</font>
+					</p>
+				</doc>
+				<doc id="55" background="stretch:image:universe/slide/back2.png">
+					<p margin-top="100" margin-left="50">
+						<font size="100">もっとマニアックな<br /><font color="darkred" size="128">"本"</font><br />に</font>
+					</p>
+				</doc>
+				<doc id="56" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="100"><font color="darkred">時間操作による<br />フロー制御</font>、<br />応用ネタが幾つか</font>
+					</p>
+				</doc>
+				<doc id="57" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="160">最後に</font>
+					</p>
+				</doc>
+				<doc id="58" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="100">西宮香風高校<br />松本 吉生先生</font>
+					</p>
+				</doc>
+				<doc id="59" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="100">Denis Grachev<br />Shiru<br />Kulor</font>
+					</p>
+				</doc>
+				<doc id="60" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="100">ありがとうございました</font>
+						
+					</p>
+				</doc>
+				<doc id="61" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="100">Our Journey Is<br /><font color="darkred" size="160">Not</font><br />Complete</font>
+					</p>
+				</doc>
 			</widget>
 		</frame>
 	</vertical>
 	<label font-size="96" text="？？？？" id="hatena" background-color="#ffffffa0" />
+	<label font-size="96" text="ここに時空移動" id="back_here" background-color="#ffffffa0" />
 	<label font-size="96" text="命令実行" id="its_a_tracer" background-color="#ffffffa0" />
 	<label font-size="96" text="メモリー空間" id="its_a_viewer" background-color="#ffffffa0" />
 	<label font-size="96" text="メモリ検索" id="its_a_compare" background-color="#ffffffa0" />
@@ -246,6 +356,37 @@
 			<widget widget-klass="image" fit="expand" id="demae-image" widget-id="demae-image">
 				<xobject>
 					<xstring name="src">slide/demae1.png</xstring>
+				</xobject>
+			</widget>
+		</frame>
+	</vertical>
+	<vertical id="loop1">
+		<frame split-weight="1">
+			<label background-color="#f000" transparent="true" machine="demo"><xstring>msg</xstring></label>
+			<vertical background-color="#0000" transparent="true">
+				<label background-color="#0000" text="" id="tabeta-label" font-size="128" />
+				<label background-color="#0000" text="ドーナッツを" font-size="128" />
+				<label background-color="#0000" text="食べた。" font-size="128" />
+			</vertical>
+			<widget widget-klass="image" fit="expand">
+				<xobject>
+					<xstring name="src">slide/back1.png</xstring>
+				</xobject>
+			</widget>
+		</frame>
+	</vertical>
+	<vertical id="loop2">
+		<frame split-weight="1">
+			<vertical background-color="#0000" transparent="true">
+				<frame split-weight="1" background-color="#0000">
+					<label transparent="true" background-color="#0000" machine="demo"><xstring>msg</xstring></label>
+					<label transparent="true" background-color="#0000" text="ほむほむ" font-size="96" />
+				</frame>
+				<button machine="demo" text="ワルプルギスの夜を倒す"><xstring>destroy</xstring></button>
+			</vertical>
+			<widget widget-klass="image" fit="expand">
+				<xobject>
+					<xstring name="src">slide/back1.png</xstring>
 				</xobject>
 			</widget>
 		</frame>

@@ -63,7 +63,7 @@ void ContentUnderlineServant::renderImpl(gl::Canvas& canvas)
 		doc::Text::DataType type = tex->objectAt(i);
 		geom::Point start(type->area().left(), type->area().bottom());
 		geom::Point end(type->area().right(), type->area().bottom());
-		canvas.drawLine(2, color_, start, end);
+		canvas.drawLine(3, color_, start, end);
 	}
 }
 

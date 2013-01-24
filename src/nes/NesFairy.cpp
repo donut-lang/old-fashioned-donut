@@ -25,6 +25,8 @@
 
 namespace nes {
 
+static std::string const TAG("NesFairy");
+
 /**********************************************************************************************************************
  * Video
  **********************************************************************************************************************/
@@ -65,12 +67,26 @@ void NesGeist::Video::dispatchRendering(const uint8_t (&nesBuffer)[screenHeight]
  * Gamepad
  **********************************************************************************************************************/
 
-NesGeist::Gamepad::Gamepad(Handler<chisa::JoystickManager> const& mgr)
-:joyState_(0)
+NesGeist::Gamepad::Gamepad(NesGeist& self, Handler<chisa::JoystickManager> const& mgr)
+:self_(self)
+,joyState_(0)
 ,keyState_(0)
 {
+	//XXX: 設定画面、作りましょう
 	if(mgr->numJoysticks() > 0) {
-		this->joystick_ = mgr->joystick(0);
+		for( std::size_t i = 0;i< mgr->numJoysticks(); ++i) {
+			auto joy = mgr->joystick(i);
+			if(joy->numButtons() >= 4){
+				this->joystick_ = joy;
+				if(self.log().d()){
+					self.log().d(TAG, "Joystick found: %d %d buttons.", i, this->joystick_->numButtons());
+				}
+				break;
+			}
+		}
+	}
+	if( !this->joystick_ && self_.log().d() ) {
+		self.log().d(TAG, "Joystick not found");
 	}
 }
 

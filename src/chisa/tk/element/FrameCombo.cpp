@@ -25,6 +25,7 @@ namespace chisa {
 namespace tk {
 
 CHISA_ELEMENT_SUBKLASS_CONSTRUCTOR_DEF_DERIVED(FrameCombo, Super)
+,numShown_(0)
 {
 }
 
@@ -40,19 +41,19 @@ std::string FrameCombo::toString() const
 
 void FrameCombo::renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
 {
-	for(std::pair<Handler<Element>, bool> pair : this->children()) {
+	for(std::vector<std::pair<Handler<Element>, bool> >::const_reverse_iterator it = std::vector<std::pair<Handler<Element>, bool> >::const_reverse_iterator(this->children().cbegin()+numShown_); it != children().crend(); ++it) {
+		std::pair<Handler<Element>, bool> pair = *it;
 		pair.first->render(canvas,ptInRoot,mask);
-		if( !pair.second ) {
-			break;
-		}
 	}
 }
 
 geom::Box FrameCombo::measureImpl(geom::Box const& constraint)
 {
 	geom::Box size;
+	this->numShown_ = 0;
 	for(std::pair<Handler<Element>, bool> pair : this->children()) {
 		size = geom::max(pair.first->measure( constraint ), size);
+		++numShown_;
 		if( !pair.second ) {
 			break;
 		}
@@ -62,8 +63,10 @@ geom::Box FrameCombo::measureImpl(geom::Box const& constraint)
 
 void FrameCombo::layoutImpl(geom::Distance const& offsetFromParent, geom::Box const& size)
 {
+	this->numShown_ = 0;
 	for(std::pair<Handler<Element>, bool> pair : this->children()) {
 		pair.first->layout(offsetFromParent, size);
+		++numShown_;
 		if( !pair.second ) {
 			break;
 		}

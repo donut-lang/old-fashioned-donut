@@ -35,7 +35,7 @@ NesGeist::NesGeist(chisa::Logger& log, ::tarte::Handler<Hexe> const& hexe, ::tar
 ,isBreak_(false)
 ,video_(*this)
 ,audio_(*this)
-,gamepad_(this->world()->joystickManager())
+,gamepad_(*this, this->world()->joystickManager())
 {
 	using namespace chisa::gl;
 	this->machine_ = new VirtualMachine(*this, video_, audio_, &gamepad_, nullptr);

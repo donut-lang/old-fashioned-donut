@@ -61,6 +61,7 @@ public:
 	};
 	class Gamepad final : public GamepadFairy {
 	private:
+		NesGeist& self_;
 		unsigned char joyState_;
 		unsigned char keyState_;
 		Handler<chisa::Joystick> joystick_;
@@ -68,7 +69,7 @@ public:
 		virtual void onUpdate() override;
 		virtual bool isPressed(uint8_t keyIdx) override;
 	public:
-		Gamepad(Handler<chisa::JoystickManager> const& mgr);
+		Gamepad(NesGeist& self, Handler<chisa::JoystickManager> const& mgr);
 		void updateJoystick();
 		void onFocusGained();
 		void onFocusLost();

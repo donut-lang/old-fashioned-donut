@@ -117,6 +117,46 @@ showDemaeReaction = func(){
 	};
 };
 
+showSourceAngel = func(){
+	heaven = World.heaven();
+	ang = heaven.newTwinAngel();
+
+	target2 = ang.newWidgetTarget("slide", "text:after");
+	underline2 = target2.newContentUnderlineServant("red", "after");
+	target2.attatchServant(underline2);
+	ang.attatchTarget(target2);
+	
+	heaven.attatchAngel(ang);
+	
+	interrupt null;
+	target1 = ang.newWidgetTarget("slide","text:before");
+	underline1 = target1.newContentUnderlineServant("red", "before");
+	target1.attatchServant(underline1);
+	ang.attatchTarget(target1);
+	
+	interrupt null;
+	l1 = target1.newElementServant("back_here");
+	target1.attatchServant(l1);
+	
+	interrupt null;
+	heaven.detatchAngel(ang);
+};
+
+homLoop = func(){
+	time=Homura.tick();
+	tabeta = 0;
+	World.pushElement("loop1");
+	World.findElementById("tabeta-label").setText((++tabeta).toString()+"番目の");
+	interrupt null;
+	World.popElement();
+	World.pushElement("loop2");
+	msg = interrupt null;
+	World.popElement();
+	if(msg != "destroy"){
+		Homura.seek(time);
+	}else{};
+};
+
 main = func(){
 	interrupt null;
 	doc = World.findWidgetById("slide");
@@ -139,7 +179,6 @@ main = func(){
 	};
 
 	World.pushElement("nes");
-	
 	interrupt null;
 	showLabelAngel("nes-tracer", "its_a_tracer");
 	showLabelAngel("memory-viewer", "its_a_viewer");
@@ -160,10 +199,36 @@ main = func(){
 	showDemaeReaction();
 	World.popElement();
 	
-	for(;i<=100;++i){
+	for(;i<=41;++i){
 		doc.loadDocument(i.toString());
 		interrupt null;
 	};
+
+	World.pushElement("nes");
+	interrupt null;
+	showLabelAngel("nes-tracer", "its_a_tracer");
+	showLabelAngel("memory-viewer", "its_a_viewer");
+	showLabelAngel("memory-compare", "its_a_compare");
+	showBiggerWatcher();
+	showBiggerScreen();
+	World.popElement();
+	
+	for(; i <= 46;++i) {
+		doc.loadDocument(i.toString());
+		interrupt null;
+	};
+	showSourceAngel();
+	for(; i <= 49;++i) {
+		doc.loadDocument(i.toString());
+		interrupt null;
+	};
+	homLoop();
+
+	for(; i <= 61;++i) {
+		doc.loadDocument(i.toString());
+		interrupt null;
+	};
+
 };
 
 main();

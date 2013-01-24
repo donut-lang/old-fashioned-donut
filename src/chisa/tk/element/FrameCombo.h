@@ -25,6 +25,8 @@ namespace tk {
 
 class FrameCombo : public ElementGroupBase<bool> {
 	CHISA_ELEMENT_SUBKLASS(FrameCombo);
+private:
+	std::size_t numShown_;
 public:
 	virtual std::string toString() const override;
 public:
