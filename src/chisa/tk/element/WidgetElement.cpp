@@ -202,7 +202,7 @@ void WidgetElement::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElem
 
 geom::Point WidgetElement::calcPtInWidgetRel(geom::Point const& ptInScreen)
 {
-	const geom::Point delta = ptInScreen - this->lastInnerPositionInRoot();
+	const geom::Point delta = ptInScreen - this->lastInnerPositionInRoot() - this->widgetOffset();
 	return geom::Point( delta / this->widgetScale() );
 }
 
