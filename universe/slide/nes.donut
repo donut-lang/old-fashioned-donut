@@ -45,7 +45,94 @@ MemoryAngel.hide = func(){
 		World.heaven().detatchAngel(self.angel);
 		self.angel  = null;
 	}else{};
+	if( self.bigAngel != null ) {
+		World.heaven().detatchAngel(self.bigAngel);
+		self.bigAngel  = null;
+	}else{};
 };
+MemoryAngel.bigAngel = null;
+
+MemoryAngel.showBiggerScreen = func(){
+	heaven = World.heaven();
+	if( self.bigAngel != null ) {
+		heaven.detatchAngel(self.bigAngel);
+		self.bigAngel = null;
+		return null;
+	}else{};
+	ang = heaven.newLoneAngel();
+	target = ang.newElementTarget("nes-screen");
+	halo = target.newHaloServant("red");
+	elm = target.newElementServant("nes-screen-bigger");
+	elm.disableAnimation();
+	
+	target.attatchServant(halo);
+	target.attatchServant(elm);
+	ang.attatchTarget(target);
+	heaven.attatchAngel(ang);
+	self.bigAngel = ang;
+};
+
+MemoryAngel.showBiggerWatcher = func(){
+	heaven = World.heaven();
+	if( self.bigAngel != null ) {
+		heaven.detatchAngel(self.bigAngel);
+		self.bigAngel = null;
+		return null;
+	}else{};
+	ang = heaven.newLoneAngel();
+	target = ang.newElementTarget("nes-screen");
+	halo = target.newHaloServant("red");
+	elm = target.newElementServant("nes-watcher-bigger");
+	elm.disableAnimation();
+	
+	target.attatchServant(halo);
+	target.attatchServant(elm);
+	ang.attatchTarget(target);
+	heaven.attatchAngel(ang);
+	self.bigAngel = ang;
+};
+
+MemoryAngel.showBiggerTrace = func(){
+	heaven = World.heaven();
+	if( self.bigAngel != null ) {
+		heaven.detatchAngel(self.bigAngel);
+		self.bigAngel = null;
+		return null;
+	}else{};
+	ang = heaven.newLoneAngel();
+	target = ang.newElementTarget("nes-screen");
+	halo = target.newHaloServant("red");
+	elm = target.newElementServant("nes-trace-bigger");
+	elm.disableAnimation();
+	
+	target.attatchServant(halo);
+	target.attatchServant(elm);
+	ang.attatchTarget(target);
+	heaven.attatchAngel(ang);
+	self.bigAngel = ang;
+};
+
+MemoryAngel.showBiggerCompare = func(){
+	heaven = World.heaven();
+	if( self.bigAngel != null ) {
+		heaven.detatchAngel(self.bigAngel);
+		self.bigAngel = null;
+		return null;
+	}else{};
+	heaven = World.heaven();
+	ang = heaven.newLoneAngel();
+	target = ang.newElementTarget("nes-screen");
+	halo = target.newHaloServant("red");
+	elm = target.newElementServant("nes-compare-bigger");
+	elm.disableAnimation();
+	
+	target.attatchServant(halo);
+	target.attatchServant(elm);
+	ang.attatchTarget(target);
+	heaven.attatchAngel(ang);
+	self.bigAngel = ang;
+};
+
 MemoryAngel.handle = func(msg){
 	if(msg.action == "new-angel"){
 		heaven = World.heaven();
@@ -98,6 +185,14 @@ MemoryAngel.handle = func(msg){
 			World.heaven().detatchAngel(self.angel);
 			self.angel = null;
 		};
+	}else if(msg.action == "bigger-screen") {
+		self.showBiggerScreen();
+	}else if(msg.action == "bigger-watcher") {
+		self.showBiggerWatcher();
+	}else if(msg.action == "bigger-compare") {
+		self.showBiggerCompare();
+	}else if(msg.action == "bigger-trace") {
+		self.showBiggerTrace();
 	}else{};
 	return false;
 };

@@ -63,6 +63,8 @@ public:
 	geom::Area calcAreaInElement(geom::Area const& areaInWidget);
 	geom::Area calcAreaInRoot(geom::Area const& areaInWidget);
 public:
+	inline Handler<WidgetElement> self() { return Handler<WidgetElement>::__internal__fromRawPointerWithoutCheck(this); };
+public:
 	virtual void onShownImpl() override final;
 	virtual void onHiddenImpl() override final;
 	virtual bool onDownRaw(float const& timeMs, geom::Point const& ptInScreen) override final;

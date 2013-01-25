@@ -41,37 +41,6 @@ showLabelAngel = func(widget, element){
 	heaven.detatchAngel(ang);
 };
 
-showBiggerScreen = func(){
-	heaven = World.heaven();
-	ang = heaven.newLoneAngel();
-	target = ang.newElementTarget("nes-screen");
-	halo = target.newHaloServant("red");
-	elm = target.newElementServant("nes-screen-bigger");
-	elm.disableAnimation();
-	
-	target.attatchServant(halo);
-	target.attatchServant(elm);
-	ang.attatchTarget(target);
-	heaven.attatchAngel(ang);
-	interrupt null;
-	heaven.detatchAngel(ang);
-};
-
-showBiggerWatcher = func(){
-	heaven = World.heaven();
-	ang = heaven.newLoneAngel();
-	target = ang.newElementTarget("nes-screen");
-	halo = target.newHaloServant("red");
-	elm = target.newElementServant("nes-watcher-bigger");
-	elm.disableAnimation();
-	
-	target.attatchServant(halo);
-	target.attatchServant(elm);
-	ang.attatchTarget(target);
-	heaven.attatchAngel(ang);
-	interrupt null;
-	heaven.detatchAngel(ang);
-};
 
 showDemae1Angel = func(){
 	heaven = World.heaven();
@@ -160,7 +129,7 @@ homLoop = func(){
 main = func(){
 	interrupt null;
 	doc = World.findWidgetById("slide");
-	for(i=1;i<=10;++i) {
+	for(i=1;i<=11;++i) {
 		doc.loadDocument(i.toString());
 		interrupt null;
 	};
@@ -183,13 +152,11 @@ main = func(){
 	showLabelAngel("nes-tracer", "its_a_tracer");
 	showLabelAngel("memory-viewer", "its_a_viewer");
 	showLabelAngel("memory-compare", "its_a_compare");
-	showBiggerWatcher();
-	showBiggerScreen();
 	
 	closeAllNesAngel();
 	World.popElement();
 	
-	for(;i<=25;++i){
+	for(i=100;i<=105;++i){
 		doc.loadDocument(i.toString());
 		interrupt null;
 	};
@@ -222,8 +189,6 @@ main = func(){
 	showLabelAngel("nes-tracer", "its_a_tracer");
 	showLabelAngel("memory-viewer", "its_a_viewer");
 	showLabelAngel("memory-compare", "its_a_compare");
-	showBiggerWatcher();
-	showBiggerScreen();
 	World.popElement();
 	
 	for(; i <= 46;++i) {

@@ -76,6 +76,10 @@ public:
 protected:
 	virtual Handler< ::donut::Object> createDonutObject(Handler< ::donut::Heap> const& heap) = 0;
 public:
+	void onAttatched();
+	void onDetatched();
+	void onShown();
+	void onHidden();
 	void render(gl::Canvas& canvas);
 	void idle(const float delta_ms);
 	geom::Box reshape(geom::Area const& area);
@@ -83,6 +87,10 @@ public:
 	virtual Handler<Element> findElementById(std::string const& id);
 	virtual Handler<Element> findElementByPoint(geom::Point const& screenVector);
 protected:
+	virtual void onAttatchedImpl() {};
+	virtual void onDetatchedImpl() {};
+	virtual void onShownImpl() {};
+	virtual void onHiddenImpl() {};
 	virtual void renderImpl(gl::Canvas& canvas) = 0;
 	virtual void idleImpl(const float delta_ms) = 0;
 	virtual geom::Box reshapeImpl(geom::Area const& area) = 0;
@@ -130,6 +138,9 @@ public:
 	virtual Handler<AngelWidgetTarget> matchToWidgetTarget(std::string const& widgetId, std::string const& widgetGuide) noexcept;
 public:
 	void onAttatched();
+	void onDetatched();
+	void onShown();
+	void onHidden();
 	void render(gl::Canvas& canvas);
 	void idle(const float delta_ms);
 	geom::Box reshape(geom::Area const& area);
@@ -137,7 +148,10 @@ public:
 	Handler<Element> findElementByPoint(geom::Point const& screenVector);
 	Handler<Element> findElementById(std::string const& id);
 protected:
-	virtual void onAttatchedImpl() = 0;
+	virtual void onAttatchedImpl() {};
+	virtual void onDetatchedImpl() {};
+	virtual void onShownImpl() {};
+	virtual void onHiddenImpl() {};
 	virtual void renderImpl(gl::Canvas& canvas) = 0;
 	virtual void idleImpl(const float delta_ms) = 0;
 	virtual geom::Box reshapeImpl(geom::Area const& area) = 0;
@@ -168,6 +182,10 @@ public:
 	Handler<Heaven> heaven() const;
 	Handler< ::donut::Object> donutObject(Handler< ::donut::Heap> const& heap);
 public:
+	void onAttatched();
+	void onDetatched();
+	void onShown();
+	void onHidden();
 	void render(gl::Canvas& canvas);
 	void idle(const float delta_ms);
 	void reshape(geom::Area const& area);
@@ -175,6 +193,10 @@ public:
 	Handler<Element> findElementByPoint(geom::Point const& screenVector);
 	Handler<Element> findElementById(std::string const& id);
 protected:
+	virtual void onAttatchedImpl() {};
+	virtual void onDetatchedImpl() {};
+	virtual void onShownImpl() {};
+	virtual void onHiddenImpl() {};
 	virtual void renderImpl(gl::Canvas& canvas) = 0;
 	virtual void idleImpl(const float delta_ms) = 0;
 	virtual void reshapeImpl(geom::Area const& area) = 0;

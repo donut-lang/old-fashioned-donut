@@ -115,6 +115,16 @@ Handler<Element> ElementServant::findElementById(const std::string& id)
 	return this->element()->findElementById(id);
 }
 
+void ElementServant::onShownImpl()
+{
+	element()->onShown();
+}
+
+void ElementServant::onHiddenImpl()
+{
+	element()->onHidden();
+}
+
 Handler<Element> ElementServant::findElementByPoint(const geom::Point& screenVector)
 {
 	return this->element()->findElementByPoint(screenVector);

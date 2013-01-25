@@ -20,67 +20,85 @@
 				<doc id="2" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
 						<font size="112">われは、われである。<br />　<br /></font>
-						<font color="darkblue" size="40">#無人化すべきである</font>
+						<font color="darkblue" size="52">#無人化すべきである</font><br />
+						<font size="12">雪風のOVA、言うほど悪くないのでは</font>
 					</p>
 				</doc>
 				<doc id="3" background="stretch:image:universe/slide/back2.png">
-					<font size="112">東京大学　理科２類</font>
+					<font size="112">所属部隊</font>
 				</doc>
 				<doc id="4" background="stretch:image:universe/slide/back2.png">
-					<font size="112">東京大学　理科２類→</font>
+					<font size="112">東京大学　理科２類</font>
 				</doc>
 				<doc id="5" background="stretch:image:universe/slide/back2.png">
+					<font size="112">東京大学　理科２類→</font>
+				</doc>
+				<doc id="6" background="stretch:image:universe/slide/back2.png">
 					<font size="112">東京大学　理科２類→<br />
 						＿人人人人人＿<br />
 						＞　<font color="red">獣医学</font>　＜<br />
 						￣Y^Y^Y^Y￣ <br />
 					</font>
 				</doc>
-				<doc id="6" background="stretch:image:universe/slide/back2.png">
-					<font size="136">　<br />コンピュータ関係ない<br />
-					</font>
-				</doc>
 				<doc id="7" background="stretch:image:universe/slide/back2.png">
-					<font size="136">　<br />はい<br />
+					<font size="136">　<br />コンピュータ関係ない<br />ʅ(´◔౪◔)ʃ
 					</font>
 				</doc>
 				<doc id="8" background="stretch:image:universe/slide/back2.png">
+					<font size="136">　<br />はい<br />
+					</font>
+				</doc>
+				<doc id="9" background="stretch:image:universe/slide/back2.png">
 					<font size="136">　<br />で、一体何を作ったのか<br />
 					</font>
 				</doc>
 				
-				<doc id="9" background="stretch:image:universe/slide/back2.png">
+				<doc id="10" background="stretch:image:universe/slide/back2.png">
 					<font size="64">
 						<font color="darkred" size="112">ファミコンを<font color="darkblue" id="one">生きたまま解剖</font></font>できるコンテンツと、
 					</font>
 				</doc>
-				<doc id="10" background="stretch:image:universe/slide/back2.png">
+				<doc id="11" background="stretch:image:universe/slide/back2.png">
 					<font size="64">
 						<font color="darkred" size="112">ファミコンを<font color="darkblue" id="one">生きたまま解剖</font></font>できるコンテンツと、<br /><font color="darkred" size="112"><font color="darkblue" id="two">時を司る</font>スクリプト言語</font>を作ってみた
 					</font>
 				</doc>
-				<doc id="11" background="stretch:image:universe/slide/back2.png">
+				<!-- あかり -->
+				<doc id="12" background="stretch:image:universe/slide/back2.png">
 					<font size="112">　<br />わけがわからないよ</font>
 				</doc>
-				<doc id="12" background="stretch:image:universe/slide/back2.png">
-					<font size="112">　<br />出前授業した</font>
-				</doc>
-				<doc id="12" background="stretch:image:universe/slide/back2.png">
-					<font size="112">　<br />とりあえずご覧頂こう</font>
-				</doc>
 				<doc id="13" background="stretch:image:universe/slide/back2.png">
-					<font size="112">　<br />とりあえずご覧頂こう<br/>　…と言いたいところだけど…</font>
+					<font size="112">　<br />出前授業した<br />　<br />ledyba.org/famicom</font>
 				</doc>
 				<doc id="14" background="stretch:image:universe/slide/back2.png">
+					<font size="112">　<br />出前授業した<br />　<br />ledyba.org/famicom</font>
+				</doc>
+				<!-- うすしお -->
+				<doc id="100" background="stretch:image:universe/slide/back2.png">
+					<font size="112">　<br />せーかほーこくかい<br />とくべつじゅぎょー</font>
+				</doc>
+				<doc id="101" background="stretch:image:universe/slide/back2.png">
+					<font size="112">　<br />れい</font>
+				</doc>
+				<doc id="102" background="stretch:image:universe/slide/back2.png">
+					<font size="112">　<br />ちゃくせき</font>
+				</doc>
+				<doc id="103" background="stretch:image:universe/slide/back2.png">
+					<font size="112">　<br />//TODO: デモ開く</font>
+				</doc>
+				<doc id="104" background="stretch:image:universe/slide/back2.png">
+					<font size="112">　<br />//TODO: デモ開く</font><br />…と言いたいところだが
+				</doc>
+				<doc id="105" background="stretch:image:universe/slide/back2.png">
 					<font size="112">実は</font><br />
 					<font size="112" color="red">　<br />これがそのシステム</font>
 				</doc>
-				<doc id="15" background="stretch:image:universe/slide/back1.png">
+				<doc id="106" background="stretch:image:universe/slide/back1.png">
 					<p margin="100">
 						<font size="112">便利なAPI<br />便利なOS</font>
 					</p>
 				</doc>
-				<doc id="16" background="stretch:image:universe/slide/back1.png">
+				<doc id="20" background="stretch:image:universe/slide/back1.png">
 					<p margin="100">
 						<font size="112">JQuery</font>
 					</p>
@@ -169,7 +187,7 @@
 				</doc>
 				<doc id="35" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
-						<font size="112"><font color="#f22" size="128">時を司る</font><br />スクリプト言語</font><br />
+						<font size="112"><font color="#f22" size="128">時を司る</font><br /><font size="112">スクリプト言語</font><font size="80">　</font><br />donut-lang.org</font>
 					</p>
 				</doc>
 				<doc id="36" background="stretch:image:universe/slide/back2.png">
@@ -408,10 +426,16 @@
 			</vertical>
 		</frame>
 	</vertical>
-	<widget widget-klass="nes-screen" fit="expand" id="nes-screen-bigger" width="512" height="480" />
+	<widget widget-klass="nes-screen" fit="expand" widget-id="nes-screen" id="nes-screen-bigger" width="512" height="480" />
+	<widget widget-klass="nes-trace" fit="center" widget-id="nes-trace" id="nes-trace-bigger" width="512" height="480" />
 	<vertical id="nes-watcher-bigger" width="1024" height="400" edge-color="red">
 		<scroll mode="vertical" split-weight="1">
 			<widget title="NES" widget-klass="nes-memory" widget-id="nes-watcher" fit="expand" />
+		</scroll>
+	</vertical>
+	<vertical id="nes-compare-bigger" width="1024" height="400" edge-color="red">
+		<scroll mode="vertical" split-weight="1">
+			<widget title="NES" widget-klass="nes-compare" widget-id="nes-compare" fit="expand" />
 		</scroll>
 	</vertical>
 	<vertical id="nes">
@@ -590,6 +614,26 @@
 			<button text="再開" id="continue" enabled="false">
 				<xobject>
 					<xstring name="action">nes-cont</xstring>
+				</xobject>
+			</button>
+			<button text="S">
+				<xobject>
+					<xstring name="action">bigger-screen</xstring>
+				</xobject>
+			</button>
+			<button text="M">
+				<xobject>
+					<xstring name="action">bigger-trace</xstring>
+				</xobject>
+			</button>
+			<button text="W">
+				<xobject>
+					<xstring name="action">bigger-watcher</xstring>
+				</xobject>
+			</button>
+			<button text="C">
+				<xobject>
+					<xstring name="action">bigger-compare</xstring>
 				</xobject>
 			</button>
 			<label split-weight="1" id="status" />

@@ -40,6 +40,8 @@ public:
 private:
 	virtual Handler< ::donut::Object> createDonutObject(Handler< ::donut::Heap> const& heap) override final;
 private:
+	virtual void onShownImpl() override final;
+	virtual void onHiddenImpl() override final;
 	virtual void renderImpl(gl::Canvas& canvas) override final;
 	virtual void idleImpl(const float delta_ms) override final;
 	virtual geom::Box reshapeImpl(geom::Area const& area) override final;

@@ -75,6 +75,8 @@ bool Heaven::attatchAngel(const Handler<Angel>& angel)
 		return false;
 	}
 	this->angels_.push_back(angel);
+	angel->onAttatched();
+	angel->onShown();
 	angel->reshape( this->world().lock()->area() );
 	return true;
 }
@@ -91,7 +93,8 @@ Handler<Angel> Heaven::detatchAngel(const Handler<Angel>& angel)
 		return Handler<Angel>();
 	}
 	this->angels_.erase(it);
-
+	angel->onHidden();
+	angel->onDetatched();
 	return angel;
 }
 

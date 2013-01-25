@@ -40,19 +40,6 @@ WidgetElement::~WidgetElement() noexcept
 	if(!this->widget()){
 		return;
 	}
-	if(this->borrowed_.lock()){
-		if(Handler<World> world = this->world().lock() ){
-			//ワールドの書き換えと、ウィジットへの現親レイアウトの通知
-			if(world->replaceWidget(this->widgetId_, this->borrowed_)) {
-				this->widget()->updateWrapper(this->self().cast<WidgetElement>());
-			}
-			// TODO　ウィジットにレイアウト通知入れたほうがいい？？
-		}
-	}else{
-		//このラッパの所属するワールドが所有権を持つので、何もせず黙って削除。
-		// INFO: ここで上のワールドはすでに開放済みなので、さわれません。
-		this->widget_.reset();
-	}
 }
 
 void WidgetElement::idle(const float delta_ms)
@@ -62,6 +49,7 @@ void WidgetElement::idle(const float delta_ms)
 	}
 	this->widget()->idle(delta_ms);
 }
+
 void WidgetElement::renderImpl(gl::Canvas& canvas, geom::Point const& ptInScreen, geom::Area const& mask)
 {
 	if(!widget()){
@@ -198,21 +186,16 @@ void WidgetElement::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElem
 		return;
 	}
 	if(Handler<World> world = this->world().lock()){
-		Handler<WidgetElement> parent;;
-		if(widgetId && (parent = world->findWidgetById(widgetId))){
+		Handler<WidgetElement> parent;
+		if(widgetId && (parent = world->findWidgetById(widgetId)) ) {
 			this->borrowed_ = parent;
-			world->replaceWidget(widgetId, this);
 			this->widget_ = parent->widget();
-			this->widget()->updateWrapper(this->self().cast<WidgetElement>());
 		}else{
 			this->widget_ = world->createWidget(widgetKlass, element);
-			if(widgetId){
-				world->replaceWidget(widgetId, this);
-			}
-			this->widget()->updateWrapper(this->self().cast<WidgetElement>());
-			if(!this->widget()){
-				this->log().e(TAG, "Oops. widget \"%s\" not registered.", widgetKlass);
-			}
+			this->widget_->updateWrapper( this->self() );
+		}
+		if( widgetId ) {
+			world->replaceWidget(widgetId_ = widgetId, this);
 		}
 	}
 }
@@ -301,11 +284,23 @@ void chisa::tk::WidgetElement::onFocusLost(const float& timeMs)
 void chisa::tk::WidgetElement::onShownImpl()
 {
 	widget_->onShown();
+	//TODO: 借りる処理はここで行う
+	Handler<World> const world = this->world().lock();
+	if( !world && !widgetId_.empty() ) {
+		world->replaceWidget(widgetId_, this);
+	}
+	this->widget()->updateWrapper( this->self() );
 }
 
 void chisa::tk::WidgetElement::onHiddenImpl()
 {
 	widget_->onHidden();
+	if( !this->borrowed_.expired() ){ //借りた物をかえす
+		Handler<World> const world = this->world().lock();
+		if(world && world->replaceWidget(this->widgetId_, this->borrowed_) ) {
+			this->widget()->updateWrapper( this->borrowed_ );
+		}
+	}
 }
 
 bool WidgetElement::onKeyUp(const float& timeMs, const SDL_Keysym& sym)

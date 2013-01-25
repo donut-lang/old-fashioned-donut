@@ -113,6 +113,7 @@ Handler<AngelTarget> Angel::detatchTarget(const Handler<AngelTarget>& target)
 	auto it = std::find(std::begin(targets_), std::end(targets_), target);
 	if(it != std::end(targets_)) {
 		targets_.erase(it);
+		target->onDetatched();
 		return target;
 	}
 	TARTE_EXCEPTION(Exception, "[BUG] Angel target not found.")
@@ -152,7 +153,29 @@ Handler<AngelElementTarget> Angel::findElementTarget(const std::string& elementI
 	}
 	return res;
 }
+void Angel::onAttatched()
+{
+	this->onAttatchedImpl();
+}
+void Angel::onDetatched()
+{
+	this->onDetatchedImpl();
+}
 
+void Angel::onShown()
+{
+	this->onShownImpl();
+	for(Handler<AngelTarget> const& target : this->targets_) {
+		target->onShown();
+	}
+}
+void Angel::onHidden()
+{
+	this->onHiddenImpl();
+	for(Handler<AngelTarget> const& target : this->targets_) {
+		target->onHidden();
+	}
+}
 /**********************************************************************************************************************
  * Servants
  **********************************************************************************************************************/
@@ -185,6 +208,7 @@ Handler<Angel> AngelTarget::angel() const
 void AngelTarget::attatchServant(const Handler<Servant>& servant)
 {
 	this->servants_.push_back(servant);
+	servant->onAttatched();
 	this->reshape( this->world()->area() );
 }
 
@@ -193,10 +217,69 @@ bool AngelTarget::detatchServant(const Handler<Servant>& servant)
 	auto it = std::find(this->servants_.begin(), this->servants_.end(), servant);
 	if(it != this->servants_.end()) {
 		this->servants_.erase(it);
+		servant->onDetatched();
 		return true;
 	}else{
 		return false;
 	}
+}
+void AngelTarget::onAttatched()
+{
+	this->onAttatchedImpl();
+}
+void AngelTarget::onDetatched()
+{
+	this->onDetatchedImpl();
+}
+void AngelTarget::onShown()
+{
+	this->onShownImpl();
+	for(Handler<Servant> const& serv : this->servants_) {
+		serv->onShown();
+	}
+}
+void AngelTarget::onHidden()
+{
+	this->onHiddenImpl();
+	for(Handler<Servant> const& serv : this->servants_) {
+		serv->onHidden();
+	}
+}
+
+void AngelTarget::render(gl::Canvas& canvas)
+{
+	this->renderImpl(canvas);
+	for(Handler<Servant> const& serv : this->servants_) {
+		serv->render(canvas);
+	}
+}
+
+void AngelTarget::idle(const float delta_ms)
+{
+	for(Handler<Servant> const& serv : this->servants_) {
+		serv->idle(delta_ms);
+	}
+	this->idleImpl(delta_ms);
+}
+
+geom::Box AngelTarget::reshape(const geom::Area& area)
+{
+	this->renderArea_ = area;
+	for(Handler<Servant> const& serv : this->servants_) {
+		serv->reshape(area);
+	}
+	return this->reshapeImpl(area);
+}
+
+Handler<AngelWidgetTarget> AngelTarget::toWidgetTarget()
+{
+	return Handler<AngelWidgetTarget>();
+}
+
+
+Handler<AngelElementTarget> AngelTarget::toElementTarget()
+{
+	return Handler<AngelElementTarget>();
 }
 
 Handler<HaloServant> AngelTarget::newHaloServant( gl::Color const& color )
@@ -310,35 +393,6 @@ Handler< ::donut::Object> Servant::donutObject(Handler< ::donut::Heap> const& he
 }
 
 
-void AngelTarget::onAttatched()
-{
-	this->onAttatchedImpl();
-}
-
-void AngelTarget::render(gl::Canvas& canvas)
-{
-	this->renderImpl(canvas);
-	for(Handler<Servant> const& serv : this->servants_) {
-		serv->render(canvas);
-	}
-}
-
-void AngelTarget::idle(const float delta_ms)
-{
-	for(Handler<Servant> const& serv : this->servants_) {
-		serv->idle(delta_ms);
-	}
-	this->idleImpl(delta_ms);
-}
-
-geom::Box AngelTarget::reshape(const geom::Area& area)
-{
-	this->renderArea_ = area;
-	for(Handler<Servant> const& serv : this->servants_) {
-		serv->reshape(area);
-	}
-	return this->reshapeImpl(area);
-}
 
 void Servant::render(gl::Canvas& canvas)
 {
@@ -366,16 +420,23 @@ Handler<Element> Servant::findElementByPoint(const geom::Point& screenVector)
 	return Handler<Element>();
 }
 
-Handler<AngelWidgetTarget> AngelTarget::toWidgetTarget()
+void Servant::onAttatched()
 {
-	return Handler<AngelWidgetTarget>();
+	this->onAttatchedImpl();
+}
+void Servant::onDetatched()
+{
+	this->onDetatchedImpl();
+}
+void Servant::onShown()
+{
+	this->onShownImpl();
+}
+void Servant::onHidden()
+{
+	this->onHiddenImpl();
 }
 
-
-Handler<AngelElementTarget> AngelTarget::toElementTarget()
-{
-	return Handler<AngelElementTarget>();
-}
 
 }}
 

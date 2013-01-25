@@ -53,7 +53,7 @@ Handler<Widget> AngelWidgetTarget::findWidget()
 
 geom::Area AngelWidgetTarget::findScreenAreaImpl()
 {
-	Handler<Widget> const& widget = findWidget();
+	Handler<Widget> const widget = findWidget();
 	if( unlikely(!widget) ) {
 		return geom::Area();
 	}
