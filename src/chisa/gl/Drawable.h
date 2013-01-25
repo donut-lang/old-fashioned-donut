@@ -31,7 +31,11 @@ class Canvas;
 class Sprite;
 class DrawableManager;
 
+#ifdef M_PI
 constexpr const double PI = M_PI;
+#else
+constexpr const double PI = 3.1415926535897932384626433832795028841971693993751;
+#endif
 
 class Drawable : public HandlerBody<Drawable> {
 	HandlerW<DrawableManager> manager_;
