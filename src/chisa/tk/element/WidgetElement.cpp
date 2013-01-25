@@ -213,7 +213,7 @@ geom::Point WidgetElement::calcPtInWidgetAbs(geom::Point const& ptInScreen)
 
 geom::Point WidgetElement::calcPtInElement(geom::Point const& ptInWidgetAbs)
 {
-	const geom::Point rel = ptInWidgetAbs - this->widgetOffset();
+	const geom::Point rel = ptInWidgetAbs + this->widgetOffset();
 	return rel * this->widgetScale();
 }
 

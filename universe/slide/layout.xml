@@ -52,7 +52,6 @@
 					<font size="136">　<br />で、一体何を作ったのか<br />
 					</font>
 				</doc>
-				
 				<doc id="10" background="stretch:image:universe/slide/back2.png">
 					<font size="64">
 						<font color="darkred" size="112">ファミコンを<font color="darkblue" id="one">生きたまま解剖</font></font>できるコンテンツと、
@@ -65,14 +64,15 @@
 				</doc>
 				<!-- あかり -->
 				<doc id="12" background="stretch:image:universe/slide/back2.png">
-					<font size="112">　<br />わけがわからないよ</font>
+					<font size="112">　<br />わけがわからないよ</font><br />
 				</doc>
 				<doc id="13" background="stretch:image:universe/slide/back2.png">
-					<font size="112">　<br />出前授業した<br />　<br />ledyba.org/famicom</font>
+					<font size="128">　<br />兵庫県<br />西宮<font color="darkred">香</font>風高校<br />＠01/18</font>
 				</doc>
 				<doc id="14" background="stretch:image:universe/slide/back2.png">
-					<font size="112">　<br />出前授業した<br />　<br />ledyba.org/famicom</font>
+					<font size="128">　<br />高校生に<br />出前授業した<br /></font>
 				</doc>
+				<!-- わぁい -->
 				<!-- うすしお -->
 				<doc id="100" background="stretch:image:universe/slide/back2.png">
 					<font size="112">　<br />せーかほーこくかい<br />とくべつじゅぎょー</font>
@@ -87,18 +87,19 @@
 					<font size="112">　<br />//TODO: デモ開く</font>
 				</doc>
 				<doc id="104" background="stretch:image:universe/slide/back2.png">
-					<font size="112">　<br />//TODO: デモ開く</font><br />…と言いたいところだが
+					<font size="112">　<br />//TODO: デモ開く<br />…<font size="128" color="darkred">と言いたいところだが</font></font>
 				</doc>
 				<doc id="105" background="stretch:image:universe/slide/back2.png">
 					<font size="112">実は</font><br />
 					<font size="112" color="red">　<br />これがそのシステム</font>
 				</doc>
-				<doc id="106" background="stretch:image:universe/slide/back1.png">
+				<!-- 嗚呼斑鳩が往く-->
+				<doc id="200" background="stretch:image:universe/slide/back1.png">
 					<p margin="100">
 						<font size="112">便利なAPI<br />便利なOS</font>
 					</p>
 				</doc>
-				<doc id="20" background="stretch:image:universe/slide/back1.png">
+				<doc id="201" background="stretch:image:universe/slide/back1.png">
 					<p margin="100">
 						<font size="112">JQuery</font>
 					</p>

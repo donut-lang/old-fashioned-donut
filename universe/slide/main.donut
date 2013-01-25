@@ -134,7 +134,7 @@ main = func(){
 		interrupt null;
 	};
 	showUnderline();
-	for(;i<=12;++i) {
+	for(;i<=14;++i) {
 		doc.loadDocument(i.toString());
 		interrupt null;
 	};
@@ -142,7 +142,10 @@ main = func(){
 	interrupt null;
 	showDemae1Angel();
 	World.popElement();
-	for(;i<=14;++i){
+	World.pushElement("ledybaorg");
+		interrupt null;
+	World.popElement();
+	for(i=100;i<=105;++i){
 		doc.loadDocument(i.toString());
 		interrupt null;
 	};
@@ -152,11 +155,12 @@ main = func(){
 	showLabelAngel("nes-tracer", "its_a_tracer");
 	showLabelAngel("memory-viewer", "its_a_viewer");
 	showLabelAngel("memory-compare", "its_a_compare");
+	interrupt null;
 	
 	closeAllNesAngel();
 	World.popElement();
 	
-	for(i=100;i<=105;++i){
+	for(i=200;i<=105;++i){
 		doc.loadDocument(i.toString());
 		interrupt null;
 	};
@@ -205,9 +209,6 @@ main = func(){
 		doc.loadDocument(i.toString());
 		interrupt null;
 	};
-	World.pushElement("ledybaorg");
-		interrupt null;
-	World.popElement();
 	for(; i <= 56;++i) {
 		doc.loadDocument(i.toString());
 		interrupt null;
