@@ -130,76 +130,56 @@
 						<font size="112">いやファミコンがある！</font>
 					</p>
 				</doc>
-				<doc id="26" background="stretch:image:universe/slide/back1.png">
-					<p margin="100">
-						<font size="112">メモリ<br />2048 bytes</font>
-					</p>
-				</doc>
-				<doc id="27" background="stretch:image:universe/slide/back1.png">
-					<p margin="100">
-						<font size="112">8ビット CPU</font>
-					</p>
-				</doc>
 				<doc id="28" background="stretch:image:universe/slide/back1.png">
-					<p margin-left="150" margin-top="50">
-						<font size="112">素朴な、<br />　　　ゲ<br />　　　｜<br />　　　ム<br/>　　　機</font>
-					</p>
-				</doc>
-				<doc id="29" background="stretch:image:universe/slide/back1.png">
-					<p margin="100">
-						<font size="112">ファミコンで</font>
-					</p>
-				</doc>
-				<doc id="30" background="stretch:image:universe/slide/back1.png">
 					<p margin="100">
 						<font size="112">「野生の<br />コンピュータ<br />入門」</font>
 					</p>
 				</doc>
-				<doc id="31" background="stretch:image:universe/slide/back1.png">
+				<doc id="29" background="stretch:image:universe/slide/back1.png">
 					<p margin="100">
 						<font size="112">できなイカ？</font>
 					</p>
 				</doc>
-				<doc id="32" background="stretch:image:universe/slide/back1.png">
+				<doc id="30" background="stretch:image:universe/slide/back1.png">
 					<p margin="100">
 						<font size="112">今回の<br />出前授業<br />感想</font>
 					</p>
 				</doc>
-				<doc id="33" background="stretch:image:universe/slide/demae2.png">
+				<doc id="31" background="stretch:image:universe/slide/demae2.png">
 					<p margin="100">
 						<font size="112">なんとか<br />バイナリを</font><br />
 						<font size="112">伝えることができたのでは！</font>
 					</p>
 				</doc>
-				<doc id="34" background="stretch:image:universe/slide/back2.png">
+				<doc id="32" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
 						<font size="112">「野生のコンピュータ入門」</font><br />
 						<font size="112">を支える技術</font>
 					</p>
 				</doc>
-				<doc id="35" background="stretch:image:universe/slide/back2.png">
+				<doc id="33" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
 						<font size="112"><font color="#f22">ど〜なっつ</font>について</font><br />
 					</p>
 				</doc>
-				<doc id="36" background="stretch:image:universe/slide/back2.png">
+				<doc id="34" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
 						<font size="112"><font color="#f22">ど〜なっつ</font>は</font><br />
 					</p>
 				</doc>
-				<doc id="37" background="stretch:image:universe/slide/back2.png">
+				<doc id="35" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
 						<font size="112"><font color="#f22" size="128">時を司る</font><br />スクリプト言語</font><br />
 					</p>
 				</doc>
-				<doc id="37" background="stretch:image:universe/slide/back2.png">
-					<p margin="100">
-						<font size="112"><font color="#f22" size="128">過去に戻り</font><br /></font><br />
+				<doc id="36" background="stretch:image:universe/slide/back2.png">
+					<p margin-left="100" margin-top="70">
+						<font size="112">過<br />去<br />に<br /><font color="#f22" size="128">遡</font>り<br /></font><br />
 					</p>
 				</doc>
 				<doc id="37" background="stretch:image:universe/slide/back2.png">
-					<p margin="100">
-						<font size="112"><font color="#f22" size="128">未来に還れる</font><br /></font><br />
+					<p margin-left="100" margin-top="70">
+						<font size="112">未<br />来<br />に<br /><font color="#f22" size="128">還</font>れる<br /></font><br />
 					</p>
 				</doc>
 				<doc id="38" background="stretch:image:universe/slide/back2.png">
@@ -209,7 +189,7 @@
 				</doc>
 				<doc id="39" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
-						<font size="128">そんなスクリプト言語</font><br />
+						<font size="128">そんな<br />スクリプト<br />言語</font><br />
 					</p>
 				</doc>
 				<doc id="40" background="stretch:image:universe/slide/back2.png">
@@ -240,7 +220,7 @@
 				
 				<doc id="45" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
-						<font size="128">時間操作による<br />フロー制御</font><br />
+						<font size="128"><font color="darkred">時間操作</font><br />による<br />フロー制御</font><br />
 					</p>
 				</doc>
 				<doc id="46" background="stretch:image:universe/slide/back2.png">
@@ -292,30 +272,35 @@
 				</doc>
 				<doc id="55" background="stretch:image:universe/slide/back2.png">
 					<p margin-top="100" margin-left="50">
-						<font size="100">もっとマニアックな<br /><font color="darkred" size="128">"本"</font><br />に</font>
+						<font size="100">出前授業の<br /><font color="darkred" size="128">シナリオ</font><br />うｐ</font>
 					</p>
 				</doc>
 				<doc id="56" background="stretch:image:universe/slide/back2.png">
-					<p margin="100">
-						<font size="100"><font color="darkred">時間操作による<br />フロー制御</font>、<br />応用ネタが幾つか</font>
+					<p margin-top="100" margin-left="50">
+						<font size="100">もっとマニアックな<br /><font color="darkred" size="128">"本"</font><br />に</font>
 					</p>
 				</doc>
 				<doc id="57" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
-						<font size="160">最後に</font>
+						<font size="100"><font color="darkred">時間操作による<br />フロー制御</font>、<br />応用ネタが幾つか</font>
 					</p>
 				</doc>
 				<doc id="58" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
-						<font size="100">西宮香風高校<br />松本 吉生先生</font>
+						<font size="160">最後に</font>
 					</p>
 				</doc>
 				<doc id="59" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
-						<font size="100">Denis Grachev<br />Shiru<br />Kulor</font>
+						<font size="100">西宮香風高校<br />松本 吉生先生</font>
 					</p>
 				</doc>
 				<doc id="60" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="100">Denis Grachev<br />Shiru<br />Kulor</font>
+					</p>
+				</doc>
+				<doc id="61" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
 						<font size="100">ありがとうございました</font>
 						
@@ -335,6 +320,12 @@
 	<label font-size="96" text="メモリー空間" id="its_a_viewer" background-color="#ffffffa0" />
 	<label font-size="96" text="メモリ検索" id="its_a_compare" background-color="#ffffffa0" />
 	<label font-size="96" text="これ" id="its_a_chisa" background-color="#ffffffa0" />
+	<label font-size="96" text="たった2048バイト" id="small_mem" background-color="#ffffffa0" />
+	<label font-size="96" text="シンプルなCPU" id="simple_cpu" background-color="#ffffffa0" />
+	<vertical id="fun_games" background-color="#ffffffa0">
+		<label font-size="96" text="今でも色褪せない" background-color="transparent" />
+		<label font-size="96" text="ファミコンゲーム" background-color="transparent" />
+	</vertical>
 	<vertical id="reaction1" background-color="#ffffff" edge-width="3" edge-color="yellow">
 		<label font-size="96" text="理論的には分かってた" background-color="transparent" />
 		<label font-size="96" text="けど、" background-color="transparent" />
@@ -389,6 +380,32 @@
 					<xstring name="src">slide/back1.png</xstring>
 				</xobject>
 			</widget>
+		</frame>
+	</vertical>
+	<vertical id="ledybaorg">
+		<frame split-weight="1">
+			<label transparent="true" background-color="#0000" machine="demo"><xstring>msg</xstring></label>
+			<vertical background-color="#0000" transparent="true">
+				<widget widget-klass="image" fit="expand" split-weight="1">
+					<xobject>
+						<xstring name="src">slide/famicom.png</xstring>
+					</xobject>
+				</widget>
+				<label transparent="true" background-color="#ffffffa0" text="ledyba.org/famicom" font-size="96" />
+			</vertical>
+		</frame>
+	</vertical>
+	<vertical id="donutlang">
+		<frame split-weight="1">
+			<label transparent="true" background-color="#0000" machine="demo"><xstring>msg</xstring></label>
+			<vertical background-color="#0000" transparent="true">
+				<widget widget-klass="image" fit="expand" split-weight="1">
+					<xobject>
+						<xstring name="src">slide/donut.png</xstring>
+					</xobject>
+				</widget>
+				<label transparent="true" background-color="#ffffffa0" text="donut-lang.org" font-size="96" />
+			</vertical>
 		</frame>
 	</vertical>
 	<widget widget-klass="nes-screen" fit="expand" id="nes-screen-bigger" width="512" height="480" />

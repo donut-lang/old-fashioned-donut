@@ -165,15 +165,15 @@ main = func(){
 		interrupt null;
 	};
 	showUnderline();
-	doc.loadDocument("11");
-	interrupt null;
-	doc.loadDocument("12");
-	interrupt null;
+	for(;i<=12;++i) {
+		doc.loadDocument(i.toString());
+		interrupt null;
+	};
 	World.pushElement("demae1");
 	interrupt null;
 	showDemae1Angel();
 	World.popElement();
-	for(i=13;i<=14;++i){
+	for(;i<=14;++i){
 		doc.loadDocument(i.toString());
 		interrupt null;
 	};
@@ -189,7 +189,20 @@ main = func(){
 	closeAllNesAngel();
 	World.popElement();
 	
-	for(;i<=32;++i){
+	for(;i<=25;++i){
+		doc.loadDocument(i.toString());
+		interrupt null;
+	};
+	
+	World.pushElement("nes");
+	showLabelAngel("memory-viewer", "small_mem");
+	showLabelAngel("nes-tracer", "simple_cpu");
+	showLabelAngel("nes-screen", "fun_games");
+	
+	closeAllNesAngel();
+	World.popElement();
+	
+	for(i=28;i<=30;++i){
 		doc.loadDocument(i.toString());
 		interrupt null;
 	};
@@ -223,6 +236,20 @@ main = func(){
 		interrupt null;
 	};
 	homLoop();
+	for(; i <= 54;++i) {
+		doc.loadDocument(i.toString());
+		interrupt null;
+	};
+	World.pushElement("ledybaorg");
+		interrupt null;
+	World.popElement();
+	for(; i <= 56;++i) {
+		doc.loadDocument(i.toString());
+		interrupt null;
+	};
+	World.pushElement("donutlang");
+		interrupt null;
+	World.popElement();
 
 	for(; i <= 61;++i) {
 		doc.loadDocument(i.toString());
