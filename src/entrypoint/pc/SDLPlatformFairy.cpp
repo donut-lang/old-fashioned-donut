@@ -22,6 +22,8 @@
 
 namespace chisa {
 
+static std::string const TAG("TAG");
+
 SDLPlatformFairy::SDLPlatformFairy(Logger& log)
 :PlatformFairy(log)
 ,window_(nullptr)
@@ -35,20 +37,20 @@ SDLPlatformFairy::SDLPlatformFairy(Logger& log)
 SDLPlatformFairy::~SDLPlatformFairy() noexcept
 {
 	SDL_LockAudio();
-	this->log().d("SDL", "Pausing audio...");
+	this->log().d(TAG, "Pausing audio...");
 	SDL_PauseAudio(1);
-	this->log().d("SDL", "paused.");
+	this->log().d(TAG, "paused.");
 	SDL_UnlockAudio();
-	this->log().d("SDL", "Closing audio...");
+	this->log().d(TAG, "Closing audio...");
 	SDL_CloseAudio();
-	this->log().d("SDL", "Closed.");
-	this->log().d("SDL", "Deleting GL context...");
+	this->log().d(TAG, "Closed.");
+	this->log().d(TAG, "Deleting GL context...");
 	SDL_GL_DeleteContext(gl_);
-	this->log().d("SDL", "Context deleted.");
+	this->log().d(TAG, "Context deleted.");
 	SDL_DestroyWindow(this->window_);
-	this->log().d("SDL", "Window destroyed.");
+	this->log().d(TAG, "Window destroyed.");
 	SDL_Quit();
-	this->log().d("SDL", "Quit.");
+	this->log().d(TAG, "Quit.");
 }
 
 void SDLPlatformFairy::init(const std::string& title, int width, int height, bool isFullScreen, int redbits, int greenbits, int bluebits, int alphabits, int depthbits, int stencilbits)
@@ -99,18 +101,26 @@ bool SDLPlatformFairy::pollEvent(Chisa& chisa)
 		case SDL_WINDOWEVENT: {
 			switch (ev.window.event) {
 			case SDL_WINDOWEVENT_RESIZED:
+			case SDL_WINDOWEVENT_SIZE_CHANGED:
 				chisa.reshape(ev.window.data1, ev.window.data2);
 				break;
 			case SDL_WINDOWEVENT_SHOWN:
-			case SDL_WINDOWEVENT_EXPOSED:
+			case SDL_WINDOWEVENT_FOCUS_GAINED:
 				chisa.onShown();
 				break;
 			case SDL_WINDOWEVENT_MINIMIZED:
 			case SDL_WINDOWEVENT_HIDDEN:
+			case SDL_WINDOWEVENT_FOCUS_LOST:
+			case SDL_WINDOWEVENT_CLOSE:
 				chisa.onHidden();
 				break;
+			default: {
+				if( this->log().d() ){
+					this->log().d(TAG, "Unhandled window event: %d", ev.window.event);
+				}
+				break;
 			}
-			break;
+			}
 		}
 		case SDL_MOUSEBUTTONDOWN:
 			switch (ev.button.button) {
