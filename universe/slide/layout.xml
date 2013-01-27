@@ -70,262 +70,475 @@
 					<font size="128">　<br />兵庫県<br />西宮<font color="darkred">香</font>風高校<br />＠01/18</font>
 				</doc>
 				<doc id="14" background="stretch:image:universe/slide/back2.png">
-					<font size="128">　<br />高校生に<br />出前授業した<br /></font>
+					<font size="128">　<br />二進数も知らない<br />高校生に<br />出前授業した<br /></font>
 				</doc>
 				<!-- わぁい -->
-				<!-- うすしお -->
 				<doc id="100" background="stretch:image:universe/slide/back2.png">
-					<font size="112">　<br />せーかほーこくかい<br />とくべつじゅぎょー</font>
+					<font size="128">これ見ようか</font>
 				</doc>
+				<!-- うすしお -->
 				<doc id="101" background="stretch:image:universe/slide/back2.png">
-					<font size="112">　<br />れい</font>
+					<font size="128">というわけで</font>
 				</doc>
 				<doc id="102" background="stretch:image:universe/slide/back2.png">
-					<font size="112">　<br />ちゃくせき</font>
+					<font size="112">　<br />せーかほーこくかい<br />とくべつじゅぎょー</font>
 				</doc>
 				<doc id="103" background="stretch:image:universe/slide/back2.png">
-					<font size="112">　<br />//TODO: デモ開く</font>
+					<font size="112">　<br />れい</font>
 				</doc>
 				<doc id="104" background="stretch:image:universe/slide/back2.png">
-					<font size="112">　<br />//TODO: デモ開く<br />…<font size="128" color="darkred">と言いたいところだが</font></font>
+					<font size="112">　<br />ちゃくせき</font>
 				</doc>
 				<doc id="105" background="stretch:image:universe/slide/back2.png">
+					<font size="112">　<br />//TODO: デモ開く</font>
+				</doc>
+				<doc id="106" background="stretch:image:universe/slide/back2.png">
+					<font size="112">　<br />//TODO: デモ開く<br />…<font size="128" color="darkred">と言いたいところだが</font></font>
+				</doc>
+				<doc id="107" background="stretch:image:universe/slide/back2.png">
 					<font size="112">実は</font><br />
 					<font size="112" color="red">　<br />これがそのシステム</font>
 				</doc>
-				<!-- 嗚呼斑鳩が往く-->
+				<!-- 嗚呼、斑鳩が往く-->
 				<doc id="200" background="stretch:image:universe/slide/back1.png">
 					<p margin="100">
-						<font size="112">便利なAPI<br />便利なOS</font>
+						<font size="112">なぜこんなものが<br />必要なんだ</font>
 					</p>
 				</doc>
 				<doc id="201" background="stretch:image:universe/slide/back1.png">
 					<p margin="100">
+						<font size="112">便利なAPI<br />便利なOS</font>
+					</p>
+				</doc>
+				<doc id="202" background="stretch:image:universe/slide/back1.png">
+					<p margin="100">
 						<font size="112">JQuery</font>
 					</p>
 				</doc>
-				<doc id="17" background="stretch:image:universe/slide/back1.png">
+				<doc id="203" background="stretch:image:universe/slide/back1.png">
 					<p margin="100">
 						<font size="112">Ruby on rails</font>
 					</p>
 				</doc>
-				<doc id="18" background="stretch:image:universe/slide/back1.png">
+				<doc id="204" background="stretch:image:universe/slide/back1.png">
 					<p margin="100">
 						<font size="112">すばらしい</font>
 					</p>
 				</doc>
-				<doc id="19" background="stretch:image:universe/slide/back1.png">
+				<doc id="205" background="stretch:image:universe/slide/back1.png">
 					<p margin="100">
 						<font size="112">でも…</font>
 					</p>
 				</doc>
-				<doc id="20" background="stretch:image:universe/slide/back1.png">
+				<doc id="206" background="stretch:image:universe/slide/back1.png">
 					<p margin="100">
 						<font size="112">…なんで動くんだ？？？？？？</font>
 					</p>
 				</doc>
-				<doc id="21" background="stretch:image:universe/slide/back1.png">
+				<doc id="207" background="stretch:image:universe/slide/back1.png">
 					<p margin="100">
 						<font size="112">バイナリは、<br />２進数は、<br />何処いった？？</font>
 					</p>
 				</doc>
-				<doc id="22" background="stretch:image:universe/slide/back1.png">
+				<doc id="208" background="stretch:image:universe/slide/back1.png">
 					<p margin="100">
 						<font size="112">プログラミングの勉強ねぇ…それ<font color="darkred">APIの勉強</font>じゃん？</font>
 					</p>
 				</doc>
-				<doc id="23" background="stretch:image:universe/slide/back1.png">
+				<doc id="209" background="stretch:image:universe/slide/back1.png">
 					<p margin="100">
 						<font size="112">むなしみ</font>
 					</p>
 				</doc>
-				<doc id="24" background="stretch:image:universe/slide/back1.png">
+				<doc id="210" background="stretch:image:universe/slide/back1.png">
 					<p margin="100">
-						<font size="112">でもパソコンが進化した証だし仕方ないじゃん</font>
+						<font size="112">でもパソコンが進化した証だし仕方ないじゃん(▰˘◡˘▰)</font>
 					</p>
 				</doc>
-				<doc id="25" background="stretch:image:universe/slide/back1.png">
+				<doc id="211" background="stretch:image:universe/slide/back1.png">
 					<p margin="100">
 						<font size="112">いやファミコンがある！</font>
 					</p>
 				</doc>
-				<doc id="28" background="stretch:image:universe/slide/back1.png">
+				<doc id="212" background="stretch:image:universe/slide/back1.png">
 					<p margin="100">
 						<font size="112">「野生の<br />コンピュータ<br />入門」</font>
 					</p>
 				</doc>
-				<doc id="29" background="stretch:image:universe/slide/back1.png">
+				<doc id="213" background="stretch:image:universe/slide/back1.png">
 					<p margin="100">
 						<font size="112">できなイカ？</font>
 					</p>
 				</doc>
-				<doc id="30" background="stretch:image:universe/slide/back1.png">
+				<doc id="214" background="stretch:image:universe/slide/back1.png">
 					<p margin="100">
 						<font size="112">今回の<br />出前授業<br />感想</font>
 					</p>
 				</doc>
-				<doc id="31" background="stretch:image:universe/slide/demae2.png">
+				<doc id="215" background="stretch:image:universe/slide/demae2.png">
 					<p margin="100">
 						<font size="112">なんとか<br />バイナリを</font><br />
 						<font size="112">伝えることができたのでは！</font>
 					</p>
 				</doc>
-				<doc id="32" background="stretch:image:universe/slide/back2.png">
+				<doc id="216" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="100">西宮香風高校<br />松本 吉生先生</font>
+					</p>
+				</doc>
+				<doc id="217" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="100">Denis Grachev<br />Shiru<br />Kulor</font>
+					</p>
+				</doc>
+				<doc id="218" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="100">ありがとうございました</font>
+					</p>
+				</doc>
+				<doc id="219" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="160">今後</font>
+					</p>
+				</doc>
+				<doc id="220" background="stretch:image:universe/slide/back2.png">
+					<p margin-top="100" margin-left="50">
+						<font size="100">出前授業の<br /><font color="darkred" size="128">シナリオ</font><br />うｐ</font>
+					</p>
+				</doc>
+				<doc id="221" background="stretch:image:universe/slide/back2.png">
+					<p margin-top="100" margin-left="50">
+						<font size="100">もっとマニアックな<br /><font color="darkred" size="128">"本"</font><br />に</font>
+					</p>
+				</doc>
+				<doc id="222" background="stretch:image:universe/slide/back2.png">
+					<p margin-top="100" margin-left="50">
+						<font size="160">…本？</font>
+					</p>
+				</doc>
+				<doc id="300" background="color:black">
+					<p margin-left="0" margin-top="250" >
+						<font size="128"><font color="darkred">☆</font><font color="white">おまけが本編</font><font color="darkred">☆</font></font><br /><font color="white" size="60">(・ワ・)＜<br />えたいの　しれない　けんきゅうする</font>
+					</p>
+				</doc>
+				<doc id="301" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="112">教材＋スライド<br />何で書かれてる？？</font>
+					</p>
+				</doc>
+				<doc id="302" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="112">XML??HTML???</font>
+					</p>
+				</doc>
+				<doc id="303" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="112">JSON()</font>
+					</p>
+				</doc>
+				<doc id="304" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="112">って思うじゃん？</font>
+					</p>
+				</doc>
+				<doc id="305" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="112">ちがいます</font>
+					</p>
+				</doc>
+				<doc id="306" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="112">読もうず〜〜〜</font>
+					</p>
+				</doc>
+				<doc id="307" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="112">はい<br /><font color="darkred">プログラミング言語</font><br />でした</font><br />
+					</p>
+				</doc>
+				<doc id="308" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="112">電子書籍<br />というか<br />電子コンテンツ</font>
+					</p>
+				</doc>
+				<doc id="309" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="112">大体ただの<br />データ</font><br />
+					</p>
+				</doc>
+				<doc id="310" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="112">XML<br />HTML<br />PDF</font><br />
+					</p>
+				</doc>
+				<doc id="311" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="112">し、<br />死んでる</font><br />
+					</p>
+				</doc>
+				<doc id="312" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="112">コンピュータの<font color="darkred">魔法</font>は、<br />チューリング完全性</font>
+					</p>
+				</doc>
+				<doc id="313" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="112">その恩恵が<br />何も<br />受けられない</font>
+					</p>
+				</doc>
+				<doc id="314" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="112">いいとこ紙芝居</font>
+					</p>
+				</doc>
+				<doc id="315" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="112">インタラクティブ（苦笑）</font>
+					</p>
+				</doc>
+				<doc id="316" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="112">そんなんだから</font>
+					</p>
+				</doc>
+				<!-- ｳｪﾋﾋ -->
+				<doc id="317" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="128">ぶっちゃけ<br />本の<br />劣化品</font>
+					</p>
+				</doc>
+				<doc id="318" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="128">JSがあるじゃん？</font>
+					</p>
+				</doc>
+				<doc id="319" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="128">駄目</font>
+					</p>
+				</doc>
+				<doc id="320" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="128">戻れないじゃん</font>
+					</p>
+				</doc>
+				<doc id="321" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="128">（・ワ・）＜あっ…（察し）</font>
+					</p>
+				</doc>
+				<doc id="322" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="128">リアル本なら戻れる</font>
+					</p>
+				</doc>
+				<doc id="323" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="128">数学の本</font>
+					</p>
+				</doc>
+				<doc id="324" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="128">式展開<br />分からない</font>
+					</p>
+				</doc>
+				<doc id="325" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="128">三行上に<br />戻ればいい</font>
+					</p>
+				</doc>
+				<doc id="326" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="128">用語定義<br />分からない</font>
+					</p>
+				</doc>
+				<doc id="327" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="128">三ページ前に<br />戻ればいい</font>
+					</p>
+				</doc>
+				<doc id="328" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="128">どこでも<br />戻れる</font>
+					</p>
+				</doc>
+				<doc id="329" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="128">JSじゃ<br />戻れないじゃん？</font>
+					</p>
+				</doc>
+				<doc id="330" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="128">劣化じゃん？</font>
+					</p>
+				</doc>
+				<doc id="331" background="stretch:image:universe/slide/back2.png">
+					<p margin-left="50" margin-top="30">
+						<font size="116">「まあ<br />インタラクティブ<br />なんだけど…</font>
+					</p>
+				</doc>
+				<doc id="332" background="stretch:image:universe/slide/back2.png">
+					<p margin-left="50" margin-top="30">
+						<font size="116">インタラクティブな<br /><font color="darkred">だけ</font><br />ですよね（）」</font>
+					</p>
+				</doc>
+				<doc id="334" background="stretch:image:universe/slide/back2.png">
+					<p margin-top="100" margin-left="30">
+						<font size="116">でもこのスライド<br />戻れるじゃん？</font>
+					</p>
+				</doc>
+				<doc id="335" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="116">さっきのデモ</font>
+					</p>
+				</doc>
+				<doc id="336" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="128">…なんで戻れるんだ</font>
+					</p>
+				</doc>
+				<doc id="337" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
 						<font size="112">「野生のコンピュータ入門」</font><br />
 						<font size="112">を支える技術</font>
 					</p>
 				</doc>
-				<doc id="33" background="stretch:image:universe/slide/back2.png">
-					<p margin="100">
-						<font size="112"><font color="#f22">ど〜なっつ</font>について</font><br />
-					</p>
-				</doc>
-				<doc id="34" background="stretch:image:universe/slide/back2.png">
-					<p margin="100">
-						<font size="112"><font color="#f22">ど〜なっつ</font>は</font><br />
-					</p>
-				</doc>
-				<doc id="35" background="stretch:image:universe/slide/back2.png">
+				<doc id="338" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
 						<font size="112"><font color="#f22" size="128">時を司る</font><br /><font size="112">スクリプト言語</font><font size="80">　</font><br />donut-lang.org</font>
 					</p>
 				</doc>
-				<doc id="36" background="stretch:image:universe/slide/back2.png">
-					<p margin-left="100" margin-top="70">
-						<font size="112">過<br />去<br />に<br /><font color="#f22" size="128">遡</font>り<br /></font><br />
+				<doc id="339" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="112"><font color="#f22">ど〜なっつ</font></font><br />
 					</p>
 				</doc>
-				<doc id="37" background="stretch:image:universe/slide/back2.png">
+				<doc id="340" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="112"><font color="#f22">ど〜なっつ</font>は</font><br />
+					</p>
+				</doc>
+				<doc id="341" background="stretch:image:universe/slide/back2.png">
+					<p margin-left="100" margin-top="70">
+						<font size="112">過<br />去<br />を<br /><font color="#f22" size="128">遡</font>り<br /></font><br />
+					</p>
+				</doc>
+				<doc id="342" background="stretch:image:universe/slide/back2.png">
 					<p margin-left="100" margin-top="70">
 						<font size="112">未<br />来<br />に<br /><font color="#f22" size="128">還</font>れる<br /></font><br />
 					</p>
 				</doc>
-				<doc id="38" background="stretch:image:universe/slide/back2.png">
+				<doc id="343" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
 						<font size="100">太らずに<br /><font color="#f22" size="128">何度でも</font><br />美味しいドーナツを食べられる</font><br />
 					</p>
 				</doc>
-				<doc id="39" background="stretch:image:universe/slide/back2.png">
-					<p margin="100">
-						<font size="128">そんな<br />スクリプト<br />言語</font><br />
+				<doc id="344" background="stretch:image:universe/slide/back2.png">
+					<p margin-left="100" margin-top="70">
+						<font size="128"><font size="100">そんな</font><br /><font color="#f22" size="128">時を司る</font><br />スクリプト<br />言語</font><br />
 					</p>
 				</doc>
-				<doc id="40" background="stretch:image:universe/slide/back2.png">
-					<p margin="100">
-						<font size="320">は？</font><br />
-					</p>
-				</doc>
-				<doc id="41" background="stretch:image:universe/slide/back2.png">
-					<p margin="100">
-						<font size="128">さっきの出前授業画面</font><br />
-					</p>
-				</doc>
-				<doc id="42" background="stretch:image:universe/slide/back2.png">
-					<p margin="100">
-						<font size="100">ﾘｱﾙ本のように<br />理解出来なかった<br />所から<br /><font color="darkred" size="132">読みなおす</font></font>
-					</p>
-				</doc>
-				<doc id="43" background="stretch:image:universe/slide/back2.png">
+				<doc id="345" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
 						<font size="100">これでやっと</font>
 					</p>
 				</doc>
-				<doc id="44" background="stretch:image:universe/slide/back2.png">
+				<doc id="346" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="100">ﾘｱﾙ本のように<br />理解出来なかった<br />所から<br /><font color="darkred" size="132">読みなおせる</font></font>
+					</p>
+				</doc>
+				<doc id="347" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
 						<font size="100"><font size="128" color="darkred">"本"</font>が<br />作れるようになった</font>
 					</p>
 				</doc>
 				
-				<doc id="45" background="stretch:image:universe/slide/back2.png">
+				<doc id="400" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
 						<font size="128"><font color="darkred">時間操作</font><br />による<br />フロー制御</font><br />
 					</p>
 				</doc>
-				<doc id="46" background="stretch:image:universe/slide/back2.png">
-					<p margin="50">
-						<font size="72">tabeta = 0;<br /><font id="before">time = Homura.tick();</font><br />++tabeta;<br />System.println<br />(tabeta,"番目のドーナッツを食べた。");<br /><font id="after">Homura.seek(time);</font></font><br />
+				<doc id="401" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="100"><font size="128" color="darkred">"ほむら"</font><br />という、<br />オブジェクト</font>
+						<font size="128">　</font><br />
+						<font size="64">推奨BGM:コネクト</font>
 					</p>
 				</doc>
-				<doc id="47" background="stretch:image:universe/slide/back2.png">
+				<doc id="402" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="128"><font color="darkred">ほむら</font>さん<br />なので</font><br />
+					</p>
+				</doc>
+				<doc id="403" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="128"><font color="darkred">時間操作</font>が<br />できます</font><br />
+					</p>
+				</doc>
+				<doc id="404" background="stretch:image:universe/slide/back2.png">
+					<p margin-left="30" margin-top="30" >
+						<font size="128">時間が<br /><font color="darkred">戻る</font>事を利用した<br />ループ</font><br />
+					</p>
+				</doc>
+				<doc id="405" background="stretch:image:universe/slide/back2.png">
+					<p margin="100">
+						<font size="128">わたしは<br /><font color="darkred">何度でも</font><br />繰り返す</font><br />
+					</p>
+				</doc>
+				<doc id="406" background="stretch:image:universe/slide/back2.png">
+					<p margin="50">
+						<font size="72">tabeta = 0;<br /><font id="before">time = Homura.tick();</font><br />++tabeta;<br />println<br />(tabeta,"番目のドーナッツを食べた。");<br /><font id="after">Homura.seek(time);</font></font><br />
+					</p>
+				</doc>
+				<doc id="407" background="stretch:image:universe/slide/back2.png">
 					<p margin="0"><font size="72">1番目のドーナッツを食べた。<br />1番目のドーナッツを食べた。<br />1番目のドーナッツを食べた。<br />1番目のドーナッツを食べた。<br />1番目のドーナッツを食べた。<br />1番目のドーナッツを食べた。<br />1番目のドーナッツを食べた。<br />1番目のドーナッツを食べた。
 						</font>
 					</p>
 				</doc>
-				<doc id="48" background="stretch:image:universe/slide/back2.png">
+				<doc id="408" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
 						<font size="100">何度でも</font><br />
 						<font size="128" color="darkred">一つめの<br />ど～なっつを</font><br />
 						<font size="100">食べられる</font><br />
 					</p>
 				</doc>
-				<doc id="49" background="stretch:image:universe/slide/back2.png">
+				<doc id="409" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
 						<font size="100">このスライドも</font>
 					</p>
 				</doc>
-				<doc id="50" background="stretch:image:universe/slide/back2.png">
+				<doc id="500" background="stretch:image:universe/slide/back2.png">
 					<p margin-top="120" margin-left="20">
 						<font size="128">まとめ(*´ω｀*)</font>
 					</p>
 				</doc>
-				<doc id="51" background="stretch:image:universe/slide/back2.png">
+				<doc id="501" background="stretch:image:universe/slide/back2.png">
 					<p margin="50">
 						<font size="100">ファミコンを<br /><font color="darkred" size="128">生きたまま解剖</font><br />した教材</font>
 					</p>
 				</doc>
-				<doc id="52" background="stretch:image:universe/slide/back2.png">
+				<doc id="502" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
 						<font size="100"><font color="darkred">出前授業</font>、<br />なかなかの成功</font>
 					</p>
 				</doc>
-				<doc id="53" background="stretch:image:universe/slide/back2.png">
+				<doc id="503" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
 						<font size="100"><font color="darkblue">時を司るスクリプト言語</font>で<br /><font color="darkred" size="128">真の"本"</font><br />が作れる</font>
 					</p>
 				</doc>
-				<doc id="54" background="stretch:image:universe/slide/back2.png">
+				<doc id="504" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
-						<font size="160">今後</font>
+						<font size="100"><font color="darkred">マニアックなやつ</font><br />書きます</font>
 					</p>
 				</doc>
-				<doc id="55" background="stretch:image:universe/slide/back2.png">
-					<p margin-top="100" margin-left="50">
-						<font size="100">出前授業の<br /><font color="darkred" size="128">シナリオ</font><br />うｐ</font>
-					</p>
-				</doc>
-				<doc id="56" background="stretch:image:universe/slide/back2.png">
-					<p margin-top="100" margin-left="50">
-						<font size="100">もっとマニアックな<br /><font color="darkred" size="128">"本"</font><br />に</font>
-					</p>
-				</doc>
-				<doc id="57" background="stretch:image:universe/slide/back2.png">
+				<doc id="505" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
 						<font size="100"><font color="darkred">時間操作による<br />フロー制御</font>、<br />応用ネタが幾つか</font>
 					</p>
 				</doc>
-				<doc id="58" background="stretch:image:universe/slide/back2.png">
-					<p margin="100">
-						<font size="160">最後に</font>
-					</p>
-				</doc>
-				<doc id="59" background="stretch:image:universe/slide/back2.png">
-					<p margin="100">
-						<font size="100">西宮香風高校<br />松本 吉生先生</font>
-					</p>
-				</doc>
-				<doc id="60" background="stretch:image:universe/slide/back2.png">
-					<p margin="100">
-						<font size="100">Denis Grachev<br />Shiru<br />Kulor</font>
-					</p>
-				</doc>
-				<doc id="61" background="stretch:image:universe/slide/back2.png">
-					<p margin="100">
-						<font size="100">ありがとうございました</font>
-						
-					</p>
-				</doc>
-				<doc id="61" background="stretch:image:universe/slide/back2.png">
+				<doc id="506" background="stretch:image:universe/slide/back2.png">
 					<p margin="100">
 						<font size="100">Our Journey Is<br /><font color="darkred" size="160">Not</font><br />Complete</font>
 					</p>
@@ -359,6 +572,11 @@
 		<label font-size="96" text="プログラマも進路の" background-color="transparent" />
 		<label font-size="96" text="一つとして考えていた" background-color="transparent" />
 		<label font-size="96" text="のでためになった" background-color="transparent" />
+	</vertical>
+	<vertical id="reaction4" background-color="#ffffff" edge-width="3" edge-color="yellow">
+		<label font-size="96" text="練習用のゲーム、" background-color="transparent" />
+		<label font-size="96" text="私も作って" background-color="transparent" />
+		<label font-size="96" text="授業に使いたいです" background-color="transparent" />
 	</vertical>
 	<vertical id="demae1">
 		<frame>
@@ -414,7 +632,78 @@
 			</vertical>
 		</frame>
 	</vertical>
-	<vertical id="donutlang">
+	<vertical id="bank1">
+		<frame split-weight="1">
+			<label transparent="true" background-color="#0000" machine="demo"><xstring>msg</xstring></label>
+			<vertical background-color="#0000" transparent="true">
+				<widget widget-klass="image" fit="expand" split-weight="1">
+					<xobject>
+						<xstring name="src">slide/bank1.png</xstring>
+					</xobject>
+				</widget>
+			</vertical>
+		</frame>
+	</vertical>
+	<vertical id="bank2">
+		<frame split-weight="1">
+			<label transparent="true" background-color="#0000" machine="demo"><xstring>msg</xstring></label>
+			<vertical background-color="#0000" transparent="true">
+				<widget widget-klass="image" fit="expand" split-weight="1">
+					<xobject>
+						<xstring name="src">slide/bank2.png</xstring>
+					</xobject>
+				</widget>
+			</vertical>
+		</frame>
+	</vertical>	
+	<vertical id="igai1">
+		<frame split-weight="1">
+			<label transparent="true" background-color="#0000" machine="demo"><xstring>msg</xstring></label>
+			<vertical background-color="#0000" transparent="true">
+				<widget widget-klass="image" fit="expand" split-weight="1">
+					<xobject>
+						<xstring name="src">slide/igai1.png</xstring>
+					</xobject>
+				</widget>
+			</vertical>
+		</frame>
+	</vertical>
+	<vertical id="igai2">
+		<frame split-weight="1">
+			<label transparent="true" background-color="#0000" machine="demo"><xstring>msg</xstring></label>
+			<vertical background-color="#0000" transparent="true">
+				<widget widget-klass="image" fit="expand" split-weight="1">
+					<xobject>
+						<xstring name="src">slide/igai2.png</xstring>
+					</xobject>
+				</widget>
+			</vertical>
+		</frame>
+	</vertical>
+	<vertical id="igai3">
+		<frame split-weight="1">
+			<label transparent="true" background-color="#0000" machine="demo"><xstring>msg</xstring></label>
+			<vertical background-color="#0000" transparent="true">
+				<widget widget-klass="image" fit="expand" split-weight="1">
+					<xobject>
+						<xstring name="src">slide/igai3.png</xstring>
+					</xobject>
+				</widget>
+			</vertical>
+		</frame>
+	</vertical>
+	<vertical id="hom">
+		<frame split-weight="1">
+			<label transparent="true" background-color="#0000" machine="demo"><xstring>msg</xstring></label>
+			<vertical background-color="#0000" transparent="true">
+				<widget widget-klass="image" fit="expand" split-weight="1">
+					<xobject>
+						<xstring name="src">slide/hom.png</xstring>
+					</xobject>
+				</widget>
+			</vertical>
+		</frame>
+	</vertical>	<vertical id="donutlang">
 		<frame split-weight="1">
 			<label transparent="true" background-color="#0000" machine="demo"><xstring>msg</xstring></label>
 			<vertical background-color="#0000" transparent="true">
