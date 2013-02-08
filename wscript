@@ -8,9 +8,8 @@ VERSION = '1.0.0'
 srcdir = '.'
 blddir = 'build'
 
-def enum(dirname, exclude=[]):
+def enum(dirname, exclude=[], exts=['.cpp','.c']):
 	dirname = os.path.join(*(dirname.split('/')))
-	COMPILED_EXT=['.cpp','.c']
 	f = []
 	for root,dirs,files in os.walk(dirname):
 		matched = False
@@ -23,7 +22,7 @@ def enum(dirname, exclude=[]):
 		for fitem in files:
 			fabs = os.path.join(root, fitem)
 			_, ext = os.path.splitext(fabs)
-			if ext in COMPILED_EXT:
+			if ext in exts:
 				f.append(os.path.relpath(fabs))
 	return f
 
@@ -41,8 +40,8 @@ CHISA_SRC=enum('src/chisa')
 
 def options(opt):
 	opt.add_option('--coverage', action='store_true', default=False, help='Enabling coverage measuring.')
+	opt.add_option('--debug', action='store_true', default=False, help='debug build')
 	opt.load('compiler_c compiler_cxx')
-	opt.load('eclipse')
 	opt.load('boost')
 
 def configure(conf):
@@ -110,8 +109,7 @@ DONUT_SRC=\
 
 def build(bld):
 	if not bld.variant:
-		bld.fatal('call "waf build_debug" or "waf build_release", and try "waf --help"')
-	srcdir=repr(bld.path)
+		bld.set_env(bld.all_envs['debug' if (bld.options.debug) else 'release'])
 	bld(
 		features = 'cxx cprogram',
 		source = DONUT_SRC,
@@ -124,17 +122,11 @@ def build(bld):
 		target = 'chisa',
 		use=['PPROF','PTHREAD', 'SDL2', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU','ANTLR'],
 		includes=[TARTE_INCLUDE_DIR, DONUT_INCLUDE_DIR])
-	
-	test_env = None
-	if "coverage" in bld.all_envs:
-		test_env = bld.all_envs["coverage"]
-	else:
-		test_env = bld.env
 	bld(
 		features = 'cxx cprogram',
 		source = TEST_SRC,
 		target = 'chisa_test',
-		env = test_env,
+		env = bld.all_envs["coverage"] if ("coverage" in bld.all_envs) else bld.env,
 		use=['PTHREAD', 'SDL2', 'OPENGL','FREETYPE2','CAIRO','GTEST','LIBPNG','BOOST','ICU','ANTLR'],
 		includes=[TARTE_INCLUDE_DIR, DONUT_INCLUDE_DIR])
 
@@ -150,4 +142,3 @@ for x in 'debug release'.split():
 
 def shutdown(ctx):
 	pass
-
