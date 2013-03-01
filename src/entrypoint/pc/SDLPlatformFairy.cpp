@@ -61,7 +61,7 @@ void SDLPlatformFairy::init(const std::string& title, int width, int height, boo
 			| (isFullScreen ? SDL_WINDOW_FULLSCREEN : 0)
 					);
 	if (!this->window_) {
-		TARTE_EXCEPTION(Exception, SDL_GetError());
+		TARTE_EXCEPTION(Exception, std::string("SDL Error: ") + SDL_GetError());
 	}
 	this->gl_ = SDL_GL_CreateContext(this->window_);
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, redbits);

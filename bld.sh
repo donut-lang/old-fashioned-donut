@@ -16,12 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+PYTHON=python
+
 function detectCompiler() {
 	DIRNAME=$(cd $(dirname $0);pwd)
 	BUILDDIR=$DIRNAME/build
 
 	CLANG_FOUND=
-	if which clang++ 2>&1 > /dev/null ; then
+	which clang++ > /dev/null 2>&1
+	if [ $? -eq 0 ] ; then
 		echo "clang found."
 		#CLANG_FOUND=1
 	else
@@ -29,7 +32,8 @@ function detectCompiler() {
 	fi
 
 	CCACHE_FOUND=
-	if which ccache 2>&1 > /dev/null ; then
+	which ccache > /dev/null 2>&1
+	if [ $? -eq 0 ] ; then
 		echo "ccache found."
 		CCACHE_FOUND=1
 	else
@@ -45,41 +49,74 @@ function detectCompiler() {
 	fi
 }
 
-
 function conf() {
 	if [ "$MSYSTEM" = "MINGW32" -o "$OS" = "Windows_NT" ] ; then
-		CONFIGURE_CMD="python waf configure --out $BUILDDIR --boost-includes=/d/software/dev/applib/boost/include --boost-lib=/d/software/dev/applib/boost/lib"
+		CONFIGURE_CMD="$PYTHON waf configure --out $BUILDDIR"
 	else
-		CONFIGURE_CMD="python waf configure --out $BUILDDIR"
+		CONFIGURE_CMD="$PYTHON waf configure --out $BUILDDIR"
 	fi
-	echo $CONFIGURE_CMD
+	echo "configure: $CONFIGURE_CMD"
 	$CONFIGURE_CMD
 }
 
-detectCompiler
+function ensureConfigure() {
+	if [ ! -d $BUILDDIR ] ; then
+		echo "not configured"
+		conf
+		return 0
+	fi
+	$PYTHON ./waf list > /dev/null 2>&1
+	if [ $? -ne 0 ] ;then
+		echo "not configured"
+		conf
+		return $?
+	fi
+	echo "configured"
+	return 0
+}
 
-MODE=$1
-if [ "$MODE" = "debug" ] ; then
-	shift
-elif [ "$MODE" = "release" ] ; then
-	shift
+function parse() {
+	consumed=1
+	if [ "$1" = "debug" ] ; then
+		MODE=$1; consumed=0
+	elif [ "$1" = "release" ] ; then
+		MODE=$1; consumed=0
+	elif [ "$1" = "build" ] ; then
+		TARGET=$1; consumed=0
+	elif [ "$1" = "clean" ] ; then
+		TARGET=$1; consumed=0
+	elif [ "$1" = "install" ] ; then
+		TARGET=$1; consumed=0
+	elif [ "$1" = "uninstall" ] ; then
+		TARGET=$1; consumed=0
+	elif [ ! -z "$1" ]; then
+		export CUSTOM=1
+	fi
+
+	if [ -z "$MODE" ]; then
+		MODE="debug"
+	fi
+	if [ -z "$TARGET" ]; then
+		TARGET="build"
+	fi
+	return $consumed
+}
+
+# parsing command line
+CUSTOM=0
+parse $1 && shift
+parse $1 && shift
+
+if [ $CUSTOM -eq 0 ]; then
+	echo "Normal launch"
+	detectCompiler
+	ensureConfigure
+	BLD_WAF_CMD="$PYTHON ./waf --out $BUILDDIR --progress ${TARGET}_${MODE} $*"
 else
-	MODE="debug"
+	echo "Custom launch"
+	BLD_WAF_CMD="$PYTHON ./waf --out $BUILDDIR --progress $*"
 fi
 
-TARGET=$1
-if [ -z $TARGET ] ; then
-	TARGET="build"
-else
-	shift
-fi
-
-BLD_WAF_CMD="python ./waf --out $BUILDDIR --progress ${TARGET}_${MODE} $*"
-if [ ! -d $BUILDDIR ] ; then
-	echo "not configured"
-	conf
-fi
-
-echo $BLD_WAF_CMD
+echo "building: $BLD_WAF_CMD"
 $BLD_WAF_CMD 2>&1
 exit $?
