@@ -14,9 +14,6 @@ blddir = 'build'
 TINYXML2_DIR=os.path.join(os.path.abspath(os.path.dirname(srcdir)), 'external', 'tinyxml2')
 TINYXML2_SRC=[os.path.join('.', 'external','tinyxml2','tinyxml2.cpp')]
 
-TARTE_INCLUDE_DIR=os.path.join(os.path.abspath(os.path.dirname(srcdir)), 'src', 'tarte','include')
-TARTE_SRC=Util.enum('src/tarte')
-
 DONUT_INCLUDE_DIR=os.path.join(os.path.abspath(os.path.dirname(srcdir)), 'src', 'donut','include')
 DONUT_SRC=Util.enum('src/donut')
 
@@ -74,7 +71,6 @@ def configureLibrary(conf):
 
 TEST_SRC=\
 		TINYXML2_SRC+\
-		TARTE_SRC+\
 		DONUT_SRC+\
 		CHISA_SRC+\
 		Util.enum('src/nes')+\
@@ -82,7 +78,6 @@ TEST_SRC=\
 
 MAIN_SRC=\
 		TINYXML2_SRC+\
-		TARTE_SRC+\
 		DONUT_SRC+\
 		CHISA_SRC+\
 		Util.enum('src/nes')+\
@@ -90,7 +85,6 @@ MAIN_SRC=\
 
 DONUT_SRC=\
 		TINYXML2_SRC+\
-		TARTE_SRC+\
 		DONUT_SRC+\
 		Util.enum('src/entrypoint/donut')
 
@@ -102,20 +96,20 @@ def build(bld):
 		source = DONUT_SRC,
 		target = 'donut',
 		use=['CINAMO','PPROF','PTHREAD','BOOST','ICU','ANTLR'],
-		includes=[TARTE_INCLUDE_DIR, DONUT_INCLUDE_DIR])
+		includes=[DONUT_INCLUDE_DIR])
 	bld(
 		features = 'cxx cprogram',
 		source = MAIN_SRC,
 		target = 'chisa',
 		use=['CINAMO','PPROF','PTHREAD', 'SDL2', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU','ANTLR'],
-		includes=[TARTE_INCLUDE_DIR, DONUT_INCLUDE_DIR])
+		includes=[DONUT_INCLUDE_DIR])
 	bld(
 		features = 'cxx cprogram',
 		source = TEST_SRC,
 		target = 'chisa_test',
 		env = bld.all_envs["coverage"] if ("coverage" in bld.all_envs) else bld.env,
 		use=['CINAMO','PTHREAD', 'SDL2', 'OPENGL','FREETYPE2','CAIRO','GTEST','LIBPNG','BOOST','ICU','ANTLR'],
-		includes=[TARTE_INCLUDE_DIR, DONUT_INCLUDE_DIR])
+		includes=[DONUT_INCLUDE_DIR])
 
 def shutdown(ctx):
 	pass
