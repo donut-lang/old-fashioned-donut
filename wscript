@@ -24,7 +24,6 @@ def options(opt):
 	opt.add_option('--coverage', action='store_true', default=False, help='Enabling coverage measuring.')
 	opt.add_option('--debug', action='store_true', default=False, help='debug build')
 	opt.load('compiler_c compiler_cxx')
-	opt.load('boost')
 	opt.load('cinamo', tooldir='external/WafHelper')
 
 def configure(conf):
@@ -56,10 +55,6 @@ def configureLibrary(conf):
 	if sys.platform == 'win32':
 		#opengl
 		conf.check(features='cxx cxxprogram', lib=['opengl32'], cflags=['-Wall'], defines=['TEST=TEST'], uselib_store='OPENGL')
-		#boost
-		conf.env.append_value('CXXFLAGS', ['-DBOOST_THREAD_USE_LIB=1'])
-		conf.load('boost')
-		conf.check_boost(lib='system thread chrono')
 	elif sys.platform in ['linux2', 'linux']:
 		#opengl
 		conf.check(features='cxx cxxprogram', lib=['GL', 'X11', 'rt', 'Xrandr', 'pthread'], cflags=['-Wall'], uselib_store='OPENGL')
