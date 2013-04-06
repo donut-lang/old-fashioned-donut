@@ -11,9 +11,6 @@ VERSION = '1.0.0'
 srcdir = '.'
 blddir = 'build'
 
-TINYXML2_DIR=os.path.join(os.path.abspath(os.path.dirname(srcdir)), 'external', 'tinyxml2')
-TINYXML2_SRC=[os.path.join('.', 'external','tinyxml2','tinyxml2.cpp')]
-
 DONUT_INCLUDE_DIR=os.path.join(os.path.abspath(os.path.dirname(srcdir)), 'src', 'donut','include')
 DONUT_SRC=Util.enum('src/donut')
 
