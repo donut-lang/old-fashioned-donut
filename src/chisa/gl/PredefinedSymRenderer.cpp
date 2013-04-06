@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tarte/Logger.h>
+#include <cinamo/Logger.h>
 
 #include "PredefinedSymRenderer.h"
 #include "Canvas.h"
@@ -42,7 +42,7 @@ PredefinedSymRenderer::PredefinedSymRenderer(Logger& log, Handler<DrawableManage
 void PredefinedSymRenderer::registerSymbol( unsigned int symbol, std::string const& str )
 {
 	if( unlikely(!this->renderBuffer_.empty()) ) {
-		TARTE_EXCEPTION(Exception, "[BUG] Oops. PredefinedSymRenderer already compiled.");
+		CINAMO_EXCEPTION(Exception, "[BUG] Oops. PredefinedSymRenderer already compiled.");
 	}
 	auto it = this->entryTable_.find(symbol);
 	if(it != this->entryTable_.end()){
@@ -67,7 +67,7 @@ void PredefinedSymRenderer::registerSymbol( unsigned int symbol, std::string con
 void PredefinedSymRenderer::compile()
 {
 	if( unlikely(!this->renderBuffer_.empty()) ) {
-		TARTE_EXCEPTION(Exception, "[BUG] Oops. PredefinedSymRenderer already compiled.");
+		CINAMO_EXCEPTION(Exception, "[BUG] Oops. PredefinedSymRenderer already compiled.");
 	}
 	int nowSprite = 0;
 	int const maxSize = drawableManager_->maxTextureSize();

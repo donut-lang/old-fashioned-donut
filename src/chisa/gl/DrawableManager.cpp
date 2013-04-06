@@ -53,7 +53,7 @@ Handler<Sprite> DrawableManager::queryImage(std::string const& filename)
 Handler<Drawable> DrawableManager::queryDrawable(std::string const& repl, geom::Box const& box)
 {
 	for(std::pair<std::string, constructor> p : this->factories_){
-		if(::tarte::startsWith(repl, p.first)){
+		if(::cinamo::startsWith(repl, p.first)){
 			std::string const left = repl.substr(p.first.size());
 			return p.second(this->self(), box, left);
 		}

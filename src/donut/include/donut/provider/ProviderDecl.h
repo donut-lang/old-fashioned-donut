@@ -18,14 +18,14 @@
 
 #pragma once
 #include <string>
-#include <tarte/Handler.h>
-#include <tarte/XVal.h>
-#include <tarte/VectorMap.h>
-#include <tarte/Dynamic.h>
+#include <cinamo/Handler.h>
+#include <cinamo/XVal.h>
+#include <cinamo/VectorMap.h>
+#include <cinamo/Dynamic.h>
 #include "../object/NativeClosureObjectDecl.h"
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 class Provider : public HandlerBody<Provider> {
 private: //これは実行前に全て設定される情報
@@ -83,7 +83,7 @@ class HeapProviderBaseT : public HeapProvider {
 protected:
 	typedef HeapProviderBaseT<Derived, T> Super;
 	HeapProviderBaseT( Handler<Heap> const& heap, std::string const& name ):HeapProvider(heap, name){};
-	HeapProviderBaseT( Handler<Heap> const& heap ):HeapProvider(heap, ::tarte::demangle<T>() ){};
+	HeapProviderBaseT( Handler<Heap> const& heap ):HeapProvider(heap, ::cinamo::demangle<T>() ){};
 public:
 	virtual ~HeapProviderBaseT() noexcept = default;
 private:
@@ -187,7 +187,7 @@ class ReactiveProviderBaseT : public ReactiveProvider {
 protected:
 	typedef ReactiveProviderBaseT<__Derived, __Object, __AntiSideEffect> Super;
 	ReactiveProviderBaseT( Handler<Heap> const& heap, std::string const& name ):ReactiveProvider(heap, name){};
-	ReactiveProviderBaseT( Handler<Heap> const& heap ):ReactiveProvider(heap, ::tarte::demangle<Object>() ){};
+	ReactiveProviderBaseT( Handler<Heap> const& heap ):ReactiveProvider(heap, ::cinamo::demangle<Object>() ){};
 public:
 	virtual ~ReactiveProviderBaseT() noexcept = default;
 private:

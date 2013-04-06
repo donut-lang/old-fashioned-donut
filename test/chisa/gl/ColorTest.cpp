@@ -18,10 +18,10 @@
 
 #include "../../TestCommon.h"
 #include "../../../src/chisa/gl/Color.h"
-#include <tarte/XMLAttrParser.h>
+#include <cinamo/XMLAttrParser.h>
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 namespace gl {
 
@@ -68,7 +68,7 @@ TEST(ColorTest, UnchangedColorTest)
 
 TEST(ColorTest, StringParsingTest)
 {
-	using namespace tarte::xml;
+	using namespace cinamo::xml;
 	using namespace tinyxml2;
 	XMLDocument doc;
 	XMLElement* elm = doc.NewElement("a");
@@ -128,7 +128,7 @@ TEST(ColorTest, StringParsingTest)
 
 TEST(ColorTest, StringNameParsingTest)
 {
-	using namespace tarte::xml;
+	using namespace cinamo::xml;
 	using namespace tinyxml2;
 	XMLDocument doc;
 	Color c;

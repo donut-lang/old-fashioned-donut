@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include <tarte/XArchiver.h>
+#include <cinamo/XArchiver.h>
 #include "ObjectDecl.h"
 
 namespace donut {

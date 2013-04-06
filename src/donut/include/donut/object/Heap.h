@@ -21,7 +21,7 @@
 #include "../object/ReactiveNativeClosureObject.h"
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 template <typename __AntiSideEffect>
 inline Handler<ReactiveNativeClosureObject> Heap::createReactiveNativeClosureObject(std::string const& objectProviderName, std::string const& closureName, typename ReactiveNativeClosureBaseT<__AntiSideEffect>::Signature f) {

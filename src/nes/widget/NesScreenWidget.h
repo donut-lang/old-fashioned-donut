@@ -20,11 +20,11 @@
 
 #include "../../chisa/tk/Widget.h"
 #include "../../chisa/Hexe.h"
-#include <tarte/Handler.h>
-#include <tarte/XVal.h>
+#include <cinamo/Handler.h>
+#include <cinamo/XVal.h>
 
 namespace nes {
-using namespace tarte;
+using namespace cinamo;
 
 class NesGeist;
 

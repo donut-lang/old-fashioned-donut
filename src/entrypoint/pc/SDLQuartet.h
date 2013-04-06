@@ -18,7 +18,7 @@
 
 #pragma once
 #include <SDL2/SDL.h>
-#include <tarte/Exception.h>
+#include <cinamo/Exception.h>
 #include "../../chisa/audio/Quartet.h"
 
 namespace chisa {

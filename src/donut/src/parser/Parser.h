@@ -18,11 +18,11 @@
 
 #pragma once
 #include <memory>
-#include <tarte/Handler.h>
+#include <cinamo/Handler.h>
 #include <donut/source/Source.h>
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 class ParserImpl;
 class CompilerImpl;

@@ -17,9 +17,9 @@
  */
 
 #pragma once
-#include <tarte/ClassUtil.h>
-#include <tarte/Logger.h>
-#include <tarte/Handler.h>
+#include <cinamo/ClassUtil.h>
+#include <cinamo/Logger.h>
+#include <cinamo/Handler.h>
 #include <deque>
 #include <vector>
 #include "../../gl/Drawable.h"

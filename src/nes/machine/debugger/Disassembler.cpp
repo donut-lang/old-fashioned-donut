@@ -17,12 +17,12 @@
  */
 
 #include <sstream>
-#include <tarte/Exception.h>
+#include <cinamo/Exception.h>
 #include "Disassembler.h"
 #include "../VirtualMachine.h"
 
 namespace nes {
-using namespace tarte;
+using namespace cinamo;
 
 Disassembler::Disassembler(VirtualMachine& vm)
 :vm_(vm)
@@ -112,7 +112,7 @@ bool Disassembler::decodeAt(uint16_t addr, Instruction& inst)
 		case AddrMode::Invalid:
 			break;
 		default:
-			TARTE_EXCEPTION(Exception, "[BUG] Oops. Invalid instruction.");
+			CINAMO_EXCEPTION(Exception, "[BUG] Oops. Invalid instruction.");
 			break;
 	}
 	return !inst.isInvalidInstruction();
@@ -309,36 +309,36 @@ std::string Instruction::toString() const noexcept
 	}
 	switch(this->addrMode_){
 		case AddrMode::Immediate:
-			ss << " " << ::tarte::format("0x%02x",this->bin[1]);
+			ss << " " << ::cinamo::format("0x%02x",this->bin[1]);
 			break;
 		case AddrMode::Zeropage:
-			ss << " [" << ::tarte::format("0x%02x",this->bin[1]) << "]";
+			ss << " [" << ::cinamo::format("0x%02x",this->bin[1]) << "]";
 			break;
 		case AddrMode::ZeropageX:
-			ss << " [" << ::tarte::format("0x%02x",this->bin[1]) << ",X]";
+			ss << " [" << ::cinamo::format("0x%02x",this->bin[1]) << ",X]";
 			break;
 		case AddrMode::ZeropageY:
-			ss << " [" << ::tarte::format("0x%02x",this->bin[1]) << ",Y]";
+			ss << " [" << ::cinamo::format("0x%02x",this->bin[1]) << ",Y]";
 			break;
 		case AddrMode::Absolute:
-			ss << " <" << ::tarte::format("0x%04x",this->bin[1] | bin[2] << 8)  << ">";
+			ss << " <" << ::cinamo::format("0x%04x",this->bin[1] | bin[2] << 8)  << ">";
 			break;
 		case AddrMode::AbsoluteX:
-			ss << " <" << ::tarte::format("0x%04x",this->bin[1] | bin[2] << 8)  << ",X>";
+			ss << " <" << ::cinamo::format("0x%04x",this->bin[1] | bin[2] << 8)  << ",X>";
 			break;
 		case AddrMode::AbsoluteY:
-			ss << " <" << ::tarte::format("0x%04x",this->bin[1] | bin[2] << 8)  << ",Y>";
+			ss << " <" << ::cinamo::format("0x%04x",this->bin[1] | bin[2] << 8)  << ",Y>";
 			break;
 		case AddrMode::Indirect: {
-			ss << " (" << ::tarte::format("0x%04x",this->bin[1] | bin[2] << 8)  << ")";
+			ss << " (" << ::cinamo::format("0x%04x",this->bin[1] | bin[2] << 8)  << ")";
 			break;
 		}
 		case AddrMode::IndirectX: {
-			ss << " (" << ::tarte::format("0x%02x",this->bin[1])  << ",X)";
+			ss << " (" << ::cinamo::format("0x%02x",this->bin[1])  << ",X)";
 			break;
 		}
 		case AddrMode::IndirectY: {
-			ss << " (" << ::tarte::format("0x%02x",this->bin[1])  << "),Y";
+			ss << " (" << ::cinamo::format("0x%02x",this->bin[1])  << "),Y";
 			break;
 		}
 		case AddrMode::Relative:
@@ -349,7 +349,7 @@ std::string Instruction::toString() const noexcept
 		case AddrMode::Invalid:
 			break;
 		default:
-			TARTE_EXCEPTION(Exception, "[BUG] Oops. Invalid instruction.");
+			CINAMO_EXCEPTION(Exception, "[BUG] Oops. Invalid instruction.");
 			break;
 	}	return ss.str();
 }

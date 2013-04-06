@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tarte/XMLAttrParser.h>
+#include <cinamo/XMLAttrParser.h>
 
 #include "FrameCombo.h"
 #include "ElementFactory.h"
@@ -36,7 +36,7 @@ FrameCombo::~FrameCombo() noexcept
 
 std::string FrameCombo::toString() const
 {
-	return ::tarte::format("(FrameCombo %p with %d elements)", this, getChildCount());
+	return ::cinamo::format("(FrameCombo %p with %d elements)", this, getChildCount());
 }
 
 void FrameCombo::renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)
@@ -77,7 +77,7 @@ void FrameCombo::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement
 {
 	for( tinyxml2::XMLElement* e = element->FirstChildElement(); e; e=e->NextSiblingElement() ){
 		bool transparent;
-		::tarte::xml::parseAttr("transparent", transparent, false, e);
+		::cinamo::xml::parseAttr("transparent", transparent, false, e);
 		this->addChild( factory->parseTree(this->self(), e), transparent);
 	}
 }

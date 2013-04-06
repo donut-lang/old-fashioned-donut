@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tarte/FileSystem.h>
-#include <tarte/String.h>
+#include <cinamo/FileSystem.h>
+#include <cinamo/String.h>
 
 #include "Font.h"
 

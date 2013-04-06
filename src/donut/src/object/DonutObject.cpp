@@ -17,13 +17,13 @@
  */
 
 #include <sstream>
-#include <tarte/String.h>
+#include <cinamo/String.h>
 #include <donut/Exception.h>
 #include <donut/object/Heap.h>
 #include <donut/object/DonutObject.h>
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 static const std::string TAG("DonutObject");
 

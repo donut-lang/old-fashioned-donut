@@ -17,11 +17,11 @@
  */
 
 #pragma once
-#include <tarte/VectorMap.h>
+#include <cinamo/VectorMap.h>
 #include "ObjectDecl.h"
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 class HomuraObject final: public NativeObject {
 private:

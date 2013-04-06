@@ -18,14 +18,14 @@
 
 #pragma once
 #include <string>
-#include <tarte/String.h>
-#include <tarte/Dynamic.h>
+#include <cinamo/String.h>
+#include <cinamo/Dynamic.h>
 #include <donut/Donut.h>
 #include <donut/object/ReactiveNativeObject.h>
 #include "../Widget.h"
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 namespace tk {
 using namespace donut;
@@ -110,7 +110,7 @@ protected:
 	virtual ~WidgetObjectBaseT() noexcept = default;
 public:
 	virtual std::string reprImpl(Handler<Heap> const& heap) const override {
-		return ::tarte::format("(WidgetObject for \"%s\" %p)", ::tarte::demangle<ObjectT>().c_str());
+		return ::cinamo::format("(WidgetObject for \"%s\" %p)", ::cinamo::demangle<ObjectT>().c_str());
 	}
 public:
 	void bootstrap(Handler< ::donut::Heap> const& heap, Handler<Widget> const& widget) {
@@ -138,7 +138,7 @@ WidgetProviderBaseT<ProviderT, ObjectT, WidgetT, AntiT >::WidgetProviderBaseT(co
 
 template<typename ProviderT, typename ObjectT, typename WidgetT, typename AntiT>
 WidgetProviderBaseT<ProviderT, ObjectT, WidgetT, AntiT >::WidgetProviderBaseT(const Handler<Heap>& heap, Handler<World> const& world)
-:WidgetProvider(heap, ::tarte::demangle<ObjectT>(), world)
+:WidgetProvider(heap, ::cinamo::demangle<ObjectT>(), world)
 {
 	registerClosures();
 }

@@ -137,7 +137,7 @@ Heading::Heading(int const level)
 		this->margin(geom::Space(gl::TextDrawable::DefaultFontSize*1, gl::TextDrawable::DefaultFontSize*0.5, 0.0f,0.0f));
 		break;
 	default:
-		TARTE_EXCEPTION(Exception, "[BUG] Unknwon heading level: %d", this->level());
+		CINAMO_EXCEPTION(Exception, "[BUG] Unknwon heading level: %d", this->level());
 	}
 }
 

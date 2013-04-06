@@ -18,15 +18,15 @@
 
 #pragma once
 #include <vector>
-#include <tarte/Handler.h>
-#include <tarte/Platform.h>
-#include <tarte/ClassUtil.h>
-#include <tarte/Thread.h>
+#include <cinamo/Handler.h>
+#include <cinamo/Platform.h>
+#include <cinamo/ClassUtil.h>
+#include <cinamo/Thread.h>
 #include "SoundSpec.h"
 #include "Instrument.h"
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 class Quartet : public HandlerBody<Quartet> {
 public:

@@ -17,9 +17,9 @@
  */
 
 #pragma once
-#include <tarte/ClassUtil.h>
-#include <tarte/Logger.h>
-#include <tarte/VectorMap.h>
+#include <cinamo/ClassUtil.h>
+#include <cinamo/Logger.h>
+#include <cinamo/VectorMap.h>
 #include "Sprite.h"
 #include "Font.h"
 #include "internal/ImageManager.h"
@@ -33,7 +33,7 @@
 #endif
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 namespace gl {
 

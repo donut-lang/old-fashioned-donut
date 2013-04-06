@@ -39,7 +39,7 @@ typename ScriptButtonObject::ResultType ScriptButtonObject::execAntiSideEffect(H
 	AntiSideEffect anti;
 	switch(val.op){
 	case AntiSideEffect::None:
-		TARTE_EXCEPTION(Exception, "[BUG] Oops. you have to process none before");
+		CINAMO_EXCEPTION(Exception, "[BUG] Oops. you have to process none before");
 		break;
 	}
 	return std::tuple<bool, AntiSideEffect>(true, anti);

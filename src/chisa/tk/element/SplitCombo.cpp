@@ -60,11 +60,11 @@ SplitCombo::~SplitCombo() noexcept
 std::string SplitCombo::toString() const
 {
 	if(this->splitMode() == Horizontal){
-		return ::tarte::format("(HorizontalCombo %p)", this);
+		return ::cinamo::format("(HorizontalCombo %p)", this);
 	}else if(this->splitMode() == Vertical){
-		return ::tarte::format("(VerticalCombo %p)", this);
+		return ::cinamo::format("(VerticalCombo %p)", this);
 	}else{
-		return ::tarte::format("(InvalidSplitCombo %p)", this);
+		return ::cinamo::format("(InvalidSplitCombo %p)", this);
 	}
 }
 
@@ -258,10 +258,10 @@ void SplitCombo::layoutImpl(geom::Distance const& offsetFromParent, geom::Box co
 {
 #ifdef DEBUG
 		if(geom::isUnspecified((size.*changed_getter)())) {
-			TARTE_EXCEPTION(Exception, "[BUG] Changed size is unspecified for SplitCombo.");
+			CINAMO_EXCEPTION(Exception, "[BUG] Changed size is unspecified for SplitCombo.");
 		}
 		if(geom::isUnspecified((size.*fixed_getter)())) {
-			TARTE_EXCEPTION(Exception, "[BUG] Fixed size is unspecified for SplitCombo.");
+			CINAMO_EXCEPTION(Exception, "[BUG] Fixed size is unspecified for SplitCombo.");
 		}
 #endif
 	float totalWeight = 0.0f;
@@ -295,7 +295,7 @@ void SplitCombo::layoutImpl(geom::Distance const& offsetFromParent, geom::Box co
 		(offset.*changed_setter)(ctx.size+(box.*changed_getter)());
 #ifdef DEBUG
 		if(geom::isUnspecified(ctx.size)) {
-			TARTE_EXCEPTION(Exception, "[BUG] Split size is unspecified.");
+			CINAMO_EXCEPTION(Exception, "[BUG] Split size is unspecified.");
 		}
 #endif
 		it.first->layout(offset, box);

@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include <tarte/ClassUtil.h>
+#include <cinamo/ClassUtil.h>
 #include <cmath>
 #include <utility>
 #include <string>

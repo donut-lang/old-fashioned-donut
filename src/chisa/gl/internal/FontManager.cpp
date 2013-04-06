@@ -17,7 +17,7 @@
  */
 
 #include "../Font.h"
-#include <tarte/FileSystem.h>
+#include <cinamo/FileSystem.h>
 
 namespace chisa {
 namespace gl {
@@ -97,7 +97,7 @@ Font* FontManager::seachDefaultFont()
 			this->log().e(TAG, "Failed to open font: %s", fname.c_str());
 		}
 	}
-	TARTE_EXCEPTION(Exception, "[BUG] Failed open default font: %s", this->fontdir_.c_str());
+	CINAMO_EXCEPTION(Exception, "[BUG] Failed open default font: %s", this->fontdir_.c_str());
 }
 
 void FontManager::backFont(Font* font)

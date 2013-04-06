@@ -19,7 +19,7 @@
 #pragma once
 #include <tuple>
 #include <climits>
-#include <tarte/ClassUtil.h>
+#include <cinamo/ClassUtil.h>
 namespace chisa {
 
 class SoundSpec {

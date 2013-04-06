@@ -8,7 +8,7 @@
 #pragma once
 
 #include <stdint.h>
-#include <tarte/XArchiver.h>
+#include <cinamo/XArchiver.h>
 #include "../exception/EmulatorException.h"
 
 namespace nes {
@@ -41,8 +41,8 @@ public:
 	virtual void onVBlank(){};
 	virtual void onUpdate() = 0;
 	virtual bool isPressed(uint8_t keyIdx) = 0;
-	virtual void save(::tarte::XArchiverOut & arc) {};
-	virtual void load(::tarte::XArchiverIn & arc) {};
+	virtual void save(::cinamo::XArchiverOut & arc) {};
+	virtual void load(::cinamo::XArchiverIn & arc) {};
 private:
 };
 

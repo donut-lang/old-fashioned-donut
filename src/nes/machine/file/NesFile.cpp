@@ -1,7 +1,7 @@
 
 #include <fstream>
 #include <string.h>
-#include <tarte/XArchiver.h>
+#include <cinamo/XArchiver.h>
 #include "./NesFile.h"
 #include "../exception/EmulatorException.h"
 
@@ -23,7 +23,7 @@ NesFile::NesFile(std::string const& filename)
 	this->loadFile();
 }
 
-NesFile::NesFile(tarte::XValue const& val) :
+NesFile::NesFile(cinamo::XValue const& val) :
 filename("<FROM XVAL NOW LOADING>"),
 mapperNo(0),
 prgRom(nullptr),
@@ -36,7 +36,7 @@ chrSize(0),
 prgPageCnt(0),
 chrPageCnt(0)
 {
-	::tarte::XArchiverIn in(val);
+	::cinamo::XArchiverIn in(val);
 	in >> *this;
 }
 

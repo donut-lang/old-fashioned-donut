@@ -32,8 +32,8 @@ struct NesGeistSideEffect {
 	};
 	Operation op_before;
 	Operation op_after;
-	::tarte::XValue before;
-	::tarte::XValue after;
+	::cinamo::XValue before;
+	::cinamo::XValue after;
 	NesGeistSideEffect()
 	:op_before(None),op_after(None)
 	{
@@ -53,8 +53,8 @@ public:
 	void onHistoryDiscarded(Handler< ::donut::Heap> const& heap);
 	ResultType onBack(Handler< ::donut::Heap> const& heap, AntiSideEffect const& val);
 	ResultType onForward(Handler< ::donut::Heap> const& heap, AntiSideEffect const& val);
-	::tarte::XValue saveImpl( Handler< ::donut::Heap> const& heap ) override final;
-	void loadImpl( Handler< ::donut::Heap> const& heap, ::tarte::XValue const& data ) override final;
+	::cinamo::XValue saveImpl( Handler< ::donut::Heap> const& heap ) override final;
+	void loadImpl( Handler< ::donut::Heap> const& heap, ::cinamo::XValue const& data ) override final;
 public:
 	std::tuple<break_id_t, bool, AntiSideEffect> addExecBreak(uint16_t addr_first, uint16_t addr_end);
 	std::tuple<bool, bool, AntiSideEffect> removeExecBreak(break_id_t id);

@@ -24,16 +24,16 @@ namespace nes {
 
 class Hexe: public chisa::Hexe {
 private:
-	::tarte::Handler<NesGeistProvider> nesGeistProvider_;
+	::cinamo::Handler<NesGeistProvider> nesGeistProvider_;
 public:
 	Hexe(chisa::Logger& log, std::string const& basepath);
 	virtual ~Hexe() noexcept;
 public:
-	::tarte::Handler<NesGeistProvider> nesGeistProvider() const noexcept { return this->nesGeistProvider_; };
+	::cinamo::Handler<NesGeistProvider> nesGeistProvider() const noexcept { return this->nesGeistProvider_; };
 public:
-	Handler<Hexe> self() { return ::tarte::Handler<Hexe>::__internal__fromRawPointerWithoutCheck(static_cast<Hexe*>(chisa::Hexe::self().get())); };
+	Handler<Hexe> self() { return ::cinamo::Handler<Hexe>::__internal__fromRawPointerWithoutCheck(static_cast<Hexe*>(chisa::Hexe::self().get())); };
 public:
-	virtual void registerGeistProvider( ::tarte::Handler< ::donut::Heap> const& heap ) override;
+	virtual void registerGeistProvider( ::cinamo::Handler< ::donut::Heap> const& heap ) override;
 	virtual void registerWidgets(chisa::tk::WidgetFactory& factory) override;
 	virtual void registerElements(chisa::tk::ElementFactory& factory) override;
 public:

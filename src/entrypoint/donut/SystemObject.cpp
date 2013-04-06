@@ -17,8 +17,8 @@
  */
 
 #include <iostream>
-#include <tarte/String.h>
-#include <tarte/XVal.h>
+#include <cinamo/String.h>
+#include <cinamo/XVal.h>
 #include <donut/object/Heap.h>
 #include <donut/object/StringObject.h>
 
@@ -27,7 +27,7 @@
 
 namespace donut_cli {
 using namespace donut;
-using namespace tarte;
+using namespace cinamo;
 
 const std::string TAG("SystemObject");
 

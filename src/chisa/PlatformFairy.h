@@ -17,16 +17,16 @@
  */
 
 #pragma once
-#include <tarte/Handler.h>
-#include <tarte/Logger.h>
-#include <tarte/ClassUtil.h>
+#include <cinamo/Handler.h>
+#include <cinamo/Logger.h>
+#include <cinamo/ClassUtil.h>
 #include "audio/Quartet.h"
 #include "input/JoystickManager.h"
 #include "input/Joystick.h"
 #include "geom/Area.h"
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 class Chisa;
 class PlatformFairy : public HandlerBody<PlatformFairy> {

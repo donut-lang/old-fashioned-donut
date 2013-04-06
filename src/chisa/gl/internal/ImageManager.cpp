@@ -60,34 +60,34 @@ Handler<Sprite> ImageManager::loadPNG(std::string const& filename)
 {
 	FILE* fp = fopen(filename.c_str(), "rb");
 	if(!fp){
-		TARTE_EXCEPTION(Exception, "[BUG] oops. failed to open: %s",filename.c_str());
+		CINAMO_EXCEPTION(Exception, "[BUG] oops. failed to open: %s",filename.c_str());
 	}
 	unsigned char header[8];
 	fread(header, 1, 8, fp);
 	if(png_sig_cmp(header,0,8)){
-		TARTE_EXCEPTION(Exception, "[BUG] oops. File \"%s\" is not a PNG file.",filename.c_str());
+		CINAMO_EXCEPTION(Exception, "[BUG] oops. File \"%s\" is not a PNG file.",filename.c_str());
 	}
 	png_structp png = png_create_read_struct (PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 	if(!png){
 		fclose(fp);
-		TARTE_EXCEPTION(Exception, "[BUG] oops. failed to create PNG read struct!!");
+		CINAMO_EXCEPTION(Exception, "[BUG] oops. failed to create PNG read struct!!");
 	}
 	png_infop info = png_create_info_struct(png);
 	if(!info){
 		fclose(fp);
 		png_destroy_read_struct(&png, (png_infopp)nullptr, (png_infopp)nullptr);
-		TARTE_EXCEPTION(Exception, "[BUG] oops. failed to create PNG info struct!!");
+		CINAMO_EXCEPTION(Exception, "[BUG] oops. failed to create PNG info struct!!");
 	}
 	png_infop end_info = png_create_info_struct(png);
 	if (!end_info) {
 		fclose(fp);
 	    png_destroy_read_struct(&png, &info, (png_infopp)NULL);
-		TARTE_EXCEPTION(Exception, "[BUG] oops. failed to create PNG info struct!!");
+		CINAMO_EXCEPTION(Exception, "[BUG] oops. failed to create PNG info struct!!");
 	}
 	if (setjmp(png_jmpbuf(png))) {
 		//例外処理
 		fclose(fp);
-		TARTE_EXCEPTION(Exception, "[BUG] oops. failed read PNG file: \"%s\"!", filename.c_str());
+		CINAMO_EXCEPTION(Exception, "[BUG] oops. failed read PNG file: \"%s\"!", filename.c_str());
 	}
 	//ファイルポインタの設定
 	png_init_io(png, fp);

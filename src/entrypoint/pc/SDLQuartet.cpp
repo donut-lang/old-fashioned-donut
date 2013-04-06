@@ -38,7 +38,7 @@ SDLQuartet::SDLQuartet(const SoundSpec& desired)
 	spec.userdata = this;
 	SDL_AudioSpec obtained;
 	if (SDL_OpenAudio(&spec, &obtained) != 0) {
-		TARTE_EXCEPTION(Exception, "[BUG] Failed to open audio. SDL says: \"%s\"", SDL_GetError());
+		CINAMO_EXCEPTION(Exception, "[BUG] Failed to open audio. SDL says: \"%s\"", SDL_GetError());
 	}
 	this->notifySoundSpec(SoundSpec::DataFormat(obtained.format), obtained.channels, obtained.freq, obtained.samples);
 }
@@ -73,9 +73,9 @@ void SDLQuartet::playImpl(unsigned char* stream, const int len)
 			SDL_AudioCVT cvt;
 			int const result = SDL_BuildAudioCVT(&cvt, SDL_AudioFormat(firstSpec.format()), firstSpec.channels(), firstSpec.frequency(), SDL_AudioFormat(this->spec().format()), this->spec().channels(), this->spec().frequency());
 			if (result == 0) {
-				TARTE_EXCEPTION(Exception, "[BUG] Oops. It is not need to convert.")
+				CINAMO_EXCEPTION(Exception, "[BUG] Oops. It is not need to convert.")
 			} else if (result < 0) {
-				TARTE_EXCEPTION(Exception, "[BUG] Oops. This format is not compatible. SDL says: \"%s\"", SDL_GetError())
+				CINAMO_EXCEPTION(Exception, "[BUG] Oops. This format is not compatible. SDL says: \"%s\"", SDL_GetError())
 			}
 			const unsigned int temporaryBufferSize = first.buffer.size() * cvt.len_mult;
 			bool needCopy = true;
@@ -94,9 +94,9 @@ void SDLQuartet::playImpl(unsigned char* stream, const int len)
 				cvt.len = first.buffer.size();
 			}
 			if (SDL_ConvertAudio(&cvt) != 0) {
-				TARTE_EXCEPTION(Exception, "[BUG] Oops. Failed to convert audio. SDL says: \"%s\"", SDL_GetError())
+				CINAMO_EXCEPTION(Exception, "[BUG] Oops. Failed to convert audio. SDL says: \"%s\"", SDL_GetError())
 			} else if (cvt.len_cvt != len) {
-				TARTE_EXCEPTION(Exception, "[BUG] Oops. Buffer size does not match! converted: %d != stream: %d", cvt.len_cvt, stream);
+				CINAMO_EXCEPTION(Exception, "[BUG] Oops. Buffer size does not match! converted: %d != stream: %d", cvt.len_cvt, stream);
 			}
 			if (needCopy) {
 				std::memcpy(stream, cvt.buf, cvt.len_cvt);
@@ -118,9 +118,9 @@ void SDLQuartet::playImpl(unsigned char* stream, const int len)
 		SDL_AudioCVT cvt;
 		int const result = SDL_BuildAudioCVT(&cvt, SDL_AudioFormat(spec.format()), spec.channels(), spec.frequency(), SDL_AudioFormat(this->spec().format()), this->spec().channels(), this->spec().frequency());
 		if (result == 0) {
-			TARTE_EXCEPTION(Exception, "[BUG] Oops. It is not need to convert.")
+			CINAMO_EXCEPTION(Exception, "[BUG] Oops. It is not need to convert.")
 		} else if (result < 0) {
-			TARTE_EXCEPTION(Exception, "[BUG] Oops. This format is not compatible. SDL says: \"%s\"", SDL_GetError())
+			CINAMO_EXCEPTION(Exception, "[BUG] Oops. This format is not compatible. SDL says: \"%s\"", SDL_GetError())
 		}
 		const unsigned int temporaryBufferSize = player.buffer.size() * cvt.len_mult;
 		if (temporaryBufferSize <= player.buffer.size()) {
@@ -133,9 +133,9 @@ void SDLQuartet::playImpl(unsigned char* stream, const int len)
 			cvt.len = player.buffer.size();
 		}
 		if (SDL_ConvertAudio(&cvt) != 0) {
-			TARTE_EXCEPTION(Exception, "[BUG] Oops. Failed to convert audio. SDL says: \"%s\"", SDL_GetError())
+			CINAMO_EXCEPTION(Exception, "[BUG] Oops. Failed to convert audio. SDL says: \"%s\"", SDL_GetError())
 		} else if (cvt.len_cvt != len) {
-			TARTE_EXCEPTION(Exception, "[BUG] Oops. Buffer size does not match! converted: %d != stream: %d", cvt.len_cvt, stream);
+			CINAMO_EXCEPTION(Exception, "[BUG] Oops. Buffer size does not match! converted: %d != stream: %d", cvt.len_cvt, stream);
 		}
 		SDL_MixAudio(stream, cvt.buf, cvt.len_cvt, volume);
 	}

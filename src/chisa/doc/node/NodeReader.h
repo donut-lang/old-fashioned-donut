@@ -16,15 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include <tarte/ClassUtil.h>
-#include <tarte/VectorMap.h>
+#include <cinamo/ClassUtil.h>
+#include <cinamo/VectorMap.h>
 #include <memory>
 #include <string>
 #include <tinyxml2.h>
 #include "Decl.h"
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 namespace doc {
 

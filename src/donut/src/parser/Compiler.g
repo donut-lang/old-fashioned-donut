@@ -14,17 +14,17 @@ options {
 #include <cstdlib>
 #include <cstddef>
 #include <algorithm>
-#include <tarte/String.h>
+#include <cinamo/String.h>
 #include <donut/source/Source.h>
 #include <donut/source/Closure.h>
 #include "../ParseUtil.h"
 
-using namespace tarte;
+using namespace cinamo;
 using namespace donut;
 using std::string;
 using std::nullptr_t;
 using donut::unescapeString;
-using tarte::parseAs;
+using cinamo::parseAs;
 
 typedef pANTLR3_COMMON_TOKEN Token;
 }
@@ -394,25 +394,25 @@ literal [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlis
 	| HEX_LITERAL
 	{
 		std::string str(createStringFromString($HEX_LITERAL.text));
-		int const val = parseAs<int>(str, 16);
+		int const val = parseAs<int>(str, 16, 0);
 		$asmlist.push_back(Inst::Push | $code->constCode<int>(val));
 	}
 	| OCT_LITERAL
 	{
 		std::string str(createStringFromString($OCT_LITERAL.text));
-		int const val = parseAs<int>(str, 8);
+		int const val = parseAs<int>(str, 8, 0);
 		$asmlist.push_back(Inst::Push | $code->constCode<int>(val));
 	}
 	| INT_LITERAL
 	{
 		std::string str(createStringFromString($INT_LITERAL.text));
-		int const val = parseAs<int>(str, 10);
+		int const val = parseAs<int>(str, 10, 0);
 		$asmlist.push_back(Inst::Push | $code->constCode<int>(val));
 	}
 	| FLOAT_LITERAL
 	{
 		std::string str(createStringFromString($FLOAT_LITERAL.text));
-		float const val = parseAs<float>(str);
+		float const val = parseAs<float>(str, NAN);
 		$asmlist.push_back(Inst::Push | $code->constCode<float>(val));
 	}
 	| STRING_SINGLE

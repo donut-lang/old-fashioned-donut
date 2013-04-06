@@ -20,7 +20,7 @@
 #include "ContentObject.h"
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 using namespace donut;
 namespace tk {
 

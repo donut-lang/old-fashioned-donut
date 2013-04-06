@@ -116,7 +116,7 @@ Handler<AngelTarget> Angel::detatchTarget(const Handler<AngelTarget>& target)
 		target->onDetatched();
 		return target;
 	}
-	TARTE_EXCEPTION(Exception, "[BUG] Angel target not found.")
+	CINAMO_EXCEPTION(Exception, "[BUG] Angel target not found.")
 }
 
 Handler<Element> Angel::findElementByPoint(const geom::Point& screenVector)
@@ -300,7 +300,7 @@ Handler<ElementServant> AngelTarget::newElementServant( std::string const& eleme
 {
 	Handler<World> world(this->world());
 	if( unlikely(!world) ){
-		TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.")
+		CINAMO_EXCEPTION(Exception, "[BUG] Oops. World is already dead.")
 	}
 	Handler<Element> element = world->realizeElement(elementId);
 	return Handler<ElementServant>(new ElementServant(self(), element));

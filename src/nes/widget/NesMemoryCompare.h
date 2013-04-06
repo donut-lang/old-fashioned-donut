@@ -22,7 +22,7 @@
 #include "../../chisa/gl/PredefinedSymRenderer.h"
 
 namespace nes {
-using namespace tarte;
+using namespace cinamo;
 
 class NesGeist;
 class NesMemoryCompare final : public ::chisa::tk::Widget {

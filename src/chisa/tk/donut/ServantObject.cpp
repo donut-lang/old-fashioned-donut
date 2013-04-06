@@ -189,7 +189,7 @@ ElementServantObject::ResultType ElementServantObject::execAntiSideEffect(const 
 		servant->animEnabled(false);
 		break;
 	case AntiSideEffect::None:
-		TARTE_EXCEPTION(Exception, "[BUG] None operation is not handled.")
+		CINAMO_EXCEPTION(Exception, "[BUG] None operation is not handled.")
 	}
 	return ResultType(true, anti);
 }
@@ -223,7 +223,7 @@ void ElementServantObject::loadImpl(const Handler<Heap>& heap, const XValue& dat
 
 std::string ElementServantObject::reprImpl(const Handler<Heap>& heap) const
 {
-	return ::tarte::format("(ElementServantObject: %p)", this);
+	return ::cinamo::format("(ElementServantObject: %p)", this);
 }
 
 
@@ -278,7 +278,7 @@ void HaloServantObject::loadImpl(const Handler<Heap>& heap, const XValue& data)
 
 std::string HaloServantObject::reprImpl(const Handler<Heap>& heap) const
 {
-	return ::tarte::format("(HaloServantObject: %p)", this);
+	return ::cinamo::format("(HaloServantObject: %p)", this);
 }
 
 /**********************************************************************************************************************
@@ -332,7 +332,7 @@ void ContentUnderlineServantObject::loadImpl(const Handler<Heap>& heap, const XV
 
 std::string ContentUnderlineServantObject::reprImpl(const Handler<Heap>& heap) const
 {
-	return ::tarte::format("(ContentUnderlineServantObject: %p)", this);
+	return ::cinamo::format("(ContentUnderlineServantObject: %p)", this);
 }
 }}
 

@@ -18,13 +18,13 @@
 
 #pragma once
 #include <vector>
-#include <tarte/Handler.h>
-#include <tarte/ClassUtil.h>
-#include <tarte/XVal.h>
-#include <tarte/Logger.h>
+#include <cinamo/Handler.h>
+#include <cinamo/ClassUtil.h>
+#include <cinamo/XVal.h>
+#include <cinamo/Logger.h>
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 class Donut;
 

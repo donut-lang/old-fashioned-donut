@@ -38,7 +38,7 @@ Handler< ::donut::Object> Heaven::donutObject(Handler< ::donut::Heap> const& hea
 	if(this->donutObject_.expired()){
 		Handler<World> world(this->world().lock());
 		if( unlikely(!world) ){
-			TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
+			CINAMO_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
 		}
 		Handler< ::donut::Object> obj(world->patron()->heavenProvider()->newInstance(heap, self()));
 		this->donutObject_ = obj;

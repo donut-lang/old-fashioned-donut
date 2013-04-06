@@ -17,15 +17,15 @@
  */
 
 #pragma once
-#include <tarte/Handler.h>
-#include <tarte/ClassUtil.h>
-#include <tarte/Logger.h>
+#include <cinamo/Handler.h>
+#include <cinamo/ClassUtil.h>
+#include <cinamo/Logger.h>
 #include "../geom/Vector.h"
 
 struct SDL_Keysym;
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 namespace tk {
 class World;

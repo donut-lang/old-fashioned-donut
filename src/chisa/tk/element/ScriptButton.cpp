@@ -17,7 +17,7 @@
  */
 
 #include <tinyxml2.h>
-#include <tarte/Exception.h>
+#include <cinamo/Exception.h>
 
 #include "ScriptButton.h"
 #include "../../gl/Canvas.h"
@@ -43,7 +43,7 @@ ScriptButton::~ScriptButton() noexcept
 
 std::string ScriptButton::toString() const
 {
-	return ::tarte::format("(ScriptButton text:\"%s\" %p)", this->text().c_str(), this);
+	return ::cinamo::format("(ScriptButton text:\"%s\" %p)", this->text().c_str(), this);
 }
 
 void ScriptButton::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)
@@ -62,7 +62,7 @@ void ScriptButton::onClick()
 		}
 		Handler<World> world( this->world().lock() );
 		if( unlikely(!world) ) {
-			TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
+			CINAMO_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
 		}
 		if(this->log().d()){
 			this->log().d(TAG, "Sending message on \"%s\"", this->machineName_.c_str());

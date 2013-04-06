@@ -75,7 +75,7 @@ Handler<Heaven> HeavenObject::heaven() const
 
 std::string HeavenObject::reprImpl(const Handler<Heap>& heap) const
 {
-	return ::tarte::format("(HeavenObject: %p)", this);
+	return ::cinamo::format("(HeavenObject: %p)", this);
 }
 
 HeavenObject::ResultType HeavenObject::execAntiSideEffect(Handler<Heap> const& heap, AntiSideEffect const& val)

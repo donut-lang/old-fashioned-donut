@@ -20,11 +20,11 @@
 #include <unordered_set>
 #include <list>
 #include <functional>
-#include <tarte/Logger.h>
-#include <tarte/TypeTrans.h>
+#include <cinamo/Logger.h>
+#include <cinamo/TypeTrans.h>
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 namespace tk {
 
 class Task {
@@ -57,7 +57,7 @@ public:
 	void send( std::function<R(Args...)> const& lambda ) = delete;
 	template <typename __Lambda>
 	void send( __Lambda lambda ){
-		this->send( ::tarte::makeFunctor(lambda) );
+		this->send( ::cinamo::makeFunctor(lambda) );
 	}
 	std::size_t numTasks() const noexcept { return this->lambas_.size(); };
 public:

@@ -38,7 +38,7 @@ Hexe::~Hexe() noexcept
 	log().d(TAG, "Shutting down...");
 }
 
-void Hexe::registerGeistProvider( ::tarte::Handler< ::donut::Heap> const& heap )
+void Hexe::registerGeistProvider( ::cinamo::Handler< ::donut::Heap> const& heap )
 {
 	heap->registerProvider(this->nesGeistProvider_ = Handler<NesGeistProvider>(new NesGeistProvider(heap)));
 }

@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#include <tarte/Handler.h>
-#include <tarte/ClassUtil.h>
+#include <cinamo/Handler.h>
+#include <cinamo/ClassUtil.h>
 #include "../../geom/Area.h"
 #include "../../gl/Drawable.h"
 

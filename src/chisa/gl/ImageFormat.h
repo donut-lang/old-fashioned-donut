@@ -20,7 +20,7 @@
 #include "OpenGL.h"
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 namespace gl {
 class Canvas;
 enum class ImageFormat : unsigned int {

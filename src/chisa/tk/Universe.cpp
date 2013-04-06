@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tarte/FileSystem.h>
+#include <cinamo/FileSystem.h>
 
 #include "Universe.h"
 #include "World.h"

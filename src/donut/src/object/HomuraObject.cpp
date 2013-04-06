@@ -16,13 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tarte/String.h>
-#include <tarte/XVal.h>
+#include <cinamo/String.h>
+#include <cinamo/XVal.h>
 #include <donut/object/Heap.h>
 #include <donut/object/HomuraObject.h>
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 const std::string TAG("HomuraObject");
 

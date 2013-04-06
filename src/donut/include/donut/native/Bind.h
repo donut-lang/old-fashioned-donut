@@ -18,14 +18,14 @@
 
 #pragma once
 #include <functional>
-#include <tarte/TypeTrans.h>
+#include <cinamo/TypeTrans.h>
 #include "../Exception.h"
 #include "../object/Object.h"
 #include "Decoder.h"
 #include "Encoder.h"
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 namespace native {
 
@@ -61,9 +61,9 @@ createBindPure(std::function<R(S self, Args... args)> f)
 
 template <typename __F>
 auto createBindPure(__F f)
--> decltype(createBindPure( ::tarte::makeFunctor(f) ))
+-> decltype(createBindPure( ::cinamo::makeFunctor(f) ))
 {
-	return createBindPure( ::tarte::makeFunctor(f) );
+	return createBindPure( ::cinamo::makeFunctor(f) );
 }
 
 /**********************************************************************************************************************
@@ -106,9 +106,9 @@ createBindReactive(std::function<std::tuple<R, bool, __AntiSideEffect>(S self, A
 
 template <typename __F>
 auto createBindReactive(__F f)
-->decltype(createBindReactive(::tarte::makeFunctor(f)))
+->decltype(createBindReactive(::cinamo::makeFunctor(f)))
 {
-	return createBindReactive(::tarte::makeFunctor(f));
+	return createBindReactive(::cinamo::makeFunctor(f));
 }
 
 }}

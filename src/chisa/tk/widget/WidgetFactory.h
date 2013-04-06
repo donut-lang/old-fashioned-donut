@@ -20,15 +20,15 @@
 #include <functional>
 #include <tinyxml2.h>
 #include <vector>
-#include <tarte/Handler.h>
-#include <tarte/Logger.h>
-#include <tarte/ClassUtil.h>
-#include <tarte/VectorMap.h>
+#include <cinamo/Handler.h>
+#include <cinamo/Logger.h>
+#include <cinamo/ClassUtil.h>
+#include <cinamo/VectorMap.h>
 #include <donut/Donut.h>
 #include "../donut/WidgetObject.h"
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 namespace util {
 class ParamSet;
@@ -69,7 +69,7 @@ public:
 	void registerProvider(Handler<WidgetProvider> const& provider)
 	{
 		static_assert(std::is_base_of<Widget, WidgetKlass>::value, "Please register provider for widget class.");
-		this->registerProvider(::tarte::demangle<WidgetKlass>(), provider);
+		this->registerProvider(::cinamo::demangle<WidgetKlass>(), provider);
 	}
 	void registerDonutProvider(Handler< ::donut::Heap> const& heap);
 public: /* 作成 */

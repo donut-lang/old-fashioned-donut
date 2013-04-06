@@ -17,7 +17,7 @@
  */
 
 #include <tinyxml2.h>
-#include <tarte/Exception.h>
+#include <cinamo/Exception.h>
 
 #include "Label.h"
 #include "../../gl/Canvas.h"
@@ -53,7 +53,7 @@ Label::~Label() noexcept
 
 std::string Label::toString() const
 {
-	return ::tarte::format("(Label text:\"%s\" %p)", this->text_.c_str(), this);
+	return ::cinamo::format("(Label text:\"%s\" %p)", this->text_.c_str(), this);
 }
 
 void Label::renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)

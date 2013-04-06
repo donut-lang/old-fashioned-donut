@@ -18,14 +18,14 @@
 
 #include "../Color.h"
 
-#include <tarte/XArchiver.h>
-#include <tarte/XMLAttrParser.h>
+#include <cinamo/XArchiver.h>
+#include <cinamo/XMLAttrParser.h>
 
-#include <tarte/String.h>
+#include <cinamo/String.h>
 
 using namespace chisa::gl;
 
-namespace tarte {
+namespace cinamo {
 namespace xml {
 
 template <>

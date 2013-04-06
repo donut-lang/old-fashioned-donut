@@ -173,7 +173,7 @@ void NesMemoryCompare::reshapeImpl(const chisa::geom::Box& areaSize)
 
 chisa::geom::Area NesMemoryCompare::findTargetImpl(const std::string& target)
 {
-	uint16_t addr = ::tarte::parseAs<uint16_t>(target);
+	uint16_t addr = ::cinamo::parseAs<uint16_t>(target, 0);
 	return addrToArea(addr);
 }
 

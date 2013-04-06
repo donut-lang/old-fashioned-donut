@@ -71,7 +71,7 @@ Handler< ::donut::Object> TwinAngel::createDonutObject(Handler< ::donut::Heap> c
 Handler<AngelTarget> TwinAngel::attatchTarget(const Handler<AngelTarget>& target)
 {
 	if(numTargets() >= 2) {
-		TARTE_EXCEPTION(Exception, "[BUG] Oops. Twin angel can hold only two targets.")
+		CINAMO_EXCEPTION(Exception, "[BUG] Oops. Twin angel can hold only two targets.")
 	}
 	return this->Angel::attatchTarget(target);
 }

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tarte/Exception.h>
+#include <cinamo/Exception.h>
 #include <tinyxml2.h>
 
 #include "ElementFactory.h"
@@ -44,7 +44,7 @@ namespace chisa {
 namespace tk {
 
 using namespace tinyxml2;
-using namespace tarte;
+using namespace cinamo;
 
 const std::string ElementFactory::ElemName::World("world");
 const std::string ElementFactory::ElemName::Vertical("vertical");
@@ -133,17 +133,17 @@ ElementFactory::~ElementFactory()
 void ElementFactory::registerLayout(std::string const& xmlElementName, ElementFactory::ConstructorType constructor)
 {
 	if(!this->tagToElementConstructorMap_.insert(xmlElementName, constructor)){
-		TARTE_EXCEPTION(Exception, "[BUG] Oops. XML Element Name \"%s\" is already registered");
+		CINAMO_EXCEPTION(Exception, "[BUG] Oops. XML Element Name \"%s\" is already registered");
 	}
 }
 
 void ElementFactory::registerProvider(std::string const& demangledElementName, Handler<ElementProvider> const& provider)
 {
 	if(!this->demangledElementNameToDonutProviderMap_.insert(demangledElementName, provider)){
-		TARTE_EXCEPTION(Exception, "[BUG] Oops. Provider for \"%s\" is already registered");
+		CINAMO_EXCEPTION(Exception, "[BUG] Oops. Provider for \"%s\" is already registered");
 	}
 	if( unlikely(!heap_) ) {
-		TARTE_EXCEPTION(Exception, "[BUG] Oops. Heap is not specified.");
+		CINAMO_EXCEPTION(Exception, "[BUG] Oops. Heap is not specified.");
 	}
 	heap_->registerProvider(provider);
 }
@@ -153,7 +153,7 @@ void ElementFactory::registerDonutProvider(Handler< ::donut::Heap> const& heap)
 	HeapLock lock(*this, heap);
 	Handler<World> world(this->world().lock());
 	if( unlikely(!world) ){
-		TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
+		CINAMO_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
 	}
 	this->registerProvider<SplitCombo>(Handler<ElementProvider>(new SplitComboProvider(heap, world)));
 	this->registerProvider<TextArea>(Handler<ElementProvider>(new TextAreaProvider(heap, world)));
@@ -163,7 +163,7 @@ void ElementFactory::registerDonutProvider(Handler< ::donut::Heap> const& heap)
 
 Handler<ElementProvider> ElementFactory::getProviderOf(Element* me)
 {
-	std::string const demangled(::tarte::demangle(me));
+	std::string const demangled(::cinamo::demangle(me));
 	VectorMap<std::string, Handler<ElementProvider> >::Iterator it =
 			this->demangledElementNameToDonutProviderMap_.find(demangled);
 	if(it == this->demangledElementNameToDonutProviderMap_.end()){
@@ -178,7 +178,7 @@ Handler<Element> ElementFactory::parseTree(HandlerW<Element> parent, XMLElement*
 	const char* name = top->Name();
 	auto it = this->tagToElementConstructorMap_.find(name);
 	if(this->tagToElementConstructorMap_.end() == it){
-		TARTE_EXCEPTION(Exception, "Unknwon Element: %s", name);
+		CINAMO_EXCEPTION(Exception, "Unknwon Element: %s", name);
 	}
 	Handler<Element> elm(it->second(this->log(), this->world(), parent));
 	elm->loadXml(this, top);
@@ -193,7 +193,7 @@ Handler<Element> ElementFactory::parseTree(std::string const& elementId)
 			return this->parseTree(HandlerW<Element>(), elem);
 		}
 	}
-	TARTE_EXCEPTION(Exception, "ID \"%s\" not found in %s", elementId.c_str(), this->filename_.c_str());
+	CINAMO_EXCEPTION(Exception, "ID \"%s\" not found in %s", elementId.c_str(), this->filename_.c_str());
 }
 
 }}

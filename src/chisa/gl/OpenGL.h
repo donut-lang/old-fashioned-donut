@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include <tarte/Platform.h>
+#include <cinamo/Platform.h>
 
 #if CHISA_ANDROID
 #include <GLES/gl.h>

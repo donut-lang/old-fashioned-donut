@@ -17,9 +17,9 @@
  */
 
 #include "../TestCommon.h"
-#include <tarte/Handler.h>
+#include <cinamo/Handler.h>
 
-namespace tarte {
+namespace cinamo {
 
 class TestFix : public HandlerBody<TestFix> {
 private:

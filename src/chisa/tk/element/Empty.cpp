@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tarte/String.h>
+#include <cinamo/String.h>
 
 #include "Empty.h"
 #include "ElementFactory.h"
@@ -40,7 +40,7 @@ void Empty::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* ele
 
 std::string Empty::toString() const
 {
-	return ::tarte::format("(Empty %p)",this);
+	return ::cinamo::format("(Empty %p)",this);
 }
 
 void Empty::renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)

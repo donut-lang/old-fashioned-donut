@@ -18,8 +18,8 @@
 
 #pragma once
 #include <string>
-#include <tarte/String.h>
-#include <tarte/Dynamic.h>
+#include <cinamo/String.h>
+#include <cinamo/Dynamic.h>
 #include <donut/Donut.h>
 #include "ElementObject.h"
 #include "../element/ElementGroup.h"
@@ -69,7 +69,7 @@ protected:
 	virtual ~ElementGroupObjectBaseT() noexcept = default;
 public:
 	virtual std::string reprImpl(Handler<Heap> const& heap) const override {
-		return ::tarte::format("(ElementGroupObject for \"%s\" %p)", ::tarte::demangle<ObjectT>().c_str());
+		return ::cinamo::format("(ElementGroupObject for \"%s\" %p)", ::cinamo::demangle<ObjectT>().c_str());
 	}
 public:
 	void bootstrap(Handler< ::donut::Heap> const& heap, Handler<ElementT> const& element) {
@@ -129,7 +129,7 @@ ElementGroupProviderBaseT<ProviderT, ObjectT, ElementT, AntiT >::ElementGroupPro
 
 template <typename ProviderT, typename ObjectT, typename ElementT, typename AntiT>
 ElementGroupProviderBaseT<ProviderT, ObjectT, ElementT, AntiT >::ElementGroupProviderBaseT(const Handler<Heap>& heap, Handler<World> const& world)
-:ElementProviderBaseT<ProviderT, ObjectT, ElementT, AntiT >(heap, ::tarte::demangle<ObjectT>(), world)
+:ElementProviderBaseT<ProviderT, ObjectT, ElementT, AntiT >(heap, ::cinamo::demangle<ObjectT>(), world)
 {
 	this->registerClosures();
 }

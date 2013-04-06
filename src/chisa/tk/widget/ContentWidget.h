@@ -17,7 +17,7 @@
  */
 #pragma once
 
-#include <tarte/Handler.h>
+#include <cinamo/Handler.h>
 
 #include "../Widget.h"
 #include "../../geom/Vector.h"

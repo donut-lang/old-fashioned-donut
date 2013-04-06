@@ -28,6 +28,7 @@ def options(opt):
 	opt.add_option('--debug', action='store_true', default=False, help='debug build')
 	opt.load('compiler_c compiler_cxx')
 	opt.load('boost')
+	opt.load('cinamo', tooldir='external/WafHelper')
 
 def configure(conf):
 	conf.setenv('release')
@@ -53,6 +54,7 @@ def configureLibrary(conf):
 	conf.check(features='cxx cxxprogram', lib=['gtest', 'gtest_main', 'pthread'], cflags=['-Wall'], uselib_store='GTEST')
 	conf.check(features='cxx cxxprogram', lib=['antlr3c'], cflags=['-Wall'], uselib_store='ANTLR')
 	conf.check(features='cxx cxxprogram', lib='pthread', cflags=['-Wall'], uselib_store='PTHREAD')
+	conf.check_cinamo()
 	# プラットフォーム依存
 	if sys.platform == 'win32':
 		#opengl
@@ -99,20 +101,20 @@ def build(bld):
 		features = 'cxx cprogram',
 		source = DONUT_SRC,
 		target = 'donut',
-		use=['PPROF','PTHREAD','BOOST','ICU','ANTLR'],
+		use=['CINAMO','PPROF','PTHREAD','BOOST','ICU','ANTLR'],
 		includes=[TARTE_INCLUDE_DIR, DONUT_INCLUDE_DIR])
 	bld(
 		features = 'cxx cprogram',
 		source = MAIN_SRC,
 		target = 'chisa',
-		use=['PPROF','PTHREAD', 'SDL2', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU','ANTLR'],
+		use=['CINAMO','PPROF','PTHREAD', 'SDL2', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU','ANTLR'],
 		includes=[TARTE_INCLUDE_DIR, DONUT_INCLUDE_DIR])
 	bld(
 		features = 'cxx cprogram',
 		source = TEST_SRC,
 		target = 'chisa_test',
 		env = bld.all_envs["coverage"] if ("coverage" in bld.all_envs) else bld.env,
-		use=['PTHREAD', 'SDL2', 'OPENGL','FREETYPE2','CAIRO','GTEST','LIBPNG','BOOST','ICU','ANTLR'],
+		use=['CINAMO','PTHREAD', 'SDL2', 'OPENGL','FREETYPE2','CAIRO','GTEST','LIBPNG','BOOST','ICU','ANTLR'],
 		includes=[TARTE_INCLUDE_DIR, DONUT_INCLUDE_DIR])
 
 def shutdown(ctx):

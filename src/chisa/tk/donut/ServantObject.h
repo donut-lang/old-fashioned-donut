@@ -18,7 +18,7 @@
 
 #pragma once
 #include <string>
-#include <tarte/ClassUtil.h>
+#include <cinamo/ClassUtil.h>
 #include <donut/Donut.h>
 #include <donut/object/ReactiveNativeObject.h>
 #include "../World.h"
@@ -29,7 +29,7 @@
 #include "../heaven/ContentUnderlineServant.h"
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 namespace tk {
 using namespace donut;

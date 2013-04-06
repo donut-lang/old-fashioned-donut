@@ -223,12 +223,12 @@ NesGeist::Audio::Instrument::Instrument(Audio& self)
 
 }
 
-::tarte::Handler<chisa::Instrument> NesGeist::Audio::instrument()
+::cinamo::Handler<chisa::Instrument> NesGeist::Audio::instrument()
 {
 	if(this->inst_) {
 		return this->inst_;
 	}
-	return (this->inst_ = ::tarte::Handler<chisa::Instrument>(new Instrument(*this)));
+	return (this->inst_ = ::cinamo::Handler<chisa::Instrument>(new Instrument(*this)));
 }
 
 ::chisa::SoundSpec NesGeist::Audio::Instrument::querySpec(::chisa::SoundSpec const& spec) noexcept

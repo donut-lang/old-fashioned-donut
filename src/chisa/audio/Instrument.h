@@ -17,11 +17,11 @@
  */
 
 #pragma once
-#include <tarte/Handler.h>
+#include <cinamo/Handler.h>
 #include "SoundSpec.h"
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 class Quartet;
 class Instrument : public HandlerBody<Instrument> {

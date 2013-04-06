@@ -19,7 +19,7 @@
 #pragma once
 #include <cmath>
 #include <string>
-#include <tarte/String.h>
+#include <cinamo/String.h>
 #undef isnan
 #undef isnanf
 
@@ -108,7 +108,7 @@ public:\
 	};
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 namespace geom {
 constexpr bool isUnspecified(const float width_or_height){

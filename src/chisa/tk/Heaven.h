@@ -17,9 +17,9 @@
  */
 
 #pragma once
-#include <tarte/ClassUtil.h>
-#include <tarte/Handler.h>
-#include <tarte/VectorMap.h>
+#include <cinamo/ClassUtil.h>
+#include <cinamo/Handler.h>
+#include <cinamo/VectorMap.h>
 #include <donut/Donut.h>
 #include <string>
 #include <cmath>
@@ -30,7 +30,7 @@ class XMLElement;
 }
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 namespace gl {
 class Canvas;

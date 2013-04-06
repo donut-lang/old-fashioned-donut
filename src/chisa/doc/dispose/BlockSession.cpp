@@ -168,7 +168,7 @@ void BlockSession::extendBlock(BlockNode* blockNode)
 		this->blockPosX_ += size.width();
 		break;
 	default:
-		TARTE_EXCEPTION(Exception, "[BUG] Unknown direction: %d", this->dir_);
+		CINAMO_EXCEPTION(Exception, "[BUG] Unknown direction: %d", this->dir_);
 	}
 }
 

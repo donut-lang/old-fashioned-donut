@@ -60,7 +60,7 @@ void Canvas::ortho(const float left, const float right, const float bottom, cons
 	const GLenum err = glGetError();
 #ifdef DEBUG
 	if(err != GL_NO_ERROR){
-		TARTE_EXCEPTION(Exception, "[BUG] Failed to exec glOrtho: 0x%08x", err);
+		CINAMO_EXCEPTION(Exception, "[BUG] Failed to exec glOrtho: 0x%08x", err);
 	}
 #endif
 }
@@ -70,7 +70,7 @@ void Canvas::translate(geom::Point const& pt)
 #ifdef DEBUG
 	const GLenum err = glGetError();
 	if(err != GL_NO_ERROR){
-		TARTE_EXCEPTION(Exception, "[BUG] Failed to exec glTranslatef: 0x%08x", err);
+		CINAMO_EXCEPTION(Exception, "[BUG] Failed to exec glTranslatef: 0x%08x", err);
 	}
 #endif
 }
@@ -80,7 +80,7 @@ void Canvas::rotate(const float angle)
 #ifdef DEBUG
 	const GLenum err = glGetError();
 	if(err != GL_NO_ERROR){
-		TARTE_EXCEPTION(Exception, "[BUG] Failed to exec glRotetef: 0x%08x", err);
+		CINAMO_EXCEPTION(Exception, "[BUG] Failed to exec glRotetef: 0x%08x", err);
 	}
 #endif
 }
@@ -90,7 +90,7 @@ void Canvas::scale(geom::ScaleVector const& scale)
 #ifdef DEBUG
 	const GLenum err = glGetError();
 	if(err != GL_NO_ERROR){
-		TARTE_EXCEPTION(Exception, "[BUG] Failed to exec glScalef: 0x%08x", err);
+		CINAMO_EXCEPTION(Exception, "[BUG] Failed to exec glScalef: 0x%08x", err);
 	}
 #endif
 }
@@ -109,7 +109,7 @@ void Canvas::resize2d(geom::Box const& box)
 #ifdef DEBUG
 	const GLenum err = glGetError();
 	if(err != GL_NO_ERROR){
-		TARTE_EXCEPTION(Exception, "[BUG] Failed to exec resize2d: 0x%08x", err);
+		CINAMO_EXCEPTION(Exception, "[BUG] Failed to exec resize2d: 0x%08x", err);
 	}
 #endif
 }
@@ -121,7 +121,7 @@ void Canvas::scissor(geom::Area const& area)
 #ifdef DEBUG
 	const GLenum err = glGetError();
 	if(err != GL_NO_ERROR){
-		TARTE_EXCEPTION(Exception, "[BUG] Failed to exec glScissor: 0x%08x", err);
+		CINAMO_EXCEPTION(Exception, "[BUG] Failed to exec glScissor: 0x%08x", err);
 	}
 #endif
 }
@@ -256,7 +256,7 @@ void Canvas::flushGL()
 		{
 			const GLenum err = glGetError();
 			if(err != GL_NO_ERROR){
-				TARTE_EXCEPTION(Exception, "[BUG] Failed to draw arrays: 0x%08x", err);
+				CINAMO_EXCEPTION(Exception, "[BUG] Failed to draw arrays: 0x%08x", err);
 			}
 		}
 #endif
@@ -270,7 +270,7 @@ void Canvas::flushGL()
 		{
 			const GLenum err = glGetError();
 			if(err != GL_NO_ERROR){
-				TARTE_EXCEPTION(Exception, "[BUG] Failed to set vertex pointer: 0x%08x", err);
+				CINAMO_EXCEPTION(Exception, "[BUG] Failed to set vertex pointer: 0x%08x", err);
 			}
 		}
 #endif
@@ -279,7 +279,7 @@ void Canvas::flushGL()
 		{
 			const GLenum err = glGetError();
 			if(err != GL_NO_ERROR){
-				TARTE_EXCEPTION(Exception, "[BUG] Failed to draw arrays: 0x%08x", err);
+				CINAMO_EXCEPTION(Exception, "[BUG] Failed to draw arrays: 0x%08x", err);
 			}
 		}
 #endif
@@ -293,7 +293,7 @@ void Canvas::flushGL()
 		{
 			const GLenum err = glGetError();
 			if(err != GL_NO_ERROR){
-				TARTE_EXCEPTION(Exception, "[BUG] Failed to set vertex pointer: 0x%08x", err);
+				CINAMO_EXCEPTION(Exception, "[BUG] Failed to set vertex pointer: 0x%08x", err);
 			}
 		}
 #endif
@@ -302,7 +302,7 @@ void Canvas::flushGL()
 		{
 			const GLenum err = glGetError();
 			if(err != GL_NO_ERROR){
-				TARTE_EXCEPTION(Exception, "[BUG] Failed to set vertex pointer: 0x%08x", err);
+				CINAMO_EXCEPTION(Exception, "[BUG] Failed to set vertex pointer: 0x%08x", err);
 			}
 		}
 #endif
@@ -311,7 +311,7 @@ void Canvas::flushGL()
 		{
 			const GLenum err = glGetError();
 			if(err != GL_NO_ERROR){
-				TARTE_EXCEPTION(Exception, "[BUG] Failed to draw arrays: 0x%08x", err);
+				CINAMO_EXCEPTION(Exception, "[BUG] Failed to draw arrays: 0x%08x", err);
 			}
 		}
 #endif
@@ -325,7 +325,7 @@ void Canvas::flushGL()
 		{
 			const GLenum err = glGetError();
 			if(err != GL_NO_ERROR){
-				TARTE_EXCEPTION(Exception, "[BUG] Failed to set vertex pointer: 0x%08x", err);
+				CINAMO_EXCEPTION(Exception, "[BUG] Failed to set vertex pointer: 0x%08x", err);
 			}
 		}
 #endif
@@ -334,14 +334,14 @@ void Canvas::flushGL()
 		{
 			const GLenum err = glGetError();
 			if(err != GL_NO_ERROR){
-				TARTE_EXCEPTION(Exception, "[BUG] Failed to draw arrays: 0x%08x", err);
+				CINAMO_EXCEPTION(Exception, "[BUG] Failed to draw arrays: 0x%08x", err);
 			}
 		}
 #endif
 		break;
 	}
 	default:
-		TARTE_EXCEPTION(Exception, "Unknown Operation", this->glOperation_);
+		CINAMO_EXCEPTION(Exception, "Unknown Operation", this->glOperation_);
 		break;
 	}
 	vertexs_.clear();
@@ -356,7 +356,7 @@ void Canvas::disableVertexArray()
 #ifdef DEBUG
 	const GLenum err = glGetError();
 	if(err != GL_NO_ERROR){
-		TARTE_EXCEPTION(Exception, "[BUG] Failed to disable vertex array: 0x%08x", err);
+		CINAMO_EXCEPTION(Exception, "[BUG] Failed to disable vertex array: 0x%08x", err);
 	}
 #endif
 		vertexArrayEnabled_ = false;
@@ -375,7 +375,7 @@ void Canvas::enableVertexArray()
 #ifdef DEBUG
 		const GLenum err = glGetError();
 		if(err != GL_NO_ERROR){
-			TARTE_EXCEPTION(Exception, "[BUG] Failed to enable vertex array: 0x%08x", err);
+			CINAMO_EXCEPTION(Exception, "[BUG] Failed to enable vertex array: 0x%08x", err);
 		}
 #endif
 		vertexArrayEnabled_ = true;
@@ -389,7 +389,7 @@ void Canvas::disableTexture()
 #ifdef DEBUG
 		const GLenum err = glGetError();
 		if(err != GL_NO_ERROR){
-			TARTE_EXCEPTION(Exception, "[BUG] Failed to disable texture: 0x%08x", err);
+			CINAMO_EXCEPTION(Exception, "[BUG] Failed to disable texture: 0x%08x", err);
 		}
 #endif
 		textureEnabled_=false;
@@ -403,7 +403,7 @@ void Canvas::enableTexture()
 #ifdef DEBUG
 		const GLenum err = glGetError();
 		if(err != GL_NO_ERROR){
-			TARTE_EXCEPTION(Exception, "[BUG] Failed to enable texture: 0x%08x", err);
+			CINAMO_EXCEPTION(Exception, "[BUG] Failed to enable texture: 0x%08x", err);
 		}
 #endif
 		textureEnabled_=true;
@@ -419,7 +419,7 @@ void Canvas::setColor(Color const& color)
 	#ifdef DEBUG
 		const GLenum err = glGetError();
 		if(err != GL_NO_ERROR){
-			TARTE_EXCEPTION(Exception, "[BUG] Failed to flush color: 0x%08x", err);
+			CINAMO_EXCEPTION(Exception, "[BUG] Failed to flush color: 0x%08x", err);
 		}
 	#endif
 	}
@@ -441,7 +441,7 @@ void Canvas::setLineWidth( float const& lineWidth )
 	#ifdef DEBUG
 		const GLenum err = glGetError();
 		if(err != GL_NO_ERROR){
-			TARTE_EXCEPTION(Exception, "[BUG] Failed to flush line width: 0x%08x", err);
+			CINAMO_EXCEPTION(Exception, "[BUG] Failed to flush line width: 0x%08x", err);
 		}
 	#endif
 	}
@@ -455,7 +455,7 @@ void Canvas::bindTexture(GLuint texId)
 	#ifdef DEBUG
 		const GLenum err = glGetError();
 		if(err != GL_NO_ERROR){
-			TARTE_EXCEPTION(Exception, "[BUG] Failed to flush texture: 0x%08x", err);
+			CINAMO_EXCEPTION(Exception, "[BUG] Failed to flush texture: 0x%08x", err);
 		}
 	#endif
 	}
@@ -493,7 +493,7 @@ Canvas::AffineScope::AffineScope(Canvas& canvas)
 #ifdef DEBUG
 	const GLenum err = glGetError();
 	if(err != GL_NO_ERROR){
-		TARTE_EXCEPTION(Exception, "[BUG] Failed to push martix: 0x%08x", err);
+		CINAMO_EXCEPTION(Exception, "[BUG] Failed to push martix: 0x%08x", err);
 	}
 #endif
 }
@@ -504,7 +504,7 @@ Canvas::AffineScope::~AffineScope()
 #ifdef DEBUG
 	const GLenum err = glGetError();
 	if(err != GL_NO_ERROR){
-		TARTE_EXCEPTION(Exception, "[BUG] Failed to pop matrix: 0x%08x", err);
+		CINAMO_EXCEPTION(Exception, "[BUG] Failed to pop matrix: 0x%08x", err);
 	}
 #endif
 }

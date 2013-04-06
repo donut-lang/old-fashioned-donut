@@ -16,13 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tarte/String.h>
+#include <cinamo/String.h>
 #include <donut/object/Heap.h>
 #include <donut/object/FloatObject.h>
 #include <donut/provider/FloatProvider.h>
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 static const std::string TAG("FloatProvider");
 
@@ -69,7 +69,7 @@ FloatProvider::FloatProvider(Handler<Heap> const& heap)
 		return static_cast<int>(self);
 	});
 	this->registerPureNativeClosure("toString", [&](float self) {
-		return ::tarte::toString(self);
+		return ::cinamo::toString(self);
 	});
 }
 

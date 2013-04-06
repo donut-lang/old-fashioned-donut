@@ -19,7 +19,7 @@
 #include "PlatformFairy.h"
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 Handler<Quartet> PlatformFairy::quartet()
 {

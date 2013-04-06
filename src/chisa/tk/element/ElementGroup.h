@@ -21,7 +21,7 @@
 #include <vector>
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 namespace tk {
 
@@ -99,7 +99,7 @@ public: /* ツリー操作 */
 	}
 	virtual Handler<Element> removeChild(std::size_t const& idx) override final {
 		if(idx >= children_.size()) {
-			TARTE_EXCEPTION(Exception, "[BUG] Invalid index: %d >= %d", idx, children_.size());
+			CINAMO_EXCEPTION(Exception, "[BUG] Invalid index: %d >= %d", idx, children_.size());
 		}
 		auto it = this->children_.begin()+idx;
 		Handler<Element> element ((*it).first);
@@ -109,7 +109,7 @@ public: /* ツリー操作 */
 	virtual Handler<Element> removeChild(Handler<Element> const& h) override final {
 		auto it = std::find_if(children_.begin(), children_.end(), PairEq<Handler<Element>,Context>(h));
 		if(it == children_.begin()) {
-			TARTE_EXCEPTION(Exception, "[BUG] %s does not have %s.", this->toString().c_str(), h->toString().c_str());
+			CINAMO_EXCEPTION(Exception, "[BUG] %s does not have %s.", this->toString().c_str(), h->toString().c_str());
 		}
 		this->children_.erase(it);
 		return h;
@@ -124,7 +124,7 @@ public: /* ツリー操作 */
 		auto it = std::find_if(children_.begin(), children_.end(), PairEq<Handler<Element>,Context>(e));
 		std::size_t s = std::distance(children_.begin(), it);
 		if(it == this->children_.end()){
-			TARTE_EXCEPTION(Exception, "Element: %s is not contained in this combo.", e->toString().c_str());
+			CINAMO_EXCEPTION(Exception, "Element: %s is not contained in this combo.", e->toString().c_str());
 		}
 		auto d = *it;
 		children_.erase(it);
@@ -136,7 +136,7 @@ public: /* ツリー操作 */
 		auto it = std::find_if(children_.begin(), children_.end(), PairEq<Handler<Element>,Context>(e));
 		std::size_t s = std::distance(children_.begin(), it);
 		if(it == this->children_.end()){
-			TARTE_EXCEPTION(Exception, "Element: %s is not contained in this combo.", e->toString().c_str());
+			CINAMO_EXCEPTION(Exception, "Element: %s is not contained in this combo.", e->toString().c_str());
 		}
 		auto d = *it;
 		children_.erase(it);

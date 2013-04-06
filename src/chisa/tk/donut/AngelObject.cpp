@@ -217,7 +217,7 @@ typename LoneAngelObject::ResultType LoneAngelObject::onForward(const Handler<He
 
 std::string LoneAngelObject::reprImpl(const Handler<Heap>& heap) const
 {
-	return ::tarte::format("(LoneAngelObject: %p)", this);
+	return ::cinamo::format("(LoneAngelObject: %p)", this);
 }
 
 
@@ -272,7 +272,7 @@ typename TwinAngelObject::ResultType TwinAngelObject::onForward(const Handler<He
 
 std::string TwinAngelObject::reprImpl(const Handler<Heap>& heap) const
 {
-	return ::tarte::format("(TwinAngelObject: %p)", this);
+	return ::cinamo::format("(TwinAngelObject: %p)", this);
 }
 
 

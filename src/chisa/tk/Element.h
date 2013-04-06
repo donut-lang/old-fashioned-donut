@@ -18,10 +18,10 @@
 
 #pragma once
 #include "Action.h"
-#include <tarte/ClassUtil.h>
-#include <tarte/Handler.h>
-#include <tarte/VectorMap.h>
-#include <tarte/XMLAttrParser.h>
+#include <cinamo/ClassUtil.h>
+#include <cinamo/Handler.h>
+#include <cinamo/VectorMap.h>
+#include <cinamo/XMLAttrParser.h>
 #include <donut/Donut.h>
 #include "../geom/Vector.h"
 #include "../geom/Area.h"
@@ -34,7 +34,7 @@ class XMLElement;
 }
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 namespace gl {
 class Canvas;

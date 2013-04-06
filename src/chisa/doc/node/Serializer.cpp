@@ -18,7 +18,7 @@
 
 #include "Node.h"
 
-namespace tarte {
+namespace cinamo {
 namespace xml {
 
 using namespace chisa::doc;

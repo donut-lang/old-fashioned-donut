@@ -23,11 +23,11 @@
 #include "../chisa/gl/Sprite.h"
 #include "../chisa/audio/Instrument.h"
 #include "../chisa/input/Joystick.h"
-#include <tarte/Thread.h>
-#include <tarte/Logger.h>
+#include <cinamo/Thread.h>
+#include <cinamo/Logger.h>
 
 namespace nes {
-using namespace tarte;
+using namespace cinamo;
 
 class Hexe;
 
@@ -43,10 +43,10 @@ public:
 	class Audio final : public AudioFairy {
 	private:
 		NesGeist& self_;
-		::tarte::Handler<chisa::Instrument> inst_;
+		::cinamo::Handler<chisa::Instrument> inst_;
 	public:
 		Audio(NesGeist& self);
-		::tarte::Handler<chisa::Instrument> instrument();
+		::cinamo::Handler<chisa::Instrument> instrument();
 	public:
 		class Instrument : public chisa::Instrument {
 		private:
@@ -118,7 +118,7 @@ private:
 	Audio audio_;
 	Gamepad gamepad_;
 public:
-	NesGeist(Logger& log, ::tarte::Handler<Hexe> const& hexe, ::tarte::HandlerW<chisa::tk::World> world);
+	NesGeist(Logger& log, ::cinamo::Handler<Hexe> const& hexe, ::cinamo::HandlerW<chisa::tk::World> world);
 	virtual ~NesGeist() noexcept;
 	virtual std::string toString() const override final;
 	inline VirtualMachine* machine() const noexcept { return this->machine_; };

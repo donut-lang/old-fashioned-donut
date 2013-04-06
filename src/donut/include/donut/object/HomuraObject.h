@@ -17,6 +17,6 @@
  */
 
 #pragma once
-#include <tarte/VectorMap.h>
+#include <cinamo/VectorMap.h>
 #include "HomuraObjectDecl.h"
 

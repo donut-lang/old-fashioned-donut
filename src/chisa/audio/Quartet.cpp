@@ -17,7 +17,7 @@
  */
 
 #include <algorithm>
-#include <tarte/Exception.h>
+#include <cinamo/Exception.h>
 #include <cstring>
 #include "Quartet.h"
 #include "Instrument.h"

@@ -30,7 +30,7 @@ SDLPlatformFairy::SDLPlatformFairy(Logger& log)
 ,gl_(nullptr)
 {
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) != 0) {
-		TARTE_EXCEPTION(Exception, "[BUG] Failed to init SDL2");
+		CINAMO_EXCEPTION(Exception, "[BUG] Failed to init SDL2");
 	}
 }
 
@@ -61,7 +61,7 @@ void SDLPlatformFairy::init(const std::string& title, int width, int height, boo
 			| (isFullScreen ? SDL_WINDOW_FULLSCREEN : 0)
 					);
 	if (!this->window_) {
-		TARTE_EXCEPTION(Exception, std::string("SDL Error: ") + SDL_GetError());
+		CINAMO_EXCEPTION(Exception, std::string("SDL Error: ") + SDL_GetError());
 	}
 	this->gl_ = SDL_GL_CreateContext(this->window_);
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, redbits);

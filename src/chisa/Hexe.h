@@ -17,15 +17,15 @@
  */
 #pragma once
 #include <memory>
-#include <tarte/Logger.h>
-#include <tarte/FileSystem.h>
-#include <tarte/Handler.h>
+#include <cinamo/Logger.h>
+#include <cinamo/FileSystem.h>
+#include <cinamo/Handler.h>
 
 #include "tk/element/ElementFactory.h"
 #include "tk/widget/WidgetFactory.h"
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 class WorldGeist;
 
 class Hexe : public HandlerBody<Hexe> {
@@ -44,7 +44,7 @@ public:
 	}
 
 public:
-	virtual void registerGeistProvider( ::tarte::Handler< ::donut::Heap> const& heap ){};
+	virtual void registerGeistProvider( ::cinamo::Handler< ::donut::Heap> const& heap ){};
 	virtual void registerWidgets(tk::WidgetFactory& factory){};
 	virtual void registerElements(tk::ElementFactory& factory){};
 public:

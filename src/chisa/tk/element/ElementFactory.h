@@ -21,15 +21,15 @@
 #include <string>
 #include <functional>
 #include <vector>
-#include <tarte/Exception.h>
-#include <tarte/Logger.h>
-#include <tarte/ClassUtil.h>
-#include <tarte/VectorMap.h>
+#include <cinamo/Exception.h>
+#include <cinamo/Logger.h>
+#include <cinamo/ClassUtil.h>
+#include <cinamo/VectorMap.h>
 #include "../Element.h"
 #include "../donut/ElementObject.h"
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 namespace tk {
 class World;
@@ -100,7 +100,7 @@ public: /* 登録 */
 	void registerProvider(Handler<ElementProvider> const& provider)
 	{
 		static_assert(std::is_base_of<Element, ElementKlass>::value, "Please register provider for element class.");
-		this->registerProvider(::tarte::demangle<ElementKlass>(), provider);
+		this->registerProvider(::cinamo::demangle<ElementKlass>(), provider);
 	}
 private:
 	Handler<Heap> heap_;

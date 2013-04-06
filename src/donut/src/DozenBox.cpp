@@ -44,7 +44,7 @@ Handler<Object> DozenBox::startCombo(std::string const& comboname, std::string c
 {
 	auto it = this->combos_.find(comboname);
 	if( it != this->combos_.end() ){
-		DONUT_EXCEPTION(Exception, "[BUG] Oops. Combo: \"%s\" is already started.", comboname.c_str());
+		DONUT_EXCEPTION(Exception, "[BUG] Oops. Combo: \"%s\" is already scinamod.", comboname.c_str());
 	}
 	Handler<Donut> donut(new Donut(this->log_));
 	Handler<Source> parsed(donut->parse(src));

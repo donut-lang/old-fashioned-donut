@@ -58,7 +58,7 @@ void WorldObject::bootstrap(const Handler<Heap>& heap, Handler<World> const& wor
 
 std::string WorldObject::reprImpl(const Handler<Heap>& heap) const
 {
-	return ::tarte::format("(WorldObject: %p)", this);
+	return ::cinamo::format("(WorldObject: %p)", this);
 }
 
 Handler<World> WorldObject::world() const

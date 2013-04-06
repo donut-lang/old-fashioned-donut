@@ -11,10 +11,10 @@
 #include <string>
 #include <sstream>
 
-#include <tarte/XArchiver.h>
+#include <cinamo/XArchiver.h>
 
 namespace nes {
-using namespace tarte;
+using namespace cinamo;
 
 //ダミー実装
 Cartridge::Cartridge(VirtualMachine& vm, const NesFile* nesFile)

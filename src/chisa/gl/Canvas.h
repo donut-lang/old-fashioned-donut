@@ -18,10 +18,10 @@
 
 #pragma once
 #include <vector>
-#include <tarte/Exception.h>
-#include <tarte/Logger.h>
-#include <tarte/ClassUtil.h>
-#include <tarte/Handler.h>
+#include <cinamo/Exception.h>
+#include <cinamo/Logger.h>
+#include <cinamo/ClassUtil.h>
+#include <cinamo/Handler.h>
 #include "../geom/Decl.h"
 #include "Color.h"
 #include "Sprite.h"

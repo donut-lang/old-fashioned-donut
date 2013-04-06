@@ -148,7 +148,7 @@ Handler<Element> Element::findElementByPoint(geom::Vector const& screenPoint)
 
 std::string Element::toString() const
 {
-	return ::tarte::format("(Element %p)", this);
+	return ::cinamo::format("(Element %p)", this);
 }
 
 geom::Box Element::measure(geom::Box const& constraint)
@@ -298,13 +298,13 @@ Handler<ElementObject> Element::donutObject()
 	}
 	Handler<World> world = this->world().lock();
 	if( unlikely(!world) ){
-		TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
+		CINAMO_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
 	}
 	Handler<Donut> donut( world->donut() );
 	ElementFactory* factory = world->elementFactory();
 	Handler<ElementProvider> provider(factory->getProviderOf(this));
 	if( unlikely(!provider) ){
-		TARTE_EXCEPTION(Exception, "[BUG] Oops. Provider is not found for \"%s\"", this->toString().c_str());
+		CINAMO_EXCEPTION(Exception, "[BUG] Oops. Provider is not found for \"%s\"", this->toString().c_str());
 	}
 	Handler<Heap> const& heap = donut->heap();
 	Handler<ElementObject> eobj ( provider->newInstance(heap, this->self()) );

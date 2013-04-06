@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tarte/Exception.h>
+#include <cinamo/Exception.h>
 
 #include "PostDisposer.h"
 #include "../node/Node.h"
@@ -33,7 +33,7 @@ PostDisposer::PostDisposer(Logger& log)
 geom::Point PostDisposer::offset()
 {
 	if(this->offsetStack_.size() <= 0){
-		TARTE_EXCEPTION(Exception, "[BUG] Oops. Offset stack is empty.");
+		CINAMO_EXCEPTION(Exception, "[BUG] Oops. Offset stack is empty.");
 	}
 	return this->offsetStack_.back();
 }

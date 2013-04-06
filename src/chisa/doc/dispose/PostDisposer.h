@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#include <tarte/ClassUtil.h>
-#include <tarte/Logger.h>
+#include <cinamo/ClassUtil.h>
+#include <cinamo/Logger.h>
 #include <vector>
 
 #include "../node/NodeWalker.h"

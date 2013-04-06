@@ -26,7 +26,7 @@ namespace nes {
 
 static const std::string TAG("NesGeist");
 
-NesGeist::NesGeist(chisa::Logger& log, ::tarte::Handler<Hexe> const& hexe, ::tarte::HandlerW<chisa::tk::World> world)
+NesGeist::NesGeist(chisa::Logger& log, ::cinamo::Handler<Hexe> const& hexe, ::cinamo::HandlerW<chisa::tk::World> world)
 :chisa::WorldGeist(log, hexe, world)
 ,machine_(nullptr)
 ,running_(false)
@@ -55,7 +55,7 @@ NesGeist::~NesGeist() noexcept
 }
 
 Handler<Hexe> NesGeist::hexe() {
-	return ::tarte::Handler<Hexe>::__internal__fromRawPointerWithoutCheck(static_cast<Hexe*>(WorldGeist::hexe().get()));
+	return ::cinamo::Handler<Hexe>::__internal__fromRawPointerWithoutCheck(static_cast<Hexe*>(WorldGeist::hexe().get()));
 }
 
 Handler< ::donut::Object> NesGeist::createDonutObject(Handler< ::donut::Heap> const& heap)

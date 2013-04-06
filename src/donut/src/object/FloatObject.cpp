@@ -16,12 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tarte/String.h>
-#include <tarte/Handler.h>
+#include <cinamo/String.h>
+#include <cinamo/Handler.h>
 #include <donut/object/FloatObject.h>
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 const std::string TAG("FloatObject");
 
@@ -33,12 +33,12 @@ FloatObject::FloatObject(HeapProvider* const provider)
 
 std::string FloatObject::reprImpl(Handler<Heap> const& heap) const
 {
-	return std::string("float: ")+::tarte::toString(value_);
+	return std::string("float: ")+::cinamo::toString(value_);
 }
 
 std::string FloatObject::printImpl(Handler<Heap> const& heap) const
 {
-	return ::tarte::toString(value_);
+	return ::cinamo::toString(value_);
 }
 
 Handler<const FloatObject> FloatObject::toFloatObjectImpl() const

@@ -18,10 +18,10 @@
 
 #pragma once
 
-#include <tarte/Logger.h>
-#include <tarte/Handler.h>
-#include <tarte/XVal.h>
-#include <tarte/VectorMap.h>
+#include <cinamo/Logger.h>
+#include <cinamo/Handler.h>
+#include <cinamo/XVal.h>
+#include <cinamo/VectorMap.h>
 
 #include "Decl.h"
 #include "Clock.h"
@@ -32,7 +32,7 @@
 #include "Patron.h"
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 class Donut final : public HandlerBody<Donut> {
 	DEFINE_MEMBER_REF(public, Logger, log);

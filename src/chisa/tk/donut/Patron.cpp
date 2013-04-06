@@ -21,7 +21,7 @@
 #include "../World.h"
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 namespace tk {
 

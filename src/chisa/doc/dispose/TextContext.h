@@ -19,7 +19,7 @@
 #pragma once
 #include <cstdint>
 #include <cstddef>
-#include <tarte/Logger.h>
+#include <cinamo/Logger.h>
 #include "../../gl/DrawableManager.h"
 #include "../../geom/Vector.h"
 #include "../../gl/Color.h"

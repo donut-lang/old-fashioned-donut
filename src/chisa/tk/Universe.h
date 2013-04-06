@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#include <tarte/Handler.h>
-#include <tarte/Logger.h>
+#include <cinamo/Handler.h>
+#include <cinamo/Logger.h>
 #include "../gl/Canvas.h"
 #include "../gl/Font.h"
 #include "../geom/Area.h"
@@ -29,7 +29,7 @@
 #include "../audio/Quartet.h"
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 namespace gl {
 class DrawableManager;

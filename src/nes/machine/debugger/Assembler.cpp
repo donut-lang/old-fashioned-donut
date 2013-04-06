@@ -18,129 +18,129 @@
 
 #include <sstream>
 #include <cstdlib>
-#include <tarte/Exception.h>
-#include <tarte/String.h>
+#include <cinamo/Exception.h>
+#include <cinamo/String.h>
 #include "Assembler.h"
 
 namespace nes {
-using namespace tarte;
+using namespace cinamo;
 
 const int readOperation(Instruction& inst, std::string const& str)
 {
 	if(str.size() < 3){
 		return -1;
 	}
-	if(::tarte::startsWith(str, "LDA")){
+	if(::cinamo::startsWith(str, "LDA")){
 		inst.op_=Operation::LDA;
-	} else if(::tarte::startsWith(str, "LDX")){
+	} else if(::cinamo::startsWith(str, "LDX")){
 		inst.op_=Operation::LDX;
-	} else if(::tarte::startsWith(str, "LDY")){
+	} else if(::cinamo::startsWith(str, "LDY")){
 		inst.op_=Operation::LDY;
-	} else if(::tarte::startsWith(str, "STA")){
+	} else if(::cinamo::startsWith(str, "STA")){
 		inst.op_=Operation::STA;
-	} else if(::tarte::startsWith(str, "STX")){
+	} else if(::cinamo::startsWith(str, "STX")){
 		inst.op_=Operation::STX;
-	} else if(::tarte::startsWith(str, "STY")){
+	} else if(::cinamo::startsWith(str, "STY")){
 		inst.op_=Operation::STY;
-	} else if(::tarte::startsWith(str, "TAX")){
+	} else if(::cinamo::startsWith(str, "TAX")){
 		inst.op_=Operation::TAX;
-	} else if(::tarte::startsWith(str, "TAY")){
+	} else if(::cinamo::startsWith(str, "TAY")){
 		inst.op_=Operation::TAY;
-	} else if(::tarte::startsWith(str, "TSX")){
+	} else if(::cinamo::startsWith(str, "TSX")){
 		inst.op_=Operation::TSX;
-	} else if(::tarte::startsWith(str, "TXA")){
+	} else if(::cinamo::startsWith(str, "TXA")){
 		inst.op_=Operation::TXA;
-	} else if(::tarte::startsWith(str, "TXS")){
+	} else if(::cinamo::startsWith(str, "TXS")){
 		inst.op_=Operation::TXS;
-	} else if(::tarte::startsWith(str, "TYA")){
+	} else if(::cinamo::startsWith(str, "TYA")){
 		inst.op_=Operation::TYA;
-	} else if(::tarte::startsWith(str, "ADC")){
+	} else if(::cinamo::startsWith(str, "ADC")){
 		inst.op_=Operation::ADC;
-	} else if(::tarte::startsWith(str, "AND")){
+	} else if(::cinamo::startsWith(str, "AND")){
 		inst.op_=Operation::AND;
-	} else if(::tarte::startsWith(str, "ASL")){
+	} else if(::cinamo::startsWith(str, "ASL")){
 		inst.op_=Operation::ASL;
-	} else if(::tarte::startsWith(str, "BIT")){
+	} else if(::cinamo::startsWith(str, "BIT")){
 		inst.op_=Operation::BIT;
-	} else if(::tarte::startsWith(str, "CMP")){
+	} else if(::cinamo::startsWith(str, "CMP")){
 		inst.op_=Operation::CMP;
-	} else if(::tarte::startsWith(str, "CPX")){
+	} else if(::cinamo::startsWith(str, "CPX")){
 		inst.op_=Operation::CPX;
-	} else if(::tarte::startsWith(str, "CPY")){
+	} else if(::cinamo::startsWith(str, "CPY")){
 		inst.op_=Operation::CPY;
-	} else if(::tarte::startsWith(str, "DEC")){
+	} else if(::cinamo::startsWith(str, "DEC")){
 		inst.op_=Operation::DEC;
-	} else if(::tarte::startsWith(str, "DEX")){
+	} else if(::cinamo::startsWith(str, "DEX")){
 		inst.op_=Operation::DEX;
-	} else if(::tarte::startsWith(str, "DEY")){
+	} else if(::cinamo::startsWith(str, "DEY")){
 		inst.op_=Operation::DEY;
-	} else if(::tarte::startsWith(str, "EOR")){
+	} else if(::cinamo::startsWith(str, "EOR")){
 		inst.op_=Operation::EOR;
-	} else if(::tarte::startsWith(str, "INC")){
+	} else if(::cinamo::startsWith(str, "INC")){
 		inst.op_=Operation::INC;
-	} else if(::tarte::startsWith(str, "INX")){
+	} else if(::cinamo::startsWith(str, "INX")){
 		inst.op_=Operation::INX;
-	} else if(::tarte::startsWith(str, "INY")){
+	} else if(::cinamo::startsWith(str, "INY")){
 		inst.op_=Operation::INY;
-	} else if(::tarte::startsWith(str, "LSR")){
+	} else if(::cinamo::startsWith(str, "LSR")){
 		inst.op_=Operation::LSR;
-	} else if(::tarte::startsWith(str, "ORA")){
+	} else if(::cinamo::startsWith(str, "ORA")){
 		inst.op_=Operation::ORA;
-	} else if(::tarte::startsWith(str, "ROL")){
+	} else if(::cinamo::startsWith(str, "ROL")){
 		inst.op_=Operation::ROL;
-	} else if(::tarte::startsWith(str, "ROR")){
+	} else if(::cinamo::startsWith(str, "ROR")){
 		inst.op_=Operation::ROR;
-	} else if(::tarte::startsWith(str, "SBC")){
+	} else if(::cinamo::startsWith(str, "SBC")){
 		inst.op_=Operation::SBC;
-	} else if(::tarte::startsWith(str, "PHA")){
+	} else if(::cinamo::startsWith(str, "PHA")){
 		inst.op_=Operation::PHA;
-	} else if(::tarte::startsWith(str, "PHP")){
+	} else if(::cinamo::startsWith(str, "PHP")){
 		inst.op_=Operation::PHP;
-	} else if(::tarte::startsWith(str, "PLA")){
+	} else if(::cinamo::startsWith(str, "PLA")){
 		inst.op_=Operation::PLA;
-	} else if(::tarte::startsWith(str, "PLP")){
+	} else if(::cinamo::startsWith(str, "PLP")){
 		inst.op_=Operation::PLP;
-	} else if(::tarte::startsWith(str, "CLC")){
+	} else if(::cinamo::startsWith(str, "CLC")){
 		inst.op_=Operation::CLC;
-	} else if(::tarte::startsWith(str, "CLD")){
+	} else if(::cinamo::startsWith(str, "CLD")){
 		inst.op_=Operation::CLD;
-	} else if(::tarte::startsWith(str, "CLI")){
+	} else if(::cinamo::startsWith(str, "CLI")){
 		inst.op_=Operation::CLI;
-	} else if(::tarte::startsWith(str, "CLV")){
+	} else if(::cinamo::startsWith(str, "CLV")){
 		inst.op_=Operation::CLV;
-	} else if(::tarte::startsWith(str, "SEC")){
+	} else if(::cinamo::startsWith(str, "SEC")){
 		inst.op_=Operation::SEC;
-	} else if(::tarte::startsWith(str, "SED")){
+	} else if(::cinamo::startsWith(str, "SED")){
 		inst.op_=Operation::SED;
-	} else if(::tarte::startsWith(str, "SEI")){
+	} else if(::cinamo::startsWith(str, "SEI")){
 		inst.op_=Operation::SEI;
-	} else if(::tarte::startsWith(str, "BRK")){
+	} else if(::cinamo::startsWith(str, "BRK")){
 		inst.op_=Operation::BRK;
-	} else if(::tarte::startsWith(str, "NOP")){
+	} else if(::cinamo::startsWith(str, "NOP")){
 		inst.op_=Operation::NOP;
-	} else if(::tarte::startsWith(str, "RTS")){
+	} else if(::cinamo::startsWith(str, "RTS")){
 		inst.op_=Operation::RTS;
-	} else if(::tarte::startsWith(str, "RTI")){
+	} else if(::cinamo::startsWith(str, "RTI")){
 		inst.op_=Operation::RTI;
-	} else if(::tarte::startsWith(str, "JMP")){
+	} else if(::cinamo::startsWith(str, "JMP")){
 		inst.op_=Operation::JMP;
-	} else if(::tarte::startsWith(str, "JSR")){
+	} else if(::cinamo::startsWith(str, "JSR")){
 		inst.op_=Operation::JSR;
-	} else if(::tarte::startsWith(str, "BCC")){
+	} else if(::cinamo::startsWith(str, "BCC")){
 		inst.op_=Operation::BCC;
-	} else if(::tarte::startsWith(str, "BCS")){
+	} else if(::cinamo::startsWith(str, "BCS")){
 		inst.op_=Operation::BCS;
-	} else if(::tarte::startsWith(str, "BEQ")){
+	} else if(::cinamo::startsWith(str, "BEQ")){
 		inst.op_=Operation::BEQ;
-	} else if(::tarte::startsWith(str, "BMI")){
+	} else if(::cinamo::startsWith(str, "BMI")){
 		inst.op_=Operation::BMI;
-	} else if(::tarte::startsWith(str, "BNE")){
+	} else if(::cinamo::startsWith(str, "BNE")){
 		inst.op_=Operation::BNE;
-	} else if(::tarte::startsWith(str, "BPL")){
+	} else if(::cinamo::startsWith(str, "BPL")){
 		inst.op_=Operation::BPL;
-	} else if(::tarte::startsWith(str, "BVC")){
+	} else if(::cinamo::startsWith(str, "BVC")){
 		inst.op_=Operation::BVC;
-	} else if(::tarte::startsWith(str, "BVS")){
+	} else if(::cinamo::startsWith(str, "BVS")){
 		inst.op_=Operation::BVS;
 	}
 	return 3;
@@ -159,13 +159,13 @@ static int readAddrMode(Instruction& inst, std::string const& str){
 	{
 		std::string left;
 		inst.bin[1] = readInt(inst, &str.c_str()[1], left);
-		if(::tarte::startsWith(left, ",X")){
+		if(::cinamo::startsWith(left, ",X")){
 			inst.addrMode_ = AddrMode::ZeropageX;
 			inst.binLength_ = 2;
-		}else if(::tarte::startsWith(left, ",Y")){
+		}else if(::cinamo::startsWith(left, ",Y")){
 			inst.addrMode_ = AddrMode::ZeropageY;
 			inst.binLength_ = 2;
-		}else if(::tarte::startsWith(left, "]")){
+		}else if(::cinamo::startsWith(left, "]")){
 			inst.addrMode_ = AddrMode::Zeropage;
 			inst.binLength_ = 2;
 		}else{
@@ -180,13 +180,13 @@ static int readAddrMode(Instruction& inst, std::string const& str){
 		unsigned int i = readInt(inst, &str.c_str()[1], left);
 		inst.bin[1] = i & 0xff;
 		inst.bin[2] = (i >> 8) & 0xff;
-		if(::tarte::startsWith(left, ",X")){
+		if(::cinamo::startsWith(left, ",X")){
 			inst.addrMode_ = AddrMode::AbsoluteX;
 			inst.binLength_ = 3;
-		}else if(::tarte::startsWith(left, ",Y")){
+		}else if(::cinamo::startsWith(left, ",Y")){
 			inst.addrMode_ = AddrMode::AbsoluteY;
 			inst.binLength_ = 3;
-		}else if(::tarte::startsWith(left, ">")){
+		}else if(::cinamo::startsWith(left, ">")){
 			inst.addrMode_ = AddrMode::Absolute;
 			inst.binLength_ = 3;
 		}else{
@@ -201,13 +201,13 @@ static int readAddrMode(Instruction& inst, std::string const& str){
 		unsigned int i = readInt(inst, &str.c_str()[1], left);
 		inst.bin[1] = i & 0xff;
 		inst.bin[2] = (i >> 8) & 0xff;
-		if(::tarte::startsWith(left, ",X")){
+		if(::cinamo::startsWith(left, ",X")){
 			inst.addrMode_ = AddrMode::IndirectX;
 			inst.binLength_ = 2;
-		}else if(::tarte::startsWith(left, "),Y")){
+		}else if(::cinamo::startsWith(left, "),Y")){
 			inst.addrMode_ = AddrMode::IndirectY;
 			inst.binLength_ = 2;
-		}else if(::tarte::startsWith(left, ")")){
+		}else if(::cinamo::startsWith(left, ")")){
 			inst.addrMode_ = AddrMode::Indirect;
 			inst.binLength_ = 3;
 		}else{

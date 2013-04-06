@@ -16,13 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tarte/String.h>
+#include <cinamo/String.h>
 #include <donut/Exception.h>
 #include <donut/object/Heap.h>
 #include <donut/provider/BoolProvider.h>
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 static const std::string TAG("BoolProvider");
 
@@ -45,7 +45,7 @@ BoolProvider::BoolProvider(Handler<Heap> const& heap)
 		return obj->isBool() && obj->toBool(this->heap().lock()) != self;
 	});
 	this->registerPureNativeClosure("toString", [&](bool self){
-		return ::tarte::toString(self);
+		return ::cinamo::toString(self);
 	});
 }
 

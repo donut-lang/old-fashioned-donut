@@ -107,7 +107,7 @@ chisa::geom::Box NesMemoryWidget::measureImpl(chisa::geom::Box const& constraint
 
 chisa::geom::Area NesMemoryWidget::findTargetImpl(const std::string& target)
 {
-	return addrToArea( ::tarte::parseAs<uint16_t>(target) );
+	return addrToArea( ::cinamo::parseAs<uint16_t>(target, 0) );
 }
 
 chisa::geom::Area NesMemoryWidget::addrToArea(uint16_t const& addr)

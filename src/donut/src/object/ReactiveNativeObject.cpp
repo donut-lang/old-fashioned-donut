@@ -17,8 +17,8 @@
  */
 
 #include <algorithm>
-#include <tarte/PairFunctor.h>
-#include <tarte/String.h>
+#include <cinamo/PairFunctor.h>
+#include <cinamo/String.h>
 #include <donut/Clock.h>
 #include <donut/object/Heap.h>
 #include <donut/object/ReactiveNativeObject.h>

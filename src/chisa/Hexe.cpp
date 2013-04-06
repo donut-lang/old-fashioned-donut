@@ -33,7 +33,7 @@ Hexe::~Hexe() noexcept
 
 std::string Hexe::toString() const
 {
-	return ::tarte::format("(Hexe %p)", this);
+	return ::cinamo::format("(Hexe %p)", this);
 }
 
 WorldGeist::WorldGeist(Logger& log, Handler<Hexe> const& hexe, HandlerW<chisa::tk::World> world)

@@ -21,14 +21,14 @@
 #include <memory>
 #include <iostream>
 
-#include <tarte/Exception.h>
-#include <tarte/Logger.h>
+#include <cinamo/Exception.h>
+#include <cinamo/Logger.h>
 
 #include <gtest/gtest.h>
 #include <tinyxml2.h>
 
 
-using namespace tarte;
+using namespace cinamo;
 
 #define MATERIAL_DIR "__testfiles__"
 

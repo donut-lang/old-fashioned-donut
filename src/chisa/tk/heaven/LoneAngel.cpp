@@ -54,7 +54,7 @@ Handler< ::donut::Object> LoneAngel::createDonutObject(Handler< ::donut::Heap> c
 Handler<AngelTarget> LoneAngel::attatchTarget(const Handler<AngelTarget>& target)
 {
 	if(numTargets() > 0) {
-		TARTE_EXCEPTION(Exception, "[BUG] Oops. Lone angel can hold only one target.")
+		CINAMO_EXCEPTION(Exception, "[BUG] Oops. Lone angel can hold only one target.")
 	}
 	return this->Angel::attatchTarget(target);
 }

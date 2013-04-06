@@ -17,14 +17,14 @@
  */
 
 #pragma once
-#include <tarte/String.h>
+#include <cinamo/String.h>
 #include "../../TestCommon.h"
 #include <donut/Donut.h>
 #include <donut/object/FloatObject.h>
 #include <donut/object/StringObject.h>
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 }
 
 #define INIT_DONUT\

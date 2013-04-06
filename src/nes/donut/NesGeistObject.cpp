@@ -21,7 +21,7 @@
 #include "../machine/debugger/Assembler.h"
 
 namespace nes {
-using namespace tarte;
+using namespace cinamo;
 
 NesGeistProvider::NesGeistProvider(Handler< ::donut::Heap> const& heap)
 :Super(heap)
@@ -278,13 +278,13 @@ std::tuple<std::string, bool, NesGeistObject::AntiSideEffect> NesGeistObject::wr
 
 std::tuple<std::string, bool, NesGeistObject::AntiSideEffect> NesGeistObject::writeMemNES(uint16_t addr, std::string vals)
 {
-	bool succeed;
-	if(! ::tarte::startsWith(vals, "0x") ){ //XXX: 今日だけでは
+	if(! ::cinamo::startsWith(vals, "0x") ){ //XXX: 今日だけでは
 		while(vals[0]=='0') {
 			vals = vals.substr(1);
 		}
 	}
-	int val = ::tarte::parseAs<int>(vals, &succeed);
+	int val;
+	bool succeed = ::cinamo::tryParseAs<int>(vals, val);
 	NesGeistSideEffect side;
 	if( !succeed ){
 		side.op_before = side.op_after = NesGeistSideEffect::None;

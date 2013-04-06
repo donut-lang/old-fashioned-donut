@@ -23,9 +23,9 @@
 #include FT_FREETYPE_H
 #include <freetype/ftcache.h>
 
-#include <tarte/Logger.h>
-#include <tarte/Handler.h>
-#include <tarte/ClassUtil.h>
+#include <cinamo/Logger.h>
+#include <cinamo/Handler.h>
+#include <cinamo/ClassUtil.h>
 
 #define FLOAT_TO_26_6(d) ((FT_F26Dot6)((d) * 64.0))
 #define FLOAT_FROM_26_6(t) ((float)(t) / 64.0)
@@ -37,7 +37,7 @@
 #define INT_FROM_16_16_FLOOR(t) (t>>16)
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 namespace gl {
 class Font;
 class BitmapGlyph;

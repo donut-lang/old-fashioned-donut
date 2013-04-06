@@ -18,7 +18,7 @@
 
 
 #include <cstring>
-#include <tarte/String.h>
+#include <cinamo/String.h>
 
 #include "Drawable.h"
 #include "../geom/Area.h"
@@ -71,7 +71,7 @@ Handler<Drawable> ColorDrawable::create( HandlerW<DrawableManager> manager, geom
 
 std::string ColorDrawable::toString() const
 {
-	return ::tarte::format("(ColorDrawable %p size:%s color: %s)", this, this->size_.toString().c_str(), this->color_.toString().c_str());
+	return ::cinamo::format("(ColorDrawable %p size:%s color: %s)", this, this->size_.toString().c_str(), this->color_.toString().c_str());
 }
 
 //-----------------------------------------------------------------------------
@@ -114,7 +114,7 @@ Handler<Drawable> ImageDrawable::create( HandlerW<DrawableManager> manager, geom
 
 std::string ImageDrawable::toString() const
 {
-	return ::tarte::format("(ImageDrawable %p size:%s file: %s sprite: %p)", this, this->size_.toString().c_str(), this->filename_.c_str(), this->sprite_.get());
+	return ::cinamo::format("(ImageDrawable %p size:%s file: %s sprite: %p)", this, this->size_.toString().c_str(), this->filename_.c_str(), this->sprite_.get());
 }
 
 //-----------------------------------------------------------------------------
@@ -165,7 +165,7 @@ Handler<Drawable> RepeatDrawable::create( HandlerW<DrawableManager> manager, geo
 std::string RepeatDrawable::toString() const
 {
 	std::string const childRepl(this->child() ? this->child()->toString() : "none");
-	return ::tarte::format("(RepeatDrawable %p size:%s drawable: %s)", this, this->size_.toString().c_str(), childRepl.c_str());
+	return ::cinamo::format("(RepeatDrawable %p size:%s drawable: %s)", this, this->size_.toString().c_str(), childRepl.c_str());
 }
 
 //-----------------------------------------------------------------------------
@@ -206,7 +206,7 @@ Handler<Drawable> StretchDrawable::create( HandlerW<DrawableManager> manager, ge
 std::string StretchDrawable::toString() const
 {
 	std::string const childRepl(this->child() ? this->child()->toString() : "none");
-	return ::tarte::format("(StretchDrawable %p size:%s drawable: %s)", this, this->size_.toString().c_str(), childRepl.c_str());
+	return ::cinamo::format("(StretchDrawable %p size:%s drawable: %s)", this, this->size_.toString().c_str(), childRepl.c_str());
 }
 
 //-----------------------------------------------------------------------------
@@ -218,7 +218,7 @@ Handler<Drawable> NullDrawable::create( HandlerW<DrawableManager> manager, geom:
 
 std::string NullDrawable::toString() const
 {
-	return ::tarte::format("(NullDrawable %p size: %s)", this, this->size_.toString().c_str());
+	return ::cinamo::format("(NullDrawable %p size: %s)", this, this->size_.toString().c_str());
 }
 
 //-----------------------------------------------------------------------------
@@ -347,7 +347,7 @@ void TextDrawable::draw(Canvas& canvas, geom::Point const& ptInRoot, const float
 
 std::string TextDrawable::toString() const
 {
-	return ::tarte::format("(TextDrawable %p str:\"%p\" size: %d)", this, this->str_.c_str(), fontSize_);
+	return ::cinamo::format("(TextDrawable %p str:\"%p\" size: %d)", this, this->str_.c_str(), fontSize_);
 }
 
 //-----------------------------------------------------------------------------

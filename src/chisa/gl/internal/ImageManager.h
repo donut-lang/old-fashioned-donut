@@ -18,12 +18,12 @@
 
 #pragma once
 #include <deque>
-#include <tarte/Handler.h>
-#include <tarte/Logger.h>
-#include <tarte/ClassUtil.h>
+#include <cinamo/Handler.h>
+#include <cinamo/Logger.h>
+#include <cinamo/ClassUtil.h>
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 namespace gl {
 class Sprite;
 

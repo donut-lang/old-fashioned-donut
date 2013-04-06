@@ -22,7 +22,7 @@
 #include "SplitCombo.h"
 #include "TabButton.h"
 
-namespace tarte {
+namespace cinamo {
 namespace xml {
 
 using namespace chisa::tk;
@@ -33,7 +33,7 @@ void parseAttr<TabCombo::ButtonPosition>(std::string const& name, TabCombo::Butt
 	v=def;
 	const char* val = elm->Attribute(name.c_str());
 	if(val){
-		std::string vs(::tarte::toLower(val));
+		std::string vs(::cinamo::toLower(val));
 		if(vs == "top"){
 			v=TabCombo::ButtonPosition::Top;
 		}else if(vs=="bottom"){
@@ -221,7 +221,7 @@ void TabCombo::idle(const float delta_ms)
 
 std::string TabCombo::toString() const
 {
-	return ::tarte::format("(TabCombo %p with %d elements)", this, this->frame_->getChildCount());
+	return ::cinamo::format("(TabCombo %p with %d elements)", this, this->frame_->getChildCount());
 }
 
 void TabCombo::renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)

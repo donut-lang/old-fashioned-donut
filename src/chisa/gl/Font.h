@@ -19,13 +19,13 @@
 #pragma once
 #include <string>
 #include <vector>
-#include <tarte/Handler.h>
-#include <tarte/ClassUtil.h>
-#include <tarte/Logger.h>
+#include <cinamo/Handler.h>
+#include <cinamo/ClassUtil.h>
+#include <cinamo/Logger.h>
 #include "internal/FontManager.h"
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 namespace gl {
 
 class BitmapGlyph : public HandlerBody<BitmapGlyph> {
@@ -71,19 +71,19 @@ public:
 	public:
 		RawFaceSession(Handler<Font> font):parent_(*font.get()){
 			if(this->parent_.locked()){
-				TARTE_EXCEPTION(Exception, "[BUG] Failed to lock Font.");
+				CINAMO_EXCEPTION(Exception, "[BUG] Failed to lock Font.");
 			}
 			this->parent_.locked(true);
 		};
 		RawFaceSession(Font& font):parent_(font){
 			if(this->parent_.locked()){
-				TARTE_EXCEPTION(Exception, "[BUG] Failed to lock Font.");
+				CINAMO_EXCEPTION(Exception, "[BUG] Failed to lock Font.");
 			}
 			this->parent_.locked(true);
 		};
 		~RawFaceSession() noexcept{
 			if(!this->parent_.locked()){
-				TARTE_EXCEPTION(Exception, "[BUG] Oops. Font is already unlocked.");
+				CINAMO_EXCEPTION(Exception, "[BUG] Oops. Font is already unlocked.");
 			}
 			this->parent_.locked(false);
 		}

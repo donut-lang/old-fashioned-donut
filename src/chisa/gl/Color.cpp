@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tarte/String.h>
+#include <cinamo/String.h>
 #include <cstdlib>
 
 #include "Color.h"
@@ -90,6 +90,6 @@ Color Color::fromString(std::string const& name)
 
 std::string Color::toString() const noexcept
 {
-	return ::tarte::format("(Color %p r:%0.2f g:%0.2f b:%0.2f a:%0.2f)", this, red_, green_, blue_, alpha_);
+	return ::cinamo::format("(Color %p r:%0.2f g:%0.2f b:%0.2f a:%0.2f)", this, red_, green_, blue_, alpha_);
 }
 }}

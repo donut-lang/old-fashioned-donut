@@ -17,13 +17,13 @@
  */
 
 #pragma once
-#include <tarte/Handler.h>
+#include <cinamo/Handler.h>
 #include "PlatformFairy.h"
 #include "tk/Universe.h"
 #include "Hexe.h"
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 class Chisa final : public HandlerBody<Chisa> {
 	DEFINE_MEMBER_REF(protected, Logger, log)

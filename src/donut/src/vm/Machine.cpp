@@ -17,7 +17,7 @@
  */
 
 #include <algorithm>
-#include <tarte/String.h>
+#include <cinamo/String.h>
 #include <donut/vm/Machine.h>
 #include <donut/Exception.h>
 #include <donut/object/StringObject.h>

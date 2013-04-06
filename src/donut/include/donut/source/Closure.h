@@ -18,12 +18,12 @@
 
 #pragma once
 #include <vector>
-#include <tarte/Handler.h>
-#include <tarte/XVal.h>
+#include <cinamo/Handler.h>
+#include <cinamo/XVal.h>
 #include "Inst.h"
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 class Closure final : public HandlerBody<Closure>{
 	const std::vector<std::string> arglist_;

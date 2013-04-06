@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tarte/String.h>
+#include <cinamo/String.h>
 #include <donut/Exception.h>
 
 namespace donut {
@@ -52,8 +52,8 @@ void DonutException::init(const char* file, const size_t line, std::string const
 	try{
 		this->_line = line;
 		this->_file = std::string(file);
-		this->_loc = ::tarte::format("(in %s:%d): ", file, line);
-		this->_msg = ::tarte::formatv(fmt, lst);
+		this->_loc = ::cinamo::format("(in %s:%d): ", file, line);
+		this->_msg = ::cinamo::formatv(fmt, lst);
 		this->_what = _loc+_msg;
 	}catch(...){
 		this->_line = 0;

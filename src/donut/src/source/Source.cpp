@@ -18,7 +18,7 @@
 
 #include <algorithm>
 #include <cstddef>
-#include <tarte/String.h>
+#include <cinamo/String.h>
 #include <donut/source/Source.h>
 #include <donut/source/Closure.h>
 #include <donut/Exception.h>

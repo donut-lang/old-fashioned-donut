@@ -16,15 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tarte/XMLAttrParser.h>
-#include <tarte/XArchiver.h>
+#include <cinamo/XMLAttrParser.h>
+#include <cinamo/XArchiver.h>
 
 #include "Vector.h"
 #include "Area.h"
 
 using namespace chisa::geom;
 
-namespace tarte {
+namespace cinamo {
 namespace xml {
 
 template <>

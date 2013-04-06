@@ -18,14 +18,14 @@
 
 #pragma once
 
-#include <tarte/Handler.h>
-#include <tarte/XVal.h>
+#include <cinamo/Handler.h>
+#include <cinamo/XVal.h>
 #include "../../chisa/Hexe.h"
 #include "../../chisa/tk/Widget.h"
 #include "../../chisa/gl/PredefinedSymRenderer.h"
 
 namespace nes {
-using namespace tarte;
+using namespace cinamo;
 
 class VirtualMachine;
 class NesGeist;

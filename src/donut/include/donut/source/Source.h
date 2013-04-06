@@ -19,8 +19,8 @@
 #pragma once
 #include <vector>
 #include <algorithm>
-#include <tarte/Handler.h>
-#include <tarte/XVal.h>
+#include <cinamo/Handler.h>
+#include <cinamo/XVal.h>
 
 #include "../Decl.h"
 #include "../Exception.h"
@@ -28,7 +28,7 @@
 #include "Inst.h"
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 template <typename T>
 class ConstTable final {

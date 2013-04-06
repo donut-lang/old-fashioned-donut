@@ -19,11 +19,11 @@
 #include "../../TestCommon.h"
 #include "../../../src/chisa/geom/Vector.h"
 #include "../../../src/chisa/geom/Area.h"
-#include <tarte/XArchiver.h>
+#include <cinamo/XArchiver.h>
 #include <math.h>
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 namespace geom {
 
 TEST(GeomSerializeTest, VectorTest)

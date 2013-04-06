@@ -168,7 +168,7 @@ void WidgetElement::layoutImpl(geom::Distance const& offsetFromParent, geom::Box
 
 std::string WidgetElement::toString() const
 {
-	return ::tarte::format( "(WidgetElement \"%s\" %p)", this->widgetId_.c_str(), this);
+	return ::cinamo::format( "(WidgetElement \"%s\" %p)", this->widgetId_.c_str(), this);
 }
 void WidgetElement::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)
 {

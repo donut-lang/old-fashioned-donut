@@ -9,7 +9,7 @@
 
 #include <stdint.h>
 #include <cstddef>
-#include <tarte/XArchiver.h>
+#include <cinamo/XArchiver.h>
 #include "../exception/EmulatorException.h"
 
 namespace nes {

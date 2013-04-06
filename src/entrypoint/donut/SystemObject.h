@@ -21,7 +21,7 @@
 #include <donut/object/ReactiveNativeObject.h>
 
 namespace donut_cli {
-using namespace tarte;
+using namespace cinamo;
 using namespace donut;
 
 class SystemProvider;

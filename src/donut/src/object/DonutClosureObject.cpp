@@ -16,14 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tarte/String.h>
+#include <cinamo/String.h>
 #include <donut/Exception.h>
 #include <donut/object/Heap.h>
 #include <donut/source/Source.h>
 #include <donut/object/DonutClosureObject.h>
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 const std::string TAG("DonutClosureObject");
 

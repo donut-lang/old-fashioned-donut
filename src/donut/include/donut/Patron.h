@@ -17,11 +17,11 @@
  */
 
 #pragma once
-#include <tarte/Handler.h>
+#include <cinamo/Handler.h>
 #include "Donut.h"
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 class Patron : public HandlerBody<Patron>
 {

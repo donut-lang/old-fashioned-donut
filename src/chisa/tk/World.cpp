@@ -78,7 +78,7 @@ void World::init()
 	Handler<World> self(this->self());
 	Handler<Universe> universe = this->universe_.lock();
 	if( unlikely(!universe) ){
-		TARTE_EXCEPTION(Exception, "[BUG] Universe is already dead.")
+		CINAMO_EXCEPTION(Exception, "[BUG] Universe is already dead.")
 	}
 	std::string const layoutfilename(universe->resolveWorldFilepath(this->name_, "layout.xml"));
 	this->doc_ = new tinyxml2::XMLDocument();
@@ -113,7 +113,7 @@ void World::init()
 				this->log().d( TAG, "Running donut from: \"%s\" on \"%s\"",src, vm_name.c_str());
 			}
 			Handler<Machine> m = donut_->queryMachine(vm_name);
-			m->start(donut_->parse(::tarte::file::readAsString(universe->resolveWorldFilepath(name_, src)), src, 1));
+			m->start(donut_->parse(::cinamo::file::readAsString(universe->resolveWorldFilepath(name_, src)), src, 1));
 		}else if(char const* src = e->GetText()){
 			if( this->log().d() ) {
 				this->log().d( TAG, "Running embedded donut-lang on \"%s\": \n\"%s\"",vm_name.c_str(),src );
@@ -210,7 +210,7 @@ Handler<Element> World::rootElement()
 	return elementStack_.top();
 }
 
-void World::sendMessage( ::tarte::XValue const& xv, std::string const& machineName )
+void World::sendMessage( ::cinamo::XValue const& xv, std::string const& machineName )
 {
 	if(this->log().d()){
 		this->log().d(TAG, "Message received on \"%s\"", machineName.c_str());
@@ -377,7 +377,7 @@ Handler<Quartet> World::quartet() const
 	if(Handler<Universe> univ = this->universe_.lock()){
 		return univ->quartet();
 	}
-	TARTE_EXCEPTION(Exception, "[BUG] Universe is already dead.");
+	CINAMO_EXCEPTION(Exception, "[BUG] Universe is already dead.");
 }
 
 Handler<JoystickManager> World::joystickManager() const
@@ -385,7 +385,7 @@ Handler<JoystickManager> World::joystickManager() const
 	if(Handler<Universe> univ = this->universe_.lock()){
 		return univ->joystickManager();
 	}
-	TARTE_EXCEPTION(Exception, "[BUG] Universe is already dead.");
+	CINAMO_EXCEPTION(Exception, "[BUG] Universe is already dead.");
 }
 
 

@@ -9,7 +9,7 @@
 #include <cstddef>
 #include <stdint.h>
 #include <stdio.h>
-#include <tarte/XVal.h>
+#include <cinamo/XVal.h>
 
 namespace nes {
 
@@ -25,7 +25,7 @@ public:
 	};
 public:
 	explicit NesFile(std::string const& filename);
-	explicit NesFile(tarte::XValue const& val);
+	explicit NesFile(cinamo::XValue const& val);
 	~NesFile();
 	inline MirrorType getMirrorType() const
 	{

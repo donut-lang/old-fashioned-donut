@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tarte/XMLAttrParser.h>
+#include <cinamo/XMLAttrParser.h>
 #include "MarginCombo.h"
 #include "ElementFactory.h"
 
@@ -37,21 +37,21 @@ MarginCombo::~MarginCombo() noexcept
 void MarginCombo::addChild(Handler<Element> const& h, Context const& ctx)
 {
 	if(getChildCount() > 0){
-		TARTE_EXCEPTION(Exception, "[BUG] Margin Combo can hold only one element.");
+		CINAMO_EXCEPTION(Exception, "[BUG] Margin Combo can hold only one element.");
 	}
 	this->Super::addChild(h,ctx);
 }
 void MarginCombo::addChild(std::size_t const& idx, Handler<Element> const& h, Context const& ctx)
 {
 	if(getChildCount() > 0){
-		TARTE_EXCEPTION(Exception, "[BUG] Margin Combo can hold only one element.");
+		CINAMO_EXCEPTION(Exception, "[BUG] Margin Combo can hold only one element.");
 	}
 	this->Super::addChild(idx,h,ctx);
 }
 
 std::string MarginCombo::toString() const
 {
-	return ::tarte::format("(MarginCombo %p)", this);
+	return ::cinamo::format("(MarginCombo %p)", this);
 }
 
 void MarginCombo::renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)

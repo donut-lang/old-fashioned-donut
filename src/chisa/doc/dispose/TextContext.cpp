@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tarte/Exception.h>
+#include <cinamo/Exception.h>
 #include "TextContext.h"
 #include <unicode/unistr.h>
 #include <unicode/bytestream.h>

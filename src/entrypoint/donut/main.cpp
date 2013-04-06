@@ -24,14 +24,14 @@
 #include <cstdlib>
 #include <exception>
 #include <sstream>
-#include <tarte/FileSystem.h>
+#include <cinamo/FileSystem.h>
 #include <donut/Donut.h>
 #include "SystemProvider.h"
 #include "SystemObject.h"
 #include "SystemPatron.h"
 
 namespace donut_cli {
-using namespace tarte;
+using namespace cinamo;
 using namespace donut;
 
 static const std::string TAG("Donut");
@@ -74,12 +74,12 @@ int runDonut(Logger& log, int argc, char** argv)
 	std::string filename;
 	if(0 == argc){
 		log.t(TAG, "Read from std::cin");
-		source = ::tarte::file::readAsString(std::cin);
+		source = ::cinamo::file::readAsString(std::cin);
 		filename = "<CIN>";
 	}else{
 		log.t(TAG, "Read from file: %s", argv[0]);
 		std::ifstream in(argv[0]);
-		source = ::tarte::file::readAsString(in);
+		source = ::cinamo::file::readAsString(in);
 		filename = argv[0];
 	}
 	log.t(TAG, "Source: \n%s", source.c_str());
@@ -152,7 +152,7 @@ int main(int argc, char* argv[]){
 	} catch (donut::DonutException& e){
 		std::cout << "Donut Exception catch: " << e.what() << std::endl;
 		return -1;
-	} catch (tarte::Exception& e){
+	} catch (cinamo::Exception& e){
 		std::cout << "Tarte Exception catch: " << e.what() << std::endl;
 		return -1;
 	} catch (std::exception& ex){

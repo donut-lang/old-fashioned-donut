@@ -17,11 +17,11 @@
  */
 
 #include <algorithm>
-#include <tarte/Handler.h>
+#include <cinamo/Handler.h>
 #include <donut/object/StringObject.h>
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 const std::string TAG("StringObject");
 

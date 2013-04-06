@@ -24,7 +24,7 @@ namespace donut {
 namespace native {
 
 template <>
-Handler<Object> encode< ::tarte::Handler<chisa::WorldGeist> >(Handler<Heap> const& heap, ::tarte::Handler<chisa::WorldGeist> val)
+Handler<Object> encode< ::cinamo::Handler<chisa::WorldGeist> >(Handler<Heap> const& heap, ::cinamo::Handler<chisa::WorldGeist> val)
 {
 	return val->donutObject(heap);
 }

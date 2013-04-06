@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tarte/Exception.h>
+#include <cinamo/Exception.h>
 #include <tinyxml2.h>
 
 #include "NodeReader.h"
@@ -77,10 +77,10 @@ for(auto it = (node)->FirstChild(); it; it = it->NextSibling())
 std::shared_ptr<Document> NodeReader::parseTree(tinyxml2::XMLElement* elm)
 {
 	if(!elm){
-		TARTE_EXCEPTION(Exception, "[BUG] parsing null element.");
+		CINAMO_EXCEPTION(Exception, "[BUG] parsing null element.");
 	}
 	if(RootElementName != elm->Name()){
-		TARTE_EXCEPTION(Exception, "Invalid document tag: %s",elm->Name());
+		CINAMO_EXCEPTION(Exception, "Invalid document tag: %s",elm->Name());
 	}
 	std::shared_ptr<Document> doc(Node::createRootDocument());
 	doc->parseAttribute(elm);
@@ -93,12 +93,12 @@ std::shared_ptr<Document> NodeReader::parseTree(tinyxml2::XMLElement* elm)
 Node* NodeReader::parseNode(Document* root, BlockNode* block, TreeNode* parent, tinyxml2::XMLNode* node)
 {
 	if(!node){
-		TARTE_EXCEPTION(Exception, "[BUG] parsing null node!");
+		CINAMO_EXCEPTION(Exception, "[BUG] parsing null node!");
 	}
 	if(tinyxml2::XMLElement* elm = node->ToElement()){
 		auto it = this->elementParser_.find(elm->Name());
 		if(it == this->elementParser_.end()){
-			TARTE_EXCEPTION(Exception, "Unknwon document tag: %s", elm->Name());
+			CINAMO_EXCEPTION(Exception, "Unknwon document tag: %s", elm->Name());
 		}
 		VectorMap<std::string, ParseFunc>::Pair const& p = *it;
 		const ParseFunc f = p.second;
@@ -106,7 +106,7 @@ Node* NodeReader::parseNode(Document* root, BlockNode* block, TreeNode* parent, 
 	}else if(tinyxml2::XMLText* txt = node->ToText()){
 		return this->parseText(root, block, parent, txt);
 	}
-	TARTE_EXCEPTION(Exception, "Unknwon document node: %s", node->Value());
+	CINAMO_EXCEPTION(Exception, "Unknwon document node: %s", node->Value());
 }
 
 TreeNode* NodeReader::parseTreeNode(TreeConstructor constructor, Document* root, BlockNode* block, TreeNode* parent, tinyxml2::XMLElement* elm)

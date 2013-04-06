@@ -17,13 +17,13 @@
  */
 
 #pragma once
-#include <tarte/ClassUtil.h>
-#include <tarte/VectorMap.h>
-#include <tarte/Handler.h>
+#include <cinamo/ClassUtil.h>
+#include <cinamo/VectorMap.h>
+#include <cinamo/Handler.h>
 #include "Donut.h"
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 /**
  * ドーナツを複数実行するためにまとめ上げるクラス。

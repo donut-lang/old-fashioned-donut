@@ -21,8 +21,8 @@
 #include <cmath>
 #include "../geom/Area.h"
 #include "Color.h"
-#include <tarte/Handler.h>
-#include <tarte/Logger.h>
+#include <cinamo/Handler.h>
+#include <cinamo/Logger.h>
 #include "Font.h"
 
 namespace chisa {

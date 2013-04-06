@@ -17,13 +17,13 @@
  */
 
 #pragma once
-#include <tarte/ClassUtil.h>
+#include <cinamo/ClassUtil.h>
 #include <unordered_map>
 #include "../geom/Decl.h"
 #include "DrawableManager.h"
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 namespace gl {
 class Canvas;
 

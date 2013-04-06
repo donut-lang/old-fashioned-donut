@@ -17,14 +17,14 @@
  */
 
 #include <tinyxml2.h>
-#include <tarte/Exception.h>
+#include <cinamo/Exception.h>
 
 #include "ClockButton.h"
 #include "../../gl/Canvas.h"
 #include "../../gl/DrawableManager.h"
 #include "../World.h"
 
-namespace tarte {
+namespace cinamo {
 namespace xml {
 template <>
 void parseAttr<chisa::tk::ClockButton::ClockOperation>(std::string const& elmname, chisa::tk::ClockButton::ClockOperation& val, chisa::tk::ClockButton::ClockOperation const& def, tinyxml2::XMLElement* xml)
@@ -34,7 +34,7 @@ void parseAttr<chisa::tk::ClockButton::ClockOperation>(std::string const& elmnam
 		val = def;
 		return;
 	}
-	std::string str(tarte::toLower(_str));
+	std::string str(cinamo::toLower(_str));
 	if(str == "forward") {
 		val = chisa::tk::ClockButton::ClockOperation::Forward;
 	}else  if(str=="back"){
@@ -65,7 +65,7 @@ ClockButton::~ClockButton() noexcept
 
 std::string ClockButton::toString() const
 {
-	return ::tarte::format("(ClockButton text:\"%s\" %p)", this->text().c_str(), this);
+	return ::cinamo::format("(ClockButton text:\"%s\" %p)", this->text().c_str(), this);
 }
 
 void ClockButton::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElement* const element)

@@ -18,14 +18,14 @@
 
 #pragma once
 #include <string>
-#include <tarte/String.h>
-#include <tarte/Dynamic.h>
+#include <cinamo/String.h>
+#include <cinamo/Dynamic.h>
 #include <donut/Donut.h>
 #include <donut/object/ReactiveNativeObject.h>
 #include "ElementObject.h"
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 namespace tk {
 using namespace donut;
@@ -71,7 +71,7 @@ protected:
 	virtual ~ButtonObjectBaseT() noexcept = default;
 public:
 	virtual std::string reprImpl(Handler<Heap> const& heap) const override {
-		return ::tarte::format("(ButtonObject for \"%s\" %p)", ::tarte::demangle<ObjectT>().c_str());
+		return ::cinamo::format("(ButtonObject for \"%s\" %p)", ::cinamo::demangle<ObjectT>().c_str());
 	}
 public:
 	void bootstrap(Handler< ::donut::Heap> const& heap, Handler<ElementT> const& element) {
@@ -98,7 +98,7 @@ ButtonProviderBaseT<ProviderT, ObjectT, ButtonT, AntiT >::ButtonProviderBaseT(co
 
 template<typename ProviderT, typename ObjectT, typename ButtonT, typename AntiT>
 ButtonProviderBaseT<ProviderT, ObjectT, ButtonT, AntiT >::ButtonProviderBaseT(const Handler<Heap>& heap, Handler<World> const& world)
-:ElementProviderBaseT<ProviderT, ObjectT, ButtonT, AntiT >(heap, ::tarte::demangle<ObjectT>(), world)
+:ElementProviderBaseT<ProviderT, ObjectT, ButtonT, AntiT >(heap, ::cinamo::demangle<ObjectT>(), world)
 {
 }
 

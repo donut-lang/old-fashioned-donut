@@ -20,7 +20,7 @@
 #include <cstdint>
 #include <vector>
 #include <tuple>
-#include <tarte/ClassUtil.h>
+#include <cinamo/ClassUtil.h>
 
 namespace nes {
 

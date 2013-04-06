@@ -20,7 +20,7 @@
 #include "../object/Object.h"
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 class Heap;
 
 namespace native {

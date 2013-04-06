@@ -17,13 +17,13 @@
  */
 
 #include <sstream>
-#include <tarte/String.h>
+#include <cinamo/String.h>
 #include <donut/object/Heap.h>
 #include <donut/object/StringObject.h>
 #include <donut/provider/StringProvider.h>
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 static const std::string TAG("StringProvider");
 
@@ -36,11 +36,11 @@ StringProvider::StringProvider(Handler<Heap> const& heap )
 	});
 	this->registerPureNativeClosure("toFloat", [this](StringObject* self) {
 		Handler<Heap> heap(this->heap().lock());
-		return parseAs<float>(self->toString(heap));
+		return parseAs<float>(self->toString(heap), false);
 	});
 	this->registerPureNativeClosure("toBoolean", [this](StringObject* self) {
 		Handler<Heap> heap(this->heap().lock());
-		return parseAs<bool>(self->toString(heap));
+		return parseAs<bool>(self->toString(heap), false);
 	});
 	this->registerPureNativeClosure("opAdd", [this](StringObject* self, Object* other) {
 		Handler<Heap> heap(this->heap().lock());

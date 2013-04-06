@@ -38,14 +38,14 @@ ScrollCombo::~ScrollCombo() noexcept
 void ScrollCombo::addChild(Handler<Element> const& h, Context const& ctx)
 {
 	if(getChildCount() > 0){
-		TARTE_EXCEPTION(Exception, "[BUG] Scroll Combo can hold only one element.");
+		CINAMO_EXCEPTION(Exception, "[BUG] Scroll Combo can hold only one element.");
 	}
 	this->Super::addChild(h,ctx);
 }
 void ScrollCombo::addChild(std::size_t const& idx, Handler<Element> const& h, Context const& ctx)
 {
 	if(getChildCount() > 0){
-		TARTE_EXCEPTION(Exception, "[BUG] Scroll Combo can hold only one element.");
+		CINAMO_EXCEPTION(Exception, "[BUG] Scroll Combo can hold only one element.");
 	}
 	this->Super::addChild(idx,h,ctx);
 }
@@ -75,7 +75,7 @@ void ScrollCombo::loadXmlImpl(ElementFactory* const factory, tinyxml2::XMLElemen
 
 std::string ScrollCombo::toString() const
 {
-	return ::tarte::format("(ScrollCombo %s %p)",
+	return ::cinamo::format("(ScrollCombo %s %p)",
 					(this->scrollMode_ == Vertical) ? "vertical":
 					(this->scrollMode_ == Horizontal) ? "horizontal":
 					(this->scrollMode_ == Both) ? "both" : "???",

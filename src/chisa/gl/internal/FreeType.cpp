@@ -18,7 +18,7 @@
 
 #include "../Font.h"
 #include <cmath>
-#include <tarte/FileSystem.h>
+#include <cinamo/FileSystem.h>
 
 namespace chisa {
 namespace gl {
@@ -37,21 +37,21 @@ FreeType::FreeType()
 ,image_(nullptr)
 {
 	if(FT_Init_FreeType(&this->library_) != 0){
-		TARTE_EXCEPTION(Exception, "[BUG] Failed to init Freetype.");
+		CINAMO_EXCEPTION(Exception, "[BUG] Failed to init Freetype.");
 	}
 	if(FTC_Manager_New(this->library_, 16, 0, 1024*1024*10, face_requester, nullptr, &this->cache_ )){
 		FT_Done_FreeType(this->library_);
-		TARTE_EXCEPTION(Exception, "[BUG] Failed to init cache manager.");
+		CINAMO_EXCEPTION(Exception, "[BUG] Failed to init cache manager.");
 	}
 	if(FTC_CMapCache_New(this->cache_, &this->cmap_)) {
 		FTC_Manager_Done(this->cache_);
 		FT_Done_FreeType(this->library_);
-		TARTE_EXCEPTION(Exception, "[BUG] Failed to init cmap cache.");
+		CINAMO_EXCEPTION(Exception, "[BUG] Failed to init cmap cache.");
 	}
 	if(FTC_ImageCache_New(this->cache_, &this->image_)) {
 		FTC_Manager_Done(this->cache_);
 		FT_Done_FreeType(this->library_);
-		TARTE_EXCEPTION(Exception, "[BUG] Failed to init image cache.");
+		CINAMO_EXCEPTION(Exception, "[BUG] Failed to init image cache.");
 	}
 }
 

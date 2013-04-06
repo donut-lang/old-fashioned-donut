@@ -4,7 +4,7 @@
 #include <iostream>
 #include <stdint.h>
 #include <string.h>
-#include <tarte/XArchiver.h>
+#include <cinamo/XArchiver.h>
 
 
 #include "file/NesFile.h"
@@ -24,7 +24,7 @@ class XArchiverOut;
 }}
 
 namespace nes {
-using namespace tarte;
+using namespace cinamo;
 
 class VirtualMachine;
 

@@ -19,14 +19,14 @@
 #pragma once
 #include <cstdint>
 #include <unordered_map>
-#include <tarte/Handler.h>
-#include <tarte/ClassUtil.h>
-#include <tarte/XVal.h>
+#include <cinamo/Handler.h>
+#include <cinamo/ClassUtil.h>
+#include <cinamo/XVal.h>
 #include "../Exception.h"
 #include "Slot.h"
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 class Heap;
 class ObjectWalker;
@@ -127,7 +127,7 @@ public:
 //---------------------------------------------------------------------------------------------------------------------
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 class HeapObject : public Object {
 private:
@@ -182,7 +182,7 @@ public:
 //---------------------------------------------------------------------------------------------------------------------
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 /**
  * ドーナツ言語内でのクロージャやオブジェクトなどのクラス
  */
@@ -221,7 +221,7 @@ protected:
 //---------------------------------------------------------------------------------------------------------------------
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 /**
  * StringやDoubleなどの組み込みオブジェクトと、
@@ -253,7 +253,7 @@ protected:
 //---------------------------------------------------------------------------------------------------------------------
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 class NativeClosureObject : public HeapObject {
 private:

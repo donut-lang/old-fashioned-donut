@@ -18,7 +18,7 @@
 
 #pragma once
 #include "Vector.h"
-#include <tarte/ClassUtil.h>
+#include <cinamo/ClassUtil.h>
 
 namespace chisa {
 namespace geom {

@@ -20,8 +20,8 @@
 #include <iostream>
 #include <iomanip>
 #include <libgen.h>
-#include <tarte/Exception.h>
-#include <tarte/Logger.h>
+#include <cinamo/Exception.h>
+#include <cinamo/Logger.h>
 
 #include "../../chisa/tk/Universe.h"
 #include "../../nes/Hexe.h"
@@ -91,7 +91,7 @@ int runChisa(Logger& log, int argc, char** argv){
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			chisa->start(argc > 0 ? argv[0] : "main");
-		} catch ( ::tarte::Exception& e) {
+		} catch ( ::cinamo::Exception& e) {
 			std::cerr << "Exception caught at " << e.file() << ":" << e.line() << std::endl;
 			std::cerr << "<msg>" << e.msg() << std::endl;
 			returnCode = -1;

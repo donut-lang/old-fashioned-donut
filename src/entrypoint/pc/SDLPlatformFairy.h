@@ -18,13 +18,13 @@
 
 #include <iostream>
 #include <SDL2/SDL.h>
-#include <tarte/Exception.h>
-#include <tarte/Logger.h>
+#include <cinamo/Exception.h>
+#include <cinamo/Logger.h>
 
 #include "../../chisa/Chisa.h"
 #include "../../chisa/audio/Quartet.h"
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 class SDLPlatformFairy: public PlatformFairy {
 private:

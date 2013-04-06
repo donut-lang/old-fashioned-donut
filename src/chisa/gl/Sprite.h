@@ -17,10 +17,10 @@
  */
 
 #pragma once
-#include <tarte/Logger.h>
-#include <tarte/ClassUtil.h>
-#include <tarte/Thread.h>
-#include <tarte/Handler.h>
+#include <cinamo/Logger.h>
+#include <cinamo/ClassUtil.h>
+#include <cinamo/Thread.h>
+#include <cinamo/Handler.h>
 #include "OpenGL.h"
 #include "Color.h"
 #include "ImageFormat.h"
@@ -29,7 +29,7 @@
 #include "internal/SpriteManager.h"
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 namespace gl {
 class Canvas;
 

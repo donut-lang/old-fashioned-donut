@@ -19,12 +19,12 @@
 #pragma once
 #include <functional>
 #include <tuple>
-#include <tarte/Handler.h>
+#include <cinamo/Handler.h>
 #include "../object/Object.h"
 
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 class ReactiveNativeClosure : public HandlerBody<ReactiveNativeClosure>{
 protected:

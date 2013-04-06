@@ -8,9 +8,9 @@
 #pragma once
 
 #include <cstring>
-#include <tarte/XArchiver.h>
+#include <cinamo/XArchiver.h>
 #include "../exception/EmulatorException.h"
-#include <tarte/Thread.h>
+#include <cinamo/Thread.h>
 
 namespace nes {
 
@@ -43,11 +43,11 @@ public:
 		}
 	}
 public:
-	void save(::tarte::XArchiverOut& out){
+	void save(::cinamo::XArchiverOut& out){
 		//out & soundBuffer & lastIndex & firstIndex;
 		this->saveImpl(out);
 	}
-	void load(::tarte::XArchiverIn& in){
+	void load(::cinamo::XArchiverIn& in){
 		//in & soundBuffer & lastIndex & firstIndex;
 		this->loadImpl(in);
 	}
@@ -70,8 +70,8 @@ protected:
 		}
 		return copiedLength;
 	}
-	virtual void saveImpl(::tarte::XArchiverOut& arc) {};
-	virtual void loadImpl(::tarte::XArchiverIn& arc) {};
+	virtual void saveImpl(::cinamo::XArchiverOut& arc) {};
+	virtual void loadImpl(::cinamo::XArchiverIn& arc) {};
 };
 
 class DummyAudioFairy : public AudioFairy

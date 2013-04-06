@@ -539,7 +539,7 @@ void NesTraceWidget::renderInst(chisa::gl::Canvas& cv, VirtualMachine& vm, uint1
 		case AddrMode::Invalid:
 			break;
 		default:
-			TARTE_EXCEPTION(Exception, "[BUG] Oops. Failed to decode inst.");
+			CINAMO_EXCEPTION(Exception, "[BUG] Oops. Failed to decode inst.");
 			break;
 		}
 	}
@@ -563,7 +563,7 @@ chisa::geom::Box NesTraceWidget::measureImpl(chisa::geom::Box const& constraintS
 
 chisa::geom::Area NesTraceWidget::findTargetImpl(const std::string& target)
 {
-	return this->addrToArea( ::tarte::parseAs<uint16_t>(target) );
+	return this->addrToArea( ::cinamo::parseAs<uint16_t>(target, 0) );
 }
 
 bool NesTraceWidget::onScroll(const float& timeMs, const chisa::geom::Point& start, const chisa::geom::Point& end, const chisa::geom::Distance& distance)

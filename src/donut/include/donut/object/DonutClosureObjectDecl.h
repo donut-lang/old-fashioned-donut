@@ -21,7 +21,7 @@
 #include "ObjectDecl.h"
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 class DonutClosureObject final : public DonutObject {
 private:

@@ -17,7 +17,7 @@
  */
 
 #include <tinyxml2.h>
-#include <tarte/Exception.h>
+#include <cinamo/Exception.h>
 
 #include "AbstractButton.h"
 #include "../../gl/Canvas.h"
@@ -52,7 +52,7 @@ AbstractButton::~AbstractButton() noexcept
 
 std::string AbstractButton::toString() const
 {
-	return ::tarte::format("(AbstractButton text:\"%s\" %p)", this->text_.c_str(), this);
+	return ::cinamo::format("(AbstractButton text:\"%s\" %p)", this->text_.c_str(), this);
 }
 
 void AbstractButton::renderImpl(gl::Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask)

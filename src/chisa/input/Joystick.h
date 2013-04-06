@@ -17,10 +17,10 @@
  */
 
 #pragma once
-#include <tarte/Handler.h>
+#include <cinamo/Handler.h>
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 class JoystickManager;
 class Joystick : public HandlerBody<Joystick>{

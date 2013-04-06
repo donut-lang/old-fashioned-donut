@@ -17,10 +17,10 @@
  */
 
 #pragma once
-#include <tarte/Handler.h>
-#include <tarte/Logger.h>
-#include <tarte/ClassUtil.h>
-#include <tarte/VectorMap.h>
+#include <cinamo/Handler.h>
+#include <cinamo/Logger.h>
+#include <cinamo/ClassUtil.h>
+#include <cinamo/VectorMap.h>
 
 #include "../Decl.h"
 #include "../Clock.h"
@@ -33,7 +33,7 @@
 #include "NativeClosureObjectDecl.h"
 
 namespace donut {
-using namespace tarte;
+using namespace cinamo;
 
 class Heap final : public HandlerBody<Heap> {
 	DEFINE_MEMBER_REF(public, Logger, log)

@@ -18,14 +18,14 @@
 
 #pragma once
 #include <string>
-#include <tarte/String.h>
-#include <tarte/Dynamic.h>
+#include <cinamo/String.h>
+#include <cinamo/Dynamic.h>
 #include <donut/Donut.h>
 #include <donut/object/ReactiveNativeObject.h>
 #include "../Element.h"
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 namespace tk {
 using namespace donut;
@@ -121,7 +121,7 @@ protected:
 	virtual ~ElementObjectBaseT() noexcept = default;
 public:
 	virtual std::string reprImpl(Handler<Heap> const& heap) const override {
-		return ::tarte::format("(ElementObject for \"%s\" %p)", ::tarte::demangle<ObjectT>().c_str());
+		return ::cinamo::format("(ElementObject for \"%s\" %p)", ::cinamo::demangle<ObjectT>().c_str());
 	}
 public:
 	void bootstrap(Handler< ::donut::Heap> const& heap, Handler<ElementT> const& element) {
@@ -152,7 +152,7 @@ ElementProviderBaseT<ProviderT, ObjectT, ElementT, AntiT >::ElementProviderBaseT
 
 template<typename ProviderT, typename ObjectT, typename ElementT, typename AntiT>
 ElementProviderBaseT<ProviderT, ObjectT, ElementT, AntiT >::ElementProviderBaseT(const Handler<Heap>& heap, Handler<World> const& world)
-:ElementProvider(heap, ::tarte::demangle<ObjectT>(), world)
+:ElementProvider(heap, ::cinamo::demangle<ObjectT>(), world)
 {
 	registerClosures();
 }

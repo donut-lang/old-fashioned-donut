@@ -63,7 +63,7 @@ void ContentWidget::loadDocument(std::string const& id, bool onInit)
 			}
 		}
 	}
-	TARTE_EXCEPTION(Exception, "[BUG] Document for \"%s\" not found.", id.c_str());
+	CINAMO_EXCEPTION(Exception, "[BUG] Document for \"%s\" not found.", id.c_str());
 }
 
 void ContentWidget::renderImpl(gl::Canvas& cv, geom::Area const& area)
@@ -129,10 +129,10 @@ chisa::geom::Area ContentWidget::findTargetImpl(const std::string& target)
 		Text
 	} mode;
 	std::string id;
-	if(::tarte::startsWith(target, "block:")) {
+	if(::cinamo::startsWith(target, "block:")) {
 		mode = Block;
 		id = target.substr(6);
-	}else if(::tarte::startsWith(target, "text:")) {
+	}else if(::cinamo::startsWith(target, "text:")) {
 		mode = Text;
 		id = target.substr(5);
 	}else{

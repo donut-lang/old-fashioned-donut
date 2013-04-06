@@ -24,7 +24,7 @@ namespace donut {
 namespace native {
 
 template <>
-Handler<Object> encode< ::tarte::Handler<chisa::tk::Element> >(Handler<Heap> const& heap, ::tarte::Handler<chisa::tk::Element> val)
+Handler<Object> encode< ::cinamo::Handler<chisa::tk::Element> >(Handler<Heap> const& heap, ::cinamo::Handler<chisa::tk::Element> val)
 {
 	return val ? Handler<Object>(val->donutObject()) : heap->createNull();
 }
@@ -53,7 +53,7 @@ Handler<World> ElementProvider::world() const
 {
 	Handler<World> w( world_.lock() );
 	if(!w){
-		TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
+		CINAMO_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
 	}
 	return w;
 }
@@ -70,7 +70,7 @@ Handler<World> ElementObject::world() const
 {
 	Handler<World> w( world_.lock() );
 	if(!w){
-		TARTE_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
+		CINAMO_EXCEPTION(Exception, "[BUG] Oops. World is already dead.");
 	}
 	return w;
 }

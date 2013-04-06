@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <tarte/Exception.h>
+#include <cinamo/Exception.h>
 
 #include "AbstractToggleButton.h"
 #include "../../gl/Canvas.h"
@@ -47,7 +47,7 @@ AbstractToggleButton::~AbstractToggleButton() noexcept
 
 std::string AbstractToggleButton::toString() const
 {
-	return ::tarte::format("(AbstractToggleButton text:\"%s\" %p)", this->text().c_str(), this);
+	return ::cinamo::format("(AbstractToggleButton text:\"%s\" %p)", this->text().c_str(), this);
 }
 
 void AbstractToggleButton::checked(bool const& state)

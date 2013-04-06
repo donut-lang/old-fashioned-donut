@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <tarte/XVal.h>
+#include <cinamo/XVal.h>
 #include "../Widget.h"
 #include "../../gl/Sprite.h"
 

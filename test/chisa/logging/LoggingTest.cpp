@@ -17,7 +17,7 @@
  */
 
 #include "../../TestCommon.h"
-#include <tarte/Logger.h>
+#include <cinamo/Logger.h>
 #include <sstream>
 
 namespace chisa {

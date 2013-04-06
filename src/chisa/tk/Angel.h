@@ -20,9 +20,9 @@
 
 #include <string>
 #include <cmath>
-#include <tarte/ClassUtil.h>
-#include <tarte/Handler.h>
-#include <tarte/VectorMap.h>
+#include <cinamo/ClassUtil.h>
+#include <cinamo/Handler.h>
+#include <cinamo/VectorMap.h>
 #include <donut/Donut.h>
 #include "../geom/Area.h"
 
@@ -31,7 +31,7 @@ class XMLElement;
 }
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 namespace gl {
 class Color;

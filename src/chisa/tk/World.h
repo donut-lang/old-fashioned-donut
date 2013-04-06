@@ -19,8 +19,8 @@
 #pragma once
 #include <string>
 #include <unordered_map>
-#include <tarte/ClassUtil.h>
-#include <tarte/TypeTrans.h>
+#include <cinamo/ClassUtil.h>
+#include <cinamo/TypeTrans.h>
 #include <donut/Donut.h>
 #include "../gl/Canvas.h"
 #include "../geom/Area.h"
@@ -36,7 +36,7 @@ class XMLDocument;
 }
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 class JoystickManager;
 
 namespace tk {
@@ -89,7 +89,7 @@ public:
 	Handler< ::chisa::tk::Patron> const& patron() const noexcept { return this->patron_; };
 	Handler< ::donut::Donut> const& donut() const noexcept { return this->donut_; };
 	Handler< ::donut::Object> donutObject(Handler< ::donut::Heap> const& heap);
-	void sendMessage( ::tarte::XValue const& xv, std::string const& machineName="" );
+	void sendMessage( ::cinamo::XValue const& xv, std::string const& machineName="" );
 	void back();
 	void forward();
 	/******************************************************************************
@@ -134,7 +134,7 @@ public:
 		if(Handler<Universe> universe = this->universe_.lock()){
 			return universe->resolveWorldFilepath(this->name(), related_filename...);
 		}else{
-			TARTE_EXCEPTION(Exception, "Oops. Universe already removed.");
+			CINAMO_EXCEPTION(Exception, "Oops. Universe already removed.");
 		}
 	}
 	template <typename... Args>
@@ -143,7 +143,7 @@ public:
 		if(Handler<Universe> universe = this->universe_.lock()){
 			return universe->resolveUniverseFilepath(related_filename...);
 		}else{
-			TARTE_EXCEPTION(Exception, "Oops. Universe already removed.");
+			CINAMO_EXCEPTION(Exception, "Oops. Universe already removed.");
 		}
 	}
 	/******************************************************************************
@@ -154,14 +154,14 @@ public:
 		if(Handler<Universe> universe = this->universe_.lock()){
 			universe->startIME(area);
 		}else{
-			TARTE_EXCEPTION(Exception, "Oops. Universe already removed.");
+			CINAMO_EXCEPTION(Exception, "Oops. Universe already removed.");
 		}
 	}
 	inline void stopIME() {
 		if(Handler<Universe> universe = this->universe_.lock()){
 			universe->stopIME();
 		}else{
-			TARTE_EXCEPTION(Exception, "Oops. Universe already removed.");
+			CINAMO_EXCEPTION(Exception, "Oops. Universe already removed.");
 		}
 	}
 	/******************************************************************************

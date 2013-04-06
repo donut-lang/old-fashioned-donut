@@ -42,12 +42,12 @@ Sprite::Sprite(HandlerW<internal::SpriteManager> mgr, ImageFormat format, geom::
 	glGenTextures(1, &const_cast<unsigned int&>(texture_.textureID()));
 	const GLenum gerr = glGetError();
 	if( unlikely(gerr != GL_NO_ERROR) ){
-		TARTE_EXCEPTION(Exception, "[BUG] Failed to generate texture: 0x%08x", gerr);
+		CINAMO_EXCEPTION(Exception, "[BUG] Failed to generate texture: 0x%08x", gerr);
 	}
 	glBindTexture(GL_TEXTURE_2D, texture_.textureID());
 	const GLenum berr = glGetError();
 	if( unlikely(gerr != GL_NO_ERROR) ){
-		TARTE_EXCEPTION(Exception, "[BUG] Failed to bind texture: 0x%08x", berr);
+		CINAMO_EXCEPTION(Exception, "[BUG] Failed to bind texture: 0x%08x", berr);
 	}
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
@@ -58,7 +58,7 @@ Sprite::Sprite(HandlerW<internal::SpriteManager> mgr, ImageFormat format, geom::
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->texture_.width(), this->texture_.height(), 0, static_cast<unsigned int>(this->texture_.format()), GL_UNSIGNED_BYTE, nullptr);
 	const GLenum terr = glGetError();
 	if( unlikely(gerr != GL_NO_ERROR) ){
-		TARTE_EXCEPTION(Exception, "[BUG] Failed to transfer texture: 0x%08x", terr);
+		CINAMO_EXCEPTION(Exception, "[BUG] Failed to transfer texture: 0x%08x", terr);
 	}
 }
 Sprite::~Sprite() noexcept (true)
@@ -114,7 +114,7 @@ void Sprite::flushBuffer()
 			glBindTexture(GL_TEXTURE_2D, this->texture_.textureID());
 			const GLenum err = glGetError();
 			if( unlikely(err != GL_NO_ERROR) ) {
-				TARTE_EXCEPTION(Exception, "[BUG] Failed to bind texture: code 0x%x", err);
+				CINAMO_EXCEPTION(Exception, "[BUG] Failed to bind texture: code 0x%x", err);
 			}
 		}
 		{
@@ -126,7 +126,7 @@ void Sprite::flushBuffer()
 					GL_UNSIGNED_BYTE, this->buffer_.mem_->ptr());
 			const GLenum err = glGetError();
 			if( unlikely(err != GL_NO_ERROR) ){
-				TARTE_EXCEPTION(Exception, "[BUG] Failed to transfer texture: code 0x%x", err);
+				CINAMO_EXCEPTION(Exception, "[BUG] Failed to transfer texture: code 0x%x", err);
 			}
 		}
 		this->backBuffer();
@@ -136,7 +136,7 @@ void Sprite::flushBuffer()
 void Sprite::resize(int width, int height)
 {
 	if(unlikely(width > this->texture_.width() || height > this->texture_.height())){
-		TARTE_EXCEPTION(Exception, "[BUG] You can't resize Sprite bigger than original.");
+		CINAMO_EXCEPTION(Exception, "[BUG] You can't resize Sprite bigger than original.");
 	}
 	this->size(geom::IntBox(width, height));
 	this->buffer_.width_ = texture_.width();
@@ -145,7 +145,7 @@ void Sprite::resize(int width, int height)
 
 std::string Sprite::toString() const noexcept
 {
-	return ::tarte::format("(Sprite %p tex: %d buffer: %p orig: (%dx%d) now: (%dx%d))", this,
+	return ::cinamo::format("(Sprite %p tex: %d buffer: %p orig: (%dx%d) now: (%dx%d))", this,
 			this->texture_.textureID(),
 			this->buffer_.mem_,
 			this->texture_.width(), texture_.height(),
@@ -180,12 +180,12 @@ internal::Buffer* Sprite::lock(ImageFormat imageFormat)
 {
 	bool expected = false;
 	if(unlikely(!this->locked_.compare_exchange_strong(expected, true))){
-		TARTE_EXCEPTION(Exception, "[BUG] Sprite already locked!");
+		CINAMO_EXCEPTION(Exception, "[BUG] Sprite already locked!");
 	}
 	if( this->buffer_.mem_ && this->buffer_.format_ == imageFormat ){
 		return this->buffer_.mem_;
 	} else if( unlikely( this->texture_.align() != Texture::formatToAlign(imageFormat) ) ) {
-		TARTE_EXCEPTION(Exception, "[BUG] Texture align does not match: requested: %d != texture: %d",
+		CINAMO_EXCEPTION(Exception, "[BUG] Texture align does not match: requested: %d != texture: %d",
 				this->texture_.align(), Texture::formatToAlign(imageFormat) );
 	} else {
 		this->flushBuffer();
@@ -194,7 +194,7 @@ internal::Buffer* Sprite::lock(ImageFormat imageFormat)
 			this->buffer_.mem_ = mgr->queryBuffer(buffer_.stride_ * buffer_.height_);
 			std::memset(buffer_.mem_->ptr(), 0, buffer_.mem_->size());
 		}else{
-			TARTE_EXCEPTION(Exception, "[BUG] SpriteManager already dead!!");
+			CINAMO_EXCEPTION(Exception, "[BUG] SpriteManager already dead!!");
 		}
 		this->buffer_.format_ = imageFormat;
 		this->buffer_.align_ = Texture::formatToAlign(imageFormat);
@@ -205,7 +205,7 @@ void Sprite::unlock()
 {
 	bool expected = true;
 	if(unlikely(!this->locked_.compare_exchange_strong(expected, false))){
-		TARTE_EXCEPTION(Exception, "[BUG] Sprite already unlocked!");
+		CINAMO_EXCEPTION(Exception, "[BUG] Sprite already unlocked!");
 	}
 }
 

@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include <tarte/VectorMap.h>
+#include <cinamo/VectorMap.h>
 
 #include "ElementGroup.h"
 #include "../../geom/Area.h"

@@ -19,10 +19,10 @@
 #include <memory>
 #include <vector>
 #include <tinyxml2.h>
-#include <tarte/Handler.h>
-#include <tarte/ClassUtil.h>
-#include <tarte/XMLAttrParser.h>
-#include <tarte/VectorMap.h>
+#include <cinamo/Handler.h>
+#include <cinamo/ClassUtil.h>
+#include <cinamo/XMLAttrParser.h>
+#include <cinamo/VectorMap.h>
 #include "../../geom/Area.h"
 #include "../../gl/Color.h"
 #include "../../gl/Drawable.h"
@@ -31,7 +31,7 @@
 #include "../render/RenderObject.h"
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 namespace doc {
 

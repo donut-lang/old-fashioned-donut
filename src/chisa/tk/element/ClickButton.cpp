@@ -17,7 +17,7 @@
  */
 
 #include <tinyxml2.h>
-#include <tarte/Exception.h>
+#include <cinamo/Exception.h>
 
 #include "ClickButton.h"
 #include "../../gl/Canvas.h"
@@ -45,7 +45,7 @@ ClickButton::~ClickButton() noexcept
 
 std::string ClickButton::toString() const
 {
-	return ::tarte::format("(Button text:\"%s\" %p)", this->text().c_str(), this);
+	return ::cinamo::format("(Button text:\"%s\" %p)", this->text().c_str(), this);
 }
 
 void ClickButton::shadowColor(gl::Color const& color)

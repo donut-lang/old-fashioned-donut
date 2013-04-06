@@ -17,7 +17,7 @@
  */
 
 #pragma once
-#include <tarte/Handler.h>
+#include <cinamo/Handler.h>
 #include <donut/Patron.h>
 #include "HeavenObject.h"
 #include "WorldObject.h"
@@ -26,7 +26,7 @@
 #include "ServantObject.h"
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 namespace tk {
 class World;

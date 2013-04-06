@@ -218,7 +218,7 @@ void AngelElementTargetObject::loadImpl(const Handler<Heap>& heap, const XValue&
 
 std::string AngelElementTargetObject::reprImpl(const Handler<Heap>& heap) const
 {
-	return ::tarte::format("(AngelElementTargetObject: %p)", this);
+	return ::cinamo::format("(AngelElementTargetObject: %p)", this);
 }
 
 
@@ -273,7 +273,7 @@ void AngelWidgetTargetObject::loadImpl(const Handler<Heap>& heap, const XValue& 
 
 std::string AngelWidgetTargetObject::reprImpl(const Handler<Heap>& heap) const
 {
-	return ::tarte::format("(AngelWidgetTargetObject: %p)", this);
+	return ::cinamo::format("(AngelWidgetTargetObject: %p)", this);
 }
 
 }}

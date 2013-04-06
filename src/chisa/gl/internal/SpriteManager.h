@@ -18,11 +18,11 @@
 
 #pragma once
 #include <deque>
-#include <tarte/ClassUtil.h>
+#include <cinamo/ClassUtil.h>
 #include "../ImageFormat.h"
 
 namespace chisa {
-using namespace tarte;
+using namespace cinamo;
 
 namespace gl {
 class Sprite;
