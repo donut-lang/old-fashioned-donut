@@ -39,7 +39,6 @@ def configure(conf):
 
 def configureLibrary(conf):
 	conf.load('compiler_c compiler_cxx')
-	conf.env.append_value('CXXFLAGS', ['-I'+TINYXML2_DIR])
 	conf.check_cfg(package='icu-uc icu-i18n', uselib_store='ICU', mandatory=True, args='--cflags --libs')
 	conf.check_cfg(package='libpng', uselib_store='LIBPNG', mandatory=True, args='--cflags --libs')
 	conf.check_cfg(package='freetype2', uselib_store='FREETYPE2', mandatory=True, args='--cflags --libs')
@@ -61,46 +60,50 @@ def configureLibrary(conf):
 			conf.to_log("Google perftools not found, so performance will not measureable.")
 	#リリースとデバッグで変更
 
-TEST_SRC=\
-		TINYXML2_SRC+\
-		DONUT_SRC+\
-		CHISA_SRC+\
+TEST_APP_SRC=\
 		Util.enum('src/nes')+\
 		Util.enum('test')
 
-MAIN_SRC=\
-		TINYXML2_SRC+\
-		DONUT_SRC+\
-		CHISA_SRC+\
+MAIN_APP_SRC=\
 		Util.enum('src/nes')+\
 		Util.enum('src/entrypoint/pc')
 
-DONUT_SRC=\
-		TINYXML2_SRC+\
-		DONUT_SRC+\
+DONUT_APP_SRC=\
 		Util.enum('src/entrypoint/donut')
 
 def build(bld):
 	if not bld.variant:
 		bld.set_env(bld.all_envs['debug' if (bld.options.debug) else 'release'])
 	bld(
-		features = 'cxx cprogram',
+		features = 'cxx cxxstlib',
 		source = DONUT_SRC,
 		target = 'donut',
 		use=['CINAMO','PPROF','PTHREAD','BOOST','ICU','ANTLR'],
 		includes=[DONUT_INCLUDE_DIR])
 	bld(
-		features = 'cxx cprogram',
-		source = MAIN_SRC,
+		features = 'cxx cxxstlib',
+		source = CHISA_SRC,
 		target = 'chisa',
-		use=['CINAMO','PPROF','PTHREAD', 'SDL2', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU','ANTLR'],
+		use=['CINAMO','PPROF','PTHREAD', 'SDL2', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU','ANTLR', 'donut'],
 		includes=[DONUT_INCLUDE_DIR])
 	bld(
 		features = 'cxx cprogram',
-		source = TEST_SRC,
-		target = 'chisa_test',
+		source = DONUT_APP_SRC,
+		target = 'donutApp',
+		use=['CINAMO','PPROF','PTHREAD','BOOST','ICU','ANTLR', 'donut'],
+		includes=[DONUT_INCLUDE_DIR])
+	bld(
+		features = 'cxx cprogram',
+		source = MAIN_APP_SRC,
+		target = 'chisaApp',
+		use=['CINAMO','PPROF','PTHREAD', 'SDL2', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU','ANTLR', 'donut','chisa'],
+		includes=[DONUT_INCLUDE_DIR])
+	bld(
+		features = 'cxx cprogram',
+		source = TEST_APP_SRC,
+		target = 'testApp',
 		env = bld.all_envs["coverage"] if ("coverage" in bld.all_envs) else bld.env,
-		use=['CINAMO','PTHREAD', 'SDL2', 'OPENGL','FREETYPE2','CAIRO','GTEST','LIBPNG','BOOST','ICU','ANTLR'],
+		use=['CINAMO','PTHREAD', 'SDL2', 'OPENGL','FREETYPE2','CAIRO','GTEST','LIBPNG','BOOST','ICU','ANTLR', 'donut', 'chisa'],
 		includes=[DONUT_INCLUDE_DIR])
 
 def shutdown(ctx):
