@@ -2,41 +2,26 @@
 import sys
 import os
 
+sys.path.append('external/WafHelper')
+import Util
+
 APPNAME = 'chisa'
 VERSION = '1.0.0'
 
 srcdir = '.'
 blddir = 'build'
 
-def enum(dirname, exclude=[], exts=['.cpp','.c']):
-	dirname = os.path.join(*(dirname.split('/')))
-	f = []
-	for root,dirs,files in os.walk(dirname):
-		matched = False
-		for e in exclude:
-			if root.startswith(e):
-				matched = True
-				break
-		if matched:
-			continue
-		for fitem in files:
-			fabs = os.path.join(root, fitem)
-			_, ext = os.path.splitext(fabs)
-			if ext in exts:
-				f.append(os.path.relpath(fabs))
-	return f
-
 TINYXML2_DIR=os.path.join(os.path.abspath(os.path.dirname(srcdir)), 'external', 'tinyxml2')
 TINYXML2_SRC=[os.path.join('.', 'external','tinyxml2','tinyxml2.cpp')]
 
 TARTE_INCLUDE_DIR=os.path.join(os.path.abspath(os.path.dirname(srcdir)), 'src', 'tarte','include')
-TARTE_SRC=enum('src/tarte')
+TARTE_SRC=Util.enum('src/tarte')
 
 DONUT_INCLUDE_DIR=os.path.join(os.path.abspath(os.path.dirname(srcdir)), 'src', 'donut','include')
-DONUT_SRC=enum('src/donut')
+DONUT_SRC=Util.enum('src/donut')
 
 CHISA_DIR=os.path.join(os.path.abspath(os.path.dirname(srcdir)), 'src', 'chisa')
-CHISA_SRC=enum('src/chisa')
+CHISA_SRC=Util.enum('src/chisa')
 
 def options(opt):
 	opt.add_option('--coverage', action='store_true', default=False, help='Enabling coverage measuring.')
@@ -46,12 +31,12 @@ def options(opt):
 
 def configure(conf):
 	conf.setenv('release')
-	conf.env.append_value('CXXFLAGS', ['-O3', '-Wall', '-std=c++0x', '-std=c++11', '-D__GXX_EXPERIMENTAL_CXX0X__=1'])
+	conf.env.append_value('CXXFLAGS', ['-O3', '-Wall', '-std=gnu++11', '-D__GXX_EXPERIMENTAL_CXX0X__=1'])
 	configureLibrary(conf)
 	
 	conf.setenv('debug')
 	denv = conf.env;
-	conf.env.append_value('CXXFLAGS', ['-ggdb','-O0', '-Wall', '-std=c++0x', '-std=c++11', '-D__GXX_EXPERIMENTAL_CXX0X__=1','-DDEBUG'])
+	conf.env.append_value('CXXFLAGS', ['-ggdb','-O0', '-Wall', '-std=gnu++11', '-D__GXX_EXPERIMENTAL_CXX0X__=1','-DDEBUG'])
 	configureLibrary(conf)
 	if conf.options.coverage:
 		conf.setenv('coverage', denv)
@@ -90,22 +75,22 @@ TEST_SRC=\
 		TARTE_SRC+\
 		DONUT_SRC+\
 		CHISA_SRC+\
-		enum('src/nes')+\
-		enum('test')
+		Util.enum('src/nes')+\
+		Util.enum('test')
 
 MAIN_SRC=\
 		TINYXML2_SRC+\
 		TARTE_SRC+\
 		DONUT_SRC+\
 		CHISA_SRC+\
-		enum('src/nes')+\
-		enum('src/entrypoint/pc')
+		Util.enum('src/nes')+\
+		Util.enum('src/entrypoint/pc')
 
 DONUT_SRC=\
 		TINYXML2_SRC+\
 		TARTE_SRC+\
 		DONUT_SRC+\
-		enum('src/entrypoint/donut')
+		Util.enum('src/entrypoint/donut')
 
 def build(bld):
 	if not bld.variant:
@@ -129,16 +114,6 @@ def build(bld):
 		env = bld.all_envs["coverage"] if ("coverage" in bld.all_envs) else bld.env,
 		use=['PTHREAD', 'SDL2', 'OPENGL','FREETYPE2','CAIRO','GTEST','LIBPNG','BOOST','ICU','ANTLR'],
 		includes=[TARTE_INCLUDE_DIR, DONUT_INCLUDE_DIR])
-
-# from http://docs.waf.googlecode.com/git/book_16/single.html#_custom_build_outputs
-from waflib.Build import BuildContext, CleanContext, InstallContext, UninstallContext
-
-for x in 'debug release'.split():
-	for y in (BuildContext, CleanContext, InstallContext, UninstallContext):
-		name = y.__name__.replace('Context','').lower()
-		class tmp(y):
-			cmd = name + '_' + x
-			variant = x
 
 def shutdown(ctx):
 	pass

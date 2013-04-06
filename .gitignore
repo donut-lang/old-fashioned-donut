@@ -21,9 +21,9 @@
 .waf*/
 
 #build dir
-build/
-waf*/
-cov/
+/build/
+/waf*/
+/cov/
 
 #antlr
 src/chisa/donut/parser/output/classes/
