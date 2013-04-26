@@ -82,7 +82,7 @@ int runChisa(Logger& log, int argc, char** argv){
 #if CHISA_ANDROID
 			chisa->init("Chisa", 1280,720,false, 8, 8, 8, 8, 16, 0);
 #else
-			chisa->init("Chisa", 1024,768,true, 8, 8, 8, 8, 16, 0);
+			chisa->init("Chisa", 1024,768,false, 8, 8, 8, 8, 16, 0);
 #endif
 			glDisable(GL_ALPHA_TEST);
 			glDisable(GL_STENCIL_TEST);

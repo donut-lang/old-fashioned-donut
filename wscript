@@ -21,6 +21,7 @@ def options(opt):
 	opt.add_option('--coverage', action='store_true', default=False, help='Enabling coverage measuring.')
 	opt.add_option('--debug', action='store_true', default=False, help='debug build')
 	opt.load('compiler_c compiler_cxx')
+	opt.load('boost')
 	opt.load('cinamo', tooldir='external/WafHelper')
 
 def configure(conf):
@@ -61,7 +62,6 @@ def configureLibrary(conf):
 	#リリースとデバッグで変更
 
 TEST_APP_SRC=\
-		Util.enum('src/nes')+\
 		Util.enum('test')
 
 MAIN_APP_SRC=\
