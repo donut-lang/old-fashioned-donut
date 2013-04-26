@@ -61,15 +61,13 @@ def configureLibrary(conf):
 			conf.to_log("Google perftools not found, so performance will not measureable.")
 	#リリースとデバッグで変更
 
-TEST_APP_SRC=\
-		Util.enum('test')
+TEST_APP_SRC=Util.enum('test')
 
 MAIN_APP_SRC=\
 		Util.enum('src/nes')+\
 		Util.enum('src/entrypoint/pc')
 
-DONUT_APP_SRC=\
-		Util.enum('src/entrypoint/donut')
+DONUT_APP_SRC=Util.enum('src/entrypoint/donut')
 
 def build(bld):
 	if not bld.variant:
@@ -87,19 +85,19 @@ def build(bld):
 		use=['CINAMO','PPROF','PTHREAD', 'SDL2', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU','ANTLR', 'donut'],
 		includes=[DONUT_INCLUDE_DIR])
 	bld(
-		features = 'cxx cprogram',
+		features = 'cxx cxxprogram',
 		source = DONUT_APP_SRC,
 		target = 'donutApp',
 		use=['CINAMO','PPROF','PTHREAD','BOOST','ICU','ANTLR', 'donut'],
 		includes=[DONUT_INCLUDE_DIR])
 	bld(
-		features = 'cxx cprogram',
+		features = 'cxx cxxprogram',
 		source = MAIN_APP_SRC,
 		target = 'chisaApp',
 		use=['CINAMO','PPROF','PTHREAD', 'SDL2', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU','ANTLR', 'donut','chisa'],
 		includes=[DONUT_INCLUDE_DIR])
 	bld(
-		features = 'cxx cprogram',
+		features = 'cxx cxxprogram',
 		source = TEST_APP_SRC,
 		target = 'testApp',
 		env = bld.all_envs["coverage"] if ("coverage" in bld.all_envs) else bld.env,
