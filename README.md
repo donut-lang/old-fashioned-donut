@@ -25,14 +25,6 @@ Chisa
 以上を利用して作られた「分からなかった所まで遡れる」情報教材です。
 
 
-タルト
----
-* src/tarteに配置
-* もちろんC++
-
-ど～なっつとちさの共通ライブラリです。([Saccubus](http://saccubus.sourceforge.jp/)もこれ使えるように出来ないかなぁ。
-
-
 Powerd by
 ====
 IPAの[未踏IT人材発掘・育成事業](http://www.ipa.go.jp/jinzai/mitou/)に採択された[「CPUの理解を容易にするシステムと解説サイトの構築」](http://www.ipa.go.jp/jinzai/mitou/2012/2012_1/gaiyou/h-1.html)の一部分として開発され、支援を受けています。
