@@ -17,8 +17,8 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../src/chisa/doc/node/NodeReader.h"
-#include "../../src/chisa/doc/node/Node.h"
+#include "../../chisa/doc/node/NodeReader.h"
+#include "../../chisa/doc/node/Node.h"
 #include <tinyxml2.h>
 #include <typeinfo>
 

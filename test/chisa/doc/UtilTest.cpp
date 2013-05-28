@@ -17,7 +17,7 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../src/chisa/doc/Util.h"
+#include "../../chisa/doc/Util.h"
 
 namespace chisa {
 namespace doc {

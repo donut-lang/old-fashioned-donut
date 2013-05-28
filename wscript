@@ -26,6 +26,7 @@ DONUT_APP_SRC=Util.enum('src/entrypoint/donut');
 def options(opt):
 	opt.add_option('--coverage', action='store_true', default=False, help='Enabling coverage measuring.')
 	opt.add_option('--debug', action='store_true', default=False, help='debug build')
+	opt.add_option('--static', action='store_true', default=False, help='use static library')
 	opt.load('compiler_c compiler_cxx')
 	opt.load('boost')
 	opt.load('cinamo', tooldir='external/WafHelper')
@@ -47,9 +48,10 @@ def configure(conf):
 def configureLibrary(conf):
 	conf.load('compiler_c compiler_cxx')
 	conf.check_cinamo()
-	conf.check_cfg(package='libpng', uselib_store='LIBPNG', mandatory=True, args='--cflags --libs --static')
-	conf.check_cfg(package='freetype2', uselib_store='FREETYPE2', mandatory=True, args='--cflags --libs --static')
-	conf.check_cfg(package='sdl2', uselib_store='SDL2', mandatory=True, args='--cflags --libs --static')
+	pkgflags = '--cflags --libs --static' if conf.options.static else '--cflags --libs';
+	conf.check_cfg(package='libpng', uselib_store='LIBPNG', mandatory=True, args=pkgflags)
+	conf.check_cfg(package='freetype2', uselib_store='FREETYPE2', mandatory=True, args=pkgflags)
+	conf.check_cfg(package='sdl2', uselib_store='SDL2', mandatory=True, args=pkgflags)
 	conf.check(features='cxx cxxprogram', lib=['gtest', 'gtest_main', 'pthread'], cflags=['-Wall'], uselib_store='GTEST')
 	conf.check(features='cxx cxxprogram', lib=['antlr3c'], cflags=['-Wall'], uselib_store='ANTLR')
 	conf.check(features='cxx cxxprogram', lib='pthread', cflags=['-Wall'], uselib_store='PTHREAD')

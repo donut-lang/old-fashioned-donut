@@ -17,7 +17,7 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../src/chisa/audio/SoundSpec.h"
+#include "../../chisa/audio/SoundSpec.h"
 
 namespace chisa {
 

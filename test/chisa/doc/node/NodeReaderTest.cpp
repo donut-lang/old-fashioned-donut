@@ -17,8 +17,8 @@
  */
 
 #include "../../../TestCommon.h"
-#include "../../src/chisa/doc/node/Node.h"
-#include "../../src/chisa/doc/node/NodeReader.h"
+#include "../../chisa/doc/node/Node.h"
+#include "../../chisa/doc/node/NodeReader.h"
 #include <typeinfo>
 
 namespace chisa {

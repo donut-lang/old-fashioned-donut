@@ -17,7 +17,7 @@
  */
 
 #include "../../TestCommon.h"
-#include "../../src/chisa/tk/Task.h"
+#include "../../chisa/tk/Task.h"
 #include <tinyxml2.h>
 #include <typeinfo>
 

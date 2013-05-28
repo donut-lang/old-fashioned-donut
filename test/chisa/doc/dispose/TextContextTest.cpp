@@ -17,11 +17,11 @@
  */
 
 #include "../../../TestCommon.h"
-#include "../../src/chisa/gl/DrawableManager.h"
-#include "../../src/chisa/gl/Color.h"
-#include "../../src/chisa/gl/Canvas.h"
-#include "../../src/chisa/doc/render/RenderTree.h"
-#include "../../src/chisa/doc/dispose/TextContext.h"
+#include "../../chisa/gl/DrawableManager.h"
+#include "../../chisa/gl/Color.h"
+#include "../../chisa/gl/Canvas.h"
+#include "../../chisa/doc/render/RenderTree.h"
+#include "../../chisa/doc/dispose/TextContext.h"
 #include <math.h>
 
 namespace chisa {

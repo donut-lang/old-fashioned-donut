@@ -18,8 +18,8 @@
 
 
 #include "../../TestCommon.h"
-#include "../../src/chisa/tk/element/SplitCombo.h"
-#include "../../src/chisa/tk/element/ElementFactory.h"
+#include "../../chisa/tk/element/SplitCombo.h"
+#include "../../chisa/tk/element/ElementFactory.h"
 
 namespace chisa {
 namespace tk {
