@@ -19,13 +19,13 @@
 #pragma once
 #include <cinamo/Platform.h>
 
-#if CHISA_ANDROID
+#if CINAMO_ANDROID
 #include <GLES/gl.h>
 #define IS_GLES (1)
 #define IS_GLES11 (1)
 #define IS_GLES20 (0)
 #define IS_GL (0)
-#elif CHISA_IOS
+#elif CINAMO_IOS
 #include <OpenGLES/ES1/gl.h>
 #define IS_GLES (1)
 #define IS_GLES11 (1)

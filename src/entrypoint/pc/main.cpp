@@ -69,7 +69,7 @@ const struct option ARG_OPTIONS[] = {
 int runChisa(Logger& log, int argc, char** argv){
 	int returnCode=0;
 	Handler<SDLPlatformFairy> platform(new SDLPlatformFairy(log));
-#if CHISA_ANDROID
+#if CINAMO_ANDROID
 	std::string basepath("/sdcard");//SDL_AndroidGetExternalStoragePath());
 #else
 	std::string basepath(".");
@@ -79,7 +79,7 @@ int runChisa(Logger& log, int argc, char** argv){
 	{
 		try {
 			//XXX: 成果報告会が終わったら戻す
-#if CHISA_ANDROID
+#if CINAMO_ANDROID
 			chisa->init("Chisa", 1280,720,false, 8, 8, 8, 8, 16, 0);
 #else
 			chisa->init("Chisa", 1024,768,false, 8, 8, 8, 8, 16, 0);

@@ -18,7 +18,7 @@
 
 #include "ImageManager.h"
 #include <algorithm>
-#include <libpng15/png.h>
+#include <png.h>
 #include "../Sprite.h"
 
 namespace chisa {

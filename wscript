@@ -13,9 +13,15 @@ blddir = 'build'
 
 DONUT_INCLUDE_DIR=os.path.join(os.path.abspath(os.path.dirname(srcdir)), 'src', 'donut','include')
 DONUT_SRC=Util.enum('src/donut')
-
-CHISA_DIR=os.path.join(os.path.abspath(os.path.dirname(srcdir)), 'src', 'chisa')
 CHISA_SRC=Util.enum('src/chisa')
+
+TEST_APP_SRC=Util.enum('test');
+
+MAIN_APP_SRC=\
+		Util.enum('src/nes')+\
+		Util.enum('src/entrypoint/pc');
+
+DONUT_APP_SRC=Util.enum('src/entrypoint/donut');
 
 def options(opt):
 	opt.add_option('--coverage', action='store_true', default=False, help='Enabling coverage measuring.')
@@ -40,34 +46,37 @@ def configure(conf):
 
 def configureLibrary(conf):
 	conf.load('compiler_c compiler_cxx')
-	conf.check_cfg(package='icu-uc icu-i18n', uselib_store='ICU', mandatory=True, args='--cflags --libs')
-	conf.check_cfg(package='libpng', uselib_store='LIBPNG', mandatory=True, args='--cflags --libs')
-	conf.check_cfg(package='freetype2', uselib_store='FREETYPE2', mandatory=True, args='--cflags --libs')
-	conf.check_cfg(package='sdl2', uselib_store='SDL2', mandatory=True, args='--cflags --libs')
+	conf.check_cinamo()
+	conf.check_cfg(package='libpng', uselib_store='LIBPNG', mandatory=True, args='--cflags --libs --static')
+	conf.check_cfg(package='freetype2', uselib_store='FREETYPE2', mandatory=True, args='--cflags --libs --static')
+	conf.check_cfg(package='sdl2', uselib_store='SDL2', mandatory=True, args='--cflags --libs --static')
 	conf.check(features='cxx cxxprogram', lib=['gtest', 'gtest_main', 'pthread'], cflags=['-Wall'], uselib_store='GTEST')
 	conf.check(features='cxx cxxprogram', lib=['antlr3c'], cflags=['-Wall'], uselib_store='ANTLR')
 	conf.check(features='cxx cxxprogram', lib='pthread', cflags=['-Wall'], uselib_store='PTHREAD')
-	conf.check_cinamo()
 	# プラットフォーム依存
 	if sys.platform == 'win32':
 		#opengl
-		conf.check(features='cxx cxxprogram', lib=['opengl32'], cflags=['-Wall'], defines=['TEST=TEST'], uselib_store='OPENGL')
+		conf.check(
+			features='cxx cxxprogram',
+			lib=['opengl32'],
+			cflags=['-Wall'],
+			defines=['TEST=TEST'],
+			uselib_store='OPENGL')
 	elif sys.platform in ['linux2', 'linux']:
 		#opengl
-		conf.check(features='cxx cxxprogram', lib=['GL', 'X11', 'rt', 'Xrandr', 'pthread'], cflags=['-Wall'], uselib_store='OPENGL')
-		try:
-			conf.check(features='cxx cxxprogram', lib=['tcmalloc','profiler'], cflags=['-Wall'], uselib_store='PPROF')
-		except conf.errors.ConfigurationError:
+		conf.check(
+				features='cxx cxxprogram',
+				lib=['GL', 'X11', 'rt', 'Xrandr', 'pthread'],
+				cflags=['-Wall'],
+				uselib_store='OPENGL')
+		if not conf.check(
+					features='cxx cxxprogram',
+					lib=['tcmalloc','profiler'],
+					cflags=['-Wall'],
+					mandatory=False,
+					uselib_store='PPROF'):
 			conf.to_log("Google perftools not found, so performance will not measureable.")
 	#リリースとデバッグで変更
-
-TEST_APP_SRC=Util.enum('test')
-
-MAIN_APP_SRC=\
-		Util.enum('src/nes')+\
-		Util.enum('src/entrypoint/pc')
-
-DONUT_APP_SRC=Util.enum('src/entrypoint/donut')
 
 def build(bld):
 	if not bld.variant:
@@ -76,32 +85,32 @@ def build(bld):
 		features = 'cxx cxxstlib',
 		source = DONUT_SRC,
 		target = 'donut',
-		use=['CINAMO','PPROF','PTHREAD','BOOST','ICU','ANTLR'],
+		use=['CINAMO','PPROF','PTHREAD','ANTLR'],
 		includes=[DONUT_INCLUDE_DIR])
 	bld(
 		features = 'cxx cxxstlib',
 		source = CHISA_SRC,
 		target = 'chisa',
-		use=['CINAMO','PPROF','PTHREAD', 'SDL2', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU','ANTLR', 'donut'],
+		use=['CINAMO','PPROF','PTHREAD', 'SDL2', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','ANTLR', 'donut'],
 		includes=[DONUT_INCLUDE_DIR])
 	bld(
 		features = 'cxx cxxprogram',
 		source = DONUT_APP_SRC,
 		target = 'donutApp',
-		use=['CINAMO','PPROF','PTHREAD','BOOST','ICU','ANTLR', 'donut'],
+		use=['CINAMO','PPROF','PTHREAD', 'donut'],
 		includes=[DONUT_INCLUDE_DIR])
 	bld(
 		features = 'cxx cxxprogram',
 		source = MAIN_APP_SRC,
 		target = 'chisaApp',
-		use=['CINAMO','PPROF','PTHREAD', 'SDL2', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','BOOST','ICU','ANTLR', 'donut','chisa'],
+		use=['CINAMO','PPROF','PTHREAD', 'SDL2', 'OPENGL','FREETYPE2','CAIRO','donut','chisa'],
 		includes=[DONUT_INCLUDE_DIR])
 	bld(
 		features = 'cxx cxxprogram',
 		source = TEST_APP_SRC,
 		target = 'testApp',
 		env = bld.all_envs["coverage"] if ("coverage" in bld.all_envs) else bld.env,
-		use=['CINAMO','PTHREAD', 'SDL2', 'OPENGL','FREETYPE2','CAIRO','GTEST','LIBPNG','BOOST','ICU','ANTLR', 'donut', 'chisa'],
+		use=['CINAMO','PTHREAD', 'SDL2', 'OPENGL','GTEST','donut', 'chisa'],
 		includes=[DONUT_INCLUDE_DIR])
 
 def shutdown(ctx):
