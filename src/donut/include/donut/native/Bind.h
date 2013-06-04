@@ -19,6 +19,7 @@
 #pragma once
 #include <functional>
 #include <cinamo/TypeTrans.h>
+#include <cinamo/functional/Maybe.h>
 #include "../Exception.h"
 #include "../object/Object.h"
 #include "Decoder.h"
@@ -71,32 +72,32 @@ auto createBindPure(__F f)
  **********************************************************************************************************************/
 
 template <size_t idx, typename __AntiSideEffect, typename R>
-std::tuple<Handler<Object>, bool, __AntiSideEffect> bindArgumentReactive(Handler<Heap> const& heap, std::vector<Handler<Object> > const& args, std::function<std::tuple<R, bool, __AntiSideEffect>()> const& funct)
+std::tuple<Handler<Object>, Maybe<__AntiSideEffect> >
+bindArgumentReactive(Handler<Heap> const& heap, std::vector<Handler<Object> > const& args, std::function<std::tuple<R, Maybe<__AntiSideEffect> >()> const& funct)
 {
-	R res;
-	bool ok;
-	__AntiSideEffect val;
-	std::tie(res, ok, val) = funct();
-	return std::tuple<Handler<Object>, bool, __AntiSideEffect>(native::Encoder<R>::exec( heap, res ), ok, val);
+	auto const res = funct();
+	return std::tuple<Handler<Object>, Maybe<__AntiSideEffect> >(native::Encoder<R>::exec( heap, std::get<0>(res) ), std::get<1>(res));
 }
 
 template <size_t idx, typename __AntiSideEffect, typename R, typename U, typename... Args>
-std::tuple<Handler<Object>, bool, __AntiSideEffect> bindArgumentReactive(Handler<Heap> const& heap, std::vector<Handler<Object> > const& args, std::function<std::tuple<R, bool, __AntiSideEffect>(U val, Args... args)> const& funct)
+std::tuple<Handler<Object>, Maybe<__AntiSideEffect> > bindArgumentReactive(Handler<Heap> const& heap, std::vector<Handler<Object> > const& args, std::function<std::tuple<R, Maybe<__AntiSideEffect> >(U val, Args... args)> const& funct)
 {
-	return bindArgumentReactive<idx + 1> (heap, args, std::function<std::tuple<R, bool, __AntiSideEffect>(Args ... args)>( [funct, &heap, &args](Args... largs) {
+	return bindArgumentReactive<idx + 1> (heap, args, std::function<std::tuple<R, Maybe<__AntiSideEffect> >(Args ... args)>( [funct, &heap, &args](Args... largs) {
 		return funct(native::Decoder<U>::exec( heap, args[idx] ), largs...);
 	}));
 }
 
 template <typename __AntiSideEffect,typename R, typename S, typename... Args>
-std::function<std::tuple<Handler<Object>, bool, __AntiSideEffect>(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)>
-createBindReactive(std::function<std::tuple<R, bool, __AntiSideEffect>(S self, Args... args)> f)
-{
-	return [f](Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)->std::tuple<Handler<Object>, bool, __AntiSideEffect>{
+std::function<std::tuple<Handler<Object>, Maybe<__AntiSideEffect> >(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)>
+createBindReactive(
+	std::function<std::tuple<R, Maybe<__AntiSideEffect> >(S self, Args... args)> f
+){
+	return [f](Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args)
+			->std::tuple<Handler<Object>, Maybe<__AntiSideEffect> >{
 		if (args.size() != sizeof...(Args)) {
 			DONUT_EXCEPTION(Exception, "this reactive native closure needs %d arguments, but %d arguments applied.", sizeof...(Args), args.size());
 		}
-		return bindArgumentReactive<0>(heap, args, std::function<std::tuple<R, bool, __AntiSideEffect>(Args...)>(
+		return bindArgumentReactive<0>(heap, args, std::function<std::tuple<R, Maybe<__AntiSideEffect> >(Args...)>(
 						[f, heap, self ](Args... args_){
 							return f(native::Decoder<S>::exec( heap, self ), args_...);
 						}

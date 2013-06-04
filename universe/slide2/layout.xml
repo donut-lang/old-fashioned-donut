@@ -24,55 +24,61 @@
 				</doc>
 				<doc id="3" background="stretch:image:universe/slide2/back1.png">
 					<font size="112">
-						　<br />iPhone液晶割り師
+						　<br />iPhone液晶割り手
 					</font>
 				</doc>
 				<doc id="4" background="stretch:image:universe/slide2/back1.png">
 					<font size="112">
-						　<br />世を忍ぶ仮の姿
+						　<br />スカート履くひと
+						　<br />（ひと？？？）
 					</font>
 				</doc>
 				<doc id="5" background="stretch:image:universe/slide2/back1.png">
 					<font size="112">
-						　<br />東京大学
+						　<br />世を忍ぶ仮の姿
 					</font>
 				</doc>
 				<doc id="6" background="stretch:image:universe/slide2/back1.png">
 					<font size="112">
 						　<br />東京大学
-						　<br />農学部
 					</font>
 				</doc>
 				<doc id="7" background="stretch:image:universe/slide2/back1.png">
 					<font size="112">
 						　<br />東京大学
 						　<br />農学部
-						　<br /><font color="red">獣医学</font>専修
 					</font>
 				</doc>
 				<doc id="8" background="stretch:image:universe/slide2/back1.png">
+					<font size="112">
+						　<br />東京大学
+						　<br />農学部
+						　<br /><font color="red">獣医学</font>専修
+					</font>
+				</doc>
+				<doc id="9" background="stretch:image:universe/slide2/back1.png">
 					<font size="180">
 					　<br />ファッ！？</font>
 				</doc>
-				<doc id="9" background="stretch:image:universe/slide2/back1.png">
+				<doc id="10" background="stretch:image:universe/slide2/back1.png">
 					<font size="180">転学科<br />しよう<br />（提案）
 					</font>
 				</doc>
-				<doc id="10" background="stretch:image:universe/slide2/back1.png">
+				<doc id="11" background="stretch:image:universe/slide2/back1.png">
 					<font size="136">　<br />はい<br />
 					</font>
 				</doc>
-				<doc id="11" background="stretch:image:universe/slide2/back1.png">
+				<doc id="12" background="stretch:image:universe/slide2/back1.png">
 					<font size="180">
 						　<br />突然<br />ですが
 					</font>
 				</doc>
-				<doc id="12" background="stretch:image:universe/slide2/fam.png">
+				<doc id="13" background="stretch:image:universe/slide2/fam.png">
 					<font size="180">
 						　<br />
 					</font>
 				</doc>
-				<doc id="13" background="stretch:image:universe/slide2/fam_w.png">
+				<doc id="14" background="stretch:image:universe/slide2/fam_w.png">
 					<p margin="0">
 						<font size="112"><font id="one">1983</font><font color="red" id="two">ファミコン</font>発売<br /></font>
 						<font size="140" color="red">30周年</font><br />
@@ -86,12 +92,12 @@
 				</doc>
 				<doc id="52" background="stretch:image:universe/slide2/back1.png">
 					<font size="180">
-						　<br />仮想機械
+						　<br />クラウド
 					</font>
 				</doc>
 				<doc id="53" background="stretch:image:universe/slide2/back1.png">
 					<font size="180">
-						　<br />クラウド
+						　<br />仮想機械
 					</font>
 				</doc>
 				<doc id="54" background="stretch:image:universe/slide2/back1.png">
@@ -396,6 +402,51 @@
 				<doc id="309" background="stretch:image:universe/slide2/back1.png">
 					<p margin="100">
 						<font size="180">出せる<br /><font size="100">（当選してれば）</font></font>
+					</p>
+				</doc>
+				<doc id="310" background="stretch:image:universe/slide2/back1.png">
+					<p margin="100">
+						<font size="112">ニコ動を再現<br />「<font color="red">さきゅばす</font>」</font>
+					</p>
+				</doc>
+				<doc id="311" background="stretch:image:universe/slide2/back1.png">
+					<p margin="100">
+						<font size="112">saccubus<br /> .sourceforge<br />　.jp</font>
+					</p>
+				</doc>
+				<doc id="312" background="stretch:image:universe/slide2/back1.png">
+					<p margin="100">
+						<font size="112">これとマージ</font>
+					</p>
+				</doc>
+				<doc id="313" background="stretch:image:universe/slide2/back1.png">
+					<p margin="100">
+						<font size="112">Androidで動く</font>
+					</p>
+				</doc>
+				<doc id="313" background="stretch:image:universe/slide2/back1.png">
+					<p margin="100">
+						<font size="112">ニコスクリプトが動く</font>
+					</p>
+				</doc>
+				<doc id="314" background="stretch:image:universe/slide2/back1.png">
+					<p margin="100">
+						<font size="112">ニコ動<br />プレイヤ！</font>
+					</p>
+				</doc>
+				<doc id="315" background="stretch:image:universe/slide2/back1.png">
+					<p margin="100">
+						<font size="180">夏休み<br />できる</font>
+					</p>
+				</doc>
+				<doc id="316" background="stretch:image:universe/slide2/back1.png">
+					<p margin="100">
+						<font size="180">夏休み<br />できる<br /><font size="100">（フラグ）</font></font>
+					</p>
+				</doc>
+				<doc id="317" background="stretch:image:universe/slide2/back1.png">
+					<p margin="100">
+						<font size="112">あっ<br />BSDとGPL<br />デュアルライセンス</font>
 					</p>
 				</doc>
 			</widget>

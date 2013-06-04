@@ -42,7 +42,7 @@ NesGeistProvider::NesGeistProvider(Handler< ::donut::Heap> const& heap)
 		geist->machine()->debugger().watcher().stepRunning();
 		side.after = geist->machine()->save();
 
-		return std::make_tuple(fname,true,side);
+		return std::make_tuple(fname, Just<NesGeistSideEffect>(side));
 	});
 	this->registerReactiveNativeClosure("writeNES", &NesGeistObject::writeMemNES);
 	this->registerReactiveNativeClosure("selectReset",[](NesGeistObject* obj){
@@ -54,7 +54,7 @@ NesGeistProvider::NesGeistProvider(Handler< ::donut::Heap> const& heap)
 		side.before = geist->machine()->save();
 		cmp.reset();
 		side.after = geist->machine()->save();
-		return std::make_tuple(cmp.candidates(),true,side);
+		return std::make_tuple(cmp.candidates(), Just<NesGeistSideEffect>(side));
 	});
 	this->registerReactiveNativeClosure("selectTakeSnapshot",[](NesGeistObject* obj){
 		Handler<NesGeist> geist(obj->geist());
@@ -65,7 +65,7 @@ NesGeistProvider::NesGeistProvider(Handler< ::donut::Heap> const& heap)
 		side.before = geist->machine()->save();
 		cmp.takeSnapshot();
 		side.after = geist->machine()->save();
-		return std::make_tuple(cmp.candidates(),true,side);
+		return std::make_tuple(cmp.candidates(), Just<NesGeistSideEffect>(side));
 	});
 #define SELECT_FU(_op) \
 	this->registerReactiveNativeClosure("select" #_op,[](NesGeistObject* obj){\
@@ -77,7 +77,7 @@ NesGeistProvider::NesGeistProvider(Handler< ::donut::Heap> const& heap)
 		side.before = geist->machine()->save();\
 		cmp.select##_op();\
 		side.after = geist->machine()->save();\
-		return std::make_tuple(cmp.candidates(),true,side);\
+		return std::make_tuple(cmp.candidates(), Just<NesGeistSideEffect>(side));\
 	});
 	SELECT_FU(Gt);
 	SELECT_FU(Ge);
@@ -97,7 +97,7 @@ NesGeistProvider::NesGeistProvider(Handler< ::donut::Heap> const& heap)
 		side.before = geist->machine()->save();\
 		cmp.select##_op(val);\
 		side.after = geist->machine()->save();\
-		return std::make_tuple(cmp.candidates(),true,side);\
+		return std::make_tuple(cmp.candidates(), Just<NesGeistSideEffect>(side));\
 	});
 	SELECT_FU(Gt);
 	SELECT_FU(Ge);
@@ -152,7 +152,7 @@ typename NesGeistObject::ResultType NesGeistObject::onBack(const Handler< ::donu
 		break;
 	}
 	}
-	return std::tuple<bool, AntiSideEffect>(true, anti);
+	return Just<AntiSideEffect>(anti);
 }
 
 typename NesGeistObject::ResultType NesGeistObject::onForward(const Handler< ::donut::Heap>& heap, const AntiSideEffect& val)
@@ -178,7 +178,7 @@ typename NesGeistObject::ResultType NesGeistObject::onForward(const Handler< ::d
 		break;
 	}
 	}
-	return std::tuple<bool, AntiSideEffect>(true, anti);
+	return Just<AntiSideEffect>(anti);
 }
 
 XValue NesGeistObject::saveImpl(const Handler< ::donut::Heap>& heap)
@@ -189,7 +189,7 @@ void NesGeistObject::loadImpl(const Handler< ::donut::Heap>& heap, const XValue&
 {
 }
 
-std::tuple<std::nullptr_t, bool, NesGeistObject::AntiSideEffect> NesGeistObject::stepRunning()
+std::tuple<std::nullptr_t, Maybe<NesGeistObject::AntiSideEffect> > NesGeistObject::stepRunning()
 {
 	Handler<NesGeist> geist(this->geist());
 	NesGeist::MachineLock lock(geist);
@@ -200,10 +200,10 @@ std::tuple<std::nullptr_t, bool, NesGeistObject::AntiSideEffect> NesGeistObject:
 	watcher.stepRunning();
 	side.after = geist->machine()->save();
 	side.op_after = geist->isBreak() ? NesGeistSideEffect::LoadSave : NesGeistSideEffect::LoadSaveAndRun;
-	return std::tuple<std::nullptr_t, bool, NesGeistObject::AntiSideEffect>(nullptr,true,side);
+	return std::tuple<std::nullptr_t, Maybe<NesGeistObject::AntiSideEffect> >(nullptr, Just<NesGeistSideEffect>(side));
 }
 
-std::tuple<break_id_t, bool, NesGeistObject::AntiSideEffect> NesGeistObject::addExecBreak(uint16_t addr_first, uint16_t addr_end)
+std::tuple<break_id_t, Maybe<NesGeistObject::AntiSideEffect> > NesGeistObject::addExecBreak(uint16_t addr_first, uint16_t addr_end)
 {
 	Handler<NesGeist> geist(this->geist());
 	NesGeist::MachineLock lock(geist);
@@ -215,10 +215,10 @@ std::tuple<break_id_t, bool, NesGeistObject::AntiSideEffect> NesGeistObject::add
 	side.after = geist->machine()->save();
 	side.op_after = geist->isBreak() ? NesGeistSideEffect::LoadSave : NesGeistSideEffect::LoadSaveAndRun;
 
-	return std::tuple<break_id_t, bool, NesGeistObject::AntiSideEffect>(id,true,side);
+	return std::tuple<break_id_t, Maybe<NesGeistObject::AntiSideEffect> >(id, Just<NesGeistSideEffect>(side));
 }
 
-std::tuple<bool, bool, NesGeistObject::AntiSideEffect> NesGeistObject::removeExecBreak(break_id_t id)
+std::tuple<bool, Maybe<NesGeistObject::AntiSideEffect> > NesGeistObject::removeExecBreak(break_id_t id)
 {
 
 	Handler<NesGeist> geist(this->geist());
@@ -231,10 +231,10 @@ std::tuple<bool, bool, NesGeistObject::AntiSideEffect> NesGeistObject::removeExe
 	side.after = geist->machine()->save();
 	side.op_after = geist->isBreak() ? NesGeistSideEffect::LoadSave : NesGeistSideEffect::LoadSaveAndRun;
 
-	return std::tuple<bool, bool, NesGeistObject::AntiSideEffect>(result, true, side);
+	return std::tuple<bool, Maybe<NesGeistObject::AntiSideEffect> >(result, Just<NesGeistObject::AntiSideEffect>(side));
 }
 
-std::tuple<std::nullptr_t, bool, NesGeistObject::AntiSideEffect> NesGeistObject::continueRunning()
+std::tuple<std::nullptr_t, Maybe<NesGeistObject::AntiSideEffect> > NesGeistObject::continueRunning()
 {
 	Handler<NesGeist> geist(this->geist());
 	NesGeist::MachineLock lock(geist);
@@ -245,10 +245,10 @@ std::tuple<std::nullptr_t, bool, NesGeistObject::AntiSideEffect> NesGeistObject:
 		watcher.resumeRunning();
 	side.after = geist->machine()->save();
 	side.op_after = geist->isBreak() ? NesGeistSideEffect::LoadSave : NesGeistSideEffect::LoadSaveAndRun;
-	return std::tuple<std::nullptr_t, bool, NesGeistObject::AntiSideEffect>(nullptr,true,side);
+	return std::tuple<std::nullptr_t, Maybe<NesGeistObject::AntiSideEffect> >(nullptr, Just<NesGeistSideEffect>(side));
 }
 
-std::tuple<std::string, bool, NesGeistObject::AntiSideEffect> NesGeistObject::writeAsmNES(uint16_t addr, std::string val)
+std::tuple<std::string, Maybe<NesGeistObject::AntiSideEffect>> NesGeistObject::writeAsmNES(uint16_t addr, std::string val)
 {
 	Handler<NesGeist> geist(this->geist());
 	NesGeist::MachineLock lock(geist);
@@ -273,10 +273,10 @@ std::tuple<std::string, bool, NesGeistObject::AntiSideEffect> NesGeistObject::wr
 		}
 	side.after = geist->machine()->save();
 	side.op_after = geist->isBreak() ? NesGeistSideEffect::LoadSave : NesGeistSideEffect::LoadSaveAndRun;
-	return std::tuple<std::string, bool, NesGeistObject::AntiSideEffect>(msg,true,side);
+	return std::tuple<std::string, Maybe<NesGeistObject::AntiSideEffect>>(msg, Just<NesGeistSideEffect>(side));
 }
 
-std::tuple<std::string, bool, NesGeistObject::AntiSideEffect> NesGeistObject::writeMemNES(uint16_t addr, std::string vals)
+std::tuple<std::string, Maybe<NesGeistObject::AntiSideEffect>> NesGeistObject::writeMemNES(uint16_t addr, std::string vals)
 {
 	if(! ::cinamo::startsWith(vals, "0x") ){ //XXX: 今日だけでは
 		while(vals[0]=='0') {
@@ -288,13 +288,13 @@ std::tuple<std::string, bool, NesGeistObject::AntiSideEffect> NesGeistObject::wr
 	NesGeistSideEffect side;
 	if( !succeed ){
 		side.op_before = side.op_after = NesGeistSideEffect::None;
-		return std::make_tuple("正しい数字ではありません。",true,side);
+		return std::make_tuple("正しい数字ではありません。", Just<NesGeistSideEffect>(side));
 	}else if( val < 0 ){
 		side.op_before = side.op_after = NesGeistSideEffect::None;
-		return std::make_tuple("0以上の数字を入れて下さい。",true,side);
+		return std::make_tuple("0以上の数字を入れて下さい。", Just<NesGeistSideEffect>(side));
 	}else if( val > 255 ){
 		side.op_before = side.op_after = NesGeistSideEffect::None;
-		return std::make_tuple("255以下の数字を入れて下さい。",true,side);
+		return std::make_tuple("255以下の数字を入れて下さい。", Just<NesGeistSideEffect>(side));
 	}else{
 		Handler<NesGeist> geist(this->geist());
 		NesGeist::MachineLock lock(geist);
@@ -302,7 +302,7 @@ std::tuple<std::string, bool, NesGeistObject::AntiSideEffect> NesGeistObject::wr
 		side.before = geist->machine()->save();
 		geist->machine()->debuggerWrite(addr, val);
 		side.after = geist->machine()->save();
-		return std::make_tuple("",true,side);
+		return std::make_tuple("", Just<NesGeistSideEffect>(side));
 	}
 }
 

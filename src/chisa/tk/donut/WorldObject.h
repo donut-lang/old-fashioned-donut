@@ -80,8 +80,8 @@ public:
 	static Handler< ::donut::Object> heaven(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& args);
 	Handler<ElementObject> findElementById(std::string const& id);
 	Handler<WidgetObject> findWidgetById(std::string const& widgetid);
-	std::tuple<Handler<ElementObject>, bool, WorldSideEffect> pushElement(std::string const& elementId);
-	std::tuple<Handler<ElementObject>, bool, WorldSideEffect> popElement();
+	std::tuple<Handler<ElementObject>, Maybe<WorldSideEffect> > pushElement(std::string const& elementId);
+	std::tuple<Handler<ElementObject>, Maybe<WorldSideEffect> > popElement();
 
 };
 

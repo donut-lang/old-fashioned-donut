@@ -178,7 +178,7 @@ inline typename WidgetObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ResultType
 		side.op = WidgetSideEffect::None;
 		break;
 	}
-	return std::make_tuple(true, newAnti);
+	return Just<AntiT>(newAnti);
 }
 
 template<typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>

@@ -90,13 +90,14 @@ std::string SystemObject::reprImpl(Handler<Heap> const& heap) const
 	return format("System: %p", this);
 }
 
-std::tuple<bool, XValue> SystemObject::onBack(Handler<Heap> const& heap, XValue const& val)
+typename SystemObject::ResultType SystemObject::onBack(Handler<Heap> const& heap, XValue const& val)
 {
-	return std::tuple<bool, XValue>(true, XValue("Do nothing"));
+	return Just<XValue>(XValue("Do nothing"));
 }
-std::tuple<bool, XValue> SystemObject::onForward(Handler<Heap> const& heap, XValue const& val)
+
+typename SystemObject::ResultType SystemObject::onForward(Handler<Heap> const& heap, XValue const& val)
 {
-	return std::tuple<bool, XValue>(true, XValue("Do nothing"));
+	return Just<XValue>(XValue("Do nothing"));
 }
 
 /**********************************************************************************

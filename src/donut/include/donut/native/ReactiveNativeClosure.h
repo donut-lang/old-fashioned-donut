@@ -36,16 +36,13 @@ Handler<Object> ReactiveNativeClosureBaseT<__AntiSideEffect>::apply(Handler<Heap
 		DONUT_EXCEPTION(Exception, "[BUG] AntiEffect type does not match. SelfType: %s\n\tAntiSideEffect type: \n\t\trequested: %s\n\t\t actual: %s",
 				demangle(self.get()).c_str(), demangle(obj->reactionRecorde()).c_str(), demangle<__AntiSideEffect>().c_str());
 	}
-	Handler<Object> result;
-	bool succeed;
-	__AntiSideEffect value;
-	std::tie(result, succeed, value) = this->func_(heap, obj, arg);
-	if( !succeed ) {
+	ReactiveNativeClosureBaseT<__AntiSideEffect>::ResultType res ( this->func_(heap, obj, arg) );
+	if( std::get<1>(res).isNothing ) {
 		heap->clock()->discardHistory();
 	}else{
-		record->registerReaction(obj, heap->clock()->now(), value);
+		record->registerReaction(obj, heap->clock()->now(), std::get<1>(res).value() );
 	}
-	return result;
+	return std::get<0>(res);
 }
 
 }

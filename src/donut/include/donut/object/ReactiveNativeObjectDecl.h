@@ -17,6 +17,7 @@
  */
 
 #pragma once
+#include <cinamo/functional/Maybe.h>
 #include <cinamo/XArchiver.h>
 #include "ObjectDecl.h"
 
@@ -53,7 +54,7 @@ private:
 	std::vector<std::pair<timestamp_t, __AntiSideEffect> > reactions_;
 	int index_; //次に順方向で挿入されるべきインデックスを示す。0なら戻るものがないのを示す。
 public:
-	typedef std::tuple<bool, __AntiSideEffect> ResultType;
+	typedef Maybe<__AntiSideEffect> ResultType;
 	ReactiveNativeObjectAspectT():index_(0){};
 	virtual ~ReactiveNativeObjectAspectT() noexcept = default;
 private:

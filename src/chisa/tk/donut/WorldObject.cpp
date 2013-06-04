@@ -66,7 +66,7 @@ Handler<World> WorldObject::world() const
 	return this->world_.lock();
 }
 
-WorldObject::ResultType WorldObject::execAntiSideEffect(const Handler<Heap>& heap, const AntiSideEffect& val)
+typename WorldObject::ResultType WorldObject::execAntiSideEffect(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
 	AntiSideEffect anti;
 	switch(val.op){
@@ -81,7 +81,7 @@ WorldObject::ResultType WorldObject::execAntiSideEffect(const Handler<Heap>& hea
 		break;
 	}
 
-	return std::tuple<bool, AntiSideEffect>(true, anti);
+	return Just<AntiSideEffect>(anti);
 }
 
 WorldObject::ResultType WorldObject::onBack(const Handler<Heap>& heap, const WorldSideEffect& val)
@@ -136,22 +136,22 @@ Handler<WidgetObject> WorldObject::findWidgetById(const std::string& widgetid)
 }
 
 
-std::tuple<Handler<ElementObject>, bool, WorldSideEffect> WorldObject::pushElement(std::string const& elementId)
+std::tuple<Handler<ElementObject>, Maybe<WorldSideEffect> > WorldObject::pushElement(std::string const& elementId)
 {
 	Handler<World> const world = this->world();
 	WorldSideEffect anti;
 	anti.op = AntiSideEffect::PopElement;
 	world->pushElement(elementId);
-	return std::tuple<Handler<ElementObject>, bool, WorldSideEffect>(world->rootElement()->donutObject(), true, anti);
+	return std::tuple<Handler<ElementObject>, Maybe<WorldSideEffect> >(world->rootElement()->donutObject(), Just(anti));
 }
-std::tuple<Handler<ElementObject>, bool, WorldSideEffect> WorldObject::popElement()
+std::tuple<Handler<ElementObject>, Maybe<WorldSideEffect> > WorldObject::popElement()
 {
 	Handler<World> const world = this->world();
 	WorldSideEffect anti;
 	anti.op = AntiSideEffect::PushElement;
 	anti.elm = world->rootElement();
 	world->popElement();
-	return std::tuple<Handler<ElementObject>, bool, WorldSideEffect>(anti.elm->donutObject(), true, anti);
+	return std::tuple<Handler<ElementObject>, Maybe<WorldSideEffect> >(anti.elm->donutObject(), Just(anti));
 
 }
 

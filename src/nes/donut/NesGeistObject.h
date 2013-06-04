@@ -56,12 +56,12 @@ public:
 	::cinamo::XValue saveImpl( Handler< ::donut::Heap> const& heap ) override final;
 	void loadImpl( Handler< ::donut::Heap> const& heap, ::cinamo::XValue const& data ) override final;
 public:
-	std::tuple<break_id_t, bool, AntiSideEffect> addExecBreak(uint16_t addr_first, uint16_t addr_end);
-	std::tuple<bool, bool, AntiSideEffect> removeExecBreak(break_id_t id);
-	std::tuple<std::nullptr_t, bool, AntiSideEffect> stepRunning();
-	std::tuple<std::nullptr_t, bool, AntiSideEffect> continueRunning();
-	std::tuple<std::string, bool, AntiSideEffect> writeAsmNES(uint16_t addr, std::string val);
-	std::tuple<std::string, bool, AntiSideEffect> writeMemNES(uint16_t addr, std::string val);
+	std::tuple<break_id_t, Maybe<NesGeistSideEffect> > addExecBreak(uint16_t addr_first, uint16_t addr_end);
+	std::tuple<bool, Maybe<NesGeistSideEffect> > removeExecBreak(break_id_t id);
+	std::tuple<std::nullptr_t, Maybe<NesGeistSideEffect> > stepRunning();
+	std::tuple<std::nullptr_t, Maybe<NesGeistSideEffect> > continueRunning();
+	std::tuple<std::string, Maybe<NesGeistSideEffect> > writeAsmNES(uint16_t addr, std::string val);
+	std::tuple<std::string, Maybe<NesGeistSideEffect> > writeMemNES(uint16_t addr, std::string val);
 };
 
 class NesGeistProvider : public ::chisa::tk::GeistProviderBaseT<NesGeistProvider, NesGeistObject, NesGeist, NesGeistSideEffect> {

@@ -46,7 +46,7 @@ typename LabelObject::ResultType LabelObject::execAntiSideEffect(Handler<Heap> c
 	case AntiSideEffect::None:
 		break;
 	}
-	return std::tuple<bool, AntiSideEffect>(true, anti);
+	return Just<AntiSideEffect>(anti);
 }
 
 typename LabelObject::ResultType LabelObject::onBack(const Handler<Heap>& heap, const AntiSideEffect& val)
@@ -86,7 +86,7 @@ LabelProvider::LabelProvider(Handler<Heap> const& heap, Handler<World> const& wo
 		anti.op=AntiSideEffect::ChangeText;
 		anti.text = obj->element()->text();
 		obj->element()->text( c );
-		return std::make_tuple(std::nullptr_t(), true, anti);
+		return std::make_tuple(std::nullptr_t(), Just<AntiSideEffect>(anti));
 	});
 }
 

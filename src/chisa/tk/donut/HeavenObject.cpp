@@ -37,21 +37,21 @@ HeavenProvider::HeavenProvider(const Handler<Heap>& heap, const Handler<Heaven>&
 	this->registerPureNativeClosure("newLoneAngel", [this](HeavenObject* obj){
 		return obj->heaven()->newLoneAngel()->donutObject(this->heap().lock());
 	});
-	this->registerReactiveNativeClosure("attatchAngel", [this](HeavenObject* obj, AngelObject* angel)->std::tuple<bool,bool,HeavenSideEffect>{
+	this->registerReactiveNativeClosure("attatchAngel", [this](HeavenObject* obj, AngelObject* angel)->std::tuple<bool, Maybe<HeavenSideEffect> >{
 		bool succeed = obj->heaven()->attatchAngel(angel->angel());
 
 		HeavenSideEffect side;
 		side.op = HeavenSideEffect::DetatchAngel;
 		side.detatchedAngel_ = angel->angel();
-		return std::tuple<bool,bool,HeavenSideEffect>(succeed, true, side);
+		return std::tuple<bool, Maybe<HeavenSideEffect> >(succeed, Just(side));
 	});
-	this->registerReactiveNativeClosure("detatchAngel", [this](HeavenObject* obj, AngelObject* angel)->std::tuple<AngelObject* ,bool,HeavenSideEffect>{
+	this->registerReactiveNativeClosure("detatchAngel", [this](HeavenObject* obj, AngelObject* angel)->std::tuple<AngelObject* , Maybe<HeavenSideEffect> >{
 		obj->heaven()->detatchAngel(angel->angel());
 
 		HeavenSideEffect side;
 		side.op = HeavenSideEffect::AttatchAngel;
 		side.attatchedAngel_ = angel->angel();
-		return std::make_tuple(angel,true,side);
+		return std::tuple<AngelObject* , Maybe<HeavenSideEffect> >(angel, Just(side));
 	});
 }
 
@@ -78,7 +78,7 @@ std::string HeavenObject::reprImpl(const Handler<Heap>& heap) const
 	return ::cinamo::format("(HeavenObject: %p)", this);
 }
 
-HeavenObject::ResultType HeavenObject::execAntiSideEffect(Handler<Heap> const& heap, AntiSideEffect const& val)
+typename HeavenObject::ResultType HeavenObject::execAntiSideEffect(Handler<Heap> const& heap, AntiSideEffect const& val)
 {
 	HeavenSideEffect side;
 	switch (val.op){
@@ -93,15 +93,15 @@ HeavenObject::ResultType HeavenObject::execAntiSideEffect(Handler<Heap> const& h
 		side.detatchedAngel_ = val.attatchedAngel_;
 		break;
 	}
-	return ResultType(true, side);
+	return Just(side);
 }
 
-HeavenObject::ResultType HeavenObject::onBack(const Handler<Heap>& heap, const HeavenSideEffect& val)
+typename HeavenObject::ResultType HeavenObject::onBack(const Handler<Heap>& heap, const HeavenSideEffect& val)
 {
 	return this->execAntiSideEffect(heap, val);
 }
 
-HeavenObject::ResultType HeavenObject::onForward(const Handler<Heap>& heap, const HeavenSideEffect& val)
+typename HeavenObject::ResultType HeavenObject::onForward(const Handler<Heap>& heap, const HeavenSideEffect& val)
 {
 	return this->execAntiSideEffect(heap, val);
 }

@@ -20,6 +20,7 @@
 #include <functional>
 #include <tuple>
 #include <cinamo/Handler.h>
+#include <cinamo/functional/Maybe.h>
 #include "../object/Object.h"
 
 
@@ -40,7 +41,7 @@ class Heap;
 template <typename __AntiSideEffect>
 class ReactiveNativeClosureBaseT : public ReactiveNativeClosure{
 public:
-	typedef std::tuple<Handler<Object>, bool, __AntiSideEffect> ResultType;
+	typedef std::tuple<Handler<Object>, Maybe<__AntiSideEffect> > ResultType;
 public:
 	typedef std::function<ResultType(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& arg)> Signature;
 	typedef ResultType(*Function)(Handler<Heap> const& heap, Handler<Object> const& self, std::vector<Handler<Object> > const& arg);

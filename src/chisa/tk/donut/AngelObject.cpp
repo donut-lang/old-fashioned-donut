@@ -96,7 +96,7 @@ AngelProviderBaseT<ProviderT, ObjectT, AngelT, AntiT>::AngelProviderBaseT(Handle
 		AngelSideEffect& side = side_;
 		side.op = AngelSideEffect::DetatchTarget;
 		side.detatchedTarget_ = target;
-		return std::make_tuple(dtarget, true, side_);
+		return std::make_tuple(dtarget, Just(side_));
 	});
 	this->registerReactiveNativeClosure("detatchTarget", [this](ObjectT* dangel, AngelTargetObject* dtarget) {
 		Handler<AngelT> angel(dangel->angel());
@@ -106,7 +106,7 @@ AngelProviderBaseT<ProviderT, ObjectT, AngelT, AntiT>::AngelProviderBaseT(Handle
 		AngelSideEffect& side = side_;
 		side.op = AngelSideEffect::AttatchTarget;
 		side.attatchedTarget_ = target;
-		return std::make_tuple(dtarget, true, side_);
+		return std::make_tuple(dtarget, Just(side_));
 	});
 }
 
@@ -159,7 +159,7 @@ inline typename AngelObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ResultType 
 		side.attatchedTarget_ = old.detatchedTarget_;
 		break;
 	}
-	return std::make_tuple(true, newAnti);
+	return Just(newAnti);
 }
 
 template<typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>

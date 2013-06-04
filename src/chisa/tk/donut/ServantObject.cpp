@@ -110,7 +110,7 @@ template<typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
 inline typename ServantObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ResultType ServantObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::execAntiSideEffect(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
 	AntiT newAnti;
-	return std::make_tuple(true, newAnti);
+	return Just(newAnti);
 }
 
 template<typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
@@ -141,7 +141,7 @@ ElementServantProvider::ElementServantProvider(const Handler<Heap>& heap, const 
 		servant->animEnabled(true);
 		AntiSideEffect anti;
 		anti.op = enabled ? AntiSideEffect::None : AntiSideEffect::DisableAnimation;
-		return std::tuple<bool,bool,AntiSideEffect>(enabled, true, anti);
+		return std::tuple<bool,Maybe<AntiSideEffect> >(enabled, Just(anti));
 	});
 	this->registerReactiveNativeClosure("disableAnimation", [this](ElementServantObject* servant_){
 		auto servant = servant_->servant();
@@ -149,7 +149,7 @@ ElementServantProvider::ElementServantProvider(const Handler<Heap>& heap, const 
 		servant->animEnabled(false);
 		AntiSideEffect anti;
 		anti.op = !enabled ? AntiSideEffect::None : AntiSideEffect::EnableAnimation;
-		return std::tuple<bool,bool,AntiSideEffect>(enabled, true, anti);
+		return std::tuple<bool,Maybe<AntiSideEffect> >(enabled, Just(anti));
 	});
 }
 
@@ -175,7 +175,7 @@ void ElementServantObject::onHistoryDiscarded(const Handler<Heap>& heap)
 	Super::onHistoryDiscarded(heap);
 }
 
-ElementServantObject::ResultType ElementServantObject::execAntiSideEffect(const Handler<Heap>& heap, const AntiSideEffect& val)
+typename ElementServantObject::ResultType ElementServantObject::execAntiSideEffect(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
 	AntiSideEffect anti;
 	auto servant = this->servant();
@@ -191,9 +191,9 @@ ElementServantObject::ResultType ElementServantObject::execAntiSideEffect(const 
 	case AntiSideEffect::None:
 		CINAMO_EXCEPTION(Exception, "[BUG] None operation is not handled.")
 	}
-	return ResultType(true, anti);
+	return Just<AntiSideEffect>(anti);
 }
-ElementServantObject::ResultType ElementServantObject::onBack(const Handler<Heap>& heap, const AntiSideEffect& val)
+typename ElementServantObject::ResultType ElementServantObject::onBack(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
 	switch(val.op){
 	case AntiSideEffect::None:
@@ -203,7 +203,7 @@ ElementServantObject::ResultType ElementServantObject::onBack(const Handler<Heap
 	}
 }
 
-ElementServantObject::ResultType ElementServantObject::onForward(const Handler<Heap>& heap, const AntiSideEffect& val)
+typename ElementServantObject::ResultType ElementServantObject::onForward(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
 	switch(val.op){
 	case AntiSideEffect::None:
@@ -258,12 +258,12 @@ void HaloServantObject::onHistoryDiscarded(const Handler<Heap>& heap)
 	Super::onHistoryDiscarded(heap);
 }
 
-HaloServantObject::ResultType HaloServantObject::onBack(const Handler<Heap>& heap, const AntiSideEffect& val)
+typename HaloServantObject::ResultType HaloServantObject::onBack(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
 	return Super::onBack(heap, val);
 }
 
-HaloServantObject::ResultType HaloServantObject::onForward(const Handler<Heap>& heap, const AntiSideEffect& val)
+typename HaloServantObject::ResultType HaloServantObject::onForward(const Handler<Heap>& heap, const AntiSideEffect& val)
 {
 	return Super::onForward(heap, val);
 }

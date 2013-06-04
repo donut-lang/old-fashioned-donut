@@ -40,7 +40,7 @@ typename SplitComboObject::ResultType SplitComboObject::execAntiSideEffect(Handl
 	//switch(val.op){
 
 	//}
-	return std::tuple<bool, AntiSideEffect>(true, anti);
+	return Just<AntiSideEffect>(anti);
 }
 
 typename SplitComboObject::ResultType SplitComboObject::onBack(const Handler<Heap>& heap, const AntiSideEffect& val)

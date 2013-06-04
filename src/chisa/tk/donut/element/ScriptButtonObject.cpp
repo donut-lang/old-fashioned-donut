@@ -42,7 +42,7 @@ typename ScriptButtonObject::ResultType ScriptButtonObject::execAntiSideEffect(H
 		CINAMO_EXCEPTION(Exception, "[BUG] Oops. you have to process none before");
 		break;
 	}
-	return std::tuple<bool, AntiSideEffect>(true, anti);
+	return Just<AntiSideEffect>(anti);
 }
 
 typename ScriptButtonObject::ResultType ScriptButtonObject::onBack(const Handler<Heap>& heap, const AntiSideEffect& val)

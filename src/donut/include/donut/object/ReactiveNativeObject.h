@@ -59,9 +59,12 @@ void ReactiveNativeObjectAspectT<AntiSideEffect, Self>::onBackNotify(Self& self,
 	bool failed = false;
 	for(int i=nowIndex-1; i>=newIndex;--i){
 		std::pair<timestamp_t, AntiSideEffect>& p = reactions_[i];
-		bool f;
-		std::tie(f, p.second) = self.onBack(heap, p.second);
-		failed |= !f;
+		Maybe<AntiSideEffect> res ( self.onBack(heap, p.second) );
+		if( res.isJust ) {
+			p.second = res.value();
+		}else{
+			failed |= true;
+		}
 	}
 	if( failed ){ //もうもどれない
 		clock->discardFuture();
@@ -79,9 +82,12 @@ void ReactiveNativeObjectAspectT<AntiSideEffect, Self>::onForwardNotify(Self& se
 	bool failed = false;
 	for(auto it = start; it != end; ++it) {
 		std::pair<timestamp_t, AntiSideEffect>& p = *it;
-		bool f;
-		std::tie(f, p.second) = self.onForward(heap, p.second);
-		failed |= !f;
+		Maybe<AntiSideEffect> res ( self.onForward(heap, p.second) );
+		if( res.isJust ){
+			p.second = res.value();
+		}else{
+			failed |= true;
+		}
 	}
 	if( failed ){ //もうもどれない
 		clock->discardHistory();

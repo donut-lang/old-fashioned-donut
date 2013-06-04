@@ -170,7 +170,7 @@ ElementGroupObjectBaseT<ProviderT, ObjectT, ElementT, AntiT>::execAntiSideEffect
 	//ElementGroupSideEffect const& old = val;
 	//switch(old.op){
 	//}
-	return std::make_tuple(true, newAnti);
+	return Just<AntiT>(newAnti);
 }
 
 template <typename ProviderT, typename ObjectT, typename ElementT, typename AntiT>

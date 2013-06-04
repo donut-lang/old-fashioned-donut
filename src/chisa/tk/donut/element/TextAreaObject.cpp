@@ -51,7 +51,7 @@ typename TextAreaObject::ResultType TextAreaObject::execAntiSideEffect(Handler<H
 	case AntiSideEffect::None:
 		break;
 	}
-	return std::tuple<bool, AntiSideEffect>(true, anti);
+	return Just<AntiSideEffect>(anti);
 }
 
 typename TextAreaObject::ResultType TextAreaObject::onBack(const Handler<Heap>& heap, const AntiSideEffect& val)
@@ -95,7 +95,7 @@ TextAreaProvider::TextAreaProvider(Handler<Heap> const& heap, Handler<World> con
 		anti.op=AntiSideEffect::ChangeFrameColor;
 		anti.color = obj->element()->frameColor();
 		obj->element()->frameColor( gl::Color::fromString(c) );
-		return std::make_tuple(std::nullptr_t(), true, anti);
+		return std::make_tuple(std::nullptr_t(), Just<AntiSideEffect>(anti));
 	});
 }
 

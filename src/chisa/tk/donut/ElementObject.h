@@ -128,8 +128,8 @@ public:
 		this->ElementObject::bootstrap(heap, element);
 	}
 public:
-	std::tuple<std::nullptr_t,bool,AntiT> setEnabled( bool newstate );
-	std::tuple<std::nullptr_t,bool,AntiT> setEdgeColor( std::string const& color );
+	std::tuple<std::nullptr_t, Maybe<AntiT> > setEnabled( bool newstate );
+	std::tuple<std::nullptr_t, Maybe<AntiT> > setEdgeColor( std::string const& color );
 private:
 	ResultType execAntiSideEffect(Handler<Heap> const& heap, AntiSideEffect const& val);
 public:
@@ -205,7 +205,7 @@ inline typename ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ResultTyp
 		side.op = ElementSideEffect::None;
 		break;
 	}
-	return std::make_tuple(true, newAnti);
+	return Just<AntiT>(newAnti);
 }
 
 template<typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
@@ -235,7 +235,7 @@ inline typename ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ResultTyp
 }
 
 template<typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
-std::tuple<std::nullptr_t,bool,AntiT> ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::setEnabled(bool newstate)
+std::tuple<std::nullptr_t, Maybe<AntiT> > ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::setEnabled(bool newstate)
 {
 		bool const oldstate = this->element()->enabled();
 		AntiT anti;
@@ -243,18 +243,18 @@ std::tuple<std::nullptr_t,bool,AntiT> ElementObjectBaseT<ProviderT, ObjectT, Ang
 		side.op=ElementSideEffect::SetEnabledOrDisabled;
 		side.enabled = oldstate;
 		element()->enabled(newstate);
-		return std::tuple<std::nullptr_t, bool, AntiT>(nullptr, true, anti);
+		return std::tuple<std::nullptr_t, Maybe<AntiT> >(nullptr, Just<AntiT>(anti));
 }
 
 template<typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
-std::tuple<std::nullptr_t,bool,AntiT> ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::setEdgeColor( std::string const& color )
+std::tuple<std::nullptr_t, Maybe<AntiT> > ElementObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::setEdgeColor( std::string const& color )
 {
 		AntiT anti;
 		ElementSideEffect& side = anti;
 		side.op=ElementSideEffect::SetEdgeColor;
 		side.color = element()->edgeColor();
 		element()->edgeColor( chisa::gl::Color::fromString(color) );
-		return std::tuple<std::nullptr_t, bool, AntiT>(nullptr, true, anti);
+		return std::tuple<std::nullptr_t, Maybe<AntiT> >(nullptr, Just<AntiT>(anti));
 }
 
 }}

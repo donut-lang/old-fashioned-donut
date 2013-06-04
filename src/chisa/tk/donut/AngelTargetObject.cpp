@@ -90,7 +90,7 @@ AngelTargetProviderBaseT<ProviderT, ObjectT, TargetT, AntiT>::AngelTargetProvide
 		side.op = AngelTargetSideEffect::DetatchServant;
 		side.detatchedServant = servant->servant();
 		target->angelTarget()->attatchServant(servant->servant());
-		return std::make_tuple(servant, true, anti);
+		return std::make_tuple(servant, Just(anti));
 	});
 
 	this->registerReactiveNativeClosure("detatchServant", [this](AngelTargetObject* target, ServantObject* servant) {
@@ -98,7 +98,7 @@ AngelTargetProviderBaseT<ProviderT, ObjectT, TargetT, AntiT>::AngelTargetProvide
 		AngelTargetSideEffect& side = anti;
 		side.op = AngelTargetSideEffect::AttatchServant;
 		side.attatchedServant = servant->servant();
-		return std::make_tuple(servant, true, anti);
+		return std::make_tuple(servant, Just(anti));
 	});
 }
 
@@ -152,7 +152,7 @@ inline typename AngelTargetObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::Resul
 		side.attatchedServant = old.detatchedServant;
 		break;
 	}
-	return std::make_tuple(true, newAnti);
+	return Just(newAnti);
 }
 
 template<typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>

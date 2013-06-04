@@ -49,7 +49,7 @@ typename ContentObject::ResultType ContentObject::execAntiSideEffect(Handler<Hea
 	case AntiSideEffect::None:
 		break;
 	}
-	return std::tuple<bool, AntiSideEffect>(true, anti);
+	return Just<AntiSideEffect>(anti);
 }
 
 typename ContentObject::ResultType ContentObject::onBack(const Handler<Heap>& heap, const AntiSideEffect& val)
@@ -76,14 +76,14 @@ void ContentObject::loadImpl(const Handler<Heap>& heap, const XValue& data)
 {
 }
 
-std::tuple<std::string,bool, ContentSideEffect> ContentObject::loadDocument(const std::string& id)
+std::tuple<std::string, Maybe<ContentSideEffect> > ContentObject::loadDocument(const std::string& id)
 {
 	ContentSideEffect anti;
 	Handler<ContentWidget> cwidget = this->widget();
 	anti.op = ContentSideEffect::LoadDocument;
 	anti.docId = cwidget->documentId();
 	cwidget->loadDocument(id);
-	return std::tuple<std::string,bool, ContentSideEffect>(id, true, anti);
+	return std::tuple<std::string, Maybe<ContentSideEffect> >(id, Just<ContentSideEffect>(anti));
 }
 
 //---------------------------------------------------------------------------------------

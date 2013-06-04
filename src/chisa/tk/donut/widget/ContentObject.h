@@ -54,7 +54,7 @@ public:
 	XValue saveImpl( Handler<Heap> const& heap ) override final;
 	void loadImpl( Handler<Heap> const& heap, XValue const& data ) override final;
 public:
-	std::tuple<std::string,bool, ContentSideEffect> loadDocument( std::string const& id );
+	std::tuple<std::string, Maybe<ContentSideEffect> > loadDocument( std::string const& id );
 };
 
 class ContentProvider : public WidgetProviderBaseT<ContentProvider, ContentObject, ContentWidget, ContentSideEffect> {

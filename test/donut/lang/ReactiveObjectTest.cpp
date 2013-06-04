@@ -44,30 +44,30 @@ public:
 		this->Super::bootstrap(heap);
 	}
 public:
-	std::tuple<bool, XValue> onBack(Handler<Heap> const& heap, XValue const& val)
+	Maybe<XValue> onBack(Handler<Heap> const& heap, XValue const& val)
 	{
 		std::string v(val.as<std::string>());
 		if(v == "backable_but_non_fowardable"){
 			backable_but_non_fowardable = true;
-			return std::tuple<bool, XValue>(false, XValue(1));//non-fowardable
+			return Nothing<XValue>();
 		}else if(v == "backable_and_forwardable"){
 			++backable_and_forwardable;
-			return std::tuple<bool, XValue>(true, XValue("backable_and_forwardable"));
+			return Just<XValue>(XValue("backable_and_forwardable"));
 		}else if(v == "backable_only_once") {
-			return std::tuple<bool, XValue>(true, XValue("backable_only_once"));
+			return Just<XValue>(XValue("backable_only_once"));
 		}
-		return std::tuple<bool, XValue>(true, XValue(2));
+		return Just<XValue>(XValue(2));
 	}
-	std::tuple<bool, XValue> onForward(Handler<Heap> const& heap, XValue const& val)
+	Maybe<XValue> onForward(Handler<Heap> const& heap, XValue const& val)
 	{
 		std::string v(val.as<std::string>());
 		if(v == "backable_and_forwardable"){
 			++backable_and_forwardable;
-			return std::tuple<bool, XValue>(true, XValue("backable_and_forwardable"));
+			return Just<XValue>(XValue("backable_and_forwardable"));
 		}else if(v == "backable_only_once"){
-			return std::tuple<bool, XValue>(false, XValue(1));//non-backwardable
+			return Nothing<XValue>();//non-backwardable
 		}
-		return std::tuple<bool, XValue>(true, XValue(1));
+		return Just<XValue>(XValue(1));
 	}
 	void onFutureDiscarded(Handler<Heap> const& heap) {
 		this->futureDiscarded = true;
@@ -85,17 +85,17 @@ public:
 class SampleProvider : public ReactiveProviderBaseT<SampleProvider, SampleObject, XValue>{
 public:
 	SampleProvider(Handler<Heap> const& heap ):Super(heap, "SampleObject"){
-		this->registerReactiveNativeClosure("unrecoverable", std::function<std::tuple<std::string,bool, XValue>(SampleObject*)>([](SampleObject* obj){
-			return std::tuple<std::string, bool, XValue>("hey!", false, XValue());
+		this->registerReactiveNativeClosure("unrecoverable", std::function<std::tuple<std::string,Maybe<XValue> >(SampleObject*)>([](SampleObject* obj){
+			return std::tuple<std::string, Maybe<XValue> >("hey!", Nothing<XValue>());
 		}));
-		this->registerReactiveNativeClosure("backable_but_non_fowardable", std::function<std::tuple<std::string,bool, XValue>(SampleObject*)>([](SampleObject* obj){
-			return std::tuple<std::string, bool, XValue>("hey!", true, XValue("backable_but_non_fowardable"));
+		this->registerReactiveNativeClosure("backable_but_non_fowardable", std::function<std::tuple<std::string,Maybe<XValue> >(SampleObject*)>([](SampleObject* obj){
+			return std::tuple<std::string, Maybe<XValue> >("hey!", Just<XValue>(XValue("backable_but_non_fowardable")));
 		}));
-		this->registerReactiveNativeClosure("backable_and_forwardable", std::function<std::tuple<std::string,bool, XValue>(SampleObject*)>([](SampleObject* obj){
-			return std::tuple<std::string, bool, XValue>("hey!", true, XValue("backable_and_forwardable"));
+		this->registerReactiveNativeClosure("backable_and_forwardable", std::function<std::tuple<std::string,Maybe<XValue> >(SampleObject*)>([](SampleObject* obj){
+			return std::tuple<std::string, Maybe<XValue> >("hey!", Just<XValue>(XValue("backable_and_forwardable")));
 		}));
-		this->registerReactiveNativeClosure("backable_only_once", std::function<std::tuple<std::string,bool, XValue>(SampleObject*)>([](SampleObject* obj){
-			return std::tuple<std::string, bool, XValue>("hey!", true, XValue("backable_only_once"));
+		this->registerReactiveNativeClosure("backable_only_once", std::function<std::tuple<std::string,Maybe<XValue> >(SampleObject*)>([](SampleObject* obj){
+			return std::tuple<std::string, Maybe<XValue> >("hey!", Just<XValue>(XValue("backable_only_once")));
 		}));
 	}
 };

@@ -167,7 +167,7 @@ inline typename GeistObjectBaseT<ProviderT, ObjectT, AngelT, AntiT>::ResultType 
 	//GeistSideEffect const& old = val;
 	//switch(old.op) {
 	//}
-	return std::make_tuple(true, newAnti);
+	return Just<AntiT>(newAnti);
 }
 
 template<typename ProviderT, typename ObjectT, typename AngelT, typename AntiT>
