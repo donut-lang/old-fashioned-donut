@@ -35,7 +35,7 @@ WindowsだとboostでC++11の標準ライブラリを代用してるのでイン
 
 ライセンス
 ====
-    Donut and Chisa are dual licensed under GPL v3 (or any later) or 2-clause BSD license. You can chose one (or both) of them.
+Donut and Chisa are dual licensed under GPL v3 (or any later) or 2-clause BSD license. You can chose one (or both) of them.
 
 GPL v3
 ----
