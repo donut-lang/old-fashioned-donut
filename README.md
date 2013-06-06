@@ -35,12 +35,12 @@ WindowsだとboostでC++11の標準ライブラリを代用してるのでイン
 
 ライセンス
 ====
-    Saccubus is dual licensed under GPL v3 (or any later) or 2-clause BSD license. You can chose one (or both) of them.
+    Donut and Chisa are dual licensed under GPL v3 (or any later) or 2-clause BSD license. You can chose one (or both) of them.
 
 GPL v3
 ----
-    Saccubus
-    Copyright (C) 2007- PSI, 2011- orz
+    Donut and Chisa
+    Copyright (C) 2012- PSI
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -57,8 +57,8 @@ GPL v3
 
 2-clause BSD License
 ----
-    Saccubus
-    Copyright (c) 2007- PSI, 2009- orz
+    Donut and Chisa
+    Copyright (c) 2012- PSI
     All rights reserved.
     
     Redistribution and use in source and binary forms,
