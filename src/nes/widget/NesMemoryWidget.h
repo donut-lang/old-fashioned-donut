@@ -1,8 +1,8 @@
-/*
- * NesMemoryWidget.h
+/* coding: utf-8 */
+/**
+ * Chisa
  *
- *  Created on: Oct 15, 2012
- *      Author: psi
+ * Copyright 2012-2013, PSI
  */
 
 #pragma once
