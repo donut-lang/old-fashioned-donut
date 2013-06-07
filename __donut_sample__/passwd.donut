@@ -1,9 +1,9 @@
 //このあとの命令を使って、この時点まで時を戻せるようになります。
-save_time=Homura.tick();
+var save_time=Homura.tick();
 
 System.print("Please input password: ");
 //パスワードを読み込みます。
-passwd=System.readline();
+var passwd=System.readline();
 
 if(passwd == "abcdef"){
   //パスワードの認証に成功しました。

@@ -45,17 +45,30 @@ prog returns [ Handler<donut::Source> code ]
 closure [ donut::Source* code] returns [ std::vector<donut::Instruction> asmlist, unsigned int closureNo ]
 	: ^(CLOS vars[$code] block[$code]
 	{
-		Handler<donut::Closure> closure = Handler<donut::Closure>(new donut::Closure($vars.list, $block.asmlist));
+		Handler<donut::Closure> closure = Handler<donut::Closure>(new donut::Closure($vars.asmlist, $block.asmlist));
 		$closureNo = $code->constCode<Handler<donut::Closure> >(closure);
 		$asmlist.push_back(Inst::Push | $closureNo);
 	}
 	)
 	;
 
-vars [ donut::Source* code ] returns [ std::vector<std::string> list ]
+vars [ donut::Source* code ] returns [ std::vector<std::string> asmlist ]
 	: ^(VARS (IDENT{
-		list.push_back(createStringFromString($IDENT.text));
+		$asmlist.push_back(createStringFromString($IDENT.text));
 	})*);
+
+defvar [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
+	: ^(VAR IDENT val=expr[code]?
+	{
+		if( !($val.asmlist.empty()) ) {
+			$asmlist.insert($asmlist.end(), $val.asmlist.begin(), $val.asmlist.end());
+		}else{
+			$asmlist.push_back(Inst::Push | $code->constCode<std::nullptr_t>(nullptr));
+		}
+		$asmlist.push_back(Inst::Push | $code->constCode<string>(createStringFromString($IDENT.text)));
+		$asmlist.push_back(Inst::DefVar);
+	})
+	;
 
 block [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
 @after{
@@ -100,6 +113,7 @@ unary_operation returns [ std::string sym ]
 
 expr [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlist ]
 	: literal[$code] { $asmlist.swap($literal.asmlist); }
+	| defvar[$code] { $asmlist.swap($defvar.asmlist); }
 	| apply[$code] { $asmlist.swap($apply.asmlist); }
 	| loop[$code] { $asmlist.swap($loop.asmlist); }
 	| cond[$code] { $asmlist.swap($cond.asmlist); }

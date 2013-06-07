@@ -1,11 +1,11 @@
 //普通の変数は、時間操作の影響を受けますが…
-tabeta=0;
+var tabeta=0;
 
 //Homuraは時間操作前の事を覚えていて、時間操作の影響を受けません。
 Homura.counter=0;
 
 //このあとの命令を使って、この時点まで時を戻せるようになります。
-save_time=Homura.tick();
+var save_time=Homura.tick();
 
 if(Homura.counter < 10){
   // ドーナッツを食べましょう。

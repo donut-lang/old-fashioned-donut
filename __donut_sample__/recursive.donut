@@ -1,4 +1,4 @@
-f = func(idx, acc){
+var f = func(idx, acc){
 	if( idx <= 0 ){
 		acc; //最後に評価された値が戻り値になる
 	}else{

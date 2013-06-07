@@ -287,11 +287,11 @@ Handler<Object> Machine::run()
 			this->popStack();
 			break;
 		case Inst::SearchScope: {
-			Handler<Object> nameObj = this->popStack();
-			const std::string name = nameObj->toString(heap_);
+			Handler<Object> const nameObj = this->popStack();
+			std::string const name = nameObj->toString(heap_);
 
-			bool found = false;
 			Handler<Object> obj = this->local();
+			bool found = false;
 			while(!found){
 				if(obj->has(heap_, name)){
 					this->pushStack( obj );
@@ -304,8 +304,16 @@ Handler<Object> Machine::run()
 				}
 			}
 			if(!found){
-				this->pushStack( this->local() );
+				DONUT_EXCEPTION(Exception, "Unknwon var: %s", name.c_str());
 			}
+			break;
+		}
+		case Inst::DefVar: {
+			Handler<Object> nameObj = this->popStack();
+			std::string const name = nameObj->toString(heap_);
+			Handler<Object> varObj = this->topStack();
+
+			this->local()->set(heap_, name, varObj);
 			break;
 		}
 		case Inst::StoreObj: {

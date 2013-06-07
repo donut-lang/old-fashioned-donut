@@ -49,6 +49,7 @@ tokens {
 	
 	COND;
 	FOR;
+	VAR;
 }
 
 @includes {
@@ -67,6 +68,7 @@ expr
 	| cond
 	| 'for' '(' fa=expr? ';' fb=expr? ';' fc=expr? ')' fd=block -> ^(FOR ^(CONT $fa?) ^(CONT $fb?) ^(CONT $fc?) $fd)
 	| 'while' '(' fb=expr? ')' fd=block -> ^(FOR ^(CONT) ^(CONT $fb) ^(CONT) $fd)
+	| 'var' nm=name ('=' val=expr)? -> ^(VAR $nm $val?) 
 	| RETURN expr -> ^(RETURN expr)
 	| INTERRUPT expr -> ^(INTERRUPT expr)
 	;

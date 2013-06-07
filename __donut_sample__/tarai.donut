@@ -1,4 +1,4 @@
-tarai = func(x,y,z) {
+var tarai = func(x,y,z) {
 	if(x<=y){
 		y;
 	}else{
