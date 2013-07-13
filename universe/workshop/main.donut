@@ -1,4 +1,4 @@
-Nes = {};
+var Nes = {};
 Nes.step_break = 0;
 Nes.handle = func(msg) {
 	if(msg.action == "nes-open"){
@@ -38,32 +38,32 @@ Nes.handle = func(msg) {
 	return true;
 };
 
-MemoryAngel = {};
+var MemoryAngel = {};
 MemoryAngel.angel = null;
 MemoryAngel.handle = func(msg){
 	if(msg.action == "new-angel"){
-		heaven = World.heaven();
+		var heaven = World.heaven();
 		if( self.angel != null ){
 			heaven.detatchAngel(self.angel);
 			self.angel = null;
 		}else{};
-		angel =  self.angel = heaven.newTwinAngel();
+		var angel =  self.angel = heaven.newTwinAngel();
 		self.addr = msg.addr;
 		//target1
-		t1 = angel.newWidgetTarget("nes-watcher", self.addr.toString());
-		elm1 = t1.newElementServant("mem-edit");
+		var t1 = angel.newWidgetTarget("nes-watcher", self.addr.toString());
+		var elm1 = t1.newElementServant("mem-edit");
 		elm1.element().findElementById("val").setText(msg.val.toString());
 		t1.attatchServant(elm1);
 		t1.attatchServant(t1.newHaloServant("red"));
 		//target2
 		if( self.addr >= 0x8000 ) {
-			t2 = angel.newWidgetTarget("nes-trace", self.addr.toString());
-			elm2 = t2.newElementServant("asm-edit");
+			var t2 = angel.newWidgetTarget("nes-trace", self.addr.toString());
+			var elm2 = t2.newElementServant("asm-edit");
 			elm2.element().findElementById("asm").setText(Geist.disasmAt(self.addr));
 			t2.attatchServant(elm2);
 			t2.attatchServant(t2.newHaloServant("red"));
 		}else{
-			t2 = angel.newWidgetTarget("nes-compare", self.addr.toString());
+			var t2 = angel.newWidgetTarget("nes-compare", self.addr.toString());
 			t2.attatchServant(t2.newHaloServant("red"));
 		};
 		//最後にくっつける
@@ -71,8 +71,8 @@ MemoryAngel.handle = func(msg){
 		angel.attatchTarget(t2);
 		heaven.attatchAngel(angel);
 	}else if(msg.action == "memchange"){
-		elm = self.angel.findElementById("val");
-		res = Geist.writeNES(self.addr, elm.getText());
+		var elm = self.angel.findElementById("val");
+		var res = Geist.writeNES(self.addr, elm.getText());
 		if( !res.isEmpty() ) {
 			elm.setFrameColor("red");
 			World.findElementById("status").setText(res);
@@ -82,8 +82,8 @@ MemoryAngel.handle = func(msg){
 			self.angel = null;
 		};
 	}else if(msg.action == "compile") {
-		elm = self.angel.findElementById("asm");
-		res = Geist.writeAsmNES(self.addr, elm.getText());
+		var elm = self.angel.findElementById("asm");
+		var res = Geist.writeAsmNES(self.addr, elm.getText());
 		if( !res.isEmpty() ) {
 			elm.setFrameColor("red");
 			World.findElementById("status").setText(res);
@@ -96,7 +96,7 @@ MemoryAngel.handle = func(msg){
 	return false;
 };
 
-handleNES = func(msg){
+var handleNES = func(msg){
 	if(Nes.handle(msg)){
 		return true;
 	}else if(MemoryAngel.handle(msg)){
@@ -106,10 +106,10 @@ handleNES = func(msg){
 	};
 };
 
-main = func(){
-	running = true;
+var main = func(){
+	var running = true;
 	while(running){
-		msg = interrupt null;
+		var msg = interrupt null;
 		if( handleNES(msg) ){
 		}else{};
 	};
