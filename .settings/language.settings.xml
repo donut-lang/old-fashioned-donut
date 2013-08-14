@@ -6,16 +6,16 @@
 				<language id="org.eclipse.cdt.core.g++">
 					<resource project-relative-path="">
 						<entry kind="includePath" name="/${ProjName}/${ProjDirPath}/src/donut/include">
-							<flag value="LOCAL|VALUE_WORKSPACE_PATH"/>
+							<flag value="BUILTIN|LOCAL|VALUE_WORKSPACE_PATH"/>
 						</entry>
 						<entry kind="includePath" name="/Cinamo/external/tinyxml2">
-							<flag value="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED"/>
+							<flag value="BUILTIN|LOCAL|VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>
 						<entry kind="includePath" name="/Cinamo/include">
-							<flag value="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED"/>
+							<flag value="BUILTIN|LOCAL|VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>
 						<entry kind="includePath" name="/Cinamo/build/debug">
-							<flag value="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED"/>
+							<flag value="BUILTIN|LOCAL|VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>
 						<entry kind="macro" name="DEBUG" value="1"/>
 						<entry kind="macro" name="NDUBUG" value="1"/>
@@ -1532,19 +1532,19 @@
 				<language id="org.eclipse.cdt.core.g++">
 					<resource project-relative-path="">
 						<entry kind="includePath" name="/usr/include/freetype2">
-							<flag value="LOCAL"/>
+							<flag value="BUILTIN|LOCAL"/>
 						</entry>
 						<entry kind="includePath" name="/${ProjName}/${ProjDirPath}/src/donut/include">
-							<flag value="LOCAL|VALUE_WORKSPACE_PATH"/>
+							<flag value="BUILTIN|LOCAL|VALUE_WORKSPACE_PATH"/>
 						</entry>
 						<entry kind="includePath" name="/Cinamo/external/tinyxml2">
-							<flag value="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED"/>
+							<flag value="BUILTIN|LOCAL|VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>
 						<entry kind="includePath" name="/Cinamo/include">
-							<flag value="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED"/>
+							<flag value="BUILTIN|LOCAL|VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>
 						<entry kind="includePath" name="/Cinamo/build/debug">
-							<flag value="LOCAL|VALUE_WORKSPACE_PATH|RESOLVED"/>
+							<flag value="BUILTIN|LOCAL|VALUE_WORKSPACE_PATH|RESOLVED"/>
 						</entry>
 						<entry kind="macro" name="DEBUG" value="1"/>
 						<entry kind="macro" name="NDEBUG" value="1"/>
