@@ -10,7 +10,7 @@
 #include <list>
 #include <functional>
 #include <cinamo/Logger.h>
-#include <cinamo/TypeTrans.h>
+#include <cinamo/functional/Base.h>
 
 namespace chisa {
 using namespace cinamo;

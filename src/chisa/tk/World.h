@@ -9,7 +9,7 @@
 #include <string>
 #include <unordered_map>
 #include <cinamo/ClassUtil.h>
-#include <cinamo/TypeTrans.h>
+#include <cinamo/functional/Base.h>
 #include <donut/Donut.h>
 #include "../gl/Canvas.h"
 #include "../geom/Area.h"
