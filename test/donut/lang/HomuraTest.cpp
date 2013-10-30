@@ -63,7 +63,7 @@ TEST(DonutHomuraTest, LoopTest)
 	INIT_DONUT;
 	{
 		Handler<Object> result;
-		result = machine->start( donut->parse("Homura.test=1;t=Homura.tick();if(Homura.test < 10){ Homura.test+=1; Homura.seek(t); }else{ Homura.test; };Homura.test;", "<MEM>", 0) );
+		result = machine->start( donut->parse("Homura.test=1;var t=Homura.tick();if(Homura.test < 10){ Homura.test+=1; Homura.seek(t); }else{ Homura.test; };Homura.test;", "<MEM>", 0) );
 		ASSERT_EQ(10, result->toInt(heap));
 	}
 }
@@ -74,7 +74,7 @@ TEST(DonutHomuraTest, BackWithInterruptTest)
 	{
 		Handler<Object> result;
 		ASSERT_NO_THROW(
-				result = machine->start( donut->parse("first = Homura.now(); x=interrupt null; if(x){ \"back\"; Homura.seek(first); }else{ \"through\"; };", "<MEM>", 0) ) );
+				result = machine->start( donut->parse("var first = Homura.now(); var x=interrupt null; if(x){ \"back\"; Homura.seek(first); }else{ \"through\"; };", "<MEM>", 0) ) );
 		ASSERT_TRUE(result->isNull());
 		ASSERT_TRUE(machine->isInterrupted());
 
@@ -95,7 +95,7 @@ TEST(DonutHomuraTest, BackToEntrypointTest)
 	{
 		Handler<Object> result;
 		ASSERT_NO_THROW(
-				result = machine->start( donut->parse("first = Homura.now(); x=interrupt null; if(x){ \"back\"; Homura.seek(first-1); }else{ \"through\"; };", "<MEM>", 0) ) );
+				result = machine->start( donut->parse("var first = Homura.now(); var x = interrupt null; if(x){ \"back\"; Homura.seek(first-1); }else{ \"through\"; };", "<MEM>", 0) ) );
 		ASSERT_TRUE(result->isNull());
 		ASSERT_TRUE(machine->isInterrupted());
 

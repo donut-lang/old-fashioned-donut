@@ -7,7 +7,7 @@
 
 #pragma once
 #include <functional>
-#include <cinamo/TypeTrans.h>
+#include <cinamo/functional/Base.h>
 #include <cinamo/functional/Maybe.h>
 #include "../Exception.h"
 #include "../object/Object.h"

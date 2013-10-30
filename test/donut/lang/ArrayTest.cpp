@@ -38,38 +38,38 @@ TEST(ArrayTest, LiteralTest)
 
 TEST(ArrayTest, LiteralAccessIndex)
 {
-	SOURCE_TEST_FLOAT(1.0, "array=['0',1.0,2];array[1];");
+	SOURCE_TEST_FLOAT(1.0, "var array=['0',1.0,2];array[1];");
 }
 
 TEST(ArrayTest, LiteralAssignIndex)
 {
-	SOURCE_TEST_STR("4", "array=['0',1.0,2];array[2]='4';");
+	SOURCE_TEST_STR("4", "var array=['0',1.0,2];array[2]='4';");
 }
 
 TEST(ArrayTest, LiteralAssignAndGetIndex)
 {
-	SOURCE_TEST_STR("4", "array=['0',1.0,2];array[2]='4';array[2];");
+	SOURCE_TEST_STR("4", "var array=['0',1.0,2];array[2]='4';array[2];");
 }
 
 TEST(ArrayTest, IntIndex)
 {
-	SOURCE_TEST_INT(3, "array={};array[1]=1;array[2]=2;array[3]=3;");
-	SOURCE_TEST_INT(3, "array={};array[1]=1;array[2]=2;array[3]=3;array[3]");
+	SOURCE_TEST_INT(3, "var array={};array[1]=1;array[2]=2;array[3]=3;");
+	SOURCE_TEST_INT(3, "var array={};array[1]=1;array[2]=2;array[3]=3;array[3]");
 }
 
 TEST(ArrayTest, StringIndex)
 {
-	SOURCE_TEST_INT(3, "array={};array['a']=1;array['b']=2;array['c']=3;");
-	SOURCE_TEST_INT(2, "array={};array['a']=1;array['b']=2;array['c']=3;array['b'];");
+	SOURCE_TEST_INT(3, "var array={};array['a']=1;array['b']=2;array['c']=3;");
+	SOURCE_TEST_INT(2, "var array={};array['a']=1;array['b']=2;array['c']=3;array['b'];");
 }
 
 TEST(ArrayTest, FuncCall)
 {
-	SOURCE_TEST_INT(2, "array={};array.f=func(z){z+1}; array[\"f\"](1);");
+	SOURCE_TEST_INT(2, "var array={};array.f=func(z){z+1}; array[\"f\"](1);");
 }
 TEST(ArrayTest, FuncCallWithVariable)
 {
-	SOURCE_TEST_INT(2, "array={}; name='f'; array.f=func(z){z+1}; array[name](1);");
+	SOURCE_TEST_INT(2, "var array={}; var name='f'; array.f=func(z){z+1}; array[name](1);");
 }
 
 }

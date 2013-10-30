@@ -28,8 +28,8 @@ TEST(DonutBlockTest, LiteralTest)
 
 TEST(DonutBlockTest, AssignTest)
 {
-	SOURCE_TEST_INT(3, "f={1;2;3;};");
-	SOURCE_TEST_INT(3, "f={1;2;3;};f;");
+	SOURCE_TEST_INT(3, "var f={1;2;3;};");
+	SOURCE_TEST_INT(3, "var f={1;2;3;};f;");
 }
 
 

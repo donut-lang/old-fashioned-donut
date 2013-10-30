@@ -33,38 +33,38 @@ TEST(DonutFunctionTest, LiteralClosureTest)
 
 TEST(DonutFunctionTest, ReturnTest)
 {
-	SOURCE_TEST_INT(3, "z = func(a,b){a+b;};z(1,2);");
+	SOURCE_TEST_INT(3, "var z = func(a,b){a+b;};z(1,2);");
 }
 
 TEST(DonutFunctionTest, ReturnWithContTest)
 {
-	SOURCE_TEST_INT(12, "z = func(a,b){a+b;};z(1,2);12");
+	SOURCE_TEST_INT(12, "var z = func(a,b){a+b;};z(1,2);12");
 }
 
 TEST(DonutFunctionTest, ArgumentTest)
 {
-	SOURCE_TEST_INT(3, "z = func(a,b,c,d){c;};z(1,2,3,4);");
+	SOURCE_TEST_INT(3, "var z = func(a,b,c,d){c;};z(1,2,3,4);");
 }
 
 TEST(DonutFunctionTest, ScopeTest)
 {
-	SOURCE_TEST_INT(0, "a = 1; f = func(){ a=0; };f(); a;");
+	SOURCE_TEST_INT(0, "var a = 1; var f = func(){ a=0; };f(); a;");
 }
 
 
 TEST(DonutFunctionTest, ScopeHideTest)
 {
-	SOURCE_TEST_INT(1, "a = 1; f = func(a){ a=0; };f(1); a;");
+	SOURCE_TEST_INT(1, "var a = 1; var f = func(a){ a=0; };f(1); a;");
 }
 
 TEST(DonutFunctionTest, ClosureCountTest)
 {
-	SOURCE_TEST_INT(2, "a = 1; f = func(){ b = 0; func(){ b++; }; }(); f(); f(); f();");
+	SOURCE_TEST_INT(2, "var a = 1; var f = func(){ var b = 0; func(){ b++; }; }(); f(); f(); f();");
 }
 
 TEST(DonutFunctionTest, RecursiveTest)
 {
-	SOURCE_TEST_INT(55, "f = func(a){ if(a>0){ a+f(a-1); }else{ 0; }; };f(10);");
+	SOURCE_TEST_INT(55, "var f = func(a){ if(a>0){ a+f(a-1); }else{ 0; }; };f(10);");
 }
 
 }
