@@ -25,3 +25,9 @@
 /waf*/
 /cov/
 
+#antlr
+src/chisa/donut/parser/output/classes/
+src/chisa/donut/parser/output/*.tokens
+src/chisa/donut/parser/output/*.java
+src/chisa/donut/parser/output/__*
+
