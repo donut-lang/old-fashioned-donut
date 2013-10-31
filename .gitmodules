@@ -1,3 +1,0 @@
-[submodule "external/WafHelper"]
-	path = external/WafHelper
-	url = git://github.com/donut-lang/WafHelper.git
