@@ -36,23 +36,23 @@ public:
 
 TEST_F(DonutForTest, CountTest)
 {
-	SOURCE_TEST_INT(10, "var cnt=0;for(i=0;i<10;++i){cnt+=1;};");
+	SOURCE_TEST_INT(10, "var cnt=0;for(var i=0;i<10;++i){cnt+=1;};");
 }
 
 TEST_F(DonutForTest, ZeroCountTest)
 {
-	SOURCE_TEST_INT(-12, "var cnt=10;for(i=-12;i>0;++i){cnt+=1;};");
+	SOURCE_TEST_INT(-12, "var cnt=10;for(var i=-12;i>0;++i){cnt+=1;};");
 }
 
 
 TEST_F(DonutForTest, WhileTest)
 {
-	SOURCE_TEST_INT(10, "var cnt=0;i=0;while(i<10){++i;cnt+=1;};");
+	SOURCE_TEST_INT(10, "var cnt=0;var i=0;while(i<10){++i;cnt+=1;};");
 }
 
 TEST_F(DonutForTest, ForWhileTest)
 {
-	SOURCE_TEST_INT(10, "var cnt=0;i=0;for(;i<10;){++i;cnt+=1;};");
+	SOURCE_TEST_INT(10, "var cnt=0;var i=0;for(;i<10;){++i;cnt+=1;};");
 }
 
 }

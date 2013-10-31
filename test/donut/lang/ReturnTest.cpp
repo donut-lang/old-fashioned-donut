@@ -28,13 +28,13 @@ TEST(ReturnTest, LiteralTest)
 
 TEST(ReturnTest, ReturnFunctionTest)
 {
-	SOURCE_TEST_STR("abc", "(func() { f=func( x ){ if(x==1){}else{return \"abc\";}; \"def\"  }; f(2); })();");
+	SOURCE_TEST_STR("abc", "(func() { var f=func( x ){ if(x==1){}else{return \"abc\";}; \"def\"  }; f(2); })();");
 }
 
 TEST(ReturnTest, ReturnLoopTest)
 {
 	std::string src(R"delimiter(
-			f=func(acc, loop){
+			var f=func(acc, loop){
 				if(loop <= 0){
 					return acc;
 				}else{

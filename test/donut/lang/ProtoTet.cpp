@@ -23,7 +23,7 @@ namespace donut {
 
 TEST(DonutProtoTest, NullTest)
 {
-	SOURCE_TEST_INT(1, "z={};x={__proto__=>z};z.x=1;x.x;");
+	SOURCE_TEST_INT(1, "var z={}; var x={__proto__=>z}; z.x=1; x.x;");
 }
 
 }

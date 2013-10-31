@@ -25,7 +25,7 @@ TEST(LocalTest, LocalTest)
 {
 	INIT_DONUT
 	Handler<Object> result;
-	ASSERT_NO_THROW( result = machine->start( donut->parse("x=1;", "<MEM>", 0) ) );
+	ASSERT_NO_THROW( result = machine->start( donut->parse("var x=1;", "<MEM>", 0) ) );
 	ASSERT_FALSE( result->isObject() );
 	ASSERT_EQ(1, result->toInt(heap) );
 	ASSERT_FALSE( heap->hasGlobalObject("x") );
@@ -35,7 +35,7 @@ TEST(LocalTest, LocalVarNotKeepingTest)
 {
 	INIT_DONUT
 	Handler<Object> result;
-	ASSERT_NO_THROW( result = machine->start( donut->parse("x=1;", "<MEM>", 0) ) );
+	ASSERT_NO_THROW( result = machine->start( donut->parse("var x=1;", "<MEM>", 0) ) );
 	ASSERT_FALSE( result->isObject() );
 	ASSERT_EQ(1, result->toInt(heap) );
 	ASSERT_ANY_THROW( result = machine->start( donut->parse("x;", "<MEM>", 0) ) );

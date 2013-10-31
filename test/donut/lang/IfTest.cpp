@@ -33,7 +33,7 @@ TEST(DonutIfTest, FalseTest)
 
 TEST(DonutIfTest, ElifTest)
 {
-	SOURCE_TEST_INT(3, "z=3;if(z==1){1;}else if(z==2){2;}else if(z==3){3;}else{4;};");
+	SOURCE_TEST_INT(3, "var z=3;if(z==1){1;}else if(z==2){2;}else if(z==3){3;}else{4;};");
 }
 
 

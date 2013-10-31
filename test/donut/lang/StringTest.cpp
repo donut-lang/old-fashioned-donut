@@ -49,9 +49,9 @@ TEST(StringTest, MultTest)
 	SOURCE_TEST_STR("abcabcabcabc", "\"abc\"*4;");
 }
 
-TEST(StringTest, MultAssgnTest)
+TEST(StringTest, MultAssignTest)
 {
-	SOURCE_TEST_STR("abcabcabcabc", "test=\"abc\";test*=4;");
+	SOURCE_TEST_STR("abcabcabcabc", "var test=\"abc\";test*=4;");
 }
 
 TEST(StringTest, ToIntegerTest)

@@ -73,6 +73,11 @@ TEST(AssignOperationTest, AssignOpTest)
 	SOURCE_TEST_INT(1, "var test=0; test+=1; test;");
 	SOURCE_TEST_INT(1, "var t={}; t.test=0; t.test+=1;");
 	SOURCE_TEST_INT(1, "var t={}; t.test=0; t.test+=1; t.test;");
+
+	SOURCE_TEST_INT(1, "var t={}; var i=\"t\"; t[i]=0; t[i]+=1;");
+	SOURCE_TEST_INT(1, "var t={}; var i=\"t\"; t[i]=0; t[i]+=1; t[i];");
+	SOURCE_TEST_INT(1, "var t=['1']; var i=\"t\"; t[i]=0; t[i]+=1;");
+	SOURCE_TEST_INT(1, "var t=['1']; var i=\"t\"; t[i]=0; t[i]+=1; t[i];");
 }
 
 TEST(AssignOperationTest, PostOpTest)
@@ -81,10 +86,10 @@ TEST(AssignOperationTest, PostOpTest)
 	SOURCE_TEST_INT(1, "var test=0; test++; test;");
 	SOURCE_TEST_INT(0, "var t={}; t.test=0; t.test++;");
 	SOURCE_TEST_INT(1, "var t={}; t.test=0; t.test++; t.test;");
-	SOURCE_TEST_INT(0, "var t={}; i=\"t\"; t[i]=0; t[i]++;");
-	SOURCE_TEST_INT(1, "var t={}; i=\"t\"; t[i]=0; t[i]++; t[i];");
-	SOURCE_TEST_INT(0, "var t=['1']; i=\"t\"; t[i]=0; t[i]++;");
-	SOURCE_TEST_INT(1, "var t=['1']; i=\"t\"; t[i]=0; t[i]++; t[i]");
+	SOURCE_TEST_INT(0, "var t={}; var i=\"t\"; t[i]=0; t[i]++;");
+	SOURCE_TEST_INT(1, "var t={}; var i=\"t\"; t[i]=0; t[i]++; t[i];");
+	SOURCE_TEST_INT(0, "var t=['1']; var i=\"t\"; t[i]=0; t[i]++;");
+	SOURCE_TEST_INT(1, "var t=['1']; var i=\"t\"; t[i]=0; t[i]++; t[i]");
 }
 
 TEST(AssignOperationTest, PreOpTest)
@@ -93,22 +98,10 @@ TEST(AssignOperationTest, PreOpTest)
 	SOURCE_TEST_INT(1, "var test=0; ++test; test;");
 	SOURCE_TEST_INT(1, "var t={}; t.test=0; ++t.test;");
 	SOURCE_TEST_INT(1, "var t={}; t.test=0; ++t.test; t.test;");
-	SOURCE_TEST_INT(1, "var t={}; i=\"t\"; t[i]=0; ++t[i];");
-	SOURCE_TEST_INT(1, "var t={}; i=\"t\"; t[i]=0; ++t[i]; t[i];");
-	SOURCE_TEST_INT(1, "var t=['1']; i=\"t\"; t[i]=0; ++t[i];");
-	SOURCE_TEST_INT(1, "var t=['1']; i=\"t\"; t[i]=0; ++t[i]; t[i];");
-}
-
-TEST(DonutRunTest, AssignOpTest)
-{
-	SOURCE_TEST_INT(1, "var test=0; test+=1;");
-	SOURCE_TEST_INT(1, "var test=0; test+=1; test;");
-	SOURCE_TEST_INT(1, "var t={}; t.test=0; t.test+=1;");
-	SOURCE_TEST_INT(1, "var t={}; t.test=0; t.test+=1; t.test;");
-	SOURCE_TEST_INT(1, "var t={}; i=\"t\"; t[i]=0; t[i]+=1;");
-	SOURCE_TEST_INT(1, "var t={}; i=\"t\"; t[i]=0; t[i]+=1; t[i];");
-	SOURCE_TEST_INT(1, "var t=['1']; i=\"t\"; t[i]=0; t[i]+=1;");
-	SOURCE_TEST_INT(1, "var t=['1']; i=\"t\"; t[i]=0; t[i]+=1; t[i];");
+	SOURCE_TEST_INT(1, "var t={}; var i=\"t\"; t[i]=0; ++t[i];");
+	SOURCE_TEST_INT(1, "var t={}; var i=\"t\"; t[i]=0; ++t[i]; t[i];");
+	SOURCE_TEST_INT(1, "var t=['1']; var i=\"t\"; t[i]=0; ++t[i];");
+	SOURCE_TEST_INT(1, "var t=['1']; var i=\"t\"; t[i]=0; ++t[i]; t[i];");
 }
 
 }
