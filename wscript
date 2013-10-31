@@ -2,7 +2,7 @@
 import sys
 import os
 
-sys.path.append('external/WafHelper')
+sys.path.append('.helper')
 import Util
 
 APPNAME = 'Template'
@@ -19,7 +19,7 @@ def options(opt):
 	opt.add_option('--debug', action='store_true', default=False, help='debug build')
 	opt.load('compiler_c compiler_cxx')
 	opt.load('boost')
-	opt.load('cinamo', tooldir='external/WafHelper')
+	opt.load('cinamo', tooldir='.helper')
 
 def configure(conf):
 	conf.setenv('release')
@@ -41,7 +41,6 @@ def configureLibrary(conf):
 	conf.check_cfg(package='sdl2', uselib_store='SDL2', mandatory=True, args='--cflags --libs')
 	conf.check(features='cxx cxxprogram', lib=['gtest', 'gtest_main', 'pthread'], cflags=['-Wall'], uselib_store='GTEST')
 	conf.check(features='cxx cxxprogram', lib='pthread', cflags=['-Wall'], uselib_store='PTHREAD')
-	conf.check(features='cxx cxxprogram', lib=['ply'], cflags=['-Wall'], uselib_store='PLY')
 	conf.check_cinamo()
 
 TEST_APP_SRC=Util.enum('test')
@@ -56,18 +55,18 @@ def build(bld):
 		features = 'cxx cxxstlib',
 		source = MAINLIB_SRC,
 		target = 'main',
-		use=['CINAMO','PPROF','PTHREAD', 'SDL2', 'ICU', 'PLY'])
+		use=['CINAMO','PPROF','PTHREAD', 'SDL2', 'ICU'])
 	bld(
 		features = 'cxx cxxprogram',
 		source = MAIN_APP_SRC,
 		target = 'mainApp',
-		use=['CINAMO','PPROF','PTHREAD', 'SDL2', 'ICU', 'PLY', 'main'])
+		use=['CINAMO','PPROF','PTHREAD', 'SDL2', 'ICU', 'main'])
 	bld(
 		features = 'cxx cxxprogram',
 		source = TEST_APP_SRC,
 		target = 'testApp',
 		env = bld.all_envs["coverage"] if ("coverage" in bld.all_envs) else bld.env,
-		use=['CINAMO','PPROF','PTHREAD', 'SDL2', 'ICU', 'PLY', 'GTEST', 'superpx'])
+		use=['CINAMO','PPROF','PTHREAD', 'SDL2', 'ICU', 'GTEST', 'superpx'])
 
 def shutdown(ctx):
 	pass
