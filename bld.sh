@@ -168,7 +168,10 @@ elif [ $LAUNCH = "test" ] ;then
 		exit 1
 	fi
 elif [ $LAUNCH = "update" ] ;then
-	git submodule foreach 'git pull --rebase origin master'
+	git remote remove __template__
+	git remote add    __template__ "https://github.com/donut-lang/Template.git"
+	git fetch         __template__
+	git merge         __template__/master
 elif [ $LAUNCH = "custom" ] ;then
 	echo "============================================================"
 	echo "Custom launch"
