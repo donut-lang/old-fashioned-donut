@@ -66,4 +66,24 @@
 		</scannerConfigBuildInfo>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
+		<buildTargets>
+			<target name="build_debug" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>sh</buildCommand>
+				<buildArguments>bld.sh</buildArguments>
+				<buildTarget>build debug</buildTarget>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>false</useDefaultCommand>
+				<runAllBuilders>true</runAllBuilders>
+			</target>
+			<target name="distclean" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+				<buildCommand>sh</buildCommand>
+				<buildArguments>bld.sh</buildArguments>
+				<buildTarget>distclean</buildTarget>
+				<stopOnError>true</stopOnError>
+				<useDefaultCommand>false</useDefaultCommand>
+				<runAllBuilders>true</runAllBuilders>
+			</target>
+		</buildTargets>
+	</storageModule>
 </cproject>
