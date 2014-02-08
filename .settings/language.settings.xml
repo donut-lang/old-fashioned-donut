@@ -1,39 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project>
-	<configuration id="cdt.managedbuild.toolchain.gnu.base.272885173" name="Linux">
+	<configuration id="cdt.managedbuild.toolchain.gnu.base.1059907105" name="Linux">
 		<extension point="org.eclipse.cdt.core.LanguageSettingsProvider">
-			<provider class="org.eclipse.cdt.core.language.settings.providers.LanguageSettingsGenericProvider" id="org.eclipse.cdt.ui.UserLanguageSettingsProvider" name="CDT User Setting Entries" prefer-non-shared="true" store-entries-with-project="true">
-				<language id="org.eclipse.cdt.core.g++">
-					<resource project-relative-path="">
-						<entry kind="includePath" name="/${ProjName}/src/donut/include">
-							<flag value="BUILTIN|VALUE_WORKSPACE_PATH"/>
-						</entry>
-						<entry kind="includePath" name="/Cinamo/build/debug">
-							<flag value="BUILTIN|VALUE_WORKSPACE_PATH|RESOLVED"/>
-						</entry>
-						<entry kind="includePath" name="/Cinamo/external/tinyxml2">
-							<flag value="BUILTIN|VALUE_WORKSPACE_PATH|RESOLVED"/>
-						</entry>
-						<entry kind="includePath" name="/Cinamo/include">
-							<flag value="BUILTIN|VALUE_WORKSPACE_PATH|RESOLVED"/>
-						</entry>
-						<entry kind="includePath" name="/usr/include/freetype2">
-							<flag value="BUILTIN"/>
-						</entry>
-						<entry kind="macro" name="DEBUG" value="1">
-							<flag value="BUILTIN"/>
-						</entry>
-						<entry kind="macro" name="_DEBUG" value="1">
-							<flag value="BUILTIN"/>
-						</entry>
-						<entry kind="macro" name="__GXX_EXPERIMENTAL_CXX0X__" value="1">
-							<flag value="BUILTIN"/>
-						</entry>
-					</resource>
-				</language>
-			</provider>
+			<provider class="org.eclipse.cdt.core.language.settings.providers.LanguageSettingsGenericProvider" id="org.eclipse.cdt.ui.UserLanguageSettingsProvider" name="CDT User Setting Entries" prefer-non-shared="true"/>
 			<provider copy-of="extension" id="org.eclipse.cdt.managedbuilder.core.GCCBuildCommandParser"/>
-			<provider class="org.eclipse.cdt.managedbuilder.internal.language.settings.providers.GCCBuiltinSpecsDetectorMinGW" console="false" env-hash="433204742" id="org.eclipse.cdt.managedbuilder.core.GCCBuiltinSpecsDetectorMinGW" keep-relative-paths="false" name="CDT GCC Built-in Compiler Settings MinGW" parameter="${COMMAND} -E -P -v -dD &quot;${INPUTS}&quot; -std=gnu++11" store-entries-with-project="true">
+			<provider class="org.eclipse.cdt.managedbuilder.language.settings.providers.GCCBuiltinSpecsDetector" console="false" env-hash="1264512227" id="org.eclipse.cdt.managedbuilder.core.GCCBuiltinSpecsDetector" keep-relative-paths="false" name="CDT GCC Built-in Compiler Settings" parameter="/usr/bin/${COMMAND} -E -P -v -dD &quot;${INPUTS}&quot; -std=gnu++11" store-entries-with-project="true">
 				<language-scope id="org.eclipse.cdt.core.gcc"/>
 				<language-scope id="org.eclipse.cdt.core.g++"/>
 				<language id="org.eclipse.cdt.core.gcc">
@@ -331,7 +302,7 @@
 					<entry kind="macro" name="__GNUC_PATCHLEVEL__" value="2">
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
-					<entry kind="macro" name="__GNUC_RH_RELEASE__" value="1">
+					<entry kind="macro" name="__GNUC_RH_RELEASE__" value="7">
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
 					<entry kind="macro" name="__GNUC__" value="4">
@@ -709,7 +680,7 @@
 					<entry kind="macro" name="__USER_LABEL_PREFIX__" value="">
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
-					<entry kind="macro" name="__VERSION__" value="&quot;4.8.2 20131017 (Red Hat 4.8.2-1)&quot;">
+					<entry kind="macro" name="__VERSION__" value="&quot;4.8.2 20131212 (Red Hat 4.8.2-7)&quot;">
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
 					<entry kind="macro" name="__WCHAR_MAX__" value="2147483647">
@@ -1083,7 +1054,7 @@
 					<entry kind="macro" name="__GNUC_PATCHLEVEL__" value="2">
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
-					<entry kind="macro" name="__GNUC_RH_RELEASE__" value="1">
+					<entry kind="macro" name="__GNUC_RH_RELEASE__" value="7">
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
 					<entry kind="macro" name="__GNUC_STDC_INLINE__" value="1">
@@ -1476,7 +1447,7 @@
 					<entry kind="macro" name="__USER_LABEL_PREFIX__" value="">
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
-					<entry kind="macro" name="__VERSION__" value="&quot;4.8.2 20131017 (Red Hat 4.8.2-1)&quot;">
+					<entry kind="macro" name="__VERSION__" value="&quot;4.8.2 20131212 (Red Hat 4.8.2-7)&quot;">
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
 					<entry kind="macro" name="__WCHAR_MAX__" value="2147483647">
@@ -1543,16 +1514,6 @@
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
 				</language>
-			</provider>
-		</extension>
-	</configuration>
-	<configuration id="cdt.managedbuild.toolchain.gnu.base.272885173.1782848259" name="Win">
-		<extension point="org.eclipse.cdt.core.LanguageSettingsProvider">
-			<provider copy-of="extension" id="org.eclipse.cdt.ui.UserLanguageSettingsProvider"/>
-			<provider copy-of="extension" id="org.eclipse.cdt.managedbuilder.core.GCCBuildCommandParser"/>
-			<provider class="org.eclipse.cdt.managedbuilder.language.settings.providers.GCCBuiltinSpecsDetector" console="false" env-hash="-1774024511" id="org.eclipse.cdt.managedbuilder.core.GCCBuiltinSpecsDetector" keep-relative-paths="false" name="CDT GCC Builtin Compiler Settings" parameter="/usr/bin/${COMMAND} -E -P -v -dD ${INPUTS} -std=gnu++11" store-entries-with-project="true">
-				<language-scope id="org.eclipse.cdt.core.gcc"/>
-				<language-scope id="org.eclipse.cdt.core.g++"/>
 			</provider>
 			<provider-reference id="org.eclipse.cdt.managedbuilder.core.MBSLanguageSettingsProvider" ref="shared-provider"/>
 		</extension>
