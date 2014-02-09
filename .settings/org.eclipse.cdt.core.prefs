@@ -1,7 +1,7 @@
 eclipse.preferences.version=1
 environment/project/cdt.managedbuild.toolchain.gnu.base.1059907105.1122776082/CONF_OPT/delimiter=\:
 environment/project/cdt.managedbuild.toolchain.gnu.base.1059907105.1122776082/CONF_OPT/operation=replace
-environment/project/cdt.managedbuild.toolchain.gnu.base.1059907105.1122776082/CONF_OPT/value=--with-cinamo\=D\:\\Dropbox\\donut\\Cinamo
+environment/project/cdt.managedbuild.toolchain.gnu.base.1059907105.1122776082/CONF_OPT/value=--with-cinamo\=D\:\\Dropbox\\donut\\Cinamo --boost-includes\=D\:\\software\\dev\\applib\\boost\\include --boost-lib\=D\:\\software\\dev\\applib\\boost\\lib
 environment/project/cdt.managedbuild.toolchain.gnu.base.1059907105.1122776082/append=true
 environment/project/cdt.managedbuild.toolchain.gnu.base.1059907105.1122776082/appendContributed=true
 environment/project/cdt.managedbuild.toolchain.gnu.base.1059907105/CONF_OPT/delimiter=\:
