@@ -28,7 +28,6 @@ def options(opt):
 	opt.add_option('--debug', action='store_true', default=False, help='debug build')
 	opt.add_option('--static', action='store_true', default=False, help='use static library')
 	opt.load('compiler_c compiler_cxx')
-	opt.load('boost')
 
 def configure(conf):
 	conf.setenv('release')

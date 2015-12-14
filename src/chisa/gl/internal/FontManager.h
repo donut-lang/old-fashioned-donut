@@ -10,12 +10,11 @@
 #include <deque>
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include <freetype/ftcache.h>
+#include <freetype2/ftcache.h>
 
 #include <cinamo/Logger.h>
 #include <cinamo/Handler.h>
 #include <cinamo/ClassUtil.h>
-
 #define FLOAT_TO_26_6(d) ((FT_F26Dot6)((d) * 64.0))
 #define FLOAT_FROM_26_6(t) ((float)(t) / 64.0)
 
