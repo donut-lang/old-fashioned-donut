@@ -29,13 +29,12 @@ def options(opt):
 	opt.add_option('--static', action='store_true', default=False, help='use static library')
 	opt.load('compiler_c compiler_cxx')
 	opt.load('boost')
-	opt.load('cinamo', tooldir='.helper')
 
 def configure(conf):
 	conf.setenv('release')
 	conf.env.append_value('CXXFLAGS', ['-O3', '-Wall', '-std=gnu++11', '-D__GXX_EXPERIMENTAL_CXX0X__=1'])
 	configureLibrary(conf)
-	
+
 	conf.setenv('debug')
 	denv = conf.env;
 	conf.env.append_value('CXXFLAGS', ['-ggdb','-O0', '-Wall', '-std=gnu++11', '-D__GXX_EXPERIMENTAL_CXX0X__=1','-DDEBUG'])
@@ -47,12 +46,12 @@ def configure(conf):
 
 def configureLibrary(conf):
 	conf.load('compiler_c compiler_cxx')
-	conf.check_cinamo()
 	pkgflags = '--cflags --libs --static' if conf.options.static else '--cflags --libs';
 	conf.check_cfg(package='libpng', uselib_store='LIBPNG', mandatory=True, args=pkgflags)
 	conf.check_cfg(package='freetype2', uselib_store='FREETYPE2', mandatory=True, args=pkgflags)
 	conf.check_cfg(package='sdl2', uselib_store='SDL2', mandatory=True, args=pkgflags)
-	conf.check(features='cxx cxxprogram', lib=['gtest', 'gtest_main', 'pthread'], cflags=['-Wall'], uselib_store='GTEST')
+	conf.check_cfg(package='libcinamo', uselib_store='CINAMO', mandatory=True, args=pkgflags)
+	#conf.check(features='cxx cxxprogram', lib=['gtest', 'gtest_main', 'pthread'], cflags=['-Wall'], uselib_store='GTEST')
 	conf.check(features='cxx cxxprogram', lib=['antlr3c'], cflags=['-Wall'], uselib_store='ANTLR')
 	conf.check(features='cxx cxxprogram', lib='pthread', cflags=['-Wall'], uselib_store='PTHREAD')
 	# プラットフォーム依存
@@ -93,19 +92,19 @@ def build(bld):
 		features = 'cxx cxxstlib',
 		source = CHISA_SRC,
 		target = 'chisa',
-		use=['CINAMO','PPROF','PTHREAD', 'SDL2', 'OPENGL','LIBPNG','FREETYPE2','CAIRO','ANTLR', 'donut'],
+		use=['CINAMO','PPROF','PTHREAD','SDL2','OPENGL','LIBPNG','FREETYPE2','CAIRO','ANTLR','donut'],
 		includes=[DONUT_INCLUDE_DIR])
 	bld(
 		features = 'cxx cxxprogram',
 		source = DONUT_APP_SRC,
 		target = 'donutApp',
-		use=['CINAMO','PPROF','PTHREAD', 'donut'],
+		use=['CINAMO','PPROF','PTHREAD','donut'],
 		includes=[DONUT_INCLUDE_DIR])
 	bld(
 		features = 'cxx cxxprogram',
 		source = MAIN_APP_SRC,
 		target = 'chisaApp',
-		use=['CINAMO','PPROF','PTHREAD', 'SDL2', 'OPENGL','FREETYPE2','CAIRO','donut','chisa'],
+		use=['CINAMO','PPROF','PTHREAD','SDL2','OPENGL','FREETYPE2','CAIRO','donut','chisa'],
 		includes=[DONUT_INCLUDE_DIR])
 	bld(
 		features = 'cxx cxxprogram',
