@@ -50,7 +50,6 @@ def configureLibrary(conf):
 	conf.check_cfg(package='freetype2', uselib_store='FREETYPE2', mandatory=True, args=pkgflags)
 	conf.check_cfg(package='sdl2', uselib_store='SDL2', mandatory=True, args=pkgflags)
 	conf.check_cfg(package='libcinamo', uselib_store='CINAMO', mandatory=True, args=pkgflags)
-	#conf.check(features='cxx cxxprogram', lib=['gtest', 'gtest_main', 'pthread'], cflags=['-Wall'], uselib_store='GTEST')
 	conf.check(features='cxx cxxprogram', lib=['antlr3c'], cflags=['-Wall'], uselib_store='ANTLR')
 	conf.check(features='cxx cxxprogram', lib='pthread', cflags=['-Wall'], uselib_store='PTHREAD')
 	# プラットフォーム依存
@@ -107,11 +106,11 @@ def build(bld):
 		includes=[DONUT_INCLUDE_DIR])
 	bld(
 		features = 'cxx cxxprogram',
-		source = TEST_APP_SRC,
+		source = TEST_APP_SRC+["external/gtest/googletest/src/gtest-all.cc"],
 		target = 'testApp',
 		env = bld.all_envs["coverage"] if ("coverage" in bld.all_envs) else bld.env,
 		use=['CINAMO','PTHREAD', 'SDL2', 'OPENGL','GTEST','donut', 'chisa'],
-		includes=[DONUT_INCLUDE_DIR])
+		includes=[DONUT_INCLUDE_DIR, "external/gtest/googletest/include", "external/gtest/googletest"])
 
 def shutdown(ctx):
 	pass
