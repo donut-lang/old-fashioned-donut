@@ -6,10 +6,10 @@
  */
 
 #include <cinamo/String.h>
-#include <donut/Exception.h>
-#include <donut/object/Heap.h>
-#include <donut/source/Source.h>
-#include <donut/object/DonutClosureObject.h>
+#include <donut/Exception.hpp>
+#include <donut/object/Heap.hpp>
+#include <donut/source/Source.hpp>
+#include <donut/object/DonutClosureObject.hpp>
 
 namespace donut {
 using namespace cinamo;

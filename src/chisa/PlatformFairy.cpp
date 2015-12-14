@@ -5,7 +5,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "PlatformFairy.h"
+#include "PlatformFairy.hpp"
 
 namespace chisa {
 using namespace cinamo;

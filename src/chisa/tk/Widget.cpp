@@ -5,9 +5,9 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "Widget.h"
-#include "element/WidgetElement.h"
-#include "World.h"
+#include "Widget.hpp"
+#include "element/WidgetElement.hpp"
+#include "World.hpp"
 
 namespace chisa {
 namespace tk {

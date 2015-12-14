@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../TestCommon.h"
-#include "../../../src/chisa/gl/Util.h"
+#include "../../TestCommon.hpp"
+#include "../../../src/chisa/gl/Util.hpp"
 
 namespace chisa {
 namespace gl {
@@ -32,4 +32,3 @@ TEST(UtilTest, GetSetTest)
 }
 
 }}
-

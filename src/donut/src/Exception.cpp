@@ -6,7 +6,7 @@
  */
 
 #include <cinamo/String.h>
-#include <donut/Exception.h>
+#include <donut/Exception.hpp>
 
 namespace donut {
 

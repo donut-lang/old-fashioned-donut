@@ -8,7 +8,7 @@
 #include <cinamo/String.h>
 #include <cstdlib>
 
-#include "Color.h"
+#include "Color.hpp"
 
 namespace chisa {
 namespace gl {

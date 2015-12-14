@@ -5,8 +5,8 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "JoystickManager.h"
-#include "Joystick.h"
+#include "JoystickManager.hpp"
+#include "Joystick.hpp"
 
 namespace chisa {
 

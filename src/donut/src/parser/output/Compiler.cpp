@@ -51,9 +51,9 @@
 #include <cstddef>
 #include <algorithm>
 #include <cinamo/String.h>
-#include <donut/source/Source.h>
-#include <donut/source/Closure.h>
-#include "../ParseUtil.h"
+#include <donut/source/Source.hpp>
+#include <donut/source/Closure.hpp>
+#include "../ParseUtil.hpp"
 
 using namespace cinamo;
 using namespace donut;
@@ -319,73 +319,73 @@ pANTLR3_UINT8   CompilerTokenNames[99+4]
 
 // Forward declare the locally static matching functions we have generated.
 //
-static 
+static
  Handler<donut::Source>
 	prog    (pCompiler ctx);
-static 
+static
  Compiler_closure_return
 	closure    (pCompiler ctx, donut::Source* code);
-static 
+static
  std::vector<std::string>
 	vars    (pCompiler ctx, donut::Source* code);
-static 
+static
  std::vector<donut::Instruction>
 	defvar    (pCompiler ctx, donut::Source* code);
-static 
+static
  std::vector<donut::Instruction>
 	block    (pCompiler ctx, donut::Source* code);
-static 
+static
  std::string
 	operation    (pCompiler ctx);
-static 
+static
  std::string
 	unary_operation    (pCompiler ctx);
-static 
+static
  std::vector<donut::Instruction>
 	expr    (pCompiler ctx, donut::Source* code);
-static 
+static
  std::vector<donut::Instruction>
 	preop    (pCompiler ctx, donut::Source* code);
-static 
+static
  std::vector<donut::Instruction>
 	postop    (pCompiler ctx, donut::Source* code);
-static 
+static
  std::vector<donut::Instruction>
 	assignop    (pCompiler ctx, donut::Source* code);
-static 
+static
  std::vector<donut::Instruction>
 	assign    (pCompiler ctx, donut::Source* code);
-static 
+static
  std::vector<donut::Instruction>
 	accessor    (pCompiler ctx, donut::Source* code);
-static 
+static
  std::vector<donut::Instruction>
 	apply    (pCompiler ctx, donut::Source* code);
-static 
+static
  std::vector<donut::Instruction>
 	cond    (pCompiler ctx, donut::Source* code);
-static 
+static
  std::vector<donut::Instruction>
 	loop    (pCompiler ctx, donut::Source* code);
-static 
+static
  std::vector<donut::Instruction>
 	literal    (pCompiler ctx, donut::Source* code);
-static 
+static
  std::vector<donut::Instruction>
 	return_    (pCompiler ctx, donut::Source* code);
-static 
+static
  std::vector<donut::Instruction>
 	interrupt    (pCompiler ctx, donut::Source* code);
-static 
+static
  std::vector<donut::Instruction>
 	object    (pCompiler ctx, donut::Source* code);
-static 
+static
  std::vector<donut::Instruction>
 	object_pair    (pCompiler ctx, donut::Source* code);
-static 
+static
  std::vector<donut::Instruction>
 	array    (pCompiler ctx, donut::Source* code);
-static 
+static
  Compiler_arglist_return
 	arglist    (pCompiler ctx, donut::Source* code);
 static void	CompilerFree(pCompiler ctx);
@@ -526,7 +526,7 @@ CompilerReset (pCompiler ctx)
     return;
  }
 
-/** Return token names used by this 
+/** Return token names used by this
 tree parser
 
  *
@@ -1009,7 +1009,7 @@ prog(pCompiler ctx)
         // d:/Dropbox/src/chisa/src/donut/src/parser\\Compiler.g:39:4: closure[$code.get()]
         {
             FOLLOWPUSH(FOLLOW_closure_in_prog64);
-            closure1=closure(ctx, 
+            closure1=closure(ctx,
             code
             .get());
 
@@ -1025,7 +1025,7 @@ prog(pCompiler ctx)
                 		code
                 ->setEntrypointID( closure1.closureNo
                  );
-                	
+
             }
 
 
@@ -1118,7 +1118,7 @@ closure(pCompiler ctx, donut::Source* code)
                 		retval.asmlist
                 .push_back(Inst::Push | retval.closureNo
                 );
-                	
+
             }
 
 
@@ -1214,7 +1214,7 @@ vars(pCompiler ctx, donut::Source* code)
 
                 	            		asmlist
                 	            .push_back(createStringFromString((IDENT4->getText(IDENT4))));
-                	            	
+
                 	        }
 
 
@@ -1388,13 +1388,13 @@ defvar(pCompiler ctx, donut::Source* code)
                 			asmlist
                 .push_back(Inst::Push | code->constCode<std::nullptr_t>(nullptr));
                 		}
-                		
+
                 asmlist
                 .push_back(Inst::Push | code->constCode<string>(createStringFromString((IDENT5->getText(IDENT5)))));
-                		
+
                 asmlist
                 .push_back(Inst::DefVar);
-                	
+
             }
 
 
@@ -1540,7 +1540,7 @@ block(pCompiler ctx, donut::Source* code)
                 	            .end());
                 	            		asmlist
                 	            .push_back(Inst::Pop | 0);
-                	            	
+
                 	        }
 
 
@@ -1589,7 +1589,7 @@ block(pCompiler ctx, donut::Source* code)
                     .push_back(Inst::Push | code->constCode<std::nullptr_t>(nullptr));
                     	}else{
                     		//最後のpopは削除する（＝値がひとつだけ残る）
-                    		
+
                     asmlist
                     .erase(asmlist
                     .end()-1);
@@ -1727,7 +1727,7 @@ operation(pCompiler ctx)
 
 
         	        {
-        	             sym="opAdd"; 
+        	             sym="opAdd";
         	        }
 
 
@@ -1744,7 +1744,7 @@ operation(pCompiler ctx)
 
 
         	        {
-        	             sym="opSub"; 
+        	             sym="opSub";
         	        }
 
 
@@ -1761,7 +1761,7 @@ operation(pCompiler ctx)
 
 
         	        {
-        	             sym = "opMul"; 
+        	             sym = "opMul";
         	        }
 
 
@@ -1778,7 +1778,7 @@ operation(pCompiler ctx)
 
 
         	        {
-        	             sym = "opDiv"; 
+        	             sym = "opDiv";
         	        }
 
 
@@ -1795,7 +1795,7 @@ operation(pCompiler ctx)
 
 
         	        {
-        	             sym = "opMod"; 
+        	             sym = "opMod";
         	        }
 
 
@@ -1812,7 +1812,7 @@ operation(pCompiler ctx)
 
 
         	        {
-        	             sym = "opAnd"; 
+        	             sym = "opAnd";
         	        }
 
 
@@ -1829,7 +1829,7 @@ operation(pCompiler ctx)
 
 
         	        {
-        	             sym = "opOr"; 
+        	             sym = "opOr";
         	        }
 
 
@@ -1846,7 +1846,7 @@ operation(pCompiler ctx)
 
 
         	        {
-        	             sym = "opLt"; 
+        	             sym = "opLt";
         	        }
 
 
@@ -1863,7 +1863,7 @@ operation(pCompiler ctx)
 
 
         	        {
-        	             sym = "opGt"; 
+        	             sym = "opGt";
         	        }
 
 
@@ -1880,7 +1880,7 @@ operation(pCompiler ctx)
 
 
         	        {
-        	             sym = "opLe"; 
+        	             sym = "opLe";
         	        }
 
 
@@ -1897,7 +1897,7 @@ operation(pCompiler ctx)
 
 
         	        {
-        	             sym = "opGe"; 
+        	             sym = "opGe";
         	        }
 
 
@@ -1914,7 +1914,7 @@ operation(pCompiler ctx)
 
 
         	        {
-        	             sym = "opEq"; 
+        	             sym = "opEq";
         	        }
 
 
@@ -1931,7 +1931,7 @@ operation(pCompiler ctx)
 
 
         	        {
-        	             sym = "opNe"; 
+        	             sym = "opNe";
         	        }
 
 
@@ -2054,7 +2054,7 @@ unary_operation(pCompiler ctx)
 
 
         	        {
-        	             sym="opPlus"; 
+        	             sym="opPlus";
         	        }
 
 
@@ -2071,7 +2071,7 @@ unary_operation(pCompiler ctx)
 
 
         	        {
-        	             sym="opMinus"; 
+        	             sym="opMinus";
         	        }
 
 
@@ -2088,7 +2088,7 @@ unary_operation(pCompiler ctx)
 
 
         	        {
-        	             sym="opNot"; 
+        	             sym="opNot";
         	        }
 
 
@@ -2434,7 +2434,7 @@ expr(pCompiler ctx, donut::Source* code)
         	        {
         	             asmlist
         	            .swap(literal6
-        	            ); 
+        	            );
         	        }
 
 
@@ -2456,7 +2456,7 @@ expr(pCompiler ctx, donut::Source* code)
         	        {
         	             asmlist
         	            .swap(defvar7
-        	            ); 
+        	            );
         	        }
 
 
@@ -2478,7 +2478,7 @@ expr(pCompiler ctx, donut::Source* code)
         	        {
         	             asmlist
         	            .swap(apply8
-        	            ); 
+        	            );
         	        }
 
 
@@ -2500,7 +2500,7 @@ expr(pCompiler ctx, donut::Source* code)
         	        {
         	             asmlist
         	            .swap(loop9
-        	            ); 
+        	            );
         	        }
 
 
@@ -2522,7 +2522,7 @@ expr(pCompiler ctx, donut::Source* code)
         	        {
         	             asmlist
         	            .swap(cond10
-        	            ); 
+        	            );
         	        }
 
 
@@ -2544,7 +2544,7 @@ expr(pCompiler ctx, donut::Source* code)
         	        {
         	             asmlist
         	            .swap(return_11
-        	            ); 
+        	            );
         	        }
 
 
@@ -2566,7 +2566,7 @@ expr(pCompiler ctx, donut::Source* code)
         	        {
         	             asmlist
         	            .swap(interrupt12
-        	            ); 
+        	            );
         	        }
 
 
@@ -2730,7 +2730,7 @@ expr(pCompiler ctx, donut::Source* code)
         	            		//実行：引数：０
         	            		asmlist
         	            .push_back(Inst::Apply | 0);
-        	            	
+
         	        }
 
 
@@ -2809,7 +2809,7 @@ expr(pCompiler ctx, donut::Source* code)
         	            		//実行：引数：１
         	            		asmlist
         	            .push_back(Inst::Apply | 1);
-        	            	
+
         	        }
 
 
@@ -2881,7 +2881,7 @@ expr(pCompiler ctx, donut::Source* code)
         	            .end());
         	            		asmlist
         	            .push_back(Inst::LoadObj);
-        	            	
+
         	        }
 
 
@@ -2929,15 +2929,15 @@ expr(pCompiler ctx, donut::Source* code)
 
         	            		asmlist
         	            .push_back(Inst::Push | code->constCode<string>(createStringFromString((IDENT19->getText(IDENT19)))));
-        	            		
+
         	            asmlist
         	            .push_back(Inst::SearchScope);
         	            		asmlist
         	            .push_back(Inst::Push | code->constCode<string>(createStringFromString((IDENT19->getText(IDENT19)))));
-        	            		
+
         	            asmlist
         	            .push_back(Inst::LoadObj);
-        	            	
+
         	        }
 
 
@@ -4758,13 +4758,13 @@ preop(pCompiler ctx, donut::Source* code)
         	            		//設定先を取得
         	            		asmlist
         	            .push_back(Inst::Push | code->constCode<string>(createStringFromString((IDENT20->getText(IDENT20)))));
-        	            		
+
         	            asmlist
         	            .push_back(Inst::SearchScope);
         	            		asmlist
         	            .push_back(Inst::Push | code->constCode<string>(createStringFromString((IDENT20->getText(IDENT20)))));
         	            			//演算オブジェクト
-        	            			
+
         	            asmlist
         	            .push_back(Inst::PushCopy | 1); //Scope
         	            			asmlist
@@ -4782,13 +4782,13 @@ preop(pCompiler ctx, donut::Source* code)
         	            .push_back(Inst::LoadObj);
         	            			asmlist
         	            .push_back(Inst::Push | code->constCode<int>(1));
-        	            			
+
         	            asmlist
         	            .push_back(Inst::Apply | 1);
         	            		//設定
         	            		asmlist
         	            .push_back(Inst::StoreObj);
-        	            	
+
         	        }
 
 
@@ -4900,13 +4900,13 @@ preop(pCompiler ctx, donut::Source* code)
         	            .push_back(Inst::LoadObj);
         	            			asmlist
         	            .push_back(Inst::Push | code->constCode<int>(1));
-        	            			
+
         	            asmlist
         	            .push_back(Inst::Apply | 1);
         	            		//設定
         	            		asmlist
         	            .push_back(Inst::StoreObj);
-        	            	
+
         	        }
 
 
@@ -6736,16 +6736,16 @@ postop(pCompiler ctx, donut::Source* code)
         	            		asmlist
         	            .push_back(Inst::Push | code->constCode<nullptr_t>(0));
         	            		//設定先を取得
-        	            		
+
         	            asmlist
         	            .push_back(Inst::Push | code->constCode<string>(createStringFromString((IDENT23->getText(IDENT23)))));
-        	            		
+
         	            asmlist
         	            .push_back(Inst::SearchScope);
         	            		asmlist
         	            .push_back(Inst::Push | code->constCode<string>(createStringFromString((IDENT23->getText(IDENT23)))));
         	            			//演算オブジェクト
-        	            			
+
         	            asmlist
         	            .push_back(Inst::PushCopy | 1); //scope
         	            			asmlist
@@ -6765,7 +6765,7 @@ postop(pCompiler ctx, donut::Source* code)
         	            .push_back(Inst::LoadObj);
         	            			asmlist
         	            .push_back(Inst::Push | code->constCode<int>(1));
-        	            			
+
         	            asmlist
         	            .push_back(Inst::Apply | 1);
         	            		//設定
@@ -6773,7 +6773,7 @@ postop(pCompiler ctx, donut::Source* code)
         	            .push_back(Inst::StoreObj);
         	            		asmlist
         	            .push_back(Inst::Pop | 0);
-        	            	
+
         	        }
 
 
@@ -6860,7 +6860,7 @@ postop(pCompiler ctx, donut::Source* code)
         	            		asmlist
         	            .push_back(Inst::Push | code->constCode<nullptr_t>(nullptr));
         	            		//設定先を取得
-        	            		
+
         	            asmlist
         	            .insert(asmlist
         	            .end(), postexpr
@@ -6891,7 +6891,7 @@ postop(pCompiler ctx, donut::Source* code)
         	            .push_back(Inst::LoadObj);
         	            			asmlist
         	            .push_back(Inst::Push | code->constCode<int>(1));
-        	            			
+
         	            asmlist
         	            .push_back(Inst::Apply | 1);
         	            		//設定
@@ -6899,7 +6899,7 @@ postop(pCompiler ctx, donut::Source* code)
         	            .push_back(Inst::StoreObj);
         	            		asmlist
         	            .push_back(Inst::Pop | 0);
-        	            	
+
         	        }
 
 
@@ -8738,14 +8738,14 @@ assignop(pCompiler ctx, donut::Source* code)
         	            		//設定先
         	            		asmlist
         	            .push_back(Inst::Push | code->constCode<string>(createStringFromString((IDENT26->getText(IDENT26)))));
-        	            		
+
         	            asmlist
         	            .push_back(Inst::SearchScope);
         	            		asmlist
         	            .push_back(Inst::Push | code->constCode<string>(createStringFromString((IDENT26->getText(IDENT26)))));
         	            		//名前
         	            			//操作先のオブジェクトを取得
-        	            			
+
         	            asmlist
         	            .push_back(Inst::PushCopy | 1); //scope
         	            			asmlist
@@ -8773,7 +8773,7 @@ assignop(pCompiler ctx, donut::Source* code)
         	            		//設定
         	            		asmlist
         	            .push_back(Inst::StoreObj);
-        	            	
+
         	        }
 
 
@@ -8906,7 +8906,7 @@ assignop(pCompiler ctx, donut::Source* code)
         	            		//設定
         	            		asmlist
         	            .push_back(Inst::StoreObj);
-        	            	
+
         	        }
 
 
@@ -9186,14 +9186,14 @@ assign(pCompiler ctx, donut::Source* code)
         	            		//適用先：解決されたスコープの先
         	            		asmlist
         	            .push_back(Inst::Push | code->constCode<string>(createStringFromString((IDENT27->getText(IDENT27)))));
-        	            		
+
         	            asmlist
         	            .push_back(Inst::SearchScope);
         	            		//第一引数：名前
         	            		asmlist
         	            .push_back(Inst::Push | code->constCode<string>(createStringFromString((IDENT27->getText(IDENT27)))));
         	            		//第二引数：rhsオブジェクト
-        	            		
+
         	            asmlist
         	            .insert(asmlist
         	            .end(), asrhs
@@ -9202,7 +9202,7 @@ assign(pCompiler ctx, donut::Source* code)
         	            		//設定
         	            		asmlist
         	            .push_back(Inst::StoreObj);
-        	            	
+
         	        }
 
 
@@ -9306,7 +9306,7 @@ assign(pCompiler ctx, donut::Source* code)
         	            		//設定
         	            		asmlist
         	            .push_back(Inst::StoreObj);
-        	            	
+
         	        }
 
 
@@ -9450,7 +9450,7 @@ accessor(pCompiler ctx, donut::Source* code)
 
         	            		asmlist
         	            .push_back(Inst::Push | code->constCode<string>(createStringFromString((IDENT28->getText(IDENT28)))));
-        	            	
+
         	        }
 
 
@@ -9480,12 +9480,12 @@ accessor(pCompiler ctx, donut::Source* code)
         	            .push_back(Inst::PushCopy);
         	            		asmlist
         	            .push_back(Inst::Push | code->constCode<string>("toString"));
-        	            		
+
         	            asmlist
         	            .push_back(Inst::LoadObj);
         	            		asmlist
         	            .push_back(Inst::Apply | 0);
-        	            	
+
         	        }
 
 
@@ -9773,14 +9773,14 @@ apply(pCompiler ctx, donut::Source* code)
 
         	            		asmlist
         	            .push_back(Inst::Push | code->constCode<string>(createStringFromString((IDENT30->getText(IDENT30)))));
-        	            		
+
         	            asmlist
         	            .push_back(Inst::SearchScope);
         	            		asmlist
         	            .push_back(Inst::PushCopy);
         	            		asmlist
         	            .push_back(Inst::Push | code->constCode<string>(createStringFromString((IDENT30->getText(IDENT30)))));
-        	            		
+
         	            asmlist
         	            .push_back(Inst::LoadObj);
         	            		asmlist
@@ -9791,7 +9791,7 @@ apply(pCompiler ctx, donut::Source* code)
         	            		asmlist
         	            .push_back(Inst::Apply | ex.count
         	            );
-        	            	
+
         	        }
 
 
@@ -9896,7 +9896,7 @@ apply(pCompiler ctx, donut::Source* code)
         	            		asmlist
         	            .push_back(Inst::Apply | ex.count
         	            );
-        	            	
+
         	        }
 
 
@@ -9963,7 +9963,7 @@ apply(pCompiler ctx, donut::Source* code)
         	            		asmlist
         	            .push_back(Inst::Apply | ex.count
         	            );
-        	            	
+
         	        }
 
 
@@ -10120,7 +10120,7 @@ cond(pCompiler ctx, donut::Source* code)
             	            .end(), iff
             	            .begin(), iff
             	            .end());
-            	            		
+
             	        }
 
 
@@ -10162,7 +10162,7 @@ cond(pCompiler ctx, donut::Source* code)
             	            .end(), ifc
             	            .begin(), ifc
             	            .end());
-            	            		
+
             	        }
 
 
@@ -10327,7 +10327,7 @@ loop(pCompiler ctx, donut::Source* code)
                 .size()+forblock
                 .size()+fornext
                 .size()+4)) & 0xffff));
-                	
+
             }
 
 
@@ -10491,7 +10491,7 @@ literal(pCompiler ctx, donut::Source* code)
 
         	            		asmlist
         	            .push_back(Inst::Push | code->constCode<bool>(true));
-        	            	
+
         	        }
 
 
@@ -10511,7 +10511,7 @@ literal(pCompiler ctx, donut::Source* code)
 
         	            		asmlist
         	            .push_back(Inst::Push | code->constCode<bool>(false));
-        	            	
+
         	        }
 
 
@@ -10531,7 +10531,7 @@ literal(pCompiler ctx, donut::Source* code)
 
         	            		asmlist
         	            .push_back(Inst::Push | code->constCode<nullptr_t>(nullptr));
-        	            	
+
         	        }
 
 
@@ -10551,10 +10551,10 @@ literal(pCompiler ctx, donut::Source* code)
 
         	            		std::string str(createStringFromString((HEX_LITERAL32->getText(HEX_LITERAL32))));
         	            		int const val = parseAs<int>(str, 16, 0);
-        	            		
+
         	            asmlist
         	            .push_back(Inst::Push | code->constCode<int>(val));
-        	            	
+
         	        }
 
 
@@ -10574,10 +10574,10 @@ literal(pCompiler ctx, donut::Source* code)
 
         	            		std::string str(createStringFromString((OCT_LITERAL33->getText(OCT_LITERAL33))));
         	            		int const val = parseAs<int>(str, 8, 0);
-        	            		
+
         	            asmlist
         	            .push_back(Inst::Push | code->constCode<int>(val));
-        	            	
+
         	        }
 
 
@@ -10597,10 +10597,10 @@ literal(pCompiler ctx, donut::Source* code)
 
         	            		std::string str(createStringFromString((INT_LITERAL34->getText(INT_LITERAL34))));
         	            		int const val = parseAs<int>(str, 10, 0);
-        	            		
+
         	            asmlist
         	            .push_back(Inst::Push | code->constCode<int>(val));
-        	            	
+
         	        }
 
 
@@ -10620,10 +10620,10 @@ literal(pCompiler ctx, donut::Source* code)
 
         	            		std::string str(createStringFromString((FLOAT_LITERAL35->getText(FLOAT_LITERAL35))));
         	            		float const val = parseAs<float>(str, NAN);
-        	            		
+
         	            asmlist
         	            .push_back(Inst::Push | code->constCode<float>(val));
-        	            	
+
         	        }
 
 
@@ -10643,10 +10643,10 @@ literal(pCompiler ctx, donut::Source* code)
 
         	            		std::string str(createStringFromString((STRING_SINGLE36->getText(STRING_SINGLE36))));
         	            		str = unescapeString(str.substr(1, str.length()-2));
-        	            		
+
         	            asmlist
         	            .push_back(Inst::Push | code->constCode<string>(str));
-        	            	
+
         	        }
 
 
@@ -10666,10 +10666,10 @@ literal(pCompiler ctx, donut::Source* code)
 
         	            		std::string str(createStringFromString((STRING_DOUBLE37->getText(STRING_DOUBLE37))));
         	            		str = unescapeString(str.substr(1, str.length()-2));
-        	            		
+
         	            asmlist
         	            .push_back(Inst::Push | code->constCode<string>(str));
-        	            	
+
         	        }
 
 
@@ -10691,7 +10691,7 @@ literal(pCompiler ctx, donut::Source* code)
         	        {
         	             asmlist
         	            .swap(array38
-        	            ); 
+        	            );
         	        }
 
 
@@ -10713,7 +10713,7 @@ literal(pCompiler ctx, donut::Source* code)
         	        {
         	             asmlist
         	            .swap(object39
-        	            ); 
+        	            );
         	        }
 
 
@@ -10735,7 +10735,7 @@ literal(pCompiler ctx, donut::Source* code)
         	        {
         	             asmlist
         	            .swap(closure40.asmlist
-        	            ); 
+        	            );
         	        }
 
 
@@ -10753,7 +10753,7 @@ literal(pCompiler ctx, donut::Source* code)
 
         	        {
         	             asmlist
-        	            .push_back(Inst::PushSelf); 
+        	            .push_back(Inst::PushSelf);
         	        }
 
 
@@ -10839,7 +10839,7 @@ return_(pCompiler ctx, donut::Source* code)
                 .end());
                 		asmlist
                 .push_back(Inst::Return | 0);
-                	
+
             }
 
 
@@ -10922,7 +10922,7 @@ interrupt(pCompiler ctx, donut::Source* code)
                 .end());
                 		asmlist
                 .push_back(Inst::Interrupt | 0);
-                	
+
             }
 
 
@@ -11020,7 +11020,7 @@ object(pCompiler ctx, donut::Source* code)
                 	            .begin(), v
                 	            .end());
                 	            		size+=1;
-                	            	
+
                 	        }
 
 
@@ -11048,7 +11048,7 @@ object(pCompiler ctx, donut::Source* code)
 
                 		asmlist
                 .push_back(Inst::ConstructObject | size);
-                	
+
             }
 
 
@@ -11136,13 +11136,13 @@ object_pair(pCompiler ctx, donut::Source* code)
 
                 		asmlist
                 .push_back(Inst::Push | code->constCode<string>(createStringFromString((IDENT43->getText(IDENT43)))));
-                		
+
                 asmlist
                 .insert(asmlist
                 .end(), v
                 .begin(), v
                 .end());
-                	
+
             }
 
 
@@ -11282,7 +11282,7 @@ array(pCompiler ctx, donut::Source* code)
                 	            .begin(), v
                 	            .end());
                 	            			array_count+=1;
-                	            		
+
                 	        }
 
 
@@ -11310,7 +11310,7 @@ array(pCompiler ctx, donut::Source* code)
 
                 		asmlist
                 .push_back(Inst::ConstructArray | array_count);
-                	
+
             }
 
 
@@ -11455,7 +11455,7 @@ arglist(pCompiler ctx, donut::Source* code)
                 	            .end());
                 	            		retval.count
                 	            +=1;
-                	            	
+
                 	        }
 
 

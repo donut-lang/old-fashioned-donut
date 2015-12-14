@@ -5,7 +5,7 @@
  *      Author: psi
  */
 
-#include "Mapper4.h"
+#include "Mapper4.hpp"
 
 namespace nes {
 

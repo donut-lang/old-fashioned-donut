@@ -5,7 +5,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "DrawableManager.h"
+#include "DrawableManager.hpp"
 
 namespace chisa {
 namespace gl {

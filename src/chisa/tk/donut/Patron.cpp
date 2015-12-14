@@ -5,9 +5,9 @@
  * Copyright 2012-2013, PSI
  */
 
-#include <donut/Exception.h>
-#include "Patron.h"
-#include "../World.h"
+#include <donut/Exception.hpp>
+#include "Patron.hpp"
+#include "../World.hpp"
 
 namespace chisa {
 using namespace cinamo;
@@ -60,5 +60,3 @@ void Patron::onGlobalObjectInitialized(Handler< ::donut::Heap> const& heap)
 }
 
 }}
-
-

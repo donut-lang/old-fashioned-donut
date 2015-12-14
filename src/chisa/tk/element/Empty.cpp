@@ -7,8 +7,8 @@
 
 #include <cinamo/String.h>
 
-#include "Empty.h"
-#include "ElementFactory.h"
+#include "Empty.hpp"
+#include "ElementFactory.hpp"
 
 namespace chisa {
 namespace tk {

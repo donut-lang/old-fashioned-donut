@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../TestCommon.h"
-#include <donut/Exception.h>
+#include "../TestCommon.hpp"
+#include <donut/Exception.hpp>
 
 namespace donut {
 
@@ -58,4 +58,3 @@ TEST(DonutExceptionTest, EmptyTest)
 }
 
 }
-

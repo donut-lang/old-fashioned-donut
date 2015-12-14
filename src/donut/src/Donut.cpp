@@ -7,9 +7,9 @@
 
 #include <iostream>
 #include <cinamo/Handler.h>
-#include <donut/Patron.h>
-#include <donut/Donut.h>
-#include "parser/Parser.h"
+#include <donut/Patron.hpp>
+#include <donut/Donut.hpp>
+#include "parser/Parser.hpp"
 
 namespace donut {
 

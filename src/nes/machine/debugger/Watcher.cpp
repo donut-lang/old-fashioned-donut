@@ -6,8 +6,8 @@
  */
 
 #include <algorithm>
-#include "Watcher.h"
-#include "../fairy/DebuggerFairy.h"
+#include "Watcher.hpp"
+#include "../fairy/DebuggerFairy.hpp"
 
 namespace nes {
 

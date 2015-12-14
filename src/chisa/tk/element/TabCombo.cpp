@@ -5,11 +5,11 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "TabCombo.h"
-#include "ElementFactory.h"
-#include "FrameCombo.h"
-#include "SplitCombo.h"
-#include "TabButton.h"
+#include "TabCombo.hpp"
+#include "ElementFactory.hpp"
+#include "FrameCombo.hpp"
+#include "SplitCombo.hpp"
+#include "TabButton.hpp"
 
 namespace cinamo {
 namespace xml {

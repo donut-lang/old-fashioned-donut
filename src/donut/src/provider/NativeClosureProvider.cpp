@@ -5,8 +5,8 @@
  * Copyright 2012-2013, PSI
  */
 
-#include <donut/object/NativeClosureObject.h>
-#include <donut/provider/NativeClosureProvider.h>
+#include <donut/object/NativeClosureObject.hpp>
+#include <donut/provider/NativeClosureProvider.hpp>
 
 namespace donut {
 

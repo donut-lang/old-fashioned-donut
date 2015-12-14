@@ -6,9 +6,9 @@
  */
 
 #include <cinamo/Platform.h>
-#include "SDLPlatformFairy.h"
-#include "SDLJoystickManager.h"
-#include "SDLQuartet.h"
+#include "SDLPlatformFairy.hpp"
+#include "SDLJoystickManager.hpp"
+#include "SDLQuartet.hpp"
 
 namespace chisa {
 

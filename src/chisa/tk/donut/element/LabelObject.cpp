@@ -5,7 +5,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "LabelObject.h"
+#include "LabelObject.hpp"
 
 namespace chisa {
 namespace tk {

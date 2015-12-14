@@ -1,5 +1,5 @@
-#include "exception/EmulatorException.h"
-#include "VirtualMachine.h"
+#include "exception/EmulatorException.hpp"
+#include "VirtualMachine.hpp"
 #include <stdio.h>
 #include <string.h>
 

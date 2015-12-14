@@ -6,7 +6,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "ScriptButtonObject.h"
+#include "ScriptButtonObject.hpp"
 
 namespace chisa {
 namespace tk {

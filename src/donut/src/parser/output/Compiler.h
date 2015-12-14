@@ -10,7 +10,7 @@
  * C language generator and runtime by Jim Idle, jimi|hereisanat|idle|dotgoeshere|ws.
  *
  *
- * The tree parser 
+ * The tree parser
 Compiler
 
 has the callable functions (rules) shown below,
@@ -28,73 +28,73 @@ has the callable functions (rules) shown below,
  *
  * The methods in pCompiler are  as follows:
  *
- *  - 
+ *  -
  Handler<donut::Source>
       pCompiler->prog(pCompiler)
- *  - 
+ *  -
  Compiler_closure_return
       pCompiler->closure(pCompiler)
- *  - 
+ *  -
  std::vector<std::string>
       pCompiler->vars(pCompiler)
- *  - 
+ *  -
  std::vector<donut::Instruction>
       pCompiler->defvar(pCompiler)
- *  - 
+ *  -
  std::vector<donut::Instruction>
       pCompiler->block(pCompiler)
- *  - 
+ *  -
  std::string
       pCompiler->operation(pCompiler)
- *  - 
+ *  -
  std::string
       pCompiler->unary_operation(pCompiler)
- *  - 
+ *  -
  std::vector<donut::Instruction>
       pCompiler->expr(pCompiler)
- *  - 
+ *  -
  std::vector<donut::Instruction>
       pCompiler->preop(pCompiler)
- *  - 
+ *  -
  std::vector<donut::Instruction>
       pCompiler->postop(pCompiler)
- *  - 
+ *  -
  std::vector<donut::Instruction>
       pCompiler->assignop(pCompiler)
- *  - 
+ *  -
  std::vector<donut::Instruction>
       pCompiler->assign(pCompiler)
- *  - 
+ *  -
  std::vector<donut::Instruction>
       pCompiler->accessor(pCompiler)
- *  - 
+ *  -
  std::vector<donut::Instruction>
       pCompiler->apply(pCompiler)
- *  - 
+ *  -
  std::vector<donut::Instruction>
       pCompiler->cond(pCompiler)
- *  - 
+ *  -
  std::vector<donut::Instruction>
       pCompiler->loop(pCompiler)
- *  - 
+ *  -
  std::vector<donut::Instruction>
       pCompiler->literal(pCompiler)
- *  - 
+ *  -
  std::vector<donut::Instruction>
       pCompiler->return_(pCompiler)
- *  - 
+ *  -
  std::vector<donut::Instruction>
       pCompiler->interrupt(pCompiler)
- *  - 
+ *  -
  std::vector<donut::Instruction>
       pCompiler->object(pCompiler)
- *  - 
+ *  -
  std::vector<donut::Instruction>
       pCompiler->object_pair(pCompiler)
- *  - 
+ *  -
  std::vector<donut::Instruction>
       pCompiler->array(pCompiler)
- *  - 
+ *  -
  Compiler_arglist_return
       pCompiler->arglist(pCompiler)
  *
@@ -163,9 +163,9 @@ typedef struct Compiler_Ctx_struct Compiler, * pCompiler;
 #include <cstddef>
 #include <algorithm>
 #include <cinamo/String.h>
-#include <donut/source/Source.h>
-#include <donut/source/Closure.h>
-#include "../ParseUtil.h"
+#include <donut/source/Source.hpp>
+#include <donut/source/Closure.hpp>
+#include "../ParseUtil.hpp"
 
 using namespace cinamo;
 using namespace donut;
@@ -220,7 +220,7 @@ typedef struct Compiler_arglist_return_struct
 
 
 
-/** Context tracking structure for 
+/** Context tracking structure for
 Compiler
 
  */
@@ -317,7 +317,7 @@ ANTLR3_API pCompiler CompilerNewSSD      (
 pANTLR3_COMMON_TREE_NODE_STREAM
  instream, pANTLR3_RECOGNIZER_SHARED_STATE state);
 
-/** Symbolic definitions of all the tokens that the 
+/** Symbolic definitions of all the tokens that the
 tree parser
  will work with.
  * \{

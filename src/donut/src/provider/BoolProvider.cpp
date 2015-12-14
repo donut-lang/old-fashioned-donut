@@ -6,9 +6,9 @@
  */
 
 #include <cinamo/String.h>
-#include <donut/Exception.h>
-#include <donut/object/Heap.h>
-#include <donut/provider/BoolProvider.h>
+#include <donut/Exception.hpp>
+#include <donut/object/Heap.hpp>
+#include <donut/provider/BoolProvider.hpp>
 
 namespace donut {
 using namespace cinamo;

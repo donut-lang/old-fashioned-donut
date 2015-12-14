@@ -7,8 +7,8 @@
 
 #include <cinamo/Exception.h>
 
-#include "AbstractToggleButton.h"
-#include "../../gl/Canvas.h"
+#include "AbstractToggleButton.hpp"
+#include "../../gl/Canvas.hpp"
 
 namespace chisa {
 namespace tk {

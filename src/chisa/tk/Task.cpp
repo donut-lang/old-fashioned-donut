@@ -5,7 +5,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "Task.h"
+#include "Task.hpp"
 
 namespace chisa {
 namespace tk {

@@ -5,7 +5,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "../Font.h"
+#include "../Font.hpp"
 #include <cinamo/FileSystem.h>
 
 namespace chisa {
@@ -98,4 +98,3 @@ void FontManager::backFont(Font* font)
 }
 
 }}}
-

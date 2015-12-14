@@ -5,9 +5,9 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "../Heaven.h"
-#include "LoneAngel.h"
-#include "../donut/Patron.h"
+#include "../Heaven.hpp"
+#include "LoneAngel.hpp"
+#include "../donut/Patron.hpp"
 
 namespace chisa {
 namespace tk {

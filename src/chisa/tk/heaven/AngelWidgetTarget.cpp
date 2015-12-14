@@ -5,12 +5,12 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "AngelWidgetTarget.h"
-#include "../Element.h"
-#include "../element/WidgetElement.h"
-#include "../Widget.h"
-#include "../World.h"
-#include "../donut/Patron.h"
+#include "AngelWidgetTarget.hpp"
+#include "../Element.hpp"
+#include "../element/WidgetElement.hpp"
+#include "../Widget.hpp"
+#include "../World.hpp"
+#include "../donut/Patron.hpp"
 
 namespace chisa {
 namespace tk {
@@ -102,4 +102,3 @@ Handler<AngelWidgetTarget> AngelWidgetTarget::toWidgetTarget()
 }
 
 }}
-

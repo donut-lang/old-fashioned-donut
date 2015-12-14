@@ -7,12 +7,12 @@
 
 #include <algorithm>
 #include <cinamo/String.h>
-#include <donut/vm/Machine.h>
-#include <donut/Exception.h>
-#include <donut/object/StringObject.h>
-#include <donut/object/FloatObject.h>
-#include <donut/object/NativeClosureObject.h>
-#include <donut/object/DonutClosureObject.h>
+#include <donut/vm/Machine.hpp>
+#include <donut/Exception.hpp>
+#include <donut/object/StringObject.hpp>
+#include <donut/object/FloatObject.hpp>
+#include <donut/object/NativeClosureObject.hpp>
+#include <donut/object/DonutClosureObject.hpp>
 
 
 namespace donut {
@@ -422,4 +422,3 @@ Handler<Object> Machine::run()
 }
 
 }
-

@@ -8,10 +8,10 @@
 #include <tinyxml2.h>
 #include <cinamo/Exception.h>
 
-#include "ScriptButton.h"
-#include "../../gl/Canvas.h"
-#include "../../gl/DrawableManager.h"
-#include "../World.h"
+#include "ScriptButton.hpp"
+#include "../../gl/Canvas.hpp"
+#include "../../gl/DrawableManager.hpp"
+#include "../World.hpp"
 
 namespace chisa {
 namespace tk {

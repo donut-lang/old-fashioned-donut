@@ -5,7 +5,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include <donut/native/Decoder.h>
+#include <donut/native/Decoder.hpp>
 
 namespace donut {
 namespace native {

@@ -5,10 +5,10 @@
  * Copyright 2012-2013, PSI
  */
 
-#include <donut/object/Object.h>
-#include <donut/object/Heap.h>
-#include <donut/object/DonutClosureObject.h>
-#include <donut/provider/DonutProvider.h>
+#include <donut/object/Object.hpp>
+#include <donut/object/Heap.hpp>
+#include <donut/object/DonutClosureObject.hpp>
+#include <donut/provider/DonutProvider.hpp>
 
 
 namespace donut {

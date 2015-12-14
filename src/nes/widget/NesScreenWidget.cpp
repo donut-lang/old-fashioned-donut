@@ -5,11 +5,11 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "NesScreenWidget.h"
-#include "../NesGeist.h"
-#include "../../chisa/tk/World.h"
-#include "../../chisa/geom/Vector.h"
-#include "../../chisa/geom/Area.h"
+#include "NesScreenWidget.hpp"
+#include "../NesGeist.hpp"
+#include "../../chisa/tk/World.hpp"
+#include "../../chisa/geom/Vector.hpp"
+#include "../../chisa/geom/Area.hpp"
 
 namespace nes {
 

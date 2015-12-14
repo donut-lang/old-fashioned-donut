@@ -5,8 +5,8 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "SystemPatron.h"
-#include "SystemObject.h"
+#include "SystemPatron.hpp"
+#include "SystemObject.hpp"
 
 namespace donut_cli {
 SystemPatron::SystemPatron(int argc, char** argv): argc_(argc), argv_(argv){

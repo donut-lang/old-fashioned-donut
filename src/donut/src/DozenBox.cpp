@@ -5,7 +5,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include <donut/DozenBox.h>
+#include <donut/DozenBox.hpp>
 
 namespace donut {
 

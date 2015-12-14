@@ -5,12 +5,12 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "Hexe.h"
-#include "widget/NesScreenWidget.h"
-#include "widget/NesMemoryWidget.h"
-#include "widget/NesMemoryCompare.h"
-#include "widget/NesTraceWidget.h"
-#include "NesGeist.h"
+#include "Hexe.hpp"
+#include "widget/NesScreenWidget.hpp"
+#include "widget/NesMemoryWidget.hpp"
+#include "widget/NesMemoryCompare.hpp"
+#include "widget/NesTraceWidget.hpp"
+#include "NesGeist.hpp"
 
 namespace nes {
 

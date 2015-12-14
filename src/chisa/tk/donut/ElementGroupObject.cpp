@@ -6,7 +6,7 @@
  */
 
 #include <functional>
-#include "ElementGroupObject.h"
+#include "ElementGroupObject.hpp"
 
 namespace chisa {
 namespace tk {

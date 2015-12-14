@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../TestCommon.h"
+#include "../TestCommon.hpp"
 #include <cinamo/Handler.h>
 
 namespace cinamo {

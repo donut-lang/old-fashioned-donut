@@ -7,7 +7,7 @@
 
 #include <algorithm>
 #include <cinamo/String.h>
-#include <donut/vm/Machine.h>
+#include <donut/vm/Machine.hpp>
 
 namespace donut {
 
@@ -78,4 +78,3 @@ void Machine::onDiscardHistoryNotify()
 }
 
 }
-

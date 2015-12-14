@@ -7,9 +7,9 @@
 
 #include <sstream>
 #include <cinamo/String.h>
-#include <donut/Exception.h>
-#include <donut/object/Heap.h>
-#include <donut/object/DonutObject.h>
+#include <donut/Exception.hpp>
+#include <donut/object/Heap.hpp>
+#include <donut/object/DonutObject.hpp>
 
 namespace donut {
 using namespace cinamo;

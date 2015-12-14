@@ -8,8 +8,8 @@
 #include <cinamo/Exception.h>
 #include <tinyxml2.h>
 
-#include "NodeReader.h"
-#include "Node.h"
+#include "NodeReader.hpp"
+#include "Node.hpp"
 
 namespace chisa {
 namespace doc {

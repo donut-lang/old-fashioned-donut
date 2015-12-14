@@ -5,8 +5,8 @@
  * Copyright 2012-2013, PSI
  */
 
-#include <donut/Donut.h>
-#include <donut/Clock.h>
+#include <donut/Donut.hpp>
+#include <donut/Clock.hpp>
 
 namespace donut {
 

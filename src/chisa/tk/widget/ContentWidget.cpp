@@ -5,14 +5,14 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "../../tk/World.h"
-#include "../../geom/Area.h"
-#include "../../geom/Vector.h"
-#include "../../doc/node/NodeReader.h"
-#include "../../doc/node/Node.h"
-#include "../../doc/dispose/Disposer.h"
-#include "../Widget.h"
-#include "ContentWidget.h"
+#include "../../tk/World.hpp"
+#include "../../geom/Area.hpp"
+#include "../../geom/Vector.hpp"
+#include "../../doc/node/NodeReader.hpp"
+#include "../../doc/node/Node.hpp"
+#include "../../doc/dispose/Disposer.hpp"
+#include "../Widget.hpp"
+#include "ContentWidget.hpp"
 #include <tinyxml2.h>
 
 namespace chisa {
@@ -150,4 +150,3 @@ chisa::geom::Area ContentWidget::findTargetImpl(const std::string& target)
 }
 
 }}
-

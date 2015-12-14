@@ -5,7 +5,7 @@
  *      Author: psi
  */
 
-#include "VRC4.h"
+#include "VRC4.hpp"
 
 namespace nes {
 

@@ -7,12 +7,12 @@
 
 #include <algorithm>
 
-#include "WidgetFactory.h"
-#include "ImageWidget.h"
-#include "ContentWidget.h"
-#include "../World.h"
+#include "WidgetFactory.hpp"
+#include "ImageWidget.hpp"
+#include "ContentWidget.hpp"
+#include "../World.hpp"
 
-#include "../donut/widget/ContentObject.h"
+#include "../donut/widget/ContentObject.hpp"
 
 namespace chisa {
 namespace tk {

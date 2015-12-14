@@ -9,7 +9,7 @@
 #include <cstdlib>
 #include <sstream>
 #include <antlr3.h>
-#include "ParseUtil.h"
+#include "ParseUtil.hpp"
 
 namespace donut{
 

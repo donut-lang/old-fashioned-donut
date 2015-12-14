@@ -5,9 +5,9 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "Action.h"
-#include "World.h"
-#include "Element.h"
+#include "Action.hpp"
+#include "World.hpp"
+#include "Element.hpp"
 #include <algorithm>
 
 namespace chisa {

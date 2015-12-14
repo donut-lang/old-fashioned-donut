@@ -5,11 +5,11 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "ElementServant.h"
-#include "../Element.h"
-#include "../World.h"
-#include "../donut/Patron.h"
-#include "../../gl/DecoUtil.h"
+#include "ElementServant.hpp"
+#include "../Element.hpp"
+#include "../World.hpp"
+#include "../donut/Patron.hpp"
+#include "../../gl/DecoUtil.hpp"
 
 namespace chisa {
 namespace tk {
@@ -120,4 +120,3 @@ Handler<Element> ElementServant::findElementByPoint(const geom::Point& screenVec
 }
 
 }}
-

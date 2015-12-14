@@ -6,7 +6,7 @@
  */
 
 #include <string>
-#include "Buffer.h"
+#include "Buffer.hpp"
 
 namespace chisa {
 namespace gl{

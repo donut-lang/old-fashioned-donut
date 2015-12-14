@@ -1,4 +1,4 @@
-#include "EmulatorException.h"
+#include "EmulatorException.hpp"
 
 namespace nes {
 

@@ -8,11 +8,11 @@
 #include <cstring>
 #include <cinamo/String.h>
 
-#include "Drawable.h"
-#include "../geom/Area.h"
-#include "../geom/Vector.h"
-#include "Canvas.h"
-#include "DrawableManager.h"
+#include "Drawable.hpp"
+#include "../geom/Area.hpp"
+#include "../geom/Vector.hpp"
+#include "Canvas.hpp"
+#include "DrawableManager.hpp"
 
 namespace chisa {
 namespace gl {
@@ -341,4 +341,3 @@ std::string TextDrawable::toString() const
 //-----------------------------------------------------------------------------
 
 }}
-

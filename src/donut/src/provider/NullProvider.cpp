@@ -5,9 +5,9 @@
  * Copyright 2012-2013, PSI
  */
 
-#include <donut/Exception.h>
-#include <donut/provider/NullProvider.h>
-#include <donut/object/Heap.h>
+#include <donut/Exception.hpp>
+#include <donut/provider/NullProvider.hpp>
+#include <donut/object/Heap.hpp>
 
 namespace donut {
 

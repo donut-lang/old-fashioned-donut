@@ -5,9 +5,9 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "NesGeistObject.h"
-#include "../../chisa/tk/World.h"
-#include "../machine/debugger/Assembler.h"
+#include "NesGeistObject.hpp"
+#include "../../chisa/tk/World.hpp"
+#include "../machine/debugger/Assembler.hpp"
 
 namespace nes {
 using namespace cinamo;

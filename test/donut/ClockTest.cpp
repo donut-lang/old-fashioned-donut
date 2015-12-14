@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "lang/DonutHelper.h"
+#include "lang/DonutHelper.hpp"
 #include <math.h>
 
 namespace donut {
@@ -106,5 +106,3 @@ TEST(ClockTest, ClockSaveTest)
 }
 
 }
-
-

@@ -6,8 +6,8 @@
  */
 
 #include <functional>
-#include "ServantObject.h"
-#include "ElementObject.h"
+#include "ServantObject.hpp"
+#include "ElementObject.hpp"
 
 namespace chisa {
 namespace tk {
@@ -324,5 +324,3 @@ std::string ContentUnderlineServantObject::reprImpl(const Handler<Heap>& heap) c
 	return ::cinamo::format("(ContentUnderlineServantObject: %p)", this);
 }
 }}
-
-

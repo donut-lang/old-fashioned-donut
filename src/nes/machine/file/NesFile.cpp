@@ -2,8 +2,8 @@
 #include <fstream>
 #include <string.h>
 #include <cinamo/XArchiver.h>
-#include "./NesFile.h"
-#include "../exception/EmulatorException.h"
+#include "./NesFile.hpp"
+#include "../exception/EmulatorException.hpp"
 
 namespace nes {
 

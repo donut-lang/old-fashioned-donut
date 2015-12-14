@@ -5,7 +5,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "Node.h"
+#include "Node.hpp"
 
 namespace chisa {
 namespace doc {
@@ -171,4 +171,3 @@ void Text::appendObject( Text::DataType const& d ) {
 }
 
 }}
-

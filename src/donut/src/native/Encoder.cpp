@@ -5,11 +5,11 @@
  * Copyright 2012-2013, PSI
  */
 
-#include <donut/native/Encoder.h>
+#include <donut/native/Encoder.hpp>
 
-#include <donut/object/Heap.h>
-#include <donut/object/StringObject.h>
-#include <donut/object/FloatObject.h>
+#include <donut/object/Heap.hpp>
+#include <donut/object/StringObject.hpp>
+#include <donut/object/FloatObject.hpp>
 
 namespace donut {
 namespace native {

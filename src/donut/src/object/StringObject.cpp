@@ -7,7 +7,7 @@
 
 #include <algorithm>
 #include <cinamo/Handler.h>
-#include <donut/object/StringObject.h>
+#include <donut/object/StringObject.hpp>
 
 namespace donut {
 using namespace cinamo;
@@ -76,4 +76,3 @@ void StringObject::loadImpl( Handler<Heap> const& heap, XValue const& data )
 }
 
 }
-

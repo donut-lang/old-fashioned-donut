@@ -5,7 +5,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "SplitComboObject.h"
+#include "SplitComboObject.hpp"
 
 namespace chisa {
 namespace tk {

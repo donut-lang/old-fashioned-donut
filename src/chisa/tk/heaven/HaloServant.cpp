@@ -5,10 +5,10 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "HaloServant.h"
-#include "../Element.h"
-#include "../World.h"
-#include "../donut/Patron.h"
+#include "HaloServant.hpp"
+#include "../Element.hpp"
+#include "../World.hpp"
+#include "../donut/Patron.hpp"
 
 namespace chisa {
 namespace tk {
@@ -45,4 +45,3 @@ geom::Box HaloServant::reshapeImpl(const geom::Area& area)
 }
 
 }}
-

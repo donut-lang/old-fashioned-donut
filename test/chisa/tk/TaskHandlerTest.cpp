@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../TestCommon.h"
-#include "../../chisa/tk/Task.h"
+#include "../../TestCommon.hpp"
+#include "../../chisa/tk/Task.hpp"
 #include <tinyxml2.h>
 #include <typeinfo>
 

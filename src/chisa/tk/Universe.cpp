@@ -7,10 +7,10 @@
 
 #include <cinamo/FileSystem.h>
 
-#include "Universe.h"
-#include "World.h"
-#include "../input/JoystickManager.h"
-#include "../gl/DrawableManager.h"
+#include "Universe.hpp"
+#include "World.hpp"
+#include "../input/JoystickManager.hpp"
+#include "../gl/DrawableManager.hpp"
 
 static const std::string TAG("Universe");
 

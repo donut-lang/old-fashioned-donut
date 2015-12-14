@@ -8,7 +8,7 @@
 #include <cinamo/FileSystem.h>
 #include <cinamo/String.h>
 
-#include "Font.h"
+#include "Font.hpp"
 
 namespace chisa {
 namespace gl {

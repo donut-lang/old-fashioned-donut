@@ -9,7 +9,7 @@
 #include <cstdlib>
 #include <cinamo/Exception.h>
 #include <cinamo/String.h>
-#include "Assembler.h"
+#include "Assembler.hpp"
 
 namespace nes {
 using namespace cinamo;

@@ -5,8 +5,8 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "ScrollCombo.h"
-#include "../World.h"
+#include "ScrollCombo.hpp"
+#include "../World.hpp"
 
 namespace chisa {
 namespace tk {

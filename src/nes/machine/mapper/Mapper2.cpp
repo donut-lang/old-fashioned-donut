@@ -5,7 +5,7 @@
  *      Author: psi
  */
 
-#include "Mapper2.h"
+#include "Mapper2.hpp"
 #include <string.h>
 
 namespace nes {

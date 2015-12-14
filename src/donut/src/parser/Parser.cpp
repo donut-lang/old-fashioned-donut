@@ -5,11 +5,11 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "Parser.h"
+#include "Parser.hpp"
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <donut/Exception.h>
+#include <donut/Exception.hpp>
 
 namespace donut {
 	class Closure;
@@ -18,7 +18,7 @@ namespace donut {
 #include "output/DonutLexer.h"
 #include "output/DonutParser.h"
 #include "output/Compiler.h"
-#include "ParseUtil.h"
+#include "ParseUtil.hpp"
 
 namespace donut {
 

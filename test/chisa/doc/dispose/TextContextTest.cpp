@@ -16,12 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../../TestCommon.h"
-#include "../../chisa/gl/DrawableManager.h"
-#include "../../chisa/gl/Color.h"
-#include "../../chisa/gl/Canvas.h"
-#include "../../chisa/doc/render/RenderTree.h"
-#include "../../chisa/doc/dispose/TextContext.h"
+#include "../../../TestCommon.hpp"
+#include "../../chisa/gl/DrawableManager.hpp"
+#include "../../chisa/gl/Color.hpp"
+#include "../../chisa/gl/Canvas.hpp"
+#include "../../chisa/doc/render/RenderTree.hpp"
+#include "../../chisa/doc/dispose/TextContext.hpp"
 #include <math.h>
 
 namespace chisa {
@@ -110,4 +110,3 @@ TEST_F(TextContextTest, FontPushTest)
 }
 
 }}
-

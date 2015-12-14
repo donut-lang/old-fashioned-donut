@@ -5,9 +5,9 @@
  * Copyright 2012-2013, PSI
  */
 
-#include <donut/Clock.h>
-#include <donut/object/Object.h>
-#include <donut/object/Slot.h>
+#include <donut/Clock.hpp>
+#include <donut/object/Object.hpp>
+#include <donut/object/Slot.hpp>
 
 namespace donut {
 

@@ -5,8 +5,8 @@
  *      Author: psi
  */
 
-#include "../../TestCommon.h"
-#include "../../../src/chisa/geom/Matrix.h"
+#include "../../TestCommon.hpp"
+#include "../../../src/chisa/geom/Matrix.hpp"
 #include <math.h>
 
 namespace chisa {
@@ -98,5 +98,3 @@ TEST_F(MatrixTest, MultTest)
 }
 
 }}
-
-

@@ -17,8 +17,8 @@
  */
 
 #include <math.h>
-#include "DonutHelper.h"
-#include <donut/object/ReactiveNativeObject.h>
+#include "DonutHelper.hpp"
+#include <donut/object/ReactiveNativeObject.hpp>
 
 namespace donut {
 namespace {
@@ -315,4 +315,3 @@ TEST_F(ReactiveObjectTest, BackableOnlyOnceTest)
 }
 
 }}
-

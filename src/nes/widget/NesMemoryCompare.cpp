@@ -5,11 +5,11 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "NesMemoryCompare.h"
-#include "../../chisa/tk/World.h"
-#include "../../chisa/tk/element/WidgetElement.h"
-#include "../../chisa/gl/DrawableManager.h"
-#include "../NesGeist.h"
+#include "NesMemoryCompare.hpp"
+#include "../../chisa/tk/World.hpp"
+#include "../../chisa/tk/element/WidgetElement.hpp"
+#include "../../chisa/gl/DrawableManager.hpp"
+#include "../NesGeist.hpp"
 
 namespace nes {
 

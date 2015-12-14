@@ -6,8 +6,8 @@
  */
 
 #include <functional>
-#include "GeistObject.h"
-#include "WorldObject.h"
+#include "GeistObject.hpp"
+#include "WorldObject.hpp"
 
 namespace donut {
 namespace native {

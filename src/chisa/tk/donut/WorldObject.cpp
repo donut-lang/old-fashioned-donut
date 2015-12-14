@@ -6,10 +6,10 @@
  */
 
 #include <functional>
-#include "WorldObject.h"
-#include "ElementObject.h"
-#include "../Heaven.h"
-#include "../element/WidgetElement.h"
+#include "WorldObject.hpp"
+#include "ElementObject.hpp"
+#include "../Heaven.hpp"
+#include "../element/WidgetElement.hpp"
 
 namespace chisa {
 namespace tk {

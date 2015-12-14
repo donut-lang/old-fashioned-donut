@@ -5,7 +5,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "SoundSpec.h"
+#include "SoundSpec.hpp"
 
 namespace chisa {
 }

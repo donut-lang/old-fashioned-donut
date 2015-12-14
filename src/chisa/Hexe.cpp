@@ -5,8 +5,8 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "Hexe.h"
-#include "tk/World.h"
+#include "Hexe.hpp"
+#include "tk/World.hpp"
 
 namespace chisa {
 

@@ -5,7 +5,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "SDLJoystick.h"
+#include "SDLJoystick.hpp"
 
 namespace chisa {
 

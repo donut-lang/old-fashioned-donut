@@ -6,12 +6,12 @@
  */
 
 #include <functional>
-#include "AngelTargetObject.h"
-#include "ElementObject.h"
-#include "../heaven/HaloServant.h"
-#include "../heaven/ElementServant.h"
-#include "../heaven/ContentUnderlineServant.h"
-#include "ServantObject.h"
+#include "AngelTargetObject.hpp"
+#include "ElementObject.hpp"
+#include "../heaven/HaloServant.hpp"
+#include "../heaven/ElementServant.hpp"
+#include "../heaven/ContentUnderlineServant.hpp"
+#include "ServantObject.hpp"
 
 namespace chisa {
 namespace tk {
@@ -266,5 +266,3 @@ std::string AngelWidgetTargetObject::reprImpl(const Handler<Heap>& heap) const
 }
 
 }}
-
-

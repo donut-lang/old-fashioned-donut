@@ -5,7 +5,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include <donut/source/Closure.h>
+#include <donut/source/Closure.hpp>
 
 namespace donut {
 

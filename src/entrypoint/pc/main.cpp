@@ -12,10 +12,10 @@
 #include <cinamo/Exception.h>
 #include <cinamo/Logger.h>
 
-#include "../../chisa/tk/Universe.h"
-#include "../../nes/Hexe.h"
-#include "../../nes/machine/exception/EmulatorException.h"
-#include "SDLPlatformFairy.h"
+#include "../../chisa/tk/Universe.hpp"
+#include "../../nes/Hexe.hpp"
+#include "../../nes/machine/exception/EmulatorException.hpp"
+#include "SDLPlatformFairy.hpp"
 
 using namespace std;
 
@@ -155,4 +155,3 @@ int main(int argc, char** argv) {
 int main(int argc, char** argv) {
 	return chisa::entrypoint::pc::main(argc, argv);
 }
-

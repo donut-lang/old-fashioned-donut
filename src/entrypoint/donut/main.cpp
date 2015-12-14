@@ -14,10 +14,10 @@
 #include <exception>
 #include <sstream>
 #include <cinamo/FileSystem.h>
-#include <donut/Donut.h>
-#include "SystemProvider.h"
-#include "SystemObject.h"
-#include "SystemPatron.h"
+#include <donut/Donut.hpp>
+#include "SystemProvider.hpp"
+#include "SystemObject.hpp"
+#include "SystemPatron.hpp"
 
 namespace donut_cli {
 using namespace cinamo;

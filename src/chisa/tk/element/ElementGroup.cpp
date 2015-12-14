@@ -5,7 +5,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "ElementGroup.h"
+#include "ElementGroup.hpp"
 #include <tinyxml2.h>
 
 namespace chisa {

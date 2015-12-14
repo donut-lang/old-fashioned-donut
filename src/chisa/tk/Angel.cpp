@@ -5,16 +5,16 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "Angel.h"
-#include "Heaven.h"
-#include "World.h"
-#include "../geom/Area.h"
-#include "../gl/Color.h"
-#include "heaven/AngelElementTarget.h"
-#include "heaven/AngelWidgetTarget.h"
-#include "heaven/HaloServant.h"
-#include "heaven/ElementServant.h"
-#include "heaven/ContentUnderlineServant.h"
+#include "Angel.hpp"
+#include "Heaven.hpp"
+#include "World.hpp"
+#include "../geom/Area.hpp"
+#include "../gl/Color.hpp"
+#include "heaven/AngelElementTarget.hpp"
+#include "heaven/AngelWidgetTarget.hpp"
+#include "heaven/HaloServant.hpp"
+#include "heaven/ElementServant.hpp"
+#include "heaven/ContentUnderlineServant.hpp"
 #include <tinyxml2.h>
 
 namespace chisa {
@@ -428,4 +428,3 @@ void Servant::onHidden()
 
 
 }}
-

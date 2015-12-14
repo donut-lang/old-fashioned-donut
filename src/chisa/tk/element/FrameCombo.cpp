@@ -7,8 +7,8 @@
 
 #include <cinamo/XMLAttrParser.h>
 
-#include "FrameCombo.h"
-#include "ElementFactory.h"
+#include "FrameCombo.hpp"
+#include "ElementFactory.hpp"
 
 namespace chisa {
 namespace tk {

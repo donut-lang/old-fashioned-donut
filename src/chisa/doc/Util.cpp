@@ -5,7 +5,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "Util.h"
+#include "Util.hpp"
 #include <unicode/unistr.h>
 #include <unicode/regex.h>
 #include <unicode/brkiter.h>

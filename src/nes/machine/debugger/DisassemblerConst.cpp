@@ -5,7 +5,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "Disassembler.h"
+#include "Disassembler.hpp"
 
 namespace nes {
 

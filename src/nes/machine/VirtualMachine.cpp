@@ -1,8 +1,8 @@
 #include <cstddef>
 #include <stdio.h>
 #include <fstream>
-#include "exception/EmulatorException.h"
-#include "VirtualMachine.h"
+#include "exception/EmulatorException.hpp"
+#include "VirtualMachine.hpp"
 
 namespace nes {
 

@@ -15,9 +15,9 @@ options {
 #include <cstddef>
 #include <algorithm>
 #include <cinamo/String.h>
-#include <donut/source/Source.h>
-#include <donut/source/Closure.h>
-#include "../ParseUtil.h"
+#include <donut/source/Source.hpp>
+#include <donut/source/Closure.hpp>
+#include "../ParseUtil.hpp"
 
 using namespace cinamo;
 using namespace donut;
@@ -506,4 +506,3 @@ arglist [ donut::Source* code ] returns [ std::vector<donut::Instruction> asmlis
 		$count+=1;
 	})*)
 	;
-

@@ -8,13 +8,13 @@
 #include <algorithm>
 #include <string>
 #include <cstring>
-#include "OpenGL.h"
-#include "Canvas.h"
-#include "Util.h"
-#include "Sprite.h"
-#include "internal/SpriteManager.h"
-#include "internal/Order.h"
-#include "../geom/Area.h"
+#include "OpenGL.hpp"
+#include "Canvas.hpp"
+#include "Util.hpp"
+#include "Sprite.hpp"
+#include "internal/SpriteManager.hpp"
+#include "internal/Order.hpp"
+#include "../geom/Area.hpp"
 
 namespace chisa {
 namespace gl {

@@ -8,10 +8,10 @@
 #include <algorithm>
 #include <cstddef>
 #include <cinamo/String.h>
-#include <donut/source/Source.h>
-#include <donut/source/Closure.h>
-#include <donut/Exception.h>
-#include <donut/object/Heap.h>
+#include <donut/source/Source.hpp>
+#include <donut/source/Closure.hpp>
+#include <donut/Exception.hpp>
+#include <donut/object/Heap.hpp>
 
 namespace donut {
 

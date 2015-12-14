@@ -8,26 +8,26 @@
 #include <cinamo/Exception.h>
 #include <tinyxml2.h>
 
-#include "ElementFactory.h"
-#include "../Element.h"
+#include "ElementFactory.hpp"
+#include "../Element.hpp"
 
-#include "SplitCombo.h"
-#include "FrameCombo.h"
-#include "Empty.h"
-#include "ScrollCombo.h"
-#include "WidgetElement.h"
-#include "ClockButton.h"
-#include "ScriptButton.h"
-#include "Label.h"
-#include "TabCombo.h"
-#include "TextArea.h"
+#include "SplitCombo.hpp"
+#include "FrameCombo.hpp"
+#include "Empty.hpp"
+#include "ScrollCombo.hpp"
+#include "WidgetElement.hpp"
+#include "ClockButton.hpp"
+#include "ScriptButton.hpp"
+#include "Label.hpp"
+#include "TabCombo.hpp"
+#include "TextArea.hpp"
 
-#include "../donut/element/SplitComboObject.h"
-#include "../donut/element/TextAreaObject.h"
-#include "../donut/element/ScriptButtonObject.h"
-#include "../donut/element/LabelObject.h"
+#include "../donut/element/SplitComboObject.hpp"
+#include "../donut/element/TextAreaObject.hpp"
+#include "../donut/element/ScriptButtonObject.hpp"
+#include "../donut/element/LabelObject.hpp"
 
-#include "../World.h"
+#include "../World.hpp"
 
 namespace chisa {
 namespace tk {

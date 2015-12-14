@@ -5,8 +5,8 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "RenderTree.h"
-#include "../../gl/DrawableManager.h"
+#include "RenderTree.hpp"
+#include "../../gl/DrawableManager.hpp"
 
 namespace chisa {
 namespace doc {

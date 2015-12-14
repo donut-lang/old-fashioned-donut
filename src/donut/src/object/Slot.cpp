@@ -6,9 +6,9 @@
  */
 
 #include <algorithm>
-#include <donut/object/Heap.h>
-#include <donut/object/Object.h>
-#include <donut/object/Slot.h>
+#include <donut/object/Heap.hpp>
+#include <donut/object/Object.hpp>
+#include <donut/object/Slot.hpp>
 
 namespace donut {
 

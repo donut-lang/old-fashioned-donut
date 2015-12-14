@@ -5,7 +5,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "../Color.h"
+#include "../Color.hpp"
 
 #include <cinamo/XArchiver.h>
 #include <cinamo/XMLAttrParser.h>

@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../TestCommon.h"
-#include "../../../src/chisa/geom/Area.h"
+#include "../../TestCommon.hpp"
+#include "../../../src/chisa/geom/Area.hpp"
 #include <cinamo/XMLAttrParser.h>
 #include <math.h>
 
@@ -128,4 +128,3 @@ TEST(SpaceTest, XMLParseAllMarginOverrideTest)
 }
 
 }}
-

@@ -5,19 +5,19 @@
  * Copyright 2012-2013, PSI
  */
 
-#include <donut/object/Heap.h>
-#include <donut/source/Source.h>
-#include <donut/provider/BoolProvider.h>
-#include <donut/provider/IntProvider.h>
-#include <donut/provider/NullProvider.h>
-#include <donut/provider/DonutProvider.h>
-#include <donut/provider/FloatProvider.h>
-#include <donut/provider/StringProvider.h>
-#include <donut/provider/NativeClosureProvider.h>
-#include <donut/provider/HomuraProvider.h>
-#include <donut/object/StringObject.h>
-#include <donut/object/FloatObject.h>
-#include <donut/object/HomuraObject.h>
+#include <donut/object/Heap.hpp>
+#include <donut/source/Source.hpp>
+#include <donut/provider/BoolProvider.hpp>
+#include <donut/provider/IntProvider.hpp>
+#include <donut/provider/NullProvider.hpp>
+#include <donut/provider/DonutProvider.hpp>
+#include <donut/provider/FloatProvider.hpp>
+#include <donut/provider/StringProvider.hpp>
+#include <donut/provider/NativeClosureProvider.hpp>
+#include <donut/provider/HomuraProvider.hpp>
+#include <donut/object/StringObject.hpp>
+#include <donut/object/FloatObject.hpp>
+#include <donut/object/HomuraObject.hpp>
 
 namespace donut {
 

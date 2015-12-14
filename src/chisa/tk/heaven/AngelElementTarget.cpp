@@ -5,10 +5,10 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "AngelElementTarget.h"
-#include "../World.h"
-#include "../Element.h"
-#include "../donut/Patron.h"
+#include "AngelElementTarget.hpp"
+#include "../World.hpp"
+#include "../Element.hpp"
+#include "../donut/Patron.hpp"
 
 namespace chisa {
 namespace tk {
@@ -87,4 +87,3 @@ Handler<AngelElementTarget> AngelElementTarget::toElementTarget()
 }
 
 }}
-

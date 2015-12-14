@@ -5,12 +5,12 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "ContentUnderlineServant.h"
-#include "../Element.h"
-#include "../World.h"
-#include "../donut/Patron.h"
-#include "../widget/ContentWidget.h"
-#include "../../doc/node/Node.h"
+#include "ContentUnderlineServant.hpp"
+#include "../Element.hpp"
+#include "../World.hpp"
+#include "../donut/Patron.hpp"
+#include "../widget/ContentWidget.hpp"
+#include "../../doc/node/Node.hpp"
 
 namespace chisa {
 namespace tk {
@@ -66,4 +66,3 @@ geom::Box ContentUnderlineServant::reshapeImpl(const geom::Area& area)
 }
 
 }}
-

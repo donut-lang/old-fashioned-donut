@@ -6,11 +6,11 @@
  */
 
 #include <functional>
-#include "HeavenObject.h"
-#include "ElementObject.h"
-#include "../Heaven.h"
-#include "../Angel.h"
-#include "AngelObject.h"
+#include "HeavenObject.hpp"
+#include "ElementObject.hpp"
+#include "../Heaven.hpp"
+#include "../Angel.hpp"
+#include "AngelObject.hpp"
 
 namespace chisa {
 namespace tk {

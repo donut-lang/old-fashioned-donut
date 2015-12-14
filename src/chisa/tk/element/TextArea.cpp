@@ -10,12 +10,12 @@
 #include <SDL2/SDL.h>
 #include <cinamo/Exception.h>
 
-#include "TextArea.h"
-#include "../../gl/Canvas.h"
-#include "../../gl/DrawableManager.h"
-#include "../World.h"
+#include "TextArea.hpp"
+#include "../../gl/Canvas.hpp"
+#include "../../gl/DrawableManager.hpp"
+#include "../World.hpp"
 
-#include "ElementGroup.h"
+#include "ElementGroup.hpp"
 namespace chisa {
 namespace tk {
 

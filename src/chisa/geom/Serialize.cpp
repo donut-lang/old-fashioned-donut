@@ -8,8 +8,8 @@
 #include <cinamo/XMLAttrParser.h>
 #include <cinamo/XArchiver.h>
 
-#include "Vector.h"
-#include "Area.h"
+#include "Vector.hpp"
+#include "Area.hpp"
 
 using namespace chisa::geom;
 
@@ -116,5 +116,3 @@ XValue XSerializer<Space>::serialize(Space& val)
 }
 
 }
-
-

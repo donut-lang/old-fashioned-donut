@@ -5,7 +5,7 @@
  *      Author: psi
  */
 
-#include "Mapper23.h"
+#include "Mapper23.hpp"
 
 namespace nes {
 

@@ -5,10 +5,10 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "WidgetElement.h"
-#include "../World.h"
-#include "../../gl/Canvas.h"
-#include "../Widget.h"
+#include "WidgetElement.hpp"
+#include "../World.hpp"
+#include "../../gl/Canvas.hpp"
+#include "../Widget.hpp"
 
 namespace chisa {
 namespace tk {

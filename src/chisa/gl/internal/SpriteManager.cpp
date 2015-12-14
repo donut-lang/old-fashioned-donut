@@ -6,10 +6,10 @@
  */
 
 #include <algorithm>
-#include "../Sprite.h"
-#include "SpriteManager.h"
-#include "Buffer.h"
-#include "Order.h"
+#include "../Sprite.hpp"
+#include "SpriteManager.hpp"
+#include "Buffer.hpp"
+#include "Order.hpp"
 
 namespace chisa {
 namespace gl{

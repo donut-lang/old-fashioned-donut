@@ -5,8 +5,8 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "Instrument.h"
-#include "Quartet.h"
+#include "Instrument.hpp"
+#include "Quartet.hpp"
 
 namespace chisa {
 

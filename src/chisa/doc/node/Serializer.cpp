@@ -5,7 +5,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "Node.h"
+#include "Node.hpp"
 
 namespace cinamo {
 namespace xml {

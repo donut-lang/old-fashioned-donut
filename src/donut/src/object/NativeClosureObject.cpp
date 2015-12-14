@@ -6,10 +6,10 @@
  */
 
 #include <cinamo/String.h>
-#include <donut/Exception.h>
-#include <donut/object/Heap.h>
-#include <donut/object/NativeClosureObject.h>
-#include <donut/object/ReactiveNativeObject.h>
+#include <donut/Exception.hpp>
+#include <donut/object/Heap.hpp>
+#include <donut/object/NativeClosureObject.hpp>
+#include <donut/object/ReactiveNativeObject.hpp>
 
 namespace donut {
 static const std::string TAG("NativeClosureObject");
@@ -145,5 +145,3 @@ void ReactiveNativeClosureObject::loadImpl(Handler<Heap> const& heap, XValue con
 }
 
 }
-
-

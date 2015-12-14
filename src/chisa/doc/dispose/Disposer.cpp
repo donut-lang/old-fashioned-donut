@@ -5,11 +5,11 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "Disposer.h"
-#include "BlockSession.h"
-#include "../Util.h"
-#include "../render/RenderObject.h"
-#include "../dispose/PostDisposer.h"
+#include "Disposer.hpp"
+#include "BlockSession.hpp"
+#include "../Util.hpp"
+#include "../render/RenderObject.hpp"
+#include "../dispose/PostDisposer.hpp"
 
 namespace chisa {
 namespace doc {

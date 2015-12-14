@@ -5,9 +5,9 @@
  * Copyright 2012-2013, PSI
  */
 
-#include <donut/object/Heap.h>
-#include "SystemProvider.h"
-#include "SystemObject.h"
+#include <donut/object/Heap.hpp>
+#include "SystemProvider.hpp"
+#include "SystemObject.hpp"
 
 namespace donut_cli {
 

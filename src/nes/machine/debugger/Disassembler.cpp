@@ -7,8 +7,8 @@
 
 #include <sstream>
 #include <cinamo/Exception.h>
-#include "Disassembler.h"
-#include "../VirtualMachine.h"
+#include "Disassembler.hpp"
+#include "../VirtualMachine.hpp"
 
 namespace nes {
 using namespace cinamo;

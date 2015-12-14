@@ -5,8 +5,8 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "MemoryComparator.h"
-#include "../VirtualMachine.h"
+#include "MemoryComparator.hpp"
+#include "../VirtualMachine.hpp"
 
 namespace nes {
 

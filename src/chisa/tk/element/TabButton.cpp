@@ -5,8 +5,8 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "TabButton.h"
-#include "TabCombo.h"
+#include "TabButton.hpp"
+#include "TabCombo.hpp"
 
 namespace chisa {
 namespace tk {

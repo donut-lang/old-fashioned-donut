@@ -6,14 +6,14 @@
  */
 
 #include <cinamo/String.h>
-#include <donut/Exception.h>
-#include <donut/object/Heap.h>
-#include <donut/object/Object.h>
-#include <donut/provider/IntProvider.h>
-#include <donut/provider/BoolProvider.h>
-#include <donut/provider/NullProvider.h>
-#include <donut/object/StringObject.h>
-#include <donut/object/FloatObject.h>
+#include <donut/Exception.hpp>
+#include <donut/object/Heap.hpp>
+#include <donut/object/Object.hpp>
+#include <donut/provider/IntProvider.hpp>
+#include <donut/provider/BoolProvider.hpp>
+#include <donut/provider/NullProvider.hpp>
+#include <donut/object/StringObject.hpp>
+#include <donut/object/FloatObject.hpp>
 
 namespace donut {
 

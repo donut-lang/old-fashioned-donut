@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../TestCommon.h"
-#include "../../chisa/audio/SoundSpec.h"
+#include "../../TestCommon.hpp"
+#include "../../chisa/audio/SoundSpec.hpp"
 
 namespace chisa {
 

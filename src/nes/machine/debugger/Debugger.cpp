@@ -5,7 +5,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "Debugger.h"
+#include "Debugger.hpp"
 
 namespace nes {
 

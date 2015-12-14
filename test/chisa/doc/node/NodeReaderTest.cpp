@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../../TestCommon.h"
-#include "../../chisa/doc/node/Node.h"
-#include "../../chisa/doc/node/NodeReader.h"
+#include "../../../TestCommon.hpp"
+#include "../../chisa/doc/node/Node.hpp"
+#include "../../chisa/doc/node/NodeReader.hpp"
 #include <typeinfo>
 
 namespace chisa {

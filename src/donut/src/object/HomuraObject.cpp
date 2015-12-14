@@ -7,8 +7,8 @@
 
 #include <cinamo/String.h>
 #include <cinamo/XVal.h>
-#include <donut/object/Heap.h>
-#include <donut/object/HomuraObject.h>
+#include <donut/object/Heap.hpp>
+#include <donut/object/HomuraObject.hpp>
 
 namespace donut {
 using namespace cinamo;
@@ -105,4 +105,3 @@ void HomuraObject::loadImpl( Handler<Heap> const& heap, XValue const& data )
 }
 
 }
-

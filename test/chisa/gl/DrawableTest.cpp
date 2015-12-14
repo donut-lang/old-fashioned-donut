@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../TestCommon.h"
-#include "../../../src/chisa/gl/DrawableManager.h"
-#include "../../../src/chisa/gl/Canvas.h"
+#include "../../TestCommon.hpp"
+#include "../../../src/chisa/gl/DrawableManager.hpp"
+#include "../../../src/chisa/gl/Canvas.hpp"
 
 namespace chisa {
 namespace gl {

@@ -6,9 +6,9 @@
  */
 
 #include <cinamo/String.h>
-#include <donut/object/Heap.h>
-#include <donut/object/FloatObject.h>
-#include <donut/provider/FloatProvider.h>
+#include <donut/object/Heap.hpp>
+#include <donut/object/FloatObject.hpp>
+#include <donut/provider/FloatProvider.hpp>
 
 namespace donut {
 using namespace cinamo;

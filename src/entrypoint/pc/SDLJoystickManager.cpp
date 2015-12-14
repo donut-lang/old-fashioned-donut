@@ -6,8 +6,8 @@
  */
 
 #include <SDL2/SDL.h>
-#include "SDLJoystick.h"
-#include "SDLJoystickManager.h"
+#include "SDLJoystick.hpp"
+#include "SDLJoystickManager.hpp"
 
 namespace chisa {
 

@@ -5,13 +5,13 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "NesTraceWidget.h"
-#include "../NesGeist.h"
-#include "../../chisa/tk/World.h"
-#include "../../chisa/geom/Vector.h"
-#include "../../chisa/geom/Area.h"
-#include "../../chisa/tk/element/WidgetElement.h"
-#include "../machine/VirtualMachine.h"
+#include "NesTraceWidget.hpp"
+#include "../NesGeist.hpp"
+#include "../../chisa/tk/World.hpp"
+#include "../../chisa/geom/Vector.hpp"
+#include "../../chisa/geom/Area.hpp"
+#include "../../chisa/tk/element/WidgetElement.hpp"
+#include "../machine/VirtualMachine.hpp"
 
 namespace nes {
 

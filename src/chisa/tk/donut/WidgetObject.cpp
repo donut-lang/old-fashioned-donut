@@ -6,9 +6,9 @@
  */
 
 #include <functional>
-#include "WidgetObject.h"
-#include "WorldObject.h"
-#include "../element/WidgetElement.h"
+#include "WidgetObject.hpp"
+#include "WorldObject.hpp"
+#include "../element/WidgetElement.hpp"
 
 namespace donut {
 namespace native {

@@ -6,11 +6,11 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "Canvas.h"
-#include "../geom/Vector.h"
-#include "../geom/Area.h"
-#include "Util.h"
-#include "OpenGL.h"
+#include "Canvas.hpp"
+#include "../geom/Vector.hpp"
+#include "../geom/Area.hpp"
+#include "Util.hpp"
+#include "OpenGL.hpp"
 #include <algorithm>
 
 namespace chisa {
@@ -501,4 +501,3 @@ Canvas::AffineScope::~AffineScope()
 
 
 }}
-

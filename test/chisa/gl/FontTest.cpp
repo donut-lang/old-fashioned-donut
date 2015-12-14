@@ -16,10 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../TestCommon.h"
+#include "../../TestCommon.hpp"
 #include <math.h>
-#include "../../../src/chisa/gl/DrawableManager.h"
-#include "../../../src/chisa/gl/Canvas.h"
+#include "../../../src/chisa/gl/DrawableManager.hpp"
+#include "../../../src/chisa/gl/Canvas.hpp"
 
 namespace chisa {
 namespace gl {
@@ -66,4 +66,3 @@ TEST_F(FontTest, AnalyzeTest)
 }
 
 }}
-

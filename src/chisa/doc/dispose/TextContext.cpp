@@ -6,11 +6,11 @@
  */
 
 #include <cinamo/Exception.h>
-#include "TextContext.h"
+#include "TextContext.hpp"
 #include <unicode/unistr.h>
 #include <unicode/bytestream.h>
-#include "../../gl/Drawable.h"
-#include "../render/RenderObject.h"
+#include "../../gl/Drawable.hpp"
+#include "../render/RenderObject.hpp"
 
 namespace chisa {
 namespace doc {

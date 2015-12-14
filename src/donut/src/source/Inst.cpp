@@ -5,8 +5,8 @@
  * Copyright 2012-2013, PSI
  */
 
-#include <donut/source/Inst.h>
-#include <donut/source/Source.h>
+#include <donut/source/Inst.hpp>
+#include <donut/source/Source.hpp>
 
 namespace donut {
 

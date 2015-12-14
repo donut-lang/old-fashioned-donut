@@ -5,7 +5,7 @@
  *      Author: psi
  */
 
-#include "VideoFairy.h"
+#include "VideoFairy.hpp"
 
 #if defined(WIN32) || defined(WIN64) || defined(__WIN32__) || defined(__WIN64__)
 #define IS_BIG_ENDIAN 0

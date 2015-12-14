@@ -6,8 +6,8 @@
  */
 
 #include <cinamo/XMLAttrParser.h>
-#include "MarginCombo.h"
-#include "ElementFactory.h"
+#include "MarginCombo.hpp"
+#include "ElementFactory.hpp"
 
 namespace chisa {
 namespace tk {

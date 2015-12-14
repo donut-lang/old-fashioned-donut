@@ -5,8 +5,8 @@
  * Copyright 2012-2013, PSI
  */
 
-#include <donut/object/Heap.h>
-#include "ContentObject.h"
+#include <donut/object/Heap.hpp>
+#include "ContentObject.hpp"
 
 namespace chisa {
 using namespace cinamo;
@@ -85,4 +85,3 @@ ContentProvider::ContentProvider(Handler<Heap> const& heap, Handler<World> const
 
 }
 }
-

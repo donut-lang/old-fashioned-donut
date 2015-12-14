@@ -5,7 +5,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "../Font.h"
+#include "../Font.hpp"
 
 namespace chisa {
 namespace gl {
@@ -22,4 +22,3 @@ BitmapGlyph::~BitmapGlyph() noexcept
 }
 
 }}
-

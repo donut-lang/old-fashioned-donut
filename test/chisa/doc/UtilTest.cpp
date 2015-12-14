@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../TestCommon.h"
-#include "../../chisa/doc/Util.h"
+#include "../../TestCommon.hpp"
+#include "../../chisa/doc/Util.hpp"
 
 namespace chisa {
 namespace doc {

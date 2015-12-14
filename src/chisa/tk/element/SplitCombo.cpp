@@ -5,9 +5,9 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "SplitCombo.h"
-#include "ElementFactory.h"
-#include "../../geom/Vector.h"
+#include "SplitCombo.hpp"
+#include "ElementFactory.hpp"
+#include "../../geom/Vector.hpp"
 
 namespace chisa {
 namespace tk {

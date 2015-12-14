@@ -5,11 +5,11 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "NesGeist.h"
-#include "../chisa/tk/World.h"
-#include "../chisa/gl/DrawableManager.h"
-#include "../chisa/input/JoystickManager.h"
-#include "Hexe.h"
+#include "NesGeist.hpp"
+#include "../chisa/tk/World.hpp"
+#include "../chisa/gl/DrawableManager.hpp"
+#include "../chisa/input/JoystickManager.hpp"
+#include "Hexe.hpp"
 
 namespace nes {
 
@@ -169,4 +169,3 @@ void NesGeist::operator ()()
 }
 
 }
-

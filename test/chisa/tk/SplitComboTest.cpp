@@ -17,9 +17,9 @@
  */
 
 
-#include "../../TestCommon.h"
-#include "../../chisa/tk/element/SplitCombo.h"
-#include "../../chisa/tk/element/ElementFactory.h"
+#include "../../TestCommon.hpp"
+#include "../../chisa/tk/element/SplitCombo.hpp"
+#include "../../chisa/tk/element/ElementFactory.hpp"
 
 namespace chisa {
 namespace tk {

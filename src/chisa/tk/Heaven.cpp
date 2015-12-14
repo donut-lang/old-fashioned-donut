@@ -5,13 +5,13 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "Heaven.h"
-#include "Angel.h"
-#include "World.h"
-#include "heaven/LoneAngel.h"
-#include "heaven/TwinAngel.h"
-#include "donut/Patron.h"
-#include "donut/WorldObject.h"
+#include "Heaven.hpp"
+#include "Angel.hpp"
+#include "World.hpp"
+#include "heaven/LoneAngel.hpp"
+#include "heaven/TwinAngel.hpp"
+#include "donut/Patron.hpp"
+#include "donut/WorldObject.hpp"
 
 namespace chisa {
 namespace tk {

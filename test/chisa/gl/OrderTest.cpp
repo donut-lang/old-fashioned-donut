@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../TestCommon.h"
-#include "../../../src/chisa/gl/internal/Order.h"
+#include "../../TestCommon.hpp"
+#include "../../../src/chisa/gl/internal/Order.hpp"
 #include <math.h>
 
 namespace chisa {
@@ -112,4 +112,3 @@ TEST(SizeOrderTest, TransitivityTest)
 }
 
 }}
-

@@ -5,10 +5,10 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "ImageManager.h"
+#include "ImageManager.hpp"
 #include <algorithm>
 #include <png.h>
-#include "../Sprite.h"
+#include "../Sprite.hpp"
 
 namespace chisa {
 namespace gl {

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "TestCommon.h"
+#include "TestCommon.hpp"
 
 std::shared_ptr<tinyxml2::XMLDocument> parse(std::string const& str)
 {
@@ -24,4 +24,3 @@ std::shared_ptr<tinyxml2::XMLDocument> parse(std::string const& str)
 	d->Parse(str.c_str(), str.size());
 	return d;
 }
-

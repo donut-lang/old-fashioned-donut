@@ -1,4 +1,4 @@
-#include "VirtualMachine.h"
+#include "VirtualMachine.hpp"
 
 namespace nes {
 

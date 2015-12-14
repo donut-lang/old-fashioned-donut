@@ -5,9 +5,9 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "ImageWidget.h"
-#include "../World.h"
-#include "../../gl/DrawableManager.h"
+#include "ImageWidget.hpp"
+#include "../World.hpp"
+#include "../../gl/DrawableManager.hpp"
 
 namespace chisa {
 namespace tk {

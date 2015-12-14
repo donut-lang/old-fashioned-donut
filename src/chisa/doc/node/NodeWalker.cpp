@@ -5,8 +5,8 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "Node.h"
-#include "NodeWalker.h"
+#include "Node.hpp"
+#include "NodeWalker.hpp"
 
 namespace chisa {
 namespace doc {

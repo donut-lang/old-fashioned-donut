@@ -5,8 +5,8 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "BlockSession.h"
-#include "Disposer.h"
+#include "BlockSession.hpp"
+#include "Disposer.hpp"
 
 namespace chisa {
 namespace doc {

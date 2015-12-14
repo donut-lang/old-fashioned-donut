@@ -5,7 +5,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "../Font.h"
+#include "../Font.hpp"
 #include <cmath>
 #include <cinamo/FileSystem.h>
 
@@ -111,4 +111,3 @@ std::vector<Handler<BitmapGlyph> > FreeType::lookupBitmap(Font& font, float size
 
 
 }}}
-

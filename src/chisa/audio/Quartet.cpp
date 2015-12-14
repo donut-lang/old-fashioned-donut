@@ -8,8 +8,8 @@
 #include <algorithm>
 #include <cinamo/Exception.h>
 #include <cstring>
-#include "Quartet.h"
-#include "Instrument.h"
+#include "Quartet.hpp"
+#include "Instrument.hpp"
 
 namespace chisa {
 

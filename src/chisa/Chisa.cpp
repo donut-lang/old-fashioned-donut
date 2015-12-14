@@ -5,7 +5,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "Chisa.h"
+#include "Chisa.hpp"
 
 namespace chisa {
 const static std::string& TAG("Chisa");

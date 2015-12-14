@@ -5,9 +5,9 @@
  * Copyright 2012-2013, PSI
  */
 
-#include <donut/Exception.h>
-#include <donut/object/Heap.h>
-#include <donut/object/Object.h>
+#include <donut/Exception.hpp>
+#include <donut/object/Heap.hpp>
+#include <donut/object/Object.hpp>
 namespace donut {
 
 HeapObject::HeapObject(HeapProvider* const provider)

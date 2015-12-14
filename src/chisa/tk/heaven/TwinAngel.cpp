@@ -5,10 +5,10 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "../Heaven.h"
-#include "TwinAngel.h"
-#include "../donut/Patron.h"
-#include "../../gl/DecoUtil.h"
+#include "../Heaven.hpp"
+#include "TwinAngel.hpp"
+#include "../donut/Patron.hpp"
+#include "../../gl/DecoUtil.hpp"
 
 namespace chisa {
 namespace tk {

@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Helper.h"
+#include "Helper.hpp"
 #include <math.h>
-#include <donut/native/Bind.h>
+#include <donut/native/Bind.hpp>
 
 namespace donut {
 namespace native {

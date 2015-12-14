@@ -8,9 +8,9 @@
 #include <tinyxml2.h>
 #include <cinamo/Exception.h>
 
-#include "ClickButton.h"
-#include "../../gl/Canvas.h"
-#include "../../gl/DrawableManager.h"
+#include "ClickButton.hpp"
+#include "../../gl/Canvas.hpp"
+#include "../../gl/DrawableManager.hpp"
 
 namespace chisa {
 namespace tk {

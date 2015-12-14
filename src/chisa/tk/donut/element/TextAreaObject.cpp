@@ -5,7 +5,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "TextAreaObject.h"
+#include "TextAreaObject.hpp"
 
 namespace chisa {
 namespace tk {

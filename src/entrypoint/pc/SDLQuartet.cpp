@@ -6,7 +6,7 @@
  */
 
 #include <cstring>
-#include "SDLQuartet.h"
+#include "SDLQuartet.hpp"
 
 namespace chisa {
 

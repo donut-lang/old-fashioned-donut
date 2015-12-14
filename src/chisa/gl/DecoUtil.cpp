@@ -5,9 +5,9 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "DecoUtil.h"
-#include "Canvas.h"
-#include "../geom/Vector.h"
+#include "DecoUtil.hpp"
+#include "Canvas.hpp"
+#include "../geom/Vector.hpp"
 
 namespace chisa {
 namespace gl {

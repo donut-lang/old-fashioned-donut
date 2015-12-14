@@ -8,11 +8,11 @@
 #include <iostream>
 #include <cinamo/String.h>
 #include <cinamo/XVal.h>
-#include <donut/object/Heap.h>
-#include <donut/object/StringObject.h>
+#include <donut/object/Heap.hpp>
+#include <donut/object/StringObject.hpp>
 
-#include "SystemObject.h"
-#include "SystemProvider.h"
+#include "SystemObject.hpp"
+#include "SystemProvider.hpp"
 
 namespace donut_cli {
 using namespace donut;
@@ -102,4 +102,3 @@ void SystemObject::loadImpl( Handler<Heap> const& heap, XValue const& data )
 }
 
 }
-

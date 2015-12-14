@@ -5,8 +5,8 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "Action.h"
-#include "World.h"
+#include "Action.hpp"
+#include "World.hpp"
 
 namespace chisa {
 namespace tk {

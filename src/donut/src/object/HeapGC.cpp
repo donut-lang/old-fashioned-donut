@@ -5,7 +5,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include <donut/object/Heap.h>
+#include <donut/object/Heap.hpp>
 
 namespace donut {
 

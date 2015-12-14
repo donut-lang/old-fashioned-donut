@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../../TestCommon.h"
-#include "../../../src/chisa/gl/Sprite.h"
+#include "../../TestCommon.hpp"
+#include "../../../src/chisa/gl/Sprite.hpp"
 
 namespace chisa {
 namespace gl {
@@ -30,4 +30,3 @@ TEST(BufferTest, GetSetTest)
 }
 
 }}
-

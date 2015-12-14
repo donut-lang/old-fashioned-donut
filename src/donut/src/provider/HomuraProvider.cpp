@@ -5,10 +5,10 @@
  * Copyright 2012-2013, PSI
  */
 
-#include <donut/object/Heap.h>
-#include <donut/object/HomuraObject.h>
-#include <donut/provider/HomuraProvider.h>
-#include <donut/Exception.h>
+#include <donut/object/Heap.hpp>
+#include <donut/object/HomuraObject.hpp>
+#include <donut/provider/HomuraProvider.hpp>
+#include <donut/Exception.hpp>
 
 namespace donut {
 

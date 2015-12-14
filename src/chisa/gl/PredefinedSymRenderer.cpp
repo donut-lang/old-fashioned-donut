@@ -7,8 +7,8 @@
 
 #include <cinamo/Logger.h>
 
-#include "PredefinedSymRenderer.h"
-#include "Canvas.h"
+#include "PredefinedSymRenderer.hpp"
+#include "Canvas.hpp"
 
 namespace chisa {
 namespace gl {

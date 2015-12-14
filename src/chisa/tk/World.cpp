@@ -5,19 +5,19 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "World.h"
-#include "Element.h"
-#include "Heaven.h"
-#include "element/ElementFactory.h"
-#include "element/WidgetElement.h"
-#include "widget/WidgetFactory.h"
-#include "Universe.h"
-#include "Action.h"
-#include "../gl/DrawableManager.h"
-#include "../input/JoystickManager.h"
-#include "Angel.h"
-#include "donut/Patron.h"
-#include "donut/WorldObject.h"
+#include "World.hpp"
+#include "Element.hpp"
+#include "Heaven.hpp"
+#include "element/ElementFactory.hpp"
+#include "element/WidgetElement.hpp"
+#include "widget/WidgetFactory.hpp"
+#include "Universe.hpp"
+#include "Action.hpp"
+#include "../gl/DrawableManager.hpp"
+#include "../input/JoystickManager.hpp"
+#include "Angel.hpp"
+#include "donut/Patron.hpp"
+#include "donut/WorldObject.hpp"
 
 namespace chisa {
 namespace tk {

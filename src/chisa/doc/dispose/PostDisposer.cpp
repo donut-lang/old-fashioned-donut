@@ -7,8 +7,8 @@
 
 #include <cinamo/Exception.h>
 
-#include "PostDisposer.h"
-#include "../node/Node.h"
+#include "PostDisposer.hpp"
+#include "../node/Node.hpp"
 
 namespace chisa {
 namespace doc {

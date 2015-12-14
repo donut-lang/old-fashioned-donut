@@ -5,12 +5,12 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "NesMemoryWidget.h"
-#include "../../chisa/tk/World.h"
-#include "../NesGeist.h"
-#include "../../chisa/geom/Vector.h"
-#include "../../chisa/geom/Area.h"
-#include "../../chisa/gl/DrawableManager.h"
+#include "NesMemoryWidget.hpp"
+#include "../../chisa/tk/World.hpp"
+#include "../NesGeist.hpp"
+#include "../../chisa/geom/Vector.hpp"
+#include "../../chisa/geom/Area.hpp"
+#include "../../chisa/gl/DrawableManager.hpp"
 
 namespace nes {
 

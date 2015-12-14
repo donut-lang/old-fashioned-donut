@@ -6,10 +6,10 @@
  */
 
 #include <tinyxml2.h>
-#include "../gl/Canvas.h"
-#include "Element.h"
-#include "World.h"
-#include "donut/ElementObject.h"
+#include "../gl/Canvas.hpp"
+#include "Element.hpp"
+#include "World.hpp"
+#include "donut/ElementObject.hpp"
 
 namespace chisa {
 namespace tk {

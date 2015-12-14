@@ -7,7 +7,7 @@
 
 #include <cinamo/String.h>
 #include <cinamo/Handler.h>
-#include <donut/object/FloatObject.h>
+#include <donut/object/FloatObject.hpp>
 
 namespace donut {
 using namespace cinamo;

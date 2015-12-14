@@ -8,9 +8,9 @@
 #include <algorithm>
 #include <cinamo/PairFunctor.h>
 #include <cinamo/String.h>
-#include <donut/Clock.h>
-#include <donut/object/Heap.h>
-#include <donut/object/ReactiveNativeObject.h>
+#include <donut/Clock.hpp>
+#include <donut/object/Heap.hpp>
+#include <donut/object/ReactiveNativeObject.hpp>
 
 namespace donut {
 
