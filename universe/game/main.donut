@@ -1,0 +1,21 @@
+var Game = {};
+
+var handleMsg = func(msg){
+	if(msg.action == ""){
+		return true;
+	}else{
+		return false;
+	};
+};
+
+var main = func(){
+	var running = true;
+	while(running){
+		var msg = interrupt null;
+		if( handleMsg(msg) ){
+		}else{};
+	};
+};
+
+
+main();

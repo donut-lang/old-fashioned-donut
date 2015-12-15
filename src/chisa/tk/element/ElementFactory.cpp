@@ -21,6 +21,7 @@
 #include "Label.hpp"
 #include "TabCombo.hpp"
 #include "TextArea.hpp"
+#include "ClockSlider.hpp"
 
 #include "../donut/element/SplitComboObject.hpp"
 #include "../donut/element/TextAreaObject.hpp"
@@ -47,6 +48,7 @@ const std::string ElementFactory::ElemName::Button("button");
 const std::string ElementFactory::ElemName::ClockButton("clockbutton");
 const std::string ElementFactory::ElemName::Label("label");
 const std::string ElementFactory::ElemName::TextArea("textarea");
+const std::string ElementFactory::ElemName::ClockSlider("clockslider");
 
 const std::string ElementFactory::AttrName::Id("id");
 
@@ -109,6 +111,7 @@ void ElementFactory::init()
 	this->registerLayout<Label>(ElemName::Label);
 	this->registerLayout<TabCombo>(ElemName::Tab);
 	this->registerLayout<TextArea>(ElemName::TextArea);
+	this->registerLayout<ClockSlider>(ElemName::ClockSlider);
 }
 
 ElementFactory::~ElementFactory()

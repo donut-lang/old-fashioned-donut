@@ -45,6 +45,7 @@ public:
 		static const std::string Label;
 		static const std::string TextArea;
 		static const std::string WidgetWrapper;
+		static const std::string ClockSlider;
 	};
 	struct AttrName {
 		static const std::string Id;

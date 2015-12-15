@@ -53,12 +53,12 @@ public: //worldからの通知
 	 ******************************************************************************/
 public:
 	template <typename... Args>
-	constexpr std::string resolveWorldFilepath(std::string const& worldname, Args const&... related_filename) const noexcept
+	std::string resolveWorldFilepath(std::string const& worldname, Args const&... related_filename) const noexcept
 	{
 		return this->hexe()->resolveFilepath(worldname, related_filename...);
 	}
 	template <typename... Args>
-	constexpr std::string resolveUniverseFilepath(Args const&... related_filename) const
+	std::string resolveUniverseFilepath(Args const&... related_filename) const
 	{
 		return this->hexe()->resolveFilepath(related_filename...);
 	}

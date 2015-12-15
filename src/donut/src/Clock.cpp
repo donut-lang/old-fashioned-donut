@@ -7,6 +7,7 @@
 
 #include <donut/Donut.hpp>
 #include <donut/Clock.hpp>
+#include "../include/donut/Clock.hpp"
 
 namespace donut {
 
