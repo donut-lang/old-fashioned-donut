@@ -32,3 +32,7 @@ src/chisa/donut/parser/output/*.java
 src/chisa/donut/parser/output/__*
 
 /Windows
+
+CMakeFiles/
+CMakeCache.txt
+.DS_Store
