@@ -34,5 +34,9 @@ src/chisa/donut/parser/output/__*
 /Windows
 
 CMakeFiles/
+CMakeScripts/
+Donut.build/
+Donut.xcodeproj/
 CMakeCache.txt
+cmake_install.cmake
 .DS_Store
