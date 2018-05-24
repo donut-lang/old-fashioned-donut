@@ -1,8 +1,66 @@
 cmake_minimum_required(VERSION 3.3)
-project(Chisa)
+project(Donut)
 find_package(PkgConfig)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+
+set(CINAMO_SOURCE_FILES
+        src/cinamo/include/cinamo/Exception.h
+        src/cinamo/include/cinamo/FormPayload.h
+        src/cinamo/include/cinamo/XArchiver.h
+        src/cinamo/include/cinamo/TypeTraits.h
+        src/cinamo/include/cinamo/MixType.h
+        src/cinamo/include/cinamo/Matrix.h
+        src/cinamo/include/cinamo/FileSystem.h
+        src/cinamo/include/cinamo/Handler.h
+        src/cinamo/include/cinamo/XMLAttrParser.h
+        src/cinamo/include/cinamo/Base64.h
+        src/cinamo/include/cinamo/ClassUtil.h
+        src/cinamo/include/cinamo/internal/XArchiver.h
+        src/cinamo/include/cinamo/internal/FileSystem.h
+        src/cinamo/include/cinamo/internal/EnumProxy.h
+        src/cinamo/include/cinamo/internal/Win32.h
+        src/cinamo/include/cinamo/internal/VectorProxy.h
+        src/cinamo/include/cinamo/internal/String.h
+        src/cinamo/include/cinamo/internal/XVal.h
+        src/cinamo/include/cinamo/internal/IntProxy.h
+        src/cinamo/include/cinamo/String.h
+        src/cinamo/include/cinamo/Dynamic.h
+        src/cinamo/include/cinamo/Platform.h
+        src/cinamo/include/cinamo/XVal.h
+        src/cinamo/include/cinamo/Logger.h
+        src/cinamo/include/cinamo/VectorMap.h
+        src/cinamo/include/cinamo/Url.h
+        src/cinamo/include/cinamo/PairFunctor.h
+        src/cinamo/include/cinamo/Cinamo.h
+        src/cinamo/include/cinamo/Time.h
+        src/cinamo/include/cinamo/Common.h
+        src/cinamo/include/cinamo/functional/Base.h
+        src/cinamo/include/cinamo/functional/Maybe.h
+        src/cinamo/include/cinamo/functional/Parser.h
+        src/cinamo/include/cinamo/functional/Box.h
+        src/cinamo/include/cinamo/functional/List.h
+        src/cinamo/include/cinamo/functional/Ident.h
+        src/cinamo/include/cinamo/functional/Either.h
+        src/cinamo/include/cinamo/Thread.h
+        src/cinamo/include/cinamo/Standard.h
+        src/cinamo/src/StringICU.cpp
+        src/cinamo/src/String.cpp
+        src/cinamo/src/XArchiver.cpp
+        src/cinamo/src/Url.cpp
+        src/cinamo/src/StringSplit.cpp
+        src/cinamo/src/StringParse.cpp
+        src/cinamo/src/XVal.cpp
+        src/cinamo/src/FileSystem.cpp
+        src/cinamo/src/Base64.cpp
+        src/cinamo/src/Time.cpp
+        src/cinamo/src/Logger.cpp
+        src/cinamo/src/Win32.cpp
+        src/cinamo/src/Exception.cpp
+        src/cinamo/src/Dynamic.cpp
+        src/cinamo/src/FormPayload.cpp
+        src/cinamo/src/XMLAttrParser.cpp
+)
 
 set(DONUT_SOURCE_FILES
         src/donut/include/donut/native/Bind.hpp
@@ -306,7 +364,7 @@ set(DONUT_APP_SOURCE_FILES
         src/entrypoint/donut/SystemPatron.hpp
         src/entrypoint/donut/SystemProvider.cpp
         src/entrypoint/donut/SystemProvider.hpp
-        )
+)
 
 set(CHISA_APP_SOURCE_FILES
         src/entrypoint/pc/main.cpp
@@ -380,7 +438,7 @@ set(CHISA_APP_SOURCE_FILES
         src/nes/NesFairy.cpp
         src/nes/NesGeist.cpp
         src/nes/NesGeist.hpp
-        )
+)
 
 set(TEST_SOURCE_FILES
     external/gtest/googletest/src/gtest-all.cc
@@ -407,6 +465,33 @@ set(TEST_SOURCE_FILES
     test/chisa/tk/TaskHandlerTest.cpp
     test/chisa/tk/WidgetTest.cpp
     test/chisa/HandlerTest.cpp
+
+    test/cinamo/Base64Test.cpp
+    test/cinamo/BoxTest.cpp
+    test/cinamo/ClassUtilTest.cpp
+    test/cinamo/ConstexprList.cpp
+    test/cinamo/DemangleTest.cpp
+    test/cinamo/EitherTest.cpp
+    test/cinamo/ExceptionTest.cpp
+    test/cinamo/FileUtilTest.cpp
+    test/cinamo/FormPayloadTest.cpp
+    test/cinamo/FunctorBaseTest.cpp
+    test/cinamo/LoggerTest.cpp
+    test/cinamo/MatrixTest.cpp
+    test/cinamo/MaybeTest.cpp
+    test/cinamo/MixTypeTest.cpp
+    test/cinamo/ParserTest.cpp
+    test/cinamo/StringUtilTest.cpp
+    test/cinamo/TypeTraitsTest.cpp
+    test/cinamo/UnitTest.cpp
+    test/cinamo/UrlTest.cpp
+    test/cinamo/VectorMapTest.cpp
+    test/cinamo/XArchiverTest.cpp
+    test/cinamo/XMLAttrParserTest.cpp
+    test/cinamo/XValueTest.cpp
+    test/cinamo/XValueTestBinaryTypes.inc.h
+    test/cinamo/XValueTestTypes.inc.h
+
     test/donut/lang/ArrayTest.cpp
     test/donut/lang/AssignOprationTest.cpp
     test/donut/lang/BlockTest.cpp
@@ -440,21 +525,23 @@ set(TEST_SOURCE_FILES
     test/donut/SourceSerializeTest.cpp
     test/main.cpp
     test/TestCommon.hpp
-    test/TestUtil.cpp)
-
-# add temporary dir
-set( ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:/home/psi/opt/chisa/lib/pkgconfig" )
+    test/TestUtil.cpp
+)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+
+## TODO: for OSX, homebrew
+set( ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:/usr/local/opt/icu4c/lib/pkgconfig")
+
 include_directories(src/donut/include)
+include_directories(src/cinamo/include)
 include_directories(external/gtest/googletest/include)
 include_directories(external/gtest/googletest)
 
+pkg_check_modules(ICU4C REQUIRED icu-io icu-uc)
 pkg_check_modules(LIBPNG REQUIRED libpng)
 pkg_check_modules(FREETYPE2 REQUIRED freetype2)
 pkg_check_modules(SDL2 REQUIRED sdl2)
-pkg_check_modules(LIBCINAMO REQUIRED libcinamo)
-link_directories(${LIBCINAMO_LIBRARY_DIRS})
 link_directories(${LIBPNG_LIBRARY_DIRS})
 link_directories(${SDL2_LIBRARY_DIRS})
 link_directories(${FREETYPE2_LIBRARY_DIRS})
@@ -462,22 +549,43 @@ link_directories(${FREETYPE2_LIBRARY_DIRS})
 find_package(OpenGL REQUIRED)
 find_package(ANTLR REQUIRED)
 
-add_library(donut ${DONUT_SOURCE_FILES})
-target_include_directories(donut PUBLIC ${LIBCINAMO_INCLUDE_DIRS})
-target_include_directories(donut PUBLIC ${ANTLR_INCLUDE_DIRS})
+###############################################################################
+#### cinamo lib
+###############################################################################
+add_subdirectory("external/tinyxml2")
+add_library(cinamo STATIC ${CINAMO_SOURCE_FILES})
+target_include_directories(cinamo PUBLIC ${ICU4C_INCLUDE_DIRS})
+target_include_directories(cinamo PUBLIC "external/tinyxml2")
+target_link_libraries(cinamo tinyxml2)
 
-add_library(chisa ${CHISA_SOURCE_FILES})
-target_include_directories(chisa PUBLIC ${LIBCINAMO_INCLUDE_DIRS})
+###############################################################################
+#### donut lib
+###############################################################################
+add_library(donut STATIC ${DONUT_SOURCE_FILES})
+target_include_directories(donut PUBLIC ${ICU4C_INCLUDE_DIRS})
+target_include_directories(donut PUBLIC ${ANTLR_INCLUDE_DIRS})
+target_include_directories(donut PUBLIC "external/tinyxml2")
+
+###############################################################################
+#### chisa lib
+###############################################################################
+add_library(chisa STATIC ${CHISA_SOURCE_FILES})
+target_include_directories(chisa PUBLIC ${ICU4C_INCLUDE_DIRS})
 target_include_directories(chisa PUBLIC ${LIBPNG_INCLUDE_DIRS})
 target_include_directories(chisa PUBLIC ${FREETYPE2_INCLUDE_DIRS})
+target_include_directories(chisa PUBLIC "external/tinyxml2")
 
+###############################################################################
+#### chisa app
+###############################################################################
 add_executable(chisaApp ${CHISA_APP_SOURCE_FILES})
+target_link_libraries(chisaApp cinamo)
 target_link_libraries(chisaApp donut)
 target_link_libraries(chisaApp chisa)
-target_include_directories(chisaApp PUBLIC ${LIBCINAMO_INCLUDE_DIRS})
+target_include_directories(chisaApp PUBLIC ${ICU4C_INCLUDE_DIRS})
 target_include_directories(chisaApp PUBLIC ${LIBPNG_INCLUDE_DIRS})
 target_include_directories(chisaApp PUBLIC ${FREETYPE2_INCLUDE_DIRS})
-target_link_libraries(chisaApp ${LIBCINAMO_LIBRARIES})
+target_include_directories(chisaApp PUBLIC "external/tinyxml2")
 target_link_libraries(chisaApp ${LIBPNG_LIBRARIES})
 target_link_libraries(chisaApp ${FREETYPE2_LIBRARIES})
 target_link_libraries(chisaApp ${OPENGL_LIBRARIES})
@@ -485,24 +593,32 @@ target_link_libraries(chisaApp ${ANTLR_LIBRARIES})
 target_link_libraries(chisaApp ${SDL2_LIBRARIES})
 target_link_libraries(chisaApp pthread)
 
+###############################################################################
+#### donut app
+###############################################################################
 add_executable(donutApp ${DONUT_APP_SOURCE_FILES})
+target_link_libraries(donutApp cinamo)
 target_link_libraries(donutApp donut)
-target_include_directories(donutApp PUBLIC ${LIBCINAMO_INCLUDE_DIRS})
+target_include_directories(donutApp PUBLIC ${ICU4C_INCLUDE_DIRS})
 target_include_directories(donutApp PUBLIC ${LIBPNG_INCLUDE_DIRS})
 target_include_directories(donutApp PUBLIC ${FREETYPE2_INCLUDE_DIRS})
-target_link_libraries(donutApp ${LIBCINAMO_LIBRARIES})
+target_include_directories(donutApp PUBLIC "external/tinyxml2")
 target_link_libraries(donutApp ${LIBPNG_LIBRARIES})
 target_link_libraries(donutApp ${FREETYPE2_LIBRARIES})
 target_link_libraries(donutApp ${OPENGL_LIBRARIES})
 target_link_libraries(donutApp ${ANTLR_LIBRARIES})
 
+###############################################################################
+#### test app
+###############################################################################
 add_executable(testApp ${TEST_SOURCE_FILES})
+target_link_libraries(testApp cinamo)
 target_link_libraries(testApp donut)
 target_link_libraries(testApp chisa)
-target_include_directories(testApp PUBLIC ${LIBCINAMO_INCLUDE_DIRS})
+target_include_directories(testApp PUBLIC ${ICU4C_INCLUDE_DIRS})
 target_include_directories(testApp PUBLIC ${LIBPNG_INCLUDE_DIRS})
 target_include_directories(testApp PUBLIC ${FREETYPE2_INCLUDE_DIRS})
-target_link_libraries(testApp ${LIBCINAMO_LIBRARIES})
+target_include_directories(testApp PUBLIC "external/tinyxml2")
 target_link_libraries(testApp ${LIBPNG_LIBRARIES})
 target_link_libraries(testApp ${FREETYPE2_LIBRARIES})
 target_link_libraries(testApp ${OPENGL_LIBRARIES})

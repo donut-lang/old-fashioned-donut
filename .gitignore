@@ -40,3 +40,5 @@ Donut.xcodeproj/
 CMakeCache.txt
 cmake_install.cmake
 .DS_Store
+DonutConfig.cmake
+DonutTargets.cmake

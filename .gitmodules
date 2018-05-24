@@ -1,3 +1,6 @@
 [submodule "external/gtest"]
 	path = external/gtest
 	url = git@github.com:google/googletest.git
+[submodule "external/tinyxml2"]
+	path = external/tinyxml2
+	url = git@github.com:leethomason/tinyxml2.git
