@@ -16,22 +16,15 @@
 #
 *.exe
 
-# waf temp files
-.lock*
-.waf*/
-
 #build dir
-/build/
-/waf*/
-/cov/
+/Debug/
+/external/*
 
 #antlr
 src/chisa/donut/parser/output/classes/
 src/chisa/donut/parser/output/*.tokens
 src/chisa/donut/parser/output/*.java
 src/chisa/donut/parser/output/__*
-
-/Windows
 
 CMakeFiles/
 CMakeScripts/
