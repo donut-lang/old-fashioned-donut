@@ -12,7 +12,7 @@
 namespace chisa {
 namespace geom {
 
-class MatrixTest : public ::testing::Test
+class ChisaMatrixTest : public ::testing::Test
 {
 protected:
 public:
@@ -30,12 +30,12 @@ for(int x=0;x<4;++x){\
 	}\
 }
 
-TEST_F(MatrixTest, IdentityTest)
+TEST_F(ChisaMatrixTest, IdentityTest)
 {
 	AssertIdentity(Matrix());
 }
 
-TEST_F(MatrixTest, BasicTest)
+TEST_F(ChisaMatrixTest, BasicTest)
 {
 	Matrix mat(
 			1,0,0,0,
@@ -50,7 +50,7 @@ TEST_F(MatrixTest, BasicTest)
 	AssertIdentity(mat);
 }
 
-TEST_F(MatrixTest, FloatMultTest)
+TEST_F(ChisaMatrixTest, FloatMultTest)
 {
 	Matrix mat(
 			 1, 2, 3, 4,
@@ -85,7 +85,7 @@ TEST_F(MatrixTest, FloatMultTest)
 	}
 }
 
-TEST_F(MatrixTest, MultTest)
+TEST_F(ChisaMatrixTest, MultTest)
 {
 	Matrix mat(
 			0, 0, 0, 1,
