@@ -6,9 +6,6 @@
  */
 
 #include <cinamo/Platform.h>
-
-#ifdef HAVE_ICU
-
 #include <unicode/unistr.h>
 #include <unicode/regex.h>
 #include <unicode/brkiter.h>
@@ -16,6 +13,8 @@
 #include <cinamo/String.h>
 
 namespace cinamo {
+
+using namespace icu;
 
 std::vector<std::string> breakChar(std::string const& str_)
 {
@@ -56,4 +55,3 @@ std::string& trim(std::string& str_)
 }
 
 }
-#endif

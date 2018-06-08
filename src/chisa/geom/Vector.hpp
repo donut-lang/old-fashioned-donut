@@ -105,16 +105,16 @@ namespace chisa {
 using namespace cinamo;
 
 namespace geom {
-bool isUnspecified(const float width_or_height){
+inline bool isUnspecified(const float width_or_height){
 	return std::isnan(width_or_height);
 };
-bool isSpecified(const float width_or_height){
+inline bool isSpecified(const float width_or_height){
 	return !std::isnan(width_or_height);
 };
-float max(const float a, const float b){
+inline float max(const float a, const float b){
 	return std::isnan(a) ? b : (a < b  ? b : a);
 };
-float min(const float a, const float b){
+inline float min(const float a, const float b){
 	return std::isnan(a) ? b : (a > b  ? b : a);
 };
 constexpr float Unspecified = NAN;
@@ -351,17 +351,17 @@ public:
 };
 
 template <typename T, typename U>
-constexpr T min(const BaseVector<T, U>& a, const BaseVector<T, U>& b) noexcept{
+inline constexpr T min(const BaseVector<T, U>& a, const BaseVector<T, U>& b) noexcept{
 	return T(std::min(a.x(), b.x()), std::min(a.y(), b.y()));
 }
 
 template <typename T, typename U>
-constexpr T max(const BaseVector<T, U>& a, const BaseVector<T, U>& b) noexcept{
+inline constexpr T max(const BaseVector<T, U>& a, const BaseVector<T, U>& b) noexcept{
 	return T(std::max(a.x(), b.x()), std::max(a.y(), b.y()));
 }
 
 template <typename T, typename U>
-constexpr T abs(const BaseVector<T, U>& a) noexcept{
+inline constexpr T abs(const BaseVector<T, U>& a) noexcept{
 	return T(std::abs(a.x()), std::abs(a.y()));
 }
 
