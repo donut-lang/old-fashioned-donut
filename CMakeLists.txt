@@ -530,8 +530,10 @@ set(TEST_SOURCE_FILES
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
-## TODO: for OSX, homebrew
-set( ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:/usr/local/opt/icu4c/lib/pkgconfig")
+if(APPLE)
+  ## TODO: for OSX, homebrew
+  set( ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:/usr/local/opt/icu4c/lib/pkgconfig")
+endif()
 
 include_directories(src/donut/include)
 include_directories(src/cinamo/include)
