@@ -5,7 +5,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "../TestCommon.h"
+#include "../TestCommon.hpp"
 #include <cinamo/XArchiver.h>
 #include <math.h>
 

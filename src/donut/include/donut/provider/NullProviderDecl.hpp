@@ -16,7 +16,7 @@ public:
 	NullProvider(Handler<Heap> const& heap);
 	virtual ~NullProvider() noexcept = default;
 private:
-	static constexpr inline Object* toPointer() noexcept {
+	static inline Object* toPointer() noexcept {
 		return reinterpret_cast<Object*>(Object::Tag::Null);
 	}
 public:

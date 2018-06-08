@@ -17,10 +17,10 @@ public:
 	IntProvider(Handler<Heap> const& heap);
 	virtual ~IntProvider() noexcept = default;
 private:
-	static constexpr inline int fromPointer(const Object* const ptr) noexcept {
+	static inline int fromPointer(const Object* const ptr) noexcept {
 		return reinterpret_cast<std::intptr_t>(ptr) >> 2;
 	}
-	static constexpr inline Object* toPointer(int const& val) noexcept {
+	static inline Object* toPointer(int const& val) noexcept {
 		return reinterpret_cast<Object*>((val << 2) | Object::Tag::Int);
 	}
 public:

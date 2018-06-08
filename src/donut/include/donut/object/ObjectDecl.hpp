@@ -95,7 +95,7 @@ public:
 	static inline constexpr bool isPrimitiveDescriptor( object_desc_t const& desc ) noexcept {
 		return (desc & Object::Tag::Mask) != Object::Tag::Obj;
 	};
-	static inline objectid_t decodeObjectId( object_desc_t const& desc ) noexcept {
+	static inline objectid_t decodeObjectId( object_desc_t const& desc ) {
 		if(Object::isPrimitiveDescriptor(desc)) {
 			DONUT_EXCEPTION(Exception, "[BUG] Decoding primitive descriptor.");
 		}
@@ -104,10 +104,10 @@ public:
 	static inline constexpr object_desc_t encodeObjectId( objectid_t const& id ) {
 		return (id << Object::TagShift) | Object::Tag::Obj;
 	}
-	static inline constexpr Object* castToPointer(object_desc_t const& desc) noexcept {
+	static inline Object* castToPointer(object_desc_t const& desc) noexcept {
 		return reinterpret_cast<Object*>(static_cast<intptr_t>(desc));
 	};
-	static inline constexpr object_desc_t castToDescriptor(Object* const& desc) noexcept {
+	static inline object_desc_t castToDescriptor(Object* const& desc) noexcept {
 		return static_cast<object_desc_t>(reinterpret_cast<intptr_t>(desc));
 	};
 };
@@ -152,7 +152,7 @@ protected:
 	inline HeapProvider* const& provider() const noexcept { return this->provider_; };
 private:
 	virtual std::string providerNameImpl(Handler<Heap> const& heap) const override final;
-	virtual std::string printImpl(Handler<Heap> const& heap) const { return reprImpl(heap); };
+	virtual std::string printImpl(Handler<Heap> const& heap) const override { return reprImpl(heap); };
 public:
 	struct CompareById : std::binary_function<HeapObject* const&,HeapObject* const&,bool>{
 		bool operator()(HeapObject* const& a, HeapObject* const& b){
@@ -224,7 +224,7 @@ protected:
 public:
 	virtual ~NativeObject() noexcept = default;
 protected:
-	virtual std::string reprImpl(Handler<Heap> const& heap) const;
+	virtual std::string reprImpl(Handler<Heap> const& heap) const override;
 protected:
 	virtual bool hasImpl(Handler<Heap> const& heap, std::string const& name) const override;
 	virtual bool hasOwnImpl(Handler<Heap> const& heap, std::string const& name) const override;
@@ -254,7 +254,7 @@ public:
 	std::string objectProviderName() const noexcept { return this->objectProviderName_; };
 	std::string closureName() const noexcept { return this->closureName_; };
 protected:
-	virtual std::string reprImpl(Handler<Heap> const& heap) const = 0;
+	virtual std::string reprImpl(Handler<Heap> const& heap) const override = 0;
 protected:
 	virtual Handler<NativeClosureObject> tryCastToNativeClosureObjectImpl() override final;
 	virtual bool hasImpl(Handler<Heap> const& heap, std::string const& name) const override final;

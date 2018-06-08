@@ -41,20 +41,20 @@ public:
 	constexpr Color multAlpha(float const& alpha) const noexcept{
 		return Color(red_,green_, blue_, alpha_*alpha);
 	}
-	constexpr bool isInvalid() const noexcept{
+	bool isInvalid() const noexcept{
 		return
 				std::isnan(red_) ||
 				std::isnan(blue_) ||
 				std::isnan(green_) ||
 				std::isnan(alpha_);
 	}
-	constexpr bool operator==(Color const& o) const noexcept{
+	bool operator==(Color const& o) const noexcept{
 		return std::fabs(this->red_ - o.red_) < DELTA &&
 				std::fabs(this->blue_ - o.blue_) < DELTA &&
 				std::fabs(this->green_ - o.green_) < DELTA &&
 				std::fabs(this->alpha_ - o.alpha_) < DELTA;
 	}
-	constexpr bool operator!=(Color const& o) const noexcept{
+	bool operator!=(Color const& o) const noexcept{
 		return std::fabs(this->red_ - o.red_) >= DELTA ||
 				std::fabs(this->blue_ - o.blue_) >= DELTA ||
 				std::fabs(this->green_ - o.green_) >= DELTA ||

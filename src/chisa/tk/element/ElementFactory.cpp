@@ -60,8 +60,8 @@ ElementFactory::ElementFactory(Logger& log, HandlerW<World> world, std::string c
 ,doc_free_by_me_(true)
 {
 	init();
-	const int code = doc_->LoadFile(filename.c_str());
-	if(code != XML_NO_ERROR){
+	auto code = doc_->LoadFile(filename.c_str());
+  if(code != tinyxml2::XMLError::XML_SUCCESS){
 		throw Exception(__FILE__, __LINE__, "Failed to read xml (%d): %s", code, filename.c_str());
 	}
 	this->root_ = doc_->RootElement();
@@ -91,8 +91,8 @@ ElementFactory::ElementFactory(Logger& log, HandlerW<World> world, std::string c
 ,doc_free_by_me_(true)
 {
 	init();
-	const int code = doc_->Parse(buffer, lenb);
-	if(code != XML_NO_ERROR){
+	auto const code = doc_->Parse(buffer, lenb);
+  if(code != tinyxml2::XMLError::XML_SUCCESS){
 		throw Exception(__FILE__, __LINE__, "Failed to read xml (%d): %s", code, filename.c_str());
 	}
 	this->root_ = doc_->RootElement();

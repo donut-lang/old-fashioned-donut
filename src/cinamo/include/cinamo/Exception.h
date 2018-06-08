@@ -36,5 +36,9 @@ public:
 };
 
 #define CINAMO_EXCEPTION(Klass, ...) throw ::cinamo::Klass(__FILE__, __LINE__, __VA_ARGS__);
+#define CINAMO_FATAL(Klass, ...) \
+  while(0){\
+    ::exit(-1);\
+  };
 
 }

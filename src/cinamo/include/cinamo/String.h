@@ -52,11 +52,9 @@ std::string join(std::vector<std::string> const& lst, std::string const& sep);
 std::size_t matchString(std::string const& a, std::string const& b);
 std::string randomString(std::size_t len);
 
-#if defined(HAVE_ICU) && HAVE_ICU
 std::vector<std::string> breakChar(std::string const& str_);
 std::string trim(std::string const& str);
 std::string& trim(std::string& str);
-#endif
 
 template <typename T> bool tryParseAs(std::string const& str, int radix, T& result);
 template <typename T> bool tryParseAs(std::string const& str, T& result);

@@ -5,7 +5,7 @@
  * Copyright 2012-2013, PSI
  */
 
-#include "../TestCommon.h"
+#include "../TestCommon.hpp"
 #include <cinamo/functional/List.h>
 #include <cinamo/String.h>
 
@@ -53,8 +53,8 @@ TEST(ConstexprList, SubListTest){
 	constexpr auto lst1 = toList( 1, 2, 3, 4, 5, 6);
 	constexpr auto lst = lst1.sub<1, 2>();
 
-	ASSERT_EQ(lst[0], 2);
-	ASSERT_EQ(lst[1], 3);
+	ASSERT_EQ((lst[0]), 2);
+	ASSERT_EQ((lst[1]), 3);
 }
 
 }

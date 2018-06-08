@@ -84,7 +84,7 @@ Handler<gl::Sprite> ImageDrawable::sprite()
 geom::Box ImageDrawable::size()
 {
 	Handler<gl::Sprite> spr(this->sprite());
-	return spr ? geom::min(geom::Box(spr->size()), this->size_) : size_;
+  return spr ? geom::min(geom::Box(spr->size()), this->size_) : size_;
 }
 
 void ImageDrawable::draw(Canvas& canvas, geom::Point const& ptInRoot, geom::Area const& mask, const float depth)
@@ -181,7 +181,7 @@ void StretchDrawable::draw(Canvas& canvas, geom::Point const& ptInRoot, geom::Ar
 	Canvas::AffineScope as(canvas);
 	{
 		canvas.translate(ptInRoot);
-		geom::ScaleVector scale(size_ / child_->size());
+		geom::ScaleVector const scale(size_ / child_->size());
 		canvas.scale(scale);
 		this->child_->draw(canvas, geom::ZERO, mask*scale, depth);
 	}

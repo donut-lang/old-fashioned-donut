@@ -17,10 +17,10 @@ public:
 	BoolProvider(Handler<Heap> const& heap);
 	virtual ~BoolProvider() noexcept = default;
 public:
-	static constexpr inline bool fromPointer(const Object* const ptr) noexcept {
+	static inline bool fromPointer(const Object* const ptr) noexcept {
 		return reinterpret_cast<std::intptr_t>(ptr) >> 2;
 	}
-	static constexpr inline Object* toPointer(bool const& val) noexcept {
+	static inline Object* toPointer(bool const& val) noexcept {
 		return reinterpret_cast<Object*>((val << 2) | Object::Tag::Bool);
 	}
 public:

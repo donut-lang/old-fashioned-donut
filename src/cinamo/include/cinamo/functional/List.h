@@ -89,16 +89,16 @@ public:
 	}
 private:
 	template <size_t start, size_t idx, size_t slen, typename... Args>
-	constexpr List<A, slen> subI(typename std::enable_if<(idx <= 0)>::type*, Args... args){
+	constexpr List<A, slen> subI(typename std::enable_if<(idx <= 0)>::type*, Args... args) const {
 		return List<A, slen>(args...);
 	}
 	template <size_t start, size_t idx, size_t slen, typename... Args>
-	constexpr List<A, slen> subI(typename std::enable_if<(idx > 0)>::type*, Args... args){
+	constexpr List<A, slen> subI(typename std::enable_if<(idx > 0)>::type*, Args... args) const {
 		return subI<start, idx-1, slen>(nullptr, spirit[start+idx-1], args...);
 	}
 public:
 	template <size_t start, size_t slen>
-	constexpr List<A, slen> sub(){
+	constexpr List<A, slen> sub() const {
 		return subI<start, slen, slen>(nullptr);
 	}
 public:

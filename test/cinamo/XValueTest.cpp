@@ -9,7 +9,7 @@
 #include <cstdint>
 #include <cinamo/XVal.h>
 #include <cinamo/TypeTraits.h>
-#include "../TestCommon.h"
+#include "../TestCommon.hpp"
 
 namespace cinamo {
 

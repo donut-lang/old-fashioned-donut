@@ -9,8 +9,13 @@
 #include <cmath>
 #include <string>
 #include <cinamo/String.h>
+
 #undef isnan
 #undef isnanf
+
+#ifdef near
+#undef near
+#endif
 
 #define SETUP(Klass)\
 public:\
@@ -24,8 +29,8 @@ public:\
 	void *operator new(std::size_t) = delete;\
 	void operator delete(void* pv) = delete;
 
-#define ENABLE_CAST(Klass, From)\
-	implicit constexpr Klass(From const& o) noexcept:BaseVector<Klass>(o){};
+#define ENABLE_CAST(Klass, From) \
+	explicit Klass(From const& o) noexcept:BaseVector<Klass, Klass::ValType>(o){};
 
 #define ENABLE_UNARY_OP(Klass)\
 	inline constexpr Klass operator-() const noexcept{\
@@ -100,16 +105,16 @@ namespace chisa {
 using namespace cinamo;
 
 namespace geom {
-constexpr bool isUnspecified(const float width_or_height){
+bool isUnspecified(const float width_or_height){
 	return std::isnan(width_or_height);
 };
-constexpr bool isSpecified(const float width_or_height){
+bool isSpecified(const float width_or_height){
 	return !std::isnan(width_or_height);
 };
-constexpr float max(const float a, const float b){
+float max(const float a, const float b){
 	return std::isnan(a) ? b : (a < b  ? b : a);
 };
-constexpr float min(const float a, const float b){
+float min(const float a, const float b){
 	return std::isnan(a) ? b : (a > b  ? b : a);
 };
 constexpr float Unspecified = NAN;
@@ -152,9 +157,6 @@ public:
 	inline constexpr bool operator!=(Self const& other) const noexcept{
 		return !(*this==other);
 	}
-#ifdef near
-#undef near
-#endif
 	inline constexpr bool near(Self const& other, const float precision) const noexcept{
 		return
 				std::fabs(this->x_ - other.x_) < precision &&
@@ -276,13 +278,13 @@ public:
 		return format("(Vector %f %f)", this->x(), this->y());
 	}
 	ENABLE_UNARY_OP(Vector);
-	ENABLE_PM(Vector , Vector , Vector );
+	ENABLE_PM(Vector , Vector , Vector);
 	ENABLE_PM_ASSIGN(Vector, Vector);
 	ENABLE_MD(Vector, ScaleVector, Vector);
 	ENABLE_DIV(Vector, Vector, ScaleVector);
 	ENABLE_MD_ASSIGN(Vector, ScaleVector);
 	ENABLE_MD_FLOAT(Vector);
-	inline constexpr bool near(Vector const& other, const ValType precision) const noexcept{
+	inline bool near(Vector const& other, const ValType precision) const noexcept{
 		return
 				std::fabs(this->x() - other.x()) < precision &&
 				std::fabs(this->y() - other.y()) < precision;
@@ -293,11 +295,13 @@ public:
 	inline ValType& height() noexcept{ return this->y(); };
 	inline void width(const ValType width) noexcept { this->x(width); };
 	inline void height(const ValType height) noexcept { this->y(height); };
-	inline constexpr bool empty() const noexcept {
+	inline bool empty() const noexcept {
 		return
 				!(std::fabs(this->x()) >= geom::VerySmall &&
 				std::fabs(this->y()) >= geom::VerySmall);
 	}
+  /* CAST */
+  inline explicit Vector(IntVector const& v);
 };
 constexpr Vector ZERO = Vector(0,0);
 
@@ -359,6 +363,10 @@ constexpr T max(const BaseVector<T, U>& a, const BaseVector<T, U>& b) noexcept{
 template <typename T, typename U>
 constexpr T abs(const BaseVector<T, U>& a) noexcept{
 	return T(std::abs(a.x()), std::abs(a.y()));
+}
+
+inline Vector::Vector(IntVector const& v)
+:BaseVector<chisa::geom::Vector, float>(v.x(), v.y()) {
 }
 
 }}

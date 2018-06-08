@@ -7,8 +7,9 @@
 
 #include <sstream>
 #include <tinyxml2.h>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <cinamo/Exception.h>
+#include <cinamo/String.h>
 
 #include "TextArea.hpp"
 #include "../../gl/Canvas.hpp"
@@ -247,7 +248,7 @@ void TextArea::startEditing(float const width)
 	float left=width;
 	if(Handler<World> w = this->world().lock()) {
 		Handler<gl::DrawableManager> mgr(w->drawableManager());
-		std::vector<std::string> lst(::cinamo::breakChar(this->text_));
+		std::vector<std::string> lst((::cinamo::breakChar(this->text_)));
 		auto it = lst.begin();
 		for(;it != lst.end(); ++it) {
 			Handler<gl::TextDrawable> t(this->createEditingText(mgr, (std::string const&)*it));
@@ -525,7 +526,7 @@ void TextArea::onTextInput(float const& timeMs, std::string const& text)
 	if(Handler<World> w = this->world().lock()) {
 		this->deleteSelected();
 		Handler<gl::DrawableManager> mgr(w->drawableManager());
-		for(std::string const& str : ::cinamo::breakChar(text)){
+		for(std::string const& str : (::cinamo::breakChar(text))){
 			Handler<gl::TextDrawable> d(this->createEditingText(mgr, str));
 			this->editListBefore_.push_back(d);
 			this->editListBeforeWidth_ += d->width();
@@ -535,7 +536,7 @@ void TextArea::onTextInput(float const& timeMs, std::string const& text)
 }
 void TextArea::onTextEdit(float const& timeMs, std::string const& text, int const start, int const length)
 {
-	std::vector<std::string> lst(::cinamo::breakChar(text));
+  std::vector<std::string> lst((::cinamo::breakChar(text)));
 	auto itstr = lst.begin();
 	auto itspr = this->editListEditing_.begin();
 	std::size_t cnt=0;

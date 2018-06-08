@@ -73,14 +73,14 @@ private: /* 実行時の一時的な変数 */
 	class RunLock{
 		Machine* const m;
 	public:
-		inline RunLock(Machine* m) noexcept
+		inline RunLock(Machine* m)
 		:m(m) {
 			if(m->running_){
 				DONUT_EXCEPTION(Exception, "[BUG] Oops. Already running!");
 			}
 			m->running_= true;
 		}
-		inline ~RunLock() noexcept {
+		inline ~RunLock() {
 			if(!m->running_){
 				DONUT_EXCEPTION(Exception, "[BUG] Oops. Already unlocked!!");
 			}

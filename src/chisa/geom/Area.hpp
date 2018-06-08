@@ -62,12 +62,12 @@ public:
 		return format("(Area %f %f %f %f)", x(), y(), width(), height());
 	}
 	inline constexpr bool empty() const noexcept { return this->box_.empty(); }
-	inline constexpr Area operator*(ScaleVector const& scale){
-		return Area(point()*scale, box()*scale);
-	}
-	inline constexpr Area operator/(ScaleVector const& scale){
-		return Area(point()/scale, box()/scale);
-	}
+  inline constexpr Area operator*(ScaleVector const& scale) const {
+    return Area(point()*scale, box()*scale);
+  }
+  inline constexpr Area operator/(ScaleVector const& scale) const {
+    return Area(point()/scale, box()/scale);
+  }
 	//	inline Area intersect(Area const& other) const noexcept
 	//	{
 	//		using namespace chisa::geom;
@@ -137,7 +137,7 @@ public:
 	void margin(float const& other) noexcept{
 		(*this) = other;
 	};
-	inline constexpr geom::Area apply(geom::Area const& other)
+	inline constexpr geom::Area apply(geom::Area const& other) const
 	{
 		return geom::Area(other.point() + this->offset(), other.box() - this->totalSpace());
 	}

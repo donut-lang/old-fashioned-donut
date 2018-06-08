@@ -58,42 +58,42 @@ public:
 	~Maybe() = default;
 public:
 	template <typename F>
-	constexpr auto operator>>=(F f) -> Maybe<typename _remove_maybe<decltype(f(val_))>::value_type> {
+	constexpr auto operator>>=(F f) const -> Maybe<typename _remove_maybe<decltype(f(val_))>::value_type> {
 		return isNothing ? decltype(f(val_))() : f(val_);
 	}
 	template <typename R>
-	constexpr Maybe<R> operator>>(Maybe<R> const& r) {
+	constexpr Maybe<R> operator>>(Maybe<R> const& r) const {
 		return isNothing ? Maybe<R>() : r;
 	}
-	constexpr Maybe<A> operator ||(Maybe<A> m) {
+	constexpr Maybe<A> operator ||(Maybe<A> m) const {
 		return isJust ? *this : m;
 	}
 	template <typename F>
-	constexpr Maybe<A> fmap(F f){
+	constexpr Maybe<A> fmap(F f) const {
 		return isNothing ? *this : Just(f(val_));
 	}
 	template <typename F>
-	constexpr auto ifNothing(F f) -> Maybe<decltype(f())>{
+	constexpr auto ifNothing(F f) -> Maybe<decltype(f())> const {
 		return isNothing ? Just(f()) : Nothing<decltype(f())>();
 	}
 	template <typename F>
-	constexpr auto ifJust(F f) -> Maybe<decltype(f(val_))>{
+	constexpr auto ifJust(F f) -> Maybe<decltype(f(val_))> const {
 		return isJust ? Just(f(val_)) : Nothing<decltype(f(val_))>();
 	}
 	template <typename F>
-	static constexpr std::function<Maybe<A>(A const&)> lift(F f){
+	static constexpr std::function<Maybe<A>(A const&)> lift(F f) {
 		return std::function<Maybe<A>(A const&)>([f](A const& a)->Maybe<A>{
 			return Just(f(a));
 		});
 	}
 	template <typename Other>
-	constexpr bool operator==(Maybe<Other> const& o){
+	constexpr bool operator==(Maybe<Other> const& o) const {
 		return std::is_same<Other, A>::value
 				&& (this->isNothing == this->isNothing)
 				&& (this->isNothing || this->val_ == o.value());
 	}
 	template <typename Other>
-	constexpr bool operator!=(Maybe<Other> const& o){
+	constexpr bool operator!=(Maybe<Other> const& o) const {
 		return !this->operator ==(o);
 	}
 };

@@ -8,9 +8,11 @@
 #pragma once
 #include <string>
 #include <deque>
+
+// include freetype2
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include <freetype2/ftcache.h>
+#include FT_CACHE_H
 
 #include <cinamo/Logger.h>
 #include <cinamo/Handler.h>

@@ -70,7 +70,7 @@ public:
 			}
 			this->parent_.locked(true);
 		};
-		~RawFaceSession() noexcept{
+		~RawFaceSession() {
 			if(!this->parent_.locked()){
 				CINAMO_EXCEPTION(Exception, "[BUG] Oops. Font is already unlocked.");
 			}

@@ -28,7 +28,7 @@ public:
 public:
 	virtual std::string toString() const;
 	template <typename... Args>
-	constexpr std::string resolveFilepath(Args const&... path) const noexcept
+	std::string resolveFilepath(Args const&... path) const noexcept
 	{
 		return file::join(this->basepath(), path...);
 	}

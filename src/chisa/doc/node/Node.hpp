@@ -31,9 +31,9 @@ namespace doc {
 
 class Node {
 	DISABLE_COPY_AND_ASSIGN(Node);
-	DEFINE_MEMBER(public, private, Document*, root);
-	DEFINE_MEMBER(public, private, BlockNode*, block);
-	DEFINE_MEMBER(public, private, TreeNode*, parent);
+	DEFINE_MEMBER(public, protected, Document*, root);
+	DEFINE_MEMBER(public, protected, BlockNode*, block);
+	DEFINE_MEMBER(public, protected, TreeNode*, parent);
 protected:
 	Node();
 public:

@@ -12,6 +12,8 @@
 
 namespace chisa {
 namespace doc {
+  
+using namespace icu;
 
 std::string shrinkSpace(std::string const& str_)
 {

@@ -8,6 +8,7 @@
 #pragma once
 #include <string>
 #include <antlr3.h>
+#include <math.h>
 
 namespace donut{
 

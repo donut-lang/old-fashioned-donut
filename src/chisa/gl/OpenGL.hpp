@@ -8,18 +8,29 @@
 #pragma once
 #include <cinamo/Platform.h>
 
-#if CINAMO_ANDROID
+#if defined(CINAMO_ANDROID)
 #include <GLES/gl.h>
 #define IS_GLES (1)
 #define IS_GLES11 (1)
 #define IS_GLES20 (0)
 #define IS_GL (0)
-#elif CINAMO_IOS
+#elif defined(CINAMO_IOS)
 #include <OpenGLES/ES1/gl.h>
 #define IS_GLES (1)
 #define IS_GLES11 (1)
 #define IS_GLES20 (0)
 #define IS_GL (0)
+#elif defined(CINAMO_OSX)
+
+#include <OpenGL/glext.h>
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+
+#define IS_GLES (0)
+#define IS_GLES11 (0)
+#define IS_GLES20 (0)
+#define IS_GL (1)
+
 #else
 #include <GL/gl.h>
 #define IS_GLES (0)
