@@ -26,6 +26,7 @@ src/chisa/donut/parser/output/*.tokens
 src/chisa/donut/parser/output/*.java
 src/chisa/donut/parser/output/__*
 
+# Cmake
 CMakeFiles/
 CMakeScripts/
 Donut.build/
@@ -35,3 +36,9 @@ cmake_install.cmake
 .DS_Store
 DonutConfig.cmake
 DonutTargets.cmake
+
+# Ninja
+build.ninja
+.ninja_deps
+.ninja_log
+rules.ninja

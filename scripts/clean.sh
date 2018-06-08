@@ -4,5 +4,11 @@ set -x
 # OSX
 find . -name .DS_Store -delete
 
+# Cmake
+rm -Rf CMakeFiles CMakeScripts *.cmake CMakeCache.txt
+
 # Xcode
-rm -Rf Debug Donut.build Donut.xcodeproj CMakeFiles CMakeScripts *.cmake CMakeCache.txt
+rm -Rf Debug Donut.build Donut.xcodeproj
+
+# Ninja
+rm -Rf build.ninja .ninja_deps .ninja_log rules.ninja
