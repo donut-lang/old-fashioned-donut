@@ -5,13 +5,6 @@
 
 "時間遡行者のための"プログラミング言語です。C++ + Antlr3 + ICU(for unicode)
 
-# Chisa - a GUI toolkit for time leapers.
-
- - src/chisaに配置
- - https://donut-lang.org/chisa
-
-ど～なっつをバックエンドに使ったGUIツールキット。OpenGL + C++製。
-
 # How to build
 
 ```bash

@@ -10,9 +10,6 @@
 namespace cinamo {
 
 struct Unit final{
-	operator void(){
-		return void();
-	}
 	constexpr bool operator==(Unit const&) { return true; }
 	constexpr bool operator!=(Unit const&) { return false; }
 };

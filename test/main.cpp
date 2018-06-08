@@ -19,17 +19,9 @@
 
 #include <gtest/gtest.h>
 #include <unicode/unistr.h>
-#include <SDL2/SDL.h>
 
 int main(int argc, char **argv) {
 	::testing::InitGoogleTest(&argc, argv);
-	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO );
-	SDL_Window* window = SDL_CreateWindow( "SDL2/OpenGL Demo", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1, 1, SDL_WINDOW_OPENGL|SDL_WINDOW_HIDDEN );
-	SDL_GLContext glcontext = SDL_GL_CreateContext(window);
-
 	const int r = RUN_ALL_TESTS();
-	SDL_GL_DeleteContext(glcontext);
-	SDL_DestroyWindow(window);
-	SDL_Quit();
 	return r;
 }

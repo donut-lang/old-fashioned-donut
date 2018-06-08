@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<world geist="nes">
-	<script src="main.donut" />
-	<vertical id="main" split-weight="1">
-		<frame split-weight="1">
-		</frame>
-		<clockslider />
-	</vertical>
-</world>
