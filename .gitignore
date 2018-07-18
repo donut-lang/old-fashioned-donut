@@ -18,6 +18,9 @@
 
 #build dir
 /Debug/
+/external/libantlr3c/
+/external/libantlr3c-3.4/
+/cmake-build-*/
 
 #antlr
 src/chisa/donut/parser/output/classes/

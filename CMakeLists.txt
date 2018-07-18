@@ -261,25 +261,36 @@ include_directories(external/gtest/googletest)
 
 pkg_check_modules(ICU4C REQUIRED icu-io icu-uc)
 link_directories(${ICU4C_LIBRARY_DIRS})
+include_directories(${ICU4C_INCLUDE_DIRS})
 
-find_package(ANTLR REQUIRED)
+include(ExternalProject)
+ExternalProject_Add(
+        libantlr
+        SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external/libantlr3c-3.4
+        PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/external/libantlr3c
+        CONFIGURE_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/external/libantlr3c-3.4/configure --enable-64bit --prefix=${CMAKE_CURRENT_SOURCE_DIR}/external/libantlr3c
+        BUILD_COMMAND make
+        INSTALL_COMMAND make install
+        BUILD_IN_SOURCE 1
+)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/libantlr3c/include)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/libantlr3c/lib)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/tinyxml2)
 
 ###############################################################################
 #### cinamo lib
 ###############################################################################
 add_subdirectory("external/tinyxml2")
 add_library(cinamo STATIC ${CINAMO_SOURCE_FILES})
-target_include_directories(cinamo PUBLIC ${ICU4C_INCLUDE_DIRS})
-target_include_directories(cinamo PUBLIC "external/tinyxml2")
 target_link_libraries(cinamo tinyxml2)
 
 ###############################################################################
 #### donut lib
 ###############################################################################
 add_library(donut STATIC ${DONUT_SOURCE_FILES})
-target_include_directories(donut PUBLIC ${ICU4C_INCLUDE_DIRS})
-target_include_directories(donut PUBLIC ${ANTLR_INCLUDE_DIRS})
-target_include_directories(donut PUBLIC "external/tinyxml2")
+add_dependencies(donut libantlr)
+link_libraries(donut antlr3c)
 
 ###############################################################################
 #### donut app
@@ -287,12 +298,8 @@ target_include_directories(donut PUBLIC "external/tinyxml2")
 add_executable(donutApp ${DONUT_APP_SOURCE_FILES})
 target_link_libraries(donutApp cinamo)
 target_link_libraries(donutApp donut)
-target_include_directories(donutApp PUBLIC ${ICU4C_INCLUDE_DIRS})
-target_include_directories(donutApp PUBLIC ${LIBPNG_INCLUDE_DIRS})
-target_include_directories(donutApp PUBLIC ${FREETYPE2_INCLUDE_DIRS})
-target_include_directories(donutApp PUBLIC "external/tinyxml2")
 target_link_libraries(donutApp ${ICU4C_LIBRARIES})
-target_link_libraries(donutApp ${ANTLR_LIBRARIES})
+add_dependencies(donutApp libantlr)
 
 ###############################################################################
 #### test app
@@ -300,8 +307,6 @@ target_link_libraries(donutApp ${ANTLR_LIBRARIES})
 add_executable(testApp ${TEST_SOURCE_FILES})
 target_link_libraries(testApp cinamo)
 target_link_libraries(testApp donut)
-target_include_directories(testApp PUBLIC ${ICU4C_INCLUDE_DIRS})
-target_include_directories(testApp PUBLIC "external/tinyxml2")
-target_link_libraries(testApp ${ICU4C_LIBRARIES})
-target_link_libraries(testApp ${ANTLR_LIBRARIES})
 target_link_libraries(testApp pthread)
+target_link_libraries(testApp ${ICU4C_LIBRARIES})
+add_dependencies(testApp libantlr)

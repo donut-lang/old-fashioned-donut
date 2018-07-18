@@ -10,14 +10,14 @@
 #include <sys/timeb.h>
 #endif
 
-#if CINAMO_LINUX
+#ifdef CINAMO_LINUX
 #include <sys/time.h>
 #endif
 
 namespace cinamo {
 
 
-#if defined(HAVE_ULONGLONG)
+#ifdef HAVE_ULONGLONG
 unsigned long long getTimeInMills()
 {
 	typedef unsigned long long Ret;
@@ -27,13 +27,13 @@ unsigned long getTimeInMills();
 	typedef unsigned long Ret;
 #endif
 
-#if CINAMO_LINUX
+#ifdef CINAMO_LINUX
 	struct timeval t;
 	gettimeofday(&t, nullptr);
 	return Ret(t.tv_sec) * 1000 + Ret(t.tv_usec) / 1000;
 #endif
 
-#if CINAMO_WINDOWS
+#ifdef CINAMO_WINDOWS
 	struct _timeb t;
 	_ftime(&t);
 	return Ret(t.time) * 1000 + Ret(t.millitm);

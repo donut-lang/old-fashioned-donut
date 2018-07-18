@@ -8,6 +8,7 @@
 #include <cinamo/String.h>
 #include <cinamo/Handler.h>
 #include <donut/object/FloatObject.hpp>
+#include <cmath>
 
 namespace donut {
 using namespace cinamo;
