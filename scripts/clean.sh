@@ -13,4 +13,8 @@ rm -Rf Debug Donut.build Donut.xcodeproj
 # Ninja
 rm -Rf build.ninja .ninja_deps .ninja_log rules.ninja
 
-rm donutApp testApp
+# Makefile
+rm -f Makefile
+
+# binaries
+rm -f donutApp testApp *.a
