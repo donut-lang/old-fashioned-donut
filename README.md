@@ -18,6 +18,7 @@ cmake -G 'Eclipse CDT4 - Unix Makefiles'
 ```
 
 ```bash
+# build types.
 cmake . -DCMAKE_BUILD_TYPE=Release
 cmake . -DCMAKE_BUILD_TYPE=RelWithDebInfo
 
