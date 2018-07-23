@@ -18,7 +18,7 @@ cmake -G 'Eclipse CDT4 - Unix Makefiles'
 ```
 
 ```bash
-# build types.
+echo 'build types:'
 cmake . -DCMAKE_BUILD_TYPE=Release
 cmake . -DCMAKE_BUILD_TYPE=RelWithDebInfo
 
@@ -27,13 +27,9 @@ cmake . -DCMAKE_BUILD_TYPE=MinSizeRel
 ```
 
 ```bash
-# to cleanup,
+echo 'to clean up:'
 bash scripts/clean.sh
 ```
-
-# License
-
-Donut and Chisa are dual licensed under GPL v3 (or any later) or 2-clause BSD license. You can chose one (or both) of them.
 
 # Powerd by
 

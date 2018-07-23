@@ -2,185 +2,187 @@ cmake_minimum_required(VERSION 3.3)
 project(Donut)
 find_package(PkgConfig)
 
+option(PROF "enable google-perftools" OFF)
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
 set(CINAMO_SOURCE_FILES
-        src/cinamo/include/cinamo/Exception.h
-        src/cinamo/include/cinamo/FormPayload.h
-        src/cinamo/include/cinamo/XArchiver.h
-        src/cinamo/include/cinamo/TypeTraits.h
-        src/cinamo/include/cinamo/MixType.h
-        src/cinamo/include/cinamo/Matrix.h
-        src/cinamo/include/cinamo/FileSystem.h
-        src/cinamo/include/cinamo/Handler.h
-        src/cinamo/include/cinamo/XMLAttrParser.h
-        src/cinamo/include/cinamo/Base64.h
-        src/cinamo/include/cinamo/ClassUtil.h
-        src/cinamo/include/cinamo/internal/XArchiver.h
-        src/cinamo/include/cinamo/internal/FileSystem.h
-        src/cinamo/include/cinamo/internal/EnumProxy.h
-        src/cinamo/include/cinamo/internal/Win32.h
-        src/cinamo/include/cinamo/internal/VectorProxy.h
-        src/cinamo/include/cinamo/internal/String.h
-        src/cinamo/include/cinamo/internal/XVal.h
-        src/cinamo/include/cinamo/internal/IntProxy.h
-        src/cinamo/include/cinamo/String.h
-        src/cinamo/include/cinamo/Dynamic.h
-        src/cinamo/include/cinamo/Platform.h
-        src/cinamo/include/cinamo/XVal.h
-        src/cinamo/include/cinamo/Logger.h
-        src/cinamo/include/cinamo/VectorMap.h
-        src/cinamo/include/cinamo/Url.h
-        src/cinamo/include/cinamo/PairFunctor.h
-        src/cinamo/include/cinamo/Cinamo.h
-        src/cinamo/include/cinamo/Time.h
-        src/cinamo/include/cinamo/Common.h
-        src/cinamo/include/cinamo/functional/Base.h
-        src/cinamo/include/cinamo/functional/Maybe.h
-        src/cinamo/include/cinamo/functional/Parser.h
-        src/cinamo/include/cinamo/functional/Box.h
-        src/cinamo/include/cinamo/functional/List.h
-        src/cinamo/include/cinamo/functional/Ident.h
-        src/cinamo/include/cinamo/functional/Either.h
-        src/cinamo/include/cinamo/Thread.h
-        src/cinamo/include/cinamo/Standard.h
-        src/cinamo/src/StringICU.cpp
-        src/cinamo/src/String.cpp
-        src/cinamo/src/XArchiver.cpp
-        src/cinamo/src/Url.cpp
-        src/cinamo/src/StringSplit.cpp
-        src/cinamo/src/StringParse.cpp
-        src/cinamo/src/XVal.cpp
-        src/cinamo/src/FileSystem.cpp
-        src/cinamo/src/Base64.cpp
-        src/cinamo/src/Time.cpp
-        src/cinamo/src/Logger.cpp
-        src/cinamo/src/Win32.cpp
-        src/cinamo/src/Exception.cpp
-        src/cinamo/src/Dynamic.cpp
-        src/cinamo/src/FormPayload.cpp
-        src/cinamo/src/XMLAttrParser.cpp
+    src/cinamo/include/cinamo/Exception.h
+    src/cinamo/include/cinamo/FormPayload.h
+    src/cinamo/include/cinamo/XArchiver.h
+    src/cinamo/include/cinamo/TypeTraits.h
+    src/cinamo/include/cinamo/MixType.h
+    src/cinamo/include/cinamo/Matrix.h
+    src/cinamo/include/cinamo/FileSystem.h
+    src/cinamo/include/cinamo/Handler.h
+    src/cinamo/include/cinamo/XMLAttrParser.h
+    src/cinamo/include/cinamo/Base64.h
+    src/cinamo/include/cinamo/ClassUtil.h
+    src/cinamo/include/cinamo/internal/XArchiver.h
+    src/cinamo/include/cinamo/internal/FileSystem.h
+    src/cinamo/include/cinamo/internal/EnumProxy.h
+    src/cinamo/include/cinamo/internal/Win32.h
+    src/cinamo/include/cinamo/internal/VectorProxy.h
+    src/cinamo/include/cinamo/internal/String.h
+    src/cinamo/include/cinamo/internal/XVal.h
+    src/cinamo/include/cinamo/internal/IntProxy.h
+    src/cinamo/include/cinamo/String.h
+    src/cinamo/include/cinamo/Dynamic.h
+    src/cinamo/include/cinamo/Platform.h
+    src/cinamo/include/cinamo/XVal.h
+    src/cinamo/include/cinamo/Logger.h
+    src/cinamo/include/cinamo/VectorMap.h
+    src/cinamo/include/cinamo/Url.h
+    src/cinamo/include/cinamo/PairFunctor.h
+    src/cinamo/include/cinamo/Cinamo.h
+    src/cinamo/include/cinamo/Time.h
+    src/cinamo/include/cinamo/Common.h
+    src/cinamo/include/cinamo/functional/Base.h
+    src/cinamo/include/cinamo/functional/Maybe.h
+    src/cinamo/include/cinamo/functional/Parser.h
+    src/cinamo/include/cinamo/functional/Box.h
+    src/cinamo/include/cinamo/functional/List.h
+    src/cinamo/include/cinamo/functional/Ident.h
+    src/cinamo/include/cinamo/functional/Either.h
+    src/cinamo/include/cinamo/Thread.h
+    src/cinamo/include/cinamo/Standard.h
+    src/cinamo/src/StringICU.cpp
+    src/cinamo/src/String.cpp
+    src/cinamo/src/XArchiver.cpp
+    src/cinamo/src/Url.cpp
+    src/cinamo/src/StringSplit.cpp
+    src/cinamo/src/StringParse.cpp
+    src/cinamo/src/XVal.cpp
+    src/cinamo/src/FileSystem.cpp
+    src/cinamo/src/Base64.cpp
+    src/cinamo/src/Time.cpp
+    src/cinamo/src/Logger.cpp
+    src/cinamo/src/Win32.cpp
+    src/cinamo/src/Exception.cpp
+    src/cinamo/src/Dynamic.cpp
+    src/cinamo/src/FormPayload.cpp
+    src/cinamo/src/XMLAttrParser.cpp
 )
 
 set(DONUT_SOURCE_FILES
-        src/donut/include/donut/native/Bind.hpp
-        src/donut/include/donut/native/Decoder.hpp
-        src/donut/include/donut/native/Encoder.hpp
-        src/donut/include/donut/native/ReactiveNativeClosure.hpp
-        src/donut/include/donut/native/ReactiveNativeClosureDecl.hpp
-        src/donut/include/donut/object/Decl.hpp
-        src/donut/include/donut/object/DonutClosureObject.hpp
-        src/donut/include/donut/object/DonutClosureObjectDecl.hpp
-        src/donut/include/donut/object/DonutObject.hpp
-        src/donut/include/donut/object/DonutObjectDecl.hpp
-        src/donut/include/donut/object/FloatObject.hpp
-        src/donut/include/donut/object/FloatObjectDecl.hpp
-        src/donut/include/donut/object/Heap.hpp
-        src/donut/include/donut/object/HeapDecl.hpp
-        src/donut/include/donut/object/HomuraObject.hpp
-        src/donut/include/donut/object/HomuraObjectDecl.hpp
-        src/donut/include/donut/object/NativeClosureObject.hpp
-        src/donut/include/donut/object/NativeClosureObjectDecl.hpp
-        src/donut/include/donut/object/NativeObject.hpp
-        src/donut/include/donut/object/NativeObjectDecl.hpp
-        src/donut/include/donut/object/Object.hpp
-        src/donut/include/donut/object/ObjectDecl.hpp
-        src/donut/include/donut/object/PureNativeClosureObject.hpp
-        src/donut/include/donut/object/PureNativeClosureObjectDecl.hpp
-        src/donut/include/donut/object/ReactiveNativeClosureObject.hpp
-        src/donut/include/donut/object/ReactiveNativeClosureObjectDecl.hpp
-        src/donut/include/donut/object/ReactiveNativeObject.hpp
-        src/donut/include/donut/object/ReactiveNativeObjectDecl.hpp
-        src/donut/include/donut/object/Slot.hpp
-        src/donut/include/donut/object/StringObject.hpp
-        src/donut/include/donut/object/StringObjectDecl.hpp
-        src/donut/include/donut/provider/BoolProvider.hpp
-        src/donut/include/donut/provider/BoolProviderDecl.hpp
-        src/donut/include/donut/provider/Decl.hpp
-        src/donut/include/donut/provider/DonutProvider.hpp
-        src/donut/include/donut/provider/DonutProviderDecl.hpp
-        src/donut/include/donut/provider/FloatProvider.hpp
-        src/donut/include/donut/provider/FloatProviderDecl.hpp
-        src/donut/include/donut/provider/HomuraProvider.hpp
-        src/donut/include/donut/provider/HomuraProviderDecl.hpp
-        src/donut/include/donut/provider/IntProvider.hpp
-        src/donut/include/donut/provider/IntProviderDecl.hpp
-        src/donut/include/donut/provider/NativeClosureProvider.hpp
-        src/donut/include/donut/provider/NativeClosureProviderDecl.hpp
-        src/donut/include/donut/provider/NullProvider.hpp
-        src/donut/include/donut/provider/NullProviderDecl.hpp
-        src/donut/include/donut/provider/Provider.hpp
-        src/donut/include/donut/provider/ProviderDecl.hpp
-        src/donut/include/donut/provider/StringProvider.hpp
-        src/donut/include/donut/provider/StringProviderDecl.hpp
-        src/donut/include/donut/source/Closure.hpp
-        src/donut/include/donut/source/Decl.hpp
-        src/donut/include/donut/source/Inst.hpp
-        src/donut/include/donut/source/Source.hpp
-        src/donut/include/donut/vm/Machine.hpp
-        src/donut/include/donut/vm/MachineImpl.hpp
-        src/donut/include/donut/Clock.hpp
-        src/donut/include/donut/Decl.hpp
-        src/donut/include/donut/Donut.hpp
-        src/donut/include/donut/DozenBox.hpp
-        src/donut/include/donut/Exception.hpp
-        src/donut/include/donut/Patron.hpp
-        src/donut/src/native/Decoder.cpp
-        src/donut/src/native/Encoder.cpp
-        src/donut/src/object/DonutClosureObject.cpp
-        src/donut/src/object/DonutObject.cpp
-        src/donut/src/object/FloatObject.cpp
-        src/donut/src/object/Heap.cpp
-        src/donut/src/object/HeapGC.cpp
-        src/donut/src/object/HeapObject.cpp
-        src/donut/src/object/HomuraObject.cpp
-        src/donut/src/object/NativeClosureObject.cpp
-        src/donut/src/object/NativeObject.cpp
-        src/donut/src/object/Object.cpp
-        src/donut/src/object/ObjectMarking.cpp
-        src/donut/src/object/ReactiveNativeObject.cpp
-        src/donut/src/object/Slot.cpp
-        src/donut/src/object/StringObject.cpp
-        src/donut/src/parser/output/Compiler.cpp
-        src/donut/src/parser/output/Compiler.h
-        src/donut/src/parser/output/DonutLexer.cpp
-        src/donut/src/parser/output/DonutLexer.h
-        src/donut/src/parser/output/DonutParser.cpp
-        src/donut/src/parser/output/DonutParser.h
-        src/donut/src/parser/Parser.cpp
-        src/donut/src/parser/Parser.hpp
-        src/donut/src/parser/ParseUtil.cpp
-        src/donut/src/parser/ParseUtil.hpp
-        src/donut/src/provider/BoolProvider.cpp
-        src/donut/src/provider/DonutProvider.cpp
-        src/donut/src/provider/FloatProvider.cpp
-        src/donut/src/provider/HeapProvider.cpp
-        src/donut/src/provider/HomuraProvider.cpp
-        src/donut/src/provider/IntProvider.cpp
-        src/donut/src/provider/NativeClosureProvider.cpp
-        src/donut/src/provider/NullProvider.cpp
-        src/donut/src/provider/Provider.cpp
-        src/donut/src/provider/StringProvider.cpp
-        src/donut/src/source/Closure.cpp
-        src/donut/src/source/Inst.cpp
-        src/donut/src/source/Source.cpp
-        src/donut/src/vm/Machine.cpp
-        src/donut/src/vm/SaveLoad.cpp
-        src/donut/src/vm/TimeOperation.cpp
-        src/donut/src/Clock.cpp
-        src/donut/src/Donut.cpp
-        src/donut/src/DozenBox.cpp
-        src/donut/src/Exception.cpp
+    src/donut/include/donut/native/Bind.hpp
+    src/donut/include/donut/native/Decoder.hpp
+    src/donut/include/donut/native/Encoder.hpp
+    src/donut/include/donut/native/ReactiveNativeClosure.hpp
+    src/donut/include/donut/native/ReactiveNativeClosureDecl.hpp
+    src/donut/include/donut/object/Decl.hpp
+    src/donut/include/donut/object/DonutClosureObject.hpp
+    src/donut/include/donut/object/DonutClosureObjectDecl.hpp
+    src/donut/include/donut/object/DonutObject.hpp
+    src/donut/include/donut/object/DonutObjectDecl.hpp
+    src/donut/include/donut/object/FloatObject.hpp
+    src/donut/include/donut/object/FloatObjectDecl.hpp
+    src/donut/include/donut/object/Heap.hpp
+    src/donut/include/donut/object/HeapDecl.hpp
+    src/donut/include/donut/object/HomuraObject.hpp
+    src/donut/include/donut/object/HomuraObjectDecl.hpp
+    src/donut/include/donut/object/NativeClosureObject.hpp
+    src/donut/include/donut/object/NativeClosureObjectDecl.hpp
+    src/donut/include/donut/object/NativeObject.hpp
+    src/donut/include/donut/object/NativeObjectDecl.hpp
+    src/donut/include/donut/object/Object.hpp
+    src/donut/include/donut/object/ObjectDecl.hpp
+    src/donut/include/donut/object/PureNativeClosureObject.hpp
+    src/donut/include/donut/object/PureNativeClosureObjectDecl.hpp
+    src/donut/include/donut/object/ReactiveNativeClosureObject.hpp
+    src/donut/include/donut/object/ReactiveNativeClosureObjectDecl.hpp
+    src/donut/include/donut/object/ReactiveNativeObject.hpp
+    src/donut/include/donut/object/ReactiveNativeObjectDecl.hpp
+    src/donut/include/donut/object/Slot.hpp
+    src/donut/include/donut/object/StringObject.hpp
+    src/donut/include/donut/object/StringObjectDecl.hpp
+    src/donut/include/donut/provider/BoolProvider.hpp
+    src/donut/include/donut/provider/BoolProviderDecl.hpp
+    src/donut/include/donut/provider/Decl.hpp
+    src/donut/include/donut/provider/DonutProvider.hpp
+    src/donut/include/donut/provider/DonutProviderDecl.hpp
+    src/donut/include/donut/provider/FloatProvider.hpp
+    src/donut/include/donut/provider/FloatProviderDecl.hpp
+    src/donut/include/donut/provider/HomuraProvider.hpp
+    src/donut/include/donut/provider/HomuraProviderDecl.hpp
+    src/donut/include/donut/provider/IntProvider.hpp
+    src/donut/include/donut/provider/IntProviderDecl.hpp
+    src/donut/include/donut/provider/NativeClosureProvider.hpp
+    src/donut/include/donut/provider/NativeClosureProviderDecl.hpp
+    src/donut/include/donut/provider/NullProvider.hpp
+    src/donut/include/donut/provider/NullProviderDecl.hpp
+    src/donut/include/donut/provider/Provider.hpp
+    src/donut/include/donut/provider/ProviderDecl.hpp
+    src/donut/include/donut/provider/StringProvider.hpp
+    src/donut/include/donut/provider/StringProviderDecl.hpp
+    src/donut/include/donut/source/Closure.hpp
+    src/donut/include/donut/source/Decl.hpp
+    src/donut/include/donut/source/Inst.hpp
+    src/donut/include/donut/source/Source.hpp
+    src/donut/include/donut/vm/Machine.hpp
+    src/donut/include/donut/vm/MachineImpl.hpp
+    src/donut/include/donut/Clock.hpp
+    src/donut/include/donut/Decl.hpp
+    src/donut/include/donut/Donut.hpp
+    src/donut/include/donut/DozenBox.hpp
+    src/donut/include/donut/Exception.hpp
+    src/donut/include/donut/Patron.hpp
+    src/donut/src/native/Decoder.cpp
+    src/donut/src/native/Encoder.cpp
+    src/donut/src/object/DonutClosureObject.cpp
+    src/donut/src/object/DonutObject.cpp
+    src/donut/src/object/FloatObject.cpp
+    src/donut/src/object/Heap.cpp
+    src/donut/src/object/HeapGC.cpp
+    src/donut/src/object/HeapObject.cpp
+    src/donut/src/object/HomuraObject.cpp
+    src/donut/src/object/NativeClosureObject.cpp
+    src/donut/src/object/NativeObject.cpp
+    src/donut/src/object/Object.cpp
+    src/donut/src/object/ObjectMarking.cpp
+    src/donut/src/object/ReactiveNativeObject.cpp
+    src/donut/src/object/Slot.cpp
+    src/donut/src/object/StringObject.cpp
+    src/donut/src/parser/output/Compiler.cpp
+    src/donut/src/parser/output/Compiler.h
+    src/donut/src/parser/output/DonutLexer.cpp
+    src/donut/src/parser/output/DonutLexer.h
+    src/donut/src/parser/output/DonutParser.cpp
+    src/donut/src/parser/output/DonutParser.h
+    src/donut/src/parser/Parser.cpp
+    src/donut/src/parser/Parser.hpp
+    src/donut/src/parser/ParseUtil.cpp
+    src/donut/src/parser/ParseUtil.hpp
+    src/donut/src/provider/BoolProvider.cpp
+    src/donut/src/provider/DonutProvider.cpp
+    src/donut/src/provider/FloatProvider.cpp
+    src/donut/src/provider/HeapProvider.cpp
+    src/donut/src/provider/HomuraProvider.cpp
+    src/donut/src/provider/IntProvider.cpp
+    src/donut/src/provider/NativeClosureProvider.cpp
+    src/donut/src/provider/NullProvider.cpp
+    src/donut/src/provider/Provider.cpp
+    src/donut/src/provider/StringProvider.cpp
+    src/donut/src/source/Closure.cpp
+    src/donut/src/source/Inst.cpp
+    src/donut/src/source/Source.cpp
+    src/donut/src/vm/Machine.cpp
+    src/donut/src/vm/SaveLoad.cpp
+    src/donut/src/vm/TimeOperation.cpp
+    src/donut/src/Clock.cpp
+    src/donut/src/Donut.cpp
+    src/donut/src/DozenBox.cpp
+    src/donut/src/Exception.cpp
 )
 
 set(DONUT_APP_SOURCE_FILES
-        src/entrypoint/donut/main.cpp
-        src/entrypoint/donut/SystemObject.cpp
-        src/entrypoint/donut/SystemObject.hpp
-        src/entrypoint/donut/SystemPatron.cpp
-        src/entrypoint/donut/SystemPatron.hpp
-        src/entrypoint/donut/SystemProvider.cpp
-        src/entrypoint/donut/SystemProvider.hpp
+    src/entrypoint/donut/main.cpp
+    src/entrypoint/donut/SystemObject.cpp
+    src/entrypoint/donut/SystemObject.hpp
+    src/entrypoint/donut/SystemPatron.cpp
+    src/entrypoint/donut/SystemPatron.hpp
+    src/entrypoint/donut/SystemProvider.cpp
+    src/entrypoint/donut/SystemProvider.hpp
 )
 
 set(TEST_SOURCE_FILES
@@ -259,9 +261,18 @@ include_directories(src/cinamo/include)
 include_directories(external/gtest/googletest/include)
 include_directories(external/gtest/googletest)
 
-pkg_check_modules(ICU4C REQUIRED icu-io icu-uc)
-link_directories(${ICU4C_LIBRARY_DIRS})
-include_directories(${ICU4C_INCLUDE_DIRS})
+if(true) ## ICU4C
+  pkg_check_modules(ICU4C REQUIRED icu-io icu-uc)
+  link_directories(${ICU4C_LIBRARY_DIRS})
+  include_directories(${ICU4C_INCLUDE_DIRS})
+endif()
+
+if(PROF) ## Profiler
+  message (STATUS "Profiler enabled")
+  pkg_check_modules(GPROF REQUIRED libprofiler)
+  link_directories(${GPROF_LIBRARY_DIRS})
+  include_directories(${GPROF_INCLUDE_DIRS})
+endif()
 
 include(ExternalProject)
 ExternalProject_Add(
@@ -275,8 +286,11 @@ ExternalProject_Add(
 )
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/libantlr3c/include)
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/libantlr3c/lib)
-
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/tinyxml2)
+
+configure_file ("${PROJECT_SOURCE_DIR}/cmake/config.h.in"
+                "${PROJECT_BINARY_DIR}/config.h" )
+include_directories(${PROJECT_BINARY_DIR})
 
 ###############################################################################
 #### cinamo lib
@@ -299,6 +313,10 @@ add_executable(donutApp ${DONUT_APP_SOURCE_FILES})
 target_link_libraries(donutApp cinamo)
 target_link_libraries(donutApp donut)
 target_link_libraries(donutApp ${ICU4C_LIBRARIES})
+if(PROF)
+  message (STATUS "Profiler enabled")
+  target_link_libraries(donutApp ${GPROF_LIBRARIES})
+endif()
 add_dependencies(donutApp libantlr)
 
 ###############################################################################

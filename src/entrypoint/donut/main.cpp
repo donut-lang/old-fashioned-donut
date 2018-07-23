@@ -13,6 +13,10 @@
 #include <cstdlib>
 #include <exception>
 #include <sstream>
+
+#include <config.h>
+#include <gperftools/profiler.h>
+
 #include <cinamo/FileSystem.h>
 #include <donut/Donut.hpp>
 #include "SystemProvider.hpp"
@@ -45,20 +49,19 @@ void version(int argc, char* argv[]){
 }
 
 const struct option ARG_OPTIONS[] = {
-		{"trace", no_argument, 0, 1},
-		{"verbose", no_argument, 0, 2},
-		{"debug", no_argument, 0, 3},
-		{"warning", no_argument, 0, 4},
-		{"info", no_argument, 0, 5},
-		{"error", no_argument, 0, 6},
-		{"help", no_argument, 0, 7},
-		{"version", no_argument, 0, 8},
-		{0,0,0,0}
+		{"trace", no_argument, nullptr, 1},
+		{"verbose", no_argument, nullptr, 2},
+		{"debug", no_argument, nullptr, 3},
+		{"warning", no_argument, nullptr, 4},
+		{"info", no_argument, nullptr, 5},
+		{"error", no_argument, nullptr, 6},
+		{"help", no_argument, nullptr, 7},
+		{"version", no_argument, nullptr, 8},
+		{nullptr,0, nullptr,0}
 };
 
 int runDonut(Logger& log, int argc, char** argv)
 {
-
 	std::string source;
 	std::string filename;
 	if(0 == argc){
@@ -85,10 +88,9 @@ int runDonut(Logger& log, int argc, char** argv)
 }
 
 int main(int argc, char* argv[]){
-
 	int indexptr=0;
 	Logger::Level level = Logger::Level::WARN_;
-	while(1){
+	while(true) {
 		int opt = getopt_long(argc, argv, "h", ARG_OPTIONS, &indexptr);
 		if(opt < 0){
 			break;
@@ -116,13 +118,13 @@ int main(int argc, char* argv[]){
 		case 7:
 		case 'h':
 			usage(argc, argv);
-			break;
+            return 0;
 		case 8:
 			version(argc, argv);
-			break;
-		case '?':
-			exit(0);
-			break;
+            return 0;
+        default:
+            usage(argc, argv);
+            return 0;
 		}
 	}
 
@@ -135,7 +137,10 @@ int main(int argc, char* argv[]){
 }
 
 int main(int argc, char* argv[]){
-	try{
+#ifdef PROF
+    ProfilerStart("prof.out");
+#endif
+    try{
 		const int resultCode = donut_cli::main(argc, argv);
 		return resultCode;
 	} catch (donut::DonutException& e){
@@ -151,4 +156,7 @@ int main(int argc, char* argv[]){
 		std::cout << "[FIXME] Unkown exception caught..." << std::endl;
 		return -3;
 	}
+#ifdef PROF
+    ProfilerStop();
+#endif
 }

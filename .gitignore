@@ -47,3 +47,5 @@ rules.ninja
 
 # Idea
 /.idea/
+
+build/

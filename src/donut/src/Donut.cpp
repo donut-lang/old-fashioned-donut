@@ -38,7 +38,7 @@ Donut::Donut(Logger& log, Handler<Patron> patron)
 :log_(log)
 ,clock_(new Clock(this))
 ,heap_(new Heap(log_, clock_))
-,patron_(patron)
+,patron_(std::move(patron))
 {
 
 }
@@ -47,7 +47,7 @@ Donut::Donut(Handler<Patron> patron)
 :log_(defaultLogger)
 ,clock_(new Clock(this))
 ,heap_(new Heap(log_, clock_))
-,patron_(patron)
+,patron_(std::move(patron))
 {
 }
 
